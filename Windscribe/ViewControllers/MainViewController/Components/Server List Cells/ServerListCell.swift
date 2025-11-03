@@ -6,6 +6,7 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import Swinject
 import SwipeCellKit
@@ -60,6 +61,7 @@ class HealthCircleView: CompletionCircleView {
 
 class ServerListCell: SwipeTableViewCell {
     var disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var icon = UIImageView()
     var circleView = UIView()
     var actionImage = UIImageView()
@@ -208,15 +210,19 @@ class ServerListCell: SwipeTableViewCell {
         layoutIfNeeded()
     }
 
-    func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(onNext: { isDarkMode in
-            self.actionImage.setImageColor(color: .from(.iconColor, isDarkMode))
-            self.circleView.layer.borderColor = UIColor.from(.loadCircleColor, isDarkMode).cgColor
-            self.isDarkMode = isDarkMode
+    func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                guard let self = self else { return }
+                self.actionImage.setImageColor(color: .from(.iconColor, isDark))
+                self.circleView.layer.borderColor = UIColor.from(.loadCircleColor, isDark).cgColor
+                self.isDarkMode = isDark
 
-            let proImageName = isDarkMode ? ImagesAsset.proMiniImage : ImagesAsset.proMiniLightImage
-            self.proIcon.image = UIImage(named: proImageName)
-        }).disposed(by: disposeBag)
+                let proImageName = isDark ? ImagesAsset.proMiniImage : ImagesAsset.proMiniLightImage
+                self.proIcon.image = UIImage(named: proImageName)
+            }
+            .store(in: &cancellables)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 
@@ -24,7 +25,7 @@ protocol ListSelectionViewDelegate {
 protocol ListSelectionViewModelType {
     var delegate: ListSelectionViewDelegate? { get set }
     var isActive: BehaviorSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var selectedAction: BehaviorSubject<CardHeaderButtonType> { get }
 
     func setActive()
@@ -39,7 +40,7 @@ protocol ListSelectionViewModelType {
 class ListSelectionViewModel: ListSelectionViewModelType {
     var delegate: ListSelectionViewDelegate?
     var isActive = BehaviorSubject<Bool>(value: true)
-    var isDarkMode: BehaviorSubject<Bool>
+    var isDarkMode: CurrentValueSubject<Bool, Never>
     var selectedAction = BehaviorSubject<CardHeaderButtonType>(value: .all)
     let disposeBag = DisposeBag()
 

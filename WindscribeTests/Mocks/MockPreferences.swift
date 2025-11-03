@@ -33,6 +33,14 @@ class MockPreferences: Preferences {
     var mockBestLocation: String = ""
     var clearWireGuardConfigurationCalled = false
 
+    // Background/Look and Feel mock storage
+    var mockAspectRatio: String?
+    var mockBackgroundEffectConnect: String?
+    var mockBackgroundEffectDisconnect: String?
+    var mockBackgroundCustomConnectPath: String?
+    var mockBackgroundCustomDisconnectPath: String?
+    private let darkModeSubject = CurrentValueSubject<Bool?, Never>(nil)
+
     func saveAdvanceParams(params: String) {
         mockAdvanceParams = params
     }
@@ -149,10 +157,11 @@ class MockPreferences: Preferences {
 
     func saveDarkMode(darkMode: Bool) {
         mockDarkMode = darkMode
+        darkModeSubject.send(darkMode)
     }
 
     func getDarkMode() -> AnyPublisher<Bool?, Never> {
-        return Just(mockDarkMode).eraseToAnyPublisher()
+        return darkModeSubject.eraseToAnyPublisher()
     }
 
     func savePingMethod(method: String) {}
@@ -467,38 +476,48 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func saveAspectRatio(value: String) {}
+    func saveAspectRatio(value: String) {
+        mockAspectRatio = value
+    }
 
     func getAspectRatio() -> String? {
-        return nil
+        return mockAspectRatio
     }
 
     func aspectRatio() -> AnyPublisher<String?, Never> {
-        return Just(nil).eraseToAnyPublisher()
+        return Just(mockAspectRatio).eraseToAnyPublisher()
     }
 
-    func saveBackgroundEffectConnect(value: String) {}
+    func saveBackgroundEffectConnect(value: String) {
+        mockBackgroundEffectConnect = value
+    }
 
     func getBackgroundEffectConnect() -> String? {
-        return nil
+        return mockBackgroundEffectConnect
     }
 
-    func saveBackgroundCustomConnectPath(value: String) {}
+    func saveBackgroundCustomConnectPath(value: String) {
+        mockBackgroundCustomConnectPath = value
+    }
 
     func getBackgroundCustomConnectPath() -> String? {
-        return nil
+        return mockBackgroundCustomConnectPath
     }
 
-    func saveBackgroundEffectDisconnect(value: String) {}
+    func saveBackgroundEffectDisconnect(value: String) {
+        mockBackgroundEffectDisconnect = value
+    }
 
     func getBackgroundEffectDisconnect() -> String? {
-        return nil
+        return mockBackgroundEffectDisconnect
     }
 
-    func saveBackgroundCustomDisconnectPath(value: String) {}
+    func saveBackgroundCustomDisconnectPath(value: String) {
+        mockBackgroundCustomDisconnectPath = value
+    }
 
     func getBackgroundCustomDisconnectPath() -> String? {
-        return nil
+        return mockBackgroundCustomDisconnectPath
     }
 
     func saveSoundEffectConnect(value: String) {}

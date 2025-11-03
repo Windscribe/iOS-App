@@ -13,14 +13,14 @@ protocol ViewLogViewModel {
     var title: String { get }
     var logContent: BehaviorSubject<String> { get }
     var showProgress: BehaviorSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
 }
 
 class ViewLogViewModelImpl: ViewLogViewModel {
     let title = TextsAsset.Debug.viewLog
     let logContent = BehaviorSubject(value: "")
     let showProgress = BehaviorSubject(value: false)
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     private let logger: FileLogger
 
     init(logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {

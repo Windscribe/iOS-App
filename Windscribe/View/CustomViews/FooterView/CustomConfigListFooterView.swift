@@ -50,10 +50,10 @@ class CustomConfigListFooterView: WSView {
             }
             .store(in: &cancellables)
 
-        lookAndFeelRepository.isDarkModeSubject.subscribe(onNext: { [weak self] isDarkMode in
+        lookAndFeelRepository.isDarkModeSubject.sink { [weak self] isDarkMode in
             self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)
             self?.backgroundColor = .from(.backgroundColor, isDarkMode)
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     override func setupLocalized() {

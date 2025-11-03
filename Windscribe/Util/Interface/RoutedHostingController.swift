@@ -23,9 +23,8 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
         view.backgroundColor = UIColor(.from(.actionBackgroundColor, lookAndFeelRepository.isDarkMode))
 
         lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in}, receiveValue: { [weak self] isDarkMode in
+            .sink { [weak self] isDarkMode in
                 guard let self = self, let navigationBar = self.navigationController?.navigationBar else {
                     return
                 }
@@ -73,7 +72,7 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
                     $0.setNeedsLayout()
                     $0.layoutIfNeeded()
                 }
-            })
+            }
             .store(in: &cancellables)
     }
 

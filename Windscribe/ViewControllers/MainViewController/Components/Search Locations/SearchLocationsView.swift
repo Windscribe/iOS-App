@@ -6,6 +6,7 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import UIKit
@@ -24,6 +25,7 @@ class SearchLocationsView: UIView {
     private var isDarkMode: Bool = DefaultValues.darkMode
 
     var disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
@@ -46,23 +48,26 @@ class SearchLocationsView: UIView {
     }
 
     private func bindViews() {
-        viewModel.isDarkMode.subscribe(onNext: { [weak self] isDarkMode in
-            guard let self = self else { return }
-            separatorView.backgroundColor = .from(.gradientBorderColor, isDarkMode)
-            searchTextfield.textColor = .from(.textColor, isDarkMode)
-            updateSearchTextfield(for: isDarkMode)
-            searchIcon.setImageColor(color: .from(.infoColor, isDarkMode))
-            exitSearchButton.imageView?.setImageColor(color: .from(.infoColor, isDarkMode))
-            searchTextfield.textColor = .from(.textColor, isDarkMode)
-            backgroundColor = isUserInteractionEnabled ? .from(.backgroundColor, isDarkMode) : .clear
-            self.isDarkMode = isDarkMode
-        }).disposed(by: disposeBag)
+        viewModel.isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDarkMode in
+                guard let self = self else { return }
+                separatorView.backgroundColor = .from(.gradientBorderColor, isDarkMode)
+                searchTextfield.textColor = .from(.textColor, isDarkMode)
+                updateSearchTextfield(for: isDarkMode)
+                searchIcon.setImageColor(color: .from(.infoColor, isDarkMode))
+                exitSearchButton.imageView?.setImageColor(color: .from(.infoColor, isDarkMode))
+                searchTextfield.textColor = .from(.textColor, isDarkMode)
+                backgroundColor = isUserInteractionEnabled ? .from(.backgroundColor, isDarkMode) : .clear
+                self.isDarkMode = isDarkMode
+            }
+            .store(in: &cancellables)
+
         viewModel.refreshLanguage.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             clearSearchButton.configuration = getClearConfig()
-            if let isDarkMode = try? viewModel.isDarkMode.value() {
-                updateSearchTextfield(for: isDarkMode)
-            }
+            let isDarkMode = viewModel.isDarkMode.value
+            updateSearchTextfield(for: isDarkMode)
         }).disposed(by: disposeBag)
     }
 

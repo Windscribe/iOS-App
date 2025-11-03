@@ -95,7 +95,7 @@ class BestLocationCell: ServerListCell {
         bestCellViewModel?.displayingBestLocation = value
     }
 
-    override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
+    override func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.bindViews(isDarkMode: isDarkMode)
         languageManager.activelanguage.sink { _ in
             self.updateUI()

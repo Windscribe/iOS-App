@@ -20,7 +20,7 @@ enum ManageAccountState: Equatable {
 protocol AccountViewModelType {
     var apiCallManager: APIManager { get }
     var alertManager: AlertManagerV2 { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var cancelAccountState: BehaviorSubject<ManageAccountState> { get }
     var languageUpdatedTrigger: PublishSubject<Void> { get }
     var sessionUpdatedTrigger: PublishSubject<Void> { get }
@@ -50,7 +50,7 @@ class AccountViewModel: AccountViewModelType {
     var sections = [AccountSectionItem]()
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
     let languageUpdatedTrigger = PublishSubject<Void>()
     var sessionUpdatedTrigger = PublishSubject<Void>()

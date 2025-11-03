@@ -6,6 +6,7 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import UIKit
 
@@ -25,8 +26,9 @@ class WSButton: UIButton {
     private(set) var size: WSButtonSize
     private(set) var text: String
     private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    init(type: WSButtonType, size: WSButtonSize, text: String, isDarkMode: BehaviorSubject<Bool>) {
+    init(type: WSButtonType, size: WSButtonSize, text: String, isDarkMode: CurrentValueSubject<Bool, Never>) {
         self.type = type
         self.size = size
         self.text = text
@@ -39,10 +41,13 @@ class WSButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            self.setup(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+    private func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                self?.setup(isDarkMode: isDark)
+            }
+            .store(in: &cancellables)
     }
 
     private func setup(isDarkMode: Bool) {

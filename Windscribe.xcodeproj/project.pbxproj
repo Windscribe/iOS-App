@@ -1053,6 +1053,7 @@
 		F44F275F2D84B87500A47E37 /* NewsFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275D2D84B87500A47E37 /* NewsFeedView.swift */; };
 		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
 		F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */; };
+		F458F60F2E982DE30034A92A /* LookAndFeelRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */; };
 		F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift */; };
 		F45BA5982D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */; };
 		F45BA59A2D53FE9100CFDB82 /* UpgradeSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */; };
@@ -2038,6 +2039,7 @@
 		F44F275D2D84B87500A47E37 /* NewsFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedView.swift; sourceTree = "<group>"; };
 		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
 		F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradePromoView.swift; sourceTree = "<group>"; };
+		F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelRepositoryTests.swift; sourceTree = "<group>"; };
 		F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessDataModels.swift; sourceTree = "<group>"; };
 		F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewModel.swift; sourceTree = "<group>"; };
 		F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewController.swift; sourceTree = "<group>"; };
@@ -3366,6 +3368,7 @@
 				C5D983C52B34E5690069FF3A /* API */,
 				F48DDC132E85B90400B66315 /* Protocol */,
 				C55AF09C2B3B76060011EF56 /* Utils */,
+				1E022C462E93FDCA00AF8AA7 /* Extensions */,
 				F4EF7A092D5D31A200E4EB9F /* Mocks */,
 				F434A1B22D834A3D0059415F /* SampleData */,
 				AF018E1A21B1AA2D00B225FF /* Info.plist */,
@@ -4467,6 +4470,7 @@
 		F437917D2E95A1E500ED6141 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */,
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
 				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
 			);
@@ -7150,6 +7154,7 @@
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
 				F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */,
+				F458F60F2E982DE30034A92A /* LookAndFeelRepositoryTests.swift in Sources */,
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
 				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,

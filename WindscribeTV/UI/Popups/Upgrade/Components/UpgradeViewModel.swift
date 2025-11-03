@@ -40,7 +40,7 @@ protocol UpgradeViewModel {
     var restoreState: BehaviorSubject<RestoreState?> { get }
     var showProgress: BehaviorSubject<Bool> { get }
     var showFreeDataOption: BehaviorSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
 
     func loadPlans(promo: String?, id: String?)
     func continuePayButtonTapped()
@@ -66,7 +66,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     var upgradeRouteState: BehaviorSubject<RouteID?> = BehaviorSubject(value: nil)
     var restoreState: BehaviorSubject<RestoreState?> = BehaviorSubject(value: nil)
     var showFreeDataOption = BehaviorSubject(value: false)
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
 
     var selectedPlan: WindscribeInAppProduct?
     let disposeBag = DisposeBag()

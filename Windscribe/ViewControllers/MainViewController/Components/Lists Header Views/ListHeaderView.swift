@@ -28,14 +28,14 @@ enum ListHeaderViewType {
 }
 
 protocol ListHeaderViewModelType {
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var type: BehaviorSubject<ListHeaderViewType> { get }
     var refreshLanguage: PublishSubject<Void> { get }
     func updateType(with type: ListHeaderViewType)
 }
 
 class ListHeaderViewModel: ListHeaderViewModelType {
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     let type = BehaviorSubject<ListHeaderViewType>(value: .empty)
     let refreshLanguage = PublishSubject<Void>()
     private var cancellables = Set<AnyCancellable>()
@@ -53,6 +53,7 @@ class ListHeaderViewModel: ListHeaderViewModelType {
 
 class ListHeaderView: UIView {
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     let infoLabel = UILabel()
 
@@ -78,9 +79,12 @@ class ListHeaderView: UIView {
                 self.infoLabel.text = $0.description
             }).disposed(by: disposeBag)
 
-        viewModel.isDarkMode.subscribe { isDarkMode in
-            self.updateLayourForTheme(isDarkMode: isDarkMode)
-        }.disposed(by: disposeBag)
+        viewModel.isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { isDarkMode in
+                self.updateLayourForTheme(isDarkMode: isDarkMode)
+            }
+            .store(in: &cancellables)
 
         viewModel.refreshLanguage.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }

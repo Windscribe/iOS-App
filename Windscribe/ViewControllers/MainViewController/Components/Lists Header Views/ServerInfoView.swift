@@ -12,13 +12,13 @@ import Combine
 
 protocol ServerInfoViewModelType {
     var serverCountSubject: PublishSubject<Int> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     func updateWithSearchCount(searchCount: Int)
 }
 
 class ServerInfoViewModel: ServerInfoViewModelType {
     let serverCountSubject = PublishSubject<Int>()
-    let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     private let localDatabase: LocalDatabase
@@ -31,14 +31,19 @@ class ServerInfoViewModel: ServerInfoViewModelType {
          lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.localDatabase = localDatabase
         self.languageManager = languageManager
-        localDatabase.getServersObservable().subscribe {
-            self.count = $0.count
-            self.serverCountSubject.onNext(self.count)
-        }.disposed(by: disposeBag)
+        self.isDarkMode = lookAndFeelRepository.isDarkModeSubject
 
-        lookAndFeelRepository.isDarkModeSubject.subscribe { data in
-            self.isDarkMode.onNext(data)
-        }.disposed(by: disposeBag)
+        localDatabase.getServersObservable()
+            .toPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { _ in },
+                receiveValue: { [weak self] servers in
+                    guard let self = self else { return }
+                    self.count = servers.count
+                    self.serverCountSubject.onNext(self.count)
+            })
+            .store(in: &cancellables)
 
         languageManager.activelanguage
             .sink { _ in
@@ -58,6 +63,7 @@ class ServerInfoViewModel: ServerInfoViewModelType {
 
 class ServerInfoView: UIView {
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     var infoLabel = UILabel()
 
@@ -87,9 +93,12 @@ class ServerInfoView: UIView {
                 self.infoLabel.text = "\(TextsAsset.allServers) (\($0))"
             }).disposed(by: disposeBag)
 
-        viewModel.isDarkMode.subscribe { isDarkMode in
-            self.updateLayourForTheme(isDarkMode: isDarkMode)
-        }.disposed(by: disposeBag)
+        viewModel.isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { isDarkMode in
+                self.updateLayourForTheme(isDarkMode: isDarkMode)
+            }
+            .store(in: &cancellables)
     }
 
     private func updateLayourForTheme(isDarkMode: Bool) {

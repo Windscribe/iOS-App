@@ -6,6 +6,8 @@
 //  Copyright © 2018 Windscribe. All rights reserved.
 //
 
+import BackgroundTasks
+import Combine
 import CoreData
 import NetworkExtension
 import RealmSwift
@@ -15,7 +17,6 @@ import Swinject
 import SwiftUI
 import UIKit
 import WidgetKit
-import BackgroundTasks
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -49,6 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var shortcutType = ShortcutType.none
 
     private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     func application(_: UIApplication,
                      didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -293,14 +295,9 @@ extension AppDelegate {
     }
 
     private func bindThemeChange() {
-        lookAndFeelRepository.isDarkModeSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { isDark in
-                UINavigationBar.setStyleNavigationBackButton(isDarkMode: isDark)
-            }, onError: { [weak self] error in
-                self?.logger.logE("AppDelegate", "Theme Change error: \(error)")
-            })
-            .disposed(by: disposeBag)
+        lookAndFeelRepository.isDarkModeSubject.sink { isDark in
+            UINavigationBar.setStyleNavigationBackButton(isDarkMode: isDark)
+        }.store(in: &cancellables)
     }
 
     /// Method to present a SwiftUI view on top a window

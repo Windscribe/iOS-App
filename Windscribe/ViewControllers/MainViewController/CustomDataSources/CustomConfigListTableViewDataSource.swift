@@ -6,6 +6,7 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import Swinject
 import SwipeCellKit
@@ -29,6 +30,7 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
     var scrollHappened = false
     var viewModel: MainViewModelType
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(customConfigs: [CustomConfigModel]?, viewModel: MainViewModelType) {
         self.viewModel = viewModel
@@ -103,7 +105,7 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
         let editAction = SwipeAction(style: .destructive, title: nil) { _, _ in
             self.logicDelegate?.showEditCustomConfig(customConfig: customConfig)
         }
-        viewModel.isDarkMode.subscribe(onNext: { dark in
+        viewModel.isDarkMode.receive(on: DispatchQueue.main).sink { dark in
             if !dark {
                 deleteAction.backgroundColor = UIColor.seperatorWhite
                 deleteAction.image = UIImage(named: ImagesAsset.delete)
@@ -115,7 +117,7 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
                 editAction.backgroundColor = UIColor.seperatorGray
                 editAction.image = UIImage(named: ImagesAsset.DarkMode.edit)
             }
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         if customConfig.authRequired ?? false {
             return [deleteAction, editAction]

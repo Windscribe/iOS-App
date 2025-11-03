@@ -66,9 +66,9 @@ class GeneralViewModel: GeneralViewModelType {
             self?.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
         }.store(in: &cancellables)
 
-        lookAndFeelRepository.isDarkModeSubject.subscribe { [weak self] data in
+        lookAndFeelRepository.isDarkModeSubject.sink { [weak self] data in
             self?.isDarkMode.onNext(data)
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         languageManager.activelanguage.sink { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())

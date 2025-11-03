@@ -22,7 +22,7 @@ protocol MainViewModelType {
     var locationOrderBy: BehaviorSubject<String> { get }
     var latencies: BehaviorSubject<[PingData]> { get }
     var notices: BehaviorSubject<[Notice]> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var selectedProtocol: BehaviorSubject<String> { get }
     var selectedPort: BehaviorSubject<String> { get }
     var connectionMode: BehaviorSubject<String> { get }
@@ -116,7 +116,7 @@ class MainViewModel: MainViewModelType {
     var didShowProPlanExpiredPopup = false
     var didShowOutOfDataPopup = false
 
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
 
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()

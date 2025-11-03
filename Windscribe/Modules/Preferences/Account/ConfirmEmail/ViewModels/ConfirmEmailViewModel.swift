@@ -50,15 +50,10 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     private func bind() {
         lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConfirmEmailViewModel", "darkTheme error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
+            .sink { [weak self] isDark in
                 self?.isDarkMode = isDark
-            })
+            }
             .store(in: &cancellables)
     }
 

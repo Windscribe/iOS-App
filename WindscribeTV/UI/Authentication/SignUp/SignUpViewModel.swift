@@ -24,7 +24,7 @@ protocol SignUpViewModel {
     var textfieldStatus: BehaviorSubject<Bool> { get }
     var showLoadingView: BehaviorSubject<Bool> { get }
     var routeTo: PublishSubject<SignupRoutes> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var showCaptchaViewModel: PublishSubject<CaptchaViewModel> { get }
     var failedState: BehaviorSubject<SignUpErrorState> { get }
 
@@ -35,7 +35,7 @@ protocol SignUpViewModel {
 }
 
 class SignUpViewModelImpl: SignUpViewModel {
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     let showCaptchaViewModel = PublishSubject<CaptchaViewModel>()
     let routeTo = PublishSubject<SignupRoutes>()
     let isPremiumUser = BehaviorSubject(value: false)

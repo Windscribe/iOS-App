@@ -40,16 +40,11 @@ class PreferencesBaseViewModelImpl: PreferencesBaseViewModel {
 
     func bindSubjects() {
         lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("PreferencesBaseViewModelImpl", "Theme Adjustment Change error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
+            .sink { [weak self] isDark in
                 self?.isDarkMode = isDark
                 self?.reloadItems()
-            })
+            }
             .store(in: &cancellables)
     }
 

@@ -103,6 +103,7 @@ class ServerSectionCellModel: ServerSectionCellModelType {
 
 class ServerSectionCell: ServerListCell {
     var p2pIcon = UIImageView()
+    private var cancellables = Set<AnyCancellable>()
 
     var serverCellViewModel: ServerSectionCellModel? {
         didSet {
@@ -163,11 +164,14 @@ class ServerSectionCell: ServerListCell {
         ])
     }
 
-    override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
+    override func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { isDarkMode in
-            self.p2pIcon.setImageColor(color: .from(.iconColor, isDarkMode))
-        }).disposed(by: disposeBag)
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                self?.p2pIcon.setImageColor(color: .from(.iconColor, isDark))
+            }
+            .store(in: &cancellables)
     }
 
     private func animateExpansion(completion: @escaping () -> Void = {}) {

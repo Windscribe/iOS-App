@@ -19,6 +19,8 @@ class LocalDatabaseTests: XCTestCase {
 
     var mockContainer: Container!
     var localDatabase: LocalDatabase!
+    var mockLogger: MockLogger!
+    var mockPreferences: MockPreferences!
 
     let disposeBag = DisposeBag()
 
@@ -26,6 +28,20 @@ class LocalDatabaseTests: XCTestCase {
         super.setUp()
 
         mockContainer = Container()
+        mockLogger = MockLogger()
+        mockPreferences = MockPreferences()
+
+        // Register mock logger
+        mockContainer.register(FileLogger.self) { _ in
+            return self.mockLogger
+        }
+
+        // Register mock preferences
+        mockContainer.register(Preferences.self) { _ in
+            return self.mockPreferences
+        }
+
+        // Register mock LocalDatabase for unit tests
         mockContainer.register(LocalDatabase.self) { _ in
             LocalDatabaseImpl(
                 logger: FileLoggerImpl(),

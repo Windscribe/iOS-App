@@ -37,17 +37,11 @@ final class PushNotificationViewModelImpl: PushNotificationViewModel {
     }
 
     private func bind() {
-        // Theme subscription using RxSwift bridge
         lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("PushNotificationViewModel", "Theme subscription error: \(error)")
-                }
-            }, receiveValue: { [weak self] in
+            .sink { [weak self] in
                 self?.isDarkMode = $0
-            })
+            }
             .store(in: &cancellables)
     }
 

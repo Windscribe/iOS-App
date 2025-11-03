@@ -20,7 +20,7 @@ protocol LoginViewModel {
     var failedState: BehaviorSubject<LoginErrorState?> { get }
     var show2faCodeField: BehaviorSubject<Bool> { get }
     var routeToMainView: PublishSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var showCaptchaViewModel: PublishSubject<CaptchaViewModel> { get }
 
     var xpressCode: BehaviorSubject<String?> { get }
@@ -36,7 +36,7 @@ class LoginViewModelImpl: LoginViewModel {
     let failedState = BehaviorSubject<LoginErrorState?>(value: nil)
     let show2faCodeField = BehaviorSubject(value: false)
     let routeToMainView = PublishSubject<Bool>()
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     let showCaptchaViewModel = PublishSubject<CaptchaViewModel>()
 
     let apiCallManager: APIManager

@@ -6,12 +6,14 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import UIKit
 
 class SwitchButton: UIButton {
-    var isDarkMode: BehaviorSubject<Bool>
+    var isDarkMode: CurrentValueSubject<Bool, Never>
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     /*
      // Only override draw() if you perform custom drawing.
      // An empty implementation adversely affects performance during animation.
@@ -28,7 +30,7 @@ class SwitchButton: UIButton {
     var onImage = UIImage(named: ImagesAsset.SwitchButton.on)
     var offImage = UIImage(named: ImagesAsset.SwitchButton.offBlack)
 
-    init(isDarkMode: BehaviorSubject<Bool>) {
+    init(isDarkMode: CurrentValueSubject<Bool, Never>) {
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
         setStatus(false)
@@ -60,8 +62,11 @@ class SwitchButton: UIButton {
     }
 
     private func bindViews() {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            self.updateTheme(isDark: $0)
-        }).disposed(by: disposeBag)
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                self?.updateTheme(isDark: isDark)
+            }
+            .store(in: &cancellables)
     }
 }

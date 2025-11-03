@@ -7,13 +7,12 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 
 protocol LookAndFeelRepositoryType {
     // Subjects
-    var backgroundChangedTrigger: PublishSubject<Void> { get }
-    var isDarkModeSubject: BehaviorSubject<Bool> { get }
+    var backgroundChangedTrigger: PassthroughSubject<Void, Never> { get }
+    var isDarkModeSubject: CurrentValueSubject<Bool, Never> { get }
 
     // Getters
     var backgroundEffectConnect: BackgroundEffectType { get }
@@ -37,8 +36,8 @@ protocol LookAndFeelRepositoryType {
 }
 
 class LookAndFeelRepository: LookAndFeelRepositoryType {
-    var backgroundChangedTrigger = PublishSubject<Void>()
-    var isDarkModeSubject = BehaviorSubject<Bool>(value: true)
+    var backgroundChangedTrigger = PassthroughSubject<Void, Never>()
+    var isDarkModeSubject = CurrentValueSubject<Bool, Never>(true)
 
     var backgroundEffectConnect: BackgroundEffectType
     var backgroundEffectDisconnect: BackgroundEffectType
@@ -49,7 +48,6 @@ class LookAndFeelRepository: LookAndFeelRepositoryType {
 
     let preferences: Preferences
 
-    private let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     init(preferences: Preferences) {
@@ -65,7 +63,7 @@ class LookAndFeelRepository: LookAndFeelRepositoryType {
         preferences.getDarkMode()
             .sink { theme in
                 self.isDarkMode = theme ?? DefaultValues.darkMode
-                self.isDarkModeSubject.onNext(self.isDarkMode)
+                self.isDarkModeSubject.send(self.isDarkMode)
             }
             .store(in: &cancellables)
     }
@@ -73,30 +71,30 @@ class LookAndFeelRepository: LookAndFeelRepositoryType {
     func updateBackgroundEffectConnect(effect: BackgroundEffectType) {
         backgroundEffectConnect = effect
         preferences.saveBackgroundEffectConnect(value: effect.preferenceValue)
-        backgroundChangedTrigger.onNext(())
+        backgroundChangedTrigger.send(())
     }
 
     func updateBackgroundEffectDisconnect(effect: BackgroundEffectType) {
         backgroundEffectDisconnect = effect
         preferences.saveBackgroundEffectDisconnect(value: effect.preferenceValue)
-        backgroundChangedTrigger.onNext(())
+        backgroundChangedTrigger.send(())
     }
 
     func updateBackgroundCustomConnectPath(path: String) {
         backgroundCustomConnectPath = path
         preferences.saveBackgroundCustomConnectPath(value: path)
-        backgroundChangedTrigger.onNext(())
+        backgroundChangedTrigger.send(())
     }
 
     func updateBackgroundCustomDisconnectPath(path: String) {
         backgroundCustomDisconnectPath = path
         preferences.saveBackgroundCustomDisconnectPath(value: path)
-        backgroundChangedTrigger.onNext(())
+        backgroundChangedTrigger.send(())
     }
 
     func updateBackgroundCustomAspectRatio(aspectRatio: BackgroundAspectRatioType) {
         backgroundCustomAspectRatio = aspectRatio
         preferences.saveAspectRatio(value: aspectRatio.preferenceValue)
-        backgroundChangedTrigger.onNext(())
+        backgroundChangedTrigger.send(())
     }
 }

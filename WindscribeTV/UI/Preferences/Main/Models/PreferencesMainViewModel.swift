@@ -21,7 +21,7 @@ enum PreferencesActionDisplay {
 
 protocol PreferencesMainViewModelOld {
     var actionDisplay: BehaviorSubject<PreferencesActionDisplay> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var currentLanguage: BehaviorSubject<String?> { get }
     var alertManager: AlertManagerV2 { get }
     func getActionButtonDisplay()
@@ -35,7 +35,7 @@ protocol PreferencesMainViewModelOld {
 
 class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let actionDisplay = BehaviorSubject<PreferencesActionDisplay>(value: .email)
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     var currentLanguage: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
     let sessionManager: SessionManager

@@ -6,6 +6,7 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import StoreKit
@@ -16,7 +17,7 @@ protocol PlanUpgradeViewModel {
     var upgradeRouteState: BehaviorSubject<RouteID?> { get }
     var restoreState: BehaviorSubject<PlanRestoreState?> { get }
     var showProgress: BehaviorSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
 
     func loadPlans(promo: String?, id: String?)
     func continuePayButtonTapped()
@@ -51,7 +52,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     let plans: BehaviorSubject<PlanTypes?> = BehaviorSubject(value: nil)
     let upgradeRouteState: BehaviorSubject<RouteID?> = BehaviorSubject(value: nil)
     let restoreState: BehaviorSubject<PlanRestoreState?> = BehaviorSubject(value: nil)
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
 
     // MARK: Internal
 

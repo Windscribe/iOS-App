@@ -59,7 +59,7 @@ enum ListEmptyViewType {
 }
 
 class ListEmptyView: UIView {
-    var isDarkMode: BehaviorSubject<Bool>
+    var isDarkMode: CurrentValueSubject<Bool, Never>
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
@@ -72,7 +72,7 @@ class ListEmptyView: UIView {
     var addAction: (() -> Void)?
     private var type: ListEmptyViewType
 
-    init(type: ListEmptyViewType, isDarkMode: BehaviorSubject<Bool>) {
+    init(type: ListEmptyViewType, isDarkMode: CurrentValueSubject<Bool, Never>) {
         self.isDarkMode = isDarkMode
         self.type = type
         super.init(frame: .zero)
@@ -149,10 +149,14 @@ class ListEmptyView: UIView {
     }
 
     private func bindViews() {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            self.label.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-            self.imageView.tintColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                guard let self = self else { return }
+                self.label.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
+                self.imageView.tintColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
+            }
+            .store(in: &cancellables)
         languageManager.activelanguage.sink { [weak self] _ in
             self?.label.text = self?.type.description
             self?.config.title = self?.type.buttonTitle

@@ -37,11 +37,10 @@ final class ScreenTestViewModelImpl: ScreenTestViewModel {
 
     private func bindSubjects() {
         lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] isDark in
+            .sink { [weak self] isDark in
                 self?.isDarkMode = isDark
-            })
+            }
             .store(in: &cancellables)
     }
 

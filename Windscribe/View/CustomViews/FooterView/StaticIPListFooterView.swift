@@ -58,11 +58,14 @@ class StaticIPListFooterView: WSView {
                 self?.label.text = TextsAsset.addStaticIP
             }
             .store(in: &cancellables)
-        viewModel?.isDarkMode.subscribe { [weak self] isDarkMode in
-            self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)
-            self?.backgroundColor = .from(.backgroundColor, isDarkMode)
-            self?.deviceNameLabel.textColor = .from(.textColor, isDarkMode)
-        }.disposed(by: disposeBag)
+        viewModel?.isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDarkMode in
+                self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)
+                self?.backgroundColor = .from(.backgroundColor, isDarkMode)
+                self?.deviceNameLabel.textColor = .from(.textColor, isDarkMode)
+            }
+            .store(in: &cancellables)
     }
 
     override func setupLocalized() {

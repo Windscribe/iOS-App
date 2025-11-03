@@ -39,15 +39,10 @@ final class LocationPermissionInfoViewModelImpl: LocationPermissionInfoViewModel
 
     private func bind() {
         lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("LocationPermissionInfoViewModel", "Theme subscription error: \(error)")
-                }
-            }, receiveValue: { [weak self] in
+            .sink { [weak self] in
                 self?.isDarkMode = $0
-            })
+            }
             .store(in: &cancellables)
 
         manager.locationStatusSubject

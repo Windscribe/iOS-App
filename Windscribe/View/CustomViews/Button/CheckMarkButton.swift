@@ -6,11 +6,12 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import UIKit
 
 class CheckMarkButton: SwitchButton {
-    override init(isDarkMode: BehaviorSubject<Bool>) {
+    override init(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.init(isDarkMode: isDarkMode)
         onImage = UIImage(named: ImagesAsset.CheckMarkButton.on)!
         offImage = UIImage(named: ImagesAsset.CheckMarkButton.off)!

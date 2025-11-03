@@ -49,10 +49,10 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
             self.updateBackgroundImage(isConnected: self.isConnected)
         }.store(in: &cancellables)
 
-        lookAndFeelRepository.backgroundChangedTrigger.subscribe(onNext: { [weak self] _ in
+        lookAndFeelRepository.backgroundChangedTrigger.sink { [weak self] _ in
             guard let self = self else { return }
             self.updateBackgroundImage(isConnected: self.isConnected)
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         vpnManager.getStatus()
             .sink { [weak self] state in

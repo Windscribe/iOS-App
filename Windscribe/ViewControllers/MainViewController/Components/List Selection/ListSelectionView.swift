@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import UIKit
+import Combine
 
 private class ButtonImageView: UIView {
     let button = UIButton()
@@ -65,6 +66,7 @@ class ListSelectionView: UIView {
     var viewModel: ListSelectionViewModelType!
 
     var disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     let viewHeight: CGFloat = 56
 
@@ -188,9 +190,12 @@ class ListSelectionView: UIView {
             self.showPresentingListIcon(cardButtonType: $0)
         }.disposed(by: disposeBag)
 
-        viewModel.isDarkMode.subscribe { isDarkMode in
-            self.updateTheme(with: isDarkMode)
-        }.disposed(by: disposeBag)
+        viewModel.isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { isDarkMode in
+                self.updateTheme(with: isDarkMode)
+            }
+            .store(in: &cancellables)
     }
 
     private func updateTheme(with isDarkMode: Bool) {
@@ -206,6 +211,6 @@ class ListSelectionView: UIView {
     }
 
     private func getIsDarkMode() -> Bool {
-        return ( try? viewModel.isDarkMode.value()) ?? DefaultValues.darkMode
+        return viewModel.isDarkMode.value
     }
 }

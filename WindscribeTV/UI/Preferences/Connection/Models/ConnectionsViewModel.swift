@@ -14,7 +14,7 @@ import Combine
 import UIKit
 
 protocol ConnectionsViewModelType {
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var isCircumventCensorshipEnabled: BehaviorSubject<Bool> { get }
     var shouldShowCustomDNSOption: BehaviorSubject<Bool> { get }
     var languageUpdatedTrigger: PublishSubject<Void> { get }
@@ -76,7 +76,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var connectedDNS = ConnectedDNSType.defaultValue()
 
     let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
     let languageUpdatedTrigger = PublishSubject<Void>()
 

@@ -6,6 +6,7 @@
 //	Copyright © 2022 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import UIKit
@@ -20,10 +21,11 @@ class ConnectionModeItemView: UIView {
 
     weak var delegate: ConnectionModeItemViewDelegate?
 
-    var isDarkMode: BehaviorSubject<Bool>
+    var isDarkMode: CurrentValueSubject<Bool, Never>
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    init(isDarkMode: BehaviorSubject<Bool>) {
+    init(isDarkMode: CurrentValueSubject<Bool, Never>) {
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
         initViews()
@@ -36,11 +38,15 @@ class ConnectionModeItemView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe {
-            self.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
-            self.titleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-        }.disposed(by: disposeBag)
+    private func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                guard let self = self else { return }
+                self.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDark)
+                self.titleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
+            }
+            .store(in: &cancellables)
     }
 
     private func addConstraints() {

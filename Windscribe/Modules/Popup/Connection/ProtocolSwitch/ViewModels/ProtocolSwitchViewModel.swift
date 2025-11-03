@@ -60,15 +60,10 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
     private func setupBindings() {
         lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ProtocolSwitchViewModel", "Theme error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
+            .sink { [weak self] isDark in
                 self?.isDarkMode = isDark
-            })
+            }
             .store(in: &cancellables)
 
         protocolManager.failOverTimerCompletedSubject

@@ -163,6 +163,7 @@ class BaseNodeCell: ServerListCell {
     var latencyView = UIView()
     var disabledIcon = UIImageView()
     var disabledContainer = UIView()
+    private var cancellables = Set<AnyCancellable>()
 
     var baseNodeCellViewModel: BaseNodeCellViewModelType? {
         didSet {
@@ -204,15 +205,19 @@ class BaseNodeCell: ServerListCell {
         super.init(coder: aDecoder)
     }
 
-    override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
+    override func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { isDarkMode in
-            self.nickNameLabel.textColor = .from(.textColor, isDarkMode)
-            self.latencyLabel.textColor = .from(.textColor, isDarkMode)
-            self.signalBarsIcon.setImageColor(color: .from(.iconColor, isDarkMode))
-            self.icon.setImageColor(color: .from(.iconColor, isDarkMode))
-            self.disabledIcon.setImageColor(color: .from(.iconColor, isDarkMode))
-        }).disposed(by: disposeBag)
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                guard let self = self else { return }
+                self.nickNameLabel.textColor = .from(.textColor, isDark)
+                self.latencyLabel.textColor = .from(.textColor, isDark)
+                self.signalBarsIcon.setImageColor(color: .from(.iconColor, isDark))
+                self.icon.setImageColor(color: .from(.iconColor, isDark))
+                self.disabledIcon.setImageColor(color: .from(.iconColor, isDark))
+            }
+            .store(in: &cancellables)
     }
 
     override func updateLayout() {

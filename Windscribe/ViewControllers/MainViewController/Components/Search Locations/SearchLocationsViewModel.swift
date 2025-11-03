@@ -18,7 +18,7 @@ protocol SearchCountryViewDelegate: AnyObject {
 
 protocol SearchLocationsViewModelType {
     var isSearchActive: BehaviorSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var refreshLanguage: PublishSubject<Void> { get }
 
     var delegate: SearchCountryViewDelegate? { get set }
@@ -34,7 +34,7 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
     let isSearchActive = BehaviorSubject<Bool>(value: false)
     let refreshLanguage = PublishSubject<Void>()
 
-    let isDarkMode: BehaviorSubject<Bool>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     private var cancellables = Set<AnyCancellable>()
 
     weak var delegate: SearchCountryViewDelegate?

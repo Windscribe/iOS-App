@@ -6,12 +6,13 @@
 //	Copyright © 2022 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import UIKit
 
 class ConnectionSecureView: UIView {
-    var isDarkMode: BehaviorSubject<Bool>
+    var isDarkMode: CurrentValueSubject<Bool, Never>
 
     lazy var contentView = UIView()
     lazy var backgroundView = UIView()
@@ -27,7 +28,7 @@ class ConnectionSecureView: UIView {
     private let disposeBag = DisposeBag()
     private let imageSetTrigger = PublishSubject<Void>()
 
-    init(isDarkMode: BehaviorSubject<Bool>) {
+    init(isDarkMode: CurrentValueSubject<Bool, Never>) {
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
         configViews()

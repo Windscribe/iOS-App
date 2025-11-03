@@ -6,12 +6,14 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import Swinject
 import UIKit
 
 class WSRefreshControl: UIRefreshControl {
     var disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     var backView: RefreshControlBackView! {
         didSet {
@@ -19,7 +21,7 @@ class WSRefreshControl: UIRefreshControl {
         }
     }
 
-    init(isDarkMode: BehaviorSubject<Bool>) {
+    init(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.init()
         setText(TextsAsset.refreshLatency)
         layer.opacity = 0.5
@@ -44,10 +46,13 @@ class WSRefreshControl: UIRefreshControl {
         setText(TextsAsset.refreshLatency)
     }
 
-    private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            self.updateDarkMode(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+    private func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                self?.updateDarkMode(isDarkMode: isDark)
+            }
+            .store(in: &cancellables)
     }
 
     private func updateDarkMode(isDarkMode: Bool) {

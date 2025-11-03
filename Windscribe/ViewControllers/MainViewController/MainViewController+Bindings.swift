@@ -87,9 +87,9 @@ extension MainViewController {
     }
 
     func bindMainViewModel() {
-        viewModel.isDarkMode.subscribe(onNext: {
+        viewModel.isDarkMode.receive(on: DispatchQueue.main).sink {
             self.updateLayoutForTheme(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
         viewModel.session.subscribe(onNext: {
             self.updateUIForSession(session: $0)
         }).disposed(by: disposeBag)

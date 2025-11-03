@@ -6,6 +6,7 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import Swinject
 import UIKit
@@ -40,9 +41,10 @@ class WSTextField: UITextField, UITextFieldDelegate {
 
 class AuthenticationTextField: UITextField {
     let disposeBag = DisposeBag()
+    fileprivate var cancellables = Set<AnyCancellable>()
     var padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 5)
 
-    init(isDarkMode: BehaviorSubject<Bool>) {
+    init(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.init(frame: .zero)
         layer.cornerRadius = 3
         clipsToBounds = true
@@ -69,11 +71,15 @@ class AuthenticationTextField: UITextField {
         return bounds.inset(by: padding)
     }
 
-    fileprivate func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            self.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-            self.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+    fileprivate func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                guard let self = self else { return }
+                self.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
+                self.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: isDark)
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -97,7 +103,7 @@ class PasswordTextField: AuthenticationTextField {
         return success
     }
 
-    override init(isDarkMode: BehaviorSubject<Bool>) {
+    override init(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.init(isDarkMode: isDarkMode)
         padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 55)
         isSecureTextEntry = true
@@ -108,11 +114,14 @@ class PasswordTextField: AuthenticationTextField {
         addSubview(showHidePasswordButton)
     }
 
-    override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
+    override func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            self.showHidePasswordButton.tintColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                self?.showHidePasswordButton.tintColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
+            }
+            .store(in: &cancellables)
     }
 
     @objc func showHidePasswordButtonTapped() {
