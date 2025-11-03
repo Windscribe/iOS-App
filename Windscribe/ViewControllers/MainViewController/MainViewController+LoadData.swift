@@ -23,8 +23,9 @@ extension MainViewController {
 
     func loadPortMap() {
         let appProtocols = TextsAsset.General.protocols.sorted()
-        viewModel.portMap.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { portMaps in
-            let portMapProvidedProtocols = (portMaps?.map { $0.heading } ?? []).sorted()
+        viewModel.portMapHeadings.observe(on: MainScheduler.instance).subscribe(onNext: { headings in
+            // Now we're working with plain strings - no Realm threading issues
+            let portMapProvidedProtocols = (headings ?? []).sorted()
             if appProtocols != portMapProvidedProtocols {
                 self.viewModel.loadServerList()
                 self.viewModel.loadPortMap()

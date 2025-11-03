@@ -14,7 +14,7 @@ import StoreKit
 protocol MainViewModelType {
     var serverList: BehaviorSubject<[ServerModel]> { get }
     var lastConnection: BehaviorSubject<VPNConnection?> { get }
-    var portMap: BehaviorSubject<[PortMap]?> { get }
+    var portMapHeadings: BehaviorSubject<[String]?> { get }
     var favouriteList: BehaviorSubject<[GroupModel]?> { get }
     var staticIPs: BehaviorSubject<[StaticIP]?> { get }
     var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
@@ -52,7 +52,6 @@ protocol MainViewModelType {
     func saveLastNotificationTimestamp()
     func getLastNotificationTimestamp() -> Double?
     func sortFavouriteNodesUsingUserPreferences(favList: [GroupModel]) -> [GroupModel]
-    func getPortList(protocolName: String) -> [String]?
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
     func isPrivacyPopupAccepted() -> Bool
@@ -87,7 +86,7 @@ class MainViewModel: MainViewModelType {
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
-    var portMap = BehaviorSubject<[PortMap]?>(value: nil)
+    var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
     var favouriteList = BehaviorSubject<[GroupModel]?>(value: nil)
     var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
     var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
@@ -365,8 +364,8 @@ class MainViewModel: MainViewModelType {
 
     func loadPortMap() {
         Task { @MainActor in
-            let portMap = try? await portMapRepo.getUpdatedPortMap()
-            self.portMap.onNext(portMap)
+            let headings = self.localDatabase.getPortMap()?.map { $0.heading } ?? []
+            self.portMapHeadings.onNext(headings)
         }
     }
 
@@ -511,14 +510,6 @@ class MainViewModel: MainViewModelType {
             }
             .store(in: &cancellables)
         notices = notificationsRepo.notices
-    }
-
-    func getPortList(protocolName: String) -> [String]? {
-        let portMap = (try? portMap.value()) ?? []
-        if let ports = portMap.first(where: { $0.heading == protocolName })?.ports {
-            return Array(ports)
-        }
-        return nil
     }
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork) {

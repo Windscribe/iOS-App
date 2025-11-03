@@ -151,9 +151,22 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             return
         }
         // Tunnel configuration provided with start of connection may have changed due user status change.
-        let lastIpAddress = tunnelConfiguration.interface.addresses[0].stringRepresentation
+        guard let firstAddress = tunnelConfiguration.interface.addresses.first else {
+            logger.logE("PacketTunnelProvider", "Tunnel configuration has no interface addresses")
+            errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+            completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+            return
+        }
+        let lastIpAddress = firstAddress.stringRepresentation
         if !preferences.isCustomConfigSelected() && lastIpAddress != wgCrendentials.address {
-            tunnelConfiguration = try! TunnelConfiguration(fromWgQuickConfig: wgCrendentials.asWgCredentialsString() ?? "")
+            do {
+                tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: wgCrendentials.asWgCredentialsString() ?? "")
+            } catch {
+                logger.logE("PacketTunnelProvider", "Failed to create tunnel configuration: \(error)")
+                errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                return
+            }
         }
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
@@ -317,7 +330,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             if let config = wgCrendentials.asWgCredentialsString(), wgCrendentials.initialized() {
                 tunnelConfig = try TunnelConfiguration(fromWgQuickConfig: config)
             }
-            let lastIpAddress = tunnelConfig?.interface.addresses[0].stringRepresentation ?? ""
+            let lastIpAddress = tunnelConfig?.interface.addresses.first?.stringRepresentation ?? ""
             let oldKey = wgCrendentials.presharedKey
             Task {
                 do {
