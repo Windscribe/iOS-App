@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 import Swinject
 import UIKit
@@ -25,7 +24,6 @@ protocol HapticFeedbackManager {
 }
 
 class HapticFeedbackManagerImpl: HapticFeedbackManager {
-    private let disposeBag = DisposeBag()
     private let preferences: Preferences
     private let logger: FileLogger
     private var hapticFeedback = true

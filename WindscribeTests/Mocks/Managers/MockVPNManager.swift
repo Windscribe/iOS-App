@@ -8,31 +8,15 @@
 
 import Foundation
 import Combine
-
-@testable import Windscribe
 import NetworkExtension
 
+@testable import Windscribe
+
 class MockVPNManager: VPNManager {
-    var configurationState: Windscribe.ConfigurationState = .initial
-    var vpnInfo = CurrentValueSubject<Windscribe.VPNConnectionInfo?, Never>(nil)
-    var connectionStateUpdatedTrigger = PassthroughSubject<Void, Never>()
-    var isFromProtocolFailover: Bool = false
-    var isFromProtocolChange: Bool = false
-    var untrustedOneTimeOnlySSID: String  = ""
+    // Mock vars
+    var mockStatus: NEVPNStatus = .disconnected
 
     func configureForConnectionState() {
-    }
-
-    func setUntrustedOneTimeOnlySSID(_ value: String) {
-        untrustedOneTimeOnlySSID = value
-    }
-
-    func setIsFromProtocolFailover(_ value: Bool) {
-        isFromProtocolFailover = value
-    }
-
-    func setIsFromProtocolChange(_ value: Bool) {
-        isFromProtocolChange = value
     }
 
     func updateOnDemandRules() {
@@ -41,22 +25,6 @@ class MockVPNManager: VPNManager {
 
     func resetProfiles() async {
 
-    }
-
-    func isDisconnected() -> Bool {
-        false
-    }
-
-    func isConnecting() -> Bool {
-        false
-    }
-
-    func isConnected() -> Bool {
-        false
-    }
-
-    func getStatus() -> AnyPublisher<NEVPNStatus, Never> {
-        PassthroughSubject<NEVPNStatus, Never>().eraseToAnyPublisher()
     }
 
     func isActive() async -> Bool {
@@ -86,6 +54,4 @@ class MockVPNManager: VPNManager {
                         isCircumventCensorshipEnabled: false,
                         onDemandRules: [])
     }
-
-
 }

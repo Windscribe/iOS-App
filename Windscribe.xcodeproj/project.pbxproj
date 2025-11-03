@@ -276,10 +276,12 @@
 		1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */; };
 		1EF7CEFA2EA146CE001AE14E /* VPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */; };
 		1EF7CEFB2EA146CE001AE14E /* VPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */; };
+		1EF7CEFE2EA65136001AE14E /* MockVPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */; };
 		1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */; };
 		1EFFD0432E99389B005603FB /* MockUserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserRepository.swift */; };
 		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
 		1EFFD04D2E994400005603FB /* ServerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFFD04C2E9943F6005603FB /* ServerList.json */; };
+		1EFFD0532E9FD8D4005603FB /* AdvanceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */; };
 		591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		59215B4A2B60E0DA0086CBF6 /* AlertManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B492B60E0DA0086CBF6 /* AlertManagerV2.swift */; };
 		592CA79A2C4EC0FF0078D487 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592CA7992C4EC0FF0078D487 /* LoginViewController.swift */; };
@@ -1596,10 +1598,12 @@
 		1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GetMoreDataPopupViewController.xib; sourceTree = "<group>"; };
 		1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVPNManager.swift; sourceTree = "<group>"; };
 		1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNStateRepository.swift; sourceTree = "<group>"; };
+		1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVPNStateRepository.swift; sourceTree = "<group>"; };
 		1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRepositoryTests.swift; sourceTree = "<group>"; };
 		1EFFD0422E993898005603FB /* MockUserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserRepository.swift; sourceTree = "<group>"; };
 		1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAdvanceRepository.swift; sourceTree = "<group>"; };
 		1EFFD04C2E9943F6005603FB /* ServerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ServerList.json; sourceTree = "<group>"; };
+		1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceRepositoryTests.swift; sourceTree = "<group>"; };
 		591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferAndShareManager.swift; sourceTree = "<group>"; };
 		591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModel.swift; sourceTree = "<group>"; };
 		591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
@@ -3131,6 +3135,7 @@
 		1EFFD0402E99383D005603FB /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */,
 				1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */,
 				1EFFD0422E993898005603FB /* MockUserRepository.swift */,
 				F4B4C1F72EA2BB090024D824 /* MockPortMapRepository.swift */,
@@ -4544,6 +4549,7 @@
 		F437917D2E95A1E500ED6141 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */,
 				1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */,
 				F4B4C1F52EA16A6C0024D824 /* StaticIpRepositoryTests.swift */,
 				F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */,
@@ -7224,6 +7230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */,
+				1EFFD0532E9FD8D4005603FB /* AdvanceRepositoryTests.swift in Sources */,
 				F48DDC1D2E8C50EB00B66315 /* MockFileDatabase.swift in Sources */,
 				1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
@@ -7259,6 +7266,7 @@
 				F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */,
 				F4B4C1ED2EA023AE0024D824 /* NotificationRepositoryTests.swift in Sources */,
 				F4B4C1E72E9982AA0024D824 /* SampleDataPorts.swift in Sources */,
+				1EF7CEFE2EA65136001AE14E /* MockVPNStateRepository.swift in Sources */,
 				F43791822E95A21900ED6141 /* MockSessionManager.swift in Sources */,
 				F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */,
 				F465A6372D5D37EF00579B5F /* AppReviewManagerTests.swift in Sources */,

@@ -7,13 +7,10 @@
 //
 
 import Foundation
-import NetworkExtension
-import RxSwift
 import Swinject
 
 class AdvanceRepositoryImpl: AdvanceRepository {
     private let preferences: Preferences
-    private let disposeBag = DisposeBag()
     private let vpnStateRepository: VPNStateRepository!
 
     init(preferences: Preferences,

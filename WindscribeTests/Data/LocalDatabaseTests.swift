@@ -26,7 +26,6 @@ class LocalDatabaseTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-
         mockContainer = Container()
         mockLogger = MockLogger()
         mockPreferences = MockPreferences()
@@ -55,7 +54,8 @@ class LocalDatabaseTests: XCTestCase {
         localDatabase.clean()
         mockContainer = nil
         localDatabase = nil
-
+        mockLogger = nil
+        mockPreferences = nil
         super.tearDown()
     }
 
