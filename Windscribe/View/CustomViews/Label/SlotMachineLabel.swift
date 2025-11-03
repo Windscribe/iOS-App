@@ -78,12 +78,13 @@ class SlotMachineLabel: UIView {
     private func addBlurOverlay() {
         guard blurLabel == nil else { return }
 
+        guard !currentText.isEmpty else { return }
+
         let blur = BlurredLabel(frame: bounds).then {
             $0.font = font
             $0.textColor = textColor
             $0.textAlignment = textAlignment
             $0.text = currentText
-            $0.isBlurring = true
             $0.blurRadius = blurRadius
             $0.isUserInteractionEnabled = false
             $0.backgroundColor = .clear
@@ -91,6 +92,11 @@ class SlotMachineLabel: UIView {
 
         addSubview(blur)
         blurLabel = blur
+
+        // Set isBlurring AFTER adding to view hierarchy and force display
+        blur.isBlurring = true
+        blur.setNeedsDisplay()
+        blur.layer.displayIfNeeded()
 
         // Hide original character views
         characterViews.forEach { $0.isHidden = true }
@@ -108,13 +114,27 @@ class SlotMachineLabel: UIView {
         if !animated {
             currentText = newText
             updateCharactersImmediate(newText)
-            blurLabel?.text = newText
+
+            // If blur is ON but overlay doesn't exist yet, create it now
+            if isBlurring && blurLabel == nil && !newText.isEmpty {
+                addBlurOverlay()
+            } else if let blur = blurLabel {
+                blur.text = newText
+                blur.setNeedsDisplay()
+            }
             return
         }
 
         animateTextChange(from: currentText, to: newText)
         currentText = newText
-        blurLabel?.text = newText
+
+        // If blur is ON but overlay doesn't exist yet, create it now
+        if isBlurring && blurLabel == nil && !newText.isEmpty {
+            addBlurOverlay()
+        } else if let blur = blurLabel {
+            blur.text = newText
+            blur.setNeedsDisplay()
+        }
     }
 
     private func updateFont() {
@@ -181,6 +201,7 @@ class SlotMachineLabel: UIView {
 
         for char in text {
             let charView = CharacterRollerView(character: String(char), font: font, textColor: textColor)
+            charView.isHidden = isBlurring  // Hide immediately if blur is active
             addSubview(charView)
             characterViews.append(charView)
         }
@@ -195,6 +216,10 @@ class SlotMachineLabel: UIView {
 
         // If lengths match, just update existing views
         if oldChars.count == newChars.count {
+            // Mark layout as needed before updating characters
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+
             for i in 0..<newChars.count {
                 let newChar = String(newChars[i])
                 if i < characterViews.count {
@@ -203,6 +228,10 @@ class SlotMachineLabel: UIView {
                     view.animateToCharacter(newChar, delay: delay, duration: baseDuration)
                 }
             }
+
+            // Force layout with correct sizes before animations execute
+            layoutIfNeeded()
+
             return
         }
 
@@ -219,6 +248,7 @@ class SlotMachineLabel: UIView {
             let initialChar = charString == "." ? "." : "0"
             let charView = CharacterRollerView(character: initialChar, font: font, textColor: textColor)
             charView.alpha = 0
+            charView.isHidden = isBlurring  // Hide immediately if blur is active
             addSubview(charView)
             characterViews.append(charView)
         }
@@ -342,10 +372,10 @@ private class CharacterRollerView: UIView {
         let randomDurationVariation = TimeInterval.random(in: -0.1...0.1)
         let finalDuration = duration + randomDurationVariation
 
-        // Use intrinsic size if bounds not set yet
+        // Always use intrinsic size for animation (reflects current character size)
         let charSize = intrinsicContentSize
-        let digitHeight = bounds.height > 0 ? bounds.height : charSize.height
-        let digitWidth = bounds.width > 0 ? bounds.width : charSize.width
+        let digitHeight = charSize.height
+        let digitWidth = charSize.width
 
         // Create a container for rolling digits
         let rollerHeight: CGFloat = digitHeight * 12 // Show 12 digits rolling
