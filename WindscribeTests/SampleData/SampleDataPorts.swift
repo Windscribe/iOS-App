@@ -1,6 +1,6 @@
 //
 //  SampleDataPorts.swift
-//  Windscribe
+//  WindscribeTests
 //
 //  Created by Soner Yuksel on 2025-10-10.
 //  Copyright © 2025 Windscribe. All rights reserved.

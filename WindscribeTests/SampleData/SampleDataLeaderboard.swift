@@ -1,6 +1,6 @@
 //
 //  SampleDataLeaderboard.swift
-//  Windscribe
+//  WindscribeTests
 //
 //  Created by Soner Yuksel on 2025-10-07.
 //  Copyright © 2025 Windscribe. All rights reserved.

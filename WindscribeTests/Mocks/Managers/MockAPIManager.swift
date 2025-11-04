@@ -30,6 +30,11 @@ class MockAPIManager: APIManager {
     // Session tracking
     var mockSession: Session?
 
+    // MobilePlan tracking
+    var mobilePlanListToReturn: MobilePlanList?
+    var getMobileBillingPlansCalled = false
+    var lastPromoCode: String?
+
     // Track method calls
     var getLeaderboardCalled = false
     var recordScoreCalled = false
@@ -49,6 +54,9 @@ class MockAPIManager: APIManager {
         lastPcpid = nil
         staticIPListToReturn = nil
         getStaticIpListCalled = false
+        mobilePlanListToReturn = nil
+        getMobileBillingPlansCalled = false
+        lastPromoCode = nil
         getLeaderboardCalled = false
         recordScoreCalled = false
         lastRecordedScore = nil
@@ -237,7 +245,21 @@ class MockAPIManager: APIManager {
     // MARK: - Billing Methods
 
     func getMobileBillingPlans(promo: String?) async throws -> MobilePlanList {
-        fatalError("Not implemented")
+        getMobileBillingPlansCalled = true
+        lastPromoCode = promo
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let mobilePlanList = mobilePlanListToReturn else {
+            // Return default mock mobile plan list from sample data
+            let jsonData = SampleDataMobilePlan.mobilePlanListJSON.data(using: .utf8)!
+            let mobilePlanList = try! JSONDecoder().decode(MobilePlanList.self, from: jsonData)
+            return mobilePlanList
+        }
+
+        return mobilePlanList
     }
 
     func postBillingCpID(pcpID: String) async throws -> APIMessage {

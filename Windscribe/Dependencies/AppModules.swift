@@ -61,8 +61,11 @@ class Repository: Assembly {
         container.register(IPRepository.self) { r in
             IPRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
         }.inObjectScope(.userScope)
-        container.register(BillingRepository.self) { r in
-            BillingRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
+        container.register(MobilePlanRepository.self) { r in
+            MobilePlanRepositoryImpl(
+                apiManager: r.resolve(APIManager.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                logger: logger)
         }.inObjectScope(.userScope)
         container.register(NotificationRepository.self) { r in
             NotificationRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger, pushNotificationsManager: r.resolve(PushNotificationManager.self)!)

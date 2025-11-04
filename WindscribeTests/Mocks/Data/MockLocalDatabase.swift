@@ -35,6 +35,10 @@ class MockLocalDatabase: LocalDatabase {
     // Session tracking
     var saveOldSessionCalled = false
 
+    // MobilePlan tracking
+    var mobilePlansToReturn: [Windscribe.MobilePlan]?
+    var saveMobilePlansCalled = false
+
     func migrate() {}
 
     func getSession() -> Observable<Windscribe.Session?> {
@@ -50,10 +54,13 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getMobilePlans() -> [Windscribe.MobilePlan]? {
-        return []
+        return mobilePlansToReturn
     }
 
-    func saveMobilePlans(mobilePlansList: [Windscribe.MobilePlan]) {}
+    func saveMobilePlans(mobilePlansList: [Windscribe.MobilePlan]) {
+        saveMobilePlansCalled = true
+        mobilePlansToReturn = mobilePlansList
+    }
 
     func getServers() -> [Windscribe.Server]? {
         return mockServers

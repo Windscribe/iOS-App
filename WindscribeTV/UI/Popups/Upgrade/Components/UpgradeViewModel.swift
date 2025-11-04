@@ -57,7 +57,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     let preferences: Preferences
     var inAppPurchaseManager: InAppPurchaseManager
     let pushNotificationManager: PushNotificationManager
-    let billingRepository: BillingRepository
+    let mobilePlanRepository: MobilePlanRepository
     let logger: FileLogger
 
     let upgradeState: BehaviorSubject<UpgradeState?> = BehaviorSubject(value: nil)
@@ -75,7 +75,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     var pushNotificationPayload: PushNotificationPayload?
     private var mobilePlans: [MobilePlan]?
 
-    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManager, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManager, billingRepository: BillingRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManager, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManager, mobilePlanRepository: MobilePlanRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
@@ -83,7 +83,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         self.preferences = preferences
         inAppPurchaseManager = inAppManager
         self.pushNotificationManager = pushNotificationManager
-        self.billingRepository = billingRepository
+        self.mobilePlanRepository = mobilePlanRepository
         self.logger = logger
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         inAppPurchaseManager.delegate = self
@@ -113,23 +113,24 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         }
         logger.logD("UpgradeViewModelImpl", "Loading billing plans. Promo: \(promoCode ?? "N/A")")
         showProgress.onNext(true)
-        billingRepository.getMobilePlans(promo: promoCode)
-            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onSuccess: { [weak self] mobilePlans in
-                guard let self = self else { return }
+        Task { @MainActor in
+            do {
+                let mobilePlans = try await mobilePlanRepository.getMobilePlans(promo: promoCode)
+
                 for p in mobilePlans {
                     let discount = p.discount >= 0 ? "\(p.discount)%" : "N/A"
-                    self.logger.logD("UpgradeViewModelImpl", "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(discount)")
+                    logger.logD("UpgradeViewModelImpl", "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(discount)")
                 }
                 self.mobilePlans = mobilePlans
-                self.showProgress.onNext(false)
+                showProgress.onNext(false)
                 if mobilePlans.count > 0 {
-                    self.inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map { $0.extId })
+                    inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map { $0.extId })
                 }
-            }, onFailure: { [weak self] _ in
-                self?.showProgress.onNext(false)
-            }).disposed(by: disposeBag)
+            } catch {
+                logger.logE("UpgradeViewModelImpl", "Failed to load mobile plans: \(error)")
+                showProgress.onNext(false)
+            }
+        }
     }
 
     func continuePayButtonTapped() {

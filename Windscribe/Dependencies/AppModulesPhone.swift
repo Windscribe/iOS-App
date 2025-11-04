@@ -69,7 +69,7 @@ class ViewModels: Assembly {
                 preferences: r.resolve(Preferences.self)!,
                 inAppPurchaseManager: r.resolve(InAppPurchaseManager.self)!,
                 pushNotificationManager: r.resolve(PushNotificationManager.self)!,
-                billingRepository: r.resolve(BillingRepository.self)!,
+                mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)

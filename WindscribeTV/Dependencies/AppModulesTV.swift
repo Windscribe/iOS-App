@@ -50,7 +50,7 @@ class TVViewModels: Assembly {
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(UpgradeViewModel.self) { r in
-            UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManager.self)!, preferences: r.resolve(Preferences.self)!, inAppManager: r.resolve(InAppPurchaseManager.self)!, pushNotificationManager: r.resolve(PushNotificationManager.self)!, billingRepository: r.resolve(BillingRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManager.self)!, preferences: r.resolve(Preferences.self)!, inAppManager: r.resolve(InAppPurchaseManager.self)!, pushNotificationManager: r.resolve(PushNotificationManager.self)!, mobilePlanRepository: r.resolve(MobilePlanRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
