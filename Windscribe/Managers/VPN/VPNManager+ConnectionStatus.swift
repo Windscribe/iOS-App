@@ -117,7 +117,7 @@ extension VPNManagerImpl {
 
     private func checkIfUserIsOutOfData() {
         DispatchQueue.main.async {
-            guard let session = self.sessionManager.session else { return }
+            guard let session = self.sessionRepository.session else { return }
             if session.status == 2, !self.locationsManager.isCustomConfigSelected() {
                 self.simpleDisableConnection()
             }

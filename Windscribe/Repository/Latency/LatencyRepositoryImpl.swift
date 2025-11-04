@@ -22,9 +22,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let locationsManager: LocationsManager
     private let preferences: Preferences
     private let advanceRepository: AdvanceRepository
-    private var sessionManager: SessionManager {
-        return Assembler.resolve(SessionManager.self)
-    }
+    private let sessionRepository: SessionRepository
 
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
@@ -38,7 +36,8 @@ class LatencyRepositoryImpl: LatencyRepository {
          logger: FileLogger,
          locationsManager: LocationsManager,
          preferences: Preferences,
-         advanceRepository: AdvanceRepository) {
+         advanceRepository: AdvanceRepository,
+         sessionRepository: SessionRepository) {
         self.pingManager = pingManager
         self.database = database
         self.vpnStateRepository = vpnStateRepository
@@ -46,6 +45,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.locationsManager = locationsManager
         self.preferences = preferences
         self.advanceRepository = advanceRepository
+        self.sessionRepository = sessionRepository
         latency.onNext(self.database.getAllPingData())
         observeFavouriteList()
     }
@@ -201,7 +201,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             .compactMap { region in Array(region.groups)}
             .reduce([], +)
             .filter {
-                if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
+                if sessionRepository.isPremium && $0.premiumOnly == true {
                     return false
                 } else {
                     return true
@@ -311,7 +311,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         for server in servers where server.countryCode == countryCode {
             let availableGroups = server.groups.filter { group in
                 guard !group.nodes.isEmpty else { return false }
-                if !(self.sessionManager.session?.isPremium ?? false) && server.premiumOnly {
+                if !(self.sessionRepository.isPremium) && server.premiumOnly {
                     return false
                 }
                 return true
@@ -336,7 +336,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             if timeDifference <= 3600 {
                 let availableGroups = server.groups.filter { group in
                     guard !group.nodes.isEmpty else { return false }
-                    if !(self.sessionManager.session?.isPremium ?? false) && server.premiumOnly {
+                    if !(self.sessionRepository.isPremium) && server.premiumOnly {
                         return false
                     }
                     return true

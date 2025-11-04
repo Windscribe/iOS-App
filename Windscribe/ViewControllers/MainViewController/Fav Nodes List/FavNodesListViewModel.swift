@@ -24,20 +24,20 @@ class FavouriteListViewModel: FavouriteListViewModelType {
     var logger: FileLogger
     var vpnStateRepository: VPNStateRepository
     var connectivity: ConnectivityManager
-    var sessionManager: SessionManager
+    var sessionRepository: SessionRepository
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
-         sessionManager: SessionManager,
+         sessionRepository: SessionRepository,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
     }
@@ -63,7 +63,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
     }
 
     private func canAccesstoProLocation() -> Bool {
-        guard let session = sessionManager.session else { return false }
+        guard let session = sessionRepository.session else { return false }
         return session.isPremium
     }
 }

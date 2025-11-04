@@ -253,22 +253,13 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         let results = (try? viewModel.serverList.value()) ?? []
         if results.count == 0 { return }
 
-        if let oldSession = viewModel.oldSession,
-           let newSession = sessionManager.session {
-            let groups = results.compactMap { $0.groups }.flatMap { $0 }
-            let nodes = groups.compactMap { $0.nodes }.flatMap { $0 }
-            if oldSession.isPremium &&
-                !newSession.isPremium &&
-                !nodes.isEmpty {
-                logger.logD("MainViewController", "Account downgrade detected.")
-                if vpnConnectionViewModel.isDisconnected() {
-                    loadLatencyValues()
-                } else {
-                    vpnConnectionViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
-                }
+        if viewModel.checkAccountWasDowngraded(for: results) {
+            if vpnConnectionViewModel.isDisconnected() {
+                loadLatencyValues()
+            } else {
+                vpnConnectionViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
             }
         }
-
         if isAnyRefreshControlIsRefreshing() {
             loadLatencyValues()
         }

@@ -277,6 +277,8 @@
 		1EF7CEFA2EA146CE001AE14E /* VPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */; };
 		1EF7CEFB2EA146CE001AE14E /* VPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */; };
 		1EF7CEFE2EA65136001AE14E /* MockVPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */; };
+		1EF7CF002EA7E61E001AE14E /* SessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFF2EA7E615001AE14E /* SessionRepository.swift */; };
+		1EF7CF012EA7E61E001AE14E /* SessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFF2EA7E615001AE14E /* SessionRepository.swift */; };
 		1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */; };
 		1EFFD0432E99389B005603FB /* MockUserSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */; };
 		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
@@ -1599,6 +1601,7 @@
 		1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVPNManager.swift; sourceTree = "<group>"; };
 		1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNStateRepository.swift; sourceTree = "<group>"; };
 		1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVPNStateRepository.swift; sourceTree = "<group>"; };
+		1EF7CEFF2EA7E615001AE14E /* SessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRepository.swift; sourceTree = "<group>"; };
 		1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRepositoryTests.swift; sourceTree = "<group>"; };
 		1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserSessionRepository.swift; sourceTree = "<group>"; };
 		1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAdvanceRepository.swift; sourceTree = "<group>"; };
@@ -3119,6 +3122,14 @@
 			path = "VPN State";
 			sourceTree = "<group>";
 		};
+		1EF7CF022EA7E621001AE14E /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7CEFF2EA7E615001AE14E /* SessionRepository.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
 		1EFFD03F2E99382D005603FB /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -4082,6 +4093,7 @@
 		C5D983BC2B34C1B10069FF3A /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1EF7CF022EA7E621001AE14E /* Session */,
 				1EF7CEFC2EA146DD001AE14E /* VPN State */,
 				1ED6163A2DC52EA0006CDC99 /* LookAndFeel */,
 				1EE74F852BD94A580031185F /* ShakeData */,
@@ -6623,6 +6635,7 @@
 				1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */,
 				59FC74852C52D9ED00021CD1 /* RouteIDTv.swift in Sources */,
 				59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */,
+				1EF7CF012EA7E61E001AE14E /* SessionRepository.swift in Sources */,
 				59FC74872C52FCEE00021CD1 /* Router.swift in Sources */,
 				F410FABA2E6F5FEB007762A1 /* LocationsManager.swift in Sources */,
 				59FC740F2C51540600021CD1 /* WireGuardConfig.swift in Sources */,
@@ -6970,6 +6983,7 @@
 				F4E48D8B2DBAB85F005CB047 /* SoundFileManager.swift in Sources */,
 				C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */,
 				F49935352DA843A200108558 /* EnterEmailViewModel.swift in Sources */,
+				1EF7CF002EA7E61E001AE14E /* SessionRepository.swift in Sources */,
 				C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */,
 				C5D983BB2B34A1D90069FF3A /* APIManager.swift in Sources */,
 				C580FDEC2B4D711D004FA857 /* KeyChainDatabaseImpl.swift in Sources */,

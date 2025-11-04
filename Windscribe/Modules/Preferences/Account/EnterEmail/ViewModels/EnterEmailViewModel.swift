@@ -30,7 +30,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
     @Published var isDarkMode: Bool = false
     @Published private(set) var showLoading: Bool = false
 
-    private let sessionManager: SessionManager
+    private let sessionRepository: SessionRepository
     private let alertManager: AlertManagerV2
     private let apiManager: APIManager
 
@@ -49,19 +49,19 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
     }
 
     var showGet10GBPromo: Bool {
-        !(sessionManager.session?.isUserPro ?? false)
+        !sessionRepository.isUserPro
     }
 
-    init(sessionManager: SessionManager,
+    init(sessionRepository: SessionRepository,
          alertManager: AlertManagerV2,
          apiManager: APIManager,
          lookAndFeelRepository: LookAndFeelRepositoryType) {
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.alertManager = alertManager
         self.apiManager = apiManager
         self.lookAndFeelRepository = lookAndFeelRepository
 
-        self.email = sessionManager.session?.email ?? ""
+        self.email = sessionRepository.email ?? ""
 
         bind()
     }
@@ -85,7 +85,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
             do {
                 _ = try await apiManager.addEmail(email: email)
                 await MainActor.run {
-                    self.sessionManager.keepSessionUpdated()
+                    self.sessionRepository.keepSessionUpdated()
                     self.submitEmailResult.send(.success(()))
                     self.showLoading = false
                 }

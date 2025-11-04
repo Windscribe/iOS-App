@@ -17,7 +17,7 @@ struct User {
     let allAccessPlan: Bool
     init(session: Session) {
         // Either user have pro subscription or pay per location plan.
-        isPro = session.isPremium || session.billingPlanId == -9
+        isPro = session.isUserPro
         username = session.username
         locationHash = session.locHash
         planType = isPro ? "1" : "0"

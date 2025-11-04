@@ -53,6 +53,7 @@ class VPNManagerImpl: VPNManager {
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManager
     let vpnStateRepository: VPNStateRepository
+    let sessionRepository: SessionRepository
 
     var connectionTaskPublisher: AnyCancellable?
 
@@ -74,7 +75,8 @@ class VPNManagerImpl: VPNManager {
          configManager: ConfigurationsManager,
          alertManager: AlertManagerV2,
          locationsManager: LocationsManager,
-         vpnStateRepository: VPNStateRepository) {
+         vpnStateRepository: VPNStateRepository,
+         sessionRepository: SessionRepository) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository
@@ -85,6 +87,7 @@ class VPNManagerImpl: VPNManager {
         self.alertManager = alertManager
         self.locationsManager = locationsManager
         self.vpnStateRepository = vpnStateRepository
+        self.sessionRepository = sessionRepository
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),

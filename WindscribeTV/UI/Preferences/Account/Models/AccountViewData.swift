@@ -26,14 +26,6 @@ enum AccountItemCell {
         }
     }
 
-    var billingPlanId: Int {
-        if let session = session {
-            return session.billingPlanId
-        } else {
-            return 0
-        }
-    }
-
     case username
     case email
     case emailPro
@@ -122,7 +114,7 @@ enum AccountItemCell {
                                                                          bounds: CGRect(x: 0, y: -2.5, width: 42, height: 42),
                                                                          textColor: UIColor.seaGreen)
                 } else {
-                    if self.billingPlanId == -9 {
+                    if self.session?.isUserUnlimited ?? false {
                         return NSAttributedString(string: TextsAsset.unlimited,
                                                   attributes: getDeviceFontAttributes(isFullColor: false))
                     } else {
@@ -171,7 +163,7 @@ enum AccountItemCell {
         guard let session = session else {
             return false
         }
-        if session.isUserPro || session.isPremium || session.billingPlanId == -9 {
+        if session.isUserPro {
             return false
         }
         return true

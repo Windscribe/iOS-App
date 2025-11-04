@@ -209,7 +209,7 @@ extension MainViewController {
 
     func arrangeListsFooterViews() {
         guard let session = try? viewModel.session.value() else { return }
-        let visible = session.isPremium || session.billingPlanId == -9 || !isSpaceAvailableForGetMoreDataView()
+        let visible = session.isUserPro || !isSpaceAvailableForGetMoreDataView()
         staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource?.shouldHideFooter() ?? true) || !visible
         customConfigTableViewFooterView.isHidden = !visible
         if customConfigListTableViewDataSource?.customConfigs?.count == 0 {

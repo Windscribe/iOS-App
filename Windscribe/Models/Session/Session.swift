@@ -37,7 +37,7 @@ struct DataLeftModel {
     var sipCount = List<SipCount>()
 
     var isUserPro: Bool {
-        return isPremium || billingPlanId == -9
+        return isPremium || isUserUnlimited
     }
 
     var isUserUnlimited: Bool {
@@ -61,6 +61,18 @@ struct DataLeftModel {
 
     var isUserGhost: Bool {
         return username == ""
+    }
+
+    var isEnabled: Bool {
+        status == 1
+    }
+
+    var isOutOfData: Bool {
+        status == 2
+    }
+
+    var isBanned: Bool {
+        status == 3
     }
 
     override static func primaryKey() -> String? {

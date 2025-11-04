@@ -20,7 +20,7 @@ protocol NodeTableViewCellModelType: BaseNodeCellViewModelType {
 }
 
 class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType {
-    var sessionManager = Assembler.resolve(SessionManager.self)
+    var sessionRepository = Assembler.resolve(SessionRepository.self)
     var latencyRepository = Assembler.resolve(LatencyRepository.self)
 
     var displayingGroup: GroupModel?
@@ -39,7 +39,7 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     override var isSignalVisible: Bool { !isDisabled }
     override var isDisabled: Bool {
         guard let displayingGroup else { return true }
-        guard let session = sessionManager.session else { return true }
+        guard let session = sessionRepository.session else { return true }
 
         // If there is no best node means user cannot connect to this location
         if displayingGroup.bestNode == nil {
@@ -99,7 +99,7 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     var isProLocked: Bool {
         guard let group = displayingGroup else { return false }
         return group.premiumOnly &&
-        !(sessionManager.session?.isPremium ?? false)
+        !(sessionRepository.isPremium)
     }
 
     override var hasProLocked: Bool { isProLocked && isFavorite }

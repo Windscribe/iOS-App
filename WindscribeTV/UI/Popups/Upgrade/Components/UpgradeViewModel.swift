@@ -53,7 +53,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     let alertManager: AlertManagerV2
     let localDatabase: LocalDatabase
     let apiManager: APIManager
-    let sessionManager: SessionManager
+    let sessionRepository: SessionRepository
     let preferences: Preferences
     var inAppPurchaseManager: InAppPurchaseManager
     let pushNotificationManager: PushNotificationManager
@@ -75,11 +75,20 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     var pushNotificationPayload: PushNotificationPayload?
     private var mobilePlans: [MobilePlan]?
 
-    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManager, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManager, mobilePlanRepository: MobilePlanRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(alertManager: AlertManagerV2,
+         localDatabase: LocalDatabase,
+         apiManager: APIManager,
+         sessionRepository: SessionRepository,
+         preferences: Preferences,
+         inAppManager: InAppPurchaseManager,
+         pushNotificationManager: PushNotificationManager,
+         mobilePlanRepository: MobilePlanRepository,
+         logger: FileLogger,
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.preferences = preferences
         inAppPurchaseManager = inAppManager
         self.pushNotificationManager = pushNotificationManager
@@ -99,7 +108,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     private func checkAccountStatus() {
-        if let session = sessionManager.session {
+        if let session = sessionRepository.session {
             showFreeDataOption.onNext(session.isUserGhost || !session.hasUserAddedEmail || (session.hasUserAddedEmail && session.userNeedsToConfirmEmail))
         }
     }
@@ -143,9 +152,9 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
 
     func continueFreeButtonTapped() {
         logger.logD("UpgradeViewModelImpl", "User tapped to get free data.")
-        if sessionManager.session?.hasUserAddedEmail == true && sessionManager.session?.emailStatus == false {
+        if sessionRepository.session?.hasUserAddedEmail == true && sessionRepository.session?.emailStatus == false {
             upgradeRouteState.onNext(RouteID.confirmEmail(delegate: self))
-        } else if sessionManager.session?.hasUserAddedEmail == false && sessionManager.session?.isUserGhost == false {
+        } else if sessionRepository.session?.hasUserAddedEmail == false && sessionRepository.session?.isUserGhost == false {
             upgradeRouteState.onNext(RouteID.enterEmail)
         } else {
             upgradeRouteState.onNext(RouteID.signup(claimGhostAccount: true))

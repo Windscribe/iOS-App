@@ -21,7 +21,7 @@ protocol ServerSectionCellModelType: ServerCellModelType {
 
 class ServerSectionCellModel: ServerSectionCellModelType {
     let preferences = Assembler.resolve(Preferences.self)
-    var sessionManager = Assembler.resolve(SessionManager.self)
+    var sessionRepository = Assembler.resolve(SessionRepository.self)
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     let updateUISubject = PublishSubject<Void>()
@@ -72,7 +72,7 @@ class ServerSectionCellModel: ServerSectionCellModelType {
     var hasProLocked: Bool {
         guard let server = displayingServer else { return false }
         let hasNoPro = server.groups.first(where: { !$0.premiumOnly }) == nil
-        return hasNoPro && !(sessionManager.session?.isPremium ?? false)
+        return hasNoPro && !(sessionRepository.isPremium)
     }
 
     init() {

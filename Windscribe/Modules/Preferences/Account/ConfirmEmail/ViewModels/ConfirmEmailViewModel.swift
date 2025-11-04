@@ -25,7 +25,7 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
     @Published var shouldDismiss: Bool = false
     @Published var isDarkMode: Bool = false
 
-    private let sessionManager: SessionManager
+    private let sessionRepository: SessionRepository
     private let localDatabase: LocalDatabase
     private let apiManager: APIManager
     private let logger: FileLogger
@@ -33,12 +33,12 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionManager: SessionManager,
+    init(sessionRepository: SessionRepository,
          localDatabase: LocalDatabase,
          apiManager: APIManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.localDatabase = localDatabase
         self.apiManager = apiManager
         self.logger = logger
@@ -81,7 +81,7 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
     }
 
     func updateSession() {
-        sessionManager.keepSessionUpdated()
+        sessionRepository.keepSessionUpdated()
     }
 
     func resendEmail() {

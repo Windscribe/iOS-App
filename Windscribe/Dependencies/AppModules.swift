@@ -98,7 +98,8 @@ class Repository: Assembly {
                                   logger: logger,
                                   locationsManager: r.resolve(LocationsManager.self)!,
                                   preferences: r.resolve(Preferences.self)!,
-                                  advanceRepository: r.resolve(AdvanceRepository.self)!)
+                                  advanceRepository: r.resolve(AdvanceRepository.self)!,
+                                  sessionRepository: r.resolve(SessionRepository.self)!)
         }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
             EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(),
@@ -119,7 +120,7 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
         container.register(ShakeDataRepository.self) { r in
             ShakeDataRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
-                                    sessionManager: r.resolve(SessionManager.self)!)
+                                    sessionRepository: r.resolve(SessionRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(ConfigurationsManager.self) { r in
             ConfigurationsManager(logger: r.resolve(FileLogger.self)!,
@@ -136,6 +137,10 @@ class Repository: Assembly {
 
         container.register(LookAndFeelRepositoryType.self) { r in
             LookAndFeelRepository(preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.userScope)
+
+        container.register(SessionRepository.self) { _ in
+            SessionRepositoryImpl()
         }.inObjectScope(.userScope)
     }
 }
@@ -209,12 +214,13 @@ class Managers: Assembly {
                            configManager: r.resolve(ConfigurationsManager.self)!,
                            alertManager: r.resolve(AlertManagerV2.self)!,
                            locationsManager: r.resolve(LocationsManager.self)!,
-                           vpnStateRepository: r.resolve(VPNStateRepository.self)!)
+                           vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                           sessionRepository: r.resolve(SessionRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManager.self) { r in
             ReferAndShareManagerImpl(
                 preferences: r.resolve(Preferences.self)!,
-                sessionManager: r.resolve(SessionManager.self)!,
+                sessionRepository: r.resolve(SessionRepository.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
@@ -228,7 +234,9 @@ class Managers: Assembly {
             return LanguageManagerImpl(preference: prefs, localizationService: localizer)
         }.inObjectScope(.userScope)
         container.register(PushNotificationManager.self) { r in
-            PushNotificationManagerImpl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManager.self)!, logger: r.resolve(FileLogger.self)!)
+            PushNotificationManagerImpl(vpnManager: r.resolve(VPNManager.self)!,
+                                        sessionRepository: r.resolve(SessionRepository.self)!,
+                                        logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ProtocolManagerType.self) { r in
             ProtocolManager(logger: r.resolve(FileLogger.self)!,
@@ -242,7 +250,7 @@ class Managers: Assembly {
 
         container.register(LivecycleManagerType.self) { r in
             LivecycleManager(logger: r.resolve(FileLogger.self)!,
-                             sessionManager: r.resolve(SessionManager.self)!,
+                             sessionRepository: r.resolve(SessionRepository.self)!,
                              preferences: r.resolve(Preferences.self)!,
                              vpnManager: r.resolve(VPNManager.self)!,
                              vpnStateRepository: r.resolve(VPNStateRepository.self)!,

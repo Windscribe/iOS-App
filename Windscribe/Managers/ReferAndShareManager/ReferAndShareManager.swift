@@ -14,14 +14,17 @@ protocol ReferAndShareManager {
 }
 
 class ReferAndShareManagerImpl: ReferAndShareManager {
-    private let sessionManager: SessionManager
+    private let sessionRepository: SessionRepository
     private let preference: Preferences
     private let vpnManager: VPNManager
 	private let logger: FileLogger
 
-    init(preferences: Preferences, sessionManager: SessionManager, vpnManager: VPNManager, logger: FileLogger) {
+    init(preferences: Preferences,
+         sessionRepository: SessionRepository,
+         vpnManager: VPNManager,
+         logger: FileLogger) {
         preference = preferences
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.vpnManager = vpnManager
         self.logger = logger
     }
@@ -36,7 +39,7 @@ class ReferAndShareManagerImpl: ReferAndShareManager {
         }
 
         return await MainActor.run {
-            guard let session = sessionManager.session else {
+            guard let session = sessionRepository.session else {
                 return false
             }
             let regDate = session.regDate

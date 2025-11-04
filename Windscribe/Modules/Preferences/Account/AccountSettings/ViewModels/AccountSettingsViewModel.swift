@@ -28,6 +28,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     // Dependencies
     private let preferences: Preferences
     private let sessionManager: SessionManager
+    private let sessionRepository: SessionRepository
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
@@ -48,6 +49,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
          sessionManager: SessionManager,
+         sessionRepository: SessionRepository,
          apiManager: APIManager,
          localDatabase: LocalDatabase,
          languageManager: LanguageManager,
@@ -55,6 +57,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
          hapticFeedbackManager: HapticFeedbackManager) {
         self.preferences = preferences
         self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.languageManager = languageManager
@@ -70,7 +73,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         NotificationCenter.default.publisher(for: Notifications.sessionUpdated)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                guard let self = self, let updatedSession = self.sessionManager.session else { return }
+                guard let self = self, let updatedSession = self.sessionRepository.session else { return }
                 self.buildSections(from: updatedSession)
                 self.accountEmailStatus = self.calculateEmailStatus(from: updatedSession)
             }

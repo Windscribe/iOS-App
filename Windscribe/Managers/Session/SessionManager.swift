@@ -14,18 +14,14 @@ import UIKit
 import SwiftUI
 
 protocol SessionManager {
-    var session: Session? { get }
     func setSessionTimer()
     func listenForSessionChanges()
     func logoutUser()
     func checkForSessionChange()
-    func keepSessionUpdated()
-    func canAccesstoProLocation() -> Bool
     func checkSession() async throws
 }
 
 class SessionManagerImpl: SessionManager {
-    var session: Session?
     var sessionNotificationToken: NotificationToken?
     var sessionTimer: Timer?
     var sessionFetchInProgress = false
@@ -44,10 +40,19 @@ class SessionManagerImpl: SessionManager {
     let locationsManager = Assembler.resolve(LocationsManager.self)
     let vpnStateRepository: VPNStateRepository = Assembler.resolve(VPNStateRepository.self)
 
+    let sessionRepository = Assembler.resolve(SessionRepository.self)
+
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
     private lazy var ssoManager = Assembler.resolve(SSOManaging.self)
 
     private var cancellables = Set<AnyCancellable>()
+
+    init () {
+        sessionRepository.keepSessionUpdatedTrigger.sink { [weak self]_ in
+            self?.keepSessionUpdated()
+        }
+        .store(in: &cancellables)
+    }
 
     func setSessionTimer() {
         sessionTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.keepSessionUpdated), userInfo: nil, repeats: true)
@@ -95,11 +100,6 @@ class SessionManagerImpl: SessionManager {
         userSessionRepo.update(session: session)
     }
 
-    func canAccesstoProLocation() -> Bool {
-        guard let session = session else { return false }
-        return session.isPremium
-    }
-
     func listenForSessionChanges() {
         localDatabase.getSession()
             .toPublisher(initialValue: nil)
@@ -111,7 +111,7 @@ class SessionManagerImpl: SessionManager {
                 }
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
-                self.session = session
+                sessionRepository.updateSession(session)
                 NotificationCenter.default.post(Notification(name: Notifications.sessionUpdated))
                 self.checkForStatus()
                 self.checkForSessionChange()
@@ -134,14 +134,14 @@ class SessionManagerImpl: SessionManager {
     }
 
     func checkForStatus() {
-        guard let session = session else { return }
-        if session.status != 1 {
+        guard let status = sessionRepository.sessionStatus else { return }
+        if status != 1 {
             wgCredentials.delete()
         }
-        if session.status == 3 {
+        if status == 3 {
             logger.logI("SessionManager", "User is banned.")
             vpnManager.simpleDisableConnection()
-        } else if session.status == 2 && !locationsManager.isCustomConfigSelected() {
+        } else if status == 2 && !locationsManager.isCustomConfigSelected() {
             logger.logI("SessionManager", "User is out of data.")
             vpnManager.simpleDisableConnection()
         }
@@ -162,7 +162,7 @@ class SessionManagerImpl: SessionManager {
     private func refreshLocations() {
         Task { @MainActor in
             latencyRepo.pickBestLocation(pingData: localDatabase.getAllPingData())
-            locationsManager.checkLocationValidity(checkProAccess: {canAccesstoProLocation()})
+            locationsManager.checkLocationValidity(checkProAccess: {sessionRepository.canAccesstoProLocation()})
         }
     }
 
@@ -170,7 +170,7 @@ class SessionManagerImpl: SessionManager {
         Task { @MainActor in
             if vpnStateRepository.isConnected() {
                 latencyRepo.refreshBestLocation()
-                locationsManager.checkLocationValidity(checkProAccess: {canAccesstoProLocation()})
+                locationsManager.checkLocationValidity(checkProAccess: {sessionRepository.canAccesstoProLocation()})
             } else {
                 loadLatency()
             }
@@ -179,7 +179,8 @@ class SessionManagerImpl: SessionManager {
 
     func checkForSessionChange() {
         logger.logD("SessionManager", "Comparing new session with old session.")
-        guard let newSession = session, let oldSession = localDatabase.getOldSession() else {
+        guard let newSession = sessionRepository.session,
+              let oldSession = localDatabase.getOldSession() else {
             logger.logI("SessionManager", "No old session found")
             return
         }
@@ -290,7 +291,7 @@ class SessionManagerImpl: SessionManager {
         NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
 
         // Clear the session
-        session = nil
+        sessionRepository.updateSession(nil)
 
         // Delete WireGuard Credentials
         wgCredentials.delete()

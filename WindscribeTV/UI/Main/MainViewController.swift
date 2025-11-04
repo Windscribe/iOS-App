@@ -57,6 +57,7 @@ class MainViewController: PreferredFocusedViewController {
     var logger: FileLogger!
     var isFromServer: Bool = false
     lazy var sessionManager = Assembler.resolve(SessionManager.self)
+    lazy var sessionRepository = Assembler.resolve(SessionRepository.self)
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     override func viewDidLoad() {
@@ -72,7 +73,7 @@ class MainViewController: PreferredFocusedViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         logger.logD("MainViewController", "Main view will appear")
-        sessionManager.keepSessionUpdated()
+        viewModel.keepSessionUpdated()
         super.viewWillAppear(animated)
         myPreferredFocusedView = connectionButton
         setNeedsFocusUpdate()
@@ -80,7 +81,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     @objc func appEnteredForeground() {
-        sessionManager.keepSessionUpdated()
+        viewModel.keepSessionUpdated()
     }
 
     private func setupUI() {
@@ -591,7 +592,7 @@ class MainViewController: PreferredFocusedViewController {
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel) {
-        if let isUserPro = sessionManager.session?.isPremium {
+        if let isUserPro = sessionRepository.session?.isPremium {
             if group.premiumOnly && !isUserPro {
                 router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             } else {

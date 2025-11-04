@@ -30,7 +30,7 @@ class ServerListViewModel: ServerListViewModelType {
     private let vpnStateRepository: VPNStateRepository
     private let connectivity: ConnectivityManager
     private let localDataBase: LocalDatabase
-    private let sessionManager: SessionManager
+    private let sessionRepository: SessionRepository
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
 
@@ -40,14 +40,14 @@ class ServerListViewModel: ServerListViewModelType {
          vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          localDataBase: LocalDatabase,
-         sessionManager: SessionManager,
+         sessionRepository: SessionRepository,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.localDataBase = localDataBase
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
     }
@@ -62,7 +62,7 @@ class ServerListViewModel: ServerListViewModelType {
             return
         }
 
-        if !sessionManager.canAccesstoProLocation() && group.premiumOnly {
+        if !sessionRepository.canAccesstoProLocation() && group.premiumOnly {
             showUpgradeTrigger.onNext(())
             return
         } else if !group.canConnect() {
@@ -102,7 +102,7 @@ extension ServerListViewModel {
         }
         if !group.isNodesAvailable() && !group.premiumOnly {
             return true
-        } else if !group.isNodesAvailable() && group.premiumOnly && sessionManager.session?.isPremium == true {
+        } else if !group.isNodesAvailable() && group.premiumOnly && sessionRepository.isPremium == true {
             return true
         }
         return false

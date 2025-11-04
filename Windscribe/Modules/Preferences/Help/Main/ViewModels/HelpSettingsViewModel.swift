@@ -25,7 +25,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     @Published var safariURL: URL?
     @Published var selectedRoute: HelpRoute?
 
-    private let sessionManager: SessionManager
+    private let sessionRepository: SessionRepository
     private let apiManager: APIManager
     private let connectivity: ConnectivityManager
 
@@ -34,11 +34,11 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
-         sessionManager: SessionManager,
+         sessionRepository: SessionRepository,
          apiManager: APIManager,
          connectivity: ConnectivityManager) {
 
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.apiManager = apiManager
         self.connectivity = connectivity
 
@@ -59,7 +59,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     }
 
     override func reloadItems() {
-        let isUserPro = sessionManager.session?.isUserPro ?? false
+        let isUserPro = sessionRepository.isUserPro
 
         var baseEntries: [HelpMenuEntryType] = [
             .link(icon: ImagesAsset.Help.apple,
@@ -131,8 +131,8 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
                 let logData = try await logger.getLogData()
 
                 let username = await MainActor.run {
-                    var username = sessionManager.session?.username ?? ""
-                    if let session = sessionManager.session, session.isUserGhost {
+                    var username = sessionRepository.session?.username ?? ""
+                    if let session = sessionRepository.session, session.isUserGhost {
                         username = "ghost_\(session.userId)"
                     }
                     return username

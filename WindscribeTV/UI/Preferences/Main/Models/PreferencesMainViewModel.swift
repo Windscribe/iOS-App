@@ -38,6 +38,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let isDarkMode: CurrentValueSubject<Bool, Never>
     var currentLanguage: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
+    let sessionRepository: SessionRepository
     let sessionManager: SessionManager
     let logger: FileLogger
     let disposeBag = DisposeBag()
@@ -47,8 +48,15 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let languageManager: LanguageManager
 
-    init(sessionManager: SessionManager, logger: FileLogger, alertManager: AlertManagerV2, lookAndFeelRepository: LookAndFeelRepositoryType, preferences: Preferences, languageManager: LanguageManager) {
+    init(sessionRepository: SessionRepository,
+         sessionManager: SessionManager,
+         logger: FileLogger,
+         alertManager: AlertManagerV2,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         preferences: Preferences,
+         languageManager: LanguageManager) {
         self.logger = logger
+        self.sessionRepository = sessionRepository
         self.sessionManager = sessionManager
         self.alertManager = alertManager
         self.lookAndFeelRepository = lookAndFeelRepository
@@ -65,27 +73,27 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     func getActionButtonDisplay() {
-        if sessionManager.session?.isUserPro == true &&
-            sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == false {
+        if sessionRepository.isUserPro == true &&
+            sessionRepository.session?.hasUserAddedEmail == false &&
+            sessionRepository.session?.isUserGhost == false {
             actionDisplay.onNext(.email)
             return
-        } else if sessionManager.session?.isUserPro == false &&
-            sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == false {
+        } else if sessionRepository.isUserPro == false &&
+                    sessionRepository.session?.hasUserAddedEmail == false &&
+                    sessionRepository.session?.isUserGhost == false {
             actionDisplay.onNext(.emailGet10GB)
             return
-        } else if sessionManager.session?.isUserPro == false &&
-            sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == true {
+        } else if sessionRepository.isUserPro == false &&
+                    sessionRepository.session?.hasUserAddedEmail == false &&
+                    sessionRepository.session?.isUserGhost == true {
             actionDisplay.onNext(.setupAccountAndLogin)
             return
-        } else if sessionManager.session?.isUserPro == true &&
-            sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == true {
+        } else if sessionRepository.isUserPro == true &&
+                    sessionRepository.session?.hasUserAddedEmail == false &&
+                    sessionRepository.session?.isUserGhost == true {
             actionDisplay.onNext(.setupAccount)
             return
-        } else if sessionManager.session?.userNeedsToConfirmEmail == true {
+        } else if sessionRepository.session?.userNeedsToConfirmEmail == true {
             actionDisplay.onNext(.confirmEmail)
             return
         } else {
@@ -99,15 +107,15 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     func isUserGhost() -> Bool {
-        return sessionManager.session?.isUserGhost ?? false
+        return sessionRepository.session?.isUserGhost ?? false
     }
 
     func isUserPro() -> Bool {
-        return sessionManager.session?.isUserPro ?? false
+        return sessionRepository.isUserPro
     }
 
     func getDataLeft() -> String {
-        return sessionManager.session?.getDataLeft() ?? "0 GB"
+        return sessionRepository.session?.getDataLeft() ?? "0 GB"
     }
 
     func getPreferenceItem(for row: Int) -> PreferenceItemType? {

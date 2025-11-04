@@ -271,7 +271,7 @@ extension MainViewController {
 
     @objc func loadLatencyWhenReady() {
         if vpnConnectionViewModel.isInvalid() { return }
-        sessionManager.keepSessionUpdated()
+        viewModel.keepSessionUpdated()
         if appJustStarted {
             appJustStarted = false
             vpnConnectionViewModel.displayLocalIPAddress()

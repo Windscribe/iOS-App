@@ -12,8 +12,6 @@ import Combine
 import Swinject
 
 protocol SubmitLogViewModel {
-    var sessionManager: SessionManager { get }
-    var apiManager: APIManager { get }
     var alertManager: AlertManagerV2 { get }
     var networkStatus: NetworkStatus { get }
     func submitDebugLog(username: String?, completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
@@ -21,16 +19,19 @@ protocol SubmitLogViewModel {
 
 class SubmitLogViewModelImpl: SubmitLogViewModel {
     var alertManager: AlertManagerV2
-    var sessionManager: SessionManager
-    var apiManager: APIManager
+    let sessionRepository: SessionRepository
+    let apiManager: APIManager
     let connectivity: ConnectivityManager
 
     private var cancellables = Set<AnyCancellable>()
     var networkStatus = NetworkStatus.disconnected
     let logger = Assembler.resolve(FileLogger.self)
 
-    init(sessionManager: SessionManager, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: ConnectivityManager) {
-        self.sessionManager = sessionManager
+    init(sessionRepository: SessionRepository,
+         apiManager: APIManager,
+         alertManager: AlertManagerV2,
+         connectivity: ConnectivityManager) {
+        self.sessionRepository = sessionRepository
         self.apiManager = apiManager
         self.alertManager = alertManager
         self.connectivity = connectivity
@@ -51,8 +52,8 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
                 let logData = try await logger.getLogData()
 
                 let username = await MainActor.run {
-                    var username = sessionManager.session?.username ?? ""
-                    if let session = sessionManager.session, session.isUserGhost {
+                    var username = sessionRepository.session?.username ?? ""
+                    if let session = sessionRepository.session, session.isUserGhost {
                         username = "ghost_\(session.userId)"
                     }
                     return username

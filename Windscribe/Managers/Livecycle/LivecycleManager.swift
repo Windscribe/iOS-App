@@ -21,7 +21,7 @@ protocol LivecycleManagerType {
 
 class LivecycleManager: LivecycleManagerType {
     let logger: FileLogger
-    let sessionManager: SessionManager
+    let sessionRepository: SessionRepository
     let preferences: Preferences
     let vpnManager: VPNManager
     let vpnStateRepository: VPNStateRepository
@@ -43,7 +43,7 @@ class LivecycleManager: LivecycleManagerType {
     private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
-         sessionManager: SessionManager,
+         sessionRepository: SessionRepository,
          preferences: Preferences,
          vpnManager: VPNManager,
          vpnStateRepository: VPNStateRepository,
@@ -55,7 +55,7 @@ class LivecycleManager: LivecycleManagerType {
          connectivityManager: ProtocolManagerType,
          locationsManager: LocationsManager) {
         self.logger = logger
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.preferences = preferences
         self.vpnManager = vpnManager
         self.vpnStateRepository = vpnStateRepository
@@ -94,7 +94,7 @@ class LivecycleManager: LivecycleManagerType {
         checkForKillSwitch()
         logger.logI("LivecycleManager", "App internet moved to foreground.")
         becameActiveTrigger.send(())
-        sessionManager.keepSessionUpdated()
+        sessionRepository.keepSessionUpdated()
         guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
             return

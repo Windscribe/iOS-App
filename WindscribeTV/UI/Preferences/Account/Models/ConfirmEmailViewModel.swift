@@ -11,7 +11,7 @@ import RxSwift
 
 protocol ConfirmEmailViewModel {
     var alertManager: AlertManagerV2 { get }
-    var sessionManager: SessionManager { get }
+    var sessionRepository: SessionRepository { get }
     var localDatabase: LocalDatabase { get }
     var apiManager: APIManager { get }
     func getSession()
@@ -20,15 +20,18 @@ protocol ConfirmEmailViewModel {
 
 class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
     var alertManager: AlertManagerV2
-    var localDatabase: LocalDatabase
-    var sessionManager: SessionManager
+    let localDatabase: LocalDatabase
+    var sessionRepository: SessionRepository
     let disposeBag = DisposeBag()
-    var apiManager: APIManager
+    let apiManager: APIManager
     let session = BehaviorSubject<Session?>(value: nil)
 
-    init(alertManager: AlertManagerV2, sessionManager: SessionManager, localDatabase: LocalDatabase, apiManager: APIManager) {
+    init(alertManager: AlertManagerV2,
+         sessionRepository: SessionRepository,
+         localDatabase: LocalDatabase,
+         apiManager: APIManager) {
         self.alertManager = alertManager
-        self.sessionManager = sessionManager
+        self.sessionRepository = sessionRepository
         self.localDatabase = localDatabase
         self.apiManager = apiManager
         getSession()
@@ -41,6 +44,6 @@ class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
     }
 
     func updateSession() {
-        sessionManager.keepSessionUpdated()
+        sessionRepository.keepSessionUpdated()
     }
 }

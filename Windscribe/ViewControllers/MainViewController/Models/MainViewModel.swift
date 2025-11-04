@@ -63,6 +63,8 @@ protocol MainViewModelType {
     func updateSSID()
     func getServerModel(from groupId: Int) -> ServerModel?
     func runHapticFeedback(level: HapticFeedbackLevel)
+    func checkAccountWasDowngraded(for serverList: [ServerModel]) -> Bool
+    func keepSessionUpdated()
 }
 
 class MainViewModel: MainViewModelType {
@@ -83,6 +85,7 @@ class MainViewModel: MainViewModelType {
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
     let hapticFeedbackManager: HapticFeedbackManager
+    let sessionRepository: SessionRepository
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
@@ -136,7 +139,8 @@ class MainViewModel: MainViewModelType {
          livecycleManager: LivecycleManagerType,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
-         hapticFeedbackManager: HapticFeedbackManager) {
+         hapticFeedbackManager: HapticFeedbackManager,
+         sessionRepository: SessionRepository) {
 
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
@@ -155,6 +159,7 @@ class MainViewModel: MainViewModelType {
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
         self.hapticFeedbackManager = hapticFeedbackManager
+        self.sessionRepository = sessionRepository
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
@@ -575,5 +580,25 @@ class MainViewModel: MainViewModelType {
 
     func runHapticFeedback(level: HapticFeedbackLevel) {
         hapticFeedbackManager.run(level: level)
+    }
+
+    func checkAccountWasDowngraded(for serverList: [ServerModel]) -> Bool {
+        if let oldSession = oldSession,
+           let newSession = sessionRepository.session {
+            let groups = serverList.compactMap { $0.groups }.flatMap { $0 }
+            let nodes = groups.compactMap { $0.nodes }.flatMap { $0 }
+            if oldSession.isPremium &&
+                !newSession.isPremium &&
+                !nodes.isEmpty {
+                logger.logD("MainViewModel", "Account downgrade detected.")
+               return true
+            }
+        }
+
+       return false
+    }
+
+    func keepSessionUpdated() {
+        sessionRepository.keepSessionUpdated()
     }
 }

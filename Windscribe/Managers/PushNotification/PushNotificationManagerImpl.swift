@@ -36,13 +36,15 @@ protocol PushNotificationManager {
 class PushNotificationManagerImpl: PushNotificationManager {
     let notification: CurrentValueSubject<PushNotificationPayload?, Never> = CurrentValueSubject(nil)
     let vpnManager: VPNManager
-    let session: SessionManager
+    let sessionRepository: SessionRepository
     let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
 
-    init(vpnManager: VPNManager, session: SessionManager, logger: FileLogger) {
+    init(vpnManager: VPNManager,
+         sessionRepository: SessionRepository,
+         logger: FileLogger) {
         self.vpnManager = vpnManager
-        self.session = session
+        self.sessionRepository = sessionRepository
         self.logger = logger
     }
 
@@ -57,11 +59,11 @@ class PushNotificationManagerImpl: PushNotificationManager {
         guard let actionType = PushNotificationActionType(from: payload.type) else { return }
         switch actionType {
         case .userDowngraded:
-            session.keepSessionUpdated()
+            sessionRepository.keepSessionUpdated()
         case .userExpired:
             vpnManager.disconnectFromViewModel()
                 .sink(receiveCompletion: { [weak self] _ in
-                    self?.session.keepSessionUpdated()
+                    self?.sessionRepository.keepSessionUpdated()
                 }, receiveValue: { _ in })
                 .store(in: &cancellables)
         case .promo:

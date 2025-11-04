@@ -58,7 +58,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         return myPreferredFocusedView
     }
 
-    lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
+    lazy var sessionRepository: SessionRepository = Assembler.resolve(SessionRepository.self)
 
     var displayingFavGroup: GroupModel? {
         didSet {
@@ -121,7 +121,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         descriptionLabel.isHidden = true
         descriptionLabel.text = ""
         proIcon.isHidden = true
-        if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
+        if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium {
             if premiumOnly && !isUserPro {
                 proIcon.isHidden = false
             }
@@ -154,7 +154,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             latencyLabel.text = "--"
         }
 
-        if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
+        if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium {
             if premiumOnly && !isUserPro {
                 proIcon.isHidden = false
             } else {
@@ -266,12 +266,12 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
-                if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium, favButton.isHidden == false {
+                if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium, favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
                 }
-                if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium, favButton.isHidden == false {
+                if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium, favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
@@ -358,8 +358,8 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     @objc func connectButtonTapped() {
-        if sessionManager.session?.status == 2 && staticIpDelegate == nil {
-            let isPro = sessionManager.session?.isPremium ?? false
+        if sessionRepository.session?.status == 2 && staticIpDelegate == nil {
+            let isPro = sessionRepository.session?.isPremium ?? false
             guard let delegate = delegate else {
                 if !isPro {
                     favDelegate?.showOutOfDataPopUp()

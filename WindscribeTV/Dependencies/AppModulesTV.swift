@@ -50,7 +50,16 @@ class TVViewModels: Assembly {
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(UpgradeViewModel.self) { r in
-            UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManager.self)!, preferences: r.resolve(Preferences.self)!, inAppManager: r.resolve(InAppPurchaseManager.self)!, pushNotificationManager: r.resolve(PushNotificationManager.self)!, mobilePlanRepository: r.resolve(MobilePlanRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!,
+                                 localDatabase: r.resolve(LocalDatabase.self)!,
+                                 apiManager: r.resolve(APIManager.self)!,
+                                 sessionRepository: r.resolve(SessionRepository.self)!,
+                                 preferences: r.resolve(Preferences.self)!,
+                                 inAppManager: r.resolve(InAppPurchaseManager.self)!,
+                                 pushNotificationManager: r.resolve(PushNotificationManager.self)!,
+                                 mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
+                                 logger: r.resolve(FileLogger.self)!,
+                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
@@ -69,7 +78,24 @@ class TVViewModels: Assembly {
                                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModelType.self) { r in
-            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManager.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(ConnectivityManager.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
+            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
+                          vpnManager: r.resolve(VPNManager.self)!,
+                          logger: r.resolve(FileLogger.self)!,
+                          serverRepository: r.resolve(ServerRepository.self)!,
+                          portMapRepo: r.resolve(PortMapRepository.self)!,
+                          staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                          preferences: r.resolve(Preferences.self)!,
+                          latencyRepo: r.resolve(LatencyRepository.self)!,
+                          lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                          pushNotificationsManager: r.resolve(PushNotificationManager.self)!,
+                          notificationsRepo: r.resolve(NotificationRepository.self)!,
+                          credentialsRepository: r.resolve(CredentialsRepository.self)!,
+                          connectivity: r.resolve(ConnectivityManager.self)!,
+                          livecycleManager: r.resolve(LivecycleManagerType.self)!,
+                          locationsManager: r.resolve(LocationsManagerType.self)!,
+                          protocolManager: r.resolve(ProtocolManagerType.self)!,
+                          hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                          sessionRepository: r.resolve(SessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
@@ -84,11 +110,17 @@ class TVViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(EnterEmailViewModel.self) { r in
-            EnterEmailViewModelImpl(sessionManager: r.resolve(SessionManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, apiManager: r.resolve(APIManager.self)!)
+            EnterEmailViewModelImpl(sessionRepository: r.resolve(SessionRepository.self)!,
+                                    alertManager: r.resolve(AlertManagerV2.self)!,
+                                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                    apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(ConfirmEmailViewModel.self) { r in
-            ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
+            ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!,
+                                      sessionRepository: r.resolve(SessionRepository.self)!,
+                                      localDatabase: r.resolve(LocalDatabase.self)!,
+                                      apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(NewsFeedModelType.self) { r in
@@ -100,11 +132,20 @@ class TVViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(PreferencesMainViewModelOld.self) { r in
-            PreferencesMainViewModelImpOld(sessionManager: r.resolve(SessionManager.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
+            PreferencesMainViewModelImpOld(sessionRepository: r.resolve(SessionRepository.self)!,
+                                           sessionManager: r.resolve(SessionManager.self)!,
+                                           logger: r.resolve(FileLogger.self)!,
+                                           alertManager: r.resolve(AlertManagerV2.self)!,
+                                           lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                           preferences: r.resolve(Preferences.self)!,
+                                           languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(SubmitLogViewModel.self) { r in
-            SubmitLogViewModelImpl(sessionManager: r.resolve(SessionManager.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(ConnectivityManager.self)!)
+            SubmitLogViewModelImpl(sessionRepository: r.resolve(SessionRepository.self)!,
+                                   apiManager: r.resolve(APIManager.self)!,
+                                   alertManager: r.resolve(AlertManagerV2.self)!,
+                                   connectivity: r.resolve(ConnectivityManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(PrivacyViewModelType.self) { r in
@@ -128,17 +169,17 @@ class TVViewModels: Assembly {
                                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
-                                sessionManager: r.resolve(SessionManager.self)!,
+                                sessionRepository: r.resolve(SessionRepository.self)!,
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
                                 protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(FavouriteListViewModelType.self) { r in
             FavouriteListViewModel(logger: r.resolve(FileLogger.self)!,
                                    vpnStateRepository: r.resolve(VPNStateRepository.self)!,
-                                  connectivity: r.resolve(ConnectivityManager.self)!,
-                                  sessionManager: r.resolve(SessionManager.self)!,
-                                  locationsManager: r.resolve(LocationsManagerType.self)!,
-                                  protocolManager: r.resolve(ProtocolManagerType.self)!)
+                                   connectivity: r.resolve(ConnectivityManager.self)!,
+                                   sessionRepository: r.resolve(SessionRepository.self)!,
+                                   locationsManager: r.resolve(LocationsManagerType.self)!,
+                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
