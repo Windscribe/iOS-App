@@ -34,6 +34,10 @@ class MockPreferences: Preferences {
     var mockBestLocation: String = ""
     var clearWireGuardConfigurationCalled = false
 
+    // UserSessionRepository tracking
+    var sessionAuthToReturn: String?
+    var lastSavedSessionAuth: String?
+
     // Background/Look and Feel mock storage
     var mockAspectRatio: String?
     var mockBackgroundEffectConnect: String?
@@ -78,10 +82,12 @@ class MockPreferences: Preferences {
         mockHasReviewed = bool
     }
 
-    func saveUserSessionAuth(sessionAuth: String?) {}
+    func saveUserSessionAuth(sessionAuth: String?) {
+        lastSavedSessionAuth = sessionAuth
+    }
 
     func userSessionAuth() -> String? {
-        return nil
+        return sessionAuthToReturn
     }
 
     func saveOrderLocationsBy(order: String) {}

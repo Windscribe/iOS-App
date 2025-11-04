@@ -26,7 +26,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let failedState = BehaviorSubject<String?>(value: nil)
     let emergencyConnectStatus =  BehaviorSubject<Bool>(value: false)
 
-    let userRepository: UserRepository
+    let userSessionRepository: UserSessionRepository
     let keyChainDatabase: KeyChainDatabase
     let userDataRepository: UserDataRepository
     let apiManager: APIManager
@@ -36,14 +36,14 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    init(userRepository: UserRepository,
+    init(userSessionRepository: UserSessionRepository,
          keyChainDatabase: KeyChainDatabase,
          userDataRepository: UserDataRepository,
          apiManager: APIManager,
          preferences: Preferences,
          vpnStateRepository: VPNStateRepository,
          logger: FileLogger) {
-        self.userRepository = userRepository
+        self.userSessionRepository = userSessionRepository
         self.keyChainDatabase = keyChainDatabase
         self.userDataRepository = userDataRepository
         self.apiManager = apiManager
@@ -70,7 +70,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
                 await MainActor.run {
                     self.keyChainDatabase.setGhostAccountCreated()
-                    self.userRepository.login(session: session)
+                    self.userSessionRepository.login(session: session)
                     self.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(session.userId)")
                     self.prepareUserData()
                 }

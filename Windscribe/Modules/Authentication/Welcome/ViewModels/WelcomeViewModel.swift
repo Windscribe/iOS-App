@@ -56,7 +56,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let emergencyConnectOnText = TextsAsset.Welcome.emergencyConnectOn
 
     private var cancellables = Set<AnyCancellable>()
-    private let userRepository: UserRepository
+    private let userSessionRepository: UserSessionRepository
     private let keyChainDatabase: KeyChainDatabase
     private let userDataRepository: UserDataRepository
     private let apiManager: APIManager
@@ -67,7 +67,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
     private var presentingController: UIViewController?
 
-    init(userRepository: UserRepository,
+    init(userSessionRepository: UserSessionRepository,
          keyChainDatabase: KeyChainDatabase,
          userDataRepository: UserDataRepository,
          apiManager: APIManager,
@@ -75,7 +75,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
          vpnStateRepository: VPNStateRepository,
          ssoManager: SSOManaging,
          logger: FileLogger) {
-        self.userRepository = userRepository
+        self.userSessionRepository = userSessionRepository
         self.keyChainDatabase = keyChainDatabase
         self.userDataRepository = userDataRepository
         self.apiManager = apiManager
@@ -100,7 +100,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 }
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
-                self.userRepository.login(session: session)
+                self.userSessionRepository.login(session: session)
                 self.logger.logI("WelcomeViewModel", "Apple sign in successful")
                 self.prepareUserData()
             })

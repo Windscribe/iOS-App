@@ -10,7 +10,7 @@ import Foundation
 
 extension APIManagerImpl {
     func getSession(_ appleID: String?) async throws -> Session {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: Session.self) { completion in
@@ -19,7 +19,7 @@ extension APIManagerImpl {
     }
 
     func getWebSession() async throws -> WebSession {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: WebSession.self) { completion in
@@ -28,7 +28,7 @@ extension APIManagerImpl {
     }
 
     func deleteSession() async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self, maxRetries: 3) { completion in

@@ -20,10 +20,10 @@ typealias LocationsManagerType = LocationsManager
 class TVViewModels: Assembly {
     func assemble(container: Swinject.Container) {
         container.register(LoginViewModel.self) { r in
-            LoginViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, connectivity: r.resolve(ConnectivityManager.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            LoginViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!, connectivity: r.resolve(ConnectivityManager.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(WelcomeViewModel.self) { r in
-            WelcomeViewModelImpl(userRepository: r.resolve(UserRepository.self)!,
+            WelcomeViewModelImpl(userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                  keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
                                  userDataRepository: r.resolve(UserDataRepository.self)!,
                                  apiManager: r.resolve(APIManager.self)!,
@@ -32,7 +32,7 @@ class TVViewModels: Assembly {
                                  logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(SignUpViewModel.self) { r in
-            SignUpViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(ConnectivityManager.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            SignUpViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(ConnectivityManager.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(GeneralViewModelType.self) { r in
             GeneralViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, languageManager: r.resolve(LanguageManager.self)!, pushNotificationManager: r.resolve(PushNotificationManager.self)!)

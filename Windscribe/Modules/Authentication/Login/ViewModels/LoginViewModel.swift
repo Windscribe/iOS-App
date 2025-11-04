@@ -52,7 +52,7 @@ class LoginViewModelImpl: LoginViewModel {
     // Dependencies
     private let apiCallManager: APIManager
     private let preferences: Preferences
-    private let userRepository: UserRepository
+    private let userSessionRepository: UserSessionRepository
     private let emergencyConnectRepository: EmergencyRepository
     private let userDataRepository: UserDataRepository
     private let vpnManager: VPNManager
@@ -71,7 +71,7 @@ class LoginViewModelImpl: LoginViewModel {
 
     /// Initialization
     init(apiCallManager: APIManager,
-         userRepository: UserRepository,
+         userSessionRepository: UserSessionRepository,
          preferences: Preferences,
          emergencyConnectRepository: EmergencyRepository,
          userDataRepository: UserDataRepository,
@@ -83,7 +83,7 @@ class LoginViewModelImpl: LoginViewModel {
          logger: FileLogger) {
 
         self.apiCallManager = apiCallManager
-        self.userRepository = userRepository
+        self.userSessionRepository = userSessionRepository
         self.preferences = preferences
         self.emergencyConnectRepository = emergencyConnectRepository
         self.userDataRepository = userDataRepository
@@ -192,7 +192,7 @@ class LoginViewModelImpl: LoginViewModel {
         WifiManager.shared.saveCurrentWifiNetworks()
 
         // Store authenticated session
-        userRepository.login(session: session)
+        userSessionRepository.login(session: session)
 
         // Log the success with the username
         logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
@@ -298,7 +298,7 @@ class LoginViewModelImpl: LoginViewModel {
                                 WifiManager.shared.saveCurrentWifiNetworks()
 
                                 self.preferences.saveLoginDate(date: Date())
-                                self.userRepository.login(session: session)
+                                self.userSessionRepository.login(session: session)
                                 self.timerCancellable?.cancel()
                                 self.logger.logI("LoginViewModel",
                                                  "Login successful with login code, Preparing user data for \(session.username)")

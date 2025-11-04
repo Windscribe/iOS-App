@@ -11,7 +11,7 @@ import UIKit
 
 extension APIManagerImpl {
     func getStaticIpList() async throws -> StaticIPList {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         guard await UIDevice.current.identifierForVendor?.uuidString != nil else {
@@ -29,7 +29,7 @@ extension APIManagerImpl {
     }
 
     func getOpenVPNServerConfig(openVPNVersion _: String) async throws -> String {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: String.self) { completion in
@@ -38,7 +38,7 @@ extension APIManagerImpl {
     }
 
     func getOpenVPNServerCredentials() async throws -> OpenVPNServerCredentials {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: OpenVPNServerCredentials.self) { completion in
@@ -47,7 +47,7 @@ extension APIManagerImpl {
     }
 
     func getIKEv2ServerCredentials() async throws -> IKEv2ServerCredentials {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: IKEv2ServerCredentials.self) { completion in
@@ -56,7 +56,7 @@ extension APIManagerImpl {
     }
 
     func getPortMap(version: Int, forceProtocols: [String]) async throws -> PortMapList {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: PortMapList.self) { completion in

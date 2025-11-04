@@ -69,7 +69,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     // Dependencies
     private let apiCallManager: APIManager
-    private let userRepository: UserRepository
+    private let userSessionRepository: UserSessionRepository
     private let userDataRepository: UserDataRepository
     private let preferences: Preferences
     private let connectivity: ConnectivityManager
@@ -83,7 +83,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     init(apiCallManager: APIManager,
-         userRepository: UserRepository,
+         userSessionRepository: UserSessionRepository,
          userDataRepository: UserDataRepository,
          preferences: Preferences,
          connectivity: ConnectivityManager,
@@ -95,7 +95,7 @@ class SignUpViewModelImpl: SignUpViewModel {
          logger: FileLogger) {
 
         self.apiCallManager = apiCallManager
-        self.userRepository = userRepository
+        self.userSessionRepository = userSessionRepository
         self.userDataRepository = userDataRepository
         self.preferences = preferences
         self.connectivity = connectivity
@@ -266,7 +266,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                     )
 
                     await MainActor.run {
-                        self.userRepository.login(session: session)
+                        self.userSessionRepository.login(session: session)
                         self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
                         self.prepareUserData()
                     }
@@ -309,19 +309,24 @@ class SignUpViewModelImpl: SignUpViewModel {
     private func getUpdatedUser() {
         logger.logD("SignUpViewModel", "Getting updated session.")
 
-        userRepository.getUpdatedUser()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] _ in
-                self?.routeTo.send(.main)
-                self?.showLoadingView = false
-            }, receiveValue: { [weak self] _ in
-                if self?.email.isEmpty == false {
-                    self?.routeTo.send(.confirmEmail)
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.userSessionRepository.getUpdatedUser()
+
+                if self.email.isEmpty == false {
+                    self.routeTo.send(.confirmEmail)
                 } else {
-                    self?.routeTo.send(.main)
+                    self.routeTo.send(.main)
                 }
-            }).store(in: &cancellables)
+                self.showLoadingView = false
+            } catch {
+                self.logger.logE("SignUpViewModel", "Failed to get updated user: \(error)")
+                self.routeTo.send(.main)
+                self.showLoadingView = false
+            }
+        }
     }
 
     private func prepareUserData(ignoreError: Bool = false) {
@@ -427,7 +432,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func checkUserStatus() {
-        let isPro = try? userRepository.user.value()?.isPro
+        let isPro = userSessionRepository.user?.isPro
         isPremiumUser = isPro ?? false
     }
 

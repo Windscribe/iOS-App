@@ -15,16 +15,16 @@ class ServerRepositoryImpl: ServerRepository {
 
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
-    private let userRepository: UserRepository
+    private let userSessionRepository: UserSessionRepository
     private let advanceRepository: AdvanceRepository
     private let preferences: Preferences
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
 
-    init(apiManager: APIManager, localDatabase: LocalDatabase, userRepository: UserRepository, preferences: Preferences, advanceRepository: AdvanceRepository, logger: FileLogger) {
+    init(apiManager: APIManager, localDatabase: LocalDatabase, userSessionRepository: UserSessionRepository, preferences: Preferences, advanceRepository: AdvanceRepository, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
-        self.userRepository = userRepository
+        self.userSessionRepository = userSessionRepository
         self.advanceRepository = advanceRepository
         self.preferences = preferences
         self.logger = logger
@@ -46,7 +46,7 @@ class ServerRepositoryImpl: ServerRepository {
     }
 
     func getUpdatedServers() async throws -> [Server] {
-        guard let user = try? userRepository.user.value() else {
+        guard let user = userSessionRepository.user else {
             throw Errors.validationFailure
         }
         let countryCode = advanceRepository.getCountryOverride() ?? ""

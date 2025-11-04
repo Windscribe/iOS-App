@@ -32,6 +32,9 @@ class MockLocalDatabase: LocalDatabase {
     var deleteStaticIpsCalled = false
     var lastDeletedStaticIPsIgnoreList: [String]?
 
+    // Session tracking
+    var saveOldSessionCalled = false
+
     func migrate() {}
 
     func getSession() -> Observable<Windscribe.Session?> {
@@ -39,7 +42,7 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getSessionSync() -> Windscribe.Session? {
-        return nil
+        return sessionSubject.value
     }
 
     func saveSession(session: Windscribe.Session) -> Disposable {
@@ -202,7 +205,9 @@ class MockLocalDatabase: LocalDatabase {
 
     func updateCustomConfigCredentials(customConfigId: String, username: String, password: String) {}
 
-    func saveOldSession() {}
+    func saveOldSession() {
+        saveOldSessionCalled = true
+    }
 
     func getOldSession() -> Windscribe.OldSession? {
         return nil

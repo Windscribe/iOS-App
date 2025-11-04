@@ -19,7 +19,7 @@ class ViewModels: Assembly {
         container.register((any LoginViewModel).self) { r in
             LoginViewModelImpl(
                 apiCallManager: r.resolve(APIManager.self)!,
-                userRepository: r.resolve(UserRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
@@ -34,7 +34,7 @@ class ViewModels: Assembly {
         container.register((any SignUpViewModel).self) { r in
             SignUpViewModelImpl(
                 apiCallManager: r.resolve(APIManager.self)!,
-                userRepository: r.resolve(UserRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 connectivity: r.resolve(ConnectivityManager.self)!,
@@ -48,7 +48,7 @@ class ViewModels: Assembly {
 
         container.register((any WelcomeViewModel).self) { r in
             WelcomeViewModelImpl(
-                userRepository: r.resolve(UserRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
@@ -452,7 +452,7 @@ class ViewControllerModule: Assembly {
     func assemble(container: Swinject.Container) {
         container.register(WelcomeView.self) { r in
             WelcomeView(viewModel: WelcomeViewModelImpl(
-                userRepository: r.resolve(UserRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
@@ -466,7 +466,7 @@ class ViewControllerModule: Assembly {
         container.register(LoginView.self) { r in
             LoginView(viewModel: LoginViewModelImpl(
                     apiCallManager: r.resolve(APIManager.self)!,
-                    userRepository: r.resolve(UserRepository.self)!,
+                    userSessionRepository: r.resolve(UserSessionRepository.self)!,
                     preferences: r.resolve(Preferences.self)!,
                     emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
                     userDataRepository: r.resolve(UserDataRepository.self)!,
@@ -482,7 +482,7 @@ class ViewControllerModule: Assembly {
         container.register(SignUpView.self) { r in
             SignUpView(viewModel: SignUpViewModelImpl(
                 apiCallManager: r.resolve(APIManager.self)!,
-                userRepository: r.resolve(UserRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 connectivity: r.resolve(ConnectivityManager.self)!,

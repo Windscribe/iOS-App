@@ -72,4 +72,8 @@ class MockSessionManager: SessionManager {
         }
         return session
     }
+
+    func checkSession() async throws {
+
+    }
 }

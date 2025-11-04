@@ -39,7 +39,7 @@ class Network: Assembly {
             APIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, logger: r.resolve(FileLogger.self)!, apiUtil: r.resolve(APIUtilService.self)!)
         }.initCompleted { r, apiManager in
             // Note: Api manager and user repository both have circular dependency on each other.
-            (apiManager as? APIManagerImpl)?.userRepository = r.resolve(UserRepository.self)
+            (apiManager as? APIManagerImpl)?.userSessionRepository = r.resolve(UserSessionRepository.self)
         }.inObjectScope(.userScope)
         container.register(WireguardAPIManager.self) { r in
             WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!, apiUtil: r.resolve(APIUtilService.self)!)
@@ -52,8 +52,8 @@ class Network: Assembly {
 class Repository: Assembly {
     func assemble(container: Container) {
         let logger = container.resolve(FileLogger.self)!
-        container.register(UserRepository.self) { r in
-            UserRepositoryImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, wgCredentials: r.resolve(WgCredentials.self)!, logger: logger)
+        container.register(UserSessionRepository.self) { r in
+            UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, wgCredentials: r.resolve(WgCredentials.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(UserDataRepository.self) { r in
             UserDataRepositoryImpl(serverRepository: r.resolve(ServerRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, portMapRepository: r.resolve(PortMapRepository.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, notificationsRepository: r.resolve(NotificationRepository.self)!, logger: r.resolve(FileLogger.self)!)
@@ -71,7 +71,7 @@ class Repository: Assembly {
             StaticIpRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(ServerRepository.self) { r in
-            ServerRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, userRepository: r.resolve(UserRepository.self)!, preferences: r.resolve(Preferences.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, logger: logger)
+            ServerRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!, preferences: r.resolve(Preferences.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(CredentialsRepository.self) { r in
             CredentialsRepositoryImpl(apiManager: r.resolve(APIManager.self)!,

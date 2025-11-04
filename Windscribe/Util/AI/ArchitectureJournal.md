@@ -98,7 +98,7 @@ Windscribe/
 
 ### 3. Repositories
 - **ServerRepository**: Server data management
-- **UserRepository**: User data management
+- **UserSessionRepository**: User data management
 - **CredentialsRepository**: Credential management
 - **LatencyRepository**: Server latency data
 - **CustomConfigRepository**: Custom configuration management

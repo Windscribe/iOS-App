@@ -40,7 +40,7 @@ class LoginViewModelImpl: LoginViewModel {
     let showCaptchaViewModel = PublishSubject<CaptchaViewModel>()
 
     let apiCallManager: APIManager
-    let userRepository: UserRepository
+    let userSessionRepository: UserSessionRepository
     let connectivity: ConnectivityManager
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
@@ -52,9 +52,9 @@ class LoginViewModelImpl: LoginViewModel {
     let disposeBag = DisposeBag()
     private var appCancellable = [AnyCancellable]()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: ConnectivityManager, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(apiCallManager: APIManager, userSessionRepository: UserSessionRepository, connectivity: ConnectivityManager, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
-        self.userRepository = userRepository
+        self.userSessionRepository = userSessionRepository
         self.connectivity = connectivity
         self.preferences = preferences
         self.emergencyConnectRepository = emergencyConnectRepository
@@ -153,7 +153,7 @@ class LoginViewModelImpl: LoginViewModel {
     private func handleLoginSuccess(session: Session) {
         preferences.saveLoginDate(date: Date())
         WifiManager.shared.saveCurrentWifiNetworks()
-        userRepository.login(session: session)
+        userSessionRepository.login(session: session)
         logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
 
         prepareUserData()
@@ -239,7 +239,7 @@ class LoginViewModelImpl: LoginViewModel {
                             session.sessionAuthHash = auth
                             WifiManager.shared.saveCurrentWifiNetworks()
                             self.preferences.saveLoginDate(date: Date())
-                            self.userRepository.login(session: session)
+                            self.userSessionRepository.login(session: session)
                             self.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")
                             self.prepareUserData()
                             self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)

@@ -10,7 +10,7 @@ import Foundation
 
 extension APIManagerImpl {
     func postBillingCpID(pcpID: String) async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
@@ -19,7 +19,7 @@ extension APIManagerImpl {
     }
 
     func getMobileBillingPlans(promo: String?) async throws -> MobilePlanList {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: MobilePlanList.self) { completion in
@@ -28,7 +28,7 @@ extension APIManagerImpl {
     }
 
     func verifyApplePayment(appleID: String, appleData: String, appleSIG: String) async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in

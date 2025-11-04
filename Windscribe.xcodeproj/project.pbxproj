@@ -278,7 +278,7 @@
 		1EF7CEFB2EA146CE001AE14E /* VPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */; };
 		1EF7CEFE2EA65136001AE14E /* MockVPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */; };
 		1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */; };
-		1EFFD0432E99389B005603FB /* MockUserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserRepository.swift */; };
+		1EFFD0432E99389B005603FB /* MockUserSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */; };
 		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
 		1EFFD04D2E994400005603FB /* ServerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFFD04C2E9943F6005603FB /* ServerList.json */; };
 		1EFFD0532E9FD8D4005603FB /* AdvanceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */; };
@@ -411,7 +411,6 @@
 		59FC73EC2C5150E000021CD1 /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
 		59FC73ED2C51510100021CD1 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1FC237DC02200BDDCDB /* APIMessage.swift */; };
 		59FC73EE2C51511700021CD1 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A7323CE2011002D3041 /* Token.swift */; };
-		59FC73EF2C51513100021CD1 /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BD2B34C1D90069FF3A /* UserRepository.swift */; };
 		59FC73F42C51527500021CD1 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930CC2B4332AA0001CFA0 /* User.swift */; };
 		59FC73F52C5152C500021CD1 /* MobilePlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E91D421ED277A00A3F584 /* MobilePlan.swift */; };
 		59FC73F62C51533E00021CD1 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0420EB21C19FE0002132DE /* Server.swift */; };
@@ -500,7 +499,7 @@
 		59FC745C2C5161DD00021CD1 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7F3087237B38670097C6D6 /* UIImageView+Extension.swift */; };
 		59FC745E2C51642100021CD1 /* PushNotificationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */; };
 		59FC745F2C51647500021CD1 /* Realm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDA2280E70300378058 /* Realm+Extension.swift */; };
-		59FC74612C51678000021CD1 /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */; };
+		59FC74612C51678000021CD1 /* UserSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserSessionRepository.swift */; };
 		59FC74622C51679000021CD1 /* UserDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384F2B917EF300AA725C /* UserDataRepository.swift */; };
 		59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D42B43EE710001CFA0 /* NotificationRepository.swift */; };
 		59FC74642C5167A300021CD1 /* NotificationRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D62B43EE9A0001CFA0 /* NotificationRepositoryImpl.swift */; };
@@ -925,8 +924,7 @@
 		C5D1C2D62BBFE2F40083B9EC /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
 		C5D983B92B34A1C40069FF3A /* APIManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983B82B34A1C40069FF3A /* APIManagerImpl.swift */; };
 		C5D983BB2B34A1D90069FF3A /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BA2B34A1D90069FF3A /* APIManager.swift */; };
-		C5D983BE2B34C1D90069FF3A /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BD2B34C1D90069FF3A /* UserRepository.swift */; };
-		C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */; };
+		C5D983C02B34C23C0069FF3A /* UserSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserSessionRepository.swift */; };
 		C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
 		C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */; };
 		C5D9F9502D8491EC00249C90 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DAB2D7882630075B8F5 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -994,6 +992,8 @@
 		F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
 		F41541FF2E12F94A00833EC5 /* CaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41541FE2E12F94400833EC5 /* CaptchaView.swift */; };
+		F41AC7A02EA950E400673A11 /* UserSessionRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */; };
+		F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AC7A22EA95CC200673A11 /* MockWgCredentials.swift */; };
 		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
 		F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
 		F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
@@ -1600,7 +1600,7 @@
 		1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNStateRepository.swift; sourceTree = "<group>"; };
 		1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVPNStateRepository.swift; sourceTree = "<group>"; };
 		1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRepositoryTests.swift; sourceTree = "<group>"; };
-		1EFFD0422E993898005603FB /* MockUserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserRepository.swift; sourceTree = "<group>"; };
+		1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserSessionRepository.swift; sourceTree = "<group>"; };
 		1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAdvanceRepository.swift; sourceTree = "<group>"; };
 		1EFFD04C2E9943F6005603FB /* ServerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ServerList.json; sourceTree = "<group>"; };
 		1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceRepositoryTests.swift; sourceTree = "<group>"; };
@@ -1954,8 +1954,7 @@
 		C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceKeys.swift; sourceTree = "<group>"; };
 		C5D983B82B34A1C40069FF3A /* APIManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManagerImpl.swift; sourceTree = "<group>"; };
 		C5D983BA2B34A1D90069FF3A /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
-		C5D983BD2B34C1D90069FF3A /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
-		C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepositoryImpl.swift; sourceTree = "<group>"; };
+		C5D983BF2B34C23C0069FF3A /* UserSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionRepository.swift; sourceTree = "<group>"; };
 		C5D983C12B34DA3F0069FF3A /* APIUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtil.swift; sourceTree = "<group>"; };
 		C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtilTests.swift; sourceTree = "<group>"; };
 		C5FA3E832684BB90001D03A7 /* HelpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpItem.swift; sourceTree = "<group>"; };
@@ -2022,6 +2021,8 @@
 		F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F41541FE2E12F94400833EC5 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
+		F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionRepositoryTests.swift; sourceTree = "<group>"; };
+		F41AC7A22EA95CC200673A11 /* MockWgCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWgCredentials.swift; sourceTree = "<group>"; };
 		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
 		F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 		F43184B92E1C59DE007C96E3 /* LocationPermissionInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionInfoView.swift; sourceTree = "<group>"; };
@@ -3137,7 +3138,7 @@
 			children = (
 				1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */,
 				1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */,
-				1EFFD0422E993898005603FB /* MockUserRepository.swift */,
+				1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */,
 				F4B4C1F72EA2BB090024D824 /* MockPortMapRepository.swift */,
 			);
 			path = Repositories;
@@ -3791,8 +3792,7 @@
 		C5592B872B394A7600F2F110 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				C5D983BD2B34C1D90069FF3A /* UserRepository.swift */,
-				C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */,
+				C5D983BF2B34C23C0069FF3A /* UserSessionRepository.swift */,
 				C5BF384F2B917EF300AA725C /* UserDataRepository.swift */,
 			);
 			path = User;
@@ -4345,6 +4345,15 @@
 			path = CI;
 			sourceTree = "<group>";
 		};
+		F41AC7A12EA95CAF00673A11 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F465A6402D5D3E1400579B5F /* MockSession.swift */,
+				F41AC7A22EA95CC200673A11 /* MockWgCredentials.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		F42ADD1E2D5BB47F0021AF6E /* AppReview */ = {
 			isa = PBXGroup;
 			children = (
@@ -4553,6 +4562,7 @@
 				1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */,
 				F4B4C1F52EA16A6C0024D824 /* StaticIpRepositoryTests.swift */,
 				F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */,
+				F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */,
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
 				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
 				F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */,
@@ -5652,10 +5662,10 @@
 		F4EF7A092D5D31A200E4EB9F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
+				F41AC7A12EA95CAF00673A11 /* Models */,
 				1EFFD0412E99384F005603FB /* Data */,
 				1EFFD0402E99383D005603FB /* Repositories */,
 				1EFFD03F2E99382D005603FB /* Managers */,
-				F465A6402D5D3E1400579B5F /* MockSession.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -6485,7 +6495,6 @@
 				5986AB3B2C41C0B900167023 /* CoreModule.swift in Sources */,
 				59FC73F42C51527500021CD1 /* User.swift in Sources */,
 				59FC73E22C51504600021CD1 /* APIManager.swift in Sources */,
-				59FC73EF2C51513100021CD1 /* UserRepository.swift in Sources */,
 				59FC745E2C51642100021CD1 /* PushNotificationManagerImpl.swift in Sources */,
 				599BA2AA2C5D202A00F0D1E4 /* LocalDatabaseImpl+Migration.swift in Sources */,
 				59FC73E92C51507800021CD1 /* APIManagerImpl+Account.swift in Sources */,
@@ -6694,7 +6703,7 @@
 				59FC741B2C51545000021CD1 /* PingData.swift in Sources */,
 				59DA7FC52C3DC4BE00042E57 /* WireguardAPIManager.swift in Sources */,
 				1E79CA5E2C63D7A3006D4DE7 /* AccountSectionView.swift in Sources */,
-				59FC74612C51678000021CD1 /* UserRepositoryImpl.swift in Sources */,
+				59FC74612C51678000021CD1 /* UserSessionRepository.swift in Sources */,
 				59FC74402C515BB000021CD1 /* CredentialsRepositoryImpl.swift in Sources */,
 				59FC746E2C51693200021CD1 /* ShakeDataRepositoryImpl.swift in Sources */,
 				59FC741D2C51546B00021CD1 /* AdvanceRepository.swift in Sources */,
@@ -7085,7 +7094,7 @@
 				C56FCBE82B2B8E40008DE7D4 /* SharedKeys.swift in Sources */,
 				F4888E3B2D946DB9005EF149 /* KeyboardResponder.swift in Sources */,
 				F499357F2DAEE82C00108558 /* CustomSoundEffectType.swift in Sources */,
-				C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */,
+				C5D983C02B34C23C0069FF3A /* UserSessionRepository.swift in Sources */,
 				F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */,
 				1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */,
 				C56FCBD22B2A42B9008DE7D4 /* RouteIDs.swift in Sources */,
@@ -7162,7 +7171,6 @@
 				AF7F3088237B38670097C6D6 /* UIImageView+Extension.swift in Sources */,
 				E9425BA52743707B008B8786 /* URLs.swift in Sources */,
 				C580FE282B50829B004FA857 /* LatencyRepository.swift in Sources */,
-				C5D983BE2B34C1D90069FF3A /* UserRepository.swift in Sources */,
 				1E5553AD2D89AAC400F16AF0 /* BaseNodeCell.swift in Sources */,
 				E9425BA227437064008B8786 /* FilePaths.swift in Sources */,
 				F47EC5432DEA47B100AF5089 /* Task+Extension.swift in Sources */,
@@ -7239,8 +7247,9 @@
 				F48DDC162E85BEA800B66315 /* WGCredentialsTests.swift in Sources */,
 				F48DDC1F2E8C9BCC00B66315 /* FileDatabaseTests.swift in Sources */,
 				F43791792E95A17000ED6141 /* SampleDataLeaderboard.swift in Sources */,
-				1EFFD0432E99389B005603FB /* MockUserRepository.swift in Sources */,
+				1EFFD0432E99389B005603FB /* MockUserSessionRepository.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
+				F41AC7A02EA950E400673A11 /* UserSessionRepositoryTests.swift in Sources */,
 				F4B4C1F22EA0416D0024D824 /* RxExtensions.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
@@ -7261,6 +7270,7 @@
 				F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
+				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,
 				F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */,

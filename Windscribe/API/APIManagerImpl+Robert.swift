@@ -11,7 +11,7 @@ import RxSwift
 
 extension APIManagerImpl {
     func getRobertFilters() async throws -> RobertFilters {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: RobertFilters.self) { completion in
@@ -20,7 +20,7 @@ extension APIManagerImpl {
     }
 
     func updateRobertSettings(id: String, status: Int32) async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
@@ -29,7 +29,7 @@ extension APIManagerImpl {
     }
 
     func syncRobertFilters() async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in

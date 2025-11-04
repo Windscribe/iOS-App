@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
-    
+
     private lazy var protocolManager: ProtocolManagerType = Assembler.resolve(ProtocolManagerType.self)
 
     lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)

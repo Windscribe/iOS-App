@@ -47,7 +47,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private var appCancellable = [AnyCancellable]()
 
     let apiCallManager: APIManager
-    let userRepository: UserRepository
+    let userSessionRepository: UserSessionRepository
     let userDataRepository: UserDataRepository
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
@@ -58,9 +58,9 @@ class SignUpViewModelImpl: SignUpViewModel {
     let logger: FileLogger
     let disposeBag = DisposeBag()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: ConnectivityManager, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(apiCallManager: APIManager, userSessionRepository: UserSessionRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: ConnectivityManager, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
-        self.userRepository = userRepository
+        self.userSessionRepository = userSessionRepository
         self.userDataRepository = userDataRepository
         self.preferences = preferences
         self.connectivity = connectivity
@@ -212,7 +212,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func handleSignupSuccess(session: Session) {
-        userRepository.login(session: session)
+        userSessionRepository.login(session: session)
         logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(session.username)")
 
         prepareUserData()
@@ -292,18 +292,25 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func getUpdatedUser(email: String) {
         logger.logD("SignUpViewModelImpl", "Getting updated session.")
-        userRepository.getUpdatedUser().observe(on: MainScheduler.instance).subscribe(onSuccess: { _ in
-            self.showLoadingView.onNext(false)
-            if email.isEmpty == false {
-                self.routeTo.onNext(.confirmEmail)
-            } else {
+
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.userSessionRepository.getUpdatedUser()
+
+                self.showLoadingView.onNext(false)
+                if email.isEmpty == false {
+                    self.routeTo.onNext(.confirmEmail)
+                } else {
+                    self.routeTo.onNext(.main)
+                }
+            } catch {
+                self.logger.logE("SignUpViewModelImpl", "Failed to get session. \(error)")
+                self.showLoadingView.onNext(false)
                 self.routeTo.onNext(.main)
             }
-        }, onFailure: { error in
-            self.logger.logE("SignUpViewModelImpl", "Failed to get session. \(error)")
-            self.showLoadingView.onNext(false)
-            self.routeTo.onNext(.main)
-        }).disposed(by: disposeBag)
+        }
     }
 
     private func disconnectFromEmergencyConnect() {
@@ -390,7 +397,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func checkUserStatus() {
-        let isPro = try? userRepository.user.value()?.isPro
+        let isPro = userSessionRepository.user?.isPro
         isPremiumUser.onNext(isPro ?? false)
     }
 

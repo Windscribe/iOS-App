@@ -40,7 +40,7 @@ class SessionManagerImpl: SessionManager {
     let portmapRepo = Assembler.resolve(PortMapRepository.self)
     let preferences = Assembler.resolve(Preferences.self)
     let latencyRepo = Assembler.resolve(LatencyRepository.self)
-    let userRepo = Assembler.resolve(UserRepository.self)
+    let userSessionRepo = Assembler.resolve(UserSessionRepository.self)
     let locationsManager = Assembler.resolve(LocationsManager.self)
     let vpnStateRepository: VPNStateRepository = Assembler.resolve(VPNStateRepository.self)
 
@@ -72,7 +72,7 @@ class SessionManagerImpl: SessionManager {
 
                 do {
                     let session = try await self.apiManager.getSession(nil)
-                    self.userRepo.update(session: session)
+                    self.userSessionRepo.update(session: session)
                     self.logger.logI("SessionManager", "Session updated for \(session.username)")
                     self.sessionFetchInProgress = false
                 } catch let error {
@@ -92,7 +92,7 @@ class SessionManagerImpl: SessionManager {
 
     func checkSession() async throws {
         let session = try await apiManager.getSession(nil)
-        userRepo.update(session: session)
+        userSessionRepo.update(session: session)
     }
 
     func canAccesstoProLocation() -> Bool {

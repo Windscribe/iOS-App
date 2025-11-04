@@ -27,6 +27,9 @@ class MockAPIManager: APIManager {
     var staticIPListToReturn: StaticIPList?
     var getStaticIpListCalled = false
 
+    // Session tracking
+    var mockSession: Session?
+
     // Track method calls
     var getLeaderboardCalled = false
     var recordScoreCalled = false
@@ -94,7 +97,15 @@ class MockAPIManager: APIManager {
     // MARK: - Session Methods
 
     func getSession(_ appleID: String?) async throws -> Session {
-        fatalError("Not implemented")
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let session = mockSession else {
+            throw Errors.notDefined
+        }
+
+        return session
     }
 
     func getWebSession() async throws -> WebSession {

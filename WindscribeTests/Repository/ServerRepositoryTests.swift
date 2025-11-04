@@ -18,7 +18,7 @@ class ServerRepositoryTests: XCTestCase {
     var repository: ServerRepository!
     var mockAPIManager: MockAPIManager!
     var mockLocalDatabase: MockLocalDatabase!
-    var mockUserRepository: MockUserRepository!
+    var mockUserSessionRepository: MockUserSessionRepository!
     var mockLogger: MockLogger!
     var mockPreferences: MockPreferences!
     var mockAdvanceRepository: MockAdvanceRepository!
@@ -29,7 +29,7 @@ class ServerRepositoryTests: XCTestCase {
         mockContainer = Container()
         mockAPIManager = MockAPIManager()
         mockLocalDatabase = MockLocalDatabase()
-        mockUserRepository = MockUserRepository()
+        mockUserSessionRepository = MockUserSessionRepository()
         mockPreferences = MockPreferences()
         mockLogger = MockLogger()
         mockAdvanceRepository = MockAdvanceRepository()
@@ -43,8 +43,8 @@ class ServerRepositoryTests: XCTestCase {
             return self.mockLocalDatabase
         }.inObjectScope(.container)
 
-        mockContainer.register(UserRepository.self) { _ in
-            return self.mockUserRepository
+        mockContainer.register(UserSessionRepository.self) { _ in
+            return self.mockUserSessionRepository
         }.inObjectScope(.container)
 
         mockContainer.register(Preferences.self) { _ in
@@ -64,7 +64,7 @@ class ServerRepositoryTests: XCTestCase {
             return ServerRepositoryImpl(
                 apiManager: r.resolve(APIManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
-                userRepository: r.resolve(UserRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 advanceRepository: r.resolve(AdvanceRepository.self)!,
                 logger: r.resolve(FileLogger.self)!
@@ -83,7 +83,7 @@ class ServerRepositoryTests: XCTestCase {
         repository = nil
         mockAPIManager = nil
         mockLocalDatabase = nil
-        mockUserRepository = nil
+        mockUserSessionRepository = nil
         mockPreferences = nil
         mockLogger = nil
         mockAdvanceRepository = nil
@@ -94,7 +94,7 @@ class ServerRepositoryTests: XCTestCase {
     func testGetUpdatedServersSuccess() async throws {
         // Given
         let mockUser = createMockUser()
-        mockUserRepository.user.onNext(mockUser)
+        mockUserSessionRepository.user = mockUser
 
         guard let mockServerList = createMockServerList() else {
             XCTFail("ServerList was nil, should be something")
@@ -117,7 +117,7 @@ class ServerRepositoryTests: XCTestCase {
 
     func testGetUpdatedServersWithoutUser() async {
         // Given
-        mockUserRepository.user.onNext(nil)
+        mockUserSessionRepository.user = nil
 
         // When/Then
         do {
@@ -131,7 +131,7 @@ class ServerRepositoryTests: XCTestCase {
     func testGetUpdatedServersAPIErrorFallbackToLocal() async throws {
         // Given
         let mockUser = createMockUser()
-        mockUserRepository.user.onNext(mockUser)
+        mockUserSessionRepository.user = mockUser
 
         // API will fail
         mockAPIManager.shouldThrowError = true
@@ -157,7 +157,7 @@ class ServerRepositoryTests: XCTestCase {
     func testGetUpdatedServersAPIErrorNoLocalData() async {
         // Given
         let mockUser = createMockUser()
-        mockUserRepository.user.onNext(mockUser)
+        mockUserSessionRepository.user = mockUser
 
         // API will fail and no local data
         mockAPIManager.shouldThrowError = true
@@ -176,7 +176,7 @@ class ServerRepositoryTests: XCTestCase {
     func testUpdatedServerModelsSubject() async throws {
         // Given
         let mockUser = createMockUser()
-        mockUserRepository.user.onNext(mockUser)
+        mockUserSessionRepository.user = mockUser
 
         guard let mockServerList = createMockServerList() else {
             XCTFail("ServerList was nil, should be something")

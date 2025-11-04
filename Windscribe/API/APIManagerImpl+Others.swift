@@ -22,7 +22,7 @@ extension APIManagerImpl {
     }
 
     func getNotifications(pcpid: String) async throws -> NoticeList {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: NoticeList.self) { completion in
@@ -43,7 +43,7 @@ extension APIManagerImpl {
     }
 
     func getShakeForDataLeaderboard() async throws -> Leaderboard {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: Leaderboard.self) { completion in
@@ -52,7 +52,7 @@ extension APIManagerImpl {
     }
 
     func recordShakeForDataScore(score: Int, userID: String) async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         var signatureText = ""

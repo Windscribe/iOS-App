@@ -108,7 +108,7 @@ extension APIManagerImpl {
     }
 
     func addEmail(email: String) async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
@@ -117,7 +117,7 @@ extension APIManagerImpl {
     }
 
     func confirmEmail() async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
@@ -126,7 +126,7 @@ extension APIManagerImpl {
     }
 
     func claimAccount(username: String, password: String, email: String) async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
@@ -147,7 +147,7 @@ extension APIManagerImpl {
     }
 
     func verifyTvLoginCode(code: String) async throws -> XPressLoginVerifyResponse {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
@@ -156,7 +156,7 @@ extension APIManagerImpl {
     }
 
     func cancelAccount(password: String) async throws -> APIMessage {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
@@ -165,7 +165,7 @@ extension APIManagerImpl {
     }
 
     func claimVoucherCode(code: String) async throws -> ClaimVoucherCodeResponse {
-        guard let sessionAuth = userRepository?.sessionAuth else {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: ClaimVoucherCodeResponse.self) { completion in
