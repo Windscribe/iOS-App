@@ -59,15 +59,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.latencyRepository.loadLatency()
             }
         }
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
 
             do {
                 let session = try await self.apiManager.getSession(nil)
                 await MainActor.run {
                     self.localDatabase.saveOldSession()
-                    self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
                 }
+                await self.localDatabase.saveSession(session: session)
             } catch {
                 await MainActor.run {
                     self.logger.logE("AppDelegate", "Failed to get session from server with error \(error).")

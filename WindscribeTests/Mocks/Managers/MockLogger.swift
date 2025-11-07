@@ -23,11 +23,23 @@ class MockLogger: FileLogger {
         print("[MOCK LOGGER DEBUG] \(tag): \(message)")
     }
 
+    func logD(_ tag: String, _ message: String, flushImmediately: Bool) {
+        print("[MOCK LOGGER DEBUG] \(tag): \(message)")
+    }
+
     func logI(_ tag: String, _ message: String) {
         print("[MOCK LOGGER INFO] \(tag): \(message)")
     }
 
+    func logI(_ tag: String, _ message: String, flushImmediately: Bool) {
+        print("[MOCK LOGGER INFO] \(tag): \(message)")
+    }
+
     func logE(_ tag: String, _ message: String) {
+        print("[MOCK LOGGER ERROR] \(tag): \(message)")
+    }
+
+    func logE(_ tag: String, _ message: String, flushImmediately: Bool) {
         print("[MOCK LOGGER ERROR] \(tag): \(message)")
     }
 

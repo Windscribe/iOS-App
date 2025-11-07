@@ -227,14 +227,16 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
 
     private func upgrade() {
         self.logger.logI("UpgradeViewModelImpl", "Getting new session.")
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
 
             do {
                 let session = try await self.apiManager.getSession(nil)
                 await MainActor.run {
                     self.logger.logI("UpgradeViewModelImpl", "Received updated session.")
-                    self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                }
+                await self.localDatabase.saveSession(session: session)
+                await MainActor.run {
                     self.upgradeState.onNext(.success(session.isUserGhost))
                 }
             } catch {

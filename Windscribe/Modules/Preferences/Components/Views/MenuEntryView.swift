@@ -306,9 +306,9 @@ struct MenuFieldView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Button(action: {
+                    action(.field(value: "", parentId: parentId))
                     isEditing = false
                     isTextFieldFocused = false
-                    editedValue = value == placeHolder ? "" : value
                 }, label: {
                     HStack {
                         Image(ImagesAsset.closeCross)
@@ -319,11 +319,11 @@ struct MenuFieldView: View {
                             .foregroundColor(.from(.infoColor, isDarkMode))
                     }
                 })
-                .padding(.trailing, 12)
+                .padding(.trailing, 20)
                 Button(action: {
+                    action(.field(value: editedValue, parentId: parentId))
                     isEditing = false
                     isTextFieldFocused = false
-                    action(.field(value: editedValue, parentId: parentId))
                 }, label: {
                     HStack {
                         Image(ImagesAsset.greenCheckMark)

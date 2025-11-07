@@ -58,10 +58,8 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     try await fileDatabase.saveFile(data: data, path: path)
 
                     // Realm operation on main thread
-                    await MainActor.run {
-                        let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort)
-                        localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
-                    }
+                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort)
+                    await localDatabase.saveCustomConfig(customConfig: customConfig)
                     return nil
                 } catch {
                     logger.logE("CustomConfigRepositoryImpl", "Failed to save WG config file: \(error)")
@@ -155,10 +153,8 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     try await fileDatabase.saveFile(data: data, path: path)
 
                     // Realm operation on main thread
-                    await MainActor.run {
-                        let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, authRequired: configAuthRequired)
-                        localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
-                    }
+                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, authRequired: configAuthRequired)
+                    await localDatabase.saveCustomConfig(customConfig: customConfig)
                     return nil
                 } catch {
                     logger.logE("CustomConfigRepositoryImpl", "Failed to save OpenVPN config file: \(error)")

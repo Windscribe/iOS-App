@@ -560,34 +560,37 @@ extension PreferencesImpl {
 
     // Generic Combine Helpers
 
-    func observeKey<T>(_ key: String, type: T.Type, defaultValue: T?) -> AnyPublisher<T?, Never> {
+    func observeKey<T: Equatable>(_ key: String, type: T.Type, defaultValue: T?) -> AnyPublisher<T?, Never> {
         guard let sharedDefault = sharedDefault else {
             return Just(defaultValue).eraseToAnyPublisher()
         }
 
         return sharedDefault.publisher(for: key, type: type)
             .map { $0 ?? defaultValue }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
-    func observeKeyEmpty<T>(_ key: String, type: T.Type) -> AnyPublisher<T?, Never> {
+    func observeKeyEmpty<T: Equatable>(_ key: String, type: T.Type) -> AnyPublisher<T?, Never> {
         guard let sharedDefault = sharedDefault else {
             return Empty().eraseToAnyPublisher()
         }
 
         return sharedDefault.publisher(for: key, type: type)
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
-    func observeKeyNonOptional<T>(_ key: String, type: T.Type, defaultValue: T, transform: @escaping (T?) -> T) -> AnyPublisher<T, Never> {
+    func observeKeyNonOptional<T: Equatable>(_ key: String, type: T.Type, defaultValue: T, transform: @escaping (T?) -> T) -> AnyPublisher<T, Never> {
         guard let sharedDefault = sharedDefault else {
             return Just(defaultValue).eraseToAnyPublisher()
         }
 
         return sharedDefault.publisher(for: key, type: type)
             .map(transform)
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }

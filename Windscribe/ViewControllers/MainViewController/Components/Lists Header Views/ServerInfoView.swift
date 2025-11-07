@@ -40,7 +40,8 @@ class ServerInfoViewModel: ServerInfoViewModelType {
                 receiveCompletion: { _ in },
                 receiveValue: { [weak self] servers in
                     guard let self = self else { return }
-                    self.count = servers.count
+                    // Count total groups across all servers
+                    self.count = servers.reduce(0) { $0 + $1.groups.count }
                     self.serverCountSubject.onNext(self.count)
             })
             .store(in: &cancellables)
@@ -55,8 +56,10 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     func updateWithSearchCount(searchCount: Int) {
         if searchCount >= 0 {
             self.serverCountSubject.onNext(searchCount)
-        } else if let count = localDatabase.getServers()?.count {
-            self.serverCountSubject.onNext(count)
+        } else if let servers = localDatabase.getServers() {
+            // Count total groups across all servers
+            let totalGroupCount = servers.reduce(0) { $0 + $1.groups.count }
+            self.serverCountSubject.onNext(totalGroupCount)
         }
     }
 }

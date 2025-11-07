@@ -403,9 +403,9 @@ class MainViewModel: MainViewModelType {
     func loadFavourite() {
         Publishers.CombineLatest(
             serverRepository.updatedServerModelsSubject,
-            localDatabase.getFavouriteListObservable().toPublisher().replaceError(with: [])
+            localDatabase.getFavouriteListObservable().toPublisherIncludingEmpty().replaceError(with: [])
         )
-        .receive(on: DispatchQueue.main)
+        .receive(on: RunLoop.main)
         .sink { [weak self] (serverModels, favList) in
             guard let self = self else { return }
             let favGroupModels = favList.filter { !$0.isInvalidated }

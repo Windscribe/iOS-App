@@ -82,7 +82,7 @@ class UserSessionRepositoryTests: XCTestCase {
     func test_init_withSessionInDatabase_shouldSetUser() {
         // Given
         let mockSession = createMockSession()
-        mockLocalDatabase.sessionSubject.send(mockSession)
+        mockLocalDatabase.sessionSubject.onNext(mockSession)
 
         // When
         let repo = UserSessionRepositoryImpl(
@@ -100,7 +100,7 @@ class UserSessionRepositoryTests: XCTestCase {
 
     func test_init_withoutSessionInDatabase_shouldHaveNilUser() {
         // Given
-        mockLocalDatabase.sessionSubject.send(nil)
+        mockLocalDatabase.sessionSubject.onNext(nil)
 
         // When
         let repo = UserSessionRepositoryImpl(
@@ -157,7 +157,7 @@ class UserSessionRepositoryTests: XCTestCase {
         // Wait a bit for async operation
         try await Task.sleep(nanoseconds: 100_000_000) // 0.1 second
 
-        let savedSession = mockLocalDatabase.sessionSubject.value
+        let savedSession = try? mockLocalDatabase.sessionSubject.value()
         XCTAssertNotNil(savedSession)
         XCTAssertEqual(savedSession?.username, "UpdatedUser")
     }
@@ -215,25 +215,25 @@ class UserSessionRepositoryTests: XCTestCase {
 
     // MARK: Login Tests
 
-    func test_login_shouldDeleteWgCredentials() {
+    func test_login_shouldDeleteWgCredentials() async {
         // Given
         let mockSession = createMockSession()
         mockWgCredentials.deleteCalled = false
 
         // When
-        repository.login(session: mockSession)
+        await repository.login(session: mockSession)
 
         // Then
         XCTAssertTrue(mockWgCredentials.deleteCalled, "Should delete WireGuard credentials on login")
     }
 
-    func test_login_shouldSaveSessionAuth() {
+    func test_login_shouldSaveSessionAuth() async {
         // Given
         let mockSession = createMockSession()
         mockSession.sessionAuthHash = "test-auth-hash"
 
         // When
-        repository.login(session: mockSession)
+        await repository.login(session: mockSession)
 
         // Then
         XCTAssertEqual(mockPreferences.lastSavedSessionAuth, "test-auth-hash")
@@ -245,10 +245,9 @@ class UserSessionRepositoryTests: XCTestCase {
         mockLocalDatabase.saveOldSessionCalled = false
 
         // When
-        repository.login(session: mockSession)
+        await repository.login(session: mockSession)
 
         // Then
-        try await Task.sleep(nanoseconds: 100_000_000) // Wait for Task to complete
         XCTAssertTrue(mockLocalDatabase.saveOldSessionCalled, "Should save old session on login")
     }
 
@@ -258,11 +257,10 @@ class UserSessionRepositoryTests: XCTestCase {
         mockSession.username = "LoginUser"
 
         // When
-        repository.login(session: mockSession)
+        await repository.login(session: mockSession)
 
         // Then
-        try await Task.sleep(nanoseconds: 100_000_000) // Wait for Task to complete
-        let savedSession = mockLocalDatabase.sessionSubject.value
+        let savedSession = try? mockLocalDatabase.sessionSubject.value()
         XCTAssertEqual(savedSession?.username, "LoginUser")
     }
 
@@ -272,10 +270,9 @@ class UserSessionRepositoryTests: XCTestCase {
         mockSession.username = "LoginUser"
 
         // When
-        repository.login(session: mockSession)
+        await repository.login(session: mockSession)
 
         // Then
-        try await Task.sleep(nanoseconds: 100_000_000) // Wait for Task to complete
         XCTAssertNotNil(repository.user)
         XCTAssertEqual(repository.user?.username, "LoginUser")
     }
@@ -288,11 +285,10 @@ class UserSessionRepositoryTests: XCTestCase {
         mockSession.username = "UpdatedUser"
 
         // When
-        repository.update(session: mockSession)
+        await repository.update(session: mockSession)
 
         // Then
-        try await Task.sleep(nanoseconds: 100_000_000) // Wait for Task to complete
-        let savedSession = mockLocalDatabase.sessionSubject.value
+        let savedSession = try? mockLocalDatabase.sessionSubject.value()
         XCTAssertEqual(savedSession?.username, "UpdatedUser")
     }
 
@@ -302,34 +298,33 @@ class UserSessionRepositoryTests: XCTestCase {
         mockSession.username = "UpdatedUser"
 
         // When
-        repository.update(session: mockSession)
+        await repository.update(session: mockSession)
 
         // Then
-        try await Task.sleep(nanoseconds: 100_000_000) // Wait for Task to complete
         XCTAssertNotNil(repository.user)
         XCTAssertEqual(repository.user?.username, "UpdatedUser")
     }
 
-    func test_update_shouldNotDeleteWgCredentials() {
+    func test_update_shouldNotDeleteWgCredentials() async {
         // Given
         let mockSession = createMockSession()
         mockWgCredentials.deleteCalled = false
 
         // When
-        repository.update(session: mockSession)
+        await repository.update(session: mockSession)
 
         // Then
         XCTAssertFalse(mockWgCredentials.deleteCalled, "Update should not delete WireGuard credentials")
     }
 
-    func test_update_shouldNotSaveSessionAuth() {
+    func test_update_shouldNotSaveSessionAuth() async {
         // Given
         let mockSession = createMockSession()
         mockSession.sessionAuthHash = "new-hash"
         mockPreferences.lastSavedSessionAuth = nil
 
         // When
-        repository.update(session: mockSession)
+        await repository.update(session: mockSession)
 
         // Then
         XCTAssertNil(mockPreferences.lastSavedSessionAuth, "Update should not save session auth")
@@ -369,8 +364,7 @@ class UserSessionRepositoryTests: XCTestCase {
         updatedSession.username = "UpdatedUser"
 
         // When - login first
-        repository.login(session: loginSession)
-        try await Task.sleep(nanoseconds: 100_000_000)
+        await repository.login(session: loginSession)
 
         // Then
         XCTAssertEqual(repository.user?.username, "LoginUser")
@@ -392,15 +386,13 @@ class UserSessionRepositoryTests: XCTestCase {
         updateSession.username = "UpdatedUser"
 
         // When - login first
-        repository.login(session: loginSession)
-        try await Task.sleep(nanoseconds: 100_000_000)
+        await repository.login(session: loginSession)
 
         // Then
         XCTAssertEqual(repository.user?.username, "LoginUser")
 
         // When - update
-        repository.update(session: updateSession)
-        try await Task.sleep(nanoseconds: 100_000_000)
+        await repository.update(session: updateSession)
 
         // Then
         XCTAssertEqual(repository.user?.username, "UpdatedUser")

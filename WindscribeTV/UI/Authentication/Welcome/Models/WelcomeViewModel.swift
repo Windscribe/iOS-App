@@ -61,16 +61,16 @@ class WelcomeViewModelImpl: WelcomeViewModel {
         }
         showLoadingView.onNext(true)
 
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
 
             do {
                 let result = try await self.apiManager.regToken()
                 let session = try await self.apiManager.signUpUsingToken(token: result.token)
 
+                await self.userSessionRepository.login(session: session)
                 await MainActor.run {
                     self.keyChainDatabase.setGhostAccountCreated()
-                    self.userSessionRepository.login(session: session)
                     self.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(session.userId)")
                     self.prepareUserData()
                 }

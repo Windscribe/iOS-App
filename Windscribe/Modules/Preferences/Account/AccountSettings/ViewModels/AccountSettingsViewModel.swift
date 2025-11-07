@@ -91,7 +91,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
             self.buildSections(from: session)
         }
 
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
             do {
                 let session = try await apiManager.getSession(nil)
@@ -99,8 +99,8 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
                     self.accountEmailStatus = self.calculateEmailStatus(from: session)
                     self.buildSections(from: session)
                     self.loadingState = .success
-                    self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
                 }
+                await self.localDatabase.saveSession(session: session)
             } catch {
                 await MainActor.run {
                     guard let session = self.localDatabase.getSessionSync() else {

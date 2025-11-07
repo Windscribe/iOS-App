@@ -161,7 +161,7 @@ class AccountViewModel: AccountViewModelType {
 
     func loadSession() -> Single<Session> {
         return Single.create { single in
-            let task = Task { [weak self] in
+            let task = Task { @MainActor [weak self] in
                 guard let self = self else {
                     single(.failure(Errors.validationFailure))
                     return
@@ -171,10 +171,12 @@ class AccountViewModel: AccountViewModelType {
                     let session = try await self.apiCallManager.getSession(nil)
                     await MainActor.run {
                         self.localDatabase.saveOldSession()
-                        self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                    }
+                    await self.localDatabase.saveSession(session: session)
+                    await MainActor.run {
                         let oldSession = self.localDatabase.getOldSession()
                         let sessionSync = self.localDatabase.getSessionSync()
-                        if self.localDatabase.getOldSession() != self.localDatabase.getSessionSync() {
+                        if oldSession != sessionSync {
                             self.sessionUpdatedTrigger.onNext(())
                         }
                     }

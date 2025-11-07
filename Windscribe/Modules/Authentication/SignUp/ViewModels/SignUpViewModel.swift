@@ -249,7 +249,7 @@ class SignUpViewModelImpl: SignUpViewModel {
         captchaSolution: String = "",
         captchaTrailX: [CGFloat] = [],
         captchaTrailY: [CGFloat] = []) {
-            Task { [weak self] in
+            Task { @MainActor [weak self] in
                 guard let self = self else { return }
 
                 do {
@@ -265,9 +265,8 @@ class SignUpViewModelImpl: SignUpViewModel {
                 captchaTrailY: captchaTrailY
                     )
 
+                    await self.userSessionRepository.login(session: session)
                     await MainActor.run {
-                        self.userSessionRepository.login(session: session)
-                        self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
                         self.prepareUserData()
                     }
                 } catch {

@@ -15,6 +15,7 @@ import Combine
 class MockLocalDatabase: LocalDatabase {
 
     let sessionSubject = BehaviorSubject<Windscribe.Session?>(value: nil)
+    let notificationsSubject = BehaviorSubject<[Windscribe.Notice]>(value: [])
 
     var mockServers: [Server]? = []
     // PortMap tracking
@@ -46,11 +47,12 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getSessionSync() -> Windscribe.Session? {
-        return sessionSubject.value
+        return try? sessionSubject.value()
     }
 
-    func saveSession(session: Windscribe.Session) -> Disposable {
-        return Disposables.create()
+    func saveSession(session: Windscribe.Session) async {
+        // Trigger the subject to simulate Realm notification
+        sessionSubject.onNext(session)
     }
 
     func getMobilePlans() -> [Windscribe.MobilePlan]? {
@@ -125,12 +127,14 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getNotificationsObservable() -> Observable<[Windscribe.Notice]> {
-        return Observable.just(notificationsToReturn ?? [])
+        return notificationsSubject.asObservable()
     }
 
-    func saveNotifications(notifications: [Windscribe.Notice]) {
+    func saveNotifications(notifications: [Windscribe.Notice]) async {
         saveNotificationsCalled = true
         notificationsToReturn = notifications
+        // Trigger the subject to simulate Realm notification
+        notificationsSubject.onNext(notifications)
     }
 
     func getReadNotices() -> [Windscribe.ReadNotice]? {
@@ -164,8 +168,8 @@ class MockLocalDatabase: LocalDatabase {
         return []
     }
 
-    func saveCustomConfig(customConfig: Windscribe.CustomConfig) -> Disposable {
-        return Disposables.create()
+    func saveCustomConfig(customConfig: Windscribe.CustomConfig) async {
+        // Mock implementation - no-op
     }
 
     func removeCustomConfig(fileId: String) {}

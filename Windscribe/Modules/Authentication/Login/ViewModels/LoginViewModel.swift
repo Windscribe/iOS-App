@@ -192,13 +192,15 @@ class LoginViewModelImpl: LoginViewModel {
         WifiManager.shared.saveCurrentWifiNetworks()
 
         // Store authenticated session
-        userSessionRepository.login(session: session)
+        Task { @MainActor in
+            await userSessionRepository.login(session: session)
 
-        // Log the success with the username
-        logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
+            // Log the success with the username
+            logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
 
-        // Continue with user-specific data preparation and transition to main app screen
-        prepareUserData()
+            // Continue with user-specific data preparation and transition to main app screen
+            prepareUserData()
+        }
     }
 
     private func loginWithCredentials(
@@ -298,12 +300,14 @@ class LoginViewModelImpl: LoginViewModel {
                                 WifiManager.shared.saveCurrentWifiNetworks()
 
                                 self.preferences.saveLoginDate(date: Date())
-                                self.userSessionRepository.login(session: session)
-                                self.timerCancellable?.cancel()
-                                self.logger.logI("LoginViewModel",
-                                                 "Login successful with login code, Preparing user data for \(session.username)")
-                                self.prepareUserData()
-                                self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                                Task { @MainActor in
+                                    await self.userSessionRepository.login(session: session)
+                                    self.timerCancellable?.cancel()
+                                    self.logger.logI("LoginViewModel",
+                                                     "Login successful with login code, Preparing user data for \(session.username)")
+                                    self.prepareUserData()
+                                    self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                                }
                             }
                         } catch {
                             // Handle getSession error silently, just like the original code

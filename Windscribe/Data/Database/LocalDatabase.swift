@@ -15,7 +15,7 @@ protocol LocalDatabase {
     func migrate()
     func getSession() -> Observable<Session?>
     func getSessionSync() -> Session?
-    func saveSession(session: Session) -> Disposable
+    func saveSession(session: Session) async
     func getMobilePlans() -> [MobilePlan]?
     func saveMobilePlans(mobilePlansList: [MobilePlan])
     func getServers() -> [Server]?
@@ -34,7 +34,7 @@ protocol LocalDatabase {
     func getSuggestedPorts() -> [SuggestedPorts]?
     func getNotifications() -> [Notice]?
     func getNotificationsObservable() -> Observable<[Notice]>
-    func saveNotifications(notifications: [Notice])
+    func saveNotifications(notifications: [Notice]) async
     func getReadNotices() -> [ReadNotice]?
     func getReadNoticesObservable() -> Observable<[ReadNotice]>
     func saveReadNotices(readNotices: [ReadNotice])
@@ -46,7 +46,7 @@ protocol LocalDatabase {
     func removeNetwork(wifiNetwork: WifiNetwork)
     func addPingData(pingData: PingData)
     func getAllPingData() -> [PingData]
-    func saveCustomConfig(customConfig: CustomConfig) -> Disposable
+    func saveCustomConfig(customConfig: CustomConfig) async
     func removeCustomConfig(fileId: String)
     func getCustomConfig() -> Observable<[CustomConfig]>
     func getPorts(protocolType: String) -> [String]?

@@ -18,7 +18,6 @@
 		1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */; };
 		1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */; };
 		1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E022C472E93FDD600AF8AA7 /* TestLocalDatabase.swift */; };
-		1E022C4F2E951EAB00AF8AA7 /* LocalDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E022C4E2E951EA200AF8AA7 /* LocalDatabaseTests.swift */; };
 		1E09747D2D7F33FE003F7AA7 /* RxRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09747C2D7F33F1003F7AA7 /* RxRealm+Extension.swift */; };
 		1E09747E2D7F33FE003F7AA7 /* RxRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09747C2D7F33F1003F7AA7 /* RxRealm+Extension.swift */; };
 		1E0974A02D8077DE003F7AA7 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 1E09749F2D8077DE003F7AA7 /* RxDataSources */; };
@@ -3302,6 +3301,7 @@
 				F415335B2E26C39900DA7683 /* CI */,
 				AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */,
 				C553E34D2C25ABE900A2C027 /* LICENCE.md */,
+				F49373012EBA6B9600B71C58 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -5083,6 +5083,14 @@
 				F48DDC142E85BEA800B66315 /* WireGuardCredentialsTests.swift */,
 			);
 			path = Protocol;
+			sourceTree = "<group>";
+		};
+		F49373012EBA6B9600B71C58 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				1E022C4E2E951EA200AF8AA7 /* LocalDatabaseTests.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		F499351E2DA7170F00108558 /* Preferences */ = {
@@ -7277,7 +7285,6 @@
 				1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */,
 				F458FA3E2EAAC16600EAAE8E /* MockSessionRepository.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
-				1E022C4F2E951EAB00AF8AA7 /* LocalDatabaseTests.swift in Sources */,
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
