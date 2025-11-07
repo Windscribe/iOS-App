@@ -30,6 +30,7 @@ extension MainViewController {
         wifiInfoView.translatesAutoresizingMaskIntoConstraints = false
         ipInfoView.translatesAutoresizingMaskIntoConstraints = false
         freeAccountViewFooterView.translatesAutoresizingMaskIntoConstraints = false
+        logoStackView.translatesAutoresizingMaskIntoConstraints = false
 
         let isSmaller = UIDevice.current.isIphone5orLess()
 
@@ -78,15 +79,20 @@ extension MainViewController {
             preferencesTapAreaButton.heightAnchor.constraint(equalToConstant: isSmaller ? 20 : 24),
             preferencesTapAreaButton.widthAnchor.constraint(equalToConstant: isSmaller ? 20 : 24),
 
+            // logoStackView
+            logoStackView.centerYAnchor.constraint(equalTo: preferencesTapAreaButton.centerYAnchor),
+            logoStackView.leftAnchor.constraint(equalTo: preferencesTapAreaButton.rightAnchor, constant: 16),
+            logoStackView.heightAnchor.constraint(equalToConstant: isSmaller ? 16 : 18),
+
+            // proIcon
+            proIcon.widthAnchor.constraint(equalToConstant: isSmaller ? 39 : 44),
+
             // logoIcon
-            logoIcon.centerYAnchor.constraint(equalTo: preferencesTapAreaButton.centerYAnchor),
-            logoIcon.leftAnchor.constraint(equalTo: preferencesTapAreaButton.rightAnchor, constant: 16),
-            logoIcon.heightAnchor.constraint(equalToConstant: isSmaller ? 16 : 18),
             logoIcon.widthAnchor.constraint(equalToConstant: isSmaller ? 110 : 124),
 
             // notificationDot
-            notificationDot.topAnchor.constraint(equalTo: logoIcon.topAnchor, constant: -5),
-            notificationDot.rightAnchor.constraint(equalTo: logoIcon.rightAnchor, constant: 16),
+            notificationDot.topAnchor.constraint(equalTo: logoStackView.topAnchor, constant: -5),
+            notificationDot.rightAnchor.constraint(equalTo: logoStackView.rightAnchor, constant: 16),
             notificationDot.heightAnchor.constraint(equalToConstant: 14),
             notificationDot.widthAnchor.constraint(equalToConstant: 14),
 
