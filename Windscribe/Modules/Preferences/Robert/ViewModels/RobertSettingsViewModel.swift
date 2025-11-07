@@ -117,22 +117,22 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
             guard let self = self else { return }
             do {
                 _ = try await apiManager.updateRobertSettings(id: filterId, status: status)
-                await MainActor.run {
-                    self.localDB.toggleRobertRule(id: filterId)
-                    guard let robertFilters = self.localDB.getRobertFilters() else {
-                        let newError = "Unable to load robert rules. Check your network connection."
-                        self.logger.logE("GeneralSettingsViewModel", self.errorMessage ?? "")
-                        self.errorMessage = newError
-                        self.isLoading = false
-                        return
-                    }
-                    self.entries = robertFilters.getRules()
-                }
 
                 // Sync Robert filters after successful update
                 do {
                     _ = try await apiManager.syncRobertFilters()
+
+                    // Only update toggle state after both API calls succeed
                     await MainActor.run {
+                        self.localDB.toggleRobertRule(id: filterId)
+                        guard let robertFilters = self.localDB.getRobertFilters() else {
+                            let newError = "Unable to load robert rules. Check your network connection."
+                            self.logger.logE("GeneralSettingsViewModel", self.errorMessage ?? "")
+                            self.errorMessage = newError
+                            self.isLoading = false
+                            return
+                        }
+                        self.entries = robertFilters.getRules()
                         self.isLoading = false
                     }
                 } catch {

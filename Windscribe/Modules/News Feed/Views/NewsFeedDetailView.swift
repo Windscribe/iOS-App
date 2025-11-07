@@ -81,6 +81,7 @@ struct NewsFeedDetailView: View {
             .onChange(of: item.expanded) { isExpanded in
                 showRotation = isExpanded
             }
+            .contentShape(Rectangle())
             .onTapGesture {
                 didTapExpand()
             }

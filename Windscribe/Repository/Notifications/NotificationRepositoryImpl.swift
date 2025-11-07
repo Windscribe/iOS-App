@@ -39,6 +39,7 @@ class NotificationRepositoryImpl: NotificationRepository {
             .store(in: &cancellables)
     }
 
+    @MainActor
     func getUpdatedNotifications() async throws -> [Notice] {
         let pcpid = pushNotificationsManager.notification.value?.pcpid ?? ""
 
@@ -50,7 +51,7 @@ class NotificationRepositoryImpl: NotificationRepository {
         let notificationsArray = Array(result.notices)
 
         // Save to database - this will trigger the reactive publisher chain
-        localDatabase.saveNotifications(notifications: notificationsArray)
+        await localDatabase.saveNotifications(notifications: notificationsArray)
 
         return notificationsArray
     }

@@ -62,28 +62,35 @@ class LocalDatabaseTests: XCTestCase {
     func testMyIpSave() {
         localDatabase.clean()
 
-        let expection = expectation(description: "Waiting for getIp call to finish.")
-        // Check no saved ip object found
-        localDatabase.getIp().subscribe(
-            onCompleted: {
-                expection.fulfill()
-            }
-        ).disposed(by: disposeBag)
+        let expectation = expectation(description: "Waiting for IP to be saved and retrieved.")
 
-        // Save Ip object to database.
+        // Save IP object to database
         let ipAddress = "192.168.0.\(String(describing: (0 ... 100).randomElement()))"
         let object = MyIP()
         object.userIp = ipAddress
+
+        // Trigger save first
         localDatabase.saveIp(myip: object).disposed(by: disposeBag)
 
-        // Get saved object from database
-        if let myIP = try? localDatabase.getIp().toBlocking().first(), myIP?.userIp == ipAddress {
-            XCTAssert(true, "MyIP object found in database.")
-        } else {
-            XCTFail("Did not found MyIP object.")
+        // Use DispatchQueue.main.async to ensure save is queued before subscribe
+        // This ensures the object exists when getRealmObservable checks
+        DispatchQueue.main.async {
+            self.localDatabase.getIp()
+                .take(1)
+                .subscribe(
+                    onNext: { myIP in
+                        XCTAssertNotNil(myIP, "MyIP object should not be nil after save")
+                        XCTAssertEqual(myIP?.userIp, ipAddress, "MyIP object found in database with correct IP.")
+                        expectation.fulfill()
+                    },
+                    onError: { error in
+                        XCTFail("Error retrieving MyIP: \(error)")
+                        expectation.fulfill()
+                    }
+                ).disposed(by: self.disposeBag)
         }
 
-        // Wait for timeouts.
+        // Wait for expectations
         waitForExpectations(timeout: 2) { _ in }
     }
 }

@@ -100,9 +100,11 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 }
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
-                self.userSessionRepository.login(session: session)
-                self.logger.logI("WelcomeViewModel", "Apple sign in successful")
-                self.prepareUserData()
+                Task { @MainActor in
+                    await self.userSessionRepository.login(session: session)
+                    self.logger.logI("WelcomeViewModel", "Apple sign in successful")
+                    self.prepareUserData()
+                }
             })
             .store(in: &cancellables)
     }

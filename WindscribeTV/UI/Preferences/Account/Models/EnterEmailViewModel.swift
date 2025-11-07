@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 protocol EnterEmailViewModel {
     var alertManager: AlertManagerV2 { get }

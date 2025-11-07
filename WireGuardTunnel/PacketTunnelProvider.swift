@@ -142,7 +142,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
             return
         }
-        
+
         self.logger.logI("PacketTunnelProvider", "Passed wg credentials initialzed check.", flushImmediately: true)
 
         guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,

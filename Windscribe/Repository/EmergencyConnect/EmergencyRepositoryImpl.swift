@@ -148,9 +148,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true)
 
         // Realm operations must be on main thread
-        await MainActor.run {
-            localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
-        }
+        await localDatabase.saveCustomConfig(customConfig: customConfig)
 
         return customConfig
     }

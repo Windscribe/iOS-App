@@ -17,7 +17,7 @@ class MockSessionManager: SessionManager {
     var listenForSessionChangesCalled = false
     var logoutUserCalled = false
     var checkForSessionChangeCalled = false
-    var keepSessionUpdatedCalled = false
+    var checkSessionCalled = false
 
     init(session: Session? = nil) {
         self.session = session
@@ -29,7 +29,7 @@ class MockSessionManager: SessionManager {
         listenForSessionChangesCalled = false
         logoutUserCalled = false
         checkForSessionChangeCalled = false
-        keepSessionUpdatedCalled = false
+        checkSessionCalled = false
     }
 
     func setMockSession(userId: String, username: String = "testuser") {
@@ -58,18 +58,10 @@ class MockSessionManager: SessionManager {
         checkForSessionChangeCalled = true
     }
 
-    func keepSessionUpdated() {
-        keepSessionUpdatedCalled = true
-    }
-
-    func canAccesstoProLocation() -> Bool {
-        return session?.isPremium ?? false
-    }
-
-    func getUpdatedSession() async throws -> Session {
-        guard let session = session else {
+    func checkSession() async throws {
+        checkSessionCalled = true
+        guard session != nil else {
             throw Errors.sessionIsInvalid
         }
-        return session
     }
 }

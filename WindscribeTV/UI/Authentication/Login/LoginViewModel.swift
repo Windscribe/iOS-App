@@ -109,9 +109,12 @@ class LoginViewModelImpl: LoginViewModel {
                         captchaVM.loginSuccess
                             .observe(on: MainScheduler.instance)
                             .bind { [weak self] session in
-                                self?.logger.logI("LoginViewModel", "Captcha login success. Preparing user data.")
-                                self?.showLoadingView.onNext(true)
-                                self?.handleLoginSuccess(session: session)
+                                guard let self = self else { return }
+                                self.logger.logI("LoginViewModel", "Captcha login success. Preparing user data.")
+                                self.showLoadingView.onNext(true)
+                                Task { @MainActor in
+                                    await self.handleLoginSuccess(session: session)
+                                }
                             }
                             .disposed(by: self.disposeBag)
 
@@ -139,9 +142,7 @@ class LoginViewModelImpl: LoginViewModel {
                     captchaTrailY: []
                 )
 
-                await MainActor.run {
-                    self.handleLoginSuccess(session: session)
-                }
+                await self.handleLoginSuccess(session: session)
             } catch {
                 await MainActor.run {
                     self.handleAuthTokenError(error)
@@ -150,13 +151,14 @@ class LoginViewModelImpl: LoginViewModel {
         }
     }
 
-    private func handleLoginSuccess(session: Session) {
-        preferences.saveLoginDate(date: Date())
-        WifiManager.shared.saveCurrentWifiNetworks()
-        userSessionRepository.login(session: session)
-        logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
-
-        prepareUserData()
+    private func handleLoginSuccess(session: Session) async {
+        await userSessionRepository.login(session: session)
+        await MainActor.run {
+            preferences.saveLoginDate(date: Date())
+            WifiManager.shared.saveCurrentWifiNetworks()
+            logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
+            prepareUserData()
+        }
     }
 
     private func handleLoginError(_ error: Error) {
@@ -234,12 +236,12 @@ class LoginViewModelImpl: LoginViewModel {
                         let auth = verifyResponse.sessionAuth
                         let session = try await self.apiCallManager.getSession(sessionAuth: auth)
 
+                        session.sessionAuthHash = auth
+                        await self.userSessionRepository.login(session: session)
                         await MainActor.run {
                             dispose.dispose()
-                            session.sessionAuthHash = auth
                             WifiManager.shared.saveCurrentWifiNetworks()
                             self.preferences.saveLoginDate(date: Date())
-                            self.userSessionRepository.login(session: session)
                             self.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")
                             self.prepareUserData()
                             self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)

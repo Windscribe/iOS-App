@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 protocol ViewLogViewModel {
     var title: String { get }

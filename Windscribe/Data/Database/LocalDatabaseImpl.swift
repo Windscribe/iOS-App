@@ -24,8 +24,16 @@ class LocalDatabaseImpl: LocalDatabase {
         self.preferences = preferences
     }
 
-    func saveSession(session: Session) -> RxSwift.Disposable {
-        return updateRealmObject(object: session)
+    @MainActor
+    func saveSession(session: Session) async {
+        do {
+            let realm = try await Realm()
+            try realm.safeWrite {
+                realm.add(session, update: .modified)
+            }
+        } catch {
+            logger.logE("LocalDatabaseImpl", "Failed to save session: \(error.localizedDescription)")
+        }
     }
 
     func getSession() -> Observable<Session?> {
@@ -60,8 +68,16 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObjects(objects: servers)
     }
 
-    func saveCustomConfig(customConfig: CustomConfig) -> Disposable {
-        return updateRealmObject(object: customConfig)
+    @MainActor
+    func saveCustomConfig(customConfig: CustomConfig) async {
+        do {
+            let realm = try await Realm()
+            try realm.safeWrite {
+                realm.add(customConfig, update: .modified)
+            }
+        } catch {
+            logger.logE("LocalDatabaseImpl", "Failed to save custom config: \(error.localizedDescription)")
+        }
     }
 
     func getCustomConfig() -> Observable<[CustomConfig]> {
@@ -126,8 +142,18 @@ class LocalDatabaseImpl: LocalDatabase {
         return getSafeRealmObservable(type: Notice.self)
     }
 
-    func saveNotifications(notifications: [Notice]) {
-        return updateRealmObjects(objects: notifications)
+    @MainActor
+    func saveNotifications(notifications: [Notice]) async {
+        do {
+            let realm = try await Realm()
+            try realm.safeWrite {
+                for notification in notifications {
+                    realm.add(notification, update: .modified)
+                }
+            }
+        } catch {
+            logger.logE("LocalDatabaseImpl", "Failed to save notifications: \(error.localizedDescription)")
+        }
     }
 
     func getReadNoticesObservable() -> Observable<[ReadNotice]> {

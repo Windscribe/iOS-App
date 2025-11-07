@@ -105,19 +105,20 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
         let editAction = SwipeAction(style: .destructive, title: nil) { _, _ in
             self.logicDelegate?.showEditCustomConfig(customConfig: customConfig)
         }
-        viewModel.isDarkMode.receive(on: DispatchQueue.main).sink { dark in
-            if !dark {
-                deleteAction.backgroundColor = UIColor.seperatorWhite
-                deleteAction.image = UIImage(named: ImagesAsset.delete)
-                editAction.backgroundColor = UIColor.seperatorWhite
-                editAction.image = UIImage(named: ImagesAsset.edit)
-            } else {
-                deleteAction.backgroundColor = UIColor.seperatorGray
-                deleteAction.image = UIImage(named: ImagesAsset.DarkMode.delete)
-                editAction.backgroundColor = UIColor.seperatorGray
-                editAction.image = UIImage(named: ImagesAsset.DarkMode.edit)
-            }
-        }.store(in: &cancellables)
+
+        // Get dark mode value synchronously
+        let isDark = viewModel.isDarkMode.value
+        if !isDark {
+            deleteAction.backgroundColor = UIColor.seperatorWhite
+            deleteAction.image = UIImage(named: ImagesAsset.delete)
+            editAction.backgroundColor = UIColor.seperatorWhite
+            editAction.image = UIImage(named: ImagesAsset.edit)
+        } else {
+            deleteAction.backgroundColor = UIColor.seperatorGray
+            deleteAction.image = UIImage(named: ImagesAsset.DarkMode.delete)
+            editAction.backgroundColor = UIColor.seperatorGray
+            editAction.image = UIImage(named: ImagesAsset.DarkMode.edit)
+        }
 
         if customConfig.authRequired ?? false {
             return [deleteAction, editAction]

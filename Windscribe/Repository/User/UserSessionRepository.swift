@@ -13,8 +13,8 @@ protocol UserSessionRepository {
     var sessionAuth: String? { get }
     var user: User? { get }
     func getUpdatedUser() async throws -> User
-    func login(session: Session)
-    func update(session: Session)
+    func login(session: Session) async
+    func update(session: Session) async
 }
 
 class UserSessionRepositoryImpl: UserSessionRepository {
@@ -42,25 +42,28 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         }
     }
 
+    @MainActor
     func getUpdatedUser() async throws -> User {
         let session = try await apiManager.getSession(nil)
         localDatabase.saveOldSession()
-        _ = localDatabase.saveSession(session: session)
+        await localDatabase.saveSession(session: session)
         let user = User(session: session)
         self.user = user
         return user
     }
 
-    func login(session: Session) {
+    @MainActor
+    func login(session: Session) async {
         wgCredentials.delete()
         preferences.saveUserSessionAuth(sessionAuth: session.sessionAuthHash)
         localDatabase.saveOldSession()
-        _ = localDatabase.saveSession(session: session)
+        await localDatabase.saveSession(session: session)
         self.user = User(session: session)
     }
 
-    func update(session: Session) {
-        _ = localDatabase.saveSession(session: session)
+    @MainActor
+    func update(session: Session) async {
+        await localDatabase.saveSession(session: session)
         self.user = User(session: session)
     }
 }

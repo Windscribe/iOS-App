@@ -77,7 +77,7 @@ class SessionManagerImpl: SessionManager {
 
                 do {
                     let session = try await self.apiManager.getSession(nil)
-                    self.userSessionRepo.update(session: session)
+                    await self.userSessionRepo.update(session: session)
                     self.logger.logI("SessionManager", "Session updated for \(session.username)")
                     self.sessionFetchInProgress = false
                 } catch let error {
@@ -97,7 +97,7 @@ class SessionManagerImpl: SessionManager {
 
     func checkSession() async throws {
         let session = try await apiManager.getSession(nil)
-        userSessionRepo.update(session: session)
+        await userSessionRepo.update(session: session)
     }
 
     func listenForSessionChanges() {

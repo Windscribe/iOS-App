@@ -139,9 +139,12 @@ class SignUpViewModelImpl: SignUpViewModel {
                         captchaVM.loginSuccess
                             .observe(on: MainScheduler.instance)
                             .bind { [weak self] session in
-                                self?.logger.logI("SignupViewModel", "Captcha login success. Preparing user data.")
-                                self?.showLoadingView.onNext(true)
-                                self?.handleSignupSuccess(session: session)
+                                guard let self = self else { return }
+                                self.logger.logI("SignupViewModel", "Captcha login success. Preparing user data.")
+                                self.showLoadingView.onNext(true)
+                                Task { @MainActor in
+                                    await self.handleSignupSuccess(session: session)
+                                }
                             }
                             .disposed(by: self.disposeBag)
 
@@ -169,9 +172,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                     captchaTrailY: []
                 )
 
-                await MainActor.run {
-                    self.handleSignupSuccess(session: session)
-                }
+                await self.handleSignupSuccess(session: session)
             } catch {
                 await MainActor.run {
                     self.handleAuthTokenError(error)
@@ -200,9 +201,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                     captchaTrailY: []
                 )
 
-                await MainActor.run {
-                    self.handleSignupSuccess(session: session)
-                }
+                await self.handleSignupSuccess(session: session)
             } catch {
                 await MainActor.run {
                     self.handleSignupError(error)
@@ -211,11 +210,12 @@ class SignUpViewModelImpl: SignUpViewModel {
         }
     }
 
-    private func handleSignupSuccess(session: Session) {
-        userSessionRepository.login(session: session)
-        logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(session.username)")
-
-        prepareUserData()
+    private func handleSignupSuccess(session: Session) async {
+        await userSessionRepository.login(session: session)
+        await MainActor.run {
+            logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(session.username)")
+            prepareUserData()
+        }
     }
 
     private func handleAuthTokenError(_ error: Error) {

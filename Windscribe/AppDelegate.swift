@@ -214,7 +214,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.reduce("") { $0 + String(format: "%02.2hhX", $1) }
         logger.logI("AppDelegate", "Sending notifcation token to server.")
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
 
             do {
@@ -222,7 +222,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 await MainActor.run {
                     self.logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
                     self.localDatabase.saveOldSession()
-                    self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                }
+                await self.localDatabase.saveSession(session: session)
+                await MainActor.run {
                     self.preferences.saveRegisteredForPushNotifications(bool: true)
                 }
             } catch {

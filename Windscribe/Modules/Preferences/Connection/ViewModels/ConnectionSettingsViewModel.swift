@@ -252,6 +252,13 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     }
 
     private func saveConnectedDNSValue(value: String) {
+        // Handle empty string (X button clicked) - reset to default empty DNS
+        if value.isEmpty {
+            self.preferences.saveCustomDNSValue(value: DefaultValues.customDNSValue)
+            self.reloadItems()
+            return
+        }
+
         dnsSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: { dnsValue in
             guard let dnsValue = dnsValue,
                   !dnsValue.servers.isEmpty else {

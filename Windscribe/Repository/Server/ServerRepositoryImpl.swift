@@ -54,19 +54,26 @@ class ServerRepositoryImpl: ServerRepository {
         do {
             let serverList = try await self.apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
 
-            let servers = Array(serverList.servers)
-            for s in servers {
-                for g in s.groups {
-                    g.setBestNode(advanceRepository: self.advanceRepository)
+            return await MainActor.run {
+                let servers = Array(serverList.servers)
+                for s in servers {
+                    for g in s.groups {
+                        g.setBestNode(advanceRepository: self.advanceRepository)
+                    }
                 }
+                self.localDatabase.saveServers(servers: servers)
+                self.updateServerModels(servers: servers)
+                return servers
+            }
+        } catch {
+            let servers = await MainActor.run {
+                self.localDatabase.getServers()
             }
 
-            self.localDatabase.saveServers(servers: servers)
-            await self.updateServerModels(servers: servers)
-            return servers
-        } catch {
-            if let servers = self.localDatabase.getServers() {
-                await self.updateServerModels(servers: servers)
+            if let servers = servers {
+                await MainActor.run {
+                    self.updateServerModels(servers: servers)
+                }
                 return servers
             } else {
                 throw error

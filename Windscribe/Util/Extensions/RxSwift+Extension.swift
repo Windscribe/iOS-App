@@ -95,6 +95,27 @@ extension Observable {
             .eraseToAnyPublisher()
     }
 
+    func toPublisherIncludingEmpty() -> AnyPublisher<Element, Error> {
+        let subject = PassthroughSubject<Element, Error>()
+        let disposable = self.subscribe(
+            onNext: { value in
+                subject.send(value)
+            },
+            onError: { error in
+                subject.send(completion: .failure(error))
+            },
+            onCompleted: {
+                subject.send(completion: .finished)
+            }
+        )
+
+        return subject
+            .handleEvents(receiveCancel: {
+                disposable.dispose()
+            })
+            .eraseToAnyPublisher()
+    }
+
         func toInitialPublisher() -> AnyPublisher<Element, Error> {
             return Deferred {
                 Future { promise in

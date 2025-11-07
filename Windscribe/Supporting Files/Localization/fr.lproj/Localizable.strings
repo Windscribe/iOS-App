@@ -339,7 +339,7 @@
 "Pro" = "Pro";
 "Enabled" = "Activé";
 "Disabled" = "Désactivé";
-"Always on VPN" = "Always on VPN";
+"Always on VPN" = "VPN toujours actif";
 "Allow LAN Traffic" = "Autoriser le trafic LAN";
 "Circumvent Censorship" = "Contourner la censure";
 "Add to fav" = "Ajouté aux favoris";
@@ -443,7 +443,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 
 "None" = "Aucun";
 "Bundled" = "Inclus";
-"Custom" = "Coutume";
+"Custom" = "Personnalisation";
 
 "Unknown API error" = "Erreur API inconnue";
 "Login code expired. Please try again." = "Le code de connexion a expiré. Veuillez réessayer.";

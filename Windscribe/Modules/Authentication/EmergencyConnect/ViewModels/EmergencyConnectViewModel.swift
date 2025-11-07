@@ -127,6 +127,23 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
                     self.logger.logI("EmergencyConnectViewModel", "Successfully started OpenVPN.")
                 case .failure(let error):
                     self.logger.logE("EmergencyConnectViewModel", "Failed to start OpenVPN: \(error.localizedDescription)")
+                    // Reset VPN state to disconnected on failure (e.g., VPN permission denied)
+                    if let currentInfo = self.vpnStateRepository.vpnInfo.value {
+                        let updatedInfo = VPNConnectionInfo(
+                            selectedProtocol: currentInfo.selectedProtocol,
+                            selectedPort: currentInfo.selectedPort,
+                            status: .disconnected,
+                            killSwitch: currentInfo.killSwitch,
+                            onDemand: currentInfo.onDemand
+                        )
+                        self.vpnStateRepository.vpnInfo.send(updatedInfo)
+                    }
+                    // Ensure clean disconnect on failure
+                    self.emergencyRepository.disconnect()
+                        .sink(receiveCompletion: { _ in
+                            self.logger.logD("EmergencyConnectViewModel", "Cleaned up after connection failure")
+                        }, receiveValue: { _ in })
+                        .store(in: &self.cancellables)
                 }
             }, receiveValue: { _ in })
             .store(in: &cancellables)

@@ -87,14 +87,14 @@ extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
                 if url.isFileURL, url.pathExtension == "ovpn" {
                     Task {
                         _ = await self.customConfigRepository.saveOpenVPNConfig(url: url)
+                        url.stopAccessingSecurityScopedResource()
                     }
                 } else if url.isFileURL, url.pathExtension == "conf" {
                     Task {
                         _ = await self.customConfigRepository.saveWgConfig(url: url)
+                        url.stopAccessingSecurityScopedResource()
                     }
                 }
-
-                url.stopAccessingSecurityScopedResource()
             }).disposed(by: disposeBag)
         }
     }
