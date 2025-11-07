@@ -11,6 +11,7 @@ import Foundation
 enum ImagesAsset {
     static let logoOnLogin = "logo-login"
     static let logoText = "logo-text"
+    static let proUserIcon = "pro-user-icon"
     static let failExIcon = "fail-ex"
     static let rightArrow = "right-arrow"
     static let upArrow = "small-white-up-arrow"

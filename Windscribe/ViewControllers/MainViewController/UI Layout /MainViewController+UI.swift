@@ -162,12 +162,26 @@ extension MainViewController {
         flagBackgroundView = Assembler.resolve(FlagsBackgroundView.self)
         view.addSubview(flagBackgroundView)
 
+        logoStackView = UIStackView()
+        logoStackView.axis = .horizontal
+        logoStackView.spacing = 0
+        view.addSubview(logoStackView)
+
         logoIcon = ImageButton()
         logoIcon.imageView?.contentMode = .scaleAspectFit
         logoIcon.addTarget(self, action: #selector(notificationsButtonTapped), for: .touchUpInside)
+
+        proIcon = ImageButton()
+        proIcon.imageView?.contentMode = .scaleAspectFit
+        proIcon.addTarget(self, action: #selector(notificationsButtonTapped), for: .touchUpInside)
+
         logoIcon.setImage(UIImage(named: ImagesAsset.logoText), for: .normal)
         logoIcon.imageView?.setImageColor(color: .white)
-        view.addSubview(logoIcon)
+        logoStackView.addArrangedSubview(logoIcon)
+
+        proIcon.setImage(UIImage(named: ImagesAsset.proUserIcon), for: .normal)
+        proIcon.imageView?.setImageColor(color: .white)
+        logoStackView.addArrangedSubview(proIcon)
 
         preferencesTapAreaButton = LargeTapAreaImageButton()
         preferencesTapAreaButton.imageView?.contentMode = .scaleAspectFit
