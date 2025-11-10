@@ -287,7 +287,9 @@ class MainViewModel: MainViewModelType {
     }
 
     func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
             var serverSections = [ServerSection]()
             var serverSectionsOrdered = [ServerSection]()
             if servers.count == 0 {
@@ -302,41 +304,58 @@ class MainViewModel: MainViewModelType {
             }
 
             let orderBy = (try? self.locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
+
             switch orderBy {
             case Fields.Values.geography:
-                serverSectionsOrdered = serverSections
+                serverSectionsOrdered = self.sortServersByGeography(serverSections)
             case Fields.Values.alphabet:
-                serverSectionsOrdered = serverSections.sorted { serverSection1, serverSection2 -> Bool in
-                    guard let countryCode1 = serverSection1.server?.name, let countryCode2 = serverSection2.server?.name else { return false }
-                    return countryCode1 < countryCode2
-                }
+                serverSectionsOrdered = self.sortServersByAlphabet(serverSections)
             case Fields.Values.latency:
-                let serversMappedWithPing = serverSections.map {
-                    guard let hostnames = $0.server?.groups.filter({$0.pingIp != ""}).map({$0.pingIp}) else { return ($0, -1)}
-                    let nodeList = hostnames.compactMap({
-                        let latency = self.latencyRepo.getPingData(ip: $0)?.latency
-                        return latency == -1 ? nil : latency
-                    })
-                    guard nodeList.count != 0 else { return ($0, -1) }
-
-                    let latency = nodeList.reduce(0, { (result, value) -> Int in
-                        return result + value
-                    }) / (nodeList.count)
-                    guard latency != 0 else { return ($0, -1) }
-                    return ($0, latency)
-                }
-                let serverMappedSorted = serversMappedWithPing.sorted { (serverSection1, serverSection2) -> Bool in
-                    guard serverSection1.1 > 0 else { return false }
-                    guard serverSection2.1 > 0 else { return true }
-                    return serverSection1.1 < serverSection2.1
-                }
-                serverSectionsOrdered = serverMappedSorted.map { $0.0 }
+                serverSectionsOrdered = self.sortServersByLatency(serverSections)
             default:
                 serverSectionsOrdered = serverSections
             }
             serverSectionsOrdered = self.sortServerNodes(serverList: serverSectionsOrdered, orderBy: orderBy)
             completion(serverSectionsOrdered)
         }
+    }
+
+    private func sortServersByGeography(_ serverSections: [ServerSection]) -> [ServerSection] {
+        return serverSections
+    }
+
+    private func sortServersByAlphabet(_ serverSections: [ServerSection]) -> [ServerSection] {
+        return serverSections.sorted { serverSection1, serverSection2 -> Bool in
+            guard let countryCode1 = serverSection1.server?.name,
+                  let countryCode2 = serverSection2.server?.name else { return false }
+            return countryCode1 < countryCode2
+        }
+    }
+
+    private func sortServersByLatency(_ serverSections: [ServerSection]) -> [ServerSection] {
+        let serversMappedWithPing = serverSections.map { serverSection -> (ServerSection, Int) in
+            guard let hostnames = serverSection.server?.groups.filter({$0.pingIp != ""}).map({$0.pingIp}) else {
+                return (serverSection, -1)
+            }
+            let nodeList = hostnames.compactMap({
+                let latency = self.latencyRepo.getPingData(ip: $0)?.latency
+                return latency == -1 ? nil : latency
+            })
+            guard nodeList.count != 0 else { return (serverSection, -1) }
+
+            // Use lowest latency instead of average for more accurate region ranking
+            let latency = nodeList.min() ?? -1
+            guard latency != 0 else { return (serverSection, -1) }
+            return (serverSection, latency)
+        }
+
+        let serverMappedSorted = serversMappedWithPing.sorted { (serverSection1, serverSection2) -> Bool in
+            guard serverSection1.1 > 0 else { return false }
+            guard serverSection2.1 > 0 else { return true }
+            return serverSection1.1 < serverSection2.1
+        }
+
+        return serverMappedSorted.map { $0.0 }
     }
 
     private func sortServerNodes(serverList: [ServerSection], orderBy: String) -> [ServerSection] {
