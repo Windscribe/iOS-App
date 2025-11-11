@@ -189,8 +189,14 @@ class TVViewModels: Assembly {
                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(IPInfoViewModelType.self) { r in
-            IPInfoViewModel(ipRepository: r.resolve(IPRepository.self)!,
-                            preferences: r.resolve(Preferences.self)!)
+            IPInfoViewModel(logger: r.resolve(FileLogger.self)!,
+                            ipRepository: r.resolve(IPRepository.self)!,
+                            preferences: r.resolve(Preferences.self)!,
+                            locationManager: r.resolve(LocationsManagerType.self)!,
+                            localDatabase: r.resolve(LocalDatabase.self)!,
+                            apiManager: r.resolve(APIManager.self)!,
+                            userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                            bridgeApiRepository: r.resolve(BridgeApiRepository.self)!)
         }.inObjectScope(.transient)
     }
 }
