@@ -72,7 +72,7 @@ class ServerDetailViewController: UIViewController {
 
     func bindData() {
         viewModel?.favouriteList.bind(onNext: { favList in
-            self.favList = favList?.compactMap { $0 }
+            self.favList = favList?.compactMap { $0.groupModel }
         }).disposed(by: disposeBag)
     }
 }

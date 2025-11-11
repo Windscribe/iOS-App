@@ -33,6 +33,7 @@ class MockPreferences: Preferences {
     var mockLastSelectedLocation: String = ""
     var mockBestLocation: String = ""
     var clearWireGuardConfigurationCalled = false
+    var mockLastNodeIP: String?
 
     // UserSessionRepository tracking
     var sessionAuthToReturn: String?
@@ -227,6 +228,14 @@ class MockPreferences: Preferences {
 
     func getBlurStaticIpAddress() -> Bool? {
         return false
+    }
+
+    func saveLastNodeIP(nodeIp: String) {
+        mockLastNodeIP = nodeIp
+    }
+
+    func getLastNodeIP() -> String? {
+        return mockLastNodeIP
     }
 
     func saveBlurNetworkName(bool: Bool?) {}

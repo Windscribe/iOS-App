@@ -1243,6 +1243,7 @@
 		F4B4F3472D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B5457E2E32D17A00135E74 /* MaintananceLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B5457D2E32D17A00135E74 /* MaintananceLocationView.swift */; };
 		F4B545802E32D19000135E74 /* MaintananceLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B5457F2E32D19000135E74 /* MaintananceLocationViewModel.swift */; };
+		F4B692FF2EC3C7C40062AD27 /* BridgeApiFailedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E222EBA60710003322D /* BridgeApiFailedViewModel.swift */; };
 		F4B7F7AF2D833D9900CB4CEF /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModel.swift */; };
 		F4B8E1FA2DCE8CD9004D9BF6 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */; };
 		F4B8E21C2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */; };
@@ -6625,6 +6626,7 @@
 				59FC74582C51613000021CD1 /* VPNManager+Selector.swift in Sources */,
 				1EF7BB392C6F93670032A4DF /* UILabel+Extension.swift in Sources */,
 				59A218752C3CA091000D89FA /* TVAssembler.swift in Sources */,
+				F4B692FF2EC3C7C40062AD27 /* BridgeApiFailedViewModel.swift in Sources */,
 				1E2CBFF02CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */,
 				C56615F32C4D7AEB008AA993 /* UITextField+Extension.swift in Sources */,
 				59DA7FCC2C3DC55F00042E57 /* APIParameters.swift in Sources */,
@@ -8346,7 +8348,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8384,7 +8386,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8417,7 +8419,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8447,7 +8449,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8482,7 +8484,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8521,7 +8523,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8592,7 +8594,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8625,7 +8627,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8858,7 +8860,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8891,7 +8893,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8925,7 +8927,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8977,7 +8979,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.6;
+				MARKETING_VERSION = 3.9.7;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -10,6 +10,7 @@ import Foundation
 @testable import Windscribe
 
 class MockAPIManager: APIManager {
+
     var shouldThrowError = false
     var customError: Error = Errors.notDefined
     var mockLeaderboard: Leaderboard?
@@ -40,6 +41,9 @@ class MockAPIManager: APIManager {
     var recordScoreCalled = false
     var lastRecordedScore: Int?
     var lastRecordedUserId: String?
+    var rotateIpCalled = false
+    var pinIpCalled = false
+    var lastPinnedIp: String?
 
     var mockServerList: ServerList?
 
@@ -61,6 +65,9 @@ class MockAPIManager: APIManager {
         recordScoreCalled = false
         lastRecordedScore = nil
         lastRecordedUserId = nil
+        rotateIpCalled = false
+        pinIpCalled = false
+        lastPinnedIp = nil
         mockServerList = nil
     }
 
@@ -318,5 +325,28 @@ class MockAPIManager: APIManager {
 
     func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) async throws -> APIMessage {
         fatalError("Not implemented")
+    }
+
+    // MARK: - Bridge API Methods
+
+    func rotateIp() async throws -> Bool {
+        rotateIpCalled = true
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        return true
+    }
+
+    func pinIp(ip: String) async throws -> Bool {
+        pinIpCalled = true
+        lastPinnedIp = ip
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        return true
     }
 }

@@ -316,9 +316,13 @@ class MainViewController: PreferredFocusedViewController {
             self.setConnectionLabelValuesForSelectedNode()
         }.store(in: &cancellables)
 
-        ipInfoViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showSecureIPAddressState(ipAddress: $0)
-        }).disposed(by: disposeBag)
+        ipInfoViewModel.ipAddressSubject
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] ipAddress in
+                self?.showSecureIPAddressState(ipAddress: ipAddress)
+            }
+            .store(in: &cancellables)
 
         vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
