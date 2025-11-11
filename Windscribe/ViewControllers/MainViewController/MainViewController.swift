@@ -156,8 +156,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(showCustomConfigTab), name: Notifications.showCustomConfigTab, object: nil)
         pushNotificationManager?.notification
             .compactMap { $0 }
-            .sink {
-                self.pushNotificationReceived(payload: $0)
+            .sink { [weak self] in
+                self?.pushNotificationReceived(payload: $0)
             }
             .store(in: &cancellables)
         if let payload = pushNotificationManager?.notification.value {

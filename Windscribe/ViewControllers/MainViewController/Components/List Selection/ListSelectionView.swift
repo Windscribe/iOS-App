@@ -181,19 +181,19 @@ class ListSelectionView: UIView {
     }
 
     private func bindView() {
-        viewModel.isActive.subscribe { isActive in
-            self.stackContainerView.isHidden = !isActive
-            self.isUserInteractionEnabled = isActive
+        viewModel.isActive.subscribe { [weak self] isActive in
+            self?.stackContainerView.isHidden = !isActive
+            self?.isUserInteractionEnabled = isActive
         }.disposed(by: disposeBag)
 
-        viewModel.selectedAction.subscribe {
-            self.showPresentingListIcon(cardButtonType: $0)
+        viewModel.selectedAction.subscribe { [weak self] in
+            self?.showPresentingListIcon(cardButtonType: $0)
         }.disposed(by: disposeBag)
 
         viewModel.isDarkMode
             .receive(on: DispatchQueue.main)
-            .sink { isDarkMode in
-                self.updateTheme(with: isDarkMode)
+            .sink { [weak self] isDarkMode in
+                self?.updateTheme(with: isDarkMode)
             }
             .store(in: &cancellables)
     }

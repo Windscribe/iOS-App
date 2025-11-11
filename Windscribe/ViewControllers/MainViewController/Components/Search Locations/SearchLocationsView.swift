@@ -165,15 +165,16 @@ class SearchLocationsView: UIView {
             })
             .disposed(by: disposeBag)
 
-        clearSearchButton.rx.tap.bind {
-            self.clearSearchField()
+        clearSearchButton.rx.tap.bind { [weak self] in
+            self?.clearSearchField()
         }.disposed(by: disposeBag)
 
-        exitSearchButton.rx.tap.bind {
-            self.viewModel.toggleSearch()
+        exitSearchButton.rx.tap.bind { [weak self] in
+            self?.viewModel.toggleSearch()
         }.disposed(by: disposeBag)
 
-        viewModel.isSearchActive.subscribe { isActive in
+        viewModel.isSearchActive.subscribe { [weak self] isActive in
+            guard let self = self else { return }
             self.stackContainerView.isHidden = !isActive
             self.isUserInteractionEnabled = isActive
             if isActive {

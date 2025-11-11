@@ -42,7 +42,7 @@ class ListHeaderViewModel: ListHeaderViewModelType {
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
-        languageManager.activelanguage.sink { _ in self.refreshLanguage.onNext(()) }
+        languageManager.activelanguage.sink { [weak self] _ in self?.refreshLanguage.onNext(()) }
             .store(in: &cancellables)
     }
 
@@ -81,8 +81,8 @@ class ListHeaderView: UIView {
 
         viewModel.isDarkMode
             .receive(on: DispatchQueue.main)
-            .sink { isDarkMode in
-                self.updateLayourForTheme(isDarkMode: isDarkMode)
+            .sink { [weak self] isDarkMode in
+                self?.updateLayourForTheme(isDarkMode: isDarkMode)
             }
             .store(in: &cancellables)
 
