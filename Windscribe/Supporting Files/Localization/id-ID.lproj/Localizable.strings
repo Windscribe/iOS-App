@@ -570,3 +570,8 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Log debug Anda telah diterima. Silakan hubungi dukungan jika Anda memerlukan bantuan untuk masalah ini.";
 
 "Network Security" = "Keamanan Jaringan";
+
+"Could not rotate IP" = "Tidak dapat memutar IP";
+"Try again later or go to our Status page for more info." = "Coba lagi nanti atau buka halaman Status kami untuk info lebih lanjut.";
+"Could not pin IP" = "Tidak dapat menyematkan IP";
+"Check Location Status" = "Periksa Status Lokasi";

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)isCurlError;
 -(NSString*)toString;
 -(BOOL)isNoNetworkError;
+-(int)httpResponseCode;
 
 @end
 

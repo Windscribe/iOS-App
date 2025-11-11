@@ -112,13 +112,17 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
         if isFavourited {
             let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
                 guard let self = self else { return }
-                self.localDB.removeFavourite(groupId: "\(self.groupId)")
+                Task { @MainActor in
+                    await self.localDB.removeFavourite(groupId: "\(self.groupId)")
+                }
             }
             AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
                                           message: TextsAsset.Favorites.removeMessage,
                                           buttonText: TextsAsset.cancel, actions: [yesAction])
         } else {
-            localDB.saveFavourite(favourite: Favourite(id: "\(self.groupId)")).disposed(by: disposeBag)
+            Task {
+                await localDB.saveFavourite(favourite: Favourite(id: "\(self.groupId)"))
+            }
         }
     }
 }

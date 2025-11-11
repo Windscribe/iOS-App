@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)syncRobert:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)wgConfigsInit:(NSString*)authHash clientPublicKey:(NSString*)clientPublicKey deleteOldestKey:(BOOL)deleteOldestKey callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)wgConfigsConnect:(NSString*)authHash clientPublicKey:(NSString*)clientPublicKey hostname:(NSString*)hostname deviceId:(NSString*)deviceId wgTtl:(NSString*)wgTtl callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)wgConfigsPskRekey:(NSString*)authHash clientPublicKey:(NSString*)clientPublicKey callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)myIP:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)mobileBillingPlans:(NSString*)authHash mobilePlanType:(NSString*)mobilePlanType promo:(NSString*)promo version:(int)version callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)sendPayment:(NSString*)authHash appleID:(NSString*)appleID appleData:(NSString*)appleData appleSIG:(NSString*)appleSIG callback:(void(^)(int, NSString*))callback;

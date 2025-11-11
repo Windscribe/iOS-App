@@ -589,3 +589,8 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Ваш журнал отладки получен. Пожалуйста, свяжитесь со службой поддержки, если вам нужна помощь с этой проблемой.";
 
 "Network Security" = "Безопасность сети";
+
+"Could not rotate IP" = "Не удалось сменить IP";
+"Try again later or go to our Status page for more info." = "Мы опоздали или перешли на новую страницу статуса с большей информацией.";
+"Could not pin IP" = "Не удалось закрепить IP";
+"Check Location Status" = "Проверить статус местоположения";

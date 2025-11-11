@@ -14,6 +14,7 @@ enum WSNetErrors: Int32 {
     case noNetworkConnection = 2
     case incorrectJson = 3
     case failOverFailed = 4
+    case bridgeAPIError = 5
 
     var error: Errors? {
         switch self {
@@ -27,6 +28,8 @@ enum WSNetErrors: Int32 {
             return Errors.parsingError
         case .failOverFailed:
             return Errors.failOverFailed
+        case .bridgeAPIError:
+            return Errors.bridgeAPIError
         }
     }
 }

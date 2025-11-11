@@ -8,8 +8,10 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 protocol IPRepository {
     var ipState: BehaviorSubject<IPState?> { get }
+    var currentIp: CurrentValueSubject<String?, Never> { get }
     func getIp() -> Single<Void>
 }

@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)isDebugLogCurlError;
 -(void)setIsEnableFreshConnect:(BOOL)bEnabled;
 -(BOOL)isEnableFreshConnect;
+-(void)setSessionToken:(NSString*)token;
+-(NSString*)sessionToken;
 
 @end
 

@@ -50,6 +50,7 @@ enum RouteID {
     case pushNotifications
     case enterCredentials(config: CustomConfigModel, isUpdating: Bool)
     case maintenanceLocation(isStaticIp: Bool)
+    case bridgeApi(type: BridgeApiPopupType)
 
     // MARK: - Protocol Switch
 

@@ -69,4 +69,16 @@ extension APIManagerImpl {
                                  callback: completion)
         }
     }
+
+    func rotateIp() async throws -> Bool {
+        try await apiUtil.makeBridgeApiCall { completion in
+            self.bridgeApi.rotateIp(completion)
+        }
+    }
+
+    func pinIp(ip: String) async throws -> Bool {
+        try await apiUtil.makeBridgeApiCall { completion in
+            self.bridgeApi.pinIp(ip, callback: completion)
+        }
+    }
 }

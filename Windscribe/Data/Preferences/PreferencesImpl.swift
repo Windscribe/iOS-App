@@ -552,6 +552,14 @@ class PreferencesImpl: Preferences {
         }
         return nil
     }
+
+    func saveLastNodeIP(nodeIp: String) {
+        sharedDefault?.set(nodeIp, forKey: SharedKeys.lasUsedNodeIP)
+    }
+
+    func getLastNodeIP() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.lasUsedNodeIP)
+    }
 }
 
 // MARK: Utility Methods

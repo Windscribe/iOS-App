@@ -9,13 +9,12 @@
 import Foundation
 import Realm
 import RealmSwift
-import RxSwift
 
 extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 55,
+            schemaVersion: 56,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -272,6 +271,11 @@ extension LocalDatabaseImpl {
                                 migration.create(Favourite.className(), value: ["id": id])
                             }
                         }
+                    }
+                } else if oldSchemaVersion < 56 {
+                    migration.enumerateObjects(ofType: Favourite.className()) { _, newObject in
+                        newObject?["pinnedIp"] = nil
+                        newObject?["pinnedNodeIp"] = nil
                     }
                 }
             }, deleteRealmIfMigrationNeeded: false

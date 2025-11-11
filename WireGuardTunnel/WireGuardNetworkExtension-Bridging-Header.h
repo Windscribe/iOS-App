@@ -11,6 +11,7 @@
 #import "wsnet/WSNetHttpRequest.h"
 #import "wsnet/WSNetPingManager.h"
 #import "wsnet/WSNetServerAPI.h"
+#import "wsnet/WSNetBridgeAPI.h"
 #import "wsnet/WSNetUtils.h"
 #import "wsnet/WSNetEmergencyConnect.h"
 #import "wsnet/WSNetEmergencyConnectEndpoint.h"

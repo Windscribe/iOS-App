@@ -95,6 +95,7 @@ class ServerListCell: SwipeTableViewCell {
         nameLabel.font = UIFont.medium(size: 16)
 
         nameInfoStackView.addArrangedSubview(nameLabel)
+        nameInfoStackView.axis = .horizontal
         nameInfoStackView.spacing = 5
 
         circleView.backgroundColor = .clear

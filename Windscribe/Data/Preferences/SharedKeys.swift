@@ -26,6 +26,7 @@ enum SharedKeys {
     static let circumventCensorship = "circumventCensorship"
     static let advanceParams = "AdvanceParams"
     static let serverSettings = "ServerSettings"
+    static let lasUsedNodeIP = "LastUsedNodeIP"
 
     // UserPreferenceManager
     static let orderLocationsBy = "OrderLocationsBy"

@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import NetworkExtension
 import Swinject
+import Combine
 
 enum IPState: Equatable {
     case available(MyIP), updating, unavailable
@@ -20,7 +21,10 @@ class IPRepositoryImpl: IPRepository {
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
     private var wasObserved = false
-    let ipState: BehaviorSubject<IPState?> = BehaviorSubject(value: nil)
+    private var cancellables = Set<AnyCancellable>()
+
+    let ipState = BehaviorSubject<IPState?>(value: nil)
+    let currentIp = CurrentValueSubject<String?, Never>(nil)
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager
@@ -31,13 +35,16 @@ class IPRepositoryImpl: IPRepository {
 
     /// Loads the last known IP from the local database
     private func load() {
-        localDatabase.getIp().observe(on:MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] data in
-                self?.wasObserved = true
-                if let data = data {
-                    self?.updateState(.available(data))
+        localDatabase.getIp()
+            .observe(on:MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] myIp in
+                guard let self = self else { return }
+                self.wasObserved = true
+                if let myIp = myIp {
+                    self.updateState(.available(myIp))
+                    self.currentIp.send(myIp.userIp)
                 } else {
-                    self?.updateState(.unavailable)
+                    self.updateState(.unavailable)
                 }
             }, onError: { [weak self] error in
                 self?.updateState(.unavailable)
@@ -59,19 +66,16 @@ class IPRepositoryImpl: IPRepository {
 
                 do {
                     let data = try await self.apiManager.getIp()
-
-                    await MainActor.run {
-                        if !self.wasObserved {
-                            self.load()
-                            self.updateState(.available(data))
-                        }
-
-                        self.logger.logI("IPRepositoryImpl", "Ip was refreshed with: \(data.userIp) Windscribe IP: \(data.isOurIp)")
-                        self.localDatabase.saveIp(myip: data)
-                            .disposed(by: self.disposeBag)
-
-                        single(.success(()))
+                    if !self.wasObserved {
+                        self.load()
+                        self.updateState(.available(data))
                     }
+
+                    self.logger.logI("IPRepositoryImpl", "Ip was refreshed with: \(data.userIp) Windscribe IP: \(data.isOurIp)")
+                    currentIp.send(data.userIp)
+                    await self.localDatabase.saveIp(myip: data)
+
+                    single(.success(()))
                 } catch {
                     await MainActor.run {
                         self.updateState(lastState)

@@ -2290,6 +2290,34 @@ enum TextsAsset {
             return "Captcha image decoding failed. Please try again later.".localized
         }
     }
+
+    enum BridgeAPIIpRotation {
+        static var title: String {
+            return "Could not rotate IP".localized
+        }
+        static var body: String {
+            return "Try again later or go to our Status page for more info.".localized
+        }
+        static var actionTitle: String {
+            return "Check Location Status".localized
+        }
+    }
+    enum BridgeAPIIpPinning {
+        static var title: String {
+            return "Could not pin IP".localized
+        }
+        static var body: String {
+            return "Try again later or go to our Status page for more info.".localized
+        }
+        static var actionTitle: String {
+            return "Check Location Status".localized
+        }
+    }
+    enum BridgeAPI {
+        static var backButton: String {
+            return "Back".localized
+        }
+    }
 }
 
 extension TextsAsset {

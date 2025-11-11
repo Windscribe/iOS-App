@@ -424,8 +424,14 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(IPInfoViewModelType.self) { r in
-            IPInfoViewModel(ipRepository: r.resolve(IPRepository.self)!,
-                            preferences: r.resolve(Preferences.self)!)
+            IPInfoViewModel(logger: r.resolve(FileLogger.self)!,
+                            ipRepository: r.resolve(IPRepository.self)!,
+                            preferences: r.resolve(Preferences.self)!,
+                            locationManager: r.resolve(LocationsManager.self)!,
+                            localDatabase: r.resolve(LocalDatabase.self)!,
+                            apiManager: r.resolve(APIManager.self)!,
+                            userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                            bridgeApiRepository: r.resolve(BridgeApiRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register(WifiInfoViewModelType.self) { r in
@@ -445,6 +451,12 @@ class ViewModels: Assembly {
 
         container.register(FreeAccountFooterViewModelType.self) { r in
             FreeAccountFooterViewModel(localDatabase: r.resolve(LocalDatabase.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any BridgeApiFailedViewModel).self) { r in
+            BridgeApiFailedViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+            )
         }.inObjectScope(.transient)
     }
 }
@@ -918,6 +930,14 @@ class ViewControllerModule: Assembly {
             ProtocolConnectionDebugView(
                 viewModel: r.resolve((any ProtocolConnectionDebugViewModel).self)!,
                 router: r.resolve(ProtocolSwitchNavigationRouter.self)!
+            )
+        }.inObjectScope(.transient)
+
+        container.register(BridgeApiFailedView.self) { r in
+            BridgeApiFailedView(
+                viewModel: BridgeApiFailedViewModelImpl(
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+                )
             )
         }.inObjectScope(.transient)
     }

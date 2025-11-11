@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/WSNet.h</key>
 		<data>
-		GPwvCJ5c5Ou+1D+m4lZnkpDyCPU=
+		HHL/9dp1G61diGlBQrcVXzEwEvE=
 		</data>
 		<key>Headers/WSNetAdvancedParameters.h</key>
 		<data>
@@ -15,6 +15,10 @@
 		<key>Headers/WSNetApiResourcesManager.h</key>
 		<data>
 		Fd++MuHWPqje9kJWUUf6bbmIcOQ=
+		</data>
+		<key>Headers/WSNetBridgeAPI.h</key>
+		<data>
+		VIosPoWlYkIGLT1IujQHPC4M/J8=
 		</data>
 		<key>Headers/WSNetCancelableCallback.h</key>
 		<data>
@@ -46,7 +50,7 @@
 		</data>
 		<key>Headers/WSNetHttpRequest.h</key>
 		<data>
-		c4xgnSpr2ShQ1vb/HxJsMy7Q7UA=
+		c15ShrH5eScEsviL2exLGf/QBTk=
 		</data>
 		<key>Headers/WSNetPingManager.h</key>
 		<data>
@@ -54,11 +58,11 @@
 		</data>
 		<key>Headers/WSNetRequestError.h</key>
 		<data>
-		XCY2dWEuUysJXeBUSwgTlKfzNl4=
+		G6Xu0Gbb+vL43+/sGzXRWkPTeI8=
 		</data>
 		<key>Headers/WSNetServerAPI.h</key>
 		<data>
-		G3NzYVZiZSCy9Zq2MyJJbMTPpWo=
+		8wz1Qb4sLOgrKy1rdusL9Z1HeV4=
 		</data>
 		<key>Headers/WSNetUtils.h</key>
 		<data>
@@ -75,7 +79,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			34RcikNYh+Zy9Hw006wCJJNvJQRzor6iq01Sc7z/Gko=
+			YD3m2/WTzd4gFpybiAZaFVt2yZkni+DIKrmL/KUpAWg=
 			</data>
 		</dict>
 		<key>Headers/WSNetAdvancedParameters.h</key>
@@ -90,6 +94,13 @@
 			<key>hash2</key>
 			<data>
 			66TLrmOG4EW6IioaTArULfZLSTqdjBrQRYEzn890os4=
+			</data>
+		</dict>
+		<key>Headers/WSNetBridgeAPI.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			RcC6Zbdp0ndqmOo6quHGef/kUaLrlmGf9PZBpV5Wkjo=
 			</data>
 		</dict>
 		<key>Headers/WSNetCancelableCallback.h</key>
@@ -145,7 +156,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2kwkwaoS3dQhLvF0Tcozn1xBmdvLhXcPnvHP+R8wVPg=
+			15kijzLhhxe9mR2p35Ujo435k24SqGgW2JmgDqZ8YSs=
 			</data>
 		</dict>
 		<key>Headers/WSNetPingManager.h</key>
@@ -159,14 +170,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			9hMkJxFzR+L1n4JEKcMtrIDyUReVICgMp3M4zLRq4lk=
+			p58p3ZWPXYeBVYh2h2JchqC41WP73ye0kBvsm0SfQ5o=
 			</data>
 		</dict>
 		<key>Headers/WSNetServerAPI.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+6f3gj7kYSyZvy2orUn/bjqiMkYk6DdqkFWqTfVlTtg=
+			oEgWZrHbfQJbmZut4VNz4egQ+/xyZtSBAGqsMitRRw8=
 			</data>
 		</dict>
 		<key>Headers/WSNetUtils.h</key>

@@ -88,19 +88,27 @@ class PopupRouter: BaseRouter, RootRouter {
             let context = ProtocolSwitchContext()
             context.fallbackType = type
             context.error = error
-            let protocolSwitchView = Assembler.resolve(ProtocolSwitchView.self).environmentObject(context)
+            let protocolSwitchView = Assembler.resolve(ProtocolSwitchView.self)
+                .environmentObject(context)
             return DeviceTypeProvider { protocolSwitchView }
 
         case .protocolConnectionResult(let protocolName, let viewType):
             let context = ProtocolConnectionResultContext()
             context.protocolName = protocolName
             context.viewType = viewType
-            let protocolResultView = Assembler.resolve(ProtocolConnectionResultView.self).environmentObject(context)
+            let protocolResultView = Assembler.resolve(ProtocolConnectionResultView.self)
+                .environmentObject(context)
             return DeviceTypeProvider { protocolResultView }
 
         case .protocolConnectionDebug:
             let protocolDebugView = Assembler.resolve(ProtocolConnectionDebugView.self)
             return DeviceTypeProvider { protocolDebugView }
+
+        case .bridgeApi(let popupType):
+            let context = BridgeApiFailedContext()
+            context.popupType = popupType
+            return Assembler.resolve(BridgeApiFailedView.self)
+                .environmentObject(context)
 
         default:
             return nil

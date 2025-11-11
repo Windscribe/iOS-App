@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 @testable import Windscribe
 
 let myIPSuccessJson = """

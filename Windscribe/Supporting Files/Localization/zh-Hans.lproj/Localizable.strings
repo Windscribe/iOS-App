@@ -570,3 +570,8 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "我们已收到您的调试日志。如果您需要此问题的帮助，请联系支持部门。";
 
 "Network Security" = "网络安全";
+
+"Could not rotate IP" = "无法轮换 IP";
+"Try again later or go to our Status page for more info." = "请稍后重试或转到我们的状态页面以获取更多信息.";
+"Could not pin IP" = "无法固定 IP";
+"Check Location Status" = "检查位置状态";

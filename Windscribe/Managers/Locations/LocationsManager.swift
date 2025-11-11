@@ -12,6 +12,7 @@ struct LocationUIInfo {
     let nickName: String
     let cityName: String
     let countryCode: String
+    let isServer: Bool
 }
 
 protocol LocationsManager {
@@ -96,27 +97,26 @@ class LocationsManagerImpl: LocationsManager {
                 return getEmptyUIInfo()
             }
             let cityName = getBestLocation() == getLastSelectedLocation() ? TextsAsset.bestLocation : location.1.city
-            return LocationUIInfo(nickName: location.1.nick, cityName: cityName, countryCode: location.0.countryCode)
+            return LocationUIInfo(nickName: location.1.nick, cityName: cityName, countryCode: location.0.countryCode, isServer: true)
         } else {
             let locationID = getId()
             if locationType == .custom {
                 guard let customConfig = localDatabase.getCustomConfigs().first(where: { locationID == "\($0.id)" }) else {
                     return getEmptyUIInfo()
                 }
-                return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation)
+                return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation, isServer: false)
             } else if locationType == .staticIP {
                 guard let staticIP = localDatabase.getStaticIPs()?.first(where: { locationID == "\($0.id)" }) else {
                     return getEmptyUIInfo()
                 }
-                return LocationUIInfo(nickName: staticIP.staticIP, cityName: staticIP.cityName, countryCode: staticIP.countryCode)
+                return LocationUIInfo(nickName: staticIP.staticIP, cityName: staticIP.cityName, countryCode: staticIP.countryCode, isServer: false)
             }
         }
         return getEmptyUIInfo()
     }
 
-
     private func getEmptyUIInfo() -> LocationUIInfo {
-        return LocationUIInfo(nickName: "", cityName: "", countryCode: "")
+        return LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
     }
 
     func checkForForceDisconnect() -> Bool {

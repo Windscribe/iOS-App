@@ -88,6 +88,7 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case wgLimitExceeded
     case appleSsoError(String)
     case failOverFailed
+    case bridgeAPIError
 
     public var unlocalizedDescription: String {
         switch self {
@@ -129,6 +130,8 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return ""
         case .parsingError:
             return ErrorTexts.APIError.tooManyFailedAttempts.unlocalizedDescription
+        case .bridgeAPIError:
+            return ErrorTexts.APIError.bridgeAPIError.unlocalizedDescription
         default:
             return ErrorTexts.APIError.unspecifiedError.unlocalizedDescription
         }
