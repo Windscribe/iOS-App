@@ -126,8 +126,8 @@ class ConnectButtonView: UIView {
                 }
             }
         }.disposed(by: disposeBag)
-        connectButton.rx.tap.bind {
-            self.connectTriggerSubject.onNext(())
+        connectButton.rx.tap.bind { [weak self] in
+            self?.connectTriggerSubject.onNext(())
         }.disposed(by: disposeBag)
     }
 

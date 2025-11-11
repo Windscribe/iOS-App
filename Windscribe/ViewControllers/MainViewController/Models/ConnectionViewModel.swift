@@ -151,7 +151,8 @@ class ConnectionViewModel: ConnectionViewModelType {
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
         vpnStateRepository.getStatus()
-            .sink { state in
+            .sink { [weak self] state in
+                guard let self = self else { return }
                 self.updateState(with: ConnectionState.state(from: state))
                 self.saveDataForWidget()
             }
@@ -183,7 +184,8 @@ class ConnectionViewModel: ConnectionViewModelType {
             }
             .store(in: &cancellables)
 
-        locationsManager.selectedLocationUpdated.sink { canReconnect in
+        locationsManager.selectedLocationUpdated.sink { [weak self] canReconnect in
+            guard let self = self else { return }
             let locationID = locationsManager.getLastSelectedLocation()
             if canReconnect, !locationID.isEmpty, locationID != "0", self.isConnected() {
                 self.enableConnection()
@@ -208,7 +210,8 @@ class ConnectionViewModel: ConnectionViewModelType {
             }.store(in: &cancellables)
 
         localDB.getNetworks()
-            .subscribe(onNext: {
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
                 guard let matchingNetwork = $0.first(where: { network in
                     network.isInvalidated == false && network.SSID == self.currentNetwork?.name
                 }) else { return }
@@ -340,7 +343,8 @@ extension ConnectionViewModel {
                 }
                 connectionTaskPublisher?.cancel()
                 connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
-                    .sink { _ in
+                    .sink { [weak self] _ in
+                        guard let self = self else { return }
                         Task { @MainActor in
                             await self.protocolManager.refreshProtocols(shouldReset: true,
                                                                         shouldReconnect: true)
@@ -358,10 +362,10 @@ extension ConnectionViewModel {
         if !gettingIpAddress && !isConnecting() {
             logger.logD("ConnectionViewModel", "Displaying local IP Address.")
             gettingIpAddress = true
-            ipRepository.getIp().subscribe(onSuccess: { _ in
-                self.gettingIpAddress = false
-            }, onFailure: { _ in
-                self.gettingIpAddress = false
+            ipRepository.getIp().subscribe(onSuccess: { [weak self] _ in
+                self?.gettingIpAddress = false
+            }, onFailure: { [weak self] _ in
+                self?.gettingIpAddress = false
             }).disposed(by: disposeBag)
         }
     }
@@ -452,7 +456,8 @@ extension ConnectionViewModel {
 
         connectionTaskPublisher?.cancel()
         connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
+                guard let self = self else { return }
                 switch completion {
                 case .finished:
                     self.logger.logD("ConnectionViewModel", "Finished disabling connection.")
@@ -473,7 +478,8 @@ extension ConnectionViewModel {
                         self.logger.logE("ConnectionViewModel", "Disable Connection with unknown error: \(error.localizedDescription)")
                     }
                 }
-            } receiveValue: { state in
+            } receiveValue: { [weak self] state in
+                guard let self = self else { return }
                 switch state {
                 case let .update(message):
                     self.logger.logD("ConnectionViewModel", "Disable connection had an update: \(message)")
@@ -532,10 +538,10 @@ extension ConnectionViewModel {
     private func updateToLocalIPAddress() {
         logger.logD("ConnectionViewModel", "Displaying local IP Address.")
         gettingIpAddress = true
-        ipRepository.getIp().subscribe(onSuccess: { _ in
-            self.gettingIpAddress = false
-        }, onFailure: { _ in
-            self.gettingIpAddress = false
+        ipRepository.getIp().subscribe(onSuccess: { [weak self] _ in
+            self?.gettingIpAddress = false
+        }, onFailure: { [weak self] _ in
+            self?.gettingIpAddress = false
         }).disposed(by: disposeBag)
     }
 

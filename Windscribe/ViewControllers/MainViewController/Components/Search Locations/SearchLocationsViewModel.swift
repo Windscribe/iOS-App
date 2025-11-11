@@ -41,7 +41,7 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
-        languageManager.activelanguage.sink { _ in self.refreshLanguage.onNext(()) }
+        languageManager.activelanguage.sink { [weak self] _ in self?.refreshLanguage.onNext(()) }
             .store(in: &cancellables)
     }
 

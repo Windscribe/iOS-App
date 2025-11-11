@@ -47,7 +47,8 @@ class ServerInfoViewModel: ServerInfoViewModelType {
             .store(in: &cancellables)
 
         languageManager.activelanguage
-            .sink { _ in
+            .sink { [weak self] _ in
+                guard let self = self else { return }
                 self.serverCountSubject.onNext(self.count)
             }
             .store(in: &cancellables)
@@ -98,8 +99,8 @@ class ServerInfoView: UIView {
 
         viewModel.isDarkMode
             .receive(on: DispatchQueue.main)
-            .sink { isDarkMode in
-                self.updateLayourForTheme(isDarkMode: isDarkMode)
+            .sink { [weak self] isDarkMode in
+                self?.updateLayourForTheme(isDarkMode: isDarkMode)
             }
             .store(in: &cancellables)
     }

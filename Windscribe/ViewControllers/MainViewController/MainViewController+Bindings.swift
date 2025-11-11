@@ -12,57 +12,60 @@ import UIKit
 
 extension MainViewController {
     func bindVPNConnectionsViewModel() {
-        vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             self.animateConnectedState(with: $0)
             if [.connected, .disconnected].contains($0.state) {
                 self.viewModel.updateSSID()
             }
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showNoConnectionAlertTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.displayInternetConnectionLostAlert()
+        vpnConnectionViewModel.showNoConnectionAlertTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            self?.displayInternetConnectionLostAlert()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
+        vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            self?.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showAuthFailureTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showAuthFailurePopup()
+        vpnConnectionViewModel.showAuthFailureTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            self?.showAuthFailurePopup()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showOutOfDataPopup()
+        vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            self?.showOutOfDataPopup()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showConnectionFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showConnectionFailed()
+        vpnConnectionViewModel.showConnectionFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            self?.showConnectionFailed()
         }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.selectedLocationUpdated
             .delay(for: .seconds(vpnConnectionViewModel.getSelectedCountryInfo().countryCode.isEmpty ? 2 : 0), scheduler: RunLoop.main)
-            .sink { _ in
-                self.updateSelectedLocationUI()
+            .sink { [weak self] _ in
+                self?.updateSelectedLocationUI()
             }.store(in: &cancellables)
 
         Observable.combineLatest(viewModel.wifiNetwork,
-                                 vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
-            self.refreshProtocol(from: network, with: protocolPort)
+                                 vpnConnectionViewModel.selectedProtoPort).bind { [weak self] (network, protocolPort) in
+            self?.refreshProtocol(from: network, with: protocolPort)
         }.disposed(by: disposeBag)
 
-        vpnConnectionViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             self.popupRouter?.routeTo(to: .pushNotifications, from: self)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.siriShortcutTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.displaySiriShortcutPopup()
+        vpnConnectionViewModel.siriShortcutTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            self?.displaySiriShortcutPopup()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.loadLatencyValuesSubject.subscribe(onNext: {
-            self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
+        vpnConnectionViewModel.loadLatencyValuesSubject.subscribe(onNext: { [weak self] in
+            self?.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showPreferredProtocolView.subscribe(onNext: { protocolName in
+        vpnConnectionViewModel.showPreferredProtocolView.subscribe(onNext: { [weak self] protocolName in
+            guard let self = self else { return }
             self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: protocolName,
                                                                       viewType: .connected),
                                  from: self)
@@ -70,11 +73,12 @@ extension MainViewController {
     }
 
     func bindViews() {
-        connectButtonView.connectTriggerSubject.subscribe { _ in
-            self.connectButtonTapped()
+        connectButtonView.connectTriggerSubject.subscribe { [weak self] _ in
+            self?.connectButtonTapped()
         }.disposed(by: disposeBag)
 
-        wifiInfoView.wifiTriggerSubject.subscribe { network in
+        wifiInfoView.wifiTriggerSubject.subscribe { [weak self] network in
+            guard let self = self else { return }
             self.router?.routeTo(to: .network(with: network), from: self)
         }.disposed(by: disposeBag)
 
@@ -103,15 +107,15 @@ extension MainViewController {
     }
 
     func bindMainViewModel() {
-        viewModel.isDarkMode.receive(on: DispatchQueue.main).sink {
-            self.updateLayoutForTheme(isDarkMode: $0)
+        viewModel.isDarkMode.receive(on: DispatchQueue.main).sink { [weak self] in
+            self?.updateLayoutForTheme(isDarkMode: $0)
         }.store(in: &cancellables)
-        viewModel.session.subscribe(onNext: {
-            self.updateUIForSession(session: $0)
+        viewModel.session.subscribe(onNext: { [weak self] in
+            self?.updateUIForSession(session: $0)
         }).disposed(by: disposeBag)
 
-        viewModel.promoPayload.distinctUntilChanged().subscribe(onNext: { payload in
-            guard let payload = payload else { return }
+        viewModel.promoPayload.distinctUntilChanged().subscribe(onNext: { [weak self] payload in
+            guard let self = self, let payload = payload else { return }
             self.logger.logD("MainViewController", "Showing upgrade view with payload: \(payload.description)")
             self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
         }).disposed(by: disposeBag)
@@ -148,7 +152,8 @@ extension MainViewController {
                 self.updateConnectedState()
             }.store(in: &cancellables)
 
-        vpnConnectionViewModel.reloadLocationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {  id in
+        vpnConnectionViewModel.reloadLocationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] id in
+            guard let self = self else { return }
             if id.starts(with: "static") {
                 self.loadStaticIPs()
             } else if id.starts(with: "custom") {
@@ -165,12 +170,14 @@ extension MainViewController {
              })
              .disposed(by: disposeBag)
 
-        viewModel.showProtocolSwitchTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        viewModel.showProtocolSwitchTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             // Disconnect VPN for clean state during countdown while preserving protocol failover sequence
             self.router?.routeTo(to: RouteID.protocolSwitch(type: .failure, error: nil), from: self)
         }).disposed(by: disposeBag)
 
-        viewModel.showAllProtocolsFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        viewModel.showAllProtocolsFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             // Disconnect VPN to stop protocol cycling when all protocols have failed
             self.vpnConnectionViewModel.disableConnection()
             self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: .fail), from: self)
@@ -180,81 +187,83 @@ extension MainViewController {
     }
 
     func bindActions() {
-        preferencesTapAreaButton.rx.tap.throttle(.seconds(1), scheduler: MainScheduler.instance).bind {
-            self.logoButtonTapped()
+        preferencesTapAreaButton.rx.tap.throttle(.seconds(1), scheduler: MainScheduler.instance).bind { [weak self] in
+            self?.logoButtonTapped()
         }.disposed(by: disposeBag)
     }
 
     func bindCustomConfigPickerModel() {
-        customConfigPickerViewModel.configureVPNTrigger.subscribe(onNext: {
-            self.enableVPNConnection()
+        customConfigPickerViewModel.configureVPNTrigger.subscribe(onNext: { [weak self] in
+            self?.enableVPNConnection()
         }).disposed(by: disposeBag)
-        customConfigPickerViewModel.disableVPNTrigger.subscribe(onNext: {
-            self.disableVPNConnection()
+        customConfigPickerViewModel.disableVPNTrigger.subscribe(onNext: { [weak self] in
+            self?.disableVPNConnection()
         }).disposed(by: disposeBag)
 
-        customConfigPickerViewModel.displayAllertTrigger.subscribe(onNext: {
+        customConfigPickerViewModel.displayAllertTrigger.subscribe(onNext: { [weak self] in
             switch $0 {
             case .connecting:
-                self.displayConnectingAlert()
+                self?.displayConnectingAlert()
             case .disconnecting:
-                self.displayDisconnectingAlert()
+                self?.displayDisconnectingAlert()
             }
         }).disposed(by: disposeBag)
 
-        customConfigPickerViewModel.presentDocumentPickerTrigger.subscribe(onNext: {
-            self.present($0, animated: true)
+        customConfigPickerViewModel.presentDocumentPickerTrigger.subscribe(onNext: { [weak self] in
+            self?.present($0, animated: true)
         }).disposed(by: disposeBag)
 
-        customConfigPickerViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
+        customConfigPickerViewModel.showEditCustomConfigTrigger.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: true), from: self)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
+        vpnConnectionViewModel.showEditCustomConfigTrigger.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
             self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: false), from: self)
         }).disposed(by: disposeBag)
     }
 
     func bindFavouriteListViewModel() {
-        favNodesListViewModel.presentAlertTrigger.subscribe {
+        favNodesListViewModel.presentAlertTrigger.subscribe { [weak self] in
             switch $0 {
-            case .connecting: self.displayConnectingAlert()
-            case .disconnecting: self.displayDisconnectingAlert()
+            case .connecting: self?.displayConnectingAlert()
+            case .disconnecting: self?.displayDisconnectingAlert()
             }
         }.disposed(by: disposeBag)
-        favNodesListViewModel.showUpgradeTrigger.subscribe { _ in
-            self.showUpgradeView()
+        favNodesListViewModel.showUpgradeTrigger.subscribe { [weak self] _ in
+            self?.showUpgradeView()
         }.disposed(by: disposeBag)
     }
 
     func bindStaticIPListViewModel() {
-        staticIPListViewModel.presentLinkTrigger.subscribe {
-            self.openLink(url: $0)
+        staticIPListViewModel.presentLinkTrigger.subscribe { [weak self] in
+            self?.openLink(url: $0)
         }.disposed(by: disposeBag)
-        staticIPListViewModel.presentAlertTrigger.subscribe {
+        staticIPListViewModel.presentAlertTrigger.subscribe { [weak self] in
             switch $0 {
             case .connecting:
-                self.displayConnectingAlert()
+                self?.displayConnectingAlert()
             case .disconnecting:
-                self.displayDisconnectingAlert()
+                self?.displayDisconnectingAlert()
             case .underMaintananence:
-                self.showMaintenanceLocationView(isStaticIp: true)
+                self?.showMaintenanceLocationView(isStaticIp: true)
             }
         }.disposed(by: disposeBag)
     }
 
     func bindServerListViewModel() {
-        serverListViewModel.presentConnectingAlertTrigger.subscribe { _ in
-            self.displayConnectingAlert()
+        serverListViewModel.presentConnectingAlertTrigger.subscribe { [weak self] _ in
+            self?.displayConnectingAlert()
         }.disposed(by: disposeBag)
-        serverListViewModel.showMaintenanceLocationTrigger.subscribe { _ in
-            self.showMaintenanceLocationView()
+        serverListViewModel.showMaintenanceLocationTrigger.subscribe { [weak self] _ in
+            self?.showMaintenanceLocationView()
         }.disposed(by: disposeBag)
-        serverListViewModel.showUpgradeTrigger.subscribe { _ in
-            self.showUpgradeView()
+        serverListViewModel.showUpgradeTrigger.subscribe { [weak self] _ in
+            self?.showUpgradeView()
         }.disposed(by: disposeBag)
-        serverListViewModel.reloadTrigger.subscribe { _ in
-            self.reloadTableViews()
+        serverListViewModel.reloadTrigger.subscribe { [weak self] _ in
+            self?.reloadTableViews()
         }.disposed(by: disposeBag)
     }
 

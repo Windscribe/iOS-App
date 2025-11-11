@@ -36,7 +36,7 @@ class IPRepositoryImpl: IPRepository {
     /// Loads the last known IP from the local database
     private func load() {
         localDatabase.getIp()
-            .observe(on:MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] myIp in
                 guard let self = self else { return }
                 self.wasObserved = true
@@ -67,13 +67,15 @@ class IPRepositoryImpl: IPRepository {
                 do {
                     let data = try await self.apiManager.getIp()
                     if !self.wasObserved {
-                        self.load()
-                        self.updateState(.available(data))
+                        await MainActor.run {
+                            self.load()
+                            self.updateState(.available(data))
+                        }
                     }
 
                     self.logger.logI("IPRepositoryImpl", "Ip was refreshed with: \(data.userIp) Windscribe IP: \(data.isOurIp)")
                     currentIp.send(data.userIp)
-                    await self.localDatabase.saveIp(myip: data)
+                    self.localDatabase.saveIp(myip: data)
 
                     single(.success(()))
                 } catch {

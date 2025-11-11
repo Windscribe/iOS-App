@@ -208,7 +208,8 @@ extension MainViewController {
             }
         }).disposed(by: disposeBag)
         reloadFavouriteOrder()
-        viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] servers in
+        viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] servers in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 self.loadServerTable(servers: servers)
             }

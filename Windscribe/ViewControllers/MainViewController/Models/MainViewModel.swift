@@ -413,8 +413,8 @@ class MainViewModel: MainViewModelType {
                 ids.compactMap { id in self.getFavouriteGroup(id: id, servers: servers) }
             }
             .receive(on: DispatchQueue.main)
-            .sink { groups in
-                self.favouriteGroups.onNext(groups)
+            .sink { [weak self] groups in
+                self?.favouriteGroups.onNext(groups)
             }
             .store(in: &cancellables)
     }
@@ -544,8 +544,8 @@ class MainViewModel: MainViewModelType {
     func loadNotifications() {
         pushNotificationsManager.notification
             .compactMap { $0 }
-            .sink {
-                self.promoPayload.onNext($0)
+            .sink { [weak self] in
+                self?.promoPayload.onNext($0)
             }
             .store(in: &cancellables)
         notices = notificationsRepo.notices
