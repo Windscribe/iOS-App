@@ -570,3 +570,8 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Votre journal de débogage a été reçu. Veuillez contacter le support si vous souhaitez obtenir de l'aide pour ce problème.";
 
 "Network Security" = "Sécurité du réseau";
+
+"Could not rotate IP" = "Impossible de faire pivoter l'IP";
+"Try again later or go to our Status page for more info." = "Tentez récemment plus tard ou allez à notre page d'état pour plus d'informations.";
+"Could not pin IP" = "Impossible d'épingler l'adresse IP";
+"Check Location Status" = "Vérifier l'état de l'emplacement";

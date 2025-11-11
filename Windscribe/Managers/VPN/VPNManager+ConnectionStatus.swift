@@ -31,6 +31,11 @@ extension VPNManagerImpl {
                 let protocolType = info.selectedProtocol
                 if self.vpnStateRepository.lastConnectionStatus == connectionStatus { return }
                 self.vpnStateRepository.setLastConnectionStatus(connectionStatus)
+
+                if vpnStateRepository.isDisconnected() {
+                    bridgeAPI.setConnectedState(false)
+                }
+
                 switch connectionStatus {
                 case .connecting:
                     self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Connecting")

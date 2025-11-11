@@ -40,11 +40,6 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
 
     var serverSections: [ServerSection] = []
     weak var delegate: ServerListTableViewDelegate?
-    var favList: [GroupModel]? {
-        didSet {
-            delegate?.reloadServerListTableView()
-        }
-    }
 
     var favNodesNotificationToken: NotificationToken?
     var scrollHappened = false
@@ -60,10 +55,6 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
             }
             return $0
         })
-
-        viewModel.favouriteList.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.favList = $0
-        }).disposed(by: disposeBag)
     }
 
     func numberOfSections(in _: UITableView) -> Int {

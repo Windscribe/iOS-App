@@ -202,6 +202,7 @@ class OldSession: Session {
     convenience init(session: Session) {
         self.init()
         userId = session.userId
+        username = session.username
         trafficMax = session.trafficMax
         trafficUsed = session.trafficUsed
         status = session.status

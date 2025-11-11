@@ -11,12 +11,17 @@ import RxSwift
 
 class APIManagerImpl: APIManager {
     var api: WSNetServerAPI
+    var bridgeApi: WSNetBridgeAPI
     private let logger: FileLogger
     let apiUtil: APIUtilService
     var userSessionRepository: UserSessionRepository?
 
-    init(api: WSNetServerAPI, logger: FileLogger, apiUtil: APIUtilService) {
+    init(api: WSNetServerAPI,
+         bridgeApi: WSNetBridgeAPI,
+         logger: FileLogger,
+         apiUtil: APIUtilService) {
         self.api = api
+        self.bridgeApi = bridgeApi
         self.logger = logger
         self.apiUtil = apiUtil
     }

@@ -116,6 +116,7 @@ enum ImagesAsset {
         static let open = "ip-menu-open"
         static let close = "close-button"
         static let save = "ip-menu-save"
+        static let isSaved = "fav-full"
         static let refresh = "ip-menu-refresh"
     }
 

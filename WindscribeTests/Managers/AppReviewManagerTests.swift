@@ -109,3 +109,4 @@ class AppReviewManagerTests: XCTestCase {
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 }
+

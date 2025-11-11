@@ -6,9 +6,8 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-import Realm
-import RealmSwift
 import RxSwift
+import Combine
 import Swinject
 import UIKit
 import Combine
@@ -158,6 +157,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 class BaseNodeCell: ServerListCell {
     var favButton = ImageButton()
     var nickNameLabel = UILabel()
+    var infoStackView = UIStackView()
     var latencyLabel = UILabel()
     var signalBarsIcon = UIImageView()
     var latencyView = UIView()

@@ -27,6 +27,8 @@ class ConfigurationsManager {
     let preferences: Preferences
     let locationsManager: LocationsManager
     let ipRepository: IPRepository
+    let bridgeAPI: WSNetBridgeAPI
+    let bridgeApiRepository: BridgeApiRepository
     var api: APIManager {
         return Assembler.resolve(APIManager.self)
     }
@@ -60,7 +62,18 @@ class ConfigurationsManager {
     var opTunnelManager: NETunnelProviderManager?
     private let tunnelManagerLock = NSLock()
 
-    init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository, wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials, preferences: Preferences, locationsManager: LocationsManager, ipRepository: IPRepository) {
+    init(logger: FileLogger,
+         localDatabase: LocalDatabase,
+         keychainDb: KeyChainDatabase,
+         fileDatabase: FileDatabase,
+         advanceRepository: AdvanceRepository,
+         wgRepository: WireguardConfigRepository,
+         wgCredentials: WgCredentials,
+         preferences: Preferences,
+         locationsManager: LocationsManager,
+         ipRepository: IPRepository,
+         bridgeAPI: WSNetBridgeAPI,
+         bridgeApiRepository: BridgeApiRepository) {
         self.logger = logger
         self.localDatabase = localDatabase
         self.keychainDb = keychainDb
@@ -71,6 +84,8 @@ class ConfigurationsManager {
         self.preferences = preferences
         self.locationsManager = locationsManager
         self.ipRepository = ipRepository
+        self.bridgeAPI = bridgeAPI
+        self.bridgeApiRepository = bridgeApiRepository
         loadTunnelManagers()
         load()
     }

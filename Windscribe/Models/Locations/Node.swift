@@ -149,10 +149,16 @@ struct FavNodeModel {
 
 @objcMembers class Favourite: Object, Decodable {
     @Persisted(primaryKey: true) var id: String
+    @Persisted var pinnedIp: String?
+    @Persisted var pinnedNodeIp: String?
 
-    convenience init(id: String) {
+    convenience init(id: String,
+                     pinnedIp: String? = nil,
+                     pinnedNodeIp: String? = nil) {
         self.init()
         self.id = id
+        self.pinnedIp = pinnedIp
+        self.pinnedNodeIp = pinnedNodeIp
     }
 }
 

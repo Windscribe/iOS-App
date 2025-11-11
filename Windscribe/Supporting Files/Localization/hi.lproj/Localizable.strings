@@ -594,3 +594,8 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "आपकी डिबग लॉग प्राप्त हो गई है। यदि आपको इस समस्या में सहायता चाहिए, तो कृपया समर्थन से संपर्क करें।";
 
 "Network Security" = "नेटवर्क सुरक्षा";
+
+"Could not rotate IP" = "आईपी ​​घुमाया नहीं जा सका";
+"Try again later or go to our Status page for more info." = "हाल ही में मुझे कई सूचनाओं के लिए स्टेटस पेज बनाना पड़ा।";
+"Could not pin IP" = "आईपी ​​पिन नहीं किया जा सका";
+"Check Location Status" = "स्थान स्थिति जांचें";

@@ -20,6 +20,7 @@ protocol ConnectionViewModelType {
     var selectedLocationUpdated: CurrentValueSubject<Void, Never> { get }
 
     var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
+    var showFailedPinIpTrigger: PassthroughSubject<Void, Never> { get }
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
     var showAuthFailureTrigger: PublishSubject<Void> { get }
@@ -73,6 +74,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let selectedLocationUpdated = CurrentValueSubject<Void, Never>(())
 
     var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
+    let showFailedPinIpTrigger = PassthroughSubject<Void, Never>()
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
     let showAuthFailureTrigger = PublishSubject<Void>()
@@ -401,6 +403,11 @@ extension ConnectionViewModel {
                     case .finished:
                         self.logger.logD("ConnectionViewModel", "Finished enabling connection.")
                     case let .failure(error):
+                        if case Errors.bridgeAPIError = error {
+                            self.logger.logE("ConnectionViewModel", "BridgeAPI error!")
+                            self.showFailedPinIpTrigger.send()
+                            return
+                        }
                         if let error = error as? NEVPNError {
                             self.logger.logE("ConnectionViewModel", "NEVPNError: \(error.code)")
                             return

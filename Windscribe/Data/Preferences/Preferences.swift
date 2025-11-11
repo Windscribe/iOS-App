@@ -155,6 +155,8 @@ protocol Preferences {
     func isCustomConfigSelected() -> Bool
     func getLocationType() -> LocationType?
     func getLocationType(id: String) -> LocationType?
+    func saveLastNodeIP(nodeIp: String)
+    func getLastNodeIP() -> String?
 
     // AspectRatio
     func saveAspectRatio(value: String)

@@ -19,14 +19,14 @@ protocol FavouriteListTableViewDelegate: AnyObject {
 }
 
 class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
-    var favList: [GroupModel]?
+    var favList: [FavouriteGroupModel]?
     weak var delegate: FavouriteListTableViewDelegate?
     var scrollHappened = false
     var viewModel: MainViewModelType
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
     let disposeBag = DisposeBag()
 
-    init(favList: [GroupModel]?, viewModel: MainViewModelType) {
+    init(favList: [FavouriteGroupModel]?, viewModel: MainViewModelType) {
         self.viewModel = viewModel
         super.init()
         scrollViewDelegate = self
@@ -49,13 +49,13 @@ class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSo
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell
-        ?? NodeTableViewCell(
+            withIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier, for: indexPath) as? FavNodeTableViewCell
+        ?? FavNodeTableViewCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
         let favourite = favList?[indexPath.row]
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
-        cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: favourite, isFavorite: true)
+        cell.favNodeCellViewModel = FavNodeTableViewCellModel(displayingFavGroup: favourite)
         return cell
     }
 
@@ -65,7 +65,7 @@ class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSo
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let favourite = favList?[indexPath.row] else { return }
-        delegate?.setSelectedFavourite(favourite: favourite)
+        delegate?.setSelectedFavourite(favourite: favourite.groupModel)
     }
 
     func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {

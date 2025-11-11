@@ -582,3 +582,8 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Nhật ký gỡ lỗi của bạn đã được nhận. Vui lòng liên hệ hỗ trợ nếu bạn cần trợ giúp với sự cố này.";
 
 "Network Security" = "Bảo mật mạng";
+
+"Could not rotate IP" = "Không thể xoay IP";
+"Try again later or go to our Status page for more info." = "Hãy thử lại sau hoặc truy cập trang Trạng thái của chúng tôi để biết thêm thông tin.";
+"Could not pin IP" = "Không thể ghim IP";
+"Check Location Status" = "Kiểm tra trạng thái vị trí";

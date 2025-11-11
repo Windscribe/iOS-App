@@ -59,6 +59,26 @@ struct GroupModel {
         self.wasEdited = wasEdited
     }
 
+    func getCustomGroupModel(customCity: String = "", customNick: String = "", countryCode: String? = nil) -> GroupModel {
+        let wasEdited = (!customCity.isEmpty && customCity != city) ||
+        (!customNick.isEmpty && customNick != nick)
+        return GroupModel(id: id,
+                          countryCode: countryCode,
+                          city: customCity.isEmpty ? city : customCity,
+                          nick: customNick.isEmpty ? nick : customNick,
+                          premiumOnly: premiumOnly,
+                          nodes: nodes,
+                          bestNode: bestNode,
+                          bestNodeHostname: bestNodeHostname,
+                          wgPublicKey: wgPublicKey,
+                          ovpnX509: ovpnX509,
+                          pingIp: pingIp,
+                          linkSpeed: linkSpeed,
+                          health: health,
+                          pingHost: pingHost,
+                          wasEdited: wasEdited)
+    }
+
     func canConnect() -> Bool {
         guard let bestNode = bestNode else { return false }
         return bestNodeHostname != "" || (!bestNode.forceDisconnect)
@@ -72,6 +92,18 @@ struct GroupModel {
             return true
         }
         return false
+    }
+}
+
+struct FavouriteGroupModel {
+    var pinnedIp: String?
+    var pinnedNodeIp: String?
+    var groupModel: GroupModel
+
+    init(favourite: Favourite, groupModel: GroupModel) {
+        self.pinnedIp = favourite.pinnedIp
+        self.pinnedNodeIp = favourite.pinnedNodeIp
+        self.groupModel = groupModel
     }
 }
 

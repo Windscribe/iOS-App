@@ -56,6 +56,21 @@ struct ServerModel {
         wasEdited = serverModel.wasEdited
     }
 
+    func getCustomServerModel(customName: String = "", groupModels: [GroupModel] = []) -> ServerModel {
+        let groupModelList = groupModels.isEmpty ? groups.map { $0.getCustomGroupModel(countryCode: countryCode) } : groupModels
+        let wasEdited = !customName.isEmpty && customName != name
+        return ServerModel(id: id,
+                           name: customName.isEmpty ? name : customName,
+                           countryCode: countryCode,
+                           status: status,
+                           premiumOnly: premiumOnly,
+                           dnsHostname: dnsHostname,
+                           groups: groupModelList,
+                           locType: locType,
+                           p2p: p2p,
+                           wasEdited: wasEdited)
+    }
+
     func isForStreaming() -> Bool {
         return locType == "streaming"
     }

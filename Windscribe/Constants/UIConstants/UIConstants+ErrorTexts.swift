@@ -27,6 +27,7 @@ enum ErrorTexts {
         case tooManyFailedAttempts
         case invalid2FA
         case unspecifiedError
+        case bridgeAPIError
 
         var description: String {
             unlocalizedDescription.localized
@@ -66,6 +67,8 @@ enum ErrorTexts {
                 return "Too many failed attempts. Please wait a moment and try again."
             case .invalid2FA:
                 return "Invalid 2FA Code provided."
+            case .bridgeAPIError:
+                return "WSNet: Bridge Api failed."
             case .unspecifiedError:
                 return "Unknown error."
             }

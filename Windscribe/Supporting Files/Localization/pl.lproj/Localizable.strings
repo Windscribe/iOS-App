@@ -571,3 +571,8 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Otrzymaliśmy Twój dziennik debugowania. Skontaktuj się z pomocą techniczną, jeśli potrzebujesz pomocy w tej sprawie.";
 
 "Network Security" = "Bezpieczeństwo sieci";
+
+"Could not rotate IP" = "Nie można zmienić adresu IP";
+"Try again later or go to our Status page for more info." = "Spróbuj ponownie później lub przejdź do naszej strony Status, aby uzyskać więcej informacji.";
+"Could not pin IP" = "Nie można przypiąć adresu IP";
+"Check Location Status" = "Sprawdź stan lokalizacji";

@@ -7,11 +7,12 @@
 //
 
 import UIKit
-import RxSwift
-import RxGesture
+import Combine
 
 class IPInfoView: UIView {
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
+    var actionFailedSubject = PassthroughSubject<BridgeApiPopupType, Never>()
+
     var viewModel: IPInfoViewModelType! {
         didSet {
             bindViewModel()
@@ -64,22 +65,51 @@ class IPInfoView: UIView {
         }
     }
 
+    @objc private func handleDoubleTap() {
+        viewModel.markBlurStaticIpAddress(isBlured: !viewModel.isBlurStaticIpAddress)
+        ipLabel.isBlurring = viewModel.isBlurStaticIpAddress
+    }
+
     private func bindViewModel() {
         ipLabel.isBlurring = viewModel.isBlurStaticIpAddress
+        actionFailedSubject = viewModel.actionFailedSubject
 
-        viewModel.ipAddressSubject.bind(onNext: {
-            self.showSecureIPAddressState(ipAddress: $0)
-        }).disposed(by: disposeBag)
+        viewModel.ipAddressSubject
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.showSecureIPAddressState(ipAddress: $0)
+            }
+            .store(in: &cancellables)
 
-        ipLabel.rx.anyGesture(.tap(configuration: { gestureRecognizer, _ in
-            gestureRecognizer.numberOfTapsRequired = 2
-        })).skip(1).subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.viewModel.markBlurStaticIpAddress(isBlured: !viewModel.isBlurStaticIpAddress)
-            self.ipLabel.isBlurring = viewModel.isBlurStaticIpAddress
-        }).disposed(by: disposeBag)
+        viewModel.areActionsAvailable
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] actionEnabled in
+                guard let self = self else { return }
+                if !actionEnabled && !self.favoriteButton.isHidden {
+                    closeMenu()
+                }
+                UIView.animate(withDuration: 0.3) {
+                    self.openButton.alpha = actionEnabled ? 1.0 : 0.5
+                }
+                self.openButton.isEnabled = actionEnabled
+            }
+            .store(in: &cancellables)
 
-        openButton.rx.tap.bind { [weak self] _ in
+        // Add double-tap gesture recognizer
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+        doubleTapGesture.numberOfTapsRequired = 2
+        ipLabel.addGestureRecognizer(doubleTapGesture)
+
+        viewModel.isFavouritedSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFavourited in
+                guard let self = self else { return }
+                favoriteButton.setImage(setFavoriteButtonImage(isFavourited: isFavourited),for: .normal)
+            }
+            .store(in: &cancellables)
+
+        openButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
             self.stackView.spacing = 8
             self.favoriteButton.isHidden = false
@@ -88,18 +118,34 @@ class IPInfoView: UIView {
 
             self.openButton.isHidden = true
             self.ipLabel.isHidden = true
-        }.disposed(by: disposeBag)
+        }, for: .touchUpInside)
 
-        closeButton.rx.tap.bind { [weak self] _ in
+        closeButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
-            self.stackView.spacing = 0
-            self.favoriteButton.isHidden = true
-            self.refreshButton.isHidden = true
-            self.closeButton.isHidden = true
+            self.closeMenu()
+        }, for: .touchUpInside)
 
-            self.openButton.isHidden = false
-            self.ipLabel.isHidden = false
-        }.disposed(by: disposeBag)
+        favoriteButton.addAction(UIAction { [weak self] _ in
+            guard let self = self else { return }
+            viewModel.saveIp()
+            self.closeMenu()
+        }, for: .touchUpInside)
+
+        refreshButton.addAction(UIAction { [weak self] _ in
+            guard let self = self else { return }
+            viewModel.rotateIp()
+            self.closeMenu()
+        }, for: .touchUpInside)
+    }
+
+    private func closeMenu() {
+        self.stackView.spacing = 0
+        self.favoriteButton.isHidden = true
+        self.refreshButton.isHidden = true
+        self.closeButton.isHidden = true
+
+        self.openButton.isHidden = false
+        self.ipLabel.isHidden = false
     }
 
     private func addViews() {
@@ -110,22 +156,26 @@ class IPInfoView: UIView {
         ipLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.7)
         ipLabel.textAlignment = .right
 
-        favoriteButton.setImage(UIImage(named: ImagesAsset.IPMenu.save), for: .normal)
-        refreshButton.setImage(UIImage(named: ImagesAsset.IPMenu.refresh), for: .normal)
-        closeButton.setImage(UIImage(named: ImagesAsset.IPMenu.close), for: .normal)
-        openButton.setImage(UIImage(named: ImagesAsset.IPMenu.open), for: .normal)
+        favoriteButton.setImage(UIImage(named: ImagesAsset.IPMenu.save)?.withRenderingMode(.alwaysTemplate)
+                                ,for: .normal)
+        refreshButton.setImage(UIImage(named: ImagesAsset.IPMenu.refresh)?.withRenderingMode(.alwaysTemplate)
+                               , for: .normal)
+        closeButton.setImage(UIImage(named: ImagesAsset.IPMenu.close)?.withRenderingMode(.alwaysTemplate)
+                             ,for: .normal)
+        openButton.setImage(UIImage(named: ImagesAsset.IPMenu.open)?.withRenderingMode(.alwaysTemplate)
+                            , for: .normal)
 
         favoriteButton.imageView?.setImageColor(color: .white)
-        refreshButton.imageView?.setImageColor(color: .white)
-        closeButton.imageView?.setImageColor(color: .white)
-        openButton.imageView?.setImageColor(color: .white)
+        refreshButton.imageView?.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
+        closeButton.imageView?.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
+        openButton.imageView?.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
 
         favoriteButton.isHidden = true
         refreshButton.isHidden = true
         closeButton.isHidden = true
-        openButton.isHidden = true
+        openButton.isHidden = false
 
-        stackView.addArrangedSubviews([ipLabel])
+        stackView.addArrangedSubviews([UIView(), ipLabel, openButton, favoriteButton, refreshButton, closeButton])
         stackView.axis = .horizontal
         addSubview(stackView)
     }
@@ -160,5 +210,11 @@ class IPInfoView: UIView {
             openButton.heightAnchor.constraint(equalToConstant: 32),
             openButton.widthAnchor.constraint(equalToConstant: 32)
         ])
+    }
+
+    private func setFavoriteButtonImage(isFavourited: Bool) -> UIImage? {
+        let imageName = isFavourited ? ImagesAsset.IPMenu.isSaved : ImagesAsset.IPMenu.save
+        return UIImage(named: imageName)?
+            .withRenderingMode(.alwaysTemplate)
     }
 }

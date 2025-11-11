@@ -15,7 +15,7 @@ protocol MainViewModelType {
     var serverList: BehaviorSubject<[ServerModel]> { get }
     var lastConnection: BehaviorSubject<VPNConnection?> { get }
     var portMapHeadings: BehaviorSubject<[String]?> { get }
-    var favouriteList: BehaviorSubject<[GroupModel]?> { get }
+    var favouriteList: BehaviorSubject<[FavouriteGroupModel]?> { get }
     var staticIPs: BehaviorSubject<[StaticIP]?> { get }
     var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
     var oldSession: OldSession? { get }
@@ -51,7 +51,7 @@ protocol MainViewModelType {
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void)
     func saveLastNotificationTimestamp()
     func getLastNotificationTimestamp() -> Double?
-    func sortFavouriteNodesUsingUserPreferences(favList: [GroupModel]) -> [GroupModel]
+    func sortFavouriteNodesUsingUserPreferences(favList: [FavouriteGroupModel]) -> [FavouriteGroupModel]
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
     func isPrivacyPopupAccepted() -> Bool
@@ -59,7 +59,7 @@ protocol MainViewModelType {
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool)
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
-    func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
+    func updatePreferred(port: String, and proto: String, for network: WifiNetwork) async
     func updateSSID()
     func getServerModel(from groupId: Int) -> ServerModel?
     func runHapticFeedback(level: HapticFeedbackLevel)
@@ -90,7 +90,7 @@ class MainViewModel: MainViewModelType {
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
     var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
-    var favouriteList = BehaviorSubject<[GroupModel]?>(value: nil)
+    var favouriteList = BehaviorSubject<[FavouriteGroupModel]?>(value: nil)
     var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
     var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
@@ -259,21 +259,21 @@ class MainViewModel: MainViewModelType {
             .store(in: &cancellables)
     }
 
-    func sortFavouriteNodesUsingUserPreferences(favList: [GroupModel]) -> [GroupModel] {
-        var favNodesOrdered = [GroupModel]()
+    func sortFavouriteNodesUsingUserPreferences(favList: [FavouriteGroupModel]) -> [FavouriteGroupModel] {
+        var favNodesOrdered = [FavouriteGroupModel]()
         switch try? locationOrderBy.value() {
         case Fields.Values.geography, Fields.Values.alphabet:
             favNodesOrdered = favList.sorted {
-                if $0.city == $1.city {
-                    return $0.nick < $1.nick
+                if $0.groupModel.city == $1.groupModel.city {
+                    return $0.groupModel.nick < $1.groupModel.nick
                 } else {
-                    return $0.city < $1.city
+                    return $0.groupModel.city < $1.groupModel.city
                 }
             }
         case Fields.Values.latency:
             favNodesOrdered = favList.sorted { fav1, fav2 -> Bool in
-                let firstLatency = getLatency(ip: fav1.pingIp)
-                let secondLatency = getLatency(ip: fav2.pingIp)
+                let firstLatency = getLatency(ip: fav1.groupModel.pingIp)
+                let secondLatency = getLatency(ip: fav2.groupModel.pingIp)
                 return firstLatency < secondLatency
             }
         default:
@@ -431,6 +431,7 @@ class MainViewModel: MainViewModelType {
                 .compactMap { favNode in
                     return serverModels.flatMap { $0.groups }
                         .first { "\($0.id)" == favNode.id }
+                        .map { FavouriteGroupModel(favourite: favNode, groupModel: $0)}
                 }
             favouriteList.onNext(favGroupModels)
         }

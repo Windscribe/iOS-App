@@ -568,3 +568,8 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "تم استلام سجل التصحيح الخاص بك. يرجى الاتصال بالدعم إذا كنت بحاجة إلى المساعدة في هذه المشكلة.";
 
 "Network Security" = "أمان الشبكة";
+
+"Could not rotate IP" = "لا يمكن تدوير IP";
+"Try again later or go to our Status page for more info." = "حاول مرة أخرى لاحقا أو انتقل إلى صفحة الحالة للحصول على مزيد من المعلومات.";
+"Could not pin IP" = "تعذر تثبيت IP";
+"Check Location Status" = "التحقق من حالة الموقع";

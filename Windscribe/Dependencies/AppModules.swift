@@ -33,10 +33,14 @@ class Network: Assembly {
             APIUtilServiceImpl()
         }.inObjectScope(.userScope)
         container.register(ConnectivityManager.self) { r in
-            ConnectivityManagerImpl(logger: r.resolve(FileLogger.self)!)
+            ConnectivityManagerImpl(logger: r.resolve(FileLogger.self)!,
+                                    bridgeAPI: r.resolve(WSNetBridgeAPI.self)!)
         }.inObjectScope(.userScope)
         container.register(APIManager.self) { r in
-            APIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, logger: r.resolve(FileLogger.self)!, apiUtil: r.resolve(APIUtilService.self)!)
+            APIManagerImpl(api: r.resolve(WSNetServerAPI.self)!,
+                           bridgeApi: r.resolve(WSNetBridgeAPI.self)!,
+                           logger: r.resolve(FileLogger.self)!,
+                           apiUtil: r.resolve(APIUtilService.self)!)
         }.initCompleted { r, apiManager in
             // Note: Api manager and user repository both have circular dependency on each other.
             (apiManager as? APIManagerImpl)?.userSessionRepository = r.resolve(UserSessionRepository.self)
@@ -53,8 +57,19 @@ class Repository: Assembly {
     func assemble(container: Container) {
         let logger = container.resolve(FileLogger.self)!
         container.register(UserSessionRepository.self) { r in
-            UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, wgCredentials: r.resolve(WgCredentials.self)!, logger: logger)
+            UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!,
+                                      apiManager: r.resolve(APIManager.self)!,
+                                      localDatabase: r.resolve(LocalDatabase.self)!,
+                                      wgCredentials: r.resolve(WgCredentials.self)!,
+                                      logger: logger)
         }.inObjectScope(.userScope)
+
+        container.register(BridgeApiRepository.self) { r in
+            BridgeApiRepositoryImpl(bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
+                                    locationManager: r.resolve(LocationsManager.self)!,
+                                    userSessionRepository: r.resolve(UserSessionRepository.self)!)
+        }.inObjectScope(.userScope)
+
         container.register(UserDataRepository.self) { r in
             UserDataRepositoryImpl(serverRepository: r.resolve(ServerRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, portMapRepository: r.resolve(PortMapRepository.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, notificationsRepository: r.resolve(NotificationRepository.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
@@ -132,7 +147,9 @@ class Repository: Assembly {
                                   wgCredentials: r.resolve(WgCredentials.self)!,
                                   preferences: r.resolve(Preferences.self)!,
                                   locationsManager: r.resolve(LocationsManager.self)!,
-                                  ipRepository: r.resolve(IPRepository.self)!)
+                                  ipRepository: r.resolve(IPRepository.self)!,
+                                  bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
+                                  bridgeApiRepository: r.resolve(BridgeApiRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LookAndFeelRepositoryType.self) { r in
@@ -185,12 +202,12 @@ class Managers: Assembly {
         container.register(SessionManager.self) { _ in
             SessionManagerImpl()
         }.inObjectScope(.userScope)
-#if os(iOS)
         container.register(HapticFeedbackManager.self) { r in
-            HapticFeedbackManagerImpl(preferences: r.resolve(Preferences.self)!,
-                                      logger: r.resolve(FileLogger.self)!)
+            HapticFeedbackManagerImpl(
+                preferences: r.resolve(Preferences.self)!,
+                logger: r.resolve(FileLogger.self)!
+            )
         }.inObjectScope(.userScope)
-#endif
         container.register(AlertManagerV2.self) { _ in
             AlertManager()
         }.inObjectScope(.userScope)
@@ -215,7 +232,8 @@ class Managers: Assembly {
                            alertManager: r.resolve(AlertManagerV2.self)!,
                            locationsManager: r.resolve(LocationsManager.self)!,
                            vpnStateRepository: r.resolve(VPNStateRepository.self)!,
-                           sessionRepository: r.resolve(SessionRepository.self)!)
+                           sessionRepository: r.resolve(SessionRepository.self)!,
+                           bridgeAPI: r.resolve(WSNetBridgeAPI.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManager.self) { r in
             ReferAndShareManagerImpl(

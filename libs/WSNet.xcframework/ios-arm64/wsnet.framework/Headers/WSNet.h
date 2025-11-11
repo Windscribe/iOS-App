@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class WSNetHttpRequest;
 @class WSNetHttpNetworkManager;
 @class WSNetServerAPI;
+@class WSNetBridgeAPI;
 @class WSNetEmergencyConnectEndpoint;
 @class WSNetEmergencyConnect;
 @class WSNetPingManager;
@@ -32,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)currentPersistentSettings;
 -(WSNetDnsResolver*)dnsResolver;
 -(WSNetHttpNetworkManager*)httpNetworkManager;
+-(WSNetBridgeAPI*)bridgeAPI;
 -(WSNetServerAPI*)serverAPI;
 -(WSNetApiResourcesManager*)apiResourcersManager;
 -(WSNetEmergencyConnect*)emergencyConnect;

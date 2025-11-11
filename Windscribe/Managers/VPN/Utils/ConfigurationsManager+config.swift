@@ -102,10 +102,11 @@ extension ConfigurationsManager {
         switch locationType {
         case .server:
             let location = try locationsManager.getLocation(from: location)
-            let node = try getRandomNode(nodes: Array(location.1.nodes))
+            let node = try getNodeFrom(group: location.1)
             let ip = node.ip3
             let hostname = node.hostname
             let publickey = location.1.wgPublicKey
+            preferences.saveLastNodeIP(nodeIp: hostname)
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
@@ -146,9 +147,10 @@ extension ConfigurationsManager {
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
             let location = try locationsManager.getLocation(from: location)
-            let node = try getRandomNode(nodes: Array(location.1.nodes))
+            let node = try getNodeFrom(group: location.1)
             let ip = node.ip1
             let hostname = node.hostname
+            preferences.saveLastNodeIP(nodeIp: hostname)
             guard let auth = keychainDb.retrieve(username: username) else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
@@ -159,6 +161,7 @@ extension ConfigurationsManager {
             let node = try getRandomNode(nodes: nodeModels)
             let ip = node.ip1
             let hostname = node.hostname
+            preferences.saveLastNodeIP(nodeIp: hostname)
             guard let credentials = location.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
@@ -187,9 +190,10 @@ extension ConfigurationsManager {
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
             let location = try locationsManager.getLocation(from: location)
-            let node = try getRandomNode(nodes: Array(location.1.nodes))
+            let node = try getNodeFrom(group: location.1)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
+            preferences.saveLastNodeIP(nodeIp: hostname)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
         case .staticIP:
@@ -204,6 +208,7 @@ extension ConfigurationsManager {
             keychainDb.save(username: username, password: password)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
+            preferences.saveLastNodeIP(nodeIp: hostname)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1)
         default:
@@ -323,6 +328,39 @@ extension ConfigurationsManager {
         return location
     }
 
+    /// Selects a node from the group, checks is there is a pinned iP or a forced node, if not then
+    /// gets a random node from the groups nodes
+    ///
+    /// - Parameters:
+    ///   - group: A `GroupModel` representeing the location the user is connecting to.
+    ///
+    /// - Throws:
+    ///   - `VPNConfigurationErrors.noValidNodeFound` if there are no nodes available to select from.
+    ///
+    private func getNodeFrom(group: GroupModel) throws -> NodeModel {
+        let nodes = group.nodes
+        if nodes.isEmpty {
+            throw VPNConfigurationErrors.noValidNodeFound
+        } else {
+            //Check if we have a forced node
+            let forceNode = advanceRepository.getForcedNode()
+            if let forceNode = forceNode, let node = nodes.first(where: { $0.hostname == forceNode }) {
+                return node
+            }
+
+            // Check if we have a pinned ip for this location
+            let pinnedNodeIp = localDatabase.getFavouriteList().first {
+                $0.id == String(group.id) && $0.pinnedNodeIp != nil
+            }?.pinnedNodeIp
+            if let pinnedNodeIp = pinnedNodeIp,
+               let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
+                return pinnedNode
+            }
+
+            return try getRandomNode(nodes: nodes)
+        }
+    }
+
     /// Selects a random node from the provided list of nodes, considering specific constraints and preferences.
     ///
     /// - Parameters:
@@ -331,18 +369,14 @@ extension ConfigurationsManager {
     /// - Throws:
     ///   - `VPNConfigurationErrors.noValidNodeFound` if there are no nodes available to select from.
     /// - Discussion:
-    ///   The selection logic prioritizes any user-specified forced node. If not applicable, it filters nodes under
-    ///   maintenance and then uses weighted random selection. This ensures that nodes with fewer connections or lowers weight are
+    ///   The selection filters nodes under maintenance and then uses weighted random selection.
+    ///   This ensures that nodes with fewer connections or lowers weight are
     ///   chosen more frequently, balancing load across nodes. If no weighted selection is possible, it falls back
     ///   to a purely random selection. This function guarantees that a valid node is selected, if available.
     private func getRandomNode(nodes: [NodeModel]) throws -> NodeModel {
         if nodes.isEmpty {
             throw VPNConfigurationErrors.noValidNodeFound
         } else {
-            let forceNode = advanceRepository.getForcedNode()
-            if let forceNode = forceNode, let node = nodes.first(where: { $0.hostname == forceNode }) {
-                return node
-            }
             let validNodes = nodes.filter { $0.forceDisconnect == false }
             var weightCounter = nodes.reduce(0) { $0 + $1.weight }
             if weightCounter >= 1 {
@@ -377,7 +411,7 @@ extension ConfigurationsManager {
                 if isFreeUser, location.1.premiumOnly {
                     throw VPNConfigurationErrors.invalidLocationType
                 }
-                _ = try getRandomNode(nodes: location.1.nodes)
+                _ = try getNodeFrom(group: location.1)
                 return lastLocation
             case .staticIP:
                 let location = try getStaticIPLocation(id: locationID)

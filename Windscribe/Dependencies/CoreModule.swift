@@ -26,41 +26,21 @@ extension Container {
         register(LocalizationService.self) { r in
             LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
-        if WSNet.isValid() {
-            register(WSNetServerAPI.self) { _ in
-                WSNet.instance().serverAPI()
-            }.inObjectScope(.container)
-            return
+        if !WSNet.isValid() {
+            initializeWSNet(r: self)
         }
-        register(WSNetServerAPI.self) { r in
-            let preferences = r.resolve(Preferences.self)!
-            let logger = r.resolve(FileLogger.self)
-            WSNet.setLogger({ message in
-                logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
-            }, debugLog: false)
-            var language = "en"
-            let preferredLanguages = Locale.preferredLanguages
-            if let deviceLanguage = preferredLanguages.first {
-                language = String(deviceLanguage.prefix(2))
-            }
-            #if STAGING
-                WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: true, language: language, persistentSettings: preferences.getServerSettings())
-            #else
-                WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: false, language: language, persistentSettings: preferences.getServerSettings())
-            #endif
-            WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])
-            WSNet.instance().setConnectivityState(true)
-            WSNet.instance().setIsConnectedToVpnState(false)
-            WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())
-            if let countryOverride = preferences.getAdvanceParams().splitToArray(separator: "\n").first(where: { keyValue in
-                let pair = keyValue.splitToArray(separator: "=")
-                return pair.count == 2 && pair[0] == wsServerOverrride
-            })?.splitToArray(separator: "=")
-                .dropFirst()
-                .joined(separator: "=") {
-                WSNet.instance().advancedParameters().setCountryOverrideValue(countryOverride)
-            }
-            return WSNet.instance().serverAPI()
+        register(WSNetServerAPI.self) { _ in
+            WSNet.instance().serverAPI()
+        }.inObjectScope(.container)
+        register(WSNetBridgeAPI.self) { _ in
+            WSNet.instance().bridgeAPI()
+        }.inObjectScope(.container)
+
+        register(DNSSettingsManagerType.self) { _ in
+            DNSSettingsManager()
+        }.inObjectScope(.container)
+        register(KeychainManager.self) { r in
+            KeychainManagerImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
         register(DNSSettingsManagerType.self) { _ in
             DNSSettingsManager()
@@ -68,5 +48,35 @@ extension Container {
         register(KeychainManager.self) { r in
             KeychainManagerImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
+    }
+
+    private func initializeWSNet(r: Container) {
+        let preferences = r.resolve(Preferences.self)!
+        let logger = r.resolve(FileLogger.self)
+        WSNet.setLogger({ message in
+            logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
+        }, debugLog: false)
+        var language = "en"
+        let preferredLanguages = Locale.preferredLanguages
+        if let deviceLanguage = preferredLanguages.first {
+            language = String(deviceLanguage.prefix(2))
+        }
+        #if STAGING
+            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: true, language: language, persistentSettings: preferences.getServerSettings())
+        #else
+            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: false, language: language, persistentSettings: preferences.getServerSettings())
+        #endif
+        WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])
+        WSNet.instance().setConnectivityState(true)
+        WSNet.instance().setIsConnectedToVpnState(false)
+        WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())
+        if let countryOverride = preferences.getAdvanceParams().splitToArray(separator: "\n").first(where: { keyValue in
+            let pair = keyValue.splitToArray(separator: "=")
+            return pair.count == 2 && pair[0] == wsServerOverrride
+        })?.splitToArray(separator: "=")
+            .dropFirst()
+            .joined(separator: "=") {
+            WSNet.instance().advancedParameters().setCountryOverrideValue(countryOverride)
+        }
     }
 }

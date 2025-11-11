@@ -84,6 +84,22 @@ extension MainViewController {
                 self.locationPermissionManager.requestLocationPermission()
             })
             .disposed(by: disposeBag)
+
+        ipInfoView.actionFailedSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] popuptype in
+            guard let self = self else { return }
+            self.popupRouter?.routeTo(to: .bridgeApi(type: popuptype), from: self)
+        }
+        .store(in: &cancellables)
+
+        vpnConnectionViewModel.showFailedPinIpTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+            guard let self = self else { return }
+                self.popupRouter?.routeTo(to: .bridgeApi(type: .pinIp), from: self)
+        }
+        .store(in: &cancellables)
     }
 
     func bindMainViewModel() {

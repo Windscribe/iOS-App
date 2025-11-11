@@ -19,6 +19,8 @@ class ConnectivityManagerImpl: ConnectivityManager {
     }
 
     private let logger: FileLogger
+    private let bridgeAPI: WSNetBridgeAPI
+
     /// Observe this subject to get network change events.
     let network = CurrentValueSubject<AppNetwork, Never>(AppNetwork(.disconnected))
     private let monitor = NWPathMonitor()
@@ -29,8 +31,10 @@ class ConnectivityManagerImpl: ConnectivityManager {
         Assembler.resolve(EmergencyRepository.self)
     }()
 
-    init(logger: FileLogger) {
+    init(logger: FileLogger,
+         bridgeAPI: WSNetBridgeAPI) {
         self.logger = logger
+        self.bridgeAPI = bridgeAPI
         registerNetworkPathMonitor()
     }
 
@@ -83,7 +87,8 @@ class ConnectivityManagerImpl: ConnectivityManager {
                     if !emergencyConnect.isConnected() {
                         WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
                     }
-                    WSNet.instance().setConnectivityState(appNetwork.status == .connected)
+                    let isConnected = appNetwork.status == .connected
+                    WSNet.instance().setConnectivityState(isConnected)
                     NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
                 }
             }

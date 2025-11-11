@@ -574,3 +574,8 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "デバッグログを受信しました。この問題について支援が必要な場合は、サポートにご連絡ください。";
 
 "Network Security" = "ネットワークセキュリティ";
+
+"Could not rotate IP" = "IPをローテーションできませんでした";
+"Try again later or go to our Status page for more info." = "しばらくしてからもう一度お試しいただくか、ステータスページで詳細をご覧ください.";
+"Could not pin IP" = "IPを固定できませんでした";
+"Check Location Status" = "場所のステータスを確認する";

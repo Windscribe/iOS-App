@@ -74,4 +74,6 @@ protocol APIManager {
     func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) async throws -> APIMessage
     func getShakeForDataLeaderboard() async throws -> Leaderboard
     func recordShakeForDataScore(score: Int, userID: String) async throws -> APIMessage
+    func rotateIp() async throws -> Bool
+    func pinIp(ip: String) async throws -> Bool
 }

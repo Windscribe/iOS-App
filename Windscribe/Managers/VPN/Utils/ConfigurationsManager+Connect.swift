@@ -241,6 +241,31 @@ extension ConfigurationsManager {
     /// Test VPN connection for network connectivity.
     private func testConnectivityWithRetries(nextManager: NEVPNManager, checkIsTaskCancelled: () -> Bool) async throws {
         try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
+
+        let currentHost = preferences.getLastNodeIP() ?? ""
+        bridgeAPI.setCurrentHost(currentHost)
+        bridgeAPI.setIgnoreSslErrors(true)
+        bridgeAPI.setConnectedState(true)
+
+        // Check if pinned IP is available and pin it before connectivity test
+        let pinnedNode = localDatabase.getFavouriteList().first {
+            $0.pinnedNodeIp == currentHost
+        }
+
+        if let pinnedNode = pinnedNode,
+           let pinnedIp = pinnedNode.pinnedIp {
+            logger.logI("ConfigurationsManager","Pinning IP: \(pinnedIp)")
+            do {
+                _ = try await api.pinIp(ip: pinnedIp)
+                logger.logI("ConfigurationsManager", "IP pinned successfully")
+            } catch {
+                logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
+                if case Errors.bridgeAPIError = error {
+                    throw Errors.bridgeAPIError
+                }
+            }
+        }
+
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
                 try await withCheckedThrowingContinuation { continuation in

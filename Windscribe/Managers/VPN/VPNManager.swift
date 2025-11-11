@@ -54,6 +54,7 @@ class VPNManagerImpl: VPNManager {
     let locationsManager: LocationsManager
     let vpnStateRepository: VPNStateRepository
     let sessionRepository: SessionRepository
+    let bridgeAPI: WSNetBridgeAPI
 
     var connectionTaskPublisher: AnyCancellable?
 
@@ -76,7 +77,8 @@ class VPNManagerImpl: VPNManager {
          alertManager: AlertManagerV2,
          locationsManager: LocationsManager,
          vpnStateRepository: VPNStateRepository,
-         sessionRepository: SessionRepository) {
+         sessionRepository: SessionRepository,
+         bridgeAPI: WSNetBridgeAPI) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository
@@ -88,6 +90,7 @@ class VPNManagerImpl: VPNManager {
         self.locationsManager = locationsManager
         self.vpnStateRepository = vpnStateRepository
         self.sessionRepository = sessionRepository
+        self.bridgeAPI = bridgeAPI
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),
