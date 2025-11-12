@@ -73,8 +73,9 @@ class ConnectionViewModel: ConnectionViewModelType {
     let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
     let selectedLocationUpdated = CurrentValueSubject<Void, Never>(())
 
+    let showFailedPinIpTrigger: PassthroughSubject<Void, Never>
+
     var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
-    let showFailedPinIpTrigger = PassthroughSubject<Void, Never>()
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
     let showAuthFailureTrigger = PublishSubject<Void>()
@@ -149,6 +150,8 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.privacyStateManager = privacyStateManager
 
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
+
+        showFailedPinIpTrigger = vpnManager.showFailedPinIpTrigger
 
         vpnStateRepository.getStatus()
             .sink { [weak self] state in
@@ -407,11 +410,6 @@ extension ConnectionViewModel {
                     case .finished:
                         self.logger.logD("ConnectionViewModel", "Finished enabling connection.")
                     case let .failure(error):
-                        if case Errors.bridgeAPIError = error {
-                            self.logger.logE("ConnectionViewModel", "BridgeAPI error!")
-                            self.showFailedPinIpTrigger.send()
-                            return
-                        }
                         if let error = error as? NEVPNError {
                             self.logger.logE("ConnectionViewModel", "NEVPNError: \(error.code)")
                             return

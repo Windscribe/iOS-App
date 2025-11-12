@@ -13,6 +13,8 @@ import Combine
 import Swinject
 
 protocol VPNManager {
+    var showFailedPinIpTrigger: PassthroughSubject<Void, Never> { get }
+
     func configureForConnectionState()
 
     func isActive() async -> Bool
@@ -40,6 +42,7 @@ extension VPNManager {
 
 class VPNManagerImpl: VPNManager {
     var cancellables = Set<AnyCancellable>()
+    var showFailedPinIpTrigger: PassthroughSubject<Void, Never>
 
     private let activeManagerKey = "activeManager"
 
@@ -91,6 +94,8 @@ class VPNManagerImpl: VPNManager {
         self.vpnStateRepository = vpnStateRepository
         self.sessionRepository = sessionRepository
         self.bridgeAPI = bridgeAPI
+
+        showFailedPinIpTrigger = configManager.showFailedPinIpTrigger
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),
