@@ -93,6 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_: UIApplication) {
         logger.logI("AppDelegate", "App state changed to WillTerminate.")
+        preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
     }
 
     /// Records app install.
