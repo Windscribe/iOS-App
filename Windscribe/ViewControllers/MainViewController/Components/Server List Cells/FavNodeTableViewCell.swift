@@ -15,8 +15,18 @@ import UIKit
 class FavNodeTableViewCellModel: NodeTableViewCellModel {
     var displayingFavGroup: FavouriteGroupModel?
 
-    override var nickName: String {
-        return  displayingFavGroup?.pinnedIp ?? "Random Ip"
+    var pinnedIpText: String {
+        return displayingFavGroup?.pinnedIp ?? "Random Ip"
+    }
+
+    override var name: String {
+        // Show full name with nickname: "New York Empire" instead of just "New York"
+        let cityName = displayingGroup?.city ?? ""
+        let nickname = displayingGroup?.nick ?? ""
+        if !nickname.isEmpty {
+            return "\(cityName) \(nickname)"
+        }
+        return cityName
     }
 
     init(displayingFavGroup: FavouriteGroupModel? = nil) {
@@ -46,6 +56,8 @@ class FavNodeTableViewCell: BaseNodeCell {
         nameInfoStackView.axis = .vertical
         nameInfoStackView.spacing = 0
 
+        // Show pinned IP as subtitle instead of nickname
+        nickNameLabel.text = favNodeCellViewModel?.pinnedIpText
         nickNameLabel.font = UIFont.text(size: 12)
         nickNameLabel.layer.opacity = 0.6
     }

@@ -67,7 +67,7 @@ extension MainViewController {
             // ipInfoView
             ipInfoView.centerYAnchor.constraint(equalTo: wifiInfoView.centerYAnchor),
             ipInfoView.leftAnchor.constraint(equalTo: wifiInfoView.rightAnchor, constant: 8),
-            ipInfoView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12),
+            ipInfoView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -5),
 
             // connectButtonView
             connectButtonView.topAnchor.constraint(equalTo: view.topAnchor, constant: flagBackgroundView.barHeight - connectButtonView.topPadding),
