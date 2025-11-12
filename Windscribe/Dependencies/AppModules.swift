@@ -67,7 +67,8 @@ class Repository: Assembly {
         container.register(BridgeApiRepository.self) { r in
             BridgeApiRepositoryImpl(bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
                                     locationManager: r.resolve(LocationsManager.self)!,
-                                    userSessionRepository: r.resolve(UserSessionRepository.self)!)
+                                    userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                    preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
 
         container.register(UserDataRepository.self) { r in

@@ -18,16 +18,21 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
     private let bridgeAPI: WSNetBridgeAPI
     private let locationManager: LocationsManager
     private let userSessionRepository: UserSessionRepository
+    private let preferences: Preferences
 
     let bridgeIsAvailable =  CurrentValueSubject<Bool, Never>(false)
     var isReady: Bool {
         bridgeIsAvailable.value
     }
 
-    init(bridgeAPI: WSNetBridgeAPI, locationManager: LocationsManager, userSessionRepository: UserSessionRepository) {
+    init(bridgeAPI: WSNetBridgeAPI,
+         locationManager: LocationsManager,
+         userSessionRepository: UserSessionRepository,
+         preferences: Preferences) {
         self.bridgeAPI = bridgeAPI
         self.locationManager = locationManager
         self.userSessionRepository = userSessionRepository
+        self.preferences = preferences
         observeBridgeApi()
     }
 
@@ -35,6 +40,9 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.bridgeAPI.setApiAvailableCallback { [weak self] ready in
                 guard let self = self else { return }
+                if ready {
+                    preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
+                }
                 guard let user = self.userSessionRepository.user else {
                     self.bridgeIsAvailable.send(false)
                     return
