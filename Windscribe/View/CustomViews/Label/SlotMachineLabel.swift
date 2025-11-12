@@ -50,7 +50,7 @@ class SlotMachineLabel: UIView {
 
     // Animation configuration
     private let baseDuration: TimeInterval = 1.2
-    private let staggerRange: (min: TimeInterval, max: TimeInterval) = (0.0, 0.05)
+    private let durationVariation: (min: TimeInterval, max: TimeInterval) = (0.8, 1.4)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -224,8 +224,8 @@ class SlotMachineLabel: UIView {
                 let newChar = String(newChars[i])
                 if i < characterViews.count {
                     let view = characterViews[i]
-                    let delay = TimeInterval.random(in: staggerRange.min...staggerRange.max)
-                    view.animateToCharacter(newChar, delay: delay, duration: baseDuration)
+                    let randomDuration = TimeInterval.random(in: durationVariation.min...durationVariation.max)
+                    view.animateToCharacter(newChar, delay: 0, duration: randomDuration)
                 }
             }
 
@@ -265,15 +265,14 @@ class SlotMachineLabel: UIView {
             let charString = String(char)
 
             // Fade in
-            let fadeDelay = TimeInterval.random(in: 0.0...0.05)
-            UIView.animate(withDuration: 0.3, delay: fadeDelay) {
+            UIView.animate(withDuration: 0.3, delay: 0) {
                 charView.alpha = 1.0
             }
 
             // Animate digits with slot machine (dots already set correctly)
             if charString != "." {
-                let animDelay = TimeInterval.random(in: staggerRange.min...staggerRange.max)
-                charView.animateToCharacter(charString, delay: animDelay, duration: baseDuration)
+                let randomDuration = TimeInterval.random(in: durationVariation.min...durationVariation.max)
+                charView.animateToCharacter(charString, delay: 0, duration: randomDuration)
             }
         }
     }
@@ -369,13 +368,13 @@ private class CharacterRollerView: UIView {
     }
 
     private func performSlotMachineAnimation(to newCharacter: String, delay: TimeInterval, duration: TimeInterval) {
-        let randomDurationVariation = TimeInterval.random(in: -0.1...0.1)
-        let finalDuration = duration + randomDurationVariation
-
         // Always use intrinsic size for animation (reflects current character size)
         let charSize = intrinsicContentSize
         let digitHeight = charSize.height
         let digitWidth = charSize.width
+
+        // Randomly choose direction: true = down (normal), false = up (reverse)
+        let scrollDown = Bool.random()
 
         // Create a container for rolling digits
         let rollerHeight: CGFloat = digitHeight * 12 // Show 12 digits rolling
@@ -393,8 +392,9 @@ private class CharacterRollerView: UIView {
 
         // Create labels for each digit
         for (index, digit) in digits.enumerated() {
+            let yPosition = scrollDown ? CGFloat(index) * digitHeight : -CGFloat(index) * digitHeight
             let label = UILabel(
-                frame: CGRect(x: 0, y: CGFloat(index) * digitHeight, width: digitWidth, height: digitHeight)).then {
+                frame: CGRect(x: 0, y: yPosition, width: digitWidth, height: digitHeight)).then {
                     $0.text = digit
                     $0.font = font
                     $0.textColor = textColor
@@ -409,28 +409,20 @@ private class CharacterRollerView: UIView {
         addSubview(rollerView)
         characterLabel.alpha = 0
 
-        // Animate roller
-        let finalYPosition = -CGFloat(digits.count - 2) * digitHeight
+        // Animate roller - single smooth animation
+        let finalYPosition = scrollDown ? -CGFloat(digits.count - 2) * digitHeight : CGFloat(digits.count - 2) * digitHeight
 
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            // Initial fast scroll with blur
-            UIView.animate(withDuration: finalDuration * 0.7, delay: 0, options: .curveEaseIn, animations: {
-                rollerView.frame.origin.y = finalYPosition * 0.7
-                rollerView.alpha = 0.6 // Motion blur effect
-            }, completion: { _ in
-                // Final part with spring
-                UIView.animate(withDuration: finalDuration * 0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: .curveEaseOut, animations: {
-                    rollerView.frame.origin.y = finalYPosition
-                    rollerView.alpha = 1.0
-                }, completion: { [weak self] _ in
-                    guard let self = self else { return }
+            UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {
+                rollerView.frame.origin.y = finalYPosition
+            }, completion: { [weak self] _ in
+                guard let self = self else { return }
 
-                    // Clean up and show final character
-                    self.characterLabel.text = newCharacter
-                    self.currentCharacter = newCharacter
-                    self.characterLabel.alpha = 1
-                    rollerView.removeFromSuperview()
-                })
+                // Clean up and show final character
+                self.characterLabel.text = newCharacter
+                self.currentCharacter = newCharacter
+                self.characterLabel.alpha = 1
+                rollerView.removeFromSuperview()
             })
         }
     }
