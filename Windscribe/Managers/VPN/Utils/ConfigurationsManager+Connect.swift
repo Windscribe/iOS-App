@@ -115,7 +115,7 @@ extension ConfigurationsManager {
                         }
                         Task {
                             do {
-                                try await self.testConnectivityWithRetries(nextManager: nextManager, forLocationId: locationID) {
+                                try await self.testConnectivityWithRetries(nextManager: nextManager) {
                                     return isCancelled
                                 }
                                 if isCancelled {
@@ -239,7 +239,7 @@ extension ConfigurationsManager {
     }
 
     /// Test VPN connection for network connectivity.
-    private func testConnectivityWithRetries(nextManager: NEVPNManager, forLocationId: String, checkIsTaskCancelled: () -> Bool) async throws {
+    private func testConnectivityWithRetries(nextManager: NEVPNManager, checkIsTaskCancelled: () -> Bool) async throws {
         try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
 
         let currentHost = preferences.getLastNodeIP() ?? ""
@@ -247,23 +247,21 @@ extension ConfigurationsManager {
         bridgeAPI.setIgnoreSslErrors(true)
         bridgeAPI.setConnectedState(true)
 
-        var ipPinningFailed = false
-        var shouldCheckPinning = false
-        var hasPinnedNodeMismatch = false
+        // Check if pinned IP is available and pin it before connectivity test
+        let pinnedNode = localDatabase.getFavouriteList().first {
+            $0.pinnedNodeIp == currentHost
+        }
 
-        let favourite = localDatabase.getFavouriteList().first { $0.id == forLocationId }
-        if let favourite = favourite {
-            shouldCheckPinning = favourite.pinnedNodeIp != nil
-            hasPinnedNodeMismatch = shouldCheckPinning && favourite.pinnedNodeIp != currentHost
-
-            if let pinnedIp = favourite.pinnedIp {
-                logger.logI("ConfigurationsManager","Pinning IP: \(pinnedIp)")
-                do {
-                    _ = try await api.pinIp(ip: pinnedIp)
-                    logger.logI("ConfigurationsManager", "IP pinned successfully")
-                } catch {
-                    logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
-                    ipPinningFailed = true
+        if let pinnedNode = pinnedNode,
+           let pinnedIp = pinnedNode.pinnedIp {
+            logger.logI("ConfigurationsManager","Pinning IP: \(pinnedIp)")
+            do {
+                _ = try await api.pinIp(ip: pinnedIp)
+                logger.logI("ConfigurationsManager", "IP pinned successfully")
+            } catch {
+                logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
+                if case Errors.bridgeAPIError = error {
+                    throw Errors.bridgeAPIError
                 }
             }
         }
@@ -283,14 +281,8 @@ extension ConfigurationsManager {
                         })
                         .store(in: &cancellables)
                 }
-                if hasPinnedNodeMismatch || ipPinningFailed {
-                   throw Errors.bridgeAPIError
-                }
                 return
             } catch {
-                if case Errors.bridgeAPIError = error {
-                    throw error
-                }
                 if checkIsTaskCancelled() {
                     throw VPNConfigurationErrors.connectivityTestFailed
                 }
