@@ -12,6 +12,8 @@ import Combine
 import Swinject
 
 protocol ConfigurationsManagerDelegate: AnyObject {
+    var showFailedPinIpTrigger: PassthroughSubject<Void, Never> { get }
+
     func configureForConnectionState()
     func setActiveManager(with type: VPNManagerType?)
 }
@@ -36,6 +38,7 @@ class ConfigurationsManager {
     weak var delegate: ConfigurationsManagerDelegate?
 
     var managers: [NEVPNManager] = []
+    var showFailedPinIpTrigger = PassthroughSubject<Void, Never>()
     var reloadManagersTrigger = CurrentValueSubject<Void, Never>(())
     var cancellables = Set<AnyCancellable>()
 
