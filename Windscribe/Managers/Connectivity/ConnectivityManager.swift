@@ -27,9 +27,6 @@ class ConnectivityManagerImpl: ConnectivityManager {
     private var lastEvent: AppNetwork?
     private var debounceTimer: Timer?
     private var lastValidNetworkName: String?
-    lazy var emergencyConnect = {
-        Assembler.resolve(EmergencyRepository.self)
-    }()
 
     init(logger: FileLogger,
          bridgeAPI: WSNetBridgeAPI) {
@@ -84,9 +81,6 @@ class ConnectivityManagerImpl: ConnectivityManager {
                 await MainActor.run {
                     logger.logD("Connectivity",  appNetwork.description)
                     network.send(appNetwork)
-                    if !emergencyConnect.isConnected() {
-                        WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
-                    }
                     let isConnected = appNetwork.status == .connected
                     WSNet.instance().setConnectivityState(isConnected)
                     NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
