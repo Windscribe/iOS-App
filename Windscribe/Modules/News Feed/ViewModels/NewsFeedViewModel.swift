@@ -67,6 +67,9 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     func loadNewsFeedData() async {
         loadState = .loading
 
+        // Load read status FIRST (synchronously) to ensure it's available during mapping
+        loadReadStatus()
+
         do {
             let notifications = try await notificationRepository.getUpdatedNotifications()
             let validated = try validateNotifications(notifications)
@@ -79,16 +82,15 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
             self.loadState = .error("\(TextsAsset.failedToLoadData): \(error.localizedDescription)")
             self.logger.logE("Newsfeed", "Data Load Error: \(error)")
         }
-
-        loadReadStatus()
     }
 
-    // Step 1: Extract Sorting Logic
+    // Step 1: Extract Sorting Logic - Take 5 newest by date
     private func sortNotifications(_ notifications: [Notice]) -> [Notice] {
         return Array(
             notifications
                 .reversed()
                 .sorted { $0.date > $1.date }
+                .prefix(5)  // Show only 5 newest notifications
         )
     }
 
@@ -166,14 +168,16 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
 
     /// Read Status Persistence
     private func updateReadNotice(for noticeID: Int) {
-        var readNotifications = localDatabase.getReadNotices() ?? [ReadNotice]()
-        let setReadNotificationIDs = Set(readNotifications.map { $0.id })
-
         // Prevent duplicates
-        if setReadNotificationIDs.contains(noticeID) {
+        if readStatus.contains(noticeID) {
             return
         }
 
+        // Update in-memory cache immediately
+        readStatus.insert(noticeID)
+
+        // Persist to database
+        var readNotifications = localDatabase.getReadNotices() ?? [ReadNotice]()
         let readNotice = ReadNotice(noticeID: noticeID)
         readNotifications.append(readNotice)
         localDatabase.saveReadNotices(readNotices: readNotifications)
@@ -186,27 +190,24 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     }
 
     private func loadReadStatus() {
-        loadState = .loading
+        // Get initial value synchronously
+        let initialReadNotices = localDatabase.getReadNotices() ?? []
+        let readNotificationIds = initialReadNotices.compactMap { $0.id }
+        self.readStatus = Set(readNotificationIds)
 
+        // Keep reactive subscription for future updates
         localDatabase.getReadNoticesObservable()
             .toPublisher()
-            .tryMap { readNotices -> [Int] in
-                guard !readNotices.isEmpty else {
-                    throw NSError(
-                        domain: "EmptyData",
-                        code: 0,
-                        userInfo: [NSLocalizedDescriptionKey: "No read notices found."])
-                }
-                return readNotices.compactMap { $0.id }
-            }
-            .catch { [weak self] error -> Just<[Int]> in
-                self?.logger.logE("ReadStatus", "Failed to load read notices: \(error.localizedDescription)")
+            .catch { [weak self] error -> Just<[ReadNotice]> in
+                self?.logger.logE("ReadStatus", "Failed to observe read notices: \(error.localizedDescription)")
                 return Just([])
             }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] readNotificationIds in
-                self?.readStatus = Set(readNotificationIds)
-                self?.loadState = .loaded
+            .sink { [weak self] readNotices in
+                let readNotificationIds = readNotices.compactMap { $0.id }
+                let newReadStatus = Set(readNotificationIds)
+                // Merge with existing instead of replacing to avoid race conditions
+                self?.readStatus.formUnion(newReadStatus)
             }
             .store(in: &cancellables)
     }

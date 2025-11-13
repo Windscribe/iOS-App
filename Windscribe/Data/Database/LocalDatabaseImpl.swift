@@ -147,6 +147,11 @@ class LocalDatabaseImpl: LocalDatabase {
         do {
             let realm = try await Realm()
             try realm.safeWrite {
+                // Delete all existing notifications first to remove stale ones
+                let existingNotifications = realm.objects(Notice.self)
+                realm.delete(existingNotifications)
+
+                // Add all new notifications from API
                 for notification in notifications {
                     realm.add(notification, update: .modified)
                 }
