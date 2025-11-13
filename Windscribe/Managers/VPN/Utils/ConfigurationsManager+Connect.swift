@@ -115,7 +115,9 @@ extension ConfigurationsManager {
                         }
                         Task {
                             do {
-                                try await self.testConnectivityWithRetries(nextManager: nextManager, forLocationId: locationID) {
+                                try await self.testConnectivityWithRetries(nextManager: nextManager,
+                                                                           forLocationId: locationID,
+                                                                           proto: proto) {
                                     return isCancelled
                                 }
                                 if isCancelled {
@@ -241,13 +243,21 @@ extension ConfigurationsManager {
     /// Test VPN connection for network connectivity.
     private func testConnectivityWithRetries(nextManager: NEVPNManager,
                                              forLocationId: String,
+                                             proto: String,
                                              checkIsTaskCancelled: () -> Bool) async throws {
         try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
 
         let currentHost = preferences.getLastNodeIP() ?? ""
-        bridgeAPI.setCurrentHost(currentHost)
+
+        if proto == "WireGuard" {
+            bridgeAPI.setCurrentHost(currentHost)
+        } else {
+            bridgeAPI.setCurrentHost("")
+        }
+
         bridgeAPI.setIgnoreSslErrors(true)
         bridgeAPI.setConnectedState(true)
+
 
         var ipPinningFailed = false
         var shouldCheckPinning = false
