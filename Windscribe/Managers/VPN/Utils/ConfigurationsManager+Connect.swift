@@ -258,7 +258,6 @@ extension ConfigurationsManager {
         bridgeAPI.setIgnoreSslErrors(true)
         bridgeAPI.setConnectedState(true)
 
-
         var ipPinningFailed = false
         var shouldCheckPinning = false
         var hasPinnedNodeMismatch = false
@@ -282,19 +281,7 @@ extension ConfigurationsManager {
 
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
-                try await withCheckedThrowingContinuation { continuation in
-                    ipRepository.getIp()
-                        .asPublisher()
-                        .receive(on: DispatchQueue.main)
-                        .sink(receiveCompletion: {
-                            if case .failure(_) = $0 {
-                                continuation.resume(with: .failure(VPNConfigurationErrors.connectivityTestFailed))
-                            }
-                        }, receiveValue: { _ in
-                            continuation.resume(with: .success(()))
-                        })
-                        .store(in: &cancellables)
-                }
+                try await ipRepository.getIp().value
                 if hasPinnedNodeMismatch || ipPinningFailed {
                     showFailedPinIpTrigger.send()
                 }

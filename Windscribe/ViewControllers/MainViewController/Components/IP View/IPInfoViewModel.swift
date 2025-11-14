@@ -120,7 +120,9 @@ class IPInfoViewModel: IPInfoViewModelType {
 
     func rotateIp() {
         Task {
-            await performRotateIp()
+            if await !performRotateIp() {
+                actionFailedSubject.send(.rotateIp)
+            }
         }
     }
 
@@ -155,30 +157,30 @@ class IPInfoViewModel: IPInfoViewModelType {
         }
     }
 
-    func performRotateIp() async {
+    func performRotateIp() async -> Bool {
         do {
             _ = try await apiManager.rotateIp()
             logger.logI("IPInfoViewModel", "Rotate IP request successful")
-            guard let currentIp = ipAddressSubject.value else { return }
+            let currentIp = ipAddressSubject.value ?? " -- "
             do {
                 try await ipRepository.getIp().value
                 guard let newIp = ipRepository.currentIp.value else {
                     logger.logE("IPInfoViewModel", "Could not get ip after rotation")
-                    actionFailedSubject.send(.rotateIp)
-                    return
+                    return false
                 }
                 if newIp != currentIp && !newIp.contains("--") {
                     logger.logI("IPInfoViewModel", "IP changed from \(currentIp) to \(newIp)")
-                    return
+                    return true
                 }
                 logger.logI("IPInfoViewModel", "IP state did not change within timeout")
+                return false
             } catch {
                 logger.logE("IPInfoViewModel", "Ip update failed: \(error)")
-                actionFailedSubject.send(.rotateIp)
+                return false
             }
         } catch {
             logger.logE("IPInfoViewModel", "Rotate IP request failed: \(error)")
-            actionFailedSubject.send(.rotateIp)
+            return false
         }
     }
 }
