@@ -268,7 +268,7 @@ extension ConfigurationsManager {
             hasPinnedNodeMismatch = shouldCheckPinning && favourite.pinnedNodeIp != currentHost
 
             if let pinnedIp = favourite.pinnedIp {
-                logger.logI("ConfigurationsManager","Pinning IP: \(pinnedIp)")
+                logger.logI("ConfigurationsManager","Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
                 do {
                     _ = try await api.pinIp(ip: pinnedIp)
                     logger.logI("ConfigurationsManager", "IP pinned successfully")

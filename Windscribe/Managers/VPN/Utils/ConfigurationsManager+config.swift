@@ -106,7 +106,7 @@ extension ConfigurationsManager {
             let ip = node.ip3
             let hostname = node.hostname
             let publickey = location.1.wgPublicKey
-            preferences.saveLastNodeIP(nodeIp: hostname)
+            preferences.saveLastNodeIP(nodeIp: node.hostname)
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
@@ -150,7 +150,7 @@ extension ConfigurationsManager {
             let node = try getNodeFrom(group: location.1)
             let ip = node.ip1
             let hostname = node.hostname
-            preferences.saveLastNodeIP(nodeIp: hostname)
+            preferences.saveLastNodeIP(nodeIp: node.hostname)
             guard let auth = keychainDb.retrieve(username: username) else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
@@ -161,7 +161,7 @@ extension ConfigurationsManager {
             let node = try getRandomNode(nodes: nodeModels)
             let ip = node.ip1
             let hostname = node.hostname
-            preferences.saveLastNodeIP(nodeIp: hostname)
+            preferences.saveLastNodeIP(nodeIp: node.hostname)
             guard let credentials = location.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
@@ -193,7 +193,7 @@ extension ConfigurationsManager {
             let node = try getNodeFrom(group: location.1)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
-            preferences.saveLastNodeIP(nodeIp: hostname)
+            preferences.saveLastNodeIP(nodeIp: node.hostname)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
         case .staticIP:
@@ -208,7 +208,7 @@ extension ConfigurationsManager {
             keychainDb.save(username: username, password: password)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
-            preferences.saveLastNodeIP(nodeIp: hostname)
+            preferences.saveLastNodeIP(nodeIp: node.hostname)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1)
         default:
