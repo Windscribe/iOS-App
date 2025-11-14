@@ -71,11 +71,9 @@ extension VPNManagerImpl {
             // Ip is available but its a NON VPN IP.
             if !ip.isInvalidated && !ip.isOurIp {
                 logger.logI("VPNManager", "Updating non VPN IP after connection update from on demand mode.")
-                ipRepository.getIp()
-                        .asPublisher()
-                        .receive(on: DispatchQueue.main)
-                        .sink(receiveCompletion: { _ in }, receiveValue: { })
-                        .store(in: &cancellables)
+                Task { @MainActor in
+                    try? await ipRepository.getIp().value
+                }
             }
         default: ()
         }
