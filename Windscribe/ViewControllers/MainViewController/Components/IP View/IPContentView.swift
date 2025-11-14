@@ -39,6 +39,8 @@ class IPInfoView: UIView {
     var stackView = UIStackView()
 
     private var isFirstIPUpdate = true
+    private var rollingTask: DispatchWorkItem?
+    private var currentIPText: String = ""
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -54,6 +56,9 @@ class IPInfoView: UIView {
         DispatchQueue.main.async {
             let formattedIP = ipAddress.formatIpAddress().maxLength(length: 15)
             let displayIP = formattedIP.isEmpty ? "---.---.---.---" : formattedIP
+
+            // Store current IP for rolling animation
+            self.currentIPText = displayIP
 
             // Don't animate the first IP update
             let shouldAnimate = !self.isFirstIPUpdate
@@ -77,8 +82,16 @@ class IPInfoView: UIView {
         viewModel.ipAddressSubject
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.showSecureIPAddressState(ipAddress: $0)
+            .sink { [weak self] ipAddress in
+                guard let self = self else { return }
+
+                // Cancel rolling animation when new IP arrives
+                // This stops the continuous rolling loop and allows the final
+                // animation to play from current IP to the new IP
+                self.rollingTask?.cancel()
+                self.rollingTask = nil
+
+                self.showSecureIPAddressState(ipAddress: ipAddress)
             }
             .store(in: &cancellables)
 
@@ -133,6 +146,29 @@ class IPInfoView: UIView {
 
         refreshButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
+
+            // Start continuous rolling animation until new IP arrives
+            // This creates a rolling loop effect that provides instant visual feedback
+            // and continues until either:
+            // 1. The new IP arrives from the API (success)
+            // 2. The rotation fails (error)
+            // The rolling is implemented by repeatedly animating the current IP to itself,
+            // creating a continuous slot machine effect that hides network latency.
+            func rollOnce() {
+                if !self.currentIPText.isEmpty && !self.currentIPText.contains("-") {
+                    self.ipLabel.setText(self.currentIPText, animated: true)
+                }
+
+                // Schedule next roll after animation duration (1.2 seconds)
+                let task = DispatchWorkItem { rollOnce() }
+                self.rollingTask = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: task)
+            }
+
+            // Cancel any previous rolling task and start fresh
+            self.rollingTask?.cancel()
+            rollOnce()
+
             viewModel.rotateIp()
             self.closeMenu()
         }, for: .touchUpInside)
