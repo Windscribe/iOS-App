@@ -482,7 +482,15 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadLatencies() {
-        latencyRepo.loadLatency()
+        // Wait for servers to be available before loading latencies
+        serverRepository.updatedServerModelsSubject
+            .first(where: { !$0.isEmpty })
+            .sink { [weak self] servers in
+                guard let self = self else { return }
+                self.latencyRepo.loadLatency()
+            }
+            .store(in: &cancellables)
+
         latencyRepo.latency.bind(onNext: { [weak self] data in
             guard let self = self else { return }
             self.latencies.onNext(data)
