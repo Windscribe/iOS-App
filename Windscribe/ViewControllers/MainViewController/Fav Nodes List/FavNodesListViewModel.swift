@@ -55,6 +55,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
             logger.logD("FavouriteListViewModel", "Tapped on Favourite \(favourite.city) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(favourite.id)")
             Task {
+                self.logger.logI("FavouriteListViewModel", "setSelectedFav for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {

@@ -136,6 +136,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
         let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: value, preferredPort: port, preferredProtocolStatus: network.preferredProtocolStatus)
         localDatabase.saveNetwork(wifiNetwork: updated)
         Task {
+            self.logger.logI("NetworkSettingsViewModel", "updatePreferredProtocol for getNextProtocol")
             await protocolManager.refreshProtocols(shouldReset: true,
                                                    shouldReconnect: vpnStateRepository.isConnected())
         }

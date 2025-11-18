@@ -318,6 +318,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             .flatMap { _ in
                 return Future<Void, Error> { promise in
                     Task {
+                        self.logger.logI("SignUpViewModel", "disconnectFromEmergencyConnect for getNextProtocol")
                         await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
                         promise(.success(()))
                     }

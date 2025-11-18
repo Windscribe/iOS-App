@@ -276,6 +276,7 @@ class LoginViewModelImpl: LoginViewModel {
             .flatMap { _ in
                 return Future<Void, Error> { promise in
                     Task {
+                        self.logger.logI("LoginViewmodel", "disconnectFromEmergencyConnect for getNextProtocol")
                         await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
                         promise(.success(()))
                     }

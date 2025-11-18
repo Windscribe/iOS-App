@@ -73,6 +73,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
         protocolManager.failOverTimerCompletedSubject
             .sink { [weak self] in
+                self?.logger.logI("ProtocolSwitchViewModel", "fail Over Timer Completed")
                 self?.shouldDismiss = true
             }
             .store(in: &cancellables)
@@ -107,7 +108,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         vpnStateRepository.setIsFromProtocolFailover(!isConnected)
         vpnStateRepository.setIsFromProtocolChange(isConnected)
 
-        logger.logD("ProtocolSwitchViewModel",
+        logger.logI("ProtocolSwitchViewModel",
                    "Protocol flags - failover: \(!isConnected), change: \(isConnected)")
     }
 
@@ -123,7 +124,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         }
 
         self.protocols = protocolItems
-        logger.logD("ProtocolSwitchViewModel", "Loaded \(protocolItems.count) protocols")
+        logger.logI("ProtocolSwitchViewModel", "Loaded \(protocolItems.count) protocols")
     }
 
     /// Maps protocol names to their user-friendly descriptions
@@ -172,6 +173,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     func dismiss() {
         // Cancel any active failover timer to prevent automatic protocol switching
         protocolManager.cancelFailoverTimer()
+        logger.logI("ProtocolSwitchViewModel", "Pressed to Dismiss")
         shouldDismiss = true
     }
 
@@ -186,7 +188,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
             shouldDismiss = true
         } else {
             // Not connected - trigger disconnect and reset failure counts
-            logger.logD("ProtocolSwitchViewModel", "Canceling protocol selection - disconnecting")
+            logger.logI("ProtocolSwitchViewModel", "Canceling protocol selection - disconnecting")
             AutomaticMode.shared.resetFailCounts()
             disconnectTrigger.send()
         }

@@ -81,6 +81,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             localDatabase.removeCustomConfig(fileId: $0.id)
         }
         Task {
+            logger.logI("EmergencyRepository", "cleansEmergencyConfigs for getRefreshedProtocols")
             await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
         }
     }
@@ -122,6 +123,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         .flatMap { _ -> AnyPublisher<VPNConnectionState, Error> in
             Future<Void, Never> { promise in
                 Task {
+                    self.logger.logI("EmergencyRepository", "connect for getRefreshedProtocols")
                     await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
                     promise(.success(()))
                 }
