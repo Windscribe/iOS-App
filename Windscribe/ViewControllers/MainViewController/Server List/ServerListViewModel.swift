@@ -72,6 +72,7 @@ class ServerListViewModel: ServerListViewModelType {
             logger.logD("ServerListViewModel", "Tapped on a node with groupID: \(group.id) \(bestNode.hostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(group.id)")
             Task {
+                self.logger.logI("ServerListViewModel", "setSelectedServerAndGroup for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {
@@ -85,6 +86,7 @@ class ServerListViewModel: ServerListViewModelType {
             self.logger.logD("ServerListViewModel", "Tapped on Best Location with ID \(locationID) from the server list.")
             self.locationsManager.selectBestLocation(with: locationID)
             Task {
+                self.logger.logI("ServerListViewModel", "connectToBestLocation for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {

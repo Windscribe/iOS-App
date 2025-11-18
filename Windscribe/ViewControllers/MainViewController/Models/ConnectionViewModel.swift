@@ -44,7 +44,6 @@ protocol ConnectionViewModelType {
     func isInvalid() -> Bool
 
     // Actions
-    func refreshProtocols()
     func setOutOfData()
     func enableConnection()
     func disableConnection()
@@ -323,15 +322,6 @@ extension ConnectionViewModel {
         return locationsManager.getLocationType()
     }
 
-    func refreshProtocols() {
-        Task { @MainActor in
-            wifiManager.saveCurrentWifiNetworks()
-            guard securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true else { return }
-            await protocolManager.refreshProtocols(shouldReset: true,
-                                                   shouldReconnect: isConnected())
-        }
-    }
-
     private func refreshConnectionFromNetworkChange() {
         if let info = vpnStateRepository.vpnInfo.value {
             if connectivity.getNetwork().name == nil || connectivity.getNetwork().name == "Unknown" {
@@ -349,12 +339,14 @@ extension ConnectionViewModel {
                     .sink { [weak self] _ in
                         guard let self = self else { return }
                         Task { @MainActor in
+                            self.logger.logI("ConnectionViewModel", "refreshConnectionFromNetworkChange 1 for getNextProtocol")
                             await self.protocolManager.refreshProtocols(shouldReset: true,
                                                                         shouldReconnect: true)
                         }
                     } receiveValue: { _ in }
             } else if .connecting != info.status {
                 Task { @MainActor in
+                    self.logger.logI("ConnectionViewModel", "refreshConnectionFromNetworkChange 2 for getNextProtocol")
                     await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
                 }
             }
@@ -461,6 +453,7 @@ extension ConnectionViewModel {
                     self.logger.logD("ConnectionViewModel", "Finished disabling connection.")
                     self.displayLocalIPAddress()
                     Task { @MainActor in
+                        self.logger.logI("ConnectionViewModel", "disableConnection for getNextProtocol")
                         await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
                     }
                     if self.loadLatencyValuesOnDisconnect {

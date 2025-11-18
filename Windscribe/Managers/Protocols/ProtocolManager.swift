@@ -136,6 +136,7 @@ class ProtocolManager: ProtocolManagerType {
                 }
             }, receiveValue: { [weak self] network in
                 Task { @MainActor in
+                    self?.logger.logI("ProtocolManager", "RefreshProtocols for Connectivity Networks : \(network)")
                     await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
                 }
             })
@@ -150,7 +151,7 @@ class ProtocolManager: ProtocolManagerType {
                 }
             }, receiveValue: { [weak self] network in
                 Task { @MainActor in
-                    self?.logger.logD("ProtocolManager", "Secured Networks : \(network)")
+                    self?.logger.logI("ProtocolManager", "RefreshProtocols for Secured Networks : \(network)")
                     await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
                 }
             })
@@ -195,7 +196,7 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         if connectionMode == Fields.Values.manual {
-            logger.logD("ProtocolManager", "Manual protocol : \(manualProtocol)")
+            logger.logI("ProtocolManager", "Manual protocol : \(manualProtocol)")
             appendPort(proto: manualProtocol, port: manualPort)
             setPriority(proto: manualProtocol, type: .normal)
         }
@@ -213,7 +214,7 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         for displayProtocol in failedProtocols {
-            logger.logD("ProtocolManager", "Failed: \(displayProtocol.protocolPort.protocolName)")
+            logger.logI("ProtocolManager", "Failed: \(displayProtocol.protocolPort.protocolName)")
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
 
@@ -244,6 +245,7 @@ class ProtocolManager: ProtocolManagerType {
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
+        logger.logI("ProtocolManager", "RefreshProtocols for getRefreshedProtocols")
         await refreshProtocols(shouldReset: false, shouldReconnect: false)
         return protocolsToConnectList
     }
@@ -255,6 +257,7 @@ class ProtocolManager: ProtocolManagerType {
     private var called = false
 
     func getNextProtocol() async -> ProtocolPort {
+        logger.logI("ProtocolManager", "RefreshProtocols for getNextProtocol")
         await refreshProtocols(shouldReset: false, shouldReconnect: false)
         return self.getFirstProtocol()
     }
@@ -326,6 +329,7 @@ class ProtocolManager: ProtocolManagerType {
             await reset()
             showAllProtocolsFailedTrigger.send(())
         } else {
+            logger.logI("ProtocolManager", "RefreshProtocols for onProtocolFail")
             await refreshProtocols(shouldReset: false, shouldReconnect: false, isFromFailover: true)
             startCountdownTimer()
         }
@@ -350,6 +354,7 @@ class ProtocolManager: ProtocolManagerType {
         userSelected = nil
         goodProtocol = nil
         protocolsToConnectList.removeAll()
+        logger.logI("ProtocolManager", "RefreshProtocols for reset")
         await refreshProtocols(shouldReset: true, shouldReconnect: false)
         return
     }
