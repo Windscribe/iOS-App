@@ -200,6 +200,12 @@ extension MainViewController {
         notificationDot.addTarget(self, action: #selector(notificationsButtonTapped), for: .touchUpInside)
         view.addSubview(notificationDot)
 
+        // Large transparent tap area covering logo, PRO icon, and notification badge
+        notificationsTapAreaButton = UIButton()
+        notificationsTapAreaButton.backgroundColor = .clear
+        notificationsTapAreaButton.addTarget(self, action: #selector(notificationsButtonTapped), for: .touchUpInside)
+        view.addSubview(notificationsTapAreaButton)
+
         connectButtonView = Assembler.resolve(ConnectButtonView.self)
         view.addSubview(connectButtonView)
 

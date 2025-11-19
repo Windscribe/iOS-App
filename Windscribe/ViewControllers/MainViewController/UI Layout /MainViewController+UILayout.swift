@@ -31,6 +31,7 @@ extension MainViewController {
         ipInfoView.translatesAutoresizingMaskIntoConstraints = false
         freeAccountViewFooterView.translatesAutoresizingMaskIntoConstraints = false
         logoStackView.translatesAutoresizingMaskIntoConstraints = false
+        notificationsTapAreaButton.translatesAutoresizingMaskIntoConstraints = false
 
         let isSmaller = UIDevice.current.isIphone5orLess()
 
@@ -95,6 +96,12 @@ extension MainViewController {
             notificationDot.rightAnchor.constraint(equalTo: logoStackView.rightAnchor, constant: 16),
             notificationDot.heightAnchor.constraint(equalToConstant: 14),
             notificationDot.widthAnchor.constraint(equalToConstant: 14),
+
+            // notificationsTapAreaButton - large tap area covering logo, PRO icon, and notification badge
+            notificationsTapAreaButton.topAnchor.constraint(equalTo: logoStackView.topAnchor, constant: -12),
+            notificationsTapAreaButton.bottomAnchor.constraint(equalTo: logoStackView.bottomAnchor, constant: 12),
+            notificationsTapAreaButton.leftAnchor.constraint(equalTo: logoStackView.leftAnchor, constant: -8),
+            notificationsTapAreaButton.rightAnchor.constraint(equalTo: logoStackView.rightAnchor, constant: 24),
 
             // scrollView
             scrollView.topAnchor.constraint(equalTo: listSelectionView.bottomAnchor),
