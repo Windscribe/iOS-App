@@ -97,6 +97,14 @@ extension MainViewController {
         }
         .store(in: &cancellables)
 
+        ipInfoView.animateFavoriteSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.animateBottomFavoriteButton()
+            }
+            .store(in: &cancellables)
+
         vpnConnectionViewModel.showFailedPinIpTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -265,6 +273,11 @@ extension MainViewController {
         serverListViewModel.reloadTrigger.subscribe { [weak self] _ in
             self?.reloadTableViews()
         }.disposed(by: disposeBag)
+    }
+
+    func animateBottomFavoriteButton() {
+        // Animate the bottom favorite button (green arrow heart)
+        listSelectionView.animateFavoriteButton()
     }
 
 }

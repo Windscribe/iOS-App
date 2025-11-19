@@ -213,4 +213,18 @@ class ListSelectionView: UIView {
     private func getIsDarkMode() -> Bool {
         return viewModel.isDarkMode.value
     }
+
+    func animateFavoriteButton() {
+        // Animate the favorite button with grow/shrink effect
+        let growScale: CGFloat = 1.3
+        let animationDuration: TimeInterval = 0.15
+
+        UIView.animate(withDuration: animationDuration, animations: { [weak self] in
+            self?.favButton.imageView.transform = CGAffineTransform(scaleX: growScale, y: growScale)
+        }) { [weak self] _ in
+            UIView.animate(withDuration: animationDuration, animations: {
+                self?.favButton.imageView.transform = .identity
+            })
+        }
+    }
 }
