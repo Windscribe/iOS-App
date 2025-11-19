@@ -71,6 +71,7 @@ class WifiInfoView: UIView {
     var trustedIcon = UIImageView()
     var actionImage = UIImageView()
     var stackView = UIStackView()
+    var nameLabelSpacerView = UIView()
     private var network: WifiNetwork?
 
     required init?(coder: NSCoder) {
@@ -177,7 +178,7 @@ class WifiInfoView: UIView {
         actionImage.image = UIImage(named: ImagesAsset.smallWhiteRightArrow)
         actionImage.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
 
-        stackView.addArrangedSubviews([paddingView, trustedIcon, nameLabel, actionButton])
+        stackView.addArrangedSubviews([paddingView, trustedIcon, nameLabelSpacerView, nameLabel, actionButton])
         stackView.axis = .horizontal
         actionButton.addSubview(actionImage)
         addSubview(stackView)
@@ -186,6 +187,7 @@ class WifiInfoView: UIView {
     private func setLayout() {
         paddingView.translatesAutoresizingMaskIntoConstraints = false
         trustedIcon.translatesAutoresizingMaskIntoConstraints = false
+        nameLabelSpacerView.translatesAutoresizingMaskIntoConstraints = false
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         trustedIcon.translatesAutoresizingMaskIntoConstraints = false
         actionImage.translatesAutoresizingMaskIntoConstraints = false
@@ -205,6 +207,9 @@ class WifiInfoView: UIView {
             // trustedIcon
             trustedIcon.heightAnchor.constraint(equalToConstant: 24),
             trustedIcon.widthAnchor.constraint(equalToConstant: 24),
+
+            // nameLabelSpacerView - aligns network name with location names in list below
+            nameLabelSpacerView.widthAnchor.constraint(equalToConstant: 12),
 
             // actionImage
             actionImage.centerYAnchor.constraint(equalTo: actionButton.centerYAnchor),
