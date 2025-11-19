@@ -136,8 +136,10 @@ class ProtocolManager: ProtocolManagerType {
                 }
             }, receiveValue: { [weak self] network in
                 Task { @MainActor in
-                    self?.logger.logI("ProtocolManager", "RefreshProtocols for Connectivity Networks : \(network)")
-                    await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
+                    guard let self = self else { return }
+                    self.logger.logI("ProtocolManager", "RefreshProtocols for Connectivity Networks : \(network)")
+                    guard self.canRefresh() else { return }
+                    await self.refreshProtocols(shouldReset: false, shouldReconnect: false)
                 }
             })
             .store(in: &cancellables)
@@ -377,6 +379,19 @@ class ProtocolManager: ProtocolManagerType {
             }
             protocolsToConnectList = copy
         }
+    }
+
+    private func canRefresh() -> Bool {
+        if vpnStateRepository.isConnected() {
+            if protocolsToConnectList.contains(where: { $0.viewType == .fail }),
+            let currentProtocol = protocolsToConnectList.first,
+               case .nextUp(countdown: let countdown) = currentProtocol.viewType,
+               countdown != -1 {
+                // This means new vpn connection failed, but the previous one is still connected, do not refresh
+                return false
+            }
+        }
+        return true
     }
 
     private func appendPort(proto: String, port: String) {
