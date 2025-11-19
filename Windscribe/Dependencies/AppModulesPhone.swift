@@ -431,7 +431,8 @@ class ViewModels: Assembly {
                             localDatabase: r.resolve(LocalDatabase.self)!,
                             apiManager: r.resolve(APIManager.self)!,
                             userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                            bridgeApiRepository: r.resolve(BridgeApiRepository.self)!)
+                            bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
+                            hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(WifiInfoViewModelType.self) { r in

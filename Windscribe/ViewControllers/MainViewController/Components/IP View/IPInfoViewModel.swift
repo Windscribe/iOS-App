@@ -20,6 +20,7 @@ protocol IPInfoViewModelType {
     func markBlurStaticIpAddress(isBlured: Bool)
     func saveIp()
     func rotateIp()
+    func runHapticFeedback(level: HapticFeedbackLevel)
 }
 
 class IPInfoViewModel: IPInfoViewModelType {
@@ -31,6 +32,7 @@ class IPInfoViewModel: IPInfoViewModelType {
     private let apiManager: APIManager
     private let userSessionRepository: UserSessionRepository
     private let bridgeApiRepository: BridgeApiRepository
+    private let hapticFeedbackManager: HapticFeedbackManager
 
     private let disposeBag = DisposeBag()
 
@@ -52,7 +54,8 @@ class IPInfoViewModel: IPInfoViewModelType {
          localDatabase: LocalDatabase,
          apiManager: APIManager,
          userSessionRepository: UserSessionRepository,
-         bridgeApiRepository: BridgeApiRepository) {
+         bridgeApiRepository: BridgeApiRepository,
+         hapticFeedbackManager: HapticFeedbackManager) {
         self.logger = logger
         self.preferences = preferences
         self.locationManager = locationManager
@@ -61,6 +64,7 @@ class IPInfoViewModel: IPInfoViewModelType {
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.bridgeApiRepository = bridgeApiRepository
+        self.hapticFeedbackManager = hapticFeedbackManager
 
         ipRepository.ipState
             .toPublisher()
@@ -182,5 +186,9 @@ class IPInfoViewModel: IPInfoViewModelType {
             logger.logE("IPInfoViewModel", "Rotate IP request failed: \(error)")
             return false
         }
+    }
+
+    func runHapticFeedback(level: HapticFeedbackLevel) {
+        hapticFeedbackManager.run(level: level)
     }
 }
