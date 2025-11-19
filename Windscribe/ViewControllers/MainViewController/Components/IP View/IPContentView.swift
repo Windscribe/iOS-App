@@ -12,6 +12,7 @@ import Combine
 class IPInfoView: UIView {
     private var cancellables = Set<AnyCancellable>()
     var actionFailedSubject = PassthroughSubject<BridgeApiPopupType, Never>()
+    var animateFavoriteSubject = PassthroughSubject<Void, Never>()
 
     var viewModel: IPInfoViewModelType! {
         didSet {
@@ -140,12 +141,22 @@ class IPInfoView: UIView {
 
         favoriteButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
+            viewModel.runHapticFeedback(level: .medium)
             viewModel.saveIp()
-            self.closeMenu()
+
+            // Notify to animate bottom favorite button
+            self.animateFavoriteSubject.send()
+
+            // Animate favorite button with grow/shrink effect
+            self.animateHeartButton(self.favoriteButton) {
+                // Close menu after animation completes
+                self.closeMenu()
+            }
         }, for: .touchUpInside)
 
         refreshButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
+            viewModel.runHapticFeedback(level: .medium)
 
             // Start continuous rolling animation until new IP arrives
             // This creates a rolling loop effect that provides instant visual feedback
@@ -182,6 +193,22 @@ class IPInfoView: UIView {
 
         self.openButton.isHidden = false
         self.ipLabel.isHidden = false
+    }
+
+    private func animateHeartButton(_ button: UIButton, completion: @escaping () -> Void) {
+        // Short, smooth grow/shrink animation
+        let growScale: CGFloat = 1.3
+        let animationDuration: TimeInterval = 0.15
+
+        UIView.animate(withDuration: animationDuration, animations: {
+            button.transform = CGAffineTransform(scaleX: growScale, y: growScale)
+        }) { _ in
+            UIView.animate(withDuration: animationDuration, animations: {
+                button.transform = .identity
+            }) { _ in
+                completion()
+            }
+        }
     }
 
     private func addViews() {
