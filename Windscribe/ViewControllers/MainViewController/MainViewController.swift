@@ -20,6 +20,7 @@ import WidgetKit
 
 class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var preferencesTapAreaButton: LargeTapAreaImageButton!
+    var notificationsTapAreaButton: UIButton!
     var logoStackView: UIStackView!
     var logoIcon: ImageButton!
     var proIcon: ImageButton!
