@@ -80,6 +80,15 @@ class IPInfoView: UIView {
         ipLabel.isBlurring = viewModel.isBlurStaticIpAddress
         actionFailedSubject = viewModel.actionFailedSubject
 
+        viewModel.actionFailedSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isFavourited in
+                guard let self = self else { return }
+                self.rollingTask?.cancel()
+                self.rollingTask = nil
+            }
+            .store(in: &cancellables)
+        
         viewModel.ipAddressSubject
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
