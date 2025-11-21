@@ -91,11 +91,16 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     func loadPlans(promo: String?, id: String?) {
         var promoCode = promo
         pcpID = id
-        if pushNotificationPayload?.type == "promo" {
-            promoCode = pushNotificationPayload?.promoCode
-            pcpID = pushNotificationPayload?.pcpid
+
+        // If no promo provided, check if there's a saved promo from push notification
+        // This makes the promo "stick" for the entire app session
+        if promoCode == nil, let payload = pushNotificationManager.notification.value, payload.type == "promo" {
+            logger.logD("DefaultUpgradePlanViewModel", "No promo provided, using saved promo from push notification")
+            promoCode = payload.promoCode
+            pcpID = payload.pcpid
         }
-        logger.logD("DefaultUpgradePlanViewModel", "Loading billing plans. Promo: \(promoCode ?? "N/A")")
+
+        logger.logD("DefaultUpgradePlanViewModel", "Loading billing plans. Promo: \(promoCode ?? "N/A"), PCPID: \(pcpID ?? "N/A")")
 
         showProgress.onNext(true)
 
