@@ -73,9 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_: UIApplication) {
-        // Once user have left the app remove last push notification payload.
         logger.logI("AppDelegate", "App state changed to EnterBackground.")
-        pushNotificationManager.addPushNotification(notificationPayload: nil)
         preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
     }
 

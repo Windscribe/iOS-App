@@ -110,14 +110,14 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
             }
 
             let action: NewsFeedActionType?
-            if let parsedLink = parsedActionLink {
-                // Use standard from parsed HTML
-                action = .standard(parsedLink)
-            } else if let notificationAction = notification.action {
-                // Only fallback to promo if message had no url parse
+            if let notificationAction = notification.action {
+                // Prioritize API action (promo) over HTML link
                 action = .promo(pcpid: notificationAction.pcpid,
                                 promoCode: notificationAction.promoCode,
                                 label: notificationAction.label)
+            } else if let parsedLink = parsedActionLink {
+                // Fallback to HTML link if no API action
+                action = .standard(parsedLink)
             } else {
                 action = nil
             }

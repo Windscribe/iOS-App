@@ -88,7 +88,7 @@ class IPInfoView: UIView {
                 self.rollingTask = nil
             }
             .store(in: &cancellables)
-        
+
         viewModel.ipAddressSubject
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
