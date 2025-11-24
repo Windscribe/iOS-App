@@ -317,11 +317,17 @@ extension AppDelegate {
             let mainViewController = Assembler.resolve(MainViewController.self).then {
                 $0.appJustStarted = true
             }
-            rootViewController = UINavigationController(rootViewController: mainViewController)
+            rootViewController = UINavigationController(rootViewController: mainViewController).then {
+                $0.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+                $0.overrideUserInterfaceStyle = lookAndFeelRepository.isDarkMode ? .dark : .light
+            }
         } else {
             // Wrap the RootView in DeviceTypeProvider
             let rootView = DeviceTypeProvider { view }
-            rootViewController = UIHostingController(rootView: rootView)
+            rootViewController = UIHostingController(rootView: rootView).then {
+                $0.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+                $0.overrideUserInterfaceStyle = lookAndFeelRepository.isDarkMode ? .dark : .light
+            }
         }
 
         window.rootViewController = rootViewController
