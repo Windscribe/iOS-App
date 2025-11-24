@@ -570,6 +570,7 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "我們已收到您的除錯日誌。如需協助解決此問題，請聯絡客服。";
 
 "Network Security" = "網絡安全";
+"Network Details" = "網絡詳情";
 
 "Could not rotate IP" = "無法輪換 IP";
 "Try again later or go to our Status page for more info." = "请稍后重试或转到我们的状态页面以获取更多信息.";

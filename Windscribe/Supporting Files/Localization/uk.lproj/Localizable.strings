@@ -572,6 +572,7 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Ваш журнал налагодження отримано. Зверніться до служби підтримки, якщо вам потрібна допомога з цією проблемою.";
 
 "Network Security" = "Безпека мережі";
+"Network Details" = "Деталі мережі";
 
 "Could not rotate IP" = "Не вдалося повернути IP";
 "Try again later or go to our Status page for more info." = "Повторіть спробу пізніше або перейдіть на сторінку статусу, щоб дізнатися більше.";

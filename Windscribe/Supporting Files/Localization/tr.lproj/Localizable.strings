@@ -586,6 +586,7 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Hata ayıklama günlüğünüz alındı. Bu sorunla ilgili yardım almak istiyorsanız lütfen destek ekibimizle iletişime geçin.";
 
 "Network Security" = "Ağ Güvenliği";
+"Network Details" = "Ağ Ayrıntıları";
 
 "Could not rotate IP" = "IP döndürülemedi";
 "Try again later or go to our Status page for more info." = "Daha sonra tekrar deneyin veya daha fazla bilgi için Durum sayfamıza gidin.";
