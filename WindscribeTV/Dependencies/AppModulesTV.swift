@@ -19,6 +19,10 @@ typealias LocationsManagerType = LocationsManager
 
 class TVViewModels: Assembly {
     func assemble(container: Swinject.Container) {
+        container.register(PrivacyStateManaging.self) { r in
+            PrivacyStateManager(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.container)
+
         container.register(LoginViewModel.self) { r in
             LoginViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!, connectivity: r.resolve(ConnectivityManager.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)

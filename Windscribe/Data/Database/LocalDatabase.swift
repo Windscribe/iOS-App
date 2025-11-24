@@ -12,15 +12,18 @@ import RxSwift
 import Combine
 
 protocol LocalDatabase {
+    //MARK: After Modelization of Database
+    func getServers() -> [Server]?
+    func saveServers(servers: [Server])
+
+    //MARK: Before Modelization of Database
+
     func migrate()
     func getSession() -> Observable<Session?>
     func getSessionSync() -> Session?
     func saveSession(session: Session) async
     func getMobilePlans() -> [MobilePlan]?
     func saveMobilePlans(mobilePlansList: [MobilePlan])
-    func getServers() -> [Server]?
-    func getServersObservable() -> Observable<[Server]>
-    func saveServers(servers: [Server])
     func getStaticIPs() -> [StaticIP]?
     func saveStaticIPs(staticIps: [StaticIP])
     func deleteStaticIps(ignore: [String])
@@ -76,6 +79,5 @@ protocol LocalDatabase {
     func updateConnectionMode(value: String)
     func getCustomConfigs() -> [CustomConfig]
     func clean()
-    func getGroups() -> [Group]?
     func getNetworksSync() -> [WifiNetwork]?
 }

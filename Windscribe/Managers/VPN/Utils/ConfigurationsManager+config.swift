@@ -436,10 +436,9 @@ extension ConfigurationsManager {
     private func handleLocationFallback(for location: String) -> String? {
         let locationID = locationsManager.getId(location: location)
         logger.logI("VPNConfiguration", "Looking for fallback location for \(location)")
-        guard let servers = localDatabase.getServers() else { return nil }
-
+        let servers = serverRepository.currentServerModels
         var groupResult: GroupModel?
-        for server in servers.map({ $0.getServerModel() }) {
+        for server in servers {
             for group in server.groups where locationID == "\(group.id)" {
                 groupResult = server.groups.filter { $0.isNodesAvailable() }.randomElement()
             }

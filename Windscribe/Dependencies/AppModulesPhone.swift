@@ -432,6 +432,7 @@ class ViewModels: Assembly {
                             apiManager: r.resolve(APIManager.self)!,
                             userSessionRepository: r.resolve(UserSessionRepository.self)!,
                             bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
+                            serverRepository: r.resolve(ServerRepository.self)!,
                             hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
 
@@ -440,9 +441,9 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(ServerInfoViewModelType.self) { r in
-            ServerInfoViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
-                                languageManager: r.resolve(LanguageManager.self)!,
-                                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            ServerInfoViewModel(languageManager: r.resolve(LanguageManager.self)!,
+                                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register(ListHeaderViewModelType.self) { r in

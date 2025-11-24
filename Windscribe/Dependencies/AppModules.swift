@@ -115,7 +115,8 @@ class Repository: Assembly {
                                   locationsManager: r.resolve(LocationsManager.self)!,
                                   preferences: r.resolve(Preferences.self)!,
                                   advanceRepository: r.resolve(AdvanceRepository.self)!,
-                                  sessionRepository: r.resolve(SessionRepository.self)!)
+                                  sessionRepository: r.resolve(SessionRepository.self)!,
+                                  serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
             EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(),
@@ -149,6 +150,7 @@ class Repository: Assembly {
                                   preferences: r.resolve(Preferences.self)!,
                                   locationsManager: r.resolve(LocationsManager.self)!,
                                   ipRepository: r.resolve(IPRepository.self)!,
+                                  serverRepository: r.resolve(ServerRepository.self)!,
                                   bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
                                   bridgeApiRepository: r.resolve(BridgeApiRepository.self)!)
         }.inObjectScope(.userScope)

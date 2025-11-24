@@ -24,6 +24,18 @@ class LocalDatabaseImpl: LocalDatabase {
         self.preferences = preferences
     }
 
+    //MARK: After Modelization of Database
+
+    func getServers() -> [Server]? {
+        return getRealmObjects(type: Server.self)
+    }
+
+    func saveServers(servers: [Server]) {
+        return updateRealmObjects(objects: servers)
+    }
+
+    //MARK: Before Modelization of Database
+
     @MainActor
     func saveSession(session: Session) async {
         do {
@@ -52,20 +64,8 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObjects(objects: mobilePlansList)
     }
 
-    func getServers() -> [Server]? {
-        return getRealmObjects(type: Server.self)
-    }
-
-    func getServersObservable() -> Observable<[Server]> {
-        return getSafeRealmObservable(type: Server.self)
-    }
-
     func getCustomConfigs() -> [CustomConfig] {
         return getRealmObjects(type: CustomConfig.self) ?? []
-    }
-
-    func saveServers(servers: [Server]) {
-        return updateRealmObjects(objects: servers)
     }
 
     @MainActor
@@ -279,10 +279,6 @@ class LocalDatabaseImpl: LocalDatabase {
 
     func getBestNode() -> [BestNode]? {
         return getRealmObjects(type: BestNode.self)
-    }
-
-    func getGroups() -> [Group]? {
-        return getRealmObjects(type: Group.self)
     }
 
     func clean() {

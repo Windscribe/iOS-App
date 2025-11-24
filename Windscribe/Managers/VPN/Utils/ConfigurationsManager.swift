@@ -29,6 +29,7 @@ class ConfigurationsManager {
     let preferences: Preferences
     let locationsManager: LocationsManager
     let ipRepository: IPRepository
+    let serverRepository: ServerRepository
     let bridgeAPI: WSNetBridgeAPI
     let bridgeApiRepository: BridgeApiRepository
     var api: APIManager {
@@ -75,6 +76,7 @@ class ConfigurationsManager {
          preferences: Preferences,
          locationsManager: LocationsManager,
          ipRepository: IPRepository,
+         serverRepository: ServerRepository,
          bridgeAPI: WSNetBridgeAPI,
          bridgeApiRepository: BridgeApiRepository) {
         self.logger = logger
@@ -87,6 +89,7 @@ class ConfigurationsManager {
         self.preferences = preferences
         self.locationsManager = locationsManager
         self.ipRepository = ipRepository
+        self.serverRepository = serverRepository
         self.bridgeAPI = bridgeAPI
         self.bridgeApiRepository = bridgeApiRepository
         loadTunnelManagers()

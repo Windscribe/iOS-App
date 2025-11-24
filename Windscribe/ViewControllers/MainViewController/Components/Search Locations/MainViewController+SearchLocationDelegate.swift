@@ -104,8 +104,8 @@ extension MainViewController: SearchCountryViewDelegate {
 
         let lowerCaseKeyword = keyword.lowercased()
 
-        for group in serverList {
-            if let (filteredGroup, matchType) = filterIfContains(group: group, keyword: lowerCaseKeyword) {
+        for serverModel in serverList {
+            if let (filteredGroup, matchType) = filterIfContains(serverModel: serverModel, keyword: lowerCaseKeyword) {
                 switch matchType {
                 case .groupPrefix:
                     groupNamePrefixMatches.append(filteredGroup)
@@ -123,16 +123,16 @@ extension MainViewController: SearchCountryViewDelegate {
 
     /// Checks what kind of MatchType best fits group with the keyword from the search
     /// This will allow the list to be better order and give priority to the the keyword being in the server name first and then in the city name or nick name
-    private func filterIfContains(group: ServerModel, keyword: String) -> (ServerModel, MatchType)? {
+    private func filterIfContains(serverModel: ServerModel, keyword: String) -> (ServerModel, MatchType)? {
         var cities: [GroupModel] = []
         var bestMatch: MatchType?
-        let name = group.name.lowercased()
+        let name = serverModel.name.lowercased()
         if name.hasPrefix(keyword) {
             bestMatch = .groupPrefix
         } else if name.contains(keyword) {
             bestMatch = .groupContains
         }
-        for cityGroup in group.groups {
+        for cityGroup in serverModel.groups {
             let nick = cityGroup.nick.lowercased()
             let city = cityGroup.city.lowercased()
             if nick.hasPrefix(keyword) || city.hasPrefix(keyword) {
@@ -146,21 +146,10 @@ extension MainViewController: SearchCountryViewDelegate {
             }
         }
         if let match = bestMatch, match == .groupPrefix || match == .groupContains {
-            cities = group.groups
+            cities = serverModel.groups
         }
         if let match = bestMatch {
-            let newServer = ServerModel(
-                id: group.id,
-                name: group.name,
-                countryCode: group.countryCode,
-                status: group.status,
-                premiumOnly: group.premiumOnly,
-                dnsHostname: group.dnsHostname,
-                groups: cities,
-                locType: group.locType,
-                p2p: group.p2p,
-                wasEdited: group.wasEdited
-            )
+            let newServer = serverModel.copyModelWith(newGroups: cities)
             return (newServer, match)
         }
         return nil

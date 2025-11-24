@@ -45,7 +45,7 @@ class UserDataRepositoryImpl: UserDataRepository {
 
         return Single.create { single in
             let task = Task { [weak self] in
-                _ = try? await self?.serverRepository.getUpdatedServers()
+                try? await self?.serverRepository.updatedServers()
                 single(.success(()))
             }
             return Disposables.create { task.cancel() }

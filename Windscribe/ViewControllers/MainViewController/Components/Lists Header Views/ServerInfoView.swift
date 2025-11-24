@@ -21,20 +21,19 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     let isDarkMode: CurrentValueSubject<Bool, Never>
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
-    private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
+    private let serverRepository: ServerRepository
 
     private var count = 0
 
-    init(localDatabase: LocalDatabase,
-         languageManager: LanguageManager,
-         lookAndFeelRepository: LookAndFeelRepositoryType) {
-        self.localDatabase = localDatabase
+    init(languageManager: LanguageManager,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         serverRepository: ServerRepository) {
         self.languageManager = languageManager
+        self.serverRepository = serverRepository
         self.isDarkMode = lookAndFeelRepository.isDarkModeSubject
 
-        localDatabase.getServersObservable()
-            .toPublisher()
+        serverRepository.serverListSubject
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { _ in },
@@ -57,7 +56,8 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     func updateWithSearchCount(searchCount: Int) {
         if searchCount >= 0 {
             self.serverCountSubject.onNext(searchCount)
-        } else if let servers = localDatabase.getServers() {
+        } else {
+            let servers = serverRepository.currentServerModels
             // Count total groups across all servers
             let totalGroupCount = servers.reduce(0) { $0 + $1.groups.count }
             self.serverCountSubject.onNext(totalGroupCount)

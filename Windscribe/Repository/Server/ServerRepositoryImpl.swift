@@ -10,8 +10,16 @@ import Foundation
 import RealmSwift
 import Combine
 
+protocol ServerRepository {
+    var serverListSubject: CurrentValueSubject<[ServerModel], Never> { get }
+    var currentServerModels: [ServerModel] { get }
+    var currentGroupModels: [GroupModel] { get }
+    func updatedServers() async throws
+    func updateRegions(with regions: [ExportedRegion])
+}
+
 class ServerRepositoryImpl: ServerRepository {
-    var updatedServerModelsSubject = CurrentValueSubject<[ServerModel], Never>([])
+    var serverListSubject = CurrentValueSubject<[ServerModel], Never>([])
 
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
@@ -29,23 +37,24 @@ class ServerRepositoryImpl: ServerRepository {
         self.preferences = preferences
         self.logger = logger
 
-        Task {
-            await loadInitialServers()
-        }
+        loadInitialServers()
     }
 
     var currentServerModels: [ServerModel] {
-        updatedServerModelsSubject.value
+        serverListSubject.value
     }
 
-    @MainActor
-    private func loadInitialServers() async {
+    var currentGroupModels: [GroupModel] {
+        currentServerModels.flatMap { $0.groups }
+    }
+
+    private func loadInitialServers() {
         if let servers = self.localDatabase.getServers() {
-            self.updateServerModels(servers: servers)
+            self.updateServerModels(mapServersToModel(servers))
         }
     }
 
-    func getUpdatedServers() async throws -> [Server] {
+    func updatedServers() async throws {
         guard let user = userSessionRepository.user else {
             throw Errors.validationFailure
         }
@@ -54,27 +63,19 @@ class ServerRepositoryImpl: ServerRepository {
         do {
             let serverList = try await self.apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
 
-            return await MainActor.run {
-                let servers = Array(serverList.servers)
-                for s in servers {
-                    for g in s.groups {
-                        g.setBestNode(advanceRepository: self.advanceRepository)
-                    }
+            let servers = Array(serverList.servers)
+            for server in servers {
+                for group in server.groups {
+                    group.setBestNode(advanceRepository: self.advanceRepository)
                 }
-                self.localDatabase.saveServers(servers: servers)
-                self.updateServerModels(servers: servers)
-                return servers
-            }
-        } catch {
-            let servers = await MainActor.run {
-                self.localDatabase.getServers()
             }
 
-            if let servers = servers {
-                await MainActor.run {
-                    self.updateServerModels(servers: servers)
-                }
-                return servers
+            self.updateServerModels(mapServersToModel(servers))
+            self.localDatabase.saveServers(servers: servers)
+        } catch {
+            if let servers = self.localDatabase.getServers() {
+                self.updateServerModels(mapServersToModel(servers))
+                return
             } else {
                 throw error
             }
@@ -82,50 +83,50 @@ class ServerRepositoryImpl: ServerRepository {
     }
 
     func updateRegions(with regions: [ExportedRegion]) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.preferences.saveCustomLocationsNames(value: regions)
-            guard let servers = self.localDatabase.getServers() else { return }
-            self.updateServerModels(servers: servers)
-        }
+        self.preferences.saveCustomLocationsNames(value: regions)
+        guard let servers = self.localDatabase.getServers() else { return }
+        self.updateServerModels(mapServersToModel(servers))
     }
 
-    @MainActor
-    private func updateServerModels(servers: [Server]) {
+    private func mapServersToModel(_ servers: [Server]) -> [ServerModel] {
+        servers.map { $0.getServerModel() }
+    }
+
+    private func updateServerModels(_ serverList: [ServerModel]) {
         logger.logI("ServerRepositoryImpl", "Stating merge of local and external servers")
         let regions = preferences.getCustomLocationsNames()
         if regions.isEmpty {
-            updatedServerModelsSubject.send(servers.compactMap { $0.getServerModel() })
+            serverListSubject.send(serverList)
             return
         }
 
         var mergedModels: [ServerModel] = []
-        servers.forEach { server in
+        serverList.forEach { server in
             if let region = regions.first(where: { $0.id == server.id }) {
                 var mergedGroups = [GroupModel]()
                 server.groups.forEach { group in
                     if let city = region.cities.first(where: { $0.id == group.id }) {
-                        mergedGroups.append(group.getGroupModel(customCity: city.name,
+                        mergedGroups.append(group.getCustomGroupModel(customCity: city.name,
                                                                 customNick: city.nickname,
                                                                 countryCode: server.countryCode))
                     } else {
-                        mergedGroups.append(group.getGroupModel(countryCode: server.countryCode))
+                        mergedGroups.append(group.getCustomGroupModel(countryCode: server.countryCode))
                     }
                 }
                 if server.groups.count == mergedGroups.count {
-                    mergedModels.append(server.getServerModel(customName: region.country,
+                    mergedModels.append(server.getCustomServerModel(customName: region.country,
                                                               groupModels: mergedGroups))
                 } else {
-                    mergedModels.append(server.getServerModel(customName: region.country,
-                                                              groupModels: server.getServerModel().groups))
+                    mergedModels.append(server.getCustomServerModel(customName: region.country,
+                                                              groupModels: server.groups))
                 }
             } else {
-                mergedModels.append(server.getServerModel())
+                mergedModels.append(server)
             }
         }
-        if mergedModels.count == servers.count {
+        if mergedModels.count == serverList.count {
             logger.logI("ServerRepositoryImpl", "Merge of local and external servers successful")
-            updatedServerModelsSubject.send(mergedModels)
+            serverListSubject.send(mergedModels)
             return
         }
     }
