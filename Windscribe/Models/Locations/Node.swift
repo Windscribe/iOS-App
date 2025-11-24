@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-struct NodeModel {
+struct NodeModel: Equatable {
     let ip1: String
     let ip2: String
     let ip3: String
@@ -17,24 +17,6 @@ struct NodeModel {
     let dnsHostname: String
     let forceDisconnect: Bool
     let weight: Int
-
-    init(
-        ip1: String,
-        ip2: String,
-        ip3: String,
-        hostname: String,
-        dnsHostname: String,
-        forceDisconnect: Bool,
-        weight: Int
-    ) {
-        self.ip1 = ip1
-        self.ip2 = ip2
-        self.ip3 = ip3
-        self.hostname = hostname
-        self.dnsHostname = dnsHostname
-        self.forceDisconnect = forceDisconnect
-        self.weight = weight
-    }
 }
 
 @objcMembers class Node: Object, Decodable {
@@ -248,29 +230,8 @@ struct FavNodeModel {
     }
 }
 
-class LastConnectedNode: FavNode {
-    var staticIPCredentials = List<LastConnectedNodeStaticIPCredentials>()
-    dynamic var connectedAt: Date = .init()
-
-    convenience init(selectedNode: SelectedNode) {
-        self.init()
-        serverName = selectedNode.cityName
-        countryCode = selectedNode.countryCode
-        hostname = selectedNode.hostname
-        cityName = selectedNode.cityName
-        nickName = selectedNode.nickName
-        dnsHostname = selectedNode.dnsHostname
-        ipAddress = selectedNode.serverAddress
-        staticIPCredentials.removeAll()
-        if let staticIPCredential = selectedNode.staticIPCredentials {
-            staticIPCredentials.append(LastConnectedNodeStaticIPCredentials(staticIPCredentials: staticIPCredential))
-        }
-        if let customConfigModel = selectedNode.customConfig {
-            customConfigId = customConfigModel.id
-        }
-        groupId = "\(selectedNode.groupId)"
-    }
-}
+// NOTE: This class is only ever used in Migration it no longer needs any implementation
+class LastConnectedNode: FavNode { }
 
 struct BestLocationModel {
     let serverName: String

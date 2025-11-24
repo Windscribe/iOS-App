@@ -14,7 +14,7 @@ extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 56,
+            schemaVersion: 57,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -277,6 +277,8 @@ extension LocalDatabaseImpl {
                         newObject?["pinnedIp"] = nil
                         newObject?["pinnedNodeIp"] = nil
                     }
+                } else if oldSchemaVersion < 57 {
+                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in }
                 }
             }, deleteRealmIfMigrationNeeded: false
         )

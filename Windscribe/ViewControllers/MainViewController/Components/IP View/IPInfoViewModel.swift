@@ -32,6 +32,7 @@ class IPInfoViewModel: IPInfoViewModelType {
     private let apiManager: APIManager
     private let userSessionRepository: UserSessionRepository
     private let bridgeApiRepository: BridgeApiRepository
+    private let serverRepository: ServerRepository
     private let hapticFeedbackManager: HapticFeedbackManager
 
     private let disposeBag = DisposeBag()
@@ -55,6 +56,7 @@ class IPInfoViewModel: IPInfoViewModelType {
          apiManager: APIManager,
          userSessionRepository: UserSessionRepository,
          bridgeApiRepository: BridgeApiRepository,
+         serverRepository: ServerRepository,
          hapticFeedbackManager: HapticFeedbackManager) {
         self.logger = logger
         self.preferences = preferences
@@ -64,6 +66,7 @@ class IPInfoViewModel: IPInfoViewModelType {
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.bridgeApiRepository = bridgeApiRepository
+        self.serverRepository = serverRepository
         self.hapticFeedbackManager = hapticFeedbackManager
 
         ipRepository.ipState
@@ -135,9 +138,9 @@ class IPInfoViewModel: IPInfoViewModelType {
         return favourites.first { $0.id == groupId &&  $0.pinnedIp != nil } != nil
     }
 
-    private func getNodeIp(groupId: String) -> Group? {
-        guard let groupId = Int(groupId),
-              let allGroups = localDatabase.getGroups() else { return nil }
+    private func getNodeIp(groupId: String) -> GroupModel? {
+        guard let groupId = Int(groupId) else { return nil }
+        let allGroups = serverRepository.currentGroupModels
         return allGroups.first { $0.id == groupId }
     }
 

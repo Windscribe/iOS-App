@@ -23,6 +23,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let preferences: Preferences
     private let advanceRepository: AdvanceRepository
     private let sessionRepository: SessionRepository
+    private let serverRepository: ServerRepository
 
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
@@ -37,7 +38,8 @@ class LatencyRepositoryImpl: LatencyRepository {
          locationsManager: LocationsManager,
          preferences: Preferences,
          advanceRepository: AdvanceRepository,
-         sessionRepository: SessionRepository) {
+         sessionRepository: SessionRepository,
+         serverRepository: ServerRepository) {
         self.pingManager = pingManager
         self.database = database
         self.vpnStateRepository = vpnStateRepository
@@ -46,6 +48,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.preferences = preferences
         self.advanceRepository = advanceRepository
         self.sessionRepository = sessionRepository
+        self.serverRepository = serverRepository
         latency.onNext(self.database.getAllPingData())
         observeFavouriteList()
     }
@@ -104,12 +107,12 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadStreamingServerLatency() -> Completable {
-        let streamingServersToPing = database.getServers()?
+        let streamingServersToPing = serverRepository.currentServerModels
             .filter { $0.locType == "streaming" }
             .compactMap { region in Array(region.groups) }
             .reduce([], +)
             .map { city in (city.pingIp, city.pingHost) }
-        return createLatencyTask(from: streamingServersToPing ?? [])
+        return createLatencyTask(from: streamingServersToPing)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
@@ -197,7 +200,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
-        let pingIps = database.getServers()?
+        let pingIps = serverRepository.currentServerModels
             .compactMap { region in Array(region.groups)}
             .reduce([], +)
             .filter {
@@ -206,7 +209,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                 } else {
                     return true
                 }
-            }.map { $0.pingIp } ?? []
+            }.map { $0.pingIp }
         let validPingData = pingDataArray.filter { $0.latency != -1 && pingIps.contains($0.ip) }
         let minLatencyPingData = validPingData.min(by: { $0.latency < $1.latency })
         return minLatencyPingData?.ip
@@ -262,10 +265,10 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Returns ping IP and Host array from database.
     private func getServerPingAndHosts() -> [(String, String)] {
-        return database.getServers()?
+        return serverRepository.currentServerModels
             .compactMap { region in Array(region.groups) }
             .reduce([], +)
-            .map { city in (city.pingIp, city.pingHost) } ?? []
+            .map { city in (city.pingIp, city.pingHost) }
     }
 
     func refreshBestLocation() {
@@ -275,9 +278,9 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func pickBestLocation(pingData: [PingData]) {
-        let servers = database.getServers()
+        let servers = serverRepository.currentServerModels
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
-            outerLoop: for server in servers ?? [] {
+            outerLoop: for server in servers {
                 for group in server.groups where group.pingIp == lowestPingIp {
                     locationsManager.saveBestLocation(with: "\(group.id)")
                     break outerLoop
@@ -292,7 +295,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     /// Only if we have servers in given region.
     func pickBestLocation() {
         DispatchQueue.main.async {
-            let servers = self.database.getServers() ?? []
+            let servers = self.serverRepository.currentServerModels
             if #available(iOS 16, tvOS 17, *) {
                 guard let countryCode = Locale.current.region?.identifier else { return }
                 if let regionBasedLocation = self.selectServerByRegion(servers: servers, countryCode: countryCode) {
@@ -307,7 +310,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     /// Select the best server based on the user's region
-    private func selectServerByRegion(servers: [Server], countryCode: String) -> String? {
+    private func selectServerByRegion(servers: [ServerModel], countryCode: String) -> String? {
         for server in servers where server.countryCode == countryCode {
             let availableGroups = server.groups.filter { group in
                 guard !group.nodes.isEmpty else { return false }
@@ -325,9 +328,9 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     /// Select the best server based on the timezon different
-    private func selectServerByTimeZone(servers: [Server]) -> String? {
+    private func selectServerByTimeZone(servers: [ServerModel]) -> String? {
         let userTimeZone = TimeZone.current
-        var bestFallbackGroup: Group?
+        var bestFallbackGroup: GroupModel?
         for server in servers {
             guard let serverTimeZone = TimeZone(identifier: server.timezone) else { continue }
 
@@ -353,7 +356,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     /// Build and save the best location using the selected server, group, and node
-    private func buildAndSaveBestLocation(group: Group) -> String {
+    private func buildAndSaveBestLocation(group: GroupModel) -> String {
         logger.logI("LatencyRepositoryImpl", "Saving best location: \(group.id)")
         locationsManager.saveBestLocation(with: "\(group.id)")
         return group.city

@@ -208,7 +208,7 @@ class MainViewModel: MainViewModelType {
             }
             .store(in: &cancellables)
 
-        serverRepository.updatedServerModelsSubject
+        serverRepository.serverListSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 guard let self = self else { return }
@@ -379,7 +379,7 @@ class MainViewModel: MainViewModelType {
                     return $0.city < $1.city
                 }
             }
-            let sortedServerModel = ServerModel(id: serverModel.id, name: serverModel.name, countryCode: serverModel.countryCode, status: serverModel.status, premiumOnly: serverModel.premiumOnly, dnsHostname: serverModel.dnsHostname, groups: sortedGroups, locType: serverModel.locType, p2p: serverModel.p2p, wasEdited: serverModel.wasEdited)
+            var sortedServerModel = serverModel.copyModelWith(newGroups: sortedGroups)
             return ServerSection(server: sortedServerModel, collapsed: $0.collapsed)
         }
     }
@@ -421,10 +421,10 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadFavourite() {
-        Publishers.CombineLatest(
-            serverRepository.updatedServerModelsSubject,
-            localDatabase.getFavouriteListObservable().toPublisherIncludingEmpty().replaceError(with: [])
-        )
+        serverRepository.serverListSubject.combineLatest(
+            localDatabase.getFavouriteListObservable()
+                .toPublisherIncludingEmpty()
+                .replaceError(with: []))
         .receive(on: RunLoop.main)
         .sink { [weak self] (serverModels, favList) in
             guard let self = self else { return }
@@ -483,7 +483,7 @@ class MainViewModel: MainViewModelType {
 
     func loadLatencies() {
         // Wait for servers to be available before loading latencies
-        serverRepository.updatedServerModelsSubject
+        serverRepository.serverListSubject
             .first(where: { !$0.isEmpty })
             .sink { [weak self] servers in
                 guard let self = self else { return }
@@ -613,7 +613,7 @@ class MainViewModel: MainViewModelType {
 
     func loadServerList() {
         Task {
-            _ = try? await serverRepository.getUpdatedServers()
+            try? await serverRepository.updatedServers()
         }
     }
 

@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 import Swinject
 
-struct GroupModel {
+struct GroupModel: Equatable {
     let id: Int
     let countryCode: String?
     let city: String
@@ -26,6 +26,7 @@ struct GroupModel {
     let health: Int
     let pingHost: String
     let wasEdited: Bool
+    let timezone: String
 
     init(id: Int,
          countryCode: String? = nil,
@@ -41,7 +42,8 @@ struct GroupModel {
          linkSpeed: String,
          health: Int,
          pingHost: String,
-         wasEdited: Bool) {
+         wasEdited: Bool,
+         timezone: String) {
         self.id = id
         self.countryCode = countryCode
         self.city = city
@@ -57,6 +59,7 @@ struct GroupModel {
         self.health = health
         self.pingHost = pingHost
         self.wasEdited = wasEdited
+        self.timezone = timezone
     }
 
     func getCustomGroupModel(customCity: String = "", customNick: String = "", countryCode: String? = nil) -> GroupModel {
@@ -76,7 +79,8 @@ struct GroupModel {
                           linkSpeed: linkSpeed,
                           health: health,
                           pingHost: pingHost,
-                          wasEdited: wasEdited)
+                          wasEdited: wasEdited,
+                          timezone: timezone)
     }
 
     func canConnect() -> Bool {
@@ -222,6 +226,7 @@ struct FavouriteGroupModel {
                           linkSpeed: linkSpeed,
                           health: health,
                           pingHost: pingHost,
-                          wasEdited: wasEdited)
+                          wasEdited: wasEdited,
+                          timezone: timezone)
     }
 }

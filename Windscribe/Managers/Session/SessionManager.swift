@@ -186,12 +186,12 @@ class SessionManagerImpl: SessionManager {
         }
         Task { @MainActor in
             if oldSession.locHash != newSession.locHash {
-                _ = try? await serverRepo.getUpdatedServers()
+                try? await serverRepo.updatedServers()
             }
             if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
                 logger.logI("SessionManager", "ALC changes detected. Request to retrieve server list")
                 do {
-                    _ = try await serverRepo.getUpdatedServers()
+                    try await serverRepo.updatedServers()
                     checkLocationValidity()
                 } catch { }
             }
@@ -207,7 +207,7 @@ class SessionManagerImpl: SessionManager {
                 _ = try? await Task.sleep(nanoseconds: 3_000_000_000)
                 self.logger.logI("SessionManager", "Updated server list.")
                 do {
-                    _ = try await serverRepo.getUpdatedServers()
+                    try await serverRepo.updatedServers()
                 } catch let error {
                     self.logger.logE("SessionManager", "Failed to update server list with error: \(error).")
                 }
@@ -216,7 +216,7 @@ class SessionManagerImpl: SessionManager {
                 _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
             }
             if newSession.isPremium && !oldSession.isPremium {
-                _ = try? await serverRepo.getUpdatedServers()
+                try? await serverRepo.updatedServers()
                 _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
                 _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
             }
@@ -227,7 +227,7 @@ class SessionManagerImpl: SessionManager {
             guard let portMaps = localDatabase.getPortMap()?.filter({ $0.heading == wireGuard }) else { return }
 
             if portMaps.first == nil {
-                _ = try? await serverRepo.getUpdatedServers()
+                try? await serverRepo.updatedServers()
                 _ = try? await portmapRepo.getUpdatedPortMap()
             }
         }

@@ -106,13 +106,15 @@ class ServerRepositoryTests: XCTestCase {
         let expectedServers = Array(mockServerList.servers)
 
         // When
-        let result = try await repository.getUpdatedServers()
+        try await repository.updatedServers()
 
         let savedServers = mockLocalDatabase.getServers()
+        let currentServerModels = repository.currentServerModels
+        let savedServersModels = savedServers?.map { $0.getServerModel() } ?? []
 
         // Then
-        XCTAssertEqual(result.count, expectedServers.count)
-        XCTAssertEqual(result, savedServers)
+        XCTAssertEqual(currentServerModels.count, expectedServers.count)
+        XCTAssertEqual(savedServersModels, currentServerModels)
     }
 
     func testGetUpdatedServersWithoutUser() async {
@@ -121,7 +123,7 @@ class ServerRepositoryTests: XCTestCase {
 
         // When/Then
         do {
-            _ = try await repository.getUpdatedServers()
+             try await repository.updatedServers()
             XCTFail("Should have thrown validation failure error")
         } catch {
             XCTAssertEqual(error as? Errors, Errors.validationFailure)
@@ -147,11 +149,12 @@ class ServerRepositoryTests: XCTestCase {
         mockLocalDatabase.mockServers = localServers
 
         // When
-        let result = try await repository.getUpdatedServers()
-
+        try await repository.updatedServers()
         // Then
-        XCTAssertEqual(result.count, localServers.count)
-        XCTAssertEqual(result, localServers)
+        let currentServerModels = repository.currentServerModels
+        let localServersModels = localServers.map { $0.getServerModel() }
+        XCTAssertEqual(currentServerModels.count, localServers.count)
+        XCTAssertEqual(currentServerModels, localServersModels)
     }
 
     func testGetUpdatedServersAPIErrorNoLocalData() async {
@@ -166,14 +169,14 @@ class ServerRepositoryTests: XCTestCase {
 
         // When/Then
         do {
-            _ = try await repository.getUpdatedServers()
+            try await repository.updatedServers()
             XCTFail("Should have thrown network error")
         } catch {
             XCTAssertEqual(error as? Errors, Errors.datanotfound)
         }
     }
 
-    func testUpdatedServerModelsSubject() async throws {
+    func testserverListSubject() async throws {
         // Given
         let mockUser = createMockUser()
         mockUserSessionRepository.user = mockUser
@@ -190,10 +193,10 @@ class ServerRepositoryTests: XCTestCase {
         }
 
         var receivedServers: [ServerModel] = []
-        _ = try await repository.getUpdatedServers()
+        try await repository.updatedServers()
 
         receivedServers = await withCheckedContinuation { continuation in
-            repository.updatedServerModelsSubject
+            repository.serverListSubject
                 .sink(receiveValue: { servers in
                     if !servers.isEmpty {
                         continuation.resume(returning: servers)
@@ -221,7 +224,7 @@ class ServerRepositoryTests: XCTestCase {
         let expectation = expectation(description: "Server models updated with custom regions")
 
         // Set up the subscription before calling updateRegions to avoid race conditions
-        repository.updatedServerModelsSubject
+        repository.serverListSubject
             .dropFirst() // Skip initial empty value
             .first() // Only take the first emission to prevent multiple fulfillments
             .sink { servers in

@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-struct ServerModel {
+struct ServerModel: Equatable {
     let id: Int
     let name: String
     let countryCode: String
@@ -20,6 +20,7 @@ struct ServerModel {
     let locType: String
     let p2p: Bool
     let wasEdited: Bool
+    let timezone: String
 
     init(id: Int,
          name: String,
@@ -30,7 +31,8 @@ struct ServerModel {
          groups: [GroupModel],
          locType: String,
          p2p: Bool,
-         wasEdited: Bool) {
+         wasEdited: Bool,
+         timezone: String) {
         self.id = id
         self.name = name
         self.countryCode = countryCode
@@ -41,6 +43,7 @@ struct ServerModel {
         self.locType = locType
         self.p2p = p2p
         self.wasEdited = wasEdited
+        self.timezone = timezone
     }
 
     init(name: String, serverModel: ServerModel) {
@@ -54,6 +57,7 @@ struct ServerModel {
         locType = serverModel.locType
         p2p = serverModel.p2p
         wasEdited = serverModel.wasEdited
+        timezone = serverModel.timezone
     }
 
     func getCustomServerModel(customName: String = "", groupModels: [GroupModel] = []) -> ServerModel {
@@ -68,7 +72,22 @@ struct ServerModel {
                            groups: groupModelList,
                            locType: locType,
                            p2p: p2p,
-                           wasEdited: wasEdited)
+                           wasEdited: wasEdited,
+                           timezone: timezone)
+    }
+
+    func copyModelWith(newGroups: [GroupModel]) -> ServerModel {
+        return  ServerModel(id: self.id,
+                            name: self.name,
+                            countryCode: self.countryCode,
+                            status: self.status,
+                            premiumOnly: self.premiumOnly,
+                            dnsHostname: self.dnsHostname,
+                            groups: newGroups,
+                            locType: self.locType,
+                            p2p: self.p2p,
+                            wasEdited: self.wasEdited,
+                            timezone: self.timezone)
     }
 
     func isForStreaming() -> Bool {
@@ -165,7 +184,8 @@ struct ServerModel {
                            groups: groupModelList,
                            locType: locType,
                            p2p: p2p,
-                           wasEdited: wasEdited)
+                           wasEdited: wasEdited,
+                           timezone: timezone)
     }
 }
 

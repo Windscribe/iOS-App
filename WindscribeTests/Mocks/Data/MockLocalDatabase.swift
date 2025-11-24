@@ -68,10 +68,6 @@ class MockLocalDatabase: LocalDatabase {
         return mockServers
     }
 
-    func getServersObservable() -> Observable<[Windscribe.Server]> {
-        return Observable.just([])
-    }
-
     func saveServers(servers: [Windscribe.Server]) {
         mockServers = servers
     }
@@ -239,10 +235,6 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func clean() {}
-
-    func getGroups() -> [Windscribe.Group]? {
-        return []
-    }
 
     func getNetworksSync() -> [Windscribe.WifiNetwork]? {
         return []

@@ -45,7 +45,6 @@ class HapticFeedbackManagerImpl: HapticFeedbackManager {
     }
 
     func run(level: HapticFeedbackLevel) {
-        #if !os(tvOS)
         if hapticFeedback {
             let style: UIImpactFeedbackGenerator.FeedbackStyle
             switch level {
@@ -64,7 +63,5 @@ class HapticFeedbackManagerImpl: HapticFeedbackManager {
             hapticFeedbackgenerator.prepare()
             hapticFeedbackgenerator.impactOccurred()
         }
-        #endif
-        // No-op on tvOS - haptic feedback not supported
     }
 }
