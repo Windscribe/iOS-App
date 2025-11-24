@@ -574,6 +574,7 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "デバッグログを受信しました。この問題について支援が必要な場合は、サポートにご連絡ください。";
 
 "Network Security" = "ネットワークセキュリティ";
+"Network Details" = "ネットワーク詳細";
 
 "Could not rotate IP" = "IPをローテーションできませんでした";
 "Try again later or go to our Status page for more info." = "しばらくしてからもう一度お試しいただくか、ステータスページで詳細をご覧ください.";

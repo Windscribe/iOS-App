@@ -570,6 +570,7 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "디버그 로그를 받았습니다. 이 문제에 대한 도움이 필요하면 지원팀에 문의하세요.";
 
 "Network Security" = "네트워크 보안";
+"Network Details" = "네트워크 정보";
 
 "Could not rotate IP" = "IP를 순환할 수 없습니다";
 "Try again later or go to our Status page for more info." = "나중에 다시 시도하거나 상태 페이지로 이동하여 자세한 내용을 확인하세요.";

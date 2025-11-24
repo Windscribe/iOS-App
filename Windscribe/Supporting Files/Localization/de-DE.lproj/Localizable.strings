@@ -586,6 +586,7 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Ihr Debug-Protokoll wurde empfangen. Bitte wenden Sie sich an den Support, wenn Sie Hilfe bei diesem Problem benötigen.";
 
 "Network Security" = "Netzwerksicherheit";
+"Network Details" = "Netzwerkdetails";
 
 "Could not rotate IP" = "IP konnte nicht rotiert werden";
 "Try again later or go to our Status page for more info." = "Versuche es später noch einmal oder besuche unsere Statusseite, um weitere Informationen zu erhalten.";

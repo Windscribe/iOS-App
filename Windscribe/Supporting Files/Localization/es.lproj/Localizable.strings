@@ -571,6 +571,7 @@
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Se ha recibido tu registro de depuración. Ponte en contacto con el soporte si deseas asistencia con este problema.";
 
 "Network Security" = "Seguridad de red";
+"Network Details" = "Detalles de la red";
 
 "Could not rotate IP" = "No se pudo rotar la IP";
 "Try again later or go to our Status page for more info." = "Inténtalo de nuevo más tarde o visita nuestra página de estado para obtener más información.";
