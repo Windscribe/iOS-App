@@ -18,9 +18,10 @@ struct PreferencesBaseView<Content: View>: View {
 
     var body: some View {
         ZStack {
+            Color.from(.screenBackgroundColor, isDarkMode)
+                .ignoresSafeArea()
             content()
         }
-        .background(Color.from(.screenBackgroundColor, isDarkMode).ignoresSafeArea())
         .onAppear {
             if useHapticFeedback {
                 hapticFeedbackManager.run(level: .medium)

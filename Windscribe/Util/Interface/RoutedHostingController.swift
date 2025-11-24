@@ -12,15 +12,25 @@ import Combine
 
 class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     private var cancellables = Set<AnyCancellable>()
+    private let lookAndFeelRepository: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
 
     var onPop: (() -> Void)?
+
+    override init(rootView: Content) {
+        super.init(rootView: rootView)
+
+        // Set background immediately to prevent white flash during push animation
+        view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+    }
+
+    @MainActor required dynamic init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        let lookAndFeelRepository = Assembler.resolve(LookAndFeelRepositoryType.self)
-
-        view.backgroundColor = UIColor(.from(.actionBackgroundColor, lookAndFeelRepository.isDarkMode))
+        view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
 
         lookAndFeelRepository.isDarkModeSubject
             .receive(on: DispatchQueue.main)
