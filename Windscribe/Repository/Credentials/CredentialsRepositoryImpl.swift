@@ -131,7 +131,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
                     let config = try await self.apiManager.getOpenVPNServerConfig(openVPNVersion: APIParameterValues.openVPNVersion)
                     if let data = Data(base64Encoded: config) {
                         do {
-                            try await self.fileDatabase.removeFile(path: FilePaths.openVPN)
+                            try? await self.fileDatabase.removeFile(path: FilePaths.openVPN)
                             try await self.fileDatabase.saveFile(data: data, path: FilePaths.openVPN)
                         } catch {
                             self.logger.logE("CredentialsRepositoryImpl", "Failed to save server config file: \(error.localizedDescription)")
