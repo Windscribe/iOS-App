@@ -224,8 +224,10 @@ enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
 
     var hasSeparator: Bool {
         switch self {
-        case .fileContentConnect, .fileContentDisconnect : false
-        default: true
+        case .fileContentConnect, .fileContentDisconnect:
+            false
+        default:
+            true
         }
     }
 

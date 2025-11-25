@@ -110,7 +110,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var pushNotificationManager: PushNotificationManager?
 
     // MARK: View Models
-    var viewModel: MainViewModelType!
+    var viewModel: MainViewModel!
     var vpnConnectionViewModel: ConnectionViewModelType!
     var customConfigPickerViewModel: CustomConfigPickerViewModelType!
     var favNodesListViewModel: FavouriteListViewModelType!

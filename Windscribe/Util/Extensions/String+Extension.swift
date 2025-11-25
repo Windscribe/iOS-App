@@ -29,10 +29,14 @@ extension String {
     }
 
     func MD5() -> String {
+        guard let messageData = messageData else { return "" }
+
         var digestData = Data(count: Int(CC_MD5_DIGEST_LENGTH))
-        _ = digestData.withUnsafeMutableBytes { digestBytes in
-            messageData?.withUnsafeBytes { messageBytes in
-                CC_MD5(messageBytes, CC_LONG(messageData!.count), digestBytes)
+        digestData.withUnsafeMutableBytes { digestBytes in
+            messageData.withUnsafeBytes { messageBytes in
+                let digestBytesPtr = digestBytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
+                let messageBytesPtr = messageBytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
+                CC_MD5(messageBytesPtr, CC_LONG(messageData.count), digestBytesPtr)
             }
         }
         let hex = digestData.map { String(format: "%02hhx", $0) }.joined()

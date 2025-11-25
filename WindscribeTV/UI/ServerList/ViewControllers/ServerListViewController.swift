@@ -39,7 +39,7 @@ enum SideMenuType: String {
 }
 
 class ServerListViewController: PreferredFocusedViewController, SideMenuOptionViewDelegate {
-    var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
+    var viewModel: MainViewModel!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
     let disposeBag = DisposeBag()
 
     @IBOutlet var sideMenu: UIStackView!
@@ -92,7 +92,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         super.viewDidAppear(animated)
         logger.logD("ServerListViewController", "Displaying Server List View")
     }
-
 
     override func viewWillDisappear(_: Bool) {
         if let vc = presentingViewController as? MainViewController {
@@ -240,7 +239,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         swipeUp.direction = .up
         view.addGestureRecognizer(swipeUp)
     }
-
 
     @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
@@ -583,7 +581,6 @@ extension ServerListViewController: StaticIPListTableViewDelegate {
         staticIpDelegate?.setSelectedStaticIP(staticIP: staticIP)
     }
 }
-
 
 class EmptyListView: UIView {
     @IBOutlet weak var emptyImageView: UIImageView!

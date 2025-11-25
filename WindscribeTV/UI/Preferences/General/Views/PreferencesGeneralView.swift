@@ -47,7 +47,7 @@ class PreferencesGeneralView: UIView {
     }
 
     private func updateText() {
-        languagesView.updateText(with: TextsAsset.General.languages, title:  GeneralViewType.language.title)
+        languagesView.updateText(with: TextsAsset.General.languages, title: GeneralViewType.language.title)
         orderByView.updateText(with: TextsAsset.orderPreferences, title: GeneralViewType.locationOrder.title)
     }
 

@@ -75,7 +75,7 @@ class IPRepositoryImpl: IPRepository {
 
                     self.logger.logI("IPRepositoryImpl", "Ip was refreshed with: \(data.userIp) Windscribe IP: \(data.isOurIp)")
                     currentIp.send(data.userIp)
-                    self.localDatabase.saveIp(myip: data)
+                    _ = self.localDatabase.saveIp(myip: data)
 
                     single(.success(()))
                 } catch {

@@ -28,11 +28,11 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
     weak var logicDelegate: CustomConfigListModelDelegate?
     weak var uiDelegate: CustomConfigListViewDelegate?
     var scrollHappened = false
-    var viewModel: MainViewModelType
+    var viewModel: MainViewModel
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    init(customConfigs: [CustomConfigModel]?, viewModel: MainViewModelType) {
+    init(customConfigs: [CustomConfigModel]?, viewModel: MainViewModel) {
         self.viewModel = viewModel
         super.init()
         scrollViewDelegate = self

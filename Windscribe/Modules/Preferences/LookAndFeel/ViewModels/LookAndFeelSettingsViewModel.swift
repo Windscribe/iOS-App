@@ -328,12 +328,12 @@ extension LookAndFeelSettingsViewModelImpl {
 
         do {
             let jsonData = try buildLocationsJsonString(serverModels: serverModels)
+            logger.logI("LookAndFeelSettingsViewModel", "Export Locations successful")
             return DocumentFormatInfo(fileData: jsonData, type: .json, tempFileName: "besugo.json")
         } catch {
             logger.logE("LookAndFeelSettingsViewModel", "Export Locations failed, \(error.localizedDescription)")
             return nil
         }
-        logger.logI("LookAndFeelSettingsViewModel", "Export Locations successful")
     }
 
     private func resetLocations() {

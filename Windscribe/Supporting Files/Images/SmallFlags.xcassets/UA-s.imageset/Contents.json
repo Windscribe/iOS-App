@@ -2,19 +2,18 @@
   "images" : [
     {
       "filename" : "UA-s.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "scale" : "1x"
     },
     {
       "filename" : "UA-s@2x.svg",
       "idiom" : "universal",
-      "scale" : "2x",
-      "unassigned" : true
+      "scale" : "2x"
     },
     {
       "filename" : "UA-s@3x.svg",
       "idiom" : "universal",
-      "scale" : "3x",
-      "unassigned" : true
+      "scale" : "3x"
     }
   ],
   "info" : {

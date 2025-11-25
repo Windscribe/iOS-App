@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol UpgradePricingViewDelegate: NSObject {
+protocol UpgradePricingViewDelegate: AnyObject {
     func pricingOptionWasSelected(plan: WindscribeInAppProduct?)
 }
 

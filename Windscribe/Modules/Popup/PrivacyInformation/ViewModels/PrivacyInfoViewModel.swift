@@ -53,7 +53,6 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
             .store(in: &cancellables)
     }
 
-
     func acceptPrivacy() {
         logger.logD("PrivacyInfoViewModel", "User accepted privacy conditions.")
 

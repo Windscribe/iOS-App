@@ -9,7 +9,7 @@
 import RxSwift
 import UIKit
 
-protocol PreferencesAccountViewDelegate: NSObject {
+protocol PreferencesAccountViewDelegate: AnyObject {
     func actionSelected(with item: AccountItemCell)
 }
 

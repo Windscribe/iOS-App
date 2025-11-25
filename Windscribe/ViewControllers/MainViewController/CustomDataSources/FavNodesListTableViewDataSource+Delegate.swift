@@ -22,11 +22,11 @@ class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSo
     var favList: [FavouriteGroupModel]?
     weak var delegate: FavouriteListTableViewDelegate?
     var scrollHappened = false
-    var viewModel: MainViewModelType
+    var viewModel: MainViewModel
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
     let disposeBag = DisposeBag()
 
-    init(favList: [FavouriteGroupModel]?, viewModel: MainViewModelType) {
+    init(favList: [FavouriteGroupModel]?, viewModel: MainViewModel) {
         self.viewModel = viewModel
         super.init()
         scrollViewDelegate = self

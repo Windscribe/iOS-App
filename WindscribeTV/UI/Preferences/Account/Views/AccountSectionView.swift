@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol AccountSectionViewDelegate: NSObject {
+protocol AccountSectionViewDelegate: AnyObject {
     func actionSelected(with item: AccountItemCell)
 }
 

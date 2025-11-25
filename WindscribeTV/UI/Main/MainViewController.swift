@@ -44,7 +44,7 @@ class MainViewController: PreferredFocusedViewController {
 
     // MARK: Properties
 
-    var viewModel: MainViewModelType!
+    var viewModel: MainViewModel!
     var ipInfoViewModel: IPInfoViewModelType!
     var vpnConnectionViewModel: ConnectionViewModelType!
     var latencyViewModel: LatencyViewModel!

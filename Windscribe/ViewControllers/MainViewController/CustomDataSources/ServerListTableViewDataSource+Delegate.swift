@@ -43,8 +43,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
 
     var favNodesNotificationToken: NotificationToken?
     var scrollHappened = false
-    var viewModel: MainViewModelType!
-    init(serverSections: [ServerSection], viewModel: MainViewModelType, shouldColapse: Bool = false) {
+    var viewModel: MainViewModel!
+    init(serverSections: [ServerSection], viewModel: MainViewModel, shouldColapse: Bool = false) {
         super.init()
         self.scrollViewDelegate = self
         self.expyDelegate = self

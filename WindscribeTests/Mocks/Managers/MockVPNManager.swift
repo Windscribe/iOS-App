@@ -15,6 +15,7 @@ import NetworkExtension
 class MockVPNManager: VPNManager {
     // Mock vars
     var mockStatus: NEVPNStatus = .disconnected
+    var showFailedPinIpTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
     func configureForConnectionState() {
     }
