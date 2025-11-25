@@ -342,7 +342,7 @@ extension ConfigurationsManager {
         if nodes.isEmpty {
             throw VPNConfigurationErrors.noValidNodeFound
         } else {
-            //Check if we have a forced node
+            // Check if we have a forced node
             let forceNode = advanceRepository.getForcedNode()
             if let forceNode = forceNode, let node = nodes.first(where: { $0.hostname == forceNode }) {
                 return node

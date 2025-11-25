@@ -23,11 +23,11 @@ class StaticIPListTableViewDataSource: WSTableViewDataSource, UITableViewDataSou
     var staticIPs: [StaticIPModel]?
     weak var delegate: StaticIPListTableViewDelegate?
     var scrollHappened = false
-    var viewModel: MainViewModelType
+    var viewModel: MainViewModel
     let disposeBag = DisposeBag()
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
-    init(staticIPs: [StaticIPModel]?, viewModel: MainViewModelType) {
+    init(staticIPs: [StaticIPModel]?, viewModel: MainViewModel) {
         self.viewModel = viewModel
         super.init()
         scrollViewDelegate = self

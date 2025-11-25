@@ -10,96 +10,97 @@ import Foundation
 import UIKit
 import os.log
 
+enum LogLevel: String {
+    case debug, info, error
+}
+
+private struct LogBufferModel: Codable {
+    enum CodingKeys: String, CodingKey {
+        case level = "lvl"
+        case tag = "mod"
+        case message = "msg"
+        case timestamp = "tm"
+    }
+
+    private static let jsonDateFormatter: DateFormatter = {
+          let formatter = DateFormatter()
+          formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+          return formatter
+      }()
+
+    let level: LogLevel
+    let tag: String
+    let message: String
+    let timestamp: TimeInterval
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        let formattedTime = LogBufferModel.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
+
+        // Encode in specific order: tm, lvl, mod, msg for human readability
+        try container.encode(formattedTime, forKey: .timestamp)
+        try container.encode(level.rawValue, forKey: .level)
+        try container.encode(tag, forKey: .tag)
+        try container.encode(message, forKey: .message)
+    }
+
+    private func escapeJSONString(_ input: String) -> String {
+        var result = ""
+        for char in input {
+            switch char {
+            case "\"": result += "\\\""
+            case "\\": result += "\\\\"
+            case "\n": result += "\\n"
+            case "\r": result += "\\r"
+            case "\t": result += "\\t"
+            default: result.append(char)
+            }
+        }
+        return result
+    }
+
+    func toOrderedJSONString() -> String {
+          let formattedTime = Self.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
+
+          // Prevent multiple replacingOccurrences
+          let escapedTag = escapeJSONString(tag)
+          let escapedMessage = escapeJSONString(message)
+
+          return "{\"tm\": \"\(formattedTime)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
+      }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Decode tag and message directly
+        tag = try container.decode(String.self, forKey: .tag)
+        message = try container.decode(String.self, forKey: .message)
+
+        // Decode level string and convert to enum
+        let levelString = try container.decode(String.self, forKey: .level)
+        switch levelString {
+        case "debug": level = .debug
+        case "info": level = .info
+        case "error": level = .error
+        default: level = .info // fallback
+        }
+
+        // Decode timestamp string and convert to TimeInterval
+        let timestampString = try container.decode(String.self, forKey: .timestamp)
+        timestamp = LogBufferModel.jsonDateFormatter.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
+    }
+
+    // Keep the original init for creating new log entries
+    init(level: LogLevel, tag: String, message: String) {
+        self.level = level
+        self.tag = tag
+        self.message = message
+        self.timestamp = Date().timeIntervalSince1970
+    }
+}
+
 class FileLoggerImpl: FileLogger {
-    enum LogLevel: String {
-        case debug, info, error
-    }
-
-    private struct LogBufferModel: Codable {
-        enum CodingKeys: String, CodingKey {
-            case level = "lvl"
-            case tag = "mod"
-            case message = "msg"
-            case timestamp = "tm"
-        }
-
-        private static let jsonDateFormatter: DateFormatter = {
-              let formatter = DateFormatter()
-              formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-              return formatter
-          }()
-
-        let level: LogLevel
-        let tag: String
-        let message: String
-        let timestamp: TimeInterval
-
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-
-            let formattedTime = LogBufferModel.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
-
-            // Encode in specific order: tm, lvl, mod, msg for human readability
-            try container.encode(formattedTime, forKey: .timestamp)
-            try container.encode(level.rawValue, forKey: .level)
-            try container.encode(tag, forKey: .tag)
-            try container.encode(message, forKey: .message)
-        }
-
-        private func escapeJSONString(_ input: String) -> String {
-            var result = ""
-            for char in input {
-                switch char {
-                case "\"": result += "\\\""
-                case "\\": result += "\\\\"
-                case "\n": result += "\\n"
-                case "\r": result += "\\r"
-                case "\t": result += "\\t"
-                default: result.append(char)
-                }
-            }
-            return result
-        }
-
-        func toOrderedJSONString() -> String {
-              let formattedTime = Self.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
-
-              // Prevent multiple replacingOccurrences
-              let escapedTag = escapeJSONString(tag)
-              let escapedMessage = escapeJSONString(message)
-
-              return "{\"tm\": \"\(formattedTime)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
-          }
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-
-            // Decode tag and message directly
-            tag = try container.decode(String.self, forKey: .tag)
-            message = try container.decode(String.self, forKey: .message)
-
-            // Decode level string and convert to enum
-            let levelString = try container.decode(String.self, forKey: .level)
-            switch levelString {
-            case "debug": level = .debug
-            case "info": level = .info
-            case "error": level = .error
-            default: level = .info // fallback
-            }
-
-            // Decode timestamp string and convert to TimeInterval
-            let timestampString = try container.decode(String.self, forKey: .timestamp)
-            timestamp = LogBufferModel.jsonDateFormatter.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
-        }
-
-        // Keep the original init for creating new log entries
-        init(level: LogLevel, tag: String, message: String) {
-            self.level = level
-            self.tag = tag
-            self.message = message
-            self.timestamp = Date().timeIntervalSince1970
-        }
-    }
 
     private let maxLogLength = 120_000
     private let logFileName = "windscribe.log"
@@ -387,6 +388,4 @@ class FileLoggerImpl: FileLogger {
         let startupMessage = "JSON log retention: \(retentionHours)h time limit, \(maxSizeMB)MB size limit. Batching: \(batchMaxSize) logs/batch, \(batchFlushInterval)s interval."
         addToBatch(.info, tag: "FileLogger", message: startupMessage, flushImmediately: false)
     }
-
-
 }

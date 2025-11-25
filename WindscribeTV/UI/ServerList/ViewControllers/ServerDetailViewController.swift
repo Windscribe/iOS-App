@@ -24,7 +24,7 @@ class ServerDetailViewController: UIViewController {
         backgroundGradient,
         flagBottomGradient: CAGradientLayer!
     var server: ServerModel?
-    var viewModel: MainViewModelType?, serverListViewModel: ServerListViewModelType?, logger: FileLogger!
+    var viewModel: MainViewModel?, serverListViewModel: ServerListViewModelType?, logger: FileLogger!
     weak var delegate: ServerListTableViewDelegate?
     var favList: [GroupModel]?
 
@@ -76,7 +76,6 @@ class ServerDetailViewController: UIViewController {
         }).disposed(by: disposeBag)
     }
 }
-
 
 extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {

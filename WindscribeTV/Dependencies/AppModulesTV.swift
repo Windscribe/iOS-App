@@ -81,25 +81,25 @@ class TVViewModels: Assembly {
                                 customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
                                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
         }.inObjectScope(.transient)
-        container.register(MainViewModelType.self) { r in
-            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
-                          vpnManager: r.resolve(VPNManager.self)!,
-                          logger: r.resolve(FileLogger.self)!,
-                          serverRepository: r.resolve(ServerRepository.self)!,
-                          portMapRepo: r.resolve(PortMapRepository.self)!,
-                          staticIpRepository: r.resolve(StaticIpRepository.self)!,
-                          preferences: r.resolve(Preferences.self)!,
-                          latencyRepo: r.resolve(LatencyRepository.self)!,
-                          lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                          pushNotificationsManager: r.resolve(PushNotificationManager.self)!,
-                          notificationsRepo: r.resolve(NotificationRepository.self)!,
-                          credentialsRepository: r.resolve(CredentialsRepository.self)!,
-                          connectivity: r.resolve(ConnectivityManager.self)!,
-                          livecycleManager: r.resolve(LivecycleManagerType.self)!,
-                          locationsManager: r.resolve(LocationsManagerType.self)!,
-                          protocolManager: r.resolve(ProtocolManagerType.self)!,
-                          hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                          sessionRepository: r.resolve(SessionRepository.self)!)
+        container.register(MainViewModel.self) { r in
+            MainViewModelImpl(localDatabase: r.resolve(LocalDatabase.self)!,
+                              vpnManager: r.resolve(VPNManager.self)!,
+                              logger: r.resolve(FileLogger.self)!,
+                              serverRepository: r.resolve(ServerRepository.self)!,
+                              portMapRepo: r.resolve(PortMapRepository.self)!,
+                              staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                              preferences: r.resolve(Preferences.self)!,
+                              latencyRepo: r.resolve(LatencyRepository.self)!,
+                              lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                              pushNotificationsManager: r.resolve(PushNotificationManager.self)!,
+                              notificationsRepo: r.resolve(NotificationRepository.self)!,
+                              credentialsRepository: r.resolve(CredentialsRepository.self)!,
+                              connectivity: r.resolve(ConnectivityManager.self)!,
+                              livecycleManager: r.resolve(LivecycleManagerType.self)!,
+                              locationsManager: r.resolve(LocationsManagerType.self)!,
+                              protocolManager: r.resolve(ProtocolManagerType.self)!,
+                              hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                              sessionRepository: r.resolve(SessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
@@ -196,11 +196,13 @@ class TVViewModels: Assembly {
             IPInfoViewModel(logger: r.resolve(FileLogger.self)!,
                             ipRepository: r.resolve(IPRepository.self)!,
                             preferences: r.resolve(Preferences.self)!,
-                            locationManager: r.resolve(LocationsManagerType.self)!,
+                            locationManager: r.resolve(LocationsManager.self)!,
                             localDatabase: r.resolve(LocalDatabase.self)!,
                             apiManager: r.resolve(APIManager.self)!,
                             userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                            bridgeApiRepository: r.resolve(BridgeApiRepository.self)!)
+                            bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
+                            serverRepository: r.resolve(ServerRepository.self)!,
+                            hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
     }
 }
@@ -214,7 +216,7 @@ class TVViewControllers: Assembly {
         container.register(MainViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainViewController") as! MainViewController
         }.initCompleted { r, vc in
-            vc.viewModel = r.resolve(MainViewModelType.self)
+            vc.viewModel = r.resolve(MainViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
@@ -323,7 +325,7 @@ class TVViewControllers: Assembly {
         container.register(ServerListViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
         }.initCompleted { r, vc in
-            vc.viewModel = r.resolve(MainViewModelType.self)
+            vc.viewModel = r.resolve(MainViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.router = r.resolve(ServerListRouter.self)
@@ -332,7 +334,7 @@ class TVViewControllers: Assembly {
         container.register(ServerDetailViewController.self) { _ in
             ServerDetailViewController(nibName: "ServerDetailViewController", bundle: nil)
         }.initCompleted { r, vc in
-            vc.viewModel = r.resolve(MainViewModelType.self)
+            vc.viewModel = r.resolve(MainViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
         }.inObjectScope(.transient)

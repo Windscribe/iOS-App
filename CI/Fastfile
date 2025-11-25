@@ -1,0 +1,80 @@
+default_platform(:ios)
+
+require 'base64'
+
+api_key = app_store_connect_api_key(
+key_id: ENV["UPLOAD_KEY_ID"],
+issuer_id: ENV["UPLOAD_ISSUER_ID"],
+key_content: Base64.decode64(ENV["UPLOAD_KEY"])
+)
+
+desc "Runs linter"
+lane :lint do
+    swiftlint
+end
+
+desc "Runs tests"
+lane :test do
+    scan(
+        project: "Windscribe.xcodeproj",
+        device: "iPhone 16 Pro",
+        scheme: "Windscribe-Default",
+        clean: true,
+        fail_build: true,
+        build_for_testing: true,
+        output_directory: "test_logs",
+        output_types: "junit"
+        )
+end
+
+desc "Build the iOS app (without signing)"
+lane :iOSBuild do
+    gym(
+        scheme: "Windscribe-Default",
+        project: "Windscribe.xcodeproj",
+        export_method: "app-store", # or "app-store"
+        export_options: "./exportOptions.plist",
+        clean: true,
+        output_directory: "build_logs"
+    )
+end
+
+desc "Build the iOS app (without signing)"
+lane :widgetBuild do
+    gym(
+        scheme: "HomeWidgetExtension",
+        project: "Windscribe.xcodeproj",
+        export_method: "app-store", # or "app-store"
+        export_options: "./exportOptions.plist",
+        clean: true,
+        output_directory: "build_logs"
+    )
+end
+
+desc "Build the iOS app (without signing)"
+lane :tvBuild do
+    gym(
+        scheme: "WindscribeTV-Default",
+        project: "Windscribe.xcodeproj",
+        export_method: "app-store", # or "app-store"
+        export_options: "./exportOptions.plist",
+        clean: true,
+        output_directory: "build_logs"
+    )
+end
+
+  desc "Push staging build to TestFlight"
+  lane :iOSTestFlight do
+    gym(
+        scheme: "Windscribe-Release",
+        project: "Windscribe.xcodeproj",
+        export_method: "app-store",
+        export_options: "./exportOptions.plist",
+        clean: true,
+        output_directory: "build_logs"
+    )
+    upload_to_testflight(
+        skip_waiting_for_build_processing: false,
+        distribute_external: false
+    )
+  end

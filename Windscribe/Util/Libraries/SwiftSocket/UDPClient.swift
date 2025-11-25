@@ -30,7 +30,6 @@
 
 import Foundation
 
-// swiftlint:disable all
 @_silgen_name("yudpsocket_server") func c_yudpsocket_server(_ host: UnsafePointer<Int8>, port: Int32) -> Int32
 @_silgen_name("yudpsocket_recive") func c_yudpsocket_recive(_ fd: Int32, buff: UnsafePointer<Byte>, len: Int32, ip: UnsafePointer<Int8>, port: UnsafePointer<Int32>) -> Int32
 @_silgen_name("yudpsocket_close") func c_yudpsocket_close(_ fd: Int32) -> Int32
@@ -139,7 +138,6 @@ open class UDPClient: Socket {
         _ = c_yudpsocket_close(fd)
         self.fd = nil
     }
-    // TODO: add multycast and boardcast
 }
 
 open class UDPServer: Socket {

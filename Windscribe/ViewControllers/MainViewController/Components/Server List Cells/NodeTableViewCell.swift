@@ -113,7 +113,7 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
             let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
                 guard let self = self else { return }
                 Task { @MainActor in
-                    await self.localDB.removeFavourite(groupId: "\(self.groupId)")
+                    self.localDB.removeFavourite(groupId: "\(self.groupId)")
                 }
             }
             AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
@@ -121,7 +121,7 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
                                           buttonText: TextsAsset.cancel, actions: [yesAction])
         } else {
             Task {
-                await localDB.saveFavourite(favourite: Favourite(id: "\(self.groupId)"))
+                localDB.saveFavourite(favourite: Favourite(id: "\(self.groupId)"))
             }
         }
     }

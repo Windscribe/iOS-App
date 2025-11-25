@@ -45,6 +45,7 @@ class HapticFeedbackManagerImpl: HapticFeedbackManager {
     }
 
     func run(level: HapticFeedbackLevel) {
+        #if os(iOS)
         if hapticFeedback {
             let style: UIImpactFeedbackGenerator.FeedbackStyle
             switch level {
@@ -63,5 +64,6 @@ class HapticFeedbackManagerImpl: HapticFeedbackManager {
             hapticFeedbackgenerator.prepare()
             hapticFeedbackgenerator.impactOccurred()
         }
+        #endif
     }
 }

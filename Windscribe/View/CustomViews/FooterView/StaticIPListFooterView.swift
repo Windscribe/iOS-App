@@ -22,7 +22,7 @@ class StaticIPListFooterView: WSView {
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
-    var viewModel: MainViewModelType? {
+    var viewModel: MainViewModel? {
         didSet {
             bindViews()
         }

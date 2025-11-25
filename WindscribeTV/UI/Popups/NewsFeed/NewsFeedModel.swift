@@ -54,7 +54,6 @@ class NewsFeedModel: NewsFeedModelType {
                     self.updateReadNotice(for: id)
                 }
 
-
                 return limitedNotifications.map { notification in
                     let (cleanMessage, parsedActionLink) = self.getMessage(description: notification.message)
                     var status = self.isRead(id: notification.id)

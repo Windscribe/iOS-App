@@ -35,7 +35,7 @@ enum ErrorTexts {
 
         var unlocalizedDescription: String {
             switch self {
-                case .validationFailure:
+            case .validationFailure:
                 return "Invalid session auth or api parameters provided."
             case .invalidSession:
                 return "Invalid session auth."

@@ -289,7 +289,7 @@ class Managers: Assembly {
                        apiManager: r.resolve(APIManager.self )!)
         }.inObjectScope(.userScope)
 
-        container.register(LocalPingManager.self) { r in
+        container.register(LocalPingManager.self) { _ in
             LocalPingManagerImpl(pingManager: WSNet.instance().pingManager())
         }.inObjectScope(.container)
     }

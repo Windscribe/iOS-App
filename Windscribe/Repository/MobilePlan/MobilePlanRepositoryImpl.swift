@@ -26,7 +26,8 @@ class MobilePlanRepositoryImpl: MobilePlanRepository {
     func getMobilePlans(promo: String?) async throws -> [MobilePlan] {
         do {
             let plans = try await apiManager.getMobileBillingPlans(promo: promo)
-            await localDatabase.saveMobilePlans(mobilePlansList: Array(plans.mobilePlans))
+            localDatabase.saveMobilePlans(mobilePlansList: Array(plans.mobilePlans))
+
             return Array(plans.mobilePlans)
         } catch {
             logger.logE("MobilePlanRepository", "Error getting mobile plans: \(error)")

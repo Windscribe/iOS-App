@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SettingOptionDelegate: NSObject {
+protocol SettingOptionDelegate: AnyObject {
     func optionWasSelected(with value: String)
 }
 

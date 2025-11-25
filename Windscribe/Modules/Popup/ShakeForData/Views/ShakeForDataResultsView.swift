@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ShakeForDataResultsView: View, ResponsivePopupLayoutProvider  {
+struct ShakeForDataResultsView: View, ResponsivePopupLayoutProvider {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) private var dismiss
     @Environment(\.deviceType) private var deviceType

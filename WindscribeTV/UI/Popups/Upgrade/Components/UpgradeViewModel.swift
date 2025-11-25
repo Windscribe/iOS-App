@@ -310,7 +310,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         logger.logE("UpgradeViewModelImpl", "Unable to restore purchase. \(error)")
         if let err = error as? URLError, err.code == URLError.Code.notConnectedToInternet {
             upgradeState.onNext(.error(Errors.noNetwork.description))
-        } else if error as? URLError != nil {
+        } else if error is URLError {
             upgradeState.onNext(.error(Errors.unknownError.description))
         } else {
             upgradeState.onNext(.error(TextsAsset.PurchaseRestoredAlert.error))

@@ -68,7 +68,7 @@ class SessionManagerImpl: SessionManager {
     @objc func keepSessionUpdated() {
         Task { @MainActor in
             if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
-                guard let savedSession = localDatabase.getSessionSync() else {
+                guard localDatabase.getSessionSync() != nil else {
                     self.logoutUser()
                     return
                 }
