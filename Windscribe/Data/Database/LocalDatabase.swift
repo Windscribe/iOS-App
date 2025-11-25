@@ -12,11 +12,11 @@ import RxSwift
 import Combine
 
 protocol LocalDatabase {
-    //MARK: After Modelization of Database
+    // MARK: After Modelization of Database
     func getServers() -> [Server]?
     func saveServers(servers: [Server])
 
-    //MARK: Before Modelization of Database
+    // MARK: Before Modelization of Database
 
     func migrate()
     func getSession() -> Observable<Session?>
