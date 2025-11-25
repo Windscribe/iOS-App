@@ -82,7 +82,7 @@ class IPInfoView: UIView {
 
         viewModel.actionFailedSubject
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isFavourited in
+            .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.rollingTask?.cancel()
                 self.rollingTask = nil

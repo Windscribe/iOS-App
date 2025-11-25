@@ -24,7 +24,7 @@ class LocalDatabaseImpl: LocalDatabase {
         self.preferences = preferences
     }
 
-    //MARK: After Modelization of Database
+    // MARK: After Modelization of Database
 
     func getServers() -> [Server]? {
         return getRealmObjects(type: Server.self)
@@ -34,7 +34,7 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObjects(objects: servers)
     }
 
-    //MARK: Before Modelization of Database
+    // MARK: Before Modelization of Database
 
     @MainActor
     func saveSession(session: Session) async {
