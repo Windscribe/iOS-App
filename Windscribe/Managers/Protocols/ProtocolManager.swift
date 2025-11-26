@@ -110,21 +110,40 @@ class ProtocolManager: ProtocolManagerType {
         preferences.getConnectionMode()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] mode in
-                self?.connectionMode = mode ?? DefaultValues.connectionMode
+                guard let self = self else { return }
+                self.connectionMode = mode ?? DefaultValues.connectionMode
+
+                self.logger.logI("ProtocolManager", "updateConnectionMode for getNextProtocol")
+                Task {
+                    await self.refreshProtocols(shouldReset: true,
+                                                shouldReconnect: false)
+                }
             }
             .store(in: &cancellables)
 
         preferences.getSelectedProtocol()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] preferredProtocol in
-                self?.manualProtocol = preferredProtocol ?? DefaultValues.protocol
+                guard let self = self else { return }
+                self.manualProtocol = preferredProtocol ?? DefaultValues.protocol
+
+                self.logger.logI("ProtocolManager", "updateProtocol for getNextProtocol")
+                Task {
+                    await self.refreshProtocols(shouldReset: true,
+                                                shouldReconnect: false)
+                }
             }
             .store(in: &cancellables)
 
         preferences.getSelectedPort()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] preferredPort in
-                self?.manualPort = preferredPort ?? DefaultValues.port
+                guard let self = self else { return }
+                self.manualPort = preferredPort ?? DefaultValues.port
+                Task {
+                    self.logger.logI("ProtocolManager", "updatePort for getNextProtocol")
+                    await self.refreshProtocols(shouldReset: true, shouldReconnect: false)
+                }
             }
             .store(in: &cancellables)
 
@@ -202,6 +221,7 @@ class ProtocolManager: ProtocolManagerType {
             appendPort(proto: manualProtocol, port: manualPort)
             setPriority(proto: manualProtocol, type: .normal)
         }
+
         WifiManager.shared.saveCurrentWifiNetworks()
         if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
             let preferredProto = currentNetwork.preferredProtocol
