@@ -250,6 +250,7 @@ extension ConfigurationsManager {
         let currentHost = preferences.getLastNodeIP() ?? ""
 
         if proto == "WireGuard" {
+            logger.logI("ConfigurationsManager","Bridge API - WSNEt - set host for wireguard: \(currentHost)")
             bridgeAPI.setCurrentHost(currentHost)
         } else {
             bridgeAPI.setCurrentHost("")

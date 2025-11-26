@@ -75,17 +75,17 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadAllServerLatency() -> Completable {
-        logger.logE("LatencyRepositoryImpl", "Attempting to update latency data.")
+        logger.logI("LatencyRepositoryImpl", "Attempting to update latency data.")
         let pingServers = getServerPingAndHosts()
         if pingServers.count == 0 {
-            logger.logE("LatencyRepositoryImpl", "Server list not ready for latency update.")
+            logger.logI("LatencyRepositoryImpl", "Server list not ready for latency update.")
             return Completable.empty()
         }
         if locationsManager.getBestLocation() == "0" {
             self.pickBestLocation()
         }
         if vpnStateRepository.isConnected() {
-            self.logger.logE("LatencyRepositoryImpl", "Latency not updated as vpn is connected")
+            self.logger.logI("LatencyRepositoryImpl", "Latency not updated as vpn is connected")
             return Completable.empty()
         }
         let latencySingles = createLatencyTask(from: pingServers)
