@@ -21,6 +21,7 @@ struct AccountSettingsView: View {
     @State private var fallbackDialog: AccountInputDialog?
     @State private var isShowingEnterEmailView = false
     @State private var showUpgradeModal = false
+    @State private var upgradePromoCode: String?
     @State private var hasLoaded = false
 
     init(viewModel: any AccountSettingsViewModel) {
@@ -124,9 +125,22 @@ struct AccountSettingsView: View {
             )
         }
         .sheet(isPresented: $showUpgradeModal) {
-            PlanUpgradeViewControllerWrapper()
-                .edgesIgnoringSafeArea(.all)
-        }.onAppear {
+            if let promoCode = upgradePromoCode {
+                PlanUpgradeViewControllerWrapper(promoCode: promoCode, pcpID: nil)
+                    .edgesIgnoringSafeArea(.all)
+            } else {
+                PlanUpgradeViewControllerWrapper()
+                    .edgesIgnoringSafeArea(.all)
+            }
+        }
+        .onChange(of: viewModel.showUpgradeWithPromo) { promoCode in
+            if let promoCode = promoCode {
+                upgradePromoCode = promoCode
+                showUpgradeModal = true
+                viewModel.showUpgradeWithPromo = nil
+            }
+        }
+        .onAppear {
             viewModel.actionSelected()
         }
     }

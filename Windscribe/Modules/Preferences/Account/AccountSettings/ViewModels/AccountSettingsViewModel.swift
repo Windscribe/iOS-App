@@ -13,6 +13,7 @@ import RxSwift
 protocol AccountSettingsViewModel: PreferencesBaseViewModel {
     var sections: [AccountSectionModel] { get }
     var loadingState: AccountState { get }
+    var showUpgradeWithPromo: String? { get }
 
     func loadSession()
     func handleRowAction(_ action: AccountRowAction)
@@ -24,6 +25,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     @Published var activeDialog: AccountDialogType?
     @Published var alertMessage: AccountSettingsAlertContent?
     @Published private(set) var accountEmailStatus: AccountEmailStatusType = .unknown
+    @Published var showUpgradeWithPromo: String?
 
     // Dependencies
     private let preferences: Preferences
@@ -291,11 +293,23 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
                 await MainActor.run {
                     self.loadingState = .success
                     if response.isClaimed {
-                        self.alertMessage = AccountSettingsAlertContent(
-                            title: TextsAsset.voucherCode,
-                            message: TextsAsset.Account.voucherCodeSuccessful,
-                            buttonText: TextsAsset.okay)
-                        self.loadSession()
+                        if response.isDiscountCode {
+                            // Discount code - open upgrade view directly
+                            self.showUpgradeWithPromo = code
+                        } else if response.isDirectPlanActivation {
+                            // Direct plan activation - show success and update session
+                            self.alertMessage = AccountSettingsAlertContent(
+                                title: TextsAsset.voucherCode,
+                                message: TextsAsset.Account.voucherCodeSuccessful,
+                                buttonText: TextsAsset.okay)
+                            self.loadSession()
+                        } else {
+                            // Unexpected case: claimed but no discount or plan
+                            self.alertMessage = AccountSettingsAlertContent(
+                                title: TextsAsset.voucherCode,
+                                message: TextsAsset.Account.voucherCodeSuccessful,
+                                buttonText: TextsAsset.okay)
+                        }
                     } else if response.emailRequired == true {
                         self.alertMessage = AccountSettingsAlertContent(
                             title: TextsAsset.voucherCode,
