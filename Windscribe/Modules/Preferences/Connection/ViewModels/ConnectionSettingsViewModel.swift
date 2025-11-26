@@ -229,10 +229,6 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
 
     private func updateConnectionMode(value: String) {
         preferences.saveConnectionMode(mode: value)
-        Task {
-            self.logger.logI("ConnectionSettingsViewModel", "updateConnectionMode for getNextProtocol")
-            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
-        }
     }
 
     private func updateProtocol(value: String) {
@@ -240,18 +236,10 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
         if let port = localDatabase.getPorts(protocolType: value) {
             preferences.saveSelectedPort(port: port[0])
         }
-        Task {
-            self.logger.logI("ConnectionSettingsViewModel", "updateProtocol for getNextProtocol")
-            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
-        }
     }
 
     private func updatePort(value: String) {
         preferences.saveSelectedPort(port: value)
-        Task {
-            self.logger.logI("ConnectionSettingsViewModel", "updatePort for getNextProtocol")
-            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
-        }
     }
 
     private func saveConnectedDNSValue(value: String) {
