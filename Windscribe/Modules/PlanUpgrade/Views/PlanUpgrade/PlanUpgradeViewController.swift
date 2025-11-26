@@ -314,8 +314,19 @@ class PlanUpgradeViewController: WSUIViewController {
 }
 
 struct PlanUpgradeViewControllerWrapper: UIViewControllerRepresentable {
+    var promoCode: String?
+    var pcpID: String?
+
+    init(promoCode: String? = nil, pcpID: String? = nil) {
+        self.promoCode = promoCode
+        self.pcpID = pcpID
+    }
+
     func makeUIViewController(context: Context) -> UIViewController {
-        let planUpgradeController = Assembler.resolve(PlanUpgradeViewController.self)
+        let planUpgradeController = Assembler.resolve(PlanUpgradeViewController.self).then {
+            $0.promoCode = promoCode
+            $0.pcpID = pcpID
+        }
 
         let navigationController = UINavigationController(rootViewController: planUpgradeController).then {
             $0.modalPresentationStyle = .fullScreen
