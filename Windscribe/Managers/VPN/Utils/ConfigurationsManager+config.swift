@@ -345,6 +345,7 @@ extension ConfigurationsManager {
             // Check if we have a forced node
             let forceNode = advanceRepository.getForcedNode()
             if let forceNode = forceNode, let node = nodes.first(where: { $0.hostname == forceNode }) {
+                logger.logI("ConfigurationsManager", "getNodeFrom returns node: \(node)")
                 return node
             }
 
@@ -354,9 +355,11 @@ extension ConfigurationsManager {
             }?.pinnedNodeIp
             if let pinnedNodeIp = pinnedNodeIp,
                let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
+                logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedNode)")
                 return pinnedNode
             }
 
+             logger.logI("ConfigurationsManager", "getNodeFrom found no pinned or forced node so trying random")
             return try getRandomNode(nodes: nodes)
         }
     }
@@ -385,6 +388,7 @@ extension ConfigurationsManager {
                 for node in validNodes {
                     weightCounter += node.weight
                     if randomNumber < weightCounter {
+                        logger.logI("ConfigurationsManager", "getRandomNode returns calculated node: \(node)")
                         return node
                     }
                 }
@@ -392,6 +396,7 @@ extension ConfigurationsManager {
             guard let randomNode = validNodes.randomElement() else {
                 throw VPNConfigurationErrors.noValidNodeFound
             }
+            logger.logI("ConfigurationsManager", "getRandomNode returns random node: \(randomNode)")
             return randomNode
         }
     }
