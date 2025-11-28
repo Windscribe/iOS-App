@@ -278,7 +278,8 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 sessionRepository: r.resolve(SessionRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
-                protocolManager: r.resolve(ProtocolManagerType.self)!
+                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                preferences: r.resolve(Preferences.self)!
             )
         }.inObjectScope(.transient)
 

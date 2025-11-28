@@ -56,6 +56,7 @@ class MainViewModelImpl: MainViewModel {
     let updateSSIDTrigger = PublishSubject<Void>()
     let showProtocolSwitchTrigger = PublishSubject<Void>()
     let showAllProtocolsFailedTrigger = PublishSubject<Void>()
+    let showNoInternetBeforeFailoverTrigger = PublishSubject<Void>()
 
     var oldSession: OldSession? { localDatabase.getOldSession() }
 
@@ -169,6 +170,12 @@ class MainViewModelImpl: MainViewModel {
         protocolManager.showAllProtocolsFailedTrigger
             .sink { [weak self] _ in
                 self?.showAllProtocolsFailedTrigger.onNext(())
+            }
+            .store(in: &cancellables)
+
+        protocolManager.showNoInternetBeforeFailoverTrigger
+            .sink { [weak self] _ in
+                self?.showNoInternetBeforeFailoverTrigger.onNext(())
             }
             .store(in: &cancellables)
 

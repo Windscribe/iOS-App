@@ -43,6 +43,10 @@ class ConfigurationsManager {
     var reloadManagersTrigger = CurrentValueSubject<Void, Never>(())
     var cancellables = Set<AnyCancellable>()
 
+    /// Tracks the node hostname that failed during current connection attempt
+    /// Used to prevent retrying the same failed node on second attempt
+    var failedNodeHostname: String?
+
     /// Wait for disconnect event after manager is disabled.
     let disconnectWaitTimeout = 5.0
 
@@ -299,5 +303,21 @@ class ConfigurationsManager {
             manager.connection.stopVPNTunnel()
         }
         try? await Task.sleep(nanoseconds: 2_000_000_000)
+    }
+
+    // MARK: - Failed Node Tracking
+
+    /// Saves the failed node hostname to exclude it from retry
+    func setFailedNode(hostname: String) {
+        failedNodeHostname = hostname
+        logger.logI("ConfigurationsManager", "Marked node as failed: \(hostname)")
+    }
+
+    /// Clears the failed node (called on success or disconnect)
+    func clearFailedNode() {
+        if let hostname = failedNodeHostname {
+            logger.logI("ConfigurationsManager", "Cleared failed node: \(hostname)")
+            failedNodeHostname = nil
+        }
     }
 }

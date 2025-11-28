@@ -600,3 +600,7 @@
 "Try again later or go to our Status page for more info." = "हाल ही में मुझे कई सूचनाओं के लिए स्टेटस पेज बनाना पड़ा।";
 "Could not pin IP" = "आईपी ​​पिन नहीं किया जा सका";
 "Check Location Status" = "स्थान स्थिति जांचें";
+
+"Manual connection mode failed" = "मैनुअल कनेक्शन मोड विफल हुआ";
+"We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "हम इस नेटवर्क पर आपको कनेक्ट नहीं कर सके। सर्वोत्तम परिणामों के लिए ऑटोमैटिक कनेक्शन मोड की सलाह दी जाती है। क्या आप मोड को ऑटो में बदलना चाहेंगे?";
+"Switch to Auto" = "ऑटो पर स्विच करें";

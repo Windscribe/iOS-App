@@ -1752,6 +1752,24 @@ enum TextsAsset {
         static var failHeaderString: String { return "This network hates us".localized }
     }
 
+    enum ManualModeFailedPopup {
+        static var title: String {
+            return "Manual connection mode failed".localized
+        }
+
+        static var message: String {
+            return "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?".localized
+        }
+
+        static var switchToAuto: String {
+            return "Switch to Auto".localized
+        }
+
+        static var cancel: String {
+            return "Cancel".localized
+        }
+    }
+
     static var back: String {
         return "Back".localized
     }

@@ -595,3 +595,7 @@
 "Try again later or go to our Status page for more info." = "Мы опоздали или перешли на новую страницу статуса с большей информацией.";
 "Could not pin IP" = "Не удалось закрепить IP";
 "Check Location Status" = "Проверить статус местоположения";
+
+"Manual connection mode failed" = "Режим ручного подключения не удался";
+"We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Не удалось подключиться к этой сети. Для лучшего результата рекомендуется автоматический режим. Переключить режим на Авто?";
+"Switch to Auto" = "Переключить на Авто";

@@ -577,3 +577,7 @@
 "Try again later or go to our Status page for more info." = "Spróbuj ponownie później lub przejdź do naszej strony Status, aby uzyskać więcej informacji.";
 "Could not pin IP" = "Nie można przypiąć adresu IP";
 "Check Location Status" = "Sprawdź stan lokalizacji";
+
+"Manual connection mode failed" = "Tryb ręcznego połączenia nie powiódł się";
+"We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Nie udało nam się połączyć w tej sieci. Zalecany jest tryb automatyczny dla najlepszych rezultatów. Przełączyć tryb połączenia na Auto?";
+"Switch to Auto" = "Przełącz na Auto";

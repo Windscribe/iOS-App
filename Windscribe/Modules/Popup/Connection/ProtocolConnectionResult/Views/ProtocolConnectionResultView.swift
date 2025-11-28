@@ -110,7 +110,8 @@ struct ProtocolConnectionResultView: View, ResponsivePopupLayoutProvider {
 
     /// Action buttons that change based on success vs failure scenario
     /// Success: Shows "Set as Preferred" button
-    /// Failure: Shows "Send Debug Log" button with loading state
+    /// Auto mode failure: Shows "Send Debug Log" button with loading state
+    /// Manual mode failure: Shows "Switch to Auto" button
     private func actionButtonsSection(maxWidth: CGFloat) -> some View {
         VStack(spacing: 8) {
             // Set as Preferred button (shown for successful connections)
@@ -118,9 +119,14 @@ struct ProtocolConnectionResultView: View, ResponsivePopupLayoutProvider {
                 setPreferredButton(maxWidth: maxWidth)
             }
 
-            // Send Debug Log button (shown for failed connections)
+            // Send Debug Log button (shown for Auto mode failures)
             if viewModel.showSendDebugLogButton {
                 sendDebugLogButton(maxWidth: maxWidth)
+            }
+
+            // Switch to Auto button (shown for Manual mode failures)
+            if viewModel.showSwitchToAutoButton {
+                switchToAutoButton(maxWidth: maxWidth)
             }
         }
     }
@@ -190,6 +196,22 @@ struct ProtocolConnectionResultView: View, ResponsivePopupLayoutProvider {
         case .sent:
             return Color.seaGreen
         }
+    }
+
+    /// "Switch to Auto" button for Manual mode failures
+    /// Allows users to switch from Manual to Automatic connection mode
+    private func switchToAutoButton(maxWidth: CGFloat) -> some View {
+        Button(action: viewModel.switchToAutoMode) {
+            Text(TextsAsset.ManualModeFailedPopup.switchToAuto)
+                .font(.bold(.callout))
+                .dynamicTypeSize(dynamicTypeRange)
+                .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.loginRegisterEnabledButtonColor)
+                .clipShape(Capsule())
+        }
+        .frame(maxWidth: maxWidth)
     }
 
     /// Bottom cancel button that resets failure counts and dismisses the dialog

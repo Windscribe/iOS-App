@@ -37,6 +37,7 @@ protocol MainViewModel {
     var updateSSIDTrigger: PublishSubject<Void> { get }
     var showProtocolSwitchTrigger: PublishSubject<Void> { get }
     var showAllProtocolsFailedTrigger: PublishSubject<Void> { get }
+    var showNoInternetBeforeFailoverTrigger: PublishSubject<Void> { get }
 
     var didShowBannedProfilePopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }

@@ -164,7 +164,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
             let connectionType: ConnectionType = .failover
             protocolSelectionTrigger.send((protocolItem.protocolPort, connectionType))
 
-        case .fail:
+        case .fail, .manualFail:
             // Failed protocols are not selectable - this shouldn't happen due to UI state
             logger.logI("ProtocolSwitchViewModel", "Attempted to select failed protocol")
         }
