@@ -87,6 +87,8 @@ class WifiInfoView: UIView {
     func updateWifiName(name: String) {
         nameLabel.text = name
         updateActionVivibility()
+        // Force layout recalculation to apply compression resistance priorities
+        setNeedsLayout()
     }
 
     private func bindViewModel() {
@@ -168,6 +170,9 @@ class WifiInfoView: UIView {
         nameLabel.isUserInteractionEnabled = true
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.minimumScaleFactor = 0.75
+        nameLabel.lineBreakMode = .byTruncatingTail
+        // Set low horizontal compression resistance so this label compresses before ipInfoView gets squeezed
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         nameLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
 
         trustedIcon = UIImageView()

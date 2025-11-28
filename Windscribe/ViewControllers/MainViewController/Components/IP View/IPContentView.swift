@@ -227,6 +227,8 @@ class IPInfoView: UIView {
         ipLabel.font = UIFont.medium(size: 16)
         ipLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.7)
         ipLabel.textAlignment = .right
+        // Set high horizontal compression resistance so this label maintains full width
+        ipLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         favoriteButton.setImage(UIImage(named: ImagesAsset.IPMenu.save)?.withRenderingMode(.alwaysTemplate)
                                 ,for: .normal)
