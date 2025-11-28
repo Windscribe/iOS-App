@@ -579,4 +579,9 @@
 "Could not rotate IP" = "IPをローテーションできませんでした";
 "Try again later or go to our Status page for more info." = "しばらくしてからもう一度お試しいただくか、ステータスページで詳細をご覧ください.";
 "Could not pin IP" = "IPを固定できませんでした";
+"Could not pin IP" = "IPを固定できませんでした";
 "Check Location Status" = "場所のステータスを確認する";
+
+"Manual connection mode failed" = "수동 연결 모드 실패";
+"We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "이 네트워크에서 연결할 수 없습니다. 최상의 결과를 위해 자동 연결 모드를 권장합니다. 자동 모드로 전환할까요?";
+"Switch to Auto" = "자동으로 전환";

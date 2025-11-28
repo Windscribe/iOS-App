@@ -576,3 +576,7 @@
 "Try again later or go to our Status page for more info." = "Coba lagi nanti atau buka halaman Status kami untuk info lebih lanjut.";
 "Could not pin IP" = "Tidak dapat menyematkan IP";
 "Check Location Status" = "Periksa Status Lokasi";
+
+"Manual connection mode failed" = "Mode koneksi manual gagal";
+"We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Kami tidak dapat menghubungkan Anda ke jaringan ini. Mode otomatis direkomendasikan untuk hasil terbaik. Beralih ke mode Otomatis?";
+"Switch to Auto" = "Beralih ke Otomatis";

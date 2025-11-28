@@ -588,3 +588,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Try again later or go to our Status page for more info." = "Hãy thử lại sau hoặc truy cập trang Trạng thái của chúng tôi để biết thêm thông tin.";
 "Could not pin IP" = "Không thể ghim IP";
 "Check Location Status" = "Kiểm tra trạng thái vị trí";
+
+"Manual connection mode failed" = "Chế độ kết nối thủ công không thành công";
+"We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Chúng tôi không thể kết nối bạn trên mạng này. Khuyến nghị dùng chế độ tự động để đạt kết quả tốt nhất. Chuyển sang chế độ Tự động?";
+"Switch to Auto" = "Chuyển sang Tự động";

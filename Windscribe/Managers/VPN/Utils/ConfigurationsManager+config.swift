@@ -372,7 +372,7 @@ extension ConfigurationsManager {
     /// - Throws:
     ///   - `VPNConfigurationErrors.noValidNodeFound` if there are no nodes available to select from.
     /// - Discussion:
-    ///   The selection filters nodes under maintenance and then uses weighted random selection.
+    ///   The selection filters nodes under maintenance, excludes previously failed nodes, and then uses weighted random selection.
     ///   This ensures that nodes with fewer connections or lowers weight are
     ///   chosen more frequently, balancing load across nodes. If no weighted selection is possible, it falls back
     ///   to a purely random selection. This function guarantees that a valid node is selected, if available.
@@ -380,8 +380,27 @@ extension ConfigurationsManager {
         if nodes.isEmpty {
             throw VPNConfigurationErrors.noValidNodeFound
         } else {
-            let validNodes = nodes.filter { $0.forceDisconnect == false }
-            var weightCounter = nodes.reduce(0) { $0 + $1.weight }
+            // Filter out nodes under maintenance
+            var validNodes = nodes.filter { $0.forceDisconnect == false }
+
+            // Filter out previously failed node to avoid retry on same host
+            if let failedHostname = failedNodeHostname {
+                let beforeCount = validNodes.count
+                validNodes = validNodes.filter { $0.hostname != failedHostname }
+                if validNodes.count < beforeCount {
+                    logger.logI("ConfigurationsManager", "Excluded failed node \(failedHostname) from selection")
+                }
+                // Clear immediately after filtering - only needed for this retry
+                clearFailedNode()
+            }
+
+            // If no valid nodes remain after filtering, throw error (handles single-node edge case)
+            guard !validNodes.isEmpty else {
+                logger.logE("ConfigurationsManager", "No valid nodes available after filtering failed nodes")
+                throw VPNConfigurationErrors.noValidNodeFound
+            }
+
+            var weightCounter = validNodes.reduce(0) { $0 + $1.weight }
             if weightCounter >= 1 {
                 let randomNumber = Int.random(in: 0 ..< Int(weightCounter))
                 weightCounter = 0

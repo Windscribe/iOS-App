@@ -43,11 +43,12 @@ enum ProtocolViewType: Equatable {
     case connected
     case normal
     case fail
+    case manualFail
     case nextUp(countdown: Int)
 
     var isSelectable: Bool {
         switch self {
-        case .fail: false
+        case .fail, .manualFail: false
         default: true
         }
     }

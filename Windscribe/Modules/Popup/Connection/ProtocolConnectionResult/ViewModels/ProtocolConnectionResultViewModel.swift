@@ -20,6 +20,7 @@ protocol ProtocolConnectionResultViewModel: ObservableObject {
 
     func setAsPreferred()
     func submitDebugLog()
+    func switchToAutoMode()
     func cancel()
 }
 
@@ -40,6 +41,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     private let sessionRepository: SessionRepository
     private let apiManager: APIManager
     private let protocolManager: ProtocolManagerType
+    private let preferences: Preferences
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -56,6 +58,8 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
             return TextsAsset.SetPreferredProtocolPopup.title(protocolType: protocolName)
         case .fail:
             return TextsAsset.SetPreferredProtocolPopup.failHeaderString
+        case .manualFail:
+            return TextsAsset.ManualModeFailedPopup.title
         case .nextUp:
             return ""
         }
@@ -68,6 +72,8 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
             return TextsAsset.SetPreferredProtocolPopup.changeMessage
         case .fail:
             return TextsAsset.SetPreferredProtocolPopup.failMessage
+        case .manualFail:
+            return TextsAsset.ManualModeFailedPopup.message
         case .nextUp:
             return ""
         }
@@ -75,12 +81,17 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
 
     /// Whether to show the "Set as Preferred" button
     var showSetPreferredButton: Bool {
-        return viewType != .fail
+        return viewType != .fail && viewType != .manualFail
     }
 
     /// Whether to show the "Send Debug Log" button
     var showSendDebugLogButton: Bool {
         return viewType == .fail
+    }
+
+    /// Whether to show the "Switch to Auto" button
+    var showSwitchToAutoButton: Bool {
+        return viewType == .manualFail
     }
 
     // MARK: - Initialization
@@ -92,7 +103,8 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         logger: FileLogger,
         sessionRepository: SessionRepository,
         apiManager: APIManager,
-        protocolManager: ProtocolManagerType
+        protocolManager: ProtocolManagerType,
+        preferences: Preferences
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.securedNetwork = securedNetwork
@@ -101,6 +113,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         self.sessionRepository = sessionRepository
         self.apiManager = apiManager
         self.protocolManager = protocolManager
+        self.preferences = preferences
 
         setupBindings()
     }
@@ -214,6 +227,25 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
                 }
             }
         }
+    }
+
+    /// Switches connection mode from Manual to Auto and dismisses
+    func switchToAutoMode() {
+        logger.logI("ProtocolConnectionResultViewModel", "Switching from Manual to Auto mode")
+
+        // Save Auto mode to preferences
+        preferences.saveConnectionMode(mode: Fields.Values.auto)
+
+        // Refresh protocols to use Auto mode failover order
+        Task {
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+        }
+
+        // Reset automatic mode failure counts for fresh start
+        AutomaticMode.shared.resetFailCounts()
+
+        // Dismiss dialog
+        shouldDismiss = true
     }
 
     /// Handles cancel action - resets failure counts and dismisses

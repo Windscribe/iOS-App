@@ -19,6 +19,7 @@ protocol ProtocolManagerType {
     var connectionProtocolSubject: CurrentValueSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?, Never> { get }
     var showProtocolSwitchTrigger: PassthroughSubject<Void, Never> { get }
     var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
+    var showNoInternetBeforeFailoverTrigger: PassthroughSubject<Void, Never> { get }
 
     var displayProtocolsSubject: CurrentValueSubject<[DisplayProtocolPort], Never> { get }
 
@@ -81,6 +82,7 @@ class ProtocolManager: ProtocolManagerType {
     let displayProtocolsSubject = CurrentValueSubject<[DisplayProtocolPort], Never>([])
     let showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
     let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
+    let showNoInternetBeforeFailoverTrigger = PassthroughSubject<Void, Never>()
 
     let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
@@ -353,7 +355,15 @@ class ProtocolManager: ProtocolManagerType {
         } else {
             logger.logI("ProtocolManager", "RefreshProtocols for onProtocolFail")
             await refreshProtocols(shouldReset: false, shouldReconnect: false, isFromFailover: true)
-            startCountdownTimer()
+
+            // Check internet connectivity before starting failover countdown
+            if !connectivity.internetConnectionAvailable() {
+                logger.logI("ProtocolManager", "No internet connection detected - showing no internet alert instead of protocol failover")
+                showNoInternetBeforeFailoverTrigger.send(())
+            } else {
+                logger.logI("ProtocolManager", "Internet connection available - proceeding with protocol failover")
+                startCountdownTimer()
+            }
         }
         currentProtocolSubject.send(getFirstProtocol())
     }

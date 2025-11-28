@@ -576,3 +576,7 @@
 "Try again later or go to our Status page for more info." = "请稍后重试或转到我们的状态页面以获取更多信息.";
 "Could not pin IP" = "无法固定 IP";
 "Check Location Status" = "检查位置状态";
+
+"Manual connection mode failed" = "手动连接模式失败";
+"We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "我们无法在此网络上为您连接。为了获得最佳效果，建议使用自动连接模式。是否切换到自动模式？";
+"Switch to Auto" = "切换到自动";
