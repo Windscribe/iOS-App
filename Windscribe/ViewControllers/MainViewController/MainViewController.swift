@@ -232,7 +232,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             guard let displayingGroup = (try? self.viewModel.serverList.value())?
                 .flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
-            if let isUserPro = try? viewModel.session.value()?.isPremium,
+            if let isUserPro = try? viewModel.sessionModel.value()?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
                isGroupProOnly,
                !isUserPro {

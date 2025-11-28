@@ -14,17 +14,17 @@ protocol ReferAndShareManager {
 }
 
 class ReferAndShareManagerImpl: ReferAndShareManager {
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let preference: Preferences
     private let vpnManager: VPNManager
 	private let logger: FileLogger
 
     init(preferences: Preferences,
-         sessionRepository: SessionRepository,
+         userSessionRepository: UserSessionRepository,
          vpnManager: VPNManager,
          logger: FileLogger) {
         preference = preferences
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.vpnManager = vpnManager
         self.logger = logger
     }
@@ -38,27 +38,25 @@ class ReferAndShareManagerImpl: ReferAndShareManager {
             return false
         }
 
-        return await MainActor.run {
-            guard let session = sessionRepository.session else {
-                return false
-            }
-            let regDate = session.regDate
-
-            let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
-            let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
-
-            if !session.isUserPro && !session.isUserGhost && daysRegisteredSince > 30 {
-                self.setShowedShareDialog()
-
-                Task {
-                    try? await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds
-                }
-
-                return true
-            }
-
+        guard let session = userSessionRepository.sessionModel else {
             return false
         }
+        let regDate = session.regDate
+
+        let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
+        let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
+
+        if !session.isUserPro && !session.isUserGhost && daysRegisteredSince > 30 {
+            self.setShowedShareDialog()
+
+            Task {
+                try? await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds
+            }
+
+            return true
+        }
+
+        return false
     }
 
     func setShowedShareDialog(showed: Bool = true) {

@@ -27,6 +27,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let emergencyConnectStatus =  BehaviorSubject<Bool>(value: false)
 
     let userSessionRepository: UserSessionRepository
+    let sessionManager: SessionManager
     let keyChainDatabase: KeyChainDatabase
     let userDataRepository: UserDataRepository
     let apiManager: APIManager
@@ -37,6 +38,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     init(userSessionRepository: UserSessionRepository,
+         sessionManager: SessionManager,
          keyChainDatabase: KeyChainDatabase,
          userDataRepository: UserDataRepository,
          apiManager: APIManager,
@@ -44,6 +46,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
          vpnStateRepository: VPNStateRepository,
          logger: FileLogger) {
         self.userSessionRepository = userSessionRepository
+        self.sessionManager = sessionManager
         self.keyChainDatabase = keyChainDatabase
         self.userDataRepository = userDataRepository
         self.apiManager = apiManager
@@ -68,7 +71,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 let result = try await self.apiManager.regToken()
                 let session = try await self.apiManager.signUpUsingToken(token: result.token)
 
-                await self.userSessionRepository.login(session: session)
+                self.sessionManager.updateFrom(session: session)
                 await MainActor.run {
                     self.keyChainDatabase.setGhostAccountCreated()
                     self.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(session.userId)")
@@ -95,6 +98,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
             self?.routeToMainView.onNext(true)
         }, onFailure: { [weak self] error in
             self?.preferences.saveUserSessionAuth(sessionAuth: nil)
+            self?.userSessionRepository.clearSession()
             self?.logger.logE("WelcomeViewModelImpl", "Failed to prepare user data: \(error)")
             self?.showLoadingView.onNext(false)
             switch error {

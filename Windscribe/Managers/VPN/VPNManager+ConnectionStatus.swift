@@ -101,7 +101,7 @@ extension VPNManagerImpl {
                     self.logger.logI("VPNManager", "Getting new session.")
 
                     do {
-                       try await self.sessionManager.checkSession()
+                       try await self.sessionManager.updateSession()
                     } catch let error {
                         self.logger.logE("VPNManager", "Failure to update session after disabling VPN profile. Error: \(error)")
                     }
@@ -116,7 +116,7 @@ extension VPNManagerImpl {
 
     private func checkIfUserIsOutOfData() {
         DispatchQueue.main.async {
-            guard let session = self.sessionRepository.session else { return }
+            guard let session = self.userSessionRepository.sessionModel else { return }
             if session.status == 2, !self.locationsManager.isCustomConfigSelected() {
                 self.simpleDisableConnection()
             }

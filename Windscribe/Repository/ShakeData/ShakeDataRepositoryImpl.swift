@@ -13,12 +13,12 @@ class ShakeDataRepositoryImpl: ShakeDataRepository {
     var currentScore: Int = 0
 
     private let apiManager: APIManager
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
 
     init(apiManager: APIManager,
-         sessionRepository: SessionRepository) {
+         userSessionRepository: UserSessionRepository) {
         self.apiManager = apiManager
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
     }
 
     func getLeaderboardScores() -> AnyPublisher<[ShakeForDataScore], Error> {
@@ -36,7 +36,7 @@ class ShakeDataRepositoryImpl: ShakeDataRepository {
     }
 
     func recordShakeForDataScore(score: Int) -> AnyPublisher<String, Error> {
-        guard let userID = sessionRepository.session?.userId else {
+        guard let userID = userSessionRepository.sessionModel?.userId else {
             return Fail(error: Errors.sessionIsInvalid)
                 .eraseToAnyPublisher()
         }

@@ -19,13 +19,14 @@ protocol ConfirmEmailViewModel {
 
 final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
-    @Published var session: Session?
+    @Published var session: SessionModel?
     @Published var resendButtonDisabled: Bool = false
     @Published var resendEmailSuccess: Bool = false
     @Published var shouldDismiss: Bool = false
     @Published var isDarkMode: Bool = false
 
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
+    private let sessionManager: SessionManager
     private let localDatabase: LocalDatabase
     private let apiManager: APIManager
     private let logger: FileLogger
@@ -33,12 +34,14 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionRepository: SessionRepository,
+    init(userSessionRepository: UserSessionRepository,
+         sessionManager: SessionManager,
          localDatabase: LocalDatabase,
          apiManager: APIManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
+        self.sessionManager = sessionManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
         self.logger = logger
@@ -68,20 +71,18 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
     }
 
     func getSession() {
-        localDatabase.getSession()
-            .toPublisher()
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] session in
+        userSessionRepository.sessionModelSubject
+            .sink { [weak self] session in
                 self?.session = session
                 if session?.emailStatus == true {
                     self?.shouldDismiss = true
                 }
-            })
+            }
             .store(in: &cancellables)
     }
 
     func updateSession() {
-        sessionRepository.keepSessionUpdated()
+        sessionManager.keepSessionUpdated()
     }
 
     func resendEmail() {

@@ -50,7 +50,7 @@ class MockLocalDatabase: LocalDatabase {
         return try? sessionSubject.value()
     }
 
-    func saveSession(session: Windscribe.Session) async {
+    func saveSession(session: Windscribe.Session) {
         // Trigger the subject to simulate Realm notification
         sessionSubject.onNext(session)
     }

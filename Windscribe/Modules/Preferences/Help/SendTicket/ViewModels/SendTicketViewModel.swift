@@ -48,7 +48,7 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
 
     // Dependencies
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
 
     // Cancellables
@@ -62,11 +62,11 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
     init(
         apiManager: APIManager,
         lookAndFeelRepository: LookAndFeelRepositoryType,
-        sessionRepository: SessionRepository
+        userSessionRepository: UserSessionRepository
     ) {
         self.apiManager = apiManager
         self.lookAndFeelRepository = lookAndFeelRepository
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
 
         bind()
     }
@@ -79,7 +79,7 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
             }
             .store(in: &cancellables)
 
-        if let userEmail = sessionRepository.email {
+        if let userEmail = userSessionRepository.sessionModel?.email {
             self.email = userEmail
         }
     }
@@ -93,7 +93,7 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
 
         let device = UIDevice.current
         let platform = "Brand: Apple | OS: \(device.systemVersion) | Model: \(UIDevice.modelName)"
-        let name = sessionRepository.userId
+        let name = userSessionRepository.sessionModel?.userId ?? ""
 
         Task { [weak self] in
             guard let self = self else { return }

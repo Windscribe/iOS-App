@@ -70,8 +70,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
         generalView.updateSelection()
         connnectionsView.updateSelection()
         logView.scrolltoBottom()
-
-        accountViewModel.loadSession().subscribe(onFailure: { _ in }).disposed(by: disposeBag)
+        accountViewModel.loadSession()
     }
 
     override func didUpdateFocus(in _: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {}

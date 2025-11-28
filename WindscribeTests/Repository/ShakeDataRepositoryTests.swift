@@ -17,7 +17,7 @@ class ShakeDataRepositoryTests: XCTestCase {
     var mockContainer: Container!
     var repository: ShakeDataRepository!
     var mockAPIManager: MockAPIManager!
-    var mockSessionRepository: MockSessionRepository!
+    var mockUserSessionRepository: MockUserSessionRepository!
     private var cancellables = Set<AnyCancellable>()
 
     // Test constants
@@ -29,22 +29,22 @@ class ShakeDataRepositoryTests: XCTestCase {
         super.setUp()
         mockContainer = Container()
         mockAPIManager = MockAPIManager()
-        mockSessionRepository = MockSessionRepository()
+        mockUserSessionRepository = MockUserSessionRepository()
 
         // Register mocks
         mockContainer.register(APIManager.self) { _ in
             return self.mockAPIManager
         }.inObjectScope(.container)
 
-        mockContainer.register(SessionRepository.self) { _ in
-            return self.mockSessionRepository
+        mockContainer.register(UserSessionRepository.self) { _ in
+            return self.mockUserSessionRepository
         }.inObjectScope(.container)
 
         // Register ShakeDataRepository
         mockContainer.register(ShakeDataRepository.self) { r in
             return ShakeDataRepositoryImpl(
                 apiManager: r.resolve(APIManager.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!
+                userSessionRepository: r.resolve(UserSessionRepository.self)!
             )
         }.inObjectScope(.container)
 
@@ -54,11 +54,11 @@ class ShakeDataRepositoryTests: XCTestCase {
     override func tearDown() {
         cancellables.removeAll()
         mockAPIManager.reset()
-        mockSessionRepository.reset()
+        mockUserSessionRepository.reset()
         mockContainer = nil
         repository = nil
         mockAPIManager = nil
-        mockSessionRepository = nil
+        mockUserSessionRepository = nil
         super.tearDown()
     }
 
@@ -139,7 +139,7 @@ class ShakeDataRepositoryTests: XCTestCase {
 
     func test_recordShakeForDataScore_success_shouldReturnMessage() {
         // Set up valid session
-        mockSessionRepository.setMockSession(userId: testUserId, username: testUsername)
+        mockUserSessionRepository.setMockSession(userId: testUserId, username: testUsername)
 
         let expectation = self.expectation(description: "Record score success")
 
@@ -162,7 +162,7 @@ class ShakeDataRepositoryTests: XCTestCase {
 
     func test_recordShakeForDataScore_invalidSession_shouldReturnError() {
         // No session set (session is nil)
-        mockSessionRepository.session = nil
+        mockUserSessionRepository.clearSession()
 
         let expectation = self.expectation(description: "Record score invalid session")
 
@@ -186,7 +186,7 @@ class ShakeDataRepositoryTests: XCTestCase {
 
     func test_recordShakeForDataScore_apiFailure_shouldReturnError() {
         // Set up valid session
-        mockSessionRepository.setMockSession(userId: testUserId, username: testUsername)
+        mockUserSessionRepository.setMockSession(userId: testUserId, username: testUsername)
 
         // Configure API to fail
         mockAPIManager.shouldThrowError = true
@@ -210,7 +210,7 @@ class ShakeDataRepositoryTests: XCTestCase {
     }
 
     func test_recordShakeForDataScore_zeroScore_shouldRecordSuccessfully() {
-        mockSessionRepository.setMockSession(userId: testUserId, username: testUsername)
+        mockUserSessionRepository.setMockSession(userId: testUserId, username: testUsername)
 
         let expectation = self.expectation(description: "Record zero score")
 
@@ -231,7 +231,7 @@ class ShakeDataRepositoryTests: XCTestCase {
     }
 
     func test_recordShakeForDataScore_highScore_shouldRecordSuccessfully() {
-        mockSessionRepository.setMockSession(userId: testUserId, username: testUsername)
+        mockUserSessionRepository.setMockSession(userId: testUserId, username: testUsername)
 
         let highScore = 9999
 
@@ -254,7 +254,7 @@ class ShakeDataRepositoryTests: XCTestCase {
     }
 
     func test_recordShakeForDataScore_customAPIMessage_shouldReturnCustomMessage() {
-        mockSessionRepository.setMockSession(userId: testUserId, username: testUsername)
+        mockUserSessionRepository.setMockSession(userId: testUserId, username: testUsername)
 
         // Set custom API message
         let jsonData = SampleDataLeaderboard.apiMessageCustomJSON.data(using: .utf8)!
@@ -321,7 +321,7 @@ class ShakeDataRepositoryTests: XCTestCase {
 
     func test_fullGameFlow_shouldWorkCorrectly() {
         // Simulate full game flow: update score, then record it
-        mockSessionRepository.setMockSession(userId: testUserId, username: testUsername)
+        mockUserSessionRepository.setMockSession(userId: testUserId, username: testUsername)
 
         // Step 1: Update current score (like during game)
         repository.updateCurrentScore(testScore)
@@ -346,7 +346,7 @@ class ShakeDataRepositoryTests: XCTestCase {
     }
 
     func test_concurrentAPIRequests_shouldHandleGracefully() {
-        mockSessionRepository.setMockSession(userId: testUserId, username: testUsername)
+        mockUserSessionRepository.setMockSession(userId: testUserId, username: testUsername)
 
         let expectation1 = self.expectation(description: "Get leaderboard")
         let expectation2 = self.expectation(description: "Record score")

@@ -20,7 +20,7 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
     @Published var isDarkMode: Bool = false
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let referFriendManager: ReferAndShareManager
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
@@ -28,18 +28,18 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
     var appStoreLink = Links.appStoreLink
 
     var inviteMessage: String {
-        let username = sessionRepository.session?.username ?? TextsAsset.Refer.usernamePlaceholder
+        let username = userSessionRepository.sessionModel?.username ?? TextsAsset.Refer.usernamePlaceholder
         return "\(username) \(TextsAsset.Refer.inviteMessage)"
     }
 
     init(
         lookAndFeelRepository: LookAndFeelRepositoryType,
-        sessionRepository: SessionRepository,
+        userSessionRepository: UserSessionRepository,
         referFriendManager: ReferAndShareManager,
         logger: FileLogger
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.referFriendManager = referFriendManager
         self.logger = logger
 

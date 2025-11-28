@@ -29,6 +29,7 @@ class ConfigurationsManager {
     let preferences: Preferences
     let locationsManager: LocationsManager
     let ipRepository: IPRepository
+    let userSessionRepository: UserSessionRepository
     let serverRepository: ServerRepository
     let bridgeAPI: WSNetBridgeAPI
     let bridgeApiRepository: BridgeApiRepository
@@ -76,6 +77,7 @@ class ConfigurationsManager {
          preferences: Preferences,
          locationsManager: LocationsManager,
          ipRepository: IPRepository,
+         userSessionRepository: UserSessionRepository,
          serverRepository: ServerRepository,
          bridgeAPI: WSNetBridgeAPI,
          bridgeApiRepository: BridgeApiRepository) {
@@ -89,6 +91,7 @@ class ConfigurationsManager {
         self.preferences = preferences
         self.locationsManager = locationsManager
         self.ipRepository = ipRepository
+        self.userSessionRepository = userSessionRepository
         self.serverRepository = serverRepository
         self.bridgeAPI = bridgeAPI
         self.bridgeApiRepository = bridgeApiRepository

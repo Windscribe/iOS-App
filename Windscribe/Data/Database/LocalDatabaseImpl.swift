@@ -24,8 +24,7 @@ class LocalDatabaseImpl: LocalDatabase {
         self.preferences = preferences
     }
 
-    // MARK: After Modelization of Database
-
+    // MARK: - After Modelization of Database
     func getServers() -> [Server]? {
         return getRealmObjects(type: Server.self)
     }
@@ -34,12 +33,9 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObjects(objects: servers)
     }
 
-    // MARK: Before Modelization of Database
-
-    @MainActor
-    func saveSession(session: Session) async {
+    func saveSession(session: Session) {
         do {
-            let realm = try await Realm()
+            let realm = try Realm()
             try realm.safeWrite {
                 realm.add(session, update: .modified)
             }
@@ -55,6 +51,8 @@ class LocalDatabaseImpl: LocalDatabase {
     func getSessionSync() -> Session? {
         return getRealmObject(type: Session.self)
     }
+
+    // MARK: - Before Modelization of Database
 
     func getMobilePlans() -> [MobilePlan]? {
         return getRealmObjects(type: MobilePlan.self)

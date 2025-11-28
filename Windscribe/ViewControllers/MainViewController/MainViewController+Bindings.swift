@@ -118,7 +118,7 @@ extension MainViewController {
         viewModel.isDarkMode.receive(on: DispatchQueue.main).sink { [weak self] in
             self?.updateLayoutForTheme(isDarkMode: $0)
         }.store(in: &cancellables)
-        viewModel.session.subscribe(onNext: { [weak self] in
+        viewModel.sessionModel.subscribe(onNext: { [weak self] in
             self?.updateUIForSession(session: $0)
         }).disposed(by: disposeBag)
 

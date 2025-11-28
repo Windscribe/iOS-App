@@ -38,14 +38,14 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     var isScreenTestEnabled: Bool = false
 
     private let sessionManager: SessionManager
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let alertManager: AlertManagerV2
     private let languageManager: LanguageManager
     private let preferences: Preferences
 
     init(
         sessionManager: SessionManager,
-        sessionRepository: SessionRepository,
+        userSessionRepository: UserSessionRepository,
         alertManager: AlertManagerV2,
         logger: FileLogger,
         lookAndFeelRepository: LookAndFeelRepositoryType,
@@ -54,7 +54,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
         hapticFeedbackManager: HapticFeedbackManager
     ) {
         self.sessionManager = sessionManager
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.alertManager = alertManager
         self.languageManager = languageManager
         self.preferences = preferences
@@ -82,7 +82,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     func updateActionDisplay() {
-        guard let session = sessionRepository.session else {
+        guard let session = userSessionRepository.sessionModel else {
             actionDisplay = .hideAll
             return
         }
@@ -103,7 +103,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     func getDynamicRouteForAccountRow() -> PreferencesRouteID {
-        let session = sessionRepository.session
+        let session = userSessionRepository.sessionModel
         if session?.isUserGhost == true {
             if session?.isUserPro == true && session?.hasUserAddedEmail == false {
                 return .signupGhost
@@ -116,7 +116,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     override func reloadItems() {
-        let isGhost = sessionRepository.session?.isUserGhost ?? false
+        let isGhost = userSessionRepository.sessionModel?.isUserGhost ?? false
         let count = isGhost ? 9 : 10
         visibleItems = (0..<count).compactMap {
             let item = PreferenceItemType(rawValue: $0)!
@@ -126,8 +126,8 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     func shouldHideRow(index: Int) -> Bool {
-        let isGhost = sessionRepository.session?.isUserGhost ?? false
-        let isPro = sessionRepository.isUserPro
+        let isGhost = userSessionRepository.sessionModel?.isUserGhost ?? false
+        let isPro = userSessionRepository.sessionModel?.isUserPro ?? false
         return index == 4 && (isGhost || isPro)
     }
 

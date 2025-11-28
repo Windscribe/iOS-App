@@ -38,7 +38,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let isDarkMode: CurrentValueSubject<Bool, Never>
     var currentLanguage: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
-    let sessionRepository: SessionRepository
+    let userSessionRepository: UserSessionRepository
     let sessionManager: SessionManager
     let logger: FileLogger
     let disposeBag = DisposeBag()
@@ -48,7 +48,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let languageManager: LanguageManager
 
-    init(sessionRepository: SessionRepository,
+    init(userSessionRepository: UserSessionRepository,
          sessionManager: SessionManager,
          logger: FileLogger,
          alertManager: AlertManagerV2,
@@ -56,7 +56,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
          preferences: Preferences,
          languageManager: LanguageManager) {
         self.logger = logger
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.sessionManager = sessionManager
         self.alertManager = alertManager
         self.lookAndFeelRepository = lookAndFeelRepository
@@ -73,27 +73,27 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     func getActionButtonDisplay() {
-        if sessionRepository.isUserPro == true &&
-            sessionRepository.session?.hasUserAddedEmail == false &&
-            sessionRepository.session?.isUserGhost == false {
+        if userSessionRepository.sessionModel?.isUserPro == true &&
+            userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
+            userSessionRepository.sessionModel?.isUserGhost == false {
             actionDisplay.onNext(.email)
             return
-        } else if sessionRepository.isUserPro == false &&
-                    sessionRepository.session?.hasUserAddedEmail == false &&
-                    sessionRepository.session?.isUserGhost == false {
+        } else if userSessionRepository.sessionModel?.isUserPro == false &&
+                    userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
+                    userSessionRepository.sessionModel?.isUserGhost == false {
             actionDisplay.onNext(.emailGet10GB)
             return
-        } else if sessionRepository.isUserPro == false &&
-                    sessionRepository.session?.hasUserAddedEmail == false &&
-                    sessionRepository.session?.isUserGhost == true {
+        } else if userSessionRepository.sessionModel?.isUserPro == false &&
+                    userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
+                    userSessionRepository.sessionModel?.isUserGhost == true {
             actionDisplay.onNext(.setupAccountAndLogin)
             return
-        } else if sessionRepository.isUserPro == true &&
-                    sessionRepository.session?.hasUserAddedEmail == false &&
-                    sessionRepository.session?.isUserGhost == true {
+        } else if userSessionRepository.sessionModel?.isUserPro == true &&
+                    userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
+                    userSessionRepository.sessionModel?.isUserGhost == true {
             actionDisplay.onNext(.setupAccount)
             return
-        } else if sessionRepository.session?.userNeedsToConfirmEmail == true {
+        } else if userSessionRepository.sessionModel?.userNeedsToConfirmEmail == true {
             actionDisplay.onNext(.confirmEmail)
             return
         } else {
@@ -107,15 +107,15 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     func isUserGhost() -> Bool {
-        return sessionRepository.session?.isUserGhost ?? false
+        return userSessionRepository.sessionModel?.isUserGhost ?? false
     }
 
     func isUserPro() -> Bool {
-        return sessionRepository.isUserPro
+        return userSessionRepository.sessionModel?.isUserPro ?? false
     }
 
     func getDataLeft() -> String {
-        return sessionRepository.session?.getDataLeft() ?? "0 GB"
+        return userSessionRepository.sessionModel?.getDataLeft() ?? "0 GB"
     }
 
     func getPreferenceItem(for row: Int) -> PreferenceItemType? {

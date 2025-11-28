@@ -93,8 +93,8 @@ class ServerRepositoryTests: XCTestCase {
     // MARK: - Test Cases
     func testGetUpdatedServersSuccess() async throws {
         // Given
-        let mockUser = createMockUser()
-        mockUserSessionRepository.user = mockUser
+        let sessionModel = createMockSessionModel()
+        mockUserSessionRepository.sessionModel = sessionModel
 
         guard let mockServerList = createMockServerList() else {
             XCTFail("ServerList was nil, should be something")
@@ -119,7 +119,7 @@ class ServerRepositoryTests: XCTestCase {
 
     func testGetUpdatedServersWithoutUser() async {
         // Given
-        mockUserSessionRepository.user = nil
+        mockUserSessionRepository.clearSession()
 
         // When/Then
         do {
@@ -132,8 +132,8 @@ class ServerRepositoryTests: XCTestCase {
 
     func testGetUpdatedServersAPIErrorFallbackToLocal() async throws {
         // Given
-        let mockUser = createMockUser()
-        mockUserSessionRepository.user = mockUser
+        let sessionModel = createMockSessionModel()
+        mockUserSessionRepository.sessionModel = sessionModel
 
         // API will fail
         mockAPIManager.shouldThrowError = true
@@ -159,8 +159,8 @@ class ServerRepositoryTests: XCTestCase {
 
     func testGetUpdatedServersAPIErrorNoLocalData() async {
         // Given
-        let mockUser = createMockUser()
-        mockUserSessionRepository.user = mockUser
+        let sessionModel = createMockSessionModel()
+        mockUserSessionRepository.sessionModel = sessionModel
 
         // API will fail and no local data
         mockAPIManager.shouldThrowError = true
@@ -178,8 +178,8 @@ class ServerRepositoryTests: XCTestCase {
 
     func testserverListSubject() async throws {
         // Given
-        let mockUser = createMockUser()
-        mockUserSessionRepository.user = mockUser
+        let sessionModel = createMockSessionModel()
+        mockUserSessionRepository.sessionModel = sessionModel
 
         guard let mockServerList = createMockServerList() else {
             XCTFail("ServerList was nil, should be something")
@@ -253,12 +253,12 @@ class ServerRepositoryTests: XCTestCase {
 // MARK: - Helper Methods
 extension ServerRepositoryTests {
 
-    private func createMockUser() -> User {
+    private func createMockSessionModel() -> SessionModel {
         let session = Session()
         session.userId = "test-user-id"
         session.username = "testuser"
         session.sessionAuthHash = "test-auth-hash"
-        return User(session: session)
+        return SessionModel(session: session)
     }
 
     private func createMockServerList() -> ServerList? {

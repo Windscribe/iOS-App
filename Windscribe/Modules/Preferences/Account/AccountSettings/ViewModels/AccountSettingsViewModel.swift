@@ -30,7 +30,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     // Dependencies
     private let preferences: Preferences
     private let sessionManager: SessionManager
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
@@ -38,7 +38,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     private let disposeBag = DisposeBag()
 
     var shouldShowAddEmailButton: Bool {
-        guard let session = localDatabase.getSessionSync() else {
+        guard let session = userSessionRepository.sessionModel else {
             return false
         }
         return session.email.isEmpty == true
@@ -51,7 +51,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
          sessionManager: SessionManager,
-         sessionRepository: SessionRepository,
+         userSessionRepository: UserSessionRepository,
          apiManager: APIManager,
          localDatabase: LocalDatabase,
          languageManager: LanguageManager,
@@ -59,7 +59,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
          hapticFeedbackManager: HapticFeedbackManager) {
         self.preferences = preferences
         self.sessionManager = sessionManager
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.languageManager = languageManager
@@ -72,12 +72,13 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     override func bindSubjects() {
         super.bindSubjects()
 
-        NotificationCenter.default.publisher(for: Notifications.sessionUpdated)
+        userSessionRepository.sessionModelSubject
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self = self, let updatedSession = self.sessionRepository.session else { return }
+            .sink { [weak self] sessionModel in
+                guard let self = self, let updatedSession = sessionModel else { return }
                 self.buildSections(from: updatedSession)
                 self.accountEmailStatus = self.calculateEmailStatus(from: updatedSession)
+                self.loadingState = .success
             }
             .store(in: &cancellables)
     }
@@ -88,7 +89,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         loadingState = .loading(isFullScreen: true)
 
         // Set initial state for session from the local database
-        if let session = localDatabase.getSessionSync() {
+        if let session = userSessionRepository.sessionModel {
             self.accountEmailStatus = self.calculateEmailStatus(from: session)
             self.buildSections(from: session)
         }
@@ -96,16 +97,10 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         Task { @MainActor [weak self] in
             guard let self = self else { return }
             do {
-                let session = try await apiManager.getSession(nil)
-                await MainActor.run {
-                    self.accountEmailStatus = self.calculateEmailStatus(from: session)
-                    self.buildSections(from: session)
-                    self.loadingState = .success
-                }
-                await self.localDatabase.saveSession(session: session)
+                try await self.sessionManager.updateSession()
             } catch {
                 await MainActor.run {
-                    guard let session = self.localDatabase.getSessionSync() else {
+                    guard let session = self.userSessionRepository.sessionModel else {
                         self.loadingState = .error(error.localizedDescription)
                         self.logger.logE("AccountViewModel", "Failed to load session: \(error)")
                         return
@@ -118,7 +113,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         }
     }
 
-    private func buildSections(from session: Session) {
+    private func buildSections(from session: SessionModel) {
         var infoRows: [AccountRowModel] = [
             .init(
                 type: .textRow(
@@ -339,7 +334,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         }
     }
 
-    private func getUserTypeDisplayText(from session: Session) -> String {
+    private func getUserTypeDisplayText(from session: SessionModel) -> String {
         if session.isUserPro {
             return session.isUserUnlimited ? TextsAsset.unlimited : TextsAsset.pro
         } else {
@@ -347,7 +342,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         }
     }
 
-    private func calculateEmailStatus(from session: Session) -> AccountEmailStatusType {
+    private func calculateEmailStatus(from session: SessionModel) -> AccountEmailStatusType {
         if session.email.isEmpty {
             return .missing
         } else if !session.emailStatus {

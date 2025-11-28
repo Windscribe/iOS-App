@@ -37,7 +37,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     private let securedNetwork: SecuredNetworkRepository
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
     private let protocolManager: ProtocolManagerType
 
@@ -90,7 +90,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         securedNetwork: SecuredNetworkRepository,
         localDatabase: LocalDatabase,
         logger: FileLogger,
-        sessionRepository: SessionRepository,
+        userSessionRepository: UserSessionRepository,
         apiManager: APIManager,
         protocolManager: ProtocolManagerType
     ) {
@@ -98,7 +98,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
         self.logger = logger
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.protocolManager = protocolManager
 
@@ -178,8 +178,9 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
 
                 // Get username, handling ghost accounts
                 let username = await MainActor.run {
-                    var username = sessionRepository.session?.username ?? ""
-                    if let session = sessionRepository.session, session.isUserGhost {
+                    var username = userSessionRepository.sessionModel?.username ?? ""
+                    if let session = userSessionRepository.sessionModel,
+                       session.isUserGhost {
                         username = "ghost_\(session.userId)"
                     }
                     return username

@@ -43,7 +43,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                 if ready {
                     preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
                 }
-                guard let user = self.userSessionRepository.user else {
+                guard let sessionModel = self.userSessionRepository.sessionModel else {
                     self.bridgeIsAvailable.send(false)
                     return
                 }
@@ -53,8 +53,8 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                     return
                 }
 
-                let hasAlc = user.alcList.first { $0 == locationInfo.countryCode } != nil
-                self.bridgeIsAvailable.send(ready && (user.isPro || hasAlc))
+                let hasAlc = sessionModel.alc.contains(locationInfo.countryCode)
+                self.bridgeIsAvailable.send(ready && (sessionModel.isUserPro || hasAlc))
             }
         }
     }

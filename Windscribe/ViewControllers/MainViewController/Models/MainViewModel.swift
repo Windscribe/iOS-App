@@ -18,7 +18,7 @@ protocol MainViewModel {
     var favouriteList: BehaviorSubject<[FavouriteGroupModel]?> { get }
     var staticIPs: BehaviorSubject<[StaticIP]?> { get }
     var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
-    var oldSession: OldSession? { get }
+    var oldSession: SessionModel? { get }
     var locationOrderBy: BehaviorSubject<String> { get }
     var latencies: BehaviorSubject<[PingData]> { get }
     var notices: CurrentValueSubject<[Notice], Never> { get }
@@ -28,7 +28,7 @@ protocol MainViewModel {
     var connectionMode: BehaviorSubject<String> { get }
     var appNetwork: BehaviorSubject<AppNetwork> { get }
     var wifiNetwork: BehaviorSubject<WifiNetwork?> { get }
-    var session: BehaviorSubject<Session?> { get }
+    var sessionModel: BehaviorSubject<SessionModel?> { get }
     var favouriteGroups: BehaviorSubject<[GroupModel]> { get }
 
     var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }

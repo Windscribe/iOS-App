@@ -31,13 +31,12 @@ protocol AccountViewModelType {
     func celldata(at indexPath: IndexPath) -> AccountItemCell
     func resendConfirmEmail(success: (() -> Void)?, failure: ((String) -> Void)?)
     func getWebSession(success: ((String) -> Void)?, failure: ((String) -> Void)?)
-    func loadSession() -> Single<Session>
+    func loadSession()
     func cancelAccount(password: String)
     func logoutUser()
     func getSections() -> [AccountSectionItem]
     func verifyCodeEntered(code: String, success: (() -> Void)?, failure: ((String) -> Void)?)
     func verifyVoucherEntered(code: String, success: ((ClaimVoucherCodeResponse) -> Void)?, failure: ((String) -> Void)?)
-    func updateSession()
 }
 
 class AccountViewModel: AccountViewModelType {
@@ -46,6 +45,7 @@ class AccountViewModel: AccountViewModelType {
     let logger: FileLogger
     let sessionManager: SessionManager
     let localDatabase: LocalDatabase
+    let userSessionRepository: UserSessionRepository
 
     var sections = [AccountSectionItem]()
     let disposeBag = DisposeBag()
@@ -54,14 +54,21 @@ class AccountViewModel: AccountViewModelType {
     let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
     let languageUpdatedTrigger = PublishSubject<Void>()
     var sessionUpdatedTrigger = PublishSubject<Void>()
-    let session = BehaviorSubject<Session?>(value: nil)
 
-    init(apiCallManager: APIManager, alertManager: AlertManagerV2, lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManager, logger: FileLogger, languageManager: LanguageManager, localDatabase: LocalDatabase) {
+    init(apiCallManager: APIManager,
+         alertManager: AlertManagerV2,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         sessionManager: SessionManager,
+         logger: FileLogger,
+         languageManager: LanguageManager,
+         localDatabase: LocalDatabase,
+         userSessionRepository: UserSessionRepository) {
         self.apiCallManager = apiCallManager
         self.logger = logger
         self.sessionManager = sessionManager
         self.localDatabase = localDatabase
         self.alertManager = alertManager
+        self.userSessionRepository = userSessionRepository
 
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         #if os(iOS)
@@ -159,38 +166,22 @@ class AccountViewModel: AccountViewModelType {
         }
     }
 
-    func loadSession() -> Single<Session> {
-        return Single.create { single in
-            let task = Task { @MainActor [weak self] in
-                guard let self = self else {
-                    single(.failure(Errors.validationFailure))
-                    return
+    func loadSession() {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                try await sessionManager.updateSession()
+                await MainActor.run {
+                    let oldSession = self.userSessionRepository.oldSessionModel
+                    let sessionSync = self.userSessionRepository.sessionModel
+                    if oldSession != sessionSync {
+                        self.sessionUpdatedTrigger.onNext(())
+                    }
                 }
-
-                do {
-                    let session = try await self.apiCallManager.getSession(nil)
-                    await MainActor.run {
-                        self.localDatabase.saveOldSession()
-                    }
-                    await self.localDatabase.saveSession(session: session)
-                    await MainActor.run {
-                        let oldSession = self.localDatabase.getOldSession()
-                        let sessionSync = self.localDatabase.getSessionSync()
-                        if oldSession != sessionSync {
-                            self.sessionUpdatedTrigger.onNext(())
-                        }
-                    }
-                    single(.success(session))
-                } catch {
-                    await MainActor.run {
-                        self.logger.logE("AccountViewModel", "Failed to get session from server with error \(error).")
-                    }
-                    single(.failure(error))
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("AccountViewModel", "Failed to get session from server with error \(error).")
                 }
-            }
-
-            return Disposables.create {
-                task.cancel()
             }
         }
     }
@@ -245,11 +236,5 @@ class AccountViewModel: AccountViewModelType {
                 }
             }
         }
-    }
-
-    func updateSession() {
-        localDatabase.getSession().observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] session in
-            self.session.onNext(session)
-        }, onError: { _ in }).disposed(by: disposeBag)
     }
 }

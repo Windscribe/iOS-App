@@ -56,7 +56,7 @@ extension MainViewController {
         }
     }
 
-    func updateUIForSession(session: Session?) {
+    func updateUIForSession(session: SessionModel?) {
         logger.logD("MainViewController", "Looking for account state changes.")
         guard let session = session else { return }
 
@@ -99,7 +99,7 @@ extension MainViewController {
         }
     }
 
-    func checkEligibility(session: Session?, isStaticIP: Bool) -> Bool {
+    func checkEligibility(session: SessionModel?, isStaticIP: Bool) -> Bool {
         guard let session = session else {
             return false
         }
@@ -137,7 +137,7 @@ extension MainViewController {
         popupRouter?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
     }
 
-    func showAccountCompletionForGhostAccount(session: Session) {
+    func showAccountCompletionForGhostAccount(session: SessionModel) {
         if didCheckForGhostAccount == false, session.isUserPro == true, session.isUserGhost == true {
             logger.logI("MainViewController", "Displaying Account Completion Popup for Ghost Account.")
             didCheckForGhostAccount = true
@@ -251,7 +251,7 @@ extension MainViewController {
             // Check eligibility EXCEPT for custom config
             let isCustomConfig = vpnConnectionViewModel.isCustomConfigSelected()
             if !isCustomConfig {
-                let session = try? viewModel.session.value()
+                let session = try? viewModel.sessionModel.value()
                 let locationType = vpnConnectionViewModel.getLocationType()
                 let isStaticIP = (locationType == .staticIP)
 

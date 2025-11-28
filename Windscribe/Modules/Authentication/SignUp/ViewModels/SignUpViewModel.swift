@@ -79,6 +79,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private let latencyRepository: LatencyRepository
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
+    private let sessionManager: SessionManager
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -92,7 +93,8 @@ class SignUpViewModelImpl: SignUpViewModel {
          latencyRepository: LatencyRepository,
          emergencyConnectRepository: EmergencyRepository,
          lookAndFeelRepository: LookAndFeelRepositoryType,
-         logger: FileLogger) {
+         logger: FileLogger,
+         sessionManager: SessionManager) {
 
         self.apiCallManager = apiCallManager
         self.userSessionRepository = userSessionRepository
@@ -105,6 +107,7 @@ class SignUpViewModelImpl: SignUpViewModel {
         self.emergencyConnectRepository = emergencyConnectRepository
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
+        self.sessionManager = sessionManager
 
         bind()
         registerNetworkEventListener()
@@ -254,22 +257,22 @@ class SignUpViewModelImpl: SignUpViewModel {
 
                 do {
                     let session = try await self.apiCallManager.signup(
-                username: username,
-                password: password,
-                referringUsername: referralUsername,
-                email: email,
-                voucherCode: voucherCode,
-                secureToken: secureToken,
-                captchaSolution: captchaSolution,
-                captchaTrailX: captchaTrailX,
-                captchaTrailY: captchaTrailY
+                        username: username,
+                        password: password,
+                        referringUsername: referralUsername,
+                        email: email,
+                        voucherCode: voucherCode,
+                        secureToken: secureToken,
+                        captchaSolution: captchaSolution,
+                        captchaTrailX: captchaTrailX,
+                        captchaTrailY: captchaTrailY
                     )
 
-                    await self.userSessionRepository.login(session: session)
-                    await MainActor.run {
-                        self.prepareUserData()
-                    }
-                } catch {
+                    self.sessionManager.updateFrom(session: session)
+                    self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
+                    self.prepareUserData()
+                }
+                catch {
                     await MainActor.run {
                         self.logger.logE("SignUpViewModel", "Failed to signup: \(error)")
                         self.handleError(error)
@@ -277,7 +280,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                     }
                 }
             }
-    }
+        }
 
     private func claimGhostAccount() {
         logger.logD("SignUpViewModel", "Claiming ghost account.")
@@ -312,7 +315,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             guard let self = self else { return }
 
             do {
-                _ = try await self.userSessionRepository.getUpdatedUser()
+                try await self.sessionManager.updateSession()
 
                 if self.email.isEmpty == false {
                     self.routeTo.send(.confirmEmail)
@@ -342,7 +345,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                         self.routeTo.send(.main)
                     } else {
                         self.preferences.saveUserSessionAuth(sessionAuth: nil)
-
+                        self.userSessionRepository.clearSession()
                         switch error {
                         case let Errors.apiError(e):
                             self.failedState = .api(e.errorMessage ?? "")
@@ -432,7 +435,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func checkUserStatus() {
-        let isPro = userSessionRepository.user?.isPro
+        let isPro = userSessionRepository.sessionModel?.isUserPro
         isPremiumUser = isPro ?? false
     }
 

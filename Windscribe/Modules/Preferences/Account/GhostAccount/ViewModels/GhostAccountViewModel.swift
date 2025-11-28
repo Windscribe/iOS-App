@@ -17,21 +17,21 @@ protocol GhostAccountViewModel: ObservableObject {
 class GhostAccountViewModelImpl: GhostAccountViewModel {
 
     var isUserPro: Bool {
-        sessionRepository.isUserPro
+        userSessionRepository.sessionModel?.isUserPro ?? false
     }
 
     @Published var isDarkMode: Bool = false
 
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionRepository: SessionRepository,
+    init(userSessionRepository: UserSessionRepository,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
 

@@ -57,7 +57,7 @@ class MainViewController: PreferredFocusedViewController {
     var logger: FileLogger!
     var isFromServer: Bool = false
     lazy var sessionManager = Assembler.resolve(SessionManager.self)
-    lazy var sessionRepository = Assembler.resolve(SessionRepository.self)
+    lazy var userSessionRepository = Assembler.resolve(UserSessionRepository.self)
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     override func viewDidLoad() {
@@ -353,7 +353,7 @@ class MainViewController: PreferredFocusedViewController {
                 self.configureBestLocation()
             })
 
-        viewModel.session.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        viewModel.sessionModel.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.checkSessionChanges(session: $0)
         }).disposed(by: disposeBag)
 
@@ -374,7 +374,7 @@ class MainViewController: PreferredFocusedViewController {
         }).disposed(by: disposeBag)
 
         Publishers.CombineLatest(
-            viewModel.session.asPublisher().replaceError(with: nil),
+            viewModel.sessionModel.asPublisher().replaceError(with: nil),
             languageManager.activelanguage
         )
         .receive(on: DispatchQueue.main)
@@ -412,7 +412,7 @@ class MainViewController: PreferredFocusedViewController {
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
-            if let isUserPro = try? viewModel.session.value()?.isPremium,
+            if let isUserPro = try? viewModel.sessionModel.value()?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
                isGroupProOnly,
                !isUserPro {
@@ -445,7 +445,7 @@ class MainViewController: PreferredFocusedViewController {
         }
     }
 
-    func setUpgradeButton(session: Session?) {
+    func setUpgradeButton(session: SessionModel?) {
         DispatchQueue.main.async {
             if let session = session {
                 if session.isUserPro {
@@ -522,7 +522,7 @@ class MainViewController: PreferredFocusedViewController {
         vpnConnectionViewModel.disableConnection()
     }
 
-    private func checkSessionChanges(session: Session?) {
+    private func checkSessionChanges(session: SessionModel?) {
         guard let session = session else { return }
         logger.logD("MainViewController", "Looking for account state changes.")
         if session.status == 3 {
@@ -596,7 +596,7 @@ class MainViewController: PreferredFocusedViewController {
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel) {
-        if let isUserPro = sessionRepository.session?.isPremium {
+        if let isUserPro = userSessionRepository.sessionModel?.isPremium {
             if group.premiumOnly && !isUserPro {
                 router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             } else {

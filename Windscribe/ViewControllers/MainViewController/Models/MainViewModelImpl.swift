@@ -29,7 +29,8 @@ class MainViewModelImpl: MainViewModel {
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
     let hapticFeedbackManager: HapticFeedbackManager
-    let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
+    private let sessionManager: SessionManager
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
@@ -46,7 +47,7 @@ class MainViewModelImpl: MainViewModel {
     var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
     var appNetwork = BehaviorSubject<AppNetwork>(value: AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
     var wifiNetwork = BehaviorSubject<WifiNetwork?>(value: nil)
-    var session = BehaviorSubject<Session?>(value: nil)
+    var sessionModel = BehaviorSubject<SessionModel?>(value: nil)
     var favouriteGroups = BehaviorSubject<[GroupModel]>(value: [])
     let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
 
@@ -57,7 +58,7 @@ class MainViewModelImpl: MainViewModel {
     let showProtocolSwitchTrigger = PublishSubject<Void>()
     let showAllProtocolsFailedTrigger = PublishSubject<Void>()
 
-    var oldSession: OldSession? { localDatabase.getOldSession() }
+    var oldSession: SessionModel? { userSessionRepository.oldSessionModel }
 
     var didShowBannedProfilePopup = false
     var didShowProPlanExpiredPopup = false
@@ -85,7 +86,8 @@ class MainViewModelImpl: MainViewModel {
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
          hapticFeedbackManager: HapticFeedbackManager,
-         sessionRepository: SessionRepository) {
+         userSessionRepository: UserSessionRepository,
+         sessionManager: SessionManager){
 
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
@@ -104,7 +106,8 @@ class MainViewModelImpl: MainViewModel {
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
         self.hapticFeedbackManager = hapticFeedbackManager
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
+        self.sessionManager = sessionManager
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
@@ -189,10 +192,12 @@ class MainViewModelImpl: MainViewModel {
     }
 
     private func observeSession() {
-        localDatabase.getSession().subscribe(onNext: { [weak self] session in
-            guard let self = self else { return }
-            self.session.onNext(session)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        userSessionRepository.sessionModelSubject
+            .sink { [weak self] session in
+                guard let self = self else { return }
+                self.sessionModel.onNext(session)
+            }
+            .store(in: &cancellables)
     }
 
     func observeNetworkStatus() {
@@ -587,7 +592,7 @@ class MainViewModelImpl: MainViewModel {
 
     func checkAccountWasDowngraded(for serverList: [ServerModel]) -> Bool {
         if let oldSession = oldSession,
-           let newSession = sessionRepository.session {
+           let newSession = userSessionRepository.sessionModel {
             let groups = serverList.compactMap { $0.groups }.flatMap { $0 }
             let nodes = groups.compactMap { $0.nodes }.flatMap { $0 }
             if oldSession.isPremium &&
@@ -602,6 +607,6 @@ class MainViewModelImpl: MainViewModel {
     }
 
     func keepSessionUpdated() {
-        sessionRepository.keepSessionUpdated()
+        sessionManager.keepSessionUpdated()
     }
 }
