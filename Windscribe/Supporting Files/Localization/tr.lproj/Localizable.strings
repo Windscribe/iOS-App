@@ -596,3 +596,5 @@
 "Manual connection mode failed" = "Manuel bağlantı modu başarısız oldu";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Bu ağda sizi bağlayamadık. En iyi sonuçlar için otomatik bağlantı modu önerilir. Bağlantı modunu Otomatik'e geçirmek ister misiniz?";
 "Switch to Auto" = "Otomatik'e Geç";
+
+"Random IP" = "Rastgele IP";

@@ -599,3 +599,5 @@
 "Manual connection mode failed" = "Режим ручного подключения не удался";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Не удалось подключиться к этой сети. Для лучшего результата рекомендуется автоматический режим. Переключить режим на Авто?";
 "Switch to Auto" = "Переключить на Авто";
+
+"Random IP" = "Случайный IP";

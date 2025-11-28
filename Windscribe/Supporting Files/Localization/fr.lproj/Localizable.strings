@@ -580,3 +580,5 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Manual connection mode failed" = "Le mode de connexion manuel a échoué";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Impossible de vous connecter sur ce réseau. Le mode automatique est recommandé pour de meilleurs résultats. Passer en mode Auto ?";
 "Switch to Auto" = "Passer en Auto";
+
+"Random IP" = "IP aléatoire";

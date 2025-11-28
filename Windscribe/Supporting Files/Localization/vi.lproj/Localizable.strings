@@ -592,3 +592,5 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Manual connection mode failed" = "Chế độ kết nối thủ công không thành công";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Chúng tôi không thể kết nối bạn trên mạng này. Khuyến nghị dùng chế độ tự động để đạt kết quả tốt nhất. Chuyển sang chế độ Tự động?";
 "Switch to Auto" = "Chuyển sang Tự động";
+
+"Random IP" = "IP ngẫu nhiên";
