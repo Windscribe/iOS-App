@@ -578,3 +578,5 @@
 "Manual connection mode failed" = "La modalità di connessione manuale non è riuscita";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Non siamo riusciti a connetterti a questa rete. Per i migliori risultati è consigliata la modalità automatica. Passare alla modalità Auto?";
 "Switch to Auto" = "Passa ad Auto";
+
+"Random IP" = "IP casuale";

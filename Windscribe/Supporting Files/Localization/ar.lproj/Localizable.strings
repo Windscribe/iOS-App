@@ -578,3 +578,5 @@
 "Manual connection mode failed" = "فشل وضع الاتصال اليدوي";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "تعذر علينا توصيلك على هذه الشبكة. يُوصى بوضع الاتصال التلقائي للحصول على أفضل النتائج. هل تريد التبديل إلى الوضع التلقائي؟";
 "Switch to Auto" = "التبديل إلى التلقائي";
+
+"Random IP" = "عنوان IP عشوائي";

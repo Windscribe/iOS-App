@@ -16,7 +16,7 @@ class FavNodeTableViewCellModel: NodeTableViewCellModel {
     var displayingFavGroup: FavouriteGroupModel?
 
     var pinnedIpText: String {
-        return displayingFavGroup?.pinnedIp ?? "Random Ip"
+        return displayingFavGroup?.pinnedIp ?? TextsAsset.Favorites.randomIP
     }
 
     override var name: String {

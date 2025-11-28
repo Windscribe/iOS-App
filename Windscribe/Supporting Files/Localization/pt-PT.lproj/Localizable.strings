@@ -583,3 +583,5 @@
 "Manual connection mode failed" = "O modo de ligação manual falhou";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "Não foi possível ligar nesta rede. O modo automático é recomendado para melhores resultados. Alterar o modo de ligação para Automático?";
 "Switch to Auto" = "Mudar para Automático";
+
+"Random IP" = "IP aleatório";

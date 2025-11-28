@@ -580,3 +580,5 @@
 "Manual connection mode failed" = "手動連線模式失敗";
 "We couldn't connect you on this network. Automatic connection mode recommended for best results. Switch connection mode to Auto?" = "無法在此網絡上為您連線。建議使用自動連線模式以獲得最佳效果。要切換至自動模式嗎？";
 "Switch to Auto" = "切換至自動";
+
+"Random IP" = "隨機 IP";
