@@ -14,7 +14,7 @@ extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 57,
+            schemaVersion: 58,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -279,6 +279,8 @@ extension LocalDatabaseImpl {
                     }
                 } else if oldSchemaVersion < 57 {
                     migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in }
+                } else if oldSchemaVersion < 58 {
+                    migration.enumerateObjects(ofType: SipCount.className()) { _, _ in }
                 }
             }, deleteRealmIfMigrationNeeded: false
         )

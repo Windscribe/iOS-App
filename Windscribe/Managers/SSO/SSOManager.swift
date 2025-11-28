@@ -16,12 +16,16 @@ protocol SSOManaging {
 class SSOManager: NSObject, ObservableObject, SSOManaging {
     private let logger: FileLogger
     private let apiManager: APIManager
+    private let userSessionRepository: UserSessionRepository
     private var cancellables = Set<AnyCancellable>()
     private var ssoSession: PassthroughSubject<Session, Errors>?
 
-    init(logger: FileLogger, apiManager: APIManager) {
+    init(logger: FileLogger,
+         apiManager: APIManager,
+         userSessionRepository: UserSessionRepository) {
         self.logger = logger
         self.apiManager = apiManager
+        self.userSessionRepository = userSessionRepository
     }
 
     /// Requests apple OAuth sign in token
@@ -79,6 +83,7 @@ extension SSOManager: ASAuthorizationControllerDelegate {
                 // Get session from "\GET" will not have session auth set.
                 session.sessionAuthHash = ssoSession.sessionAuth
 
+                userSessionRepository.update(sessionModel: SessionModel(session: session))
                 await MainActor.run {
                     self.ssoSession?.send(session)
                     self.ssoSession?.send(completion: .finished)

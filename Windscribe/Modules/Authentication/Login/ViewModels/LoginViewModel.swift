@@ -55,6 +55,7 @@ class LoginViewModelImpl: LoginViewModel {
     private let userSessionRepository: UserSessionRepository
     private let emergencyConnectRepository: EmergencyRepository
     private let userDataRepository: UserDataRepository
+    private let sessionManager: SessionManager
     private let vpnManager: VPNManager
     private let protocolManager: ProtocolManagerType
     private let latencyRepository: LatencyRepository
@@ -72,6 +73,7 @@ class LoginViewModelImpl: LoginViewModel {
     /// Initialization
     init(apiCallManager: APIManager,
          userSessionRepository: UserSessionRepository,
+         sessionManager: SessionManager,
          preferences: Preferences,
          emergencyConnectRepository: EmergencyRepository,
          userDataRepository: UserDataRepository,
@@ -84,6 +86,7 @@ class LoginViewModelImpl: LoginViewModel {
 
         self.apiCallManager = apiCallManager
         self.userSessionRepository = userSessionRepository
+        self.sessionManager = sessionManager
         self.preferences = preferences
         self.emergencyConnectRepository = emergencyConnectRepository
         self.userDataRepository = userDataRepository
@@ -192,15 +195,13 @@ class LoginViewModelImpl: LoginViewModel {
         WifiManager.shared.saveCurrentWifiNetworks()
 
         // Store authenticated session
-        Task { @MainActor in
-            await userSessionRepository.login(session: session)
+        sessionManager.updateFrom(session: session)
 
-            // Log the success with the username
-            logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
+        // Log the success with the username
+        logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
 
-            // Continue with user-specific data preparation and transition to main app screen
-            prepareUserData()
-        }
+        // Continue with user-specific data preparation and transition to main app screen
+        prepareUserData()
     }
 
     private func loginWithCredentials(
@@ -255,7 +256,6 @@ class LoginViewModelImpl: LoginViewModel {
             }
         }
     }
-
     /// Generate Code Logic
     func generateCodeTapped() {
         Task { [weak self] in
@@ -294,20 +294,16 @@ class LoginViewModelImpl: LoginViewModel {
                         let auth = verifyResponse.sessionAuth
 
                         do {
-                            let session = try await self.apiCallManager.getSession(sessionAuth: auth)
-                            await MainActor.run {
-                                session.sessionAuthHash = auth
+                            try await sessionManager.login(auth: auth)
+                            if let session = userSessionRepository.sessionModel {
                                 WifiManager.shared.saveCurrentWifiNetworks()
 
                                 self.preferences.saveLoginDate(date: Date())
-                                Task { @MainActor in
-                                    await self.userSessionRepository.login(session: session)
-                                    self.timerCancellable?.cancel()
-                                    self.logger.logI("LoginViewModel",
-                                                     "Login successful with login code, Preparing user data for \(session.username)")
-                                    self.prepareUserData()
-                                    self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
-                                }
+                                self.timerCancellable?.cancel()
+                                self.logger.logI("LoginViewModel",
+                                                 "Login successful with login code, Preparing user data for \(session.username)")
+                                self.prepareUserData()
+                                self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                             }
                         } catch {
                             // Handle getSession error silently, just like the original code
@@ -381,6 +377,7 @@ class LoginViewModelImpl: LoginViewModel {
 
                 if case let .failure(error) = completion {
                     self.preferences.saveUserSessionAuth(sessionAuth: nil)
+                    self.userSessionRepository.clearSession()
                     self.logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
                     self.showLoadingView = false
 

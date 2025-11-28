@@ -25,7 +25,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     @Published var safariURL: URL?
     @Published var selectedRoute: HelpRoute?
 
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
     private let connectivity: ConnectivityManager
 
@@ -34,11 +34,11 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
-         sessionRepository: SessionRepository,
+         userSessionRepository: UserSessionRepository,
          apiManager: APIManager,
          connectivity: ConnectivityManager) {
 
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.connectivity = connectivity
 
@@ -59,7 +59,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     }
 
     override func reloadItems() {
-        let isUserPro = sessionRepository.isUserPro
+        let isUserPro = userSessionRepository.sessionModel?.isUserPro ?? false
 
         var baseEntries: [HelpMenuEntryType] = [
             .link(icon: ImagesAsset.Help.apple,
@@ -131,8 +131,8 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
                 let logData = try await logger.getLogData()
 
                 let username = await MainActor.run {
-                    var username = sessionRepository.session?.username ?? ""
-                    if let session = sessionRepository.session, session.isUserGhost {
+                    var username = userSessionRepository.sessionModel?.username ?? ""
+                    if let session = userSessionRepository.sessionModel, session.isUserGhost {
                         username = "ghost_\(session.userId)"
                     }
                     return username

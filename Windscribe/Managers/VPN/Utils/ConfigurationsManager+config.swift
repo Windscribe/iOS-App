@@ -431,7 +431,7 @@ extension ConfigurationsManager {
             switch locationType {
             case .server:
                 let location = try locationsManager.getLocation(from: locationID)
-                let isFreeUser = localDatabase.getSessionSync()?.isPremium == false
+                let isFreeUser = userSessionRepository.sessionModel?.isPremium == false
                 if isFreeUser, location.1.premiumOnly {
                     throw VPNConfigurationErrors.invalidLocationType
                 }
@@ -497,7 +497,7 @@ extension ConfigurationsManager {
                 switch locationType {
                 case .server:
                     let location = try self.locationsManager.getLocation(from: locationID)
-                    let session = self.localDatabase.getSessionSync()
+                    let session = self.userSessionRepository.sessionModel
                     let isFreeUser = session?.isPremium == false
                     if session?.status == 2 {
                         promise(.failure(VPNConfigurationErrors.accountExpired))

@@ -44,12 +44,18 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
     let preferences: Preferences
     let logger: FileLogger
     let localDatabase: LocalDatabase
+    let sessionManager: SessionManager
 
-    init(apiManager: APIManager, preferences: Preferences, logger: FileLogger, localDatabase: LocalDatabase) {
+    init(apiManager: APIManager,
+         preferences: Preferences,
+         logger: FileLogger,
+         localDatabase: LocalDatabase,
+         sessionManager: SessionManager) {
         self.apiManager = apiManager
         self.preferences = preferences
         self.localDatabase = localDatabase
         self.logger = logger
+        self.sessionManager = sessionManager
         super.init()
     }
 
@@ -173,7 +179,7 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
                     _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
 
                     // Verify successful - now get updated session
-                    _ = try? await self.apiManager.getSession(nil)
+                    try? await self.sessionManager.updateSession()
 
                     self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
                     // setting nil for successfull validation
@@ -204,7 +210,7 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
                 _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
 
                 // Verify successful - now get updated session
-                _ = try? await self.apiManager.getSession(nil)
+                try? await self.sessionManager.updateSession()
 
                 self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
                 // setting nil for successfull validation

@@ -10,14 +10,18 @@ import Foundation
 @testable import Windscribe
 
 class MockSessionManager: SessionManager {
+
     var session: Session?
 
     // Track method calls
+    var keepSessionUpdatedCalled = false
     var setSessionTimerCalled = false
     var listenForSessionChangesCalled = false
     var logoutUserCalled = false
     var checkForSessionChangeCalled = false
-    var checkSessionCalled = false
+    var updateSessionCalled = false
+    var loginCalled = false
+    var updateFromCalled = false
 
     init(session: Session? = nil) {
         self.session = session
@@ -25,11 +29,14 @@ class MockSessionManager: SessionManager {
 
     func reset() {
         session = nil
+        keepSessionUpdatedCalled = false
         setSessionTimerCalled = false
         listenForSessionChangesCalled = false
         logoutUserCalled = false
         checkForSessionChangeCalled = false
-        checkSessionCalled = false
+        updateSessionCalled = false
+        loginCalled = false
+        updateFromCalled = false
     }
 
     func setMockSession(userId: String, username: String = "testuser") {
@@ -57,11 +64,23 @@ class MockSessionManager: SessionManager {
     func checkForSessionChange() {
         checkForSessionChangeCalled = true
     }
+    func keepSessionUpdated() {
+        keepSessionUpdatedCalled = true
+    }
 
-    func checkSession() async throws {
-        checkSessionCalled = true
-        guard session != nil else {
-            throw Errors.sessionIsInvalid
-        }
+    func updateSession() async throws {
+        updateSessionCalled = true
+    }
+
+    func updateSession(_ appleID: String) async throws {
+        try await updateSession()
+    }
+
+    func login(auth: String) async throws {
+        loginCalled = true
+    }
+
+    func updateFrom(session: Windscribe.Session) {
+        updateFromCalled = true
     }
 }

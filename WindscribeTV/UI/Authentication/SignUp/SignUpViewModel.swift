@@ -48,6 +48,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     let apiCallManager: APIManager
     let userSessionRepository: UserSessionRepository
+    let sessionManager: SessionManager
     let userDataRepository: UserDataRepository
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
@@ -58,9 +59,21 @@ class SignUpViewModelImpl: SignUpViewModel {
     let logger: FileLogger
     let disposeBag = DisposeBag()
 
-    init(apiCallManager: APIManager, userSessionRepository: UserSessionRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: ConnectivityManager, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(apiCallManager: APIManager,
+         userSessionRepository: UserSessionRepository,
+         sessionManager: SessionManager,
+         userDataRepository: UserDataRepository,
+         preferences: Preferences,
+         connectivity: ConnectivityManager,
+         vpnManager: VPNManager,
+         protocolManager: ProtocolManagerType,
+         latencyRepository: LatencyRepository,
+         emergencyConnectRepository: EmergencyRepository,
+         logger: FileLogger,
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
         self.userSessionRepository = userSessionRepository
+        self.sessionManager = sessionManager
         self.userDataRepository = userDataRepository
         self.preferences = preferences
         self.connectivity = connectivity
@@ -211,7 +224,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func handleSignupSuccess(session: Session) async {
-        await userSessionRepository.login(session: session)
+        await sessionManager.updateFrom(session: session)
         await MainActor.run {
             logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(session.username)")
             prepareUserData()
@@ -297,7 +310,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             guard let self = self else { return }
 
             do {
-                _ = try await self.userSessionRepository.getUpdatedUser()
+                try await self.sessionManager.updateSession()
 
                 self.showLoadingView.onNext(false)
                 if email.isEmpty == false {
@@ -350,6 +363,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 self?.routeTo.onNext(.main)
             } else {
                 self?.preferences.saveUserSessionAuth(sessionAuth: nil)
+                self?.userSessionRepository.clearSession()
                 self?.logger.logE("SignUpViewModelImpl", "Failed to prepare user data: \(error)")
 
                 switch error {
@@ -398,7 +412,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func checkUserStatus() {
-        let isPro = userSessionRepository.user?.isPro
+        let isPro = userSessionRepository.sessionModel?.isUserPro
         isPremiumUser.onNext(isPro ?? false)
     }
 

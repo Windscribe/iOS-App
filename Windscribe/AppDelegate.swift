@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var customConfigRepository: CustomConfigRepository = Assembler.resolve(CustomConfigRepository.self)
 
     private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
+    private lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
 
     private lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
 
@@ -215,17 +216,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         logger.logI("AppDelegate", "Sending notifcation token to server.")
         Task { @MainActor [weak self] in
             guard let self = self else { return }
-
             do {
-                let session = try await self.apiManager.getSession(token)
-                await MainActor.run {
-                    self.logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
-                    self.localDatabase.saveOldSession()
-                }
-                await self.localDatabase.saveSession(session: session)
-                await MainActor.run {
-                    self.preferences.saveRegisteredForPushNotifications(bool: true)
-                }
+                try await sessionManager.updateSession()
+                try await self.sessionManager.updateSession(token)
+                self.logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
+                self.preferences.saveRegisteredForPushNotifications(bool: true)
             } catch {
                 await MainActor.run {
                     self.logger.logE("AppDelegate", "Failed to register remote notification token with server \(error).")

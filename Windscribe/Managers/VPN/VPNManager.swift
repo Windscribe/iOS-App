@@ -56,8 +56,8 @@ class VPNManagerImpl: VPNManager {
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManager
     let vpnStateRepository: VPNStateRepository
-    let sessionRepository: SessionRepository
     let bridgeAPI: WSNetBridgeAPI
+    let userSessionRepository: UserSessionRepository
 
     var connectionTaskPublisher: AnyCancellable?
 
@@ -80,8 +80,8 @@ class VPNManagerImpl: VPNManager {
          alertManager: AlertManagerV2,
          locationsManager: LocationsManager,
          vpnStateRepository: VPNStateRepository,
-         sessionRepository: SessionRepository,
-         bridgeAPI: WSNetBridgeAPI) {
+         bridgeAPI: WSNetBridgeAPI,
+         userSessionRepository: UserSessionRepository) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository
@@ -92,8 +92,8 @@ class VPNManagerImpl: VPNManager {
         self.alertManager = alertManager
         self.locationsManager = locationsManager
         self.vpnStateRepository = vpnStateRepository
-        self.sessionRepository = sessionRepository
         self.bridgeAPI = bridgeAPI
+        self.userSessionRepository = userSessionRepository
 
         showFailedPinIpTrigger = configManager.showFailedPinIpTrigger
 

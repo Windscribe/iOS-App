@@ -108,6 +108,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let appReviewManager: AppReviewManaging
     let customSoundPlaybackManager: CustomSoundPlaybackManaging
     let privacyStateManager: PrivacyStateManaging
+    let userSessionRepository: UserSessionRepository
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -131,7 +132,8 @@ class ConnectionViewModel: ConnectionViewModelType {
          ipRepository: IPRepository,
          localDB: LocalDatabase,
          customSoundPlaybackManager: CustomSoundPlaybackManaging,
-         privacyStateManager: PrivacyStateManaging) {
+         privacyStateManager: PrivacyStateManaging,
+         userSessionRepository: UserSessionRepository) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -147,6 +149,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.localDB = localDB
         self.customSoundPlaybackManager = customSoundPlaybackManager
         self.privacyStateManager = privacyStateManager
+        self.userSessionRepository = userSessionRepository
 
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
@@ -520,7 +523,7 @@ extension ConnectionViewModel {
                 return
             }
 
-            let activeSession = self.localDB.getSessionSync()
+            let activeSession = self.userSessionRepository.sessionModel
             self.appReviewManager.requestReviewIfAvailable(session: activeSession)
         }
     }

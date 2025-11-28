@@ -18,7 +18,11 @@ protocol SessionManager {
     func listenForSessionChanges()
     func logoutUser()
     func checkForSessionChange()
-    func checkSession() async throws
+    func updateSession() async throws
+    func updateSession(_ appleID: String) async throws
+    func login(auth: String) async throws
+    func updateFrom(session: Session)
+    func keepSessionUpdated()
 }
 
 class SessionManagerImpl: SessionManager {
@@ -26,46 +30,79 @@ class SessionManagerImpl: SessionManager {
     var sessionTimer: Timer?
     var sessionFetchInProgress = false
     var lastCheckForServerConfig = Date()
-    let wgCredentials = Assembler.resolve(WgCredentials.self)
-    let logger = Assembler.resolve(FileLogger.self)
-    let apiManager = Assembler.resolve(APIManager.self)
-    let localDatabase = Assembler.resolve(LocalDatabase.self)
-    let credentialsRepo = Assembler.resolve(CredentialsRepository.self)
-    let serverRepo = Assembler.resolve(ServerRepository.self)
-    let staticIPRepo = Assembler.resolve(StaticIpRepository.self)
-    let portmapRepo = Assembler.resolve(PortMapRepository.self)
-    let preferences = Assembler.resolve(Preferences.self)
-    let latencyRepo = Assembler.resolve(LatencyRepository.self)
-    let userSessionRepo = Assembler.resolve(UserSessionRepository.self)
-    let locationsManager = Assembler.resolve(LocationsManager.self)
-    let vpnStateRepository: VPNStateRepository = Assembler.resolve(VPNStateRepository.self)
 
-    let sessionRepository = Assembler.resolve(SessionRepository.self)
+    // Not circular dependencies
+    private let wgCredentials: WgCredentials
+    private let logger: FileLogger
+    private let apiManager: APIManager
+    private let localDatabase: LocalDatabase
+    private let credentialsRepo: CredentialsRepository
+    private let serverRepo: ServerRepository
+    private let staticIPRepo: StaticIpRepository
+    private let portmapRepo: PortMapRepository
+    private let preferences: Preferences
+    private let latencyRepo: LatencyRepository
+    private let userSessionRepository: UserSessionRepository
+    private let locationsManager: LocationsManager
+    private let vpnStateRepository: VPNStateRepository
 
-    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
-    private lazy var ssoManager = Assembler.resolve(SSOManaging.self)
+    private let vpnManager: VPNManager
+    private let ssoManager: SSOManaging
 
     private var cancellables = Set<AnyCancellable>()
 
-    init () {
-        sessionRepository.keepSessionUpdatedTrigger.sink { [weak self]_ in
-            self?.keepSessionUpdated()
-        }
-        .store(in: &cancellables)
+    init (wgCredentials: WgCredentials,
+          logger: FileLogger,
+          apiManager: APIManager,
+          localDatabase: LocalDatabase,
+          credentialsRepo: CredentialsRepository,
+          serverRepo: ServerRepository,
+          staticIPRepo: StaticIpRepository,
+          portmapRepo: PortMapRepository,
+          preferences: Preferences,
+          latencyRepo: LatencyRepository,
+          userSessionRepository: UserSessionRepository,
+          locationsManager: LocationsManager,
+          vpnStateRepository: VPNStateRepository,
+          vpnManager: VPNManager,
+          ssoManager: SSOManaging) {
+        self.wgCredentials = wgCredentials
+        self.logger = logger
+        self.apiManager = apiManager
+        self.localDatabase = localDatabase
+        self.credentialsRepo = credentialsRepo
+        self.serverRepo = serverRepo
+        self.staticIPRepo = staticIPRepo
+        self.portmapRepo = portmapRepo
+        self.preferences = preferences
+        self.userSessionRepository = userSessionRepository
+        self.latencyRepo = latencyRepo
+        self.locationsManager = locationsManager
+        self.vpnStateRepository = vpnStateRepository
+        self.vpnManager = vpnManager
+        self.ssoManager = ssoManager
+
+        keepSessionUpdated()
     }
 
     func setSessionTimer() {
-        sessionTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.keepSessionUpdated), userInfo: nil, repeats: true)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.cancelTimers), name: Notifications.userLoggedOut, object: nil)
+        sessionTimer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { [weak self] _ in
+            self?.keepSessionUpdated()
+        }
+        NotificationCenter.default.publisher(for: Notifications.userLoggedOut)
+            .sink { [weak self] _ in
+                self?.cancelTimers()
+            }
+            .store(in: &cancellables)
     }
 
-    @objc func cancelTimers() {
+    func cancelTimers() {
         logger.logD("SessionManager", "Cancelled Session timer.")
         sessionTimer?.invalidate()
         sessionTimer = nil
     }
 
-    @objc func keepSessionUpdated() {
+    func keepSessionUpdated() {
         Task { @MainActor in
             if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
                 guard localDatabase.getSessionSync() != nil else {
@@ -76,13 +113,11 @@ class SessionManagerImpl: SessionManager {
                 localDatabase.saveOldSession()
 
                 do {
-                    let session = try await self.apiManager.getSession(nil)
-                    await self.userSessionRepo.update(session: session)
-                    self.logger.logI("SessionManager", "Session updated for \(session.username)")
+                    try await self.updateSession()
                     self.sessionFetchInProgress = false
                 } catch let error {
                     if let errors = error as? Errors,
-                       errors == .sessionIsInvalid {
+                       (errors == .sessionIsInvalid  || errors == .validationFailure) {
                         self.logoutUser()
                     } else {
                         self.logger.logE("SessionManager", "Failed to update error: \(error)")
@@ -95,27 +130,46 @@ class SessionManagerImpl: SessionManager {
         }
     }
 
-    func checkSession() async throws {
-        let session = try await apiManager.getSession(nil)
-        await userSessionRepo.update(session: session)
+    func updateSession() async throws {
+        try await updateSessionUsing(token: nil)
+    }
+
+    func updateSession(_ appleID: String) async throws {
+        try await updateSessionUsing(token: appleID)
+    }
+
+    private func updateSessionUsing(token: String?) async throws {
+        let session = try await apiManager.getSession(token)
+        logger.logI("SessionManager", "Session updated for \(session.username)")
+        processUpdatedSession(session: session)
+    }
+
+    func login(auth: String) async throws {
+        let session = try await self.apiManager.getSession(sessionAuth: auth)
+        wgCredentials.delete()
+        updateFrom(session: session)
+    }
+
+    func updateFrom(session: Session) {
+        preferences.saveUserSessionAuth(sessionAuth: session.sessionAuthHash)
+        processUpdatedSession(session: session)
+    }
+
+    private func processUpdatedSession(session: Session) {
+        userSessionRepository.update(sessionModel: SessionModel(session: session))
+        localDatabase.saveOldSession()
+        localDatabase.saveSession(session: session)
     }
 
     func listenForSessionChanges() {
-        localDatabase.getSession()
-            .toPublisher(initialValue: nil)
+        userSessionRepository.sessionModelSubject
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("SessionManager", "Realm user preferences notification error \(error.localizedDescription)")
-                }
-            }, receiveValue: { [weak self] session in
+            .sink { [weak self] _ in
                 guard let self = self else { return }
-                sessionRepository.updateSession(session)
-                NotificationCenter.default.post(Notification(name: Notifications.sessionUpdated))
                 self.checkForStatus()
                 self.checkForSessionChange()
-            })
+            }
             .store(in: &cancellables)
     }
 
@@ -134,7 +188,7 @@ class SessionManagerImpl: SessionManager {
     }
 
     func checkForStatus() {
-        guard let status = sessionRepository.sessionStatus else { return }
+        guard let status = userSessionRepository.sessionModel?.status else { return }
         if status != 1 {
             wgCredentials.delete()
         }
@@ -162,7 +216,7 @@ class SessionManagerImpl: SessionManager {
     private func refreshLocations() {
         Task { @MainActor in
             latencyRepo.pickBestLocation(pingData: localDatabase.getAllPingData())
-            locationsManager.checkLocationValidity(checkProAccess: {sessionRepository.canAccesstoProLocation()})
+            locationsManager.checkLocationValidity(checkProAccess: {userSessionRepository.canAccesstoProLocation()})
         }
     }
 
@@ -170,7 +224,7 @@ class SessionManagerImpl: SessionManager {
         Task { @MainActor in
             if vpnStateRepository.isConnected() {
                 latencyRepo.refreshBestLocation()
-                locationsManager.checkLocationValidity(checkProAccess: {sessionRepository.canAccesstoProLocation()})
+                locationsManager.checkLocationValidity(checkProAccess: {userSessionRepository.canAccesstoProLocation()})
             } else {
                 loadLatency()
             }
@@ -179,11 +233,12 @@ class SessionManagerImpl: SessionManager {
 
     func checkForSessionChange() {
         logger.logD("SessionManager", "Comparing new session with old session.")
-        guard let newSession = sessionRepository.session,
-              let oldSession = localDatabase.getOldSession() else {
+        guard let newSession = userSessionRepository.sessionModel,
+              let oldLocalSession = localDatabase.getOldSession() else {
             logger.logI("SessionManager", "No old session found")
             return
         }
+        let oldSession = SessionModel(session: oldLocalSession)
         Task { @MainActor in
             if oldSession.locHash != newSession.locHash {
                 try? await serverRepo.updatedServers()
@@ -291,7 +346,7 @@ class SessionManagerImpl: SessionManager {
         NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
 
         // Clear the session
-        sessionRepository.updateSession(nil)
+        userSessionRepository.clearSession()
 
         // Delete WireGuard Credentials
         wgCredentials.delete()

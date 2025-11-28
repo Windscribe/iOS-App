@@ -55,13 +55,13 @@ class ServerRepositoryImpl: ServerRepository {
     }
 
     func updatedServers() async throws {
-        guard let user = userSessionRepository.user else {
+        guard let session = userSessionRepository.sessionModel else {
             throw Errors.validationFailure
         }
         let countryCode = advanceRepository.getCountryOverride() ?? ""
 
         do {
-            let serverList = try await self.apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
+            let serverList = try await self.apiManager.getServerList(languageCode: countryCode, revision: session.locHash, isPro: session.isPremium, alcList: session.alc)
 
             let servers = Array(serverList.servers)
             for server in servers {

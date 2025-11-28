@@ -20,18 +20,18 @@ protocol LivecycleManagerType {
 }
 
 class LivecycleManager: LivecycleManagerType {
-    let logger: FileLogger
-    let sessionRepository: SessionRepository
-    let preferences: Preferences
-    let vpnManager: VPNManager
-    let vpnStateRepository: VPNStateRepository
-    let connectivity: ConnectivityManager
-    let credentialsRepo: CredentialsRepository
-    let notificationRepo: NotificationRepository
-    let ipRepository: IPRepository
-    let configManager: ConfigurationsManager
-    let connectivityManager: ProtocolManagerType
-    let locationsManager: LocationsManager
+    private let logger: FileLogger
+    private let sessionManager: SessionManager
+    private let preferences: Preferences
+    private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
+    private let connectivity: ConnectivityManager
+    private let credentialsRepo: CredentialsRepository
+    private let notificationRepo: NotificationRepository
+    private let ipRepository: IPRepository
+    private let configManager: ConfigurationsManager
+    private let connectivityManager: ProtocolManagerType
+    private let locationsManager: LocationsManager
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -43,7 +43,7 @@ class LivecycleManager: LivecycleManagerType {
     private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
-         sessionRepository: SessionRepository,
+         sessionManager: SessionManager,
          preferences: Preferences,
          vpnManager: VPNManager,
          vpnStateRepository: VPNStateRepository,
@@ -55,7 +55,7 @@ class LivecycleManager: LivecycleManagerType {
          connectivityManager: ProtocolManagerType,
          locationsManager: LocationsManager) {
         self.logger = logger
-        self.sessionRepository = sessionRepository
+        self.sessionManager = sessionManager
         self.preferences = preferences
         self.vpnManager = vpnManager
         self.vpnStateRepository = vpnStateRepository
@@ -94,7 +94,7 @@ class LivecycleManager: LivecycleManagerType {
         checkForKillSwitch()
         logger.logI("LivecycleManager", "App internet moved to foreground.")
         becameActiveTrigger.send(())
-        sessionRepository.keepSessionUpdated()
+        sessionManager.keepSessionUpdated()
         guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
             return

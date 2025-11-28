@@ -9,21 +9,23 @@
 import UIKit
 import RxSwift
 import Swinject
+import Combine
 
 protocol FreeAccountFooterViewModelType {
     var dataLeftSubject: BehaviorSubject<DataLeftModel?> { get }
 }
 
 class FreeAccountFooterViewModel: FreeAccountFooterViewModelType {
-    let disposeBag = DisposeBag()
     let dataLeftSubject = BehaviorSubject<DataLeftModel?>(value: nil)
 
-    init(localDatabase: LocalDatabase) {
-        localDatabase.getSession().subscribe(
-            onNext: { [weak self] session in
+    private var cancellables = Set<AnyCancellable>()
+
+    init(userSessionRepository: UserSessionRepository) {
+        userSessionRepository.sessionModelSubject
+            .sink { [weak self] session in
                 self?.dataLeftSubject.onNext(session?.getDataLeftModel())
             }
-        ).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
 

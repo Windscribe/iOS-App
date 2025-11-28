@@ -20,6 +20,7 @@ class ViewModels: Assembly {
             LoginViewModelImpl(
                 apiCallManager: r.resolve(APIManager.self)!,
                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                sessionManager: r.resolve(SessionManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
@@ -43,7 +44,8 @@ class ViewModels: Assembly {
                 latencyRepository: r.resolve(LatencyRepository.self)!,
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                logger: r.resolve(FileLogger.self)!)
+                logger: r.resolve(FileLogger.self)!,
+                sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any WelcomeViewModel).self) { r in
@@ -55,7 +57,8 @@ class ViewModels: Assembly {
                 preferences: r.resolve(Preferences.self)!,
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 ssoManager: r.resolve(SSOManaging.self)!,
-                logger: r.resolve(FileLogger.self)!
+                logger: r.resolve(FileLogger.self)!,
+                sessionManager: r.resolve(SessionManager.self)!
             )
         }.inObjectScope(.transient)
 
@@ -71,7 +74,8 @@ class ViewModels: Assembly {
                 pushNotificationManager: r.resolve(PushNotificationManager.self)!,
                 mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register((any EmergencyConnectViewModel).self) { r in
@@ -84,7 +88,8 @@ class ViewModels: Assembly {
 
         container.register((any EnterEmailViewModel).self) { r in
             EnterEmailViewModelImpl(
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                sessionManager: r.resolve(SessionManager.self)!,
                 alertManager: r.resolve(AlertManagerV2.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
@@ -92,7 +97,8 @@ class ViewModels: Assembly {
 
         container.register((any ConfirmEmailViewModel).self) { r in
             ConfirmEmailViewModelImpl(
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                sessionManager: r.resolve(SessionManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -101,7 +107,7 @@ class ViewModels: Assembly {
 
         container.register((any GhostAccountViewModel).self) { r in
             GhostAccountViewModelImpl(
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
@@ -109,7 +115,7 @@ class ViewModels: Assembly {
         container.register((any PreferencesMainCategoryViewModel).self) { r in
             PreferencesMainCategoryViewModelImpl(
                 sessionManager: r.resolve(SessionManager.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 alertManager: r.resolve(AlertManagerV2.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -123,7 +129,7 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 languageManager: r.resolve(LanguageManager.self)!,
@@ -157,7 +163,7 @@ class ViewModels: Assembly {
         container.register((any ReferForDataSettingsViewModel).self) { r in
             ReferForDataSettingsViewModelImpl(
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 referFriendManager: r.resolve(ReferAndShareManager.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
@@ -179,7 +185,7 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 connectivity: r.resolve(ConnectivityManager.self)!)
         }.inObjectScope(.transient)
@@ -188,7 +194,7 @@ class ViewModels: Assembly {
             SendTicketViewModelImpl(
                 apiManager: r.resolve(APIManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!)
+                userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register((any AdvancedParametersViewModel).self) { r in
@@ -256,7 +262,7 @@ class ViewModels: Assembly {
             AccountStatusViewModelImpl(
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!
+                userSessionRepository: r.resolve(UserSessionRepository.self)!
             )
         }.inObjectScope(.transient)
 
@@ -276,7 +282,7 @@ class ViewModels: Assembly {
                 securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                sessionRepository: r.resolve(SessionRepository.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 preferences: r.resolve(Preferences.self)!
@@ -332,7 +338,8 @@ class ViewModels: Assembly {
                           locationsManager: r.resolve(LocationsManager.self)!,
                           protocolManager: r.resolve(ProtocolManagerType.self)!,
                           hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                          sessionRepository: r.resolve(SessionRepository.self)!)
+                          userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                          sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -357,7 +364,8 @@ class ViewModels: Assembly {
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 localDB: r.resolve(LocalDatabase.self)!,
                                 customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
-                                privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
+                                privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
+                                userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(ListSelectionViewModelType.self) { r in
             ListSelectionViewModel(
@@ -379,7 +387,7 @@ class ViewModels: Assembly {
             FavouriteListViewModel(logger: r.resolve(FileLogger.self)!,
                                    vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                    connectivity: r.resolve(ConnectivityManager.self)!,
-                                   sessionRepository: r.resolve(SessionRepository.self)!,
+                                   userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                    locationsManager: r.resolve(LocationsManager.self)!,
                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
@@ -388,7 +396,7 @@ class ViewModels: Assembly {
                                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
-                                sessionRepository: r.resolve(SessionRepository.self)!,
+                                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                 locationsManager: r.resolve(LocationsManager.self)!,
                                 protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
@@ -453,7 +461,7 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(FreeAccountFooterViewModelType.self) { r in
-            FreeAccountFooterViewModel(localDatabase: r.resolve(LocalDatabase.self)!)
+            FreeAccountFooterViewModel(userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register((any BridgeApiFailedViewModel).self) { r in

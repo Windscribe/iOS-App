@@ -30,7 +30,7 @@ class ServerListViewModel: ServerListViewModelType {
     private let vpnStateRepository: VPNStateRepository
     private let connectivity: ConnectivityManager
     private let localDataBase: LocalDatabase
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
 
@@ -40,14 +40,14 @@ class ServerListViewModel: ServerListViewModelType {
          vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          localDataBase: LocalDatabase,
-         sessionRepository: SessionRepository,
+         userSessionRepository: UserSessionRepository,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.localDataBase = localDataBase
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
     }
@@ -62,7 +62,7 @@ class ServerListViewModel: ServerListViewModelType {
             return
         }
 
-        if !sessionRepository.canAccesstoProLocation() && group.premiumOnly {
+        if !userSessionRepository.canAccesstoProLocation() && group.premiumOnly {
             showUpgradeTrigger.onNext(())
             return
         } else if !group.canConnect() {
@@ -104,7 +104,8 @@ extension ServerListViewModel {
         }
         if !group.isNodesAvailable() && !group.premiumOnly {
             return true
-        } else if !group.isNodesAvailable() && group.premiumOnly && sessionRepository.isPremium == true {
+        } else if !group.isNodesAvailable() && group.premiumOnly &&
+                    userSessionRepository.sessionModel?.isPremium == true {
             return true
         }
         return false

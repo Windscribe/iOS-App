@@ -22,12 +22,23 @@ class TVViewModels: Assembly {
         container.register(PrivacyStateManaging.self) { r in
             PrivacyStateManager(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
-
+        
         container.register(LoginViewModel.self) { r in
-            LoginViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!, connectivity: r.resolve(ConnectivityManager.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            LoginViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                               sessionManager: r.resolve(SessionManager.self)!,
+                               connectivity: r.resolve(ConnectivityManager.self)!,
+                               preferences: r.resolve(Preferences.self)!,
+                               emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
+                               userDataRepository: r.resolve(UserDataRepository.self)!,
+                               vpnManager: r.resolve(VPNManager.self)!,
+                               protocolManager: r.resolve(ProtocolManagerType.self)!,
+                               latencyRepository: r.resolve(LatencyRepository.self)!,
+                               logger: r.resolve(FileLogger.self)!,
+                               lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(WelcomeViewModel.self) { r in
             WelcomeViewModelImpl(userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                 sessionManager: r.resolve(SessionManager.self)!,
                                  keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
                                  userDataRepository: r.resolve(UserDataRepository.self)!,
                                  apiManager: r.resolve(APIManager.self)!,
@@ -36,7 +47,18 @@ class TVViewModels: Assembly {
                                  logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(SignUpViewModel.self) { r in
-            SignUpViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(ConnectivityManager.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            SignUpViewModelImpl(apiCallManager: r.resolve(APIManager.self)!,
+                                userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                sessionManager: r.resolve(SessionManager.self)!,
+                                userDataRepository: r.resolve(UserDataRepository.self)!,
+                                preferences: r.resolve(Preferences.self)!,
+                                connectivity: r.resolve(ConnectivityManager.self)!,
+                                vpnManager: r.resolve(VPNManager.self)!,
+                                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                                latencyRepository: r.resolve(LatencyRepository.self)!,
+                                emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
+                                logger: r.resolve(FileLogger.self)!,
+                                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(GeneralViewModelType.self) { r in
             GeneralViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, languageManager: r.resolve(LanguageManager.self)!, pushNotificationManager: r.resolve(PushNotificationManager.self)!)
@@ -45,7 +67,14 @@ class TVViewModels: Assembly {
             GeneralViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, languageManager: r.resolve(LanguageManager.self)!, pushNotificationManager: r.resolve(PushNotificationManager.self)!)
         }.inObjectScope(.transient)
         container.register(AccountViewModelType.self) { r in
-            AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManager.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
+            AccountViewModel(apiCallManager: r.resolve(APIManager.self)!,
+                             alertManager: r.resolve(AlertManagerV2.self)!,
+                             lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                             sessionManager: r.resolve(SessionManager.self)!,
+                             logger: r.resolve(FileLogger.self)!,
+                             languageManager: r.resolve(LanguageManager.self)!,
+                             localDatabase: r.resolve(LocalDatabase.self)!,
+                             userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
             ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(ConnectivityManager.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!)
@@ -57,7 +86,8 @@ class TVViewModels: Assembly {
             UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!,
                                  localDatabase: r.resolve(LocalDatabase.self)!,
                                  apiManager: r.resolve(APIManager.self)!,
-                                 sessionRepository: r.resolve(SessionRepository.self)!,
+                                 sessionManager: r.resolve(SessionManager.self)!,
+                                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                  preferences: r.resolve(Preferences.self)!,
                                  inAppManager: r.resolve(InAppPurchaseManager.self)!,
                                  pushNotificationManager: r.resolve(PushNotificationManager.self)!,
@@ -77,9 +107,11 @@ class TVViewModels: Assembly {
                                 wifiManager: WifiManager.shared,
                                 securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
-                                ipRepository: r.resolve(IPRepository.self)!, localDB: r.resolve(LocalDatabase.self)!,
+                                ipRepository: r.resolve(IPRepository.self)!,
+                                localDB: r.resolve(LocalDatabase.self)!,
                                 customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
-                                privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
+                                privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
+                                userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModel.self) { r in
             MainViewModelImpl(localDatabase: r.resolve(LocalDatabase.self)!,
@@ -99,34 +131,33 @@ class TVViewModels: Assembly {
                               locationsManager: r.resolve(LocationsManagerType.self)!,
                               protocolManager: r.resolve(ProtocolManagerType.self)!,
                               hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                              sessionRepository: r.resolve(SessionRepository.self)!)
+                              userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                              sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(BasePopupViewModelType.self) { _ in
             BasePopupViewModel()
         }.inObjectScope(.transient)
-
+        
         container.register(RateUsPopupModelType.self) { r in
             RateUsPopupModel(preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(EnterEmailViewModel.self) { r in
-            EnterEmailViewModelImpl(sessionRepository: r.resolve(SessionRepository.self)!,
+            EnterEmailViewModelImpl(userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                     alertManager: r.resolve(AlertManagerV2.self)!,
                                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                     apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(ConfirmEmailViewModel.self) { r in
             ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!,
-                                      sessionRepository: r.resolve(SessionRepository.self)!,
-                                      localDatabase: r.resolve(LocalDatabase.self)!,
                                       apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(NewsFeedModelType.self) { r in
             NewsFeedModel(
                 localDatabase: r.resolve(LocalDatabase.self)!,
@@ -134,9 +165,9 @@ class TVViewModels: Assembly {
                 fileLogger: r.resolve(FileLogger.self)!,
                 htmlParser: r.resolve(HTMLParsing.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(PreferencesMainViewModelOld.self) { r in
-            PreferencesMainViewModelImpOld(sessionRepository: r.resolve(SessionRepository.self)!,
+            PreferencesMainViewModelImpOld(userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                            sessionManager: r.resolve(SessionManager.self)!,
                                            logger: r.resolve(FileLogger.self)!,
                                            alertManager: r.resolve(AlertManagerV2.self)!,
@@ -144,36 +175,40 @@ class TVViewModels: Assembly {
                                            preferences: r.resolve(Preferences.self)!,
                                            languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(SubmitLogViewModel.self) { r in
-            SubmitLogViewModelImpl(sessionRepository: r.resolve(SessionRepository.self)!,
+            SubmitLogViewModelImpl(userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                    apiManager: r.resolve(APIManager.self)!,
                                    alertManager: r.resolve(AlertManagerV2.self)!,
                                    connectivity: r.resolve(ConnectivityManager.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(PrivacyViewModelType.self) { r in
             PrivacyViewModel(preferences: r.resolve(Preferences.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
-
+        
         container.register(OutOfDataAccountPopupModelType.self) { r in
-            OutOfDataAccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
+            OutOfDataAccountPopupModel(userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                       router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(AccountPopupModelType.self) { r in
-            AccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
+            AccountPopupModel(userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                              router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(ProPlanExpiredAccountPopupModelType.self) { r in
-            ProPlanExpiredAccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
+            ProPlanExpiredAccountPopupModel(userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                            router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(BannedAccountPopupModelType.self) { r in
-            BannedAccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
+            BannedAccountPopupModel(userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                    router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
             ServerListViewModel(logger: r.resolve(FileLogger.self)!,
                                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
-                                sessionRepository: r.resolve(SessionRepository.self)!,
+                                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
                                 protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
@@ -181,7 +216,7 @@ class TVViewModels: Assembly {
             FavouriteListViewModel(logger: r.resolve(FileLogger.self)!,
                                    vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                    connectivity: r.resolve(ConnectivityManager.self)!,
-                                   sessionRepository: r.resolve(SessionRepository.self)!,
+                                   userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                    locationsManager: r.resolve(LocationsManagerType.self)!,
                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
@@ -252,7 +287,7 @@ class TVViewControllers: Assembly {
         }.initCompleted { r, vc in
             vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-
+        
         container.register(PreferencesMainViewController.self) { _ in
             PreferencesMainViewController(nibName: "PreferencesMainViewController", bundle: nil)
         }.initCompleted { r, vc in
@@ -265,31 +300,31 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
-
+        
         container.register(ServerListViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
         }.initCompleted { _, _ in
         }.inObjectScope(.transient)
-
+        
         container.register(UpgradePopViewController.self) { _ in UpgradePopViewController(nibName: "UpgradePopViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(UpgradeViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-
+        
         container.register(BasePopUpViewController.self) { _ in BasePopUpViewController(nibName: "BasePopUpViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-
+        
         container.register(RatePopupViewController.self) { _ in RatePopupViewController(nibName: "RatePopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.ruViewModel = r.resolve(RateUsPopupModelType.self)
         }.inObjectScope(.transient)
-
+        
         container.register(GetMoreDataPopupViewController.self) { _ in GetMoreDataPopupViewController(nibName: "GetMoreDataPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
@@ -297,7 +332,7 @@ class TVViewControllers: Assembly {
             vc.router = r.resolve(HomeRouter.self)
             vc.signupRouter = r.resolve(SignupRouter.self)
         }.inObjectScope(.transient)
-
+        
         container.register(ConfirmEmailPopupViewController.self) { _ in ConfirmEmailPopupViewController(nibName: "ConfirmEmailPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
@@ -305,7 +340,7 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
-
+        
         container.register(AddEmailPopupViewController.self) { _ in AddEmailPopupViewController(nibName: "AddEmailPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
@@ -313,7 +348,7 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
-
+        
         container.register(NewsFeedViewController.self) { _ in NewsFeedViewController(nibName: "NewsFeedViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(NewsFeedModelType.self)
@@ -321,7 +356,7 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.alertManager = r.resolve(AlertManagerV2.self)
         }.inObjectScope(.transient)
-
+        
         container.register(ServerListViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
         }.initCompleted { r, vc in
@@ -330,7 +365,7 @@ class TVViewControllers: Assembly {
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.router = r.resolve(ServerListRouter.self)
         }.inObjectScope(.transient)
-
+        
         container.register(ServerDetailViewController.self) { _ in
             ServerDetailViewController(nibName: "ServerDetailViewController", bundle: nil)
         }.initCompleted { r, vc in
@@ -338,41 +373,41 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
         }.inObjectScope(.transient)
-
+        
         container.register(PrivacyPopUpViewController.self) { _ in PrivacyPopUpViewController(nibName: "PrivacyPopUpViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.privacyViewModel = r.resolve(PrivacyViewModelType.self)
         }.inObjectScope(.transient)
-
+        
         container.register(AccountPopupViewController.self) { _ in AccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.accountPopupViewModel = r.resolve(AccountPopupModelType.self)
         }.inObjectScope(.transient)
-
+        
         container.register(BannedAccountPopupViewController.self) { _ in BannedAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.accountPopupViewModel = r.resolve(BannedAccountPopupModelType.self)
         }.inObjectScope(.transient)
-
+        
         container.register(OutOfDataAccountPopupViewController.self) { _ in OutOfDataAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.accountPopupViewModel = r.resolve(OutOfDataAccountPopupModelType.self)
         }.inObjectScope(.transient)
-
+        
         container.register(ProPlanExpiredAccountPopupViewController.self) { _ in ProPlanExpiredAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.accountPopupViewModel = r.resolve(ProPlanExpiredAccountPopupModelType.self)
         }.inObjectScope(.transient)
-
+        
         // swiftlint:enable force_cast
     }
 }

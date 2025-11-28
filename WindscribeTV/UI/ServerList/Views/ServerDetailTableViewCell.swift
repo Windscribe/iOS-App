@@ -59,7 +59,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         return myPreferredFocusedView
     }
 
-    lazy var sessionRepository: SessionRepository = Assembler.resolve(SessionRepository.self)
+    lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)
 
     var displayingFavGroup: GroupModel? {
         didSet {
@@ -122,7 +122,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         descriptionLabel.isHidden = true
         descriptionLabel.text = ""
         proIcon.isHidden = true
-        if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium {
+        if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
             if premiumOnly && !isUserPro {
                 proIcon.isHidden = false
             }
@@ -155,7 +155,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             latencyLabel.text = "--"
         }
 
-        if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium {
+        if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
             if premiumOnly && !isUserPro {
                 proIcon.isHidden = false
             } else {
@@ -267,12 +267,16 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
-                if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium, favButton.isHidden == false {
+                if let premiumOnly = displayingFavGroup?.premiumOnly,
+                   let isUserPro = userSessionRepository.sessionModel?.isPremium,
+                   favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
                 }
-                if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionRepository.session?.isPremium, favButton.isHidden == false {
+                if let premiumOnly = displayingGroup?.premiumOnly,
+                   let isUserPro = userSessionRepository.sessionModel?.isPremium,
+                   favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
@@ -359,8 +363,8 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     @objc func connectButtonTapped() {
-        if sessionRepository.session?.status == 2 && staticIpDelegate == nil {
-            let isPro = sessionRepository.session?.isPremium ?? false
+        if userSessionRepository.sessionModel?.status == 2 && staticIpDelegate == nil {
+            let isPro = userSessionRepository.sessionModel?.isPremium ?? false
             guard let delegate = delegate else {
                 if !isPro {
                     favDelegate?.showOutOfDataPopUp()

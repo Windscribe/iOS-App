@@ -40,7 +40,7 @@ class AppReviewManager: AppReviewManaging {
                           AppReviewCriteriaType.userActiveStatus]
     }
 
-    func requestReviewIfAvailable(session: Session?) {
+    func requestReviewIfAvailable(session: SessionModel?) {
         guard shouldShowReviewRequest(session: session) else {
             logger.logD("AppReviewManager", "Rate Dialog: Do not show! All of the review request criterias shall be met.")
             return
@@ -49,7 +49,7 @@ class AppReviewManager: AppReviewManaging {
         promptReview()
     }
 
-    func shouldShowReviewRequest(session: Session?) -> Bool {
+    func shouldShowReviewRequest(session: SessionModel?) -> Bool {
         // User Session is necessary to detect user status
         guard let session = session else {
             logger.logD("AppReviewManager", "Rate Dialog: Do not show, no session available")
@@ -67,7 +67,7 @@ class AppReviewManager: AppReviewManaging {
     /// This method is for checking App Review Sub Criteria is satisfied for a type
     /// - Parameter type: Main-criteria type
     /// - Returns:Boolean value showing particular criteria is satisfied
-    private func checkReviewCriteriasSatisfied(for type: AppReviewCriteriaType, session: Session) -> Bool {
+    private func checkReviewCriteriasSatisfied(for type: AppReviewCriteriaType, session: SessionModel) -> Bool {
       switch type {
       case .timeElapseStatus:
           return checkTimeElapseStatus()
@@ -108,7 +108,7 @@ class AppReviewManager: AppReviewManaging {
     /// Step 2
     /// User used at least 1 gb
     /// - Returns: If user used soem amount of data that will be enough for rating
-    private func checkUsageBandwithStatus(session: Session) -> Bool {
+    private func checkUsageBandwithStatus(session: SessionModel) -> Bool {
         guard session.getDataUsedInMB() >= 1024 else {
             return false
         }
@@ -132,7 +132,7 @@ class AppReviewManager: AppReviewManaging {
     /// User not banned
     /// User not out of data
     /// - Returns: If user is in active status
-    private func checkActiveStatus (session: Session) -> Bool {
+    private func checkActiveStatus (session: SessionModel) -> Bool {
         // Checking user status
         // User is not banned (session status ≠ 3)
         // User has some data left (session status ≠ 2)

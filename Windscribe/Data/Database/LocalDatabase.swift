@@ -12,16 +12,17 @@ import RxSwift
 import Combine
 
 protocol LocalDatabase {
+    func migrate()
+
     // MARK: After Modelization of Database
     func getServers() -> [Server]?
     func saveServers(servers: [Server])
 
-    // MARK: Before Modelization of Database
-
-    func migrate()
     func getSession() -> Observable<Session?>
     func getSessionSync() -> Session?
-    func saveSession(session: Session) async
+    func saveSession(session: Session)
+
+    // MARK: Before Modelization of Databas)
     func getMobilePlans() -> [MobilePlan]?
     func saveMobilePlans(mobilePlansList: [MobilePlan])
     func getStaticIPs() -> [StaticIP]?

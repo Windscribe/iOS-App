@@ -117,7 +117,7 @@ extension MainViewController {
     }
 
     func setTableViewInsets() {
-        guard let session = try? viewModel.session.value() else { return }
+        guard let session = try? viewModel.sessionModel.value() else { return }
         if session.isPremium {
             serverListTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             favTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -228,7 +228,7 @@ extension MainViewController {
     }
 
     func arrangeListsFooterViews() {
-        guard let session = try? viewModel.session.value() else { return }
+        guard let session = try? viewModel.sessionModel.value() else { return }
         let visible = session.isUserPro || !isSpaceAvailableForGetMoreDataView()
         staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource?.shouldHideFooter() ?? true) || !visible
         customConfigTableViewFooterView.isHidden = !visible

@@ -12,11 +12,11 @@ import Swinject
 import UIKit
 
 enum AccountItemCell {
-    private var localDatabase: LocalDatabase {
-        return Assembler.resolve(LocalDatabase.self)
+    private var userSessionRepository: UserSessionRepository {
+        return Assembler.resolve(UserSessionRepository.self)
     }
 
-    private var session: Session? { localDatabase.getSessionSync() }
+    private var session: SessionModel? { userSessionRepository.sessionModel }
 
     var isProUser: Bool {
         if let session = session {
@@ -175,11 +175,11 @@ enum AccountItemCell {
 }
 
 enum AccountSectionItem {
-    private var localDatabase: LocalDatabase {
-        return Assembler.resolve(LocalDatabase.self)
+    private var userSessionRepository: UserSessionRepository {
+        return Assembler.resolve(UserSessionRepository.self)
     }
 
-    private var session: Session? { localDatabase.getSessionSync() }
+    private var session: SessionModel? { userSessionRepository.sessionModel }
 
     var isProUser: Bool {
         if let session = session {

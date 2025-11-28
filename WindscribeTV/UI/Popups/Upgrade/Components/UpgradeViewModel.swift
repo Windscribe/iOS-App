@@ -53,7 +53,8 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     let alertManager: AlertManagerV2
     let localDatabase: LocalDatabase
     let apiManager: APIManager
-    let sessionRepository: SessionRepository
+    let sessionManager: SessionManager
+    let userSessionRepository: UserSessionRepository
     let preferences: Preferences
     var inAppPurchaseManager: InAppPurchaseManager
     let pushNotificationManager: PushNotificationManager
@@ -78,7 +79,8 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     init(alertManager: AlertManagerV2,
          localDatabase: LocalDatabase,
          apiManager: APIManager,
-         sessionRepository: SessionRepository,
+         sessionManager: SessionManager,
+         userSessionRepository: UserSessionRepository,
          preferences: Preferences,
          inAppManager: InAppPurchaseManager,
          pushNotificationManager: PushNotificationManager,
@@ -88,7 +90,8 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         self.alertManager = alertManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
+        self.sessionManager = sessionManager
         self.preferences = preferences
         inAppPurchaseManager = inAppManager
         self.pushNotificationManager = pushNotificationManager
@@ -108,7 +111,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     private func checkAccountStatus() {
-        if let session = sessionRepository.session {
+        if let session = userSessionRepository.sessionModel {
             showFreeDataOption.onNext(session.isUserGhost || !session.hasUserAddedEmail || (session.hasUserAddedEmail && session.userNeedsToConfirmEmail))
         }
     }
@@ -152,9 +155,9 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
 
     func continueFreeButtonTapped() {
         logger.logD("UpgradeViewModelImpl", "User tapped to get free data.")
-        if sessionRepository.session?.hasUserAddedEmail == true && sessionRepository.session?.emailStatus == false {
+        if userSessionRepository.sessionModel?.hasUserAddedEmail == true && userSessionRepository.sessionModel?.emailStatus == false {
             upgradeRouteState.onNext(RouteID.confirmEmail(delegate: self))
-        } else if sessionRepository.session?.hasUserAddedEmail == false && sessionRepository.session?.isUserGhost == false {
+        } else if userSessionRepository.sessionModel?.hasUserAddedEmail == false && userSessionRepository.sessionModel?.isUserGhost == false {
             upgradeRouteState.onNext(RouteID.enterEmail)
         } else {
             upgradeRouteState.onNext(RouteID.signup(claimGhostAccount: true))
@@ -231,14 +234,10 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             guard let self = self else { return }
 
             do {
-                let session = try await self.apiManager.getSession(nil)
-                await MainActor.run {
-                    self.logger.logI("UpgradeViewModelImpl", "Received updated session.")
-                }
-                await self.localDatabase.saveSession(session: session)
-                await MainActor.run {
-                    self.upgradeState.onNext(.success(session.isUserGhost))
-                }
+                try await sessionManager.updateSession()
+                let session = userSessionRepository.sessionModel
+                self.logger.logI("UpgradeViewModelImpl", "Received updated session.")
+                self.upgradeState.onNext(.success(session?.isUserGhost ?? false))
             } catch {
                 await MainActor.run {
                     self.logger.logE("UpgradeViewModelImpl", "Failure to update session.")

@@ -19,7 +19,7 @@ protocol SubmitLogViewModel {
 
 class SubmitLogViewModelImpl: SubmitLogViewModel {
     var alertManager: AlertManagerV2
-    let sessionRepository: SessionRepository
+    let userSessionRepository: UserSessionRepository
     let apiManager: APIManager
     let connectivity: ConnectivityManager
 
@@ -27,11 +27,11 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
     var networkStatus = NetworkStatus.disconnected
     let logger = Assembler.resolve(FileLogger.self)
 
-    init(sessionRepository: SessionRepository,
+    init(userSessionRepository: UserSessionRepository,
          apiManager: APIManager,
          alertManager: AlertManagerV2,
          connectivity: ConnectivityManager) {
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.alertManager = alertManager
         self.connectivity = connectivity
@@ -52,8 +52,8 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
                 let logData = try await logger.getLogData()
 
                 let username = await MainActor.run {
-                    var username = sessionRepository.session?.username ?? ""
-                    if let session = sessionRepository.session, session.isUserGhost {
+                    var username = userSessionRepository.sessionModel?.username ?? ""
+                    if let session = userSessionRepository.sessionModel, session.isUserGhost {
                         username = "ghost_\(session.userId)"
                     }
                     return username

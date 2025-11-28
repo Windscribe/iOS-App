@@ -41,6 +41,7 @@ class LoginViewModelImpl: LoginViewModel {
 
     let apiCallManager: APIManager
     let userSessionRepository: UserSessionRepository
+    let sessionManager: SessionManager
     let connectivity: ConnectivityManager
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
@@ -50,11 +51,24 @@ class LoginViewModelImpl: LoginViewModel {
     let latencyRepository: LatencyRepository
     let logger: FileLogger
     let disposeBag = DisposeBag()
-    private var appCancellable = [AnyCancellable]()
 
-    init(apiCallManager: APIManager, userSessionRepository: UserSessionRepository, connectivity: ConnectivityManager, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    private var appCancellable = [AnyCancellable]()
+    private var timerCancellable: AnyCancellable?
+
+    init(apiCallManager: APIManager,
+         userSessionRepository: UserSessionRepository,
+         sessionManager: SessionManager,
+         connectivity: ConnectivityManager,
+         preferences: Preferences,
+         emergencyConnectRepository: EmergencyRepository,
+         userDataRepository: UserDataRepository,
+         vpnManager: VPNManager,
+         protocolManager: ProtocolManagerType,
+         latencyRepository: LatencyRepository,
+         logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
         self.userSessionRepository = userSessionRepository
+        self.sessionManager = sessionManager
         self.connectivity = connectivity
         self.preferences = preferences
         self.emergencyConnectRepository = emergencyConnectRepository
@@ -151,14 +165,13 @@ class LoginViewModelImpl: LoginViewModel {
         }
     }
 
-    private func handleLoginSuccess(session: Session) async {
-        await userSessionRepository.login(session: session)
-        await MainActor.run {
-            preferences.saveLoginDate(date: Date())
-            WifiManager.shared.saveCurrentWifiNetworks()
-            logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
-            prepareUserData()
-        }
+    private func handleLoginSuccess(session: Session) {
+        preferences.saveLoginDate(date: Date())
+        WifiManager.shared.saveCurrentWifiNetworks()
+        sessionManager.updateFrom(session: session)
+        logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
+
+        prepareUserData()
     }
 
     private func handleLoginError(_ error: Error) {
@@ -219,43 +232,62 @@ class LoginViewModelImpl: LoginViewModel {
 
     func startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
         let startTime = Date()
-        let dispose = CompositeDisposable()
 
-        let d = Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { _ in
+
+        timerCancellable = Timer.publish(every: 5, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+
                 Task { [weak self] in
                     guard let self = self else { return }
-
                     do {
-                        let verifyResponse = try await self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
-
-                        if dispose.isDisposed {
-                            return
+                        let verifyResponse = try await withTimeout(seconds: 20) {
+                            try await self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
                         }
 
                         let auth = verifyResponse.sessionAuth
-                        let session = try await self.apiCallManager.getSession(sessionAuth: auth)
 
-                        session.sessionAuthHash = auth
-                        await self.userSessionRepository.login(session: session)
-                        await MainActor.run {
-                            dispose.dispose()
-                            WifiManager.shared.saveCurrentWifiNetworks()
-                            self.preferences.saveLoginDate(date: Date())
-                            self.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")
-                            self.prepareUserData()
-                            self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                        do {
+                            try await sessionManager.login(auth: auth)
+                            if let session = userSessionRepository.sessionModel {
+                                WifiManager.shared.saveCurrentWifiNetworks()
+
+                                self.preferences.saveLoginDate(date: Date())
+                                self.timerCancellable?.cancel()
+                                self.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")
+                                self.prepareUserData()
+                                self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                            }
+                        } catch {
+                            // Handle getSession error silently, just like the original code
                         }
                     } catch {
                         await MainActor.run {
                             self.logger.logE("LoginViewModel", "Failed to verify XPress login code: \(error.localizedDescription)")
                             self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                            self.timerCancellable?.cancel()
                         }
                     }
                 }
-            })
+            }
+    }
 
-        _ = dispose.insert(d)
+    private func withTimeout<T>(seconds: TimeInterval, operation: @escaping () async throws -> T) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask {
+                try await operation()
+            }
+
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw CancellationError()
+            }
+
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
+        }
     }
 
     private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse) {
@@ -304,6 +336,7 @@ class LoginViewModelImpl: LoginViewModel {
             }
         }, onFailure: { [weak self] error in
             self?.preferences.saveUserSessionAuth(sessionAuth: nil)
+            self?.userSessionRepository.clearSession()
             self?.logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
             self?.showLoadingView.onNext(false)
             switch error {

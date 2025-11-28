@@ -29,17 +29,17 @@ final class AccountStatusViewModelImpl: AccountStatusViewModel {
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
-    private let sessionRepository: SessionRepository
+    private let userSessionRepository: UserSessionRepository
 
     private var cancellables = Set<AnyCancellable>()
 
     init(accountStatusType: AccountStatusType = .banned,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger,
-         sessionRepository: SessionRepository) {
+         userSessionRepository: UserSessionRepository) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
 
         self.accountStatusType = accountStatusType
 
@@ -57,7 +57,7 @@ final class AccountStatusViewModelImpl: AccountStatusViewModel {
     var resetDate: String {
         switch accountStatusType {
         case .outOfData:
-            return sessionRepository.session?.getNextReset() ?? ""
+            return userSessionRepository.sessionModel?.getNextReset() ?? ""
         default:
             return ""
         }

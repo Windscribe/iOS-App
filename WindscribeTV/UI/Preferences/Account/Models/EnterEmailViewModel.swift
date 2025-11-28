@@ -18,20 +18,20 @@ protocol EnterEmailViewModel {
 }
 
 class EnterEmailViewModelImpl: EnterEmailViewModel {
-    let sessionRepository: SessionRepository
+    let userSessionRepository: UserSessionRepository
     let alertManager: AlertManagerV2
     let apiManager: APIManager
     let isDarkMode: CurrentValueSubject<Bool, Never>
 
     var currentEmail: String? {
-        sessionRepository.session?.email
+        userSessionRepository.sessionModel?.email
     }
 
-    init(sessionRepository: SessionRepository,
+    init(userSessionRepository: UserSessionRepository,
          alertManager: AlertManagerV2,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          apiManager: APIManager) {
-        self.sessionRepository = sessionRepository
+        self.userSessionRepository = userSessionRepository
         self.alertManager = alertManager
         self.apiManager = apiManager
         isDarkMode = lookAndFeelRepository.isDarkModeSubject

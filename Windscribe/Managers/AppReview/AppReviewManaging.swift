@@ -16,8 +16,8 @@ protocol AppReviewManaging {
 
     var reviewRequestTrigger: PassthroughSubject<Void, Never> { get }
 
-    func requestReviewIfAvailable(session: Session?)
+    func requestReviewIfAvailable(session: SessionModel?)
     func promptReviewWithConfirmation()
     func openAppStoreForReview()
-    func shouldShowReviewRequest(session: Session?) -> Bool
+    func shouldShowReviewRequest(session: SessionModel?) -> Bool
 }

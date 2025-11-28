@@ -63,6 +63,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     private let preferences: Preferences
     private let vpnStateRepository: VPNStateRepository
     private let ssoManager: SSOManaging
+    private let sessionManager: SessionManager
     private let logger: FileLogger
 
     private var presentingController: UIViewController?
@@ -74,7 +75,8 @@ class WelcomeViewModelImpl: WelcomeViewModel {
          preferences: Preferences,
          vpnStateRepository: VPNStateRepository,
          ssoManager: SSOManaging,
-         logger: FileLogger) {
+         logger: FileLogger,
+         sessionManager: SessionManager) {
         self.userSessionRepository = userSessionRepository
         self.keyChainDatabase = keyChainDatabase
         self.userDataRepository = userDataRepository
@@ -83,6 +85,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
         self.vpnStateRepository = vpnStateRepository
         self.ssoManager = ssoManager
         self.logger = logger
+        self.sessionManager = sessionManager
 
         listenForVPNStateChange()
     }
@@ -100,11 +103,9 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 }
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
-                Task { @MainActor in
-                    await self.userSessionRepository.login(session: session)
-                    self.logger.logI("WelcomeViewModel", "Apple sign in successful")
-                    self.prepareUserData()
-                }
+                self.sessionManager.updateFrom(session: session)
+                self.logger.logI("WelcomeViewModel", "Apple sign in successful")
+                self.prepareUserData()
             })
             .store(in: &cancellables)
     }

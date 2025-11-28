@@ -39,6 +39,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private let apiManager: APIManager
     private let upgradeRouter: UpgradeRouter
     private let sessionManager: SessionManager
+    private let userSessionRepository: UserSessionRepository
     private let preferences: Preferences
     private var inAppPurchaseManager: InAppPurchaseManager
     private let pushNotificationManager: PushNotificationManager
@@ -62,10 +63,17 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private var mobilePlans: [MobilePlan]?
     private let disposeBag = DisposeBag()
 
-    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, upgradeRouter: UpgradeRouter,
-         sessionManager: SessionManager, preferences: Preferences, inAppPurchaseManager: InAppPurchaseManager,
-         pushNotificationManager: PushNotificationManager, mobilePlanRepository: MobilePlanRepository, logger: FileLogger,
-         lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(alertManager: AlertManagerV2,
+         localDatabase: LocalDatabase,
+         apiManager: APIManager,
+         upgradeRouter: UpgradeRouter,
+         sessionManager: SessionManager,
+         preferences: Preferences,
+         inAppPurchaseManager: InAppPurchaseManager,
+         pushNotificationManager: PushNotificationManager,
+         mobilePlanRepository: MobilePlanRepository, logger: FileLogger,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         userSessionRepository: UserSessionRepository) {
         self.alertManager = alertManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
@@ -76,6 +84,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
         self.pushNotificationManager = pushNotificationManager
         self.mobilePlanRepository = mobilePlanRepository
         self.logger = logger
+        self.userSessionRepository = userSessionRepository
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         self.inAppPurchaseManager.delegate = self
     }
@@ -169,14 +178,10 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
             guard let self = self else { return }
 
             do {
-                let session = try await self.apiManager.getSession(nil)
-                await MainActor.run {
-                    self.logger.logI("DefaultUpgradePlanViewModel", "Received updated session.")
-                }
-                await self.localDatabase.saveSession(session: session)
-                await MainActor.run {
-                    self.upgradeState.onNext(.success(session.isUserGhost))
-                }
+                try await sessionManager.updateSession()
+                let session = userSessionRepository.sessionModel
+                self.logger.logI("DefaultUpgradePlanViewModel", "Received updated session.")
+                self.upgradeState.onNext(.success(session?.isUserGhost ?? false))
             } catch {
                 await MainActor.run {
                     self.logger.logE("DefaultUpgradePlanViewModel", "Failure to update session. \(error.localizedDescription)")

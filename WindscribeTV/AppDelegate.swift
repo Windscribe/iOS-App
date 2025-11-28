@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let disposeBag = DisposeBag()
     private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
 
+    private lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
+
     private lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
 
     private lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
@@ -63,11 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             guard let self = self else { return }
 
             do {
-                let session = try await self.apiManager.getSession(nil)
-                await MainActor.run {
-                    self.localDatabase.saveOldSession()
-                }
-                await self.localDatabase.saveSession(session: session)
+                try await sessionManager.updateSession()
             } catch {
                 await MainActor.run {
                     self.logger.logE("AppDelegate", "Failed to get session from server with error \(error).")
