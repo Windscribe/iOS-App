@@ -28,7 +28,7 @@ protocol MainViewModel {
     var connectionMode: BehaviorSubject<String> { get }
     var appNetwork: BehaviorSubject<AppNetwork> { get }
     var wifiNetwork: BehaviorSubject<WifiNetwork?> { get }
-    var sessionModel: BehaviorSubject<SessionModel?> { get }
+    var sessionModel: CurrentValueSubject<SessionModel?, Never> { get }
     var favouriteGroups: BehaviorSubject<[GroupModel]> { get }
 
     var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }

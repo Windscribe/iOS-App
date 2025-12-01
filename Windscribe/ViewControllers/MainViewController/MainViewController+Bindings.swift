@@ -118,9 +118,13 @@ extension MainViewController {
         viewModel.isDarkMode.receive(on: DispatchQueue.main).sink { [weak self] in
             self?.updateLayoutForTheme(isDarkMode: $0)
         }.store(in: &cancellables)
-        viewModel.sessionModel.subscribe(onNext: { [weak self] in
-            self?.updateUIForSession(session: $0)
-        }).disposed(by: disposeBag)
+        viewModel.sessionModel
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sessionModel in
+                guard let self = self else { return }
+                self.updateUIForSession(session: sessionModel)
+            }
+            .store(in: &cancellables)
 
         viewModel.promoPayload.distinctUntilChanged().subscribe(onNext: { [weak self] payload in
             guard let self = self, let payload = payload else { return }
