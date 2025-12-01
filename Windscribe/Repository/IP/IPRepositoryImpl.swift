@@ -30,10 +30,23 @@ class IPRepositoryImpl: IPRepository {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
+
+        // Load cached IP synchronously to ensure value is available before UI subscribes
+        if let cachedIp = localDatabase.getIpSync() {
+            logger.logI("IPRepositoryImpl", "Loaded cached IP synchronously: \(cachedIp.userIp)")
+            updateState(.available(cachedIp))
+            currentIp.send(cachedIp.userIp)
+            wasObserved = true
+        } else {
+            logger.logI("IPRepositoryImpl", "No cached IP found in database")
+            updateState(.unavailable)
+        }
+
+        // Set up async observation for database changes
         load()
     }
 
-    /// Loads the last known IP from the local database
+    /// Observes database changes for IP updates
     private func load() {
         localDatabase.getIp()
             .observe(on: MainScheduler.asyncInstance)

@@ -147,6 +147,10 @@ class MockLocalDatabase: LocalDatabase {
         return Observable.just(nil)
     }
 
+    func getIpSync() -> Windscribe.MyIP? {
+        return nil
+    }
+
     func saveIp(myip: Windscribe.MyIP) -> Disposable {
         return Disposables.create()
     }

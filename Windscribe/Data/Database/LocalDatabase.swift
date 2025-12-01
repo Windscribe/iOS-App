@@ -43,6 +43,7 @@ protocol LocalDatabase {
     func getReadNoticesObservable() -> Observable<[ReadNotice]>
     func saveReadNotices(readNotices: [ReadNotice])
     func getIp() -> Observable<MyIP?>
+    func getIpSync() -> MyIP?
     func saveIp(myip: MyIP) -> Disposable
     func getNetworks() -> Observable<[WifiNetwork]>
     func getPublishedNetworks() -> AnyPublisher<[WifiNetwork], Never>
