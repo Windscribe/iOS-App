@@ -266,7 +266,6 @@ class LoginViewModelImpl: LoginViewModel {
                         await MainActor.run {
                             self.logger.logE("LoginViewModel", "Failed to verify XPress login code: \(error.localizedDescription)")
                             self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
-                            self.timerCancellable?.cancel()
                         }
                     }
                 }
@@ -292,10 +291,11 @@ class LoginViewModelImpl: LoginViewModel {
 
     private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse) {
         let now = Date()
-        let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)
+        let secondsPassed = Int(now.timeIntervalSince(startTime))
         if secondsPassed > loginCodeResponse.ttl {
             logger.logE("LoginViewModel", "Failed to verify XPress login code in ttl. Giving up")
             failedState.onNext(.network(""))
+            timerCancellable?.cancel()
         }
     }
 
