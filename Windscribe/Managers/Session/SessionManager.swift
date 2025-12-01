@@ -145,13 +145,15 @@ class SessionManagerImpl: SessionManager {
     }
 
     func login(auth: String) async throws {
-        let session = try await self.apiManager.getSession(sessionAuth: auth)
+        var session = try await self.apiManager.getSession(sessionAuth: auth)
         wgCredentials.delete()
+        if session.sessionAuthHash.isEmpty {
+            session.sessionAuthHash = auth
+        }
         updateFrom(session: session)
     }
 
     func updateFrom(session: Session) {
-        preferences.saveUserSessionAuth(sessionAuth: session.sessionAuthHash)
         processUpdatedSession(session: session)
     }
 
