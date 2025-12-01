@@ -47,7 +47,7 @@ class MainViewModelImpl: MainViewModel {
     var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
     var appNetwork = BehaviorSubject<AppNetwork>(value: AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
     var wifiNetwork = BehaviorSubject<WifiNetwork?>(value: nil)
-    var sessionModel = BehaviorSubject<SessionModel?>(value: nil)
+    var sessionModel = CurrentValueSubject<SessionModel?, Never>(nil)
     var favouriteGroups = BehaviorSubject<[GroupModel]>(value: [])
     let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
 
@@ -202,7 +202,7 @@ class MainViewModelImpl: MainViewModel {
         userSessionRepository.sessionModelSubject
             .sink { [weak self] session in
                 guard let self = self else { return }
-                self.sessionModel.onNext(session)
+                self.sessionModel.send(session)
             }
             .store(in: &cancellables)
     }

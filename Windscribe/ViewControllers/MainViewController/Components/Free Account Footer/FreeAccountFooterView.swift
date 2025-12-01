@@ -22,6 +22,7 @@ class FreeAccountFooterViewModel: FreeAccountFooterViewModelType {
 
     init(userSessionRepository: UserSessionRepository) {
         userSessionRepository.sessionModelSubject
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 self?.dataLeftSubject.onNext(session?.getDataLeftModel())
             }

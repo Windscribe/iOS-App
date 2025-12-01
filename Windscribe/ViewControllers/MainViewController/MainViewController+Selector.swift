@@ -57,17 +57,17 @@ extension MainViewController {
     }
 
     func updateUIForSession(session: SessionModel?) {
-        logger.logD("MainViewController", "Looking for account state changes.")
         guard let session = session else { return }
+        logger.logD("MainViewController", "Looking for account state changes.")
 
         // Check for ghost account and present account completion screen
         showAccountCompletionForGhostAccount(session: session)
 
         proIcon.isHidden = !session.isUserPro
 
-        arrangeListsFooterViews()
+        arrangeListsFooterViews(for: session)
         reloadTableViews()
-        setTableViewInsets()
+        setTableViewInsets(for: session)
 
         if session.status == 3 {
             logger.logI("MainViewController", "User is banned from servers.")
@@ -251,7 +251,7 @@ extension MainViewController {
             // Check eligibility EXCEPT for custom config
             let isCustomConfig = vpnConnectionViewModel.isCustomConfigSelected()
             if !isCustomConfig {
-                let session = try? viewModel.sessionModel.value()
+                let session = viewModel.sessionModel.value
                 let locationType = vpnConnectionViewModel.getLocationType()
                 let isStaticIP = (locationType == .staticIP)
 
