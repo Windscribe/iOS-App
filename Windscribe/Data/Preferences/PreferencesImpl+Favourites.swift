@@ -15,7 +15,7 @@ extension PreferencesImpl {
             return Just([]).eraseToAnyPublisher()
         }
 
-        return sharedDefault.publisher(for: \.self)
+        return NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification, object: sharedDefault)
             .compactMap { _ in sharedDefault.stringArray(forKey: SharedKeys.tvFavourites) }
             .prepend(sharedDefault.stringArray(forKey: SharedKeys.tvFavourites))
             .map { $0 ?? [] }

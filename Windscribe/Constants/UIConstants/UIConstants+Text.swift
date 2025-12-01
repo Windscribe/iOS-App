@@ -322,7 +322,7 @@ enum TextsAsset {
         static var connectedState: String {
             return "Connected to".localized
         }
-        
+
 
     }
 
@@ -1473,7 +1473,7 @@ enum TextsAsset {
         static var noFavorites: String {
             return "No Favourites".localized
         }
-         
+
         static var randomIP: String {
             return "Random IP".localized
         }
