@@ -158,8 +158,10 @@ class ListEmptyView: UIView {
             }
             .store(in: &cancellables)
         languageManager.activelanguage.sink { [weak self] _ in
-            self?.label.text = self?.type.description
-            self?.config.title = self?.type.buttonTitle
+            guard let self = self else { return }
+            self.label.text = self.type.description
+            self.config.title = self.type.buttonTitle
+            self.button.configuration = self.config
         }.store(in: &cancellables)
     }
 }
