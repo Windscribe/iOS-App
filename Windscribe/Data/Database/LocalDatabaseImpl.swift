@@ -175,6 +175,10 @@ class LocalDatabaseImpl: LocalDatabase {
         return getSafeRealmObservable(type: MyIP.self)
     }
 
+    func getIpSync() -> MyIP? {
+        return getRealmObject(type: MyIP.self)
+    }
+
     func saveIp(myip: MyIP) -> Disposable {
         return updateRealmObject(object: myip)
     }

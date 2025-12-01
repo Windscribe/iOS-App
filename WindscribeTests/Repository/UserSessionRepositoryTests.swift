@@ -20,12 +20,14 @@ class UserSessionRepositoryTests: XCTestCase {
         super.setUp()
         mockContainer = Container()
 
-        // Register UserSessionRepository
+        mockContainer.register(Preferences.self) { _ in
+            return MockPreferences()
+        }
+
         mockContainer.register(UserSessionRepository.self) { r in
-            return UserSessionRepositoryImpl()
+            return UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.container)
 
-        // Resolve repository from container
         repository = mockContainer.resolve(UserSessionRepository.self)!
     }
 
