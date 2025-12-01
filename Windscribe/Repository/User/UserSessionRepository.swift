@@ -37,7 +37,7 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     init(preferences: Preferences) {
         self.preferences = preferences
     }
-    
+
     func update(sessionModel: SessionModel) {
         self.oldSessionModel = self.sessionModel
         self.sessionModel = sessionModel

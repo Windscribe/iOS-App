@@ -355,13 +355,8 @@ class MainViewModelImpl: MainViewModel {
     }
 
     private func getFavouriteGroup(id: String, servers: [ServerModel]) -> GroupModel? {
-        var groups: [GroupModel] = []
-        for server in servers {
-            for group in (server.groups) {
-                groups.append(group)
-            }
-        }
-        return groups.first { $0.id == Int(id) }
+        servers.flatMap { $0.groups }
+            .first { $0.id == Int(id) }
     }
 
     private func loadTvFavourites() {

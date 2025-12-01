@@ -49,6 +49,18 @@ struct StaticIPCredentialsModel {
     dynamic var username: String = ""
     dynamic var password: String = ""
 
+    enum CodingKeys: String, CodingKey {
+        case username
+        case password
+    }
+
+    required convenience init(from decoder: Decoder) throws {
+        self.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        username = try container.decodeIfPresent(String.self, forKey: .username) ?? ""
+        password = try container.decodeIfPresent(String.self, forKey: .password) ?? ""
+    }
+
     convenience init(username: String, password: String) {
         self.init()
         self.username = username

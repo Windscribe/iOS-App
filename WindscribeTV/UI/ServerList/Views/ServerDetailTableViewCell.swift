@@ -47,6 +47,8 @@ class ServerDetailTableViewCell: UITableViewCell {
     lazy var localDB = Assembler.resolve(LocalDatabase.self)
     lazy var preferences = Assembler.resolve(Preferences.self)
     lazy var serverRepository = Assembler.resolve(ServerRepository.self)
+    lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)
+
     var displayingGroup: GroupModel?
     var displayingNodeServer: ServerModel?
     var favIDs: [String] = []
@@ -59,7 +61,6 @@ class ServerDetailTableViewCell: UITableViewCell {
         return myPreferredFocusedView
     }
 
-    lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)
 
     var displayingFavGroup: GroupModel? {
         didSet {
