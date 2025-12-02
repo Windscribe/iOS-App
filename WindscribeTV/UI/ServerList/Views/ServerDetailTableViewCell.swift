@@ -353,14 +353,17 @@ class ServerDetailTableViewCell: UITableViewCell {
         if staticIpDelegate != nil {
             return true
         }
-        if let bestNode = displayingGroup?.bestNode,
-           let bestNodeHostname = displayingGroup?.bestNodeHostname,
+
+        // Check whichever group is set (regular server list or favorites)
+        let group = displayingGroup ?? displayingFavGroup
+        if let bestNode = group?.bestNode,
+           let bestNodeHostname = group?.bestNodeHostname,
            bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
            bestNodeHostname != "" {
             return true
-        } else {
-            return false
         }
+
+        return false
     }
 
     @objc func connectButtonTapped() {
