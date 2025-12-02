@@ -611,6 +611,19 @@ extension PreferencesImpl {
         sharedDefault?.setValue(value, forKey: forKey)
     }
 
+    // Synchronous getters for tvOS preferences display
+    func getOrderLocationsBySync() -> String? {
+        return getString(forKey: SharedKeys.orderLocationsBy)
+    }
+
+    func getSelectedProtocolSync() -> String? {
+        return getString(forKey: SharedKeys.selectedProtocol)
+    }
+
+    func getSelectedPortSync() -> String? {
+        return getString(forKey: SharedKeys.port)
+    }
+
     func getBool(key: String) -> Bool {
         return sharedDefault?.bool(forKey: key) ?? false
     }

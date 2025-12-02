@@ -90,7 +90,7 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     func getCurrentLocationOrder() -> String {
-        return (try? locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
+        return preferences.getOrderLocationsBySync() ?? DefaultValues.orderLocationsBy
     }
 
     func getCurrentApperance() -> String {

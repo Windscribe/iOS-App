@@ -214,4 +214,9 @@ protocol Preferences {
 
     // WireGuard Cleanup
     func clearWireGuardConfiguration()
+
+    // Synchronous getters for tvOS preferences display
+    func getOrderLocationsBySync() -> String?
+    func getSelectedProtocolSync() -> String?
+    func getSelectedPortSync() -> String?
 }

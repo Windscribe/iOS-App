@@ -353,9 +353,12 @@ class MainViewController: PreferredFocusedViewController {
                 self.configureBestLocation()
             })
 
-        viewModel.sessionModel.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.checkSessionChanges(session: $0)
-        }).disposed(by: disposeBag)
+        viewModel.sessionModel
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] session in
+                self?.checkSessionChanges(session: session)
+            }
+            .store(in: &cancellables)
 
         Publishers.CombineLatest(
             viewModel.wifiNetwork.asPublisher().replaceError(with: nil),
@@ -374,7 +377,7 @@ class MainViewController: PreferredFocusedViewController {
         }).disposed(by: disposeBag)
 
         Publishers.CombineLatest(
-            viewModel.sessionModel.asPublisher().replaceError(with: nil),
+            viewModel.sessionModel,
             languageManager.activelanguage
         )
         .receive(on: DispatchQueue.main)
@@ -412,7 +415,7 @@ class MainViewController: PreferredFocusedViewController {
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
-            if let isUserPro = try? viewModel.sessionModel.value()?.isPremium,
+            if let isUserPro = viewModel.sessionModel.value?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
                isGroupProOnly,
                !isUserPro {
@@ -454,6 +457,9 @@ class MainViewController: PreferredFocusedViewController {
                     self.upgradeButton.isHidden = false
                     self.upgradeButton.dataLeft.text = "\(session.getDataLeft()) \(TextsAsset.left.uppercased())"
                 }
+            } else {
+                // Hide upgrade button when session is nil (not loaded yet)
+                self.upgradeButton.isHidden = true
             }
         }
     }
