@@ -97,6 +97,10 @@ class MockPreferences: Preferences {
         return Just(nil).eraseToAnyPublisher()
     }
 
+    func getOrderLocationsBySync() -> String? {
+        return nil
+    }
+
     func saveLanguage(language: String) {
         mockLanguage = language
     }
@@ -618,5 +622,13 @@ class MockPreferences: Preferences {
 
     func clearWireGuardConfiguration() {
         clearWireGuardConfigurationCalled = true
+    }
+
+    func getSelectedProtocolSync() -> String? {
+        return mockSelectedProtocol
+    }
+
+    func getSelectedPortSync() -> String? {
+        return mockSelectedPort
     }
 }

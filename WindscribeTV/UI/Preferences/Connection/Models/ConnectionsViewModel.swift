@@ -197,11 +197,11 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func getCurrentConnectionMode() -> ConnectionModeType {
-        return connectionMode
+        return ConnectionModeType(fieldValue: preferences.getConnectionModeSync())
     }
 
     func getCurrentConnectedDNS() -> ConnectedDNSType {
-        return connectedDNS
+        return ConnectedDNSType(fieldValue: preferences.getConnectedDNS())
     }
 
     func updateConnectedDNS(type: ConnectedDNSType) {
@@ -252,11 +252,11 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func getCurrentPort() -> String {
-        return (try? currentPort.value()) ?? DefaultValues.port
+        return preferences.getSelectedPortSync() ?? DefaultValues.port
     }
 
     func getCurrentProtocol() -> String {
-        return (try? currentProtocol.value()) ?? DefaultValues.protocol
+        return preferences.getSelectedProtocolSync() ?? DefaultValues.protocol
     }
 
     func getPorts() -> [String] {
