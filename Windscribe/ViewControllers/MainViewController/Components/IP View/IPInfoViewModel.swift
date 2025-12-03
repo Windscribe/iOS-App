@@ -70,7 +70,7 @@ class IPInfoViewModel: IPInfoViewModelType {
         self.hapticFeedbackManager = hapticFeedbackManager
 
         ipRepository.ipState
-            .toPublisher()
+            .asPublisher()
             .receive(on: DispatchQueue.main)
             .compactMap { state -> MyIP? in
                 guard case .available(let ip) = state, !ip.isInvalidated else {

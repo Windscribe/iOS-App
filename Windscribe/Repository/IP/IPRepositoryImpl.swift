@@ -23,24 +23,29 @@ class IPRepositoryImpl: IPRepository {
     private var wasObserved = false
     private var cancellables = Set<AnyCancellable>()
 
-    let ipState = BehaviorSubject<IPState?>(value: nil)
-    let currentIp = CurrentValueSubject<String?, Never>(nil)
+    let ipState: BehaviorSubject<IPState?>
+    let currentIp: CurrentValueSubject<String?, Never>
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
 
-        // Load cached IP synchronously to ensure value is available before UI subscribes
+        // Load cached IP synchronously and initialize BehaviorSubject with correct initial state
+        // This ensures subscribers immediately get the correct value without race conditions
+        let initialState: IPState?
         if let cachedIp = localDatabase.getIpSync() {
             logger.logI("IPRepositoryImpl", "Loaded cached IP synchronously: \(cachedIp.userIp)")
-            updateState(.available(cachedIp))
-            currentIp.send(cachedIp.userIp)
+            initialState = .available(cachedIp)
+            self.currentIp = CurrentValueSubject<String?, Never>(cachedIp.userIp)
             wasObserved = true
         } else {
             logger.logI("IPRepositoryImpl", "No cached IP found in database")
-            updateState(.unavailable)
+            initialState = .unavailable
+            self.currentIp = CurrentValueSubject<String?, Never>(nil)
         }
+
+        self.ipState = BehaviorSubject<IPState?>(value: initialState)
 
         // Set up async observation for database changes
         load()
@@ -68,7 +73,15 @@ class IPRepositoryImpl: IPRepository {
     /// Fetches the current IP from the API and updates the local database
     func getIp() -> Single<Void> {
         let lastState = try? ipState.value()
-        updateState(.updating)
+
+        // Only show .updating if we don't have a valid IP already
+        // This keeps the cached IP visible while fetching fresh data
+        if case .available(_)? = lastState {
+            // Keep showing cached IP while updating in background
+            logger.logI("IPRepositoryImpl", "Fetching fresh IP while keeping cached IP visible")
+        } else {
+            updateState(.updating)
+        }
 
         return Single.create { single in
             let task = Task { [weak self] in
