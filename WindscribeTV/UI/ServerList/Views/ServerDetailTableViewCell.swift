@@ -61,7 +61,6 @@ class ServerDetailTableViewCell: UITableViewCell {
         return myPreferredFocusedView
     }
 
-
     var displayingFavGroup: GroupModel? {
         didSet {
             updateUIForFavourite()

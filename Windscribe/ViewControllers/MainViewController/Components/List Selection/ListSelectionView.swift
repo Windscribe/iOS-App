@@ -221,10 +221,10 @@ class ListSelectionView: UIView {
 
         UIView.animate(withDuration: animationDuration, animations: { [weak self] in
             self?.favButton.imageView.transform = CGAffineTransform(scaleX: growScale, y: growScale)
-        }) { [weak self] _ in
+        }, completion: { [weak self] _ in
             UIView.animate(withDuration: animationDuration, animations: {
                 self?.favButton.imageView.transform = .identity
             })
-        }
+        })
     }
 }

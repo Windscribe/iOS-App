@@ -233,7 +233,6 @@ class LoginViewModelImpl: LoginViewModel {
     func startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
         let startTime = Date()
 
-
         timerCancellable = Timer.publish(every: 5, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in

@@ -271,8 +271,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                     self.sessionManager.updateFrom(session: session)
                     self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
                     self.prepareUserData()
-                }
-                catch {
+                } catch {
                     await MainActor.run {
                         self.logger.logE("SignUpViewModel", "Failed to signup: \(error)")
                         self.handleError(error)
