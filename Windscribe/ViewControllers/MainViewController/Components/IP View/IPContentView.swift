@@ -211,13 +211,13 @@ class IPInfoView: UIView {
 
         UIView.animate(withDuration: animationDuration, animations: {
             button.transform = CGAffineTransform(scaleX: growScale, y: growScale)
-        }) { _ in
+        }, completion: { _ in
             UIView.animate(withDuration: animationDuration, animations: {
                 button.transform = .identity
-            }) { _ in
+            }, completion: { _ in
                 completion()
-            }
-        }
+            })
+        })
     }
 
     private func addViews() {

@@ -322,8 +322,6 @@ enum TextsAsset {
         static var connectedState: String {
             return "Connected to".localized
         }
-
-
     }
 
     enum Permission {

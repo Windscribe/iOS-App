@@ -88,7 +88,7 @@ class MainViewModelImpl: MainViewModel {
          protocolManager: ProtocolManagerType,
          hapticFeedbackManager: HapticFeedbackManager,
          userSessionRepository: UserSessionRepository,
-         sessionManager: SessionManager){
+         sessionManager: SessionManager) {
 
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
@@ -435,7 +435,7 @@ class MainViewModelImpl: MainViewModel {
     func loadLatencies() {
         serverRepository.serverListSubject
             .first(where: { !$0.isEmpty })
-            .sink { [weak self] servers in
+            .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.latencyRepo.loadLatency()
             }

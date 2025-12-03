@@ -145,7 +145,7 @@ class SessionManagerImpl: SessionManager {
     }
 
     func login(auth: String) async throws {
-        var session = try await self.apiManager.getSession(sessionAuth: auth)
+        let session = try await self.apiManager.getSession(sessionAuth: auth)
         wgCredentials.delete()
         if session.sessionAuthHash.isEmpty {
             session.sessionAuthHash = auth
