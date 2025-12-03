@@ -72,6 +72,7 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     func getSession() {
         userSessionRepository.sessionModelSubject
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 self?.session = session
                 if session?.emailStatus == true {

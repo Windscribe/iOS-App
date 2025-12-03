@@ -44,17 +44,22 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
         self.locationsManager = locationsManager
         self.backgroundFileManager = backgroundFileManager
 
-        locationsManager.selectedLocationUpdated.sink { [weak self] _ in
+        locationsManager.selectedLocationUpdated
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
             guard let self = self else { return }
             self.updateBackgroundImage(isConnected: self.isConnected)
         }.store(in: &cancellables)
 
-        lookAndFeelRepository.backgroundChangedTrigger.sink { [weak self] _ in
+        lookAndFeelRepository.backgroundChangedTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
             guard let self = self else { return }
             self.updateBackgroundImage(isConnected: self.isConnected)
         }.store(in: &cancellables)
 
         vpnStateRepository.getStatus()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 guard let self = self else { return }
                 self.isConnected = state == .connected

@@ -149,9 +149,11 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             }
             .store(in: &cancellables)
 
-        languageManager.activelanguage.sink { [weak self] _ in
-            self?.languageUpdatedTrigger.onNext(())
-        }.store(in: &cancellables)
+        languageManager.activelanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.languageUpdatedTrigger.onNext(())
+            }.store(in: &cancellables)
     }
 
     func updateChangeFirewallStatus() {

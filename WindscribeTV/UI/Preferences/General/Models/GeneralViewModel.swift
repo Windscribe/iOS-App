@@ -66,13 +66,17 @@ class GeneralViewModel: GeneralViewModelType {
             self?.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
         }.store(in: &cancellables)
 
-        lookAndFeelRepository.isDarkModeSubject.sink { [weak self] data in
-            self?.isDarkMode.onNext(data)
-        }.store(in: &cancellables)
+        lookAndFeelRepository.isDarkModeSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                self?.isDarkMode.onNext(data)
+            }.store(in: &cancellables)
 
-        languageManager.activelanguage.sink { [weak self] _ in
-            self?.languageUpdatedTrigger.onNext(())
-        }.store(in: &cancellables)
+        languageManager.activelanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.languageUpdatedTrigger.onNext(())
+            }.store(in: &cancellables)
     }
 
     func updateHapticFeedback() {

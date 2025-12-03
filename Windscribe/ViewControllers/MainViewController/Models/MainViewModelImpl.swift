@@ -200,6 +200,7 @@ class MainViewModelImpl: MainViewModel {
 
     private func observeSession() {
         userSessionRepository.sessionModelSubject
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
                 guard let self = self else { return }
                 self.sessionModel.send(session)
@@ -209,6 +210,7 @@ class MainViewModelImpl: MainViewModel {
 
     func observeNetworkStatus() {
         connectivity.network
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] network in
                 guard let self = self else { return }
                 self.appNetwork.onNext(network)

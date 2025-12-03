@@ -67,9 +67,11 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     private func observeLanguage() {
-        languageManager.activelanguage.sink { [weak self] updatedLanguage in
-            self?.currentLanguage.onNext(updatedLanguage.name)
-        }.store(in: &cancellables)
+        languageManager.activelanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] updatedLanguage in
+                self?.currentLanguage.onNext(updatedLanguage.name)
+            }.store(in: &cancellables)
     }
 
     func getActionButtonDisplay() {

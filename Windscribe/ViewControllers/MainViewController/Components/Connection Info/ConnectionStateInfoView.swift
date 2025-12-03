@@ -53,12 +53,13 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
             .store(in: &cancellables)
 
         // This is after the passing of RxSwift to Combine
-        protocolManager.currentProtocolSubject.sink { [weak self] data in
-            self?.refreshProtocolSubject.onNext(data)
-        }.store(in: &cancellables)
-
+        protocolManager.currentProtocolSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                self?.refreshProtocolSubject.onNext(data)
+            }.store(in: &cancellables)
     }
-
+    
     var isCustomConfigSelected: Bool {
         locationsManager.isCustomConfigSelected()
     }
