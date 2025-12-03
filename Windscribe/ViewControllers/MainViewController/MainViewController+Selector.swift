@@ -47,7 +47,7 @@ extension MainViewController {
     }
 
     @objc func configureBestLocationDefault() {
-        if serverListTableViewDataSource?.bestLocation == nil, noSelectedNodeToConnect() {
+        if serverListTableViewDataSource.bestLocation == nil, noSelectedNodeToConnect() {
             configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
             reloadServerList()
         } else {
@@ -218,16 +218,14 @@ extension MainViewController {
 
     func loadServerTable(servers: [ServerModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
         viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: servers) { serverSectionsOrdered in
-            self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel, shouldColapse: shouldColapse)
-            self.serverListTableViewDataSource?.delegate = self
-            self.serverListTableView.dataSource = self.serverListTableViewDataSource
-            self.serverListTableView.delegate = self.serverListTableViewDataSource
+            self.serverListTableViewDataSource.updateServerList(with: serverSectionsOrdered)
+            self.serverListTableViewDataSource.updateShouldColapse(with: shouldColapse)
+
             if let bestLocation = self.vpnConnectionViewModel.getBestLocation() {
-                self.serverListTableViewDataSource?.bestLocation = bestLocation
+                self.serverListTableViewDataSource.bestLocation = bestLocation
             }
             reloadFinishedCompletion?()
             DispatchQueue.main.async {
-                self.serverListTableView.reloadData()
                 self.reloadServerList()
             }
         }

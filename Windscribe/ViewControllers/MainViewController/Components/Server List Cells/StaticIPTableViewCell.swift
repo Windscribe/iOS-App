@@ -12,15 +12,6 @@ import UIKit
 
 class StaticIPNodeCellModel: BaseNodeCellViewModel {
     var displayingStaticIP: StaticIPModel?
-    var latencyRepository = Assembler.resolve(LatencyRepository.self)
-
-    init(displayingStaticIP: StaticIPModel?) {
-        super.init()
-        self.displayingStaticIP = displayingStaticIP
-        if let bestNode = displayingStaticIP?.bestNode, bestNode.forceDisconnect == false {
-            minTime = latencyRepository.getPingData(ip: bestNode.ip1)?.latency ?? minTime
-        }
-    }
 
     override var name: String {
         displayingStaticIP?.cityName ?? ""
@@ -40,6 +31,14 @@ class StaticIPNodeCellModel: BaseNodeCellViewModel {
     override var actionVisible: Bool { false }
 
     override var showServerHealth: Bool { false }
+
+    func update(displayingStaticIP: StaticIPModel?,
+                isDarkMode: Bool,
+                latency: Int) {
+        self.displayingStaticIP = displayingStaticIP
+        self.isDarkMode = isDarkMode
+        self.latency = latency
+    }
 }
 
 class StaticIPTableViewCell: BaseNodeCell {

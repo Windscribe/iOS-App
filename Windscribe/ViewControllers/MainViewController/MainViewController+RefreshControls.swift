@@ -120,7 +120,7 @@ extension MainViewController {
     func addRefreshControls() {
         serverListTableViewRefreshControl.resetText()
         serverListTableView.refreshControl = serverListTableViewRefreshControl
-        if (favNodesListTableViewDataSource?.favList?.count ?? 0) > 0 {
+        if favNodesListTableViewDataSource.favList.count > 0 {
             favTableView.addSubview(favTableViewRefreshControl)
         }
         staticIpTableView.addSubview(staticIpTableViewRefreshControl)

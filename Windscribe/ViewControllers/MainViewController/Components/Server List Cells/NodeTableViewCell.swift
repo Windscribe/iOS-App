@@ -6,46 +6,63 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import Realm
-import RealmSwift
-import RxSwift
-import Swinject
 import UIKit
 
 protocol NodeTableViewCellModelType: BaseNodeCellViewModelType {
     var displayingGroup: GroupModel? { get }
     var isProLocked: Bool { get }
     var isSpeedIconVisible: Bool { get }
-    var isFavorite: Bool { get }
+    var isFavoriteCell: Bool { get }
+    var delegate: NodeTableViewCellModelDelegate? { get set }
+
+    func update(displayingGroup: GroupModel?,
+                locationLoad: Bool,
+                isSavedHasFav: Bool,
+                isUserPro: Bool,
+                isPremium: Bool,
+                isDarkMode: Bool,
+                latency: Int)
+}
+
+protocol NodeTableViewCellModelDelegate: AnyObject {
+    func saveAsFavorite(groupId: String)
+    func removeFavorite(groupId: String)
 }
 
 class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType {
-    var userSessionRepository = Assembler.resolve(UserSessionRepository.self)
-    var latencyRepository = Assembler.resolve(LatencyRepository.self)
+    weak var delegate: NodeTableViewCellModelDelegate?
 
     var displayingGroup: GroupModel?
-    var isFavorite: Bool
+    var isFavoriteCell: Bool { return false }
 
-    init(displayingGroup: GroupModel?, isFavorite: Bool = false) {
-        self.isFavorite = isFavorite
-        super.init()
+    var locationLoad: Bool = false
+    var isPremium: Bool = false
+    var isUserPro: Bool = false
+
+    func update(displayingGroup: GroupModel?,
+                locationLoad: Bool,
+                isSavedHasFav: Bool,
+                isUserPro: Bool,
+                isPremium: Bool,
+                isDarkMode: Bool,
+                latency: Int) {
         self.displayingGroup = displayingGroup
-        if let pingIP = displayingGroup?.pingIp {
-            minTime = latencyRepository.getPingData(ip: pingIP)?.latency ?? minTime
-        }
-        isFavourited = isNodeFavorited()
+        self.locationLoad = locationLoad
+        self.isSavedHasFav = isSavedHasFav
+        self.isUserPro = isUserPro
+        self.isPremium = isPremium
+        self.isDarkMode = isDarkMode
+        self.latency = latency
     }
 
     override var isSignalVisible: Bool { !isDisabled }
     override var isDisabled: Bool {
         guard let displayingGroup else { return true }
-        guard let session = userSessionRepository.sessionModel else { return true }
-
         // If there is no best node means user cannot connect to this location
         if displayingGroup.bestNode == nil {
             // this can be because the user is free and the location is pro
             // and in that case we should just show it as pro location - it is not disabled
-            if !session.isUserPro && displayingGroup.premiumOnly { return false }
+            if !isUserPro && displayingGroup.premiumOnly { return false }
             // if the locations has a node that is not best node check forceDisconnect
             // if it forces to disconnect then the location is disabled
             if let node = displayingGroup.nodes.first {
@@ -77,14 +94,14 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     }
 
     override var iconSize: CGFloat {
-        if isFavorite { return 20.0 }
+        if isFavoriteCell { return 20.0 }
         if isProLocked { return super.iconSize }
         if isSpeedIconVisible { return 16.0 }
         return 20.0
     }
 
     override var iconImage: UIImage? {
-        if isFavorite, let countryCode = displayingGroup?.countryCode {
+        if isFavoriteCell, let countryCode = displayingGroup?.countryCode {
             return UIImage(named: "\(countryCode)-s") ?? super.iconImage
         } else if isProLocked {
             return UIImage(named: ImagesAsset.proCityImage)?
@@ -98,31 +115,20 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
 
     var isProLocked: Bool {
         guard let group = displayingGroup else { return false }
-        return group.premiumOnly &&
-        !(userSessionRepository.sessionModel?.isPremium ?? false)
+        return group.premiumOnly && !isPremium
     }
 
-    override var hasProLocked: Bool { isProLocked && isFavorite }
+    override var hasProLocked: Bool { isProLocked && isFavoriteCell }
 
     var isSpeedIconVisible: Bool {
         displayingGroup?.linkSpeed == "10000"
     }
 
     override func favoriteSelected() {
-        if isFavourited {
-            let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
-                guard let self = self else { return }
-                Task { @MainActor in
-                    self.localDB.removeFavourite(groupId: "\(self.groupId)")
-                }
-            }
-            AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
-                                          message: TextsAsset.Favorites.removeMessage,
-                                          buttonText: TextsAsset.cancel, actions: [yesAction])
+        if isSavedHasFav {
+            delegate?.removeFavorite(groupId: self.groupId)
         } else {
-            Task {
-                localDB.saveFavourite(favourite: Favourite(id: "\(self.groupId)"))
-            }
+            delegate?.saveAsFavorite(groupId: self.groupId)
         }
     }
 }
@@ -144,7 +150,7 @@ class NodeTableViewCell: BaseNodeCell {
 
     override func updateUI() {
         super.updateUI()
-        if nodeCellViewModel?.isFavorite ?? false {
+        if nodeCellViewModel?.isFavoriteCell ?? false {
             icon.image = nodeCellViewModel?.iconImage
         } else if nodeCellViewModel?.isProLocked ?? false {
             icon.setImageColor(color: .proStarColor)

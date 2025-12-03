@@ -496,5 +496,40 @@ class ViewControllerModule: Assembly {
                 )
             )
         }.inObjectScope(.transient)
+
+        container.register(ServerListTableViewDataSource.self) { r in
+            ServerListTableViewDataSourceImpl(locationsManager: r.resolve(LocationsManager.self)!,
+                                              lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                              hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                                              preferences: r.resolve(Preferences.self)!,
+                                              localDatabase: r.resolve(LocalDatabase.self)!,
+                                              userSessionRepository: r.resolve(UserSessionRepository.self)! ,
+                                              latencyRepository: r.resolve(LatencyRepository.self)!,
+                                              languageManager: r.resolve(LanguageManager.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(FavouriteListTableViewDataSource.self) { r in
+            FavouriteListTableViewDataSourceImpl(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                                 hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                                                 preferences: r.resolve(Preferences.self)!,
+                                                 localDatabase: r.resolve(LocalDatabase.self)!,
+                                                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                                 languageManager: r.resolve(LanguageManager.self)!,
+                                                 latencyRepository: r.resolve(LatencyRepository.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(StaticIPListTableViewDataSource.self) { r in
+            StaticIPListTableViewDataSourceImpl(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                                                languageManager: r.resolve(LanguageManager.self)!,
+                                                latencyRepository: r.resolve(LatencyRepository.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(CustomConfigListTableViewDataSource.self) { r in
+            CustomConfigListTableViewDataSourceImpl(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                                                latencyRepository: r.resolve(LatencyRepository.self)!,
+                                                languageManager: r.resolve(LanguageManager.self)!)
+        }.inObjectScope(.transient)
     }
 }

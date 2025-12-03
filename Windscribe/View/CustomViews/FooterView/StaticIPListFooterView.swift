@@ -10,7 +10,6 @@ import Combine
 import RealmSwift
 import RxSwift
 import SafariServices
-import Swinject
 import UIKit
 
 class StaticIPListFooterView: WSView {
@@ -19,7 +18,7 @@ class StaticIPListFooterView: WSView {
     lazy var deviceNameLabel = UILabel()
     lazy var label = UILabel()
     lazy var backgroundView = UIView()
-    lazy var languageManager = Assembler.resolve(LanguageManager.self)
+    let activeLanguage: CurrentValueSubject<Languages, Never>
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     var viewModel: MainViewModel? {
@@ -28,8 +27,9 @@ class StaticIPListFooterView: WSView {
         }
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(activeLanguage: CurrentValueSubject<Languages, Never>) {
+        self.activeLanguage = activeLanguage
+        super.init(frame: .zero)
 
         addSubview(backgroundView)
 
@@ -53,7 +53,8 @@ class StaticIPListFooterView: WSView {
         actionButton.rx.tap.bind { [weak self] _ in
             self?.delegate?.addStaticIP()
         }.disposed(by: disposeBag)
-        languageManager.activelanguage
+        activeLanguage
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.label.text = TextsAsset.addStaticIP
             }

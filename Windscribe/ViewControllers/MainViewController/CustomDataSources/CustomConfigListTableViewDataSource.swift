@@ -21,26 +21,65 @@ protocol CustomConfigListModelDelegate: AddCustomConfigDelegate {
 protocol CustomConfigListViewDelegate: WTableViewDataSourceDelegate, AnyObject {
     func hideCustomConfigRefreshControl()
     func showCustomConfigRefreshControl()
+    func reloadCustomConfigListTableView()
 }
 
-class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate, SwipeTableViewCellDelegate {
-    var customConfigs: [CustomConfigModel]?
+protocol CustomConfigListTableViewDataSource: WSTableViewDataSource,
+                                          UITableViewDataSource,
+                                          WTableViewDataSourceDelegate,
+                                              SwipeTableViewCellDelegate {
+    var logicDelegate: CustomConfigListModelDelegate? { get set }
+    var uiDelegate: CustomConfigListViewDelegate? { get set }
+    var scrollHappened: Bool { get set }
+    var customConfigs: [CustomConfigModel] { get }
+
+    func updateCustomConfigList(with customConfigs: [CustomConfigModel])
+    func showEmptyView(tableView: UITableView)
+}
+
+class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConfigListTableViewDataSource {
+
     weak var logicDelegate: CustomConfigListModelDelegate?
     weak var uiDelegate: CustomConfigListViewDelegate?
     var scrollHappened = false
-    var viewModel: MainViewModel
-    let disposeBag = DisposeBag()
+    var customConfigs: [CustomConfigModel] = []
+
     private var cancellables = Set<AnyCancellable>()
 
-    init(customConfigs: [CustomConfigModel]?, viewModel: MainViewModel) {
-        self.viewModel = viewModel
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let hapticFeedbackManager: HapticFeedbackManager
+    private let latencyRepository: LatencyRepository
+    private let languageManager: LanguageManager
+
+    init(lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
+         latencyRepository: LatencyRepository,
+         languageManager: LanguageManager) {
+        self.lookAndFeelRepository = lookAndFeelRepository
+        self.hapticFeedbackManager = hapticFeedbackManager
+        self.latencyRepository = latencyRepository
+        self.languageManager = languageManager
         super.init()
         scrollViewDelegate = self
+
+        bind()
+    }
+
+    private func bind() {
+        self.lookAndFeelRepository.isDarkModeSubject
+            .sink {[weak self] _ in
+                self?.uiDelegate?.reloadCustomConfigListTableView()
+            }
+            .store(in: &cancellables)
+    }
+
+    func updateCustomConfigList(with customConfigs: [CustomConfigModel]) {
         self.customConfigs = customConfigs
+        uiDelegate?.reloadCustomConfigListTableView()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection _: Int) -> Int {
-        guard let count = customConfigs?.count else { return 0 }
+        let count = customConfigs.count
         if count == 0 {
             uiDelegate?.hideCustomConfigRefreshControl()
             showEmptyView(tableView: tableView)
@@ -59,9 +98,23 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
             ?? CustomConfigCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.customConfigCellReuseIdentifier)
-        cell.bindViews(isDarkMode: viewModel.isDarkMode)
+
+        let customConfig = customConfigs[indexPath.row]
+
+        var latency = -1
+        if let pingIP = customConfig.serverAddress {
+            latency = latencyRepository.getPingData(ip: pingIP)?.latency ?? latency
+        }
+
+        if cell.customConfigCellViewModel == nil {
+            cell.customConfigCellViewModel = CustomConfigCellModel()
+        }
+
+        cell.customConfigCellViewModel?.update(displayingCustomConfig: customConfig,
+                                               isDarkMode: lookAndFeelRepository.isDarkMode,
+                                               latency: latency)
         cell.delegate = self
-        cell.customConfigCellViewModel = CustomConfigCellModel(displayingCustomConfig: customConfigs?[indexPath.row])
+        cell.refreshUI()
         return cell
     }
 
@@ -70,12 +123,14 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let customConfig = customConfigs?[indexPath.row] else { return }
+        let customConfig = customConfigs[indexPath.row]
         logicDelegate?.setSelectedCustomConfig(customConfig: customConfig)
     }
 
     func showEmptyView(tableView: UITableView) {
-        let view = ListEmptyView(type: .customConfig,isDarkMode: viewModel.isDarkMode)
+        let view = ListEmptyView(type: .customConfig,
+                                 isDarkMode: lookAndFeelRepository.isDarkModeSubject,
+                                 activeLanguage: languageManager.activelanguage)
         view.addAction = { [weak self] in
             self?.logicDelegate?.addCustomConfig()
         }
@@ -97,7 +152,9 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
 
     func tableView(_: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
-        guard let customConfig = customConfigs?[indexPath.row], let fileId = customConfig.id, let protocolType = customConfig.protocolType else { return nil }
+        let customConfig = customConfigs[indexPath.row]
+
+        guard let fileId = customConfig.id, let protocolType = customConfig.protocolType else { return nil }
 
         let deleteAction = SwipeAction(style: .destructive, title: nil) { _, _ in
             self.logicDelegate?.showRemoveAlertForCustomConfig(id: fileId, protocolType: protocolType)
@@ -107,7 +164,7 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
         }
 
         // Get dark mode value synchronously
-        let isDark = viewModel.isDarkMode.value
+        let isDark = lookAndFeelRepository.isDarkMode
         if !isDark {
             deleteAction.backgroundColor = UIColor.seperatorWhite
             deleteAction.image = UIImage(named: ImagesAsset.delete)
@@ -140,7 +197,7 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
 
     func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 && scrollHappened {
-            viewModel.runHapticFeedback(level: .light)
+            hapticFeedbackManager.run(level: .light)
         }
     }
 }

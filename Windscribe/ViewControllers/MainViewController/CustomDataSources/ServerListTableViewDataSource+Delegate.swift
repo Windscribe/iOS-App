@@ -7,9 +7,8 @@
 //
 
 import ExpyTableView
-import RealmSwift
-import RxSwift
 import UIKit
+import Combine
 
 protocol ServerListTableViewDelegate: AnyObject {
     func setSelectedServerAndGroup(server: ServerModel, group: GroupModel)
@@ -19,18 +18,28 @@ protocol ServerListTableViewDelegate: AnyObject {
     func tableViewScrolled(toTop: Bool)
 }
 
-class ServerListTableViewDataSource: WExpyTableViewDataSource,
-    ExpyTableViewDataSource,
-    WExpyTableViewDataSourceDelegate,
-    WTableViewDataSourceDelegate {
-    var hapticFeedbackCounter = 0
-    let disposeBag = DisposeBag()
+protocol ServerListTableViewDataSource: WExpyTableViewDataSource,
+                                        ExpyTableViewDataSource,
+                                        WExpyTableViewDataSourceDelegate,
+                                        WTableViewDataSourceDelegate {
+    var delegate: ServerListTableViewDelegate? { get set }
+    var bestLocation: BestLocationModel? { get set }
+    var scrollHappened: Bool { get set }
+
+    var serverSections: [ServerSection] { get }
+
+    func updateServerList(with serverSections: [ServerSection])
+    func updateShouldColapse(with value: Bool)
+}
+
+class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
+                                         ServerListTableViewDataSource {
     var bestLocation: BestLocationModel? {
         didSet {
             if bestLocation != nil,
                serverSections.first?.server?.name != Fields.Values.bestLocation,
                let groupId = bestLocation?.groupId,
-               let serverModel = viewModel.getServerModel(from: groupId) {
+               let serverModel = getServerModel(from: groupId) {
                 let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
                 serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
             }
@@ -38,30 +47,105 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         }
     }
 
-    var serverSections: [ServerSection] = []
     weak var delegate: ServerListTableViewDelegate?
-
-    var favNodesNotificationToken: NotificationToken?
+    var serverSections: [ServerSection] = []
     var scrollHappened = false
-    var viewModel: MainViewModel!
-    init(serverSections: [ServerSection], viewModel: MainViewModel, shouldColapse: Bool = false) {
+
+    private var shouldColapse: Bool = false
+    private var cancellables = Set<AnyCancellable>()
+    private var favList: [Favourite] = []
+    private var locationLoad: Bool = false
+
+    private let locationsManager: LocationsManager
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let hapticFeedbackManager: HapticFeedbackManager
+    private let preferences: Preferences
+    private let userSessionRepository: UserSessionRepository
+    private let latencyRepository: LatencyRepository
+    private let languageManager: LanguageManager
+
+    let localDatabase: LocalDatabase
+
+    init(locationsManager: LocationsManager,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
+         preferences: Preferences,
+         localDatabase: LocalDatabase,
+         userSessionRepository: UserSessionRepository,
+         latencyRepository: LatencyRepository,
+         languageManager: LanguageManager) {
+        self.locationsManager = locationsManager
+        self.lookAndFeelRepository = lookAndFeelRepository
+        self.hapticFeedbackManager = hapticFeedbackManager
+        self.preferences = preferences
+        self.localDatabase = localDatabase
+        self.userSessionRepository = userSessionRepository
+        self.latencyRepository = latencyRepository
+        self.languageManager = languageManager
         super.init()
-        self.scrollViewDelegate = self
-        self.expyDelegate = self
-        self.viewModel = viewModel
-        self.serverSections = serverSections.map({
+
+        scrollViewDelegate = self
+        expyDelegate = self
+
+        bind()
+    }
+
+    private func bind() {
+        self.lookAndFeelRepository.isDarkModeSubject
+            .sink {[weak self] _ in
+                self?.delegate?.reloadServerListTableView()
+            }
+            .store(in: &cancellables)
+
+        self.languageManager.activelanguage
+            .sink {[weak self] _ in
+                self?.delegate?.reloadServerListTableView()
+            }
+            .store(in: &cancellables)
+
+        preferences.getShowServerHealth()
+            .sink {[weak self] locationLoad in
+                self?.locationLoad = locationLoad ?? DefaultValues.showServerHealth
+                self?.delegate?.reloadServerListTableView()
+            }
+            .store(in: &cancellables)
+
+        localDatabase.getFavouriteListObservable()
+            .toPublisherIncludingEmpty()
+            .replaceError(with: [])
+            .sink {[weak self] _ in
+                self?.delegate?.reloadServerListTableView()
+                self?.favList = self?.localDatabase.getFavouriteList() ?? []
+            }
+            .store(in: &cancellables)
+
+        userSessionRepository.sessionModelSubject
+            .sink {[weak self] _ in
+                self?.delegate?.reloadServerListTableView()
+            }
+            .store(in: &cancellables)
+    }
+
+    func updateServerList(with serverSections: [ServerSection]) {
+        self.serverSections = serverSections.map {
             if shouldColapse, let server = $0.server {
                 return ServerSection(server: server, collapsed: true)
             }
             return $0
-        })
+        }
+        delegate?.reloadServerListTableView()
+    }
+
+    func updateShouldColapse(with value: Bool) {
+        shouldColapse = value
+        updateServerList(with: serverSections)
     }
 
     func numberOfSections(in _: UITableView) -> Int {
         if bestLocation != nil,
            serverSections.first?.server?.name != Fields.Values.bestLocation,
            let groupId = bestLocation?.groupId,
-           let serverModel = viewModel.getServerModel(from: groupId) {
+           let serverModel = getServerModel(from: groupId) {
             let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
             serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
         }
@@ -84,8 +168,24 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         ?? NodeTableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
         if (serverSections.count > indexPath.section) && ((serverSections[indexPath.section].server?.groups.count ?? 0) > indexPath.row - 1) {
             let group = serverSections[indexPath.section].server?.groups[indexPath.row - 1]
-            cell.bindViews(isDarkMode: viewModel.isDarkMode)
-            cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: group)
+
+            var latency = -1
+            if let group = group {
+                latency = latencyRepository.getPingData(ip: group.pingIp)?.latency ?? latency
+            }
+
+            if cell.nodeCellViewModel == nil {
+                cell.nodeCellViewModel = NodeTableViewCellModel()
+                cell.nodeCellViewModel?.delegate = self
+            }
+            cell.nodeCellViewModel?.update(displayingGroup: group,
+                                           locationLoad: locationLoad,
+                                           isSavedHasFav: isGroupFavorite(group?.id),
+                                           isUserPro: userSessionRepository.sessionModel?.isUserPro ?? false,
+                                           isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
+                                           isDarkMode: lookAndFeelRepository.isDarkMode,
+                                           latency: latency)
+            cell.refreshUI()
         }
         return cell
     }
@@ -104,27 +204,36 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         if section == 0 && bestLocation != nil {
             let bestLocationCell = tableView.dequeueReusableCell(
                 withIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)! as? BestLocationCell
-                ?? BestLocationCell(
-                    style: .default,
-                    reuseIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)
-            bestLocationCell.bestCellViewModel = BestLocationCellModel()
-            bestLocationCell.updateBestLocation(bestLocation)
-            bestLocationCell.bindViews(isDarkMode: viewModel.isDarkMode)
+            ?? BestLocationCell(
+                style: .default,
+                reuseIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)
+            if bestLocationCell.bestCellViewModel == nil {
+                bestLocationCell.bestCellViewModel = BestLocationCellModel()
+            }
+            bestLocationCell.bestCellViewModel?.update(bestLocationModel: bestLocation,
+                                                       locationLoad: locationLoad,
+                                                       isDarkMode: lookAndFeelRepository.isDarkMode)
+            bestLocationCell.refreshUI()
             return bestLocationCell
         } else {
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)! as? ServerSectionCell
-                ?? ServerSectionCell(
-                    style: .default,
-                    reuseIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)
-            cell.serverCellViewModel = ServerSectionCellModel()
+            ?? ServerSectionCell(
+                style: .default,
+                reuseIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)
+            if cell.serverCellViewModel == nil {
+                cell.serverCellViewModel = ServerSectionCellModel()
+            }
+
             if let expanded = tableView.expandedSections[section] {
                 serverSections[section].collapsed = !expanded
             }
-            cell.bindViews(isDarkMode: viewModel.isDarkMode)
             if serverSections.count > 0 {
+                cell.serverCellViewModel?.update(serverModel: serverSections[section].server,
+                                                 isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
+                                                 isDarkMode: lookAndFeelRepository.isDarkMode)
                 cell.setCollapsed(collapsed: serverSections[section].collapsed)
-                cell.updateServerModel(serverSections[section].server)
+                cell.refreshUI()
             }
             return cell
         }
@@ -162,11 +271,42 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
 
     func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 && scrollHappened {
-            viewModel.runHapticFeedback(level: .light)
+            hapticFeedbackManager.run(level: .light)
         }
     }
 
     func tableView(_ tableView: ExpyTableView, canExpandSection section: Int) -> Bool {
         true
+    }
+
+    private func getServerModel(from groupId: Int) -> ServerModel? {
+        try? locationsManager.getLocation(from: String(groupId)).0
+    }
+
+    private func isGroupFavorite(_ groupId: Int?) -> Bool {
+        guard let groupId = groupId else { return false }
+        return favList.filter { !$0.isInvalidated }
+            .map { $0.id }
+            .contains(String(groupId))
+    }
+}
+
+extension ServerListTableViewDataSourceImpl: NodeTableViewCellModelDelegate {
+    func saveAsFavorite(groupId: String) {
+        Task {
+            localDatabase.saveFavourite(favourite: Favourite(id: "\(groupId)"))
+        }
+    }
+
+    func removeFavorite(groupId: String) {
+        let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            Task { @MainActor in
+                self.localDatabase.removeFavourite(groupId: "\(groupId)")
+            }
+        }
+        AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
+                                      message: TextsAsset.Favorites.removeMessage,
+                                      buttonText: TextsAsset.cancel, actions: [yesAction])
     }
 }

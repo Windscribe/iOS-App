@@ -57,10 +57,10 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var wifiInfoView: WifiInfoView!
 
     // MARK: datasources
-    var serverListTableViewDataSource: ServerListTableViewDataSource?
-    var favNodesListTableViewDataSource: FavouriteListTableViewDataSource?
-    var staticIPListTableViewDataSource: StaticIPListTableViewDataSource?
-    var customConfigListTableViewDataSource: CustomConfigListTableViewDataSource?
+    var serverListTableViewDataSource: ServerListTableViewDataSource!
+    var favNodesListTableViewDataSource: FavouriteListTableViewDataSource!
+    var staticIPListTableViewDataSource: StaticIPListTableViewDataSource!
+    var customConfigListTableViewDataSource: CustomConfigListTableViewDataSource!
 
     // MARK: properties
 
@@ -221,7 +221,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
             let locationId = "\(bestLocation.groupId)"
             logger.logD("MainViewController", "Configuring best location.")
-            serverListTableViewDataSource?.bestLocation = bestLocation
+            serverListTableViewDataSource.bestLocation = bestLocation
             if selectBestLocation || noSelectedNodeToConnect() {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
             }
@@ -247,10 +247,10 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func clearScrollHappened() {
-        serverListTableViewDataSource?.scrollHappened = false
-        favNodesListTableViewDataSource?.scrollHappened = false
-        customConfigListTableViewDataSource?.scrollHappened = false
-        staticIPListTableViewDataSource?.scrollHappened = false
+        serverListTableViewDataSource.scrollHappened = false
+        favNodesListTableViewDataSource.scrollHappened = false
+        customConfigListTableViewDataSource.scrollHappened = false
+        staticIPListTableViewDataSource.scrollHappened = false
     }
 
     func reloadServerList() {
@@ -276,8 +276,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         for result in results {
             customConfigModels.append(result.getModel())
         }
-        customConfigListTableViewDataSource?.customConfigs = customConfigModels
-        customConfigTableView.reloadData()
+
+        customConfigListTableViewDataSource.updateCustomConfigList(with: customConfigModels)
     }
 
     func tableViewScrolled(toTop: Bool) {

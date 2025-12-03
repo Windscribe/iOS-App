@@ -10,7 +10,6 @@ import Combine
 import RealmSwift
 import RxSwift
 import SafariServices
-import Swinject
 import UIKit
 
 class CustomConfigListFooterView: WSView {
@@ -18,13 +17,15 @@ class CustomConfigListFooterView: WSView {
     lazy var actionButton = UIButton(type: .system)
     lazy var label = UILabel()
     lazy var backgroundView = UIView()
-    lazy var languageManager = Assembler.resolve(LanguageManager.self)
-    lazy var lookAndFeelRepository = Assembler.resolve(LookAndFeelRepositoryType.self)
+    let activeLanguage: CurrentValueSubject<Languages, Never>
+    let isDarkMode: CurrentValueSubject<Bool, Never>
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(activeLanguage: CurrentValueSubject<Languages, Never>, isDarkMode: CurrentValueSubject<Bool, Never>) {
+        self.activeLanguage = activeLanguage
+        self.isDarkMode = isDarkMode
+        super.init(frame: .zero)
 
         addSubview(backgroundView)
 
@@ -44,16 +45,20 @@ class CustomConfigListFooterView: WSView {
             self?.delegate?.addCustomConfig()
         }.disposed(by: disposeBag)
 
-        languageManager.activelanguage
+        activeLanguage
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.label.text = TextsAsset.addCustomConfig
             }
             .store(in: &cancellables)
 
-        lookAndFeelRepository.isDarkModeSubject.sink { [weak self] isDarkMode in
-            self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)
-            self?.backgroundColor = .from(.backgroundColor, isDarkMode)
-        }.store(in: &cancellables)
+        isDarkMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDark in
+                self?.backgroundView.backgroundColor = .from(.pressStateColor, isDark)
+                self?.backgroundColor = .from(.backgroundColor, isDark)
+            }
+            .store(in: &cancellables)
     }
 
     override func setupLocalized() {

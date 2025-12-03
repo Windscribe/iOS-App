@@ -6,27 +6,23 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import RxSwift
-import Swinject
 import UIKit
-import Combine
 
 protocol ServerSectionCellModelType: ServerCellModelType {
     var isExpanded: Bool { get }
     var isP2pHidden: Bool { get }
     var displayingServer: ServerModel? { get }
     func setIsExpanded(_ value: Bool)
-    func setDisplayingServer(_ value: ServerModel?)
+
+    func update(serverModel: ServerModel?,
+                isPremium: Bool,
+                isDarkMode: Bool)
 }
 
 class ServerSectionCellModel: ServerSectionCellModelType {
-    let preferences = Assembler.resolve(Preferences.self)
-    var userSessionRepository = Assembler.resolve(UserSessionRepository.self)
-    let disposeBag = DisposeBag()
-    private var cancellables = Set<AnyCancellable>()
-    let updateUISubject = PublishSubject<Void>()
-
+    var isDarkMode: Bool = false
     var isExpanded: Bool = false
+    var isPremium: Bool = false
     var showServerHealth: Bool = DefaultValues.showServerHealth
 
     var displayingServer: ServerModel?
@@ -44,7 +40,8 @@ class ServerSectionCellModel: ServerSectionCellModelType {
     var shouldTintIcon: Bool { false }
 
     var actionImage: UIImage? {
-        UIImage(named: !isExpanded ? ImagesAsset.cellExpand : ImagesAsset.cellCollapse)
+        UIImage(named: !isExpanded ? ImagesAsset.cellExpand : ImagesAsset.cellCollapse)?
+            .withRenderingMode(.alwaysTemplate)
     }
 
     var iconSize: CGFloat = 20.0
@@ -72,26 +69,11 @@ class ServerSectionCellModel: ServerSectionCellModelType {
     var hasProLocked: Bool {
         guard let server = displayingServer else { return false }
         let hasNoPro = server.groups.first(where: { !$0.premiumOnly }) == nil
-        return hasNoPro && !(userSessionRepository.sessionModel?.isPremium ?? false)
-    }
-
-    init() {
-        preferences.getShowServerHealth()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] enabled in
-                guard let self = self else { return }
-                self.showServerHealth = enabled ?? DefaultValues.showServerHealth
-                self.updateUISubject.onNext(())
-            }
-            .store(in: &cancellables)
+        return hasNoPro && !isPremium
     }
 
     func setIsExpanded(_ value: Bool) {
         isExpanded = value
-    }
-
-    func setDisplayingServer(_ value: ServerModel?) {
-        displayingServer = value
     }
 
     func nameColor(for isDarkMode: Bool) -> UIColor {
@@ -99,20 +81,23 @@ class ServerSectionCellModel: ServerSectionCellModelType {
             .from( .textColor, isDarkMode) :
             .from( .infoColor, isDarkMode)
     }
+
+    func update(serverModel: ServerModel?,
+                isPremium: Bool,
+                isDarkMode: Bool) {
+        self.displayingServer = serverModel
+        self.isPremium = isPremium
+        self.isDarkMode = isDarkMode
+    }
 }
 
 class ServerSectionCell: ServerListCell {
     var p2pIcon = UIImageView()
-    private var cancellables = Set<AnyCancellable>()
 
     var serverCellViewModel: ServerSectionCellModel? {
         didSet {
             viewModel = serverCellViewModel
-            updateLayout()
-            updateUI()
-            serverCellViewModel?.updateUISubject.subscribe { [weak self] _ in
-                self?.updateUI()
-            }.disposed(by: disposeBag)
+            refreshUI()
         }
     }
 
@@ -126,17 +111,11 @@ class ServerSectionCell: ServerListCell {
         p2pIcon.layer.opacity = 0.7
         contentView.addSubview(p2pIcon)
 
-        updateUI()
-        updateLayout()
+        refreshUI()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-
-    func updateServerModel(_ value: ServerModel?) {
-        serverCellViewModel?.setDisplayingServer(value)
-        updateUI()
     }
 
     func setCollapsed(collapsed: Bool, completion _: @escaping () -> Void = {}) {
@@ -148,6 +127,7 @@ class ServerSectionCell: ServerListCell {
         super.updateUI()
         guard let serverCellViewModel = serverCellViewModel else { return }
         p2pIcon.isHidden = serverCellViewModel.isP2pHidden
+        p2pIcon.setImageColor(color: .from(.iconColor, viewModel?.isDarkMode ?? false))
     }
 
     override func updateLayout() {
@@ -164,20 +144,12 @@ class ServerSectionCell: ServerListCell {
         ])
     }
 
-    override func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
-        super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isDark in
-                self?.p2pIcon.setImageColor(color: .from(.iconColor, isDark))
-            }
-            .store(in: &cancellables)
-    }
-
     private func animateExpansion(completion: @escaping () -> Void = {}) {
         guard let serverCellViewModel = serverCellViewModel else { return }
+        let isDarkMode = serverCellViewModel.isDarkMode
         UIView.animate(withDuration: 0.15, animations: {
             self.actionImage.layer.opacity = serverCellViewModel.actionOpacity
+            self.nameLabel.textColor = serverCellViewModel.nameColor(for: isDarkMode)
         }, completion: { _ in
             completion()
         })

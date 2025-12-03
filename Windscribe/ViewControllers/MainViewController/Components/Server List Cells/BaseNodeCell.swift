@@ -6,16 +6,12 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-import RxSwift
-import Swinject
 import UIKit
-import Combine
 
 protocol BaseNodeCellViewModelType: ServerCellModelType {
     var signalImage: UIImage? { get }
     var latencyValue: NSAttributedString { get }
     var nickName: String { get }
-    var updateUISubject: PublishSubject<Void> { get }
     var groupId: String { get }
     var isActionVisible: Bool { get }
     var isSignalVisible: Bool { get }
@@ -25,19 +21,12 @@ protocol BaseNodeCellViewModelType: ServerCellModelType {
 }
 
 class BaseNodeCellViewModel: BaseNodeCellViewModelType {
-    let localDB = Assembler.resolve(LocalDatabase.self)
-    let preferences = Assembler.resolve(Preferences.self)
-
-    let updateUISubject = PublishSubject<Void>()
-    let disposeBag = DisposeBag()
-    private var cancellables = Set<AnyCancellable>()
 
     private var locationLoad: Bool = DefaultValues.showServerHealth
-
     var showServerHealth: Bool { locationLoad }
-    var favList: [Favourite] = []
-    var isFavourited: Bool = false
-    var minTime = -1
+    var isSavedHasFav: Bool = false
+    var isDarkMode: Bool = false
+    var latency = -1
 
     var groupId: String { "" }
 
@@ -53,7 +42,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var shouldTintIcon: Bool { true }
 
     var actionImage: UIImage? {
-        UIImage(named: isFavourited ? ImagesAsset.favFull : ImagesAsset.favEmpty)
+        UIImage(named: isSavedHasFav ? ImagesAsset.favFull : ImagesAsset.favEmpty)
     }
 
     var iconSize: CGFloat { 24.0 }
@@ -73,8 +62,8 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var hasProLocked: Bool { false }
 
     var signalImage: UIImage? {
-        if minTime < 0 { return UIImage(named: ImagesAsset.CellSignalBars.none) }
-        switch getSignalLevel(minTime: minTime) {
+        if latency < 0 { return UIImage(named: ImagesAsset.CellSignalBars.none) }
+        switch getSignalLevel(minTime: latency) {
         case 1:
             return UIImage(named: ImagesAsset.CellSignalBars.low)
         case 2:
@@ -93,8 +82,8 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var isDisabled: Bool { false }
 
     var latencyValue: NSAttributedString {
-        if minTime > 0 {
-            let latencyText = "\(minTime.description)ms"
+        if latency > 0 {
+            let latencyText = "\(latency.description)ms"
             let attributedString = NSMutableAttributedString(string: latencyText)
 
             if let msRange = latencyText.range(of: "ms") {
@@ -107,34 +96,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
         }
     }
 
-    init() {
-        favList = localDB.getFavouriteList()
-        localDB.getFavouriteListObservable().subscribe(onNext: { [weak self] favList in
-            guard let self = self else { return }
-            self.favList = favList
-            let prevIsFavourited = self.isFavourited
-            self.isFavourited = isNodeFavorited()
-            if prevIsFavourited != self.isFavourited {
-                self.updateUISubject.onNext(())
-            }
-        }).disposed(by: disposeBag)
-
-        preferences.getShowServerHealth()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] enabled in
-                guard let self = self else { return }
-                self.locationLoad = enabled ?? DefaultValues.showServerHealth
-                self.updateUISubject.onNext(())
-            }
-            .store(in: &cancellables)
-    }
-
     func favoriteSelected() { }
-
-    func isNodeFavorited() -> Bool {
-        favList.filter { !$0.isInvalidated }
-            .map({ $0.id }).contains(groupId)
-    }
 
     private func getSignalLevel(minTime: Int) -> Int {
         var signalLevel = 0
@@ -162,16 +124,11 @@ class BaseNodeCell: ServerListCell {
     var latencyView = UIView()
     var disabledIcon = UIImageView()
     var disabledContainer = UIView()
-    private var cancellables = Set<AnyCancellable>()
 
     var baseNodeCellViewModel: BaseNodeCellViewModelType? {
         didSet {
             viewModel = baseNodeCellViewModel
-            updateLayout()
-            updateUI()
-            baseNodeCellViewModel?.updateUISubject.subscribe { [weak self] _ in
-                self?.updateUI()
-            }.disposed(by: disposeBag)
+            refreshUI()
         }
     }
 
@@ -202,21 +159,6 @@ class BaseNodeCell: ServerListCell {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-
-    override func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
-        super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isDark in
-                guard let self = self else { return }
-                self.nickNameLabel.textColor = .from(.textColor, isDark)
-                self.latencyLabel.textColor = .from(.textColor, isDark)
-                self.signalBarsIcon.setImageColor(color: .from(.iconColor, isDark))
-                self.icon.setImageColor(color: .from(.iconColor, isDark))
-                self.disabledIcon.setImageColor(color: .from(.iconColor, isDark))
-            }
-            .store(in: &cancellables)
     }
 
     override func updateLayout() {
@@ -279,6 +221,14 @@ class BaseNodeCell: ServerListCell {
 
         latencyView.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
         disabledIcon.isHidden = !(baseNodeCellViewModel?.isDisabled ?? false)
+
+        let isDark = viewModel?.isDarkMode ?? false
+
+        nickNameLabel.textColor = .from(.textColor, isDark)
+        latencyLabel.textColor = .from(.textColor, isDark)
+        signalBarsIcon.setImageColor(color: .from(.iconColor, isDark))
+        icon.setImageColor(color: .from(.iconColor, isDark))
+        disabledIcon.setImageColor(color: .from(.iconColor, isDark))
 
         super.updateUI()
     }
