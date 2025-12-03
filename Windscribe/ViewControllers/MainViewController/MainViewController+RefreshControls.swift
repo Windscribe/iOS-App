@@ -78,11 +78,13 @@ extension MainViewController {
         }
 
         if update {
-            Timer.scheduledTimer(timeInterval: 0.25, target: self, selector: #selector(updateRefreshControls), userInfo: nil, repeats: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                self?.updateRefreshControls()
+            }
         }
     }
 
-    @objc func updateRefreshControls() {
+    func updateRefreshControls() {
         if vpnConnectionViewModel.isDisconnected() {
             if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
                 showRefreshControlDisconnectedState(serverRefreshControl)

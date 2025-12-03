@@ -46,6 +46,7 @@ class ServerInfoViewModel: ServerInfoViewModelType {
             .store(in: &cancellables)
 
         languageManager.activelanguage
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.serverCountSubject.onNext(self.count)

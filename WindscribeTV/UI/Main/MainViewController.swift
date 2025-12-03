@@ -368,7 +368,9 @@ class MainViewController: PreferredFocusedViewController {
             self.refreshProtocol(from: network, with: protocolPort)
         }.store(in: &cancellables)
 
-        languageManager.activelanguage.sink { [self] _ in
+        languageManager.activelanguage
+        .receive(on: DispatchQueue.main)
+        .sink { [self] _ in
             localisation()
         }.store(in: &cancellables)
 

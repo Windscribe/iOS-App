@@ -133,12 +133,14 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         viewModel.notices
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.checkForUnreadNotifications()
             }
             .store(in: &cancellables)
 
         viewModel.showNetworkSecurityTrigger
+            .receive(on: DispatchQueue.main)
             .sink {[weak self] in
                 guard let self = self else { return }
                 Task { @MainActor in

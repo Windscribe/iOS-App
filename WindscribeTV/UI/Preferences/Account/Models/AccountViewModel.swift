@@ -71,14 +71,16 @@ class AccountViewModel: AccountViewModelType {
         self.userSessionRepository = userSessionRepository
 
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
-        #if os(iOS)
-            sections = [.info, .plan, .other]
-        #else
-            sections = [.info, .plan]
-        #endif
-        languageManager.activelanguage.sink { [weak self] _ in
-            self?.languageUpdatedTrigger.onNext(())
-        }.store(in: &cancellables)
+#if os(iOS)
+        sections = [.info, .plan, .other]
+#else
+        sections = [.info, .plan]
+#endif
+        languageManager.activelanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.languageUpdatedTrigger.onNext(())
+            }.store(in: &cancellables)
     }
 
     func getSections() -> [AccountSectionItem] {

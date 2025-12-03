@@ -32,7 +32,8 @@ class PreferencesAccountView: UIView {
     }
 
     func bindViews() {
-        viewModel?.languageUpdatedTrigger.subscribe { [weak self] _ in
+        viewModel?.languageUpdatedTrigger.observe(on: MainScheduler.asyncInstance)
+            .subscribe { [weak self] _ in
             guard let self = self else { return }
             for arrangedSubview in self.contentStackView.arrangedSubviews {
                 if let sectionView = arrangedSubview as? AccountSectionView {

@@ -42,7 +42,11 @@ class ListHeaderViewModel: ListHeaderViewModelType {
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
-        languageManager.activelanguage.sink { [weak self] _ in self?.refreshLanguage.onNext(()) }
+        languageManager.activelanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.refreshLanguage.onNext(())
+            }
             .store(in: &cancellables)
     }
 
@@ -86,7 +90,8 @@ class ListHeaderView: UIView {
             }
             .store(in: &cancellables)
 
-        viewModel.refreshLanguage.subscribe(onNext: { [weak self] _ in
+        viewModel.refreshLanguage.observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             if let type = try? viewModel.type.value() {
                 self.infoLabel.text = type.description

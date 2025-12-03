@@ -293,9 +293,11 @@ extension AppDelegate {
     }
 
     private func bindThemeChange() {
-        lookAndFeelRepository.isDarkModeSubject.sink { isDark in
-            UINavigationBar.setStyleNavigationBackButton(isDarkMode: isDark)
-        }.store(in: &cancellables)
+        lookAndFeelRepository.isDarkModeSubject
+            .receive(on: DispatchQueue.main)
+            .sink { isDark in
+                UINavigationBar.setStyleNavigationBackButton(isDarkMode: isDark)
+            }.store(in: &cancellables)
     }
 
     /// Method to present a SwiftUI view on top a window
