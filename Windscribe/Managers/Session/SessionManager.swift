@@ -105,9 +105,12 @@ class SessionManagerImpl: SessionManager {
     func keepSessionUpdated() {
         Task { @MainActor in
             if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
-                guard localDatabase.getSessionSync() != nil else {
+                guard let currentSession = localDatabase.getSessionSync() else {
                     self.logoutUser()
                     return
+                }
+                if userSessionRepository.sessionModel == nil {
+                    userSessionRepository.update(sessionModel: SessionModel(session: currentSession))
                 }
                 sessionFetchInProgress = true
                 localDatabase.saveOldSession()
