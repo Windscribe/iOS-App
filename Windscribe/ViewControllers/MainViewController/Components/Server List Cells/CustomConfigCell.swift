@@ -12,15 +12,7 @@ import UIKit
 
 class CustomConfigCellModel: BaseNodeCellViewModel {
     var displayingCustomConfig: CustomConfigModel?
-    var latencyRepository = Assembler.resolve(LatencyRepository.self)
 
-    init(displayingCustomConfig: CustomConfigModel?) {
-        super.init()
-        self.displayingCustomConfig = displayingCustomConfig
-        if let pingIP = displayingCustomConfig?.serverAddress {
-            minTime = latencyRepository.getPingData(ip: pingIP)?.latency ?? minTime
-        }
-    }
     override var name: String {
         displayingCustomConfig?.name ?? ""
     }
@@ -54,6 +46,14 @@ class CustomConfigCellModel: BaseNodeCellViewModel {
 
     private var areMissingCredentials: Bool {
         ((displayingCustomConfig?.username ?? "").isEmpty || (displayingCustomConfig?.password ?? "").isEmpty) && (displayingCustomConfig?.authRequired ?? false)
+    }
+
+    func update(displayingCustomConfig: CustomConfigModel?,
+                isDarkMode: Bool,
+                latency: Int) {
+        self.displayingCustomConfig = displayingCustomConfig
+        self.isDarkMode = isDarkMode
+        self.latency = latency
     }
 }
 

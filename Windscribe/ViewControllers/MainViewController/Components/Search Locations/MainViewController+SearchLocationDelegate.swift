@@ -68,8 +68,7 @@ extension MainViewController: SearchCountryViewDelegate {
                 let serverModels = serverSections.map {$0.server!}
                 let sortedModels = self.find(groupList: serverModels, keyword: text)
                 resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: text.isEmpty)}
-                self.serverListTableViewDataSource?.serverSections = resultServerSections
-                self.serverListTableView.reloadData()
+                self.serverListTableViewDataSource.updateServerList(with: resultServerSections)
                 for (index, serverSection) in resultServerSections.enumerated() {
                     if serverSection.collapsed == false, !text.isEmpty {
                         self.serverListTableView.expand(index)

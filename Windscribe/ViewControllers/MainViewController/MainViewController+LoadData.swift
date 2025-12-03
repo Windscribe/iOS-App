@@ -34,31 +34,15 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    func loadFavouriteList() {
-        favTableView.dataSource = favNodesListTableViewDataSource
-        favTableView.delegate = favNodesListTableViewDataSource
-        favNodesListTableViewDataSource?.delegate = self
-        reloadFavouriteOrder()
-    }
-
     @objc func reloadFavouriteOrder() {
         viewModel.favouriteList.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] favList in
             guard let self = self else { return }
             if favList?.count == 0 {
-                favNodesListTableViewDataSource = FavouriteListTableViewDataSource(favList: [], viewModel: viewModel)
-                favTableView.dataSource = favNodesListTableViewDataSource
-                favTableView.reloadData()
-                return
+                favNodesListTableViewDataSource.updateFavoriteList(with: [])
             }
             if let favList = favList {
-                favNodesListTableViewDataSource = FavouriteListTableViewDataSource(favList: viewModel.sortFavouriteNodesUsingUserPreferences(favList: favList), viewModel: viewModel)
-                favNodesListTableViewDataSource?.delegate = self
-                favTableView.dataSource = favNodesListTableViewDataSource
-                favTableView.delegate = favNodesListTableViewDataSource
-                DispatchQueue.main.async { [weak self] in
-                    self?.favTableView.reloadData()
-                    self?.serverListTableView.reloadData()
-                }
+                let orderedFavList = viewModel.sortFavouriteNodesUsingUserPreferences(favList: favList)
+                favNodesListTableViewDataSource.updateFavoriteList(with: orderedFavList)
             }
 
         }, onError: { error in
@@ -77,14 +61,7 @@ extension MainViewController {
                     guard let staticIPModel = result.getStaticIPModel() else { return }
                     staticIPModels.append(staticIPModel)
                 }
-                self.staticIPListTableViewDataSource = StaticIPListTableViewDataSource(staticIPs: staticIPModels, viewModel: self.viewModel)
-                self.staticIPListTableViewDataSource?.delegate = self
-                self.staticIPListTableViewDataSource?.makeEmptyView(tableView: self.staticIpTableView)
-                self.staticIpTableView.dataSource = self.staticIPListTableViewDataSource
-                self.staticIpTableView.delegate = self.staticIPListTableViewDataSource
-                self.staticIpTableView.reloadData()
-                self.staticIPTableViewFooterView.delegate = self.staticIPListViewModel
-                self.staticIPTableViewFooterView.updateDeviceName()
+                self.staticIPListTableViewDataSource.updateStaticIPList(with: staticIPModels)
                 self.loadStaticIPLatencyValues()
             }
 
@@ -102,12 +79,7 @@ extension MainViewController {
             for result in customconfigs where !result.isInvalidated {
                 customConfigs.append(result.getModel())
             }
-            self.customConfigListTableViewDataSource = CustomConfigListTableViewDataSource(customConfigs: customConfigs, viewModel: viewModel)
-            customConfigListTableViewDataSource?.uiDelegate = self
-            customConfigListTableViewDataSource?.logicDelegate = customConfigPickerViewModel
-            self.customConfigTableView.dataSource = self.customConfigListTableViewDataSource
-            self.customConfigTableView.delegate = self.customConfigListTableViewDataSource
-            self.customConfigTableView.reloadData()
+            customConfigListTableViewDataSource.updateCustomConfigList(with: customConfigs)
         }, onError: { [self] error in
             self.logger.logE("MainViewController", "Realm custom config list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)

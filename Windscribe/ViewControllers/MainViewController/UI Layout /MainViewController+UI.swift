@@ -22,6 +22,36 @@ extension MainViewController {
         listSelectionView.redrawGradientView()
     }
 
+    func addDataSources() {
+        serverListTableViewDataSource = Assembler.container.resolve(ServerListTableViewDataSource.self)!
+        favNodesListTableViewDataSource = Assembler.container.resolve(FavouriteListTableViewDataSource.self)!
+        staticIPListTableViewDataSource = Assembler.container.resolve(StaticIPListTableViewDataSource.self)!
+
+        customConfigListTableViewDataSource = Assembler.container.resolve(CustomConfigListTableViewDataSource.self)!
+
+        serverListTableView.dataSource = serverListTableViewDataSource
+        serverListTableView.delegate = serverListTableViewDataSource
+        serverListTableViewDataSource.delegate = self
+
+        favTableView.dataSource = favNodesListTableViewDataSource
+        favTableView.delegate = favNodesListTableViewDataSource
+        favNodesListTableViewDataSource.delegate = self
+
+        staticIpTableView.dataSource = staticIPListTableViewDataSource
+        staticIpTableView.delegate = staticIPListTableViewDataSource
+        staticIPListTableViewDataSource.delegate = self
+        staticIPListTableViewDataSource.makeEmptyView(tableView: staticIpTableView)
+        staticIPTableViewFooterView.delegate = staticIPListViewModel
+        staticIPTableViewFooterView.updateDeviceName()
+
+        customConfigTableView.dataSource = customConfigListTableViewDataSource
+        customConfigTableView.delegate = customConfigListTableViewDataSource
+        customConfigListTableViewDataSource.uiDelegate = self
+        customConfigListTableViewDataSource.logicDelegate = customConfigPickerViewModel
+
+        reloadFavouriteOrder()
+    }
+
     func addViews() {
         view.backgroundColor = UIColor.nightBlue
         addConnectionViews()
@@ -71,7 +101,8 @@ extension MainViewController {
 
         staticIpTableView = PlainTableView()
         staticIpTableView.tag = 3
-        staticIPTableViewFooterView = StaticIPListFooterView()
+        let languageManager = Assembler.resolve(LanguageManager.self)
+        staticIPTableViewFooterView = StaticIPListFooterView(activeLanguage: languageManager.activelanguage)
         staticIPTableViewFooterView.viewModel = viewModel
         staticIpTableView.tableFooterView = staticIPTableViewFooterView
         staticIpTableView.register(
@@ -90,7 +121,8 @@ extension MainViewController {
 
         customConfigTableView = PlainTableView()
         customConfigTableView.tag = 4
-        customConfigTableViewFooterView = CustomConfigListFooterView()
+        let lookAndFeelRepository = Assembler.resolve(LookAndFeelRepositoryType.self)
+        customConfigTableViewFooterView = CustomConfigListFooterView(activeLanguage: languageManager.activelanguage, isDarkMode: lookAndFeelRepository.isDarkModeSubject)
         customConfigTableViewFooterView.delegate = customConfigPickerViewModel
         customConfigTableView.tableFooterView = customConfigTableViewFooterView
         customConfigTableView.register(
@@ -107,6 +139,7 @@ extension MainViewController {
         customHeaderView.viewModel.updateType(with: .customConfig)
         customConfigTableView.tableHeaderView = customHeaderView
 
+        addDataSources()
         addRefreshControls()
 
         freeAccountViewFooterView = Assembler.container.resolve(FreeAccountFooterView.self)!
@@ -230,9 +263,9 @@ extension MainViewController {
 
     func arrangeListsFooterViews(for sessionModel: SessionModel) {
         let visible = sessionModel.isUserPro || !isSpaceAvailableForGetMoreDataView()
-        staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource?.shouldHideFooter() ?? true) || !visible
+        staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource.shouldHideFooter() ?? true) || !visible
         customConfigTableViewFooterView.isHidden = !visible
-        if customConfigListTableViewDataSource?.customConfigs?.count == 0 {
+        if customConfigListTableViewDataSource.customConfigs.count == 0 {
             customConfigTableViewFooterView.isHidden = true
         }
     }

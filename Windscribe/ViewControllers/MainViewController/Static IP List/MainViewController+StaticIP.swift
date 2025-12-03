@@ -9,6 +9,10 @@
 import Foundation
 
 extension MainViewController: StaticIPListTableViewDelegate {
+    func reloadStaticIPListTableView() {
+        staticIpTableView.reloadData()
+    }
+
     func addStaticIP() {
         staticIPListViewModel.addStaticIP()
     }

@@ -6,9 +6,6 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-import Combine
-import RxSwift
-import Swinject
 import SwipeCellKit
 import UIKit
 
@@ -26,6 +23,7 @@ protocol ServerCellModelType {
     var serverHealth: CGFloat { get }
     var showServerHealth: Bool { get }
     var hasProLocked: Bool { get }
+    var isDarkMode: Bool { get }
     func nameColor(for isDarkMode: Bool) -> UIColor
 }
 
@@ -60,8 +58,6 @@ class HealthCircleView: CompletionCircleView {
 }
 
 class ServerListCell: SwipeTableViewCell {
-    var disposeBag = DisposeBag()
-    private var cancellables = Set<AnyCancellable>()
     var icon = UIImageView()
     var circleView = UIView()
     var actionImage = UIImageView()
@@ -81,8 +77,6 @@ class ServerListCell: SwipeTableViewCell {
     }()
 
     var viewModel: ServerCellModelType?
-
-    private var isDarkMode: Bool = DefaultValues.darkMode
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -122,9 +116,9 @@ class ServerListCell: SwipeTableViewCell {
         super.init(coder: aDecoder)
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        disposeBag = DisposeBag() // Force rx disposal on reuse
+    func refreshUI() {
+        updateLayout()
+        updateUI()
     }
 
     func updateLayout() {
@@ -190,14 +184,14 @@ class ServerListCell: SwipeTableViewCell {
         nameLabel.text = viewModel.name
         icon.image = viewModel.iconImage
         if viewModel.shouldTintIcon {
-            icon.setImageColor(color: .from(.locationColor, isDarkMode))
+            icon.setImageColor(color: .from(.locationColor, viewModel.isDarkMode))
         }
         actionImage.image = viewModel.actionImage
         actionImage.layer.opacity = viewModel.actionOpacity
-        actionImage.setImageColor(color: .from(.iconColor, isDarkMode))
+        actionImage.setImageColor(color: .from(.iconColor, viewModel.isDarkMode))
         actionImage.isHidden = !viewModel.actionVisible
 
-        nameLabel.textColor = viewModel.nameColor(for: isDarkMode)
+        nameLabel.textColor = viewModel.nameColor(for: viewModel.isDarkMode)
 
         healthCircle.health = viewModel.serverHealth
 
@@ -208,27 +202,19 @@ class ServerListCell: SwipeTableViewCell {
 
         iconHeightConstraint.constant = viewModel.iconSize
         iconWidthConstraint.constant = viewModel.iconSize
+
+        actionImage.setImageColor(color: .from(.iconColor, viewModel.isDarkMode))
+        circleView.layer.borderColor = UIColor.from(.loadCircleColor, viewModel.isDarkMode).cgColor
+
+        let proImageName = viewModel.isDarkMode ? ImagesAsset.proMiniImage : ImagesAsset.proMiniLightImage
+        proIcon.image = UIImage(named: proImageName)
+
         layoutIfNeeded()
-    }
-
-    func bindViews(isDarkMode: CurrentValueSubject<Bool, Never>) {
-        isDarkMode
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isDark in
-                guard let self = self else { return }
-                self.actionImage.setImageColor(color: .from(.iconColor, isDark))
-                self.circleView.layer.borderColor = UIColor.from(.loadCircleColor, isDark).cgColor
-                self.isDarkMode = isDark
-
-                let proImageName = isDark ? ImagesAsset.proMiniImage : ImagesAsset.proMiniLightImage
-                self.proIcon.image = UIImage(named: proImageName)
-            }
-            .store(in: &cancellables)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        self.backgroundColor = .from(.pressStateColor, self.isDarkMode)
+        self.backgroundColor = .from(.pressStateColor, self.viewModel?.isDarkMode ?? false)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

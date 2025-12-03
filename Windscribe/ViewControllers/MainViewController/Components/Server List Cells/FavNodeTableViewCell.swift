@@ -6,10 +6,6 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-import Realm
-import RealmSwift
-import RxSwift
-import Swinject
 import UIKit
 
 class FavNodeTableViewCellModel: NodeTableViewCellModel {
@@ -18,6 +14,8 @@ class FavNodeTableViewCellModel: NodeTableViewCellModel {
     var pinnedIpText: String {
         return displayingFavGroup?.pinnedIp ?? TextsAsset.Favorites.randomIP
     }
+
+    override var isFavoriteCell: Bool { return true }
 
     override var name: String {
         // Show full name with nickname: "New York Empire" instead of just "New York"
@@ -29,9 +27,21 @@ class FavNodeTableViewCellModel: NodeTableViewCellModel {
         return cityName
     }
 
-    init(displayingFavGroup: FavouriteGroupModel? = nil) {
+    func update(displayingFavGroup: FavouriteGroupModel?,
+                locationLoad: Bool,
+                isSavedHasFav: Bool,
+                isUserPro: Bool,
+                isPremium: Bool,
+                isDarkMode: Bool,
+                latency: Int) {
         self.displayingFavGroup = displayingFavGroup
-        super.init(displayingGroup: displayingFavGroup?.groupModel, isFavorite: true)
+        self.displayingGroup = displayingFavGroup?.groupModel
+        self.locationLoad = locationLoad
+        self.isSavedHasFav = isSavedHasFav
+        self.isUserPro = isUserPro
+        self.isPremium = isPremium
+        self.isDarkMode = isDarkMode
+        self.latency = latency
     }
 }
 

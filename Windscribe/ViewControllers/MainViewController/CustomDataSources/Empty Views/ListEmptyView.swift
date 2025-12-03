@@ -9,7 +9,6 @@
 import Combine
 import Foundation
 import RxSwift
-import Swinject
 import UIKit
 
 enum ListEmptyViewType {
@@ -60,9 +59,9 @@ enum ListEmptyViewType {
 
 class ListEmptyView: UIView {
     var isDarkMode: CurrentValueSubject<Bool, Never>
+    var activeLanguage: CurrentValueSubject<Languages, Never>
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
-    lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
     let label = UILabel()
     let button = UIButton()
@@ -72,8 +71,9 @@ class ListEmptyView: UIView {
     var addAction: (() -> Void)?
     private var type: ListEmptyViewType
 
-    init(type: ListEmptyViewType, isDarkMode: CurrentValueSubject<Bool, Never>) {
+    init(type: ListEmptyViewType, isDarkMode: CurrentValueSubject<Bool, Never>, activeLanguage: CurrentValueSubject<Languages, Never>) {
         self.isDarkMode = isDarkMode
+        self.activeLanguage = activeLanguage
         self.type = type
         super.init(frame: .zero)
         bindViews()
@@ -157,11 +157,14 @@ class ListEmptyView: UIView {
                 self.imageView.tintColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             }
             .store(in: &cancellables)
-        languageManager.activelanguage.sink { [weak self] _ in
-            guard let self = self else { return }
-            self.label.text = self.type.description
-            self.config.title = self.type.buttonTitle
-            self.button.configuration = self.config
-        }.store(in: &cancellables)
+        activeLanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.label.text = self.type.description
+                self.config.title = self.type.buttonTitle
+                self.button.configuration = self.config
+            }
+            .store(in: &cancellables)
     }
 }

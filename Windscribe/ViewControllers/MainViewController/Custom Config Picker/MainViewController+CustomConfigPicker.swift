@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 
 extension MainViewController: CustomConfigListViewDelegate {
+    func reloadCustomConfigListTableView() {
+        customConfigTableView.reloadData()
+    }
+
     func hideCustomConfigRefreshControl() {
         if customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {
             customConfigsTableViewRefreshControl.removeFromSuperview()

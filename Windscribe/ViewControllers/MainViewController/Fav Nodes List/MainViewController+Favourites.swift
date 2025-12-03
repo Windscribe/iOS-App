@@ -25,4 +25,10 @@ extension MainViewController: FavouriteListTableViewDelegate {
             favTableView.addSubview(favTableViewRefreshControl)
         }
     }
+
+    func reloadFavouriteListTableView() {
+        DispatchQueue.main.async { [weak self] in
+            self?.favTableView.reloadData()
+        }
+    }
 }

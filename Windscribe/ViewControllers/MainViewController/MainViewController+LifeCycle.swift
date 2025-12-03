@@ -25,7 +25,6 @@ extension MainViewController {
         WifiManager.shared.saveCurrentWifiNetworks()
         loadPortMap()
         loadServerList()
-        loadFavouriteList()
         loadStaticIPs()
         loadCustomConfigs()
         loadLastConnection()
