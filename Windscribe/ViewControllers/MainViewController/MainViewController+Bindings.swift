@@ -195,12 +195,15 @@ extension MainViewController {
             // Disconnect VPN to stop protocol cycling when all protocols have failed
             self.vpnConnectionViewModel.disableConnection()
 
-            // Check connection mode to determine which failure dialog to show
-            let connectionMode = try? self.viewModel.connectionMode.value()
-            let viewType: ProtocolViewType = (connectionMode == Fields.Values.manual) ? .manualFail : .fail
-
-            self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: viewType), from: self)
+            self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: .fail), from: self)
         }).disposed(by: disposeBag)
+
+        viewModel.showConnectionModeTriggeer
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] in
+                guard let self = self else { return }
+                self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: .manualFail), from: self)
+            }.store(in: &cancellables)
 
         viewModel.showNoInternetBeforeFailoverTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }

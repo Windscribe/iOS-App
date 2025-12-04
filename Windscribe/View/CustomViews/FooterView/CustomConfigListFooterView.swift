@@ -60,7 +60,7 @@ class CustomConfigListFooterView: WSView {
             }
             .store(in: &cancellables)
     }
-    
+
     override func setupLocalized() {
         label.text = TextsAsset.addCustomConfig
     }

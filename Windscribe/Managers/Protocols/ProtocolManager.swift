@@ -20,6 +20,7 @@ protocol ProtocolManagerType {
     var showProtocolSwitchTrigger: PassthroughSubject<Void, Never> { get }
     var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
     var showNoInternetBeforeFailoverTrigger: PassthroughSubject<Void, Never> { get }
+    var showConnectionModeTriggeer: PassthroughSubject<Void, Never> { get }
 
     var displayProtocolsSubject: CurrentValueSubject<[DisplayProtocolPort], Never> { get }
 
@@ -83,6 +84,7 @@ class ProtocolManager: ProtocolManagerType {
     let showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
     let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
     let showNoInternetBeforeFailoverTrigger = PassthroughSubject<Void, Never>()
+    let showConnectionModeTriggeer = PassthroughSubject<Void, Never>()
 
     let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
@@ -344,6 +346,16 @@ class ProtocolManager: ProtocolManagerType {
 
     /// Current protocol failed to connect, lower its priority.
     func onProtocolFail() async {
+        if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
+            // If the Network has a preferred protocol do not show Protocol Switch View
+            return
+        }
+        
+        guard TextsAsset.General.manual != preferences.getConnectionModeSync() else {
+            // The connection failed while user on Manual mode, show message to change to Auto mode
+            showConnectionModeTriggeer.send(())
+            return
+        }
         userSelected = nil
         let failedProtocol = await getNextProtocol()
         logger.logI("ProtocolManager", "\(failedProtocol.protocolName) failed to connect.")

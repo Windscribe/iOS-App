@@ -97,16 +97,16 @@ class PreferencesImpl: Preferences {
         return observeKey(SharedKeys.connectionMode, type: String.self, defaultValue: DefaultValues.connectionMode)
     }
 
+    func getConnectionModeSync() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.connectionMode) ?? DefaultValues.connectionMode
+    }
+
     func getConnectedDNS() -> String {
         return getString(forKey: SharedKeys.connectedDNS) ?? DefaultValues.connectedDNS
     }
 
     func getConnectedDNSObservable() -> AnyPublisher<String?, Never> {
         return observeKey(SharedKeys.connectedDNS, type: String.self, defaultValue: DefaultValues.connectedDNS)
-    }
-
-    func getConnectionModeSync() -> String {
-        return sharedDefault?.string(forKey: SharedKeys.connectionMode) ?? DefaultValues.connectionMode
     }
 
     func saveAutoSecureNewNetworks(autoSecure: Bool) {
