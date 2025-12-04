@@ -302,18 +302,10 @@ extension ConfigurationsManager {
                 }
                 if attempt == maxConnectivityTestAttempts {
                     self.logger.logE("VPNConfiguration", "Connectivity error: \(error)")
-                    // Mark node as failed so retry won't select the same node
-                    if !currentHost.isEmpty {
-                        self.setFailedNode(hostname: currentHost)
-                    }
                     throw VPNConfigurationErrors.connectivityTestFailed
                 }
                 try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
             }
-        }
-        // Mark node as failed if all connectivity attempts exhausted
-        if !currentHost.isEmpty {
-            self.setFailedNode(hostname: currentHost)
         }
         throw VPNConfigurationErrors.connectivityTestFailed
     }

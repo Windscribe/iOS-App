@@ -32,7 +32,7 @@ class HomeRouter: BaseRouter, RootRouter {
                     .environmentObject(router)
             )
 
-            if viewType == .fail {
+            if viewType == .fail || viewType == .manualFail {
                 from.navigationController?.pushViewController(hostingController, animated: true)
             } else if viewType == .connected {
                 hostingController.modalPresentationStyle = .fullScreen

@@ -311,9 +311,9 @@ class ConfigurationsManager {
     // MARK: - Failed Node Tracking
 
     /// Saves the failed node hostname to exclude it from retry
-    func setFailedNode(hostname: String) {
-        failedNodeHostname = hostname
-        logger.logI("ConfigurationsManager", "Marked node as failed: \(hostname)")
+    func updateFailedNode() {
+        failedNodeHostname = preferences.getLastNodeIP()
+        logger.logI("ConfigurationsManager", "Marked node as failed: \(failedNodeHostname ?? "nil")")
     }
 
     /// Clears the failed node (called on success or disconnect)

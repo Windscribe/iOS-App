@@ -59,7 +59,7 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
                 self?.refreshProtocolSubject.onNext(data)
             }.store(in: &cancellables)
     }
-    
+
     var isCustomConfigSelected: Bool {
         locationsManager.isCustomConfigSelected()
     }
