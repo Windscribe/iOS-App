@@ -350,7 +350,7 @@ class ProtocolManager: ProtocolManagerType {
             // If the Network has a preferred protocol do not show Protocol Switch View
             return
         }
-        
+
         guard TextsAsset.General.manual != preferences.getConnectionModeSync() else {
             // The connection failed while user on Manual mode, show message to change to Auto mode
             showConnectionModeTriggeer.send(())
