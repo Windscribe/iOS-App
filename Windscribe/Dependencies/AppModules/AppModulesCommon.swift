@@ -64,6 +64,9 @@ class Repository: Assembly {
             BridgeApiRepositoryImpl(bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
                                     locationManager: r.resolve(LocationsManager.self)!,
                                     userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                    vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                                    logger: r.resolve(FileLogger.self)!,
+                                    protocolManager: r.resolve(ProtocolManagerType.self)!,
                                     preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
 

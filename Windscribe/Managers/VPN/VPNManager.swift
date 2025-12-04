@@ -114,20 +114,6 @@ class VPNManagerImpl: VPNManager {
             }.store(in: &cancellables)
 
         self.configManager.delegate = self
-
-        self.vpnStateRepository.getStatus()
-            .map { $0 == .connected }
-            .removeDuplicates()
-            .sink { [weak self] isConnected in
-                guard let self = self else { return }
-                self.logger.logI("VPNConfiguration", "wsnet setIsConnectedToVpnState to isConnected: \(isConnected)")
-                WSNet.instance().setIsConnectedToVpnState(isConnected)
-                if !isConnected {
-                    self.logger.logI("VPNConfiguration", "wsnet BridgeAPI_impl VPN Disconnected setting bridgeAPI to Connected State: false")
-                    self.bridgeAPI.setConnectedState(false)
-                }
-            }
-            .store(in: &cancellables)
     }
 
     func isActive() async -> Bool {

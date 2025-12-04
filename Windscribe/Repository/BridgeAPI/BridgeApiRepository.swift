@@ -15,9 +15,16 @@ protocol BridgeApiRepository {
 }
 
 class BridgeApiRepositoryImpl: BridgeApiRepository {
+    private var cancellables = Set<AnyCancellable>()
+    private var startTimeStamp = Date()
+    private var initialListenning = true
+
     private let bridgeAPI: WSNetBridgeAPI
     private let locationManager: LocationsManager
     private let userSessionRepository: UserSessionRepository
+    private let vpnStateRepository: VPNStateRepository
+    private let logger: FileLogger
+    private let protocolManager: ProtocolManagerType
     private let preferences: Preferences
 
     let bridgeIsAvailable =  CurrentValueSubject<Bool, Never>(false)
@@ -28,34 +35,79 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
     init(bridgeAPI: WSNetBridgeAPI,
          locationManager: LocationsManager,
          userSessionRepository: UserSessionRepository,
+         vpnStateRepository: VPNStateRepository,
+         logger: FileLogger,
+         protocolManager: ProtocolManagerType,
          preferences: Preferences) {
         self.bridgeAPI = bridgeAPI
         self.locationManager = locationManager
         self.userSessionRepository = userSessionRepository
+        self.vpnStateRepository = vpnStateRepository
+        self.logger = logger
+        self.protocolManager = protocolManager
         self.preferences = preferences
         observeBridgeApi()
     }
 
     private func observeBridgeApi() {
+        vpnStateRepository.getStatus()
+            .map { $0 == .connected }
+            .removeDuplicates()
+            .sink { [weak self] isConnected in
+                guard let self = self else { return }
+                if !isConnected {
+                    self.logger.logI("BridgeApiRepository", "wsnet BridgeAPI_impl VPN Disconnected setting bridgeAPI to Connected State: false")
+                    self.bridgeAPI.setConnectedState(false)
+                }
+                guard initialListenning else {
+                    self.logger.logI("BridgeApiRepository", "wsnet setIsConnectedToVpnState to isConnected: \(isConnected)")
+                    WSNet.instance().setIsConnectedToVpnState(isConnected)
+                    return
+                }
+                guard Date().timeIntervalSince(startTimeStamp) < 2 else {
+                    initialListenning = false
+                    return
+                }
+                if isConnected {
+                    initialListenning = false
+                    let currentHost = preferences.getLastNodeIP() ?? ""
+                    let currentProtocol = protocolManager.currentProtocolSubject.value?.protocolName ?? ""
+                    if currentProtocol == "WireGuard" {
+                        self.bridgeAPI.setCurrentHost(currentHost)
+                    } else {
+                        self.bridgeAPI.setCurrentHost("")
+                    }
+                    self.bridgeAPI.setIgnoreSslErrors(true)
+                    self.bridgeAPI.setConnectedState(true)
+                }
+            }
+            .store(in: &cancellables)
+
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.bridgeAPI.setApiAvailableCallback { [weak self] ready in
-                guard let self = self else { return }
-                if ready {
-                    preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
-                }
-                guard let sessionModel = self.userSessionRepository.sessionModel else {
-                    self.bridgeIsAvailable.send(false)
-                    return
-                }
-                let locationInfo = self.locationManager.getLocationUIInfo()
-                guard locationInfo.isServer else {
-                    self.bridgeIsAvailable.send(false)
-                    return
-                }
-
-                let hasAlc = sessionModel.alc.contains(locationInfo.countryCode)
-                self.bridgeIsAvailable.send(ready && (sessionModel.isUserPro || hasAlc))
+                self?.checkAndEmitApiAvailability(ready: ready)
             }
         }
+    }
+
+    private func checkAndEmitApiAvailability(ready: Bool) {
+        if ready {
+            preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
+            let persistantSettings = WSNet.instance().currentPersistentSettings()
+        }
+        guard let sessionModel = self.userSessionRepository.sessionModel else {
+            self.bridgeIsAvailable.send(false)
+            logger.logI("BridgeApiRepository", "userSessionRepository.sessionModel - nil")
+            return
+        }
+        let locationInfo = self.locationManager.getLocationUIInfo()
+        guard locationInfo.isServer else {
+            self.bridgeIsAvailable.send(false)
+            logger.logI("BridgeApiRepository", "locationInfo - nil")
+            return
+        }
+
+        let hasAlc = sessionModel.alc.contains(locationInfo.countryCode)
+        self.bridgeIsAvailable.send(ready && (sessionModel.isUserPro || hasAlc))
     }
 }
