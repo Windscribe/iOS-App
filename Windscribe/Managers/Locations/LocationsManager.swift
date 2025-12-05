@@ -32,10 +32,11 @@ protocol LocationsManager {
     func getId() -> String
     func getId(location: String) -> String
     func isCustomConfigSelected() -> Bool
-    func checkLocationValidity(checkProAccess: () -> Bool)
+    func checkLocationValidity()
     func checkForForceDisconnect() -> Bool
 
     var selectedLocationUpdated: CurrentValueSubject<Bool, Never> { get }
+    var bestLocationUpdated: PassthroughSubject<Void, Never> { get }
 }
 
 class LocationsManagerImpl: LocationsManager {
@@ -45,16 +46,24 @@ class LocationsManagerImpl: LocationsManager {
 
     private let languageManager: LanguageManager
     private let serverRepository: ServerRepository
+    private let userSessionRepository: UserSessionRepository
 
     private var cancellables = Set<AnyCancellable>()
 
     let selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
+    let bestLocationUpdated = PassthroughSubject<Void, Never>()
 
-    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManager, serverRepository: ServerRepository) {
+    init(localDatabase: LocalDatabase,
+         preferences: Preferences,
+         logger: FileLogger,
+         languageManager: LanguageManager,
+         userSessionRepository: UserSessionRepository,
+         serverRepository: ServerRepository) {
         self.localDatabase = localDatabase
         self.preferences = preferences
         self.logger = logger
         self.languageManager = languageManager
+        self.userSessionRepository = userSessionRepository
         self.serverRepository = serverRepository
 
         languageManager.activelanguage.sink { [weak self] _ in
@@ -92,11 +101,12 @@ class LocationsManagerImpl: LocationsManager {
             return getEmptyUIInfo()
         }
         let groupId = getLastSelectedLocation()
+        let bestLocationId = getBestLocation()
         if locationType == .server {
             guard let location = try? getLocation(from: groupId) else {
                 return getEmptyUIInfo()
             }
-            let cityName = getBestLocation() == getLastSelectedLocation() ? TextsAsset.bestLocation : location.1.city
+            let cityName = bestLocationId == groupId ? TextsAsset.bestLocation : location.1.city
             return LocationUIInfo(nickName: location.1.nick, cityName: cityName, countryCode: location.0.countryCode, isServer: true)
         } else {
             let locationID = getId()
@@ -151,10 +161,9 @@ class LocationsManagerImpl: LocationsManager {
 
     func saveBestLocation(with locationID: String) {
         preferences.saveBestLocation(with: locationID)
-        let lastLocation = getLastSelectedLocation()
-        if lastLocation.isEmpty || lastLocation == "0" {
-            saveLastSelectedLocation(with: locationID)
-        }
+        self.logger.logI("LocationsManager", "Saved BestLocation ID: \(locationID)")
+        checkLocationValidity()
+        bestLocationUpdated.send(())
     }
 
     func selectBestLocation(with locationID: String) {
@@ -200,7 +209,7 @@ class LocationsManagerImpl: LocationsManager {
         return preferences.isCustomConfigSelected()
     }
 
-    func checkLocationValidity(checkProAccess: () -> Bool) {
+    func checkLocationValidity() {
         let locationID = getLastSelectedLocation()
         guard !locationID.isEmpty, locationID != "0" else {
             self.logger.logI("LocationsManager", "Location is empty or invalid.. Switching to Best location.")
@@ -217,7 +226,7 @@ class LocationsManagerImpl: LocationsManager {
             }
             return
         }
-        if !checkProAccess() && currentLocation.1.premiumOnly {
+        if !userSessionRepository.canAccesstoProLocation() && currentLocation.1.premiumOnly {
             updateToBestLocation()
         }
     }

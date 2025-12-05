@@ -30,6 +30,7 @@ protocol MainViewModel {
     var wifiNetwork: BehaviorSubject<WifiNetwork?> { get }
     var sessionModel: CurrentValueSubject<SessionModel?, Never> { get }
     var favouriteGroups: BehaviorSubject<[GroupModel]> { get }
+    var bestLocationUpdated: PassthroughSubject<Void, Never> { get }
 
     var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }
     var showNotificationsTrigger: PassthroughSubject<Void, Never> { get }

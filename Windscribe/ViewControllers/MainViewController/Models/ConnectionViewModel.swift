@@ -198,6 +198,11 @@ class ConnectionViewModel: ConnectionViewModelType {
             self.selectedLocationUpdated.send(())
         }.store(in: &cancellables)
 
+        locationsManager.bestLocationUpdated.sink { [weak self] canReconnect in
+            guard let self = self else { return }
+            self.selectedLocationUpdated.send(())
+        }.store(in: &cancellables)
+
         connectivity.network
             .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
             .sink { [weak self] network in

@@ -218,12 +218,10 @@ extension MainViewController {
 
     func loadServerTable(servers: [ServerModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
         viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: servers) { serverSectionsOrdered in
+
             self.serverListTableViewDataSource.updateServerList(with: serverSectionsOrdered)
             self.serverListTableViewDataSource.updateShouldColapse(with: shouldColapse)
 
-            if let bestLocation = self.vpnConnectionViewModel.getBestLocation() {
-                self.serverListTableViewDataSource.bestLocation = bestLocation
-            }
             reloadFinishedCompletion?()
             DispatchQueue.main.async {
                 self.reloadServerList()

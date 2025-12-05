@@ -45,6 +45,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
         self.backgroundFileManager = backgroundFileManager
 
         locationsManager.selectedLocationUpdated
+            .combineLatest(locationsManager.bestLocationUpdated)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
             guard let self = self else { return }

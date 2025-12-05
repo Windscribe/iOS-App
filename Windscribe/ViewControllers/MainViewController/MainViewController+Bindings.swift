@@ -211,6 +211,15 @@ extension MainViewController {
             self.displayInternetConnectionLostAlert()
         }).disposed(by: disposeBag)
 
+        viewModel.bestLocationUpdated
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] in
+                guard let self = self else { return }
+                if let bestLocation = vpnConnectionViewModel.getBestLocation() {
+                    serverListTableViewDataSource.bestLocation = bestLocation
+                }
+            }.store(in: &cancellables)
+
         setNetworkSsid()
     }
 

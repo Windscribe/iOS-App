@@ -221,7 +221,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
             let locationId = "\(bestLocation.groupId)"
             logger.logD("MainViewController", "Configuring best location.")
-            serverListTableViewDataSource.bestLocation = bestLocation
             if selectBestLocation || noSelectedNodeToConnect() {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
             }

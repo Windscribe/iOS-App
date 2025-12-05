@@ -234,6 +234,7 @@ class Managers: Assembly {
                                  preferences: r.resolve(Preferences.self)!,
                                  logger: r.resolve(FileLogger.self)!,
                                  languageManager: r.resolve(LanguageManager.self)!,
+                                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                  serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(VPNStateRepository.self) { r in
