@@ -312,6 +312,8 @@ enum ImagesAsset {
         static let connectionButtonOnFocused = "connectionButtonOnFocused"
         static let connectingRing = "connecting_ring"
         static let connectedRing = "connected_ring"
+        static let secureIcon = "secure"
+        static let insecureIcon = "insecure"
     }
 
     enum Backgrounds {
