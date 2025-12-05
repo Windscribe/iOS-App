@@ -221,7 +221,6 @@ class SessionManagerImpl: SessionManager {
     private func refreshLocations() {
         Task { @MainActor in
             latencyRepo.pickBestLocation(pingData: localDatabase.getAllPingData())
-            locationsManager.checkLocationValidity(checkProAccess: {userSessionRepository.canAccesstoProLocation()})
         }
     }
 
@@ -229,7 +228,6 @@ class SessionManagerImpl: SessionManager {
         Task { @MainActor in
             if vpnStateRepository.isConnected() {
                 latencyRepo.refreshBestLocation()
-                locationsManager.checkLocationValidity(checkProAccess: {userSessionRepository.canAccesstoProLocation()})
             } else {
                 loadLatency()
             }
@@ -277,6 +275,7 @@ class SessionManagerImpl: SessionManager {
             }
             if newSession.isPremium && !oldSession.isPremium {
                 try? await serverRepo.updatedServers()
+                self.refreshLocations()
                 _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
                 _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
             }

@@ -54,6 +54,7 @@ class MainViewModelImpl: MainViewModel {
     let showNetworkSecurityTrigger: PassthroughSubject<Void, Never>
     let showNotificationsTrigger: PassthroughSubject<Void, Never>
     let becameActiveTrigger: PassthroughSubject<Void, Never>
+    let bestLocationUpdated = PassthroughSubject<Void, Never>()
     let updateSSIDTrigger = PublishSubject<Void>()
     let showProtocolSwitchTrigger = PublishSubject<Void>()
     let showAllProtocolsFailedTrigger = PublishSubject<Void>()
@@ -186,6 +187,12 @@ class MainViewModelImpl: MainViewModel {
         protocolManager.showConnectionModeTriggeer
             .sink { [weak self] _ in
                 self?.showConnectionModeTriggeer.send(())
+            }
+            .store(in: &cancellables)
+
+        locationsManager.bestLocationUpdated
+            .sink { [weak self] _ in
+                self?.bestLocationUpdated.send(())
             }
             .store(in: &cancellables)
 

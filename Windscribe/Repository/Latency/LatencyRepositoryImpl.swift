@@ -205,7 +205,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             .compactMap { region in Array(region.groups)}
             .reduce([], +)
             .filter {
-                if (userSessionRepository.sessionModel?.isPremium ?? false)
+                if (userSessionRepository.sessionModel?.isPremium == false)
                     && $0.premiumOnly == true {
                     return false
                 } else {
@@ -284,12 +284,11 @@ class LatencyRepositoryImpl: LatencyRepository {
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
             outerLoop: for server in servers {
                 for group in server.groups where group.pingIp == lowestPingIp {
+                    self.logger.logI("LatencyRepositoryImpl", "Selected best location based on pingData: \(group)")
                     locationsManager.saveBestLocation(with: "\(group.id)")
                     break outerLoop
                 }
             }
-        } else {
-            return
         }
     }
 

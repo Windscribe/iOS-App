@@ -470,7 +470,7 @@ class MainViewController: PreferredFocusedViewController {
         UIView.animate(withDuration: 0.25) { [weak self] in
             guard let self = self else { return }
             self.ipLabel.text = ipAddress.formatIpAddress().maxLength(length: 15)
-            
+
             if self.vpnConnectionViewModel.isConnected() {
                 self.ipIcon.image = UIImage(named: ImagesAsset.TvAsset.secureIcon)
             } else {
