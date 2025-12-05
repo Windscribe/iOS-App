@@ -107,8 +107,15 @@ class ListEmptyView: UIView {
                 outgoing.font = UIFont.text(size: 16)
                 return outgoing
               }
-            config.baseBackgroundColor = .whiteWithOpacity(opacity: 0.1)
-            config.baseForegroundColor = .white
+            // Set initial colors based on dark mode
+            let isDark = isDarkMode.value
+            if isDark {
+                config.baseBackgroundColor = .whiteWithOpacity(opacity: 0.1)
+                config.baseForegroundColor = .white
+            } else {
+                config.baseBackgroundColor = .blackWithOpacity(opacity: 0.1)
+                config.baseForegroundColor = .black
+            }
             config.cornerStyle = .capsule
             config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24)
 
@@ -155,6 +162,16 @@ class ListEmptyView: UIView {
                 guard let self = self else { return }
                 self.label.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
                 self.imageView.tintColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
+
+                // Update button colors based on dark mode
+                if isDark {
+                    self.config.baseBackgroundColor = .whiteWithOpacity(opacity: 0.1)
+                    self.config.baseForegroundColor = .white
+                } else {
+                    self.config.baseBackgroundColor = .blackWithOpacity(opacity: 0.1)
+                    self.config.baseForegroundColor = .black
+                }
+                self.button.configuration = self.config
             }
             .store(in: &cancellables)
         activeLanguage
