@@ -57,6 +57,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
     private var sideOptions: [SideMenuType] = [.all, .fav, .windflix, .staticIp]
     private var selectedRow: Int = 0
+    private var selectedCollectionIndexPath: IndexPath?
     private var optionViews = [SideMenuOptionsView]()
     private var selectionOption = SideMenuType.all
 
@@ -88,9 +89,33 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         changeEmptyViewVisibility()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        // Restore focus to previously selected collection view item
+        if let indexPath = selectedCollectionIndexPath,
+           selectionOption == .all || selectionOption == .windflix {
+            // Scroll to the item first
+            serverListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+        }
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         logger.logD("ServerListViewController", "Displaying Server List View")
+
+        // Set focus after view is fully loaded with a small delay to ensure cell is ready
+        if let indexPath = selectedCollectionIndexPath,
+           selectionOption == .all || selectionOption == .windflix {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                if let cell = self.serverListCollectionView.cellForItem(at: indexPath) {
+                    self.myPreferredFocusedView = cell
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                }
+            }
+        }
     }
 
     override func viewWillDisappear(_: Bool) {
@@ -472,6 +497,9 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
     }
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // Store the selected index path to restore focus when returning
+        selectedCollectionIndexPath = indexPath
+
         if indexPath.row == 0 && !isWindflixLocationSelected && bestLocation != nil {
             navigationController?.popToRootViewController(animated: true)
             bestLocDelegate?.connectToBestLocation()
