@@ -254,11 +254,18 @@ class ProtocolManager: ProtocolManagerType {
             setPriority(proto: protocolName, type: .normal)
         }
 
+        // Check if VPN is currently connected and mark the connected protocol
         if !isFromFailover, !shouldReconnect,
            let info = vpnStateRepository.vpnInfo.value, info.status == .connected {
+            // vpnInfo is populated with connection details
             appendPort(proto: info.selectedProtocol, port: info.selectedPort)
             setPriority(proto: info.selectedProtocol, type: .connected)
+        } else if vpnStateRepository.isConnected() {
+            // VPN is connected but vpnInfo not populated yet (e.g., app restart)
+            // Mark the first protocol as connected
+            protocolsToConnectList.first?.viewType = .connected
         } else {
+            // Not connected - mark first as next up
             protocolsToConnectList.first?.viewType = .nextUp(countdown: -1)
         }
         let log = "Protocols to connect List: " + protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
@@ -307,9 +314,10 @@ class ProtocolManager: ProtocolManagerType {
             userSelected = nil
             logger.logI("ProtocolManager", "Connection state changed to \(state).")
             if state == .connected {
-                protocolsToConnectList.first { $0.viewType.isNextup
-                }?.viewType = .connected
-                protocolsToConnectList.filter { $0.viewType.isNextup }.forEach { $0.viewType = .normal }
+                // Mark the first protocol (the one we're connecting to) as connected
+                protocolsToConnectList.first?.viewType = .connected
+                // Reset any other nextUp protocols back to normal
+                protocolsToConnectList.dropFirst().filter { $0.viewType.isNextup }.forEach { $0.viewType = .normal }
             }
             if state == .disconnected {
                 protocolsToConnectList.filter { $0.viewType.isNextup }.forEach { $0.viewType = .normal }
