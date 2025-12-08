@@ -230,6 +230,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             }
             if serverSections.count > 0 {
                 cell.serverCellViewModel?.update(serverModel: serverSections[section].server,
+                                                 locationLoad: locationLoad,
                                                  isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
                                                  isDarkMode: lookAndFeelRepository.isDarkMode)
                 cell.setCollapsed(collapsed: serverSections[section].collapsed)

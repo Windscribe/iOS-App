@@ -12,7 +12,7 @@ class BestLocationCellModel: ServerCellModelType {
     var isDarkMode: Bool = false
 
     var displayingBestLocation: BestLocationModel?
-    var showServerHealth: Bool = DefaultValues.showServerHealth
+    var locationLoad: Bool = DefaultValues.showServerHealth
 
     var name: String {
         TextsAsset.bestLocation
@@ -48,7 +48,7 @@ class BestLocationCellModel: ServerCellModelType {
                 locationLoad: Bool,
                 isDarkMode: Bool) {
         self.displayingBestLocation = bestLocationModel
-        self.showServerHealth = locationLoad
+        self.locationLoad = locationLoad
         self.isDarkMode = isDarkMode
     }
 

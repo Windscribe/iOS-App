@@ -15,6 +15,7 @@ protocol ServerSectionCellModelType: ServerCellModelType {
     func setIsExpanded(_ value: Bool)
 
     func update(serverModel: ServerModel?,
+                locationLoad: Bool,
                 isPremium: Bool,
                 isDarkMode: Bool)
 }
@@ -23,7 +24,7 @@ class ServerSectionCellModel: ServerSectionCellModelType {
     var isDarkMode: Bool = false
     var isExpanded: Bool = false
     var isPremium: Bool = false
-    var showServerHealth: Bool = DefaultValues.showServerHealth
+    var locationLoad: Bool = DefaultValues.showServerHealth
 
     var displayingServer: ServerModel?
 
@@ -83,9 +84,11 @@ class ServerSectionCellModel: ServerSectionCellModelType {
     }
 
     func update(serverModel: ServerModel?,
+                locationLoad: Bool,
                 isPremium: Bool,
                 isDarkMode: Bool) {
         self.displayingServer = serverModel
+        self.locationLoad = locationLoad
         self.isPremium = isPremium
         self.isDarkMode = isDarkMode
     }

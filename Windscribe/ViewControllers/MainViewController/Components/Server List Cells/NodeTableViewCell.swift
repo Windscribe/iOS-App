@@ -35,7 +35,6 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     var displayingGroup: GroupModel?
     var isFavoriteCell: Bool { return false }
 
-    var locationLoad: Bool = false
     var isPremium: Bool = false
     var isUserPro: Bool = false
 
