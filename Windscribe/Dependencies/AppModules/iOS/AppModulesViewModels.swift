@@ -272,6 +272,8 @@ class ViewModels: Assembly {
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.transient)

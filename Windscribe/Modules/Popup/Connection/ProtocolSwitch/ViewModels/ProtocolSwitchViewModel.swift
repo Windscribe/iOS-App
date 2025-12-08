@@ -35,6 +35,8 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     private let protocolManager: ProtocolManagerType
     private let vpnStateRepository: VPNStateRepository
     private let vpnManager: VPNManager
+    private let localDatabase: LocalDatabase
+    private let securedNetwork: SecuredNetworkRepository
     private let logger: FileLogger
 
     private var cancellables = Set<AnyCancellable>()
@@ -49,12 +51,16 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         protocolManager: ProtocolManagerType,
         vpnStateRepository: VPNStateRepository,
         vpnManager: VPNManager,
+        localDatabase: LocalDatabase,
+        securedNetwork: SecuredNetworkRepository,
         logger: FileLogger
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.protocolManager = protocolManager
         self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
+        self.localDatabase = localDatabase
+        self.securedNetwork = securedNetwork
         self.logger = logger
 
         isDarkMode = lookAndFeelRepository.isDarkMode
@@ -114,13 +120,30 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
     // MARK: Protocol Loading and Management
     private func updateDisplayProtocols(_ displayProtocols: [DisplayProtocolPort]) {
-        let protocolItems = displayProtocols.map { displayProtocol in
+        var protocolItems = displayProtocols.map { displayProtocol in
             ProtocolDisplayItem(
                 protocolName: displayProtocol.protocolPort.protocolName,
                 portName: displayProtocol.protocolPort.portName,
                 description: getProtocolDescription(displayProtocol.protocolPort.protocolName),
                 viewType: displayProtocol.viewType
             )
+        }
+
+        // If we're currently connected, ensure the connected protocol shows the "Connected to" badge
+        if vpnStateRepository.isConnected(),
+           let vpnInfo = vpnStateRepository.vpnInfo.value {
+            // Find the connected protocol in the list and recreate it with .connected viewType
+            if let index = protocolItems.firstIndex(where: {
+                $0.protocolName == vpnInfo.selectedProtocol && $0.portName == vpnInfo.selectedPort
+            }) {
+                let connectedItem = protocolItems[index]
+                protocolItems[index] = ProtocolDisplayItem(
+                    protocolName: connectedItem.protocolName,
+                    portName: connectedItem.portName,
+                    description: connectedItem.description,
+                    viewType: .connected
+                )
+            }
         }
 
         self.protocols = protocolItems
@@ -156,8 +179,12 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
         switch protocolItem.viewType {
         case .connected:
-            // User tapped connected protocol - navigate to ProtocolConnectionResultView
-            shouldNavigateToResult = ProtocolViewDetails(protocolName: protocolItem.protocolName, viewType: protocolItem.viewType)
+            // User tapped connected protocol - check if already set as preferred
+            if shouldShowPreferredProtocolPopup(for: protocolItem.protocolName) {
+                shouldNavigateToResult = ProtocolViewDetails(protocolName: protocolItem.protocolName, viewType: protocolItem.viewType)
+            } else {
+                shouldDismiss = true
+            }
 
         case .normal, .nextUp:
             // User manually selected a protocol to connect with
@@ -168,6 +195,21 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
             // Failed protocols are not selectable - this shouldn't happen due to UI state
             logger.logI("ProtocolSwitchViewModel", "Attempted to select failed protocol")
         }
+    }
+
+    /// Checks if we should show the "Set as Preferred Protocol" popup
+    /// Returns true if the protocol is NOT already set as preferred for the current network
+    private func shouldShowPreferredProtocolPopup(for protocolName: String) -> Bool {
+        guard let network = securedNetwork.getCurrentNetwork() else {
+            return true // Show popup if we can't determine network
+        }
+
+        // Don't show popup if protocol is already set as preferred
+        if network.preferredProtocolStatus && network.preferredProtocol == protocolName {
+            return false
+        }
+
+        return true
     }
 
     func dismiss() {
