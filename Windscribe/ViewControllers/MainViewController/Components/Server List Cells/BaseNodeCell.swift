@@ -22,7 +22,7 @@ protocol BaseNodeCellViewModelType: ServerCellModelType {
 
 class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
-    private var locationLoad: Bool = DefaultValues.showServerHealth
+    var locationLoad: Bool = DefaultValues.showServerHealth
     var showServerHealth: Bool { locationLoad }
     var isSavedHasFav: Bool = false
     var isDarkMode: Bool = false

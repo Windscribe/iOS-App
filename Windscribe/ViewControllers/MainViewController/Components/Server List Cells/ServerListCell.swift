@@ -21,7 +21,7 @@ protocol ServerCellModelType {
     var actionRightOffset: CGFloat { get }
     var actionOpacity: Float { get }
     var serverHealth: CGFloat { get }
-    var showServerHealth: Bool { get }
+    var locationLoad: Bool { get }
     var hasProLocked: Bool { get }
     var isDarkMode: Bool { get }
     func nameColor(for isDarkMode: Bool) -> UIColor
@@ -195,8 +195,8 @@ class ServerListCell: SwipeTableViewCell {
 
         healthCircle.health = viewModel.serverHealth
 
-        circleView.isHidden = !viewModel.showServerHealth
-        healthCircle.isHidden = !viewModel.showServerHealth
+        circleView.isHidden = !viewModel.locationLoad
+        healthCircle.isHidden = !viewModel.locationLoad
 
         proIcon.isHidden = !viewModel.hasProLocked
 
