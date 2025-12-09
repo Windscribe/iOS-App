@@ -167,8 +167,8 @@ class ViewControllerModule: Assembly {
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     preferences: r.resolve(Preferences.self)!,
                     connectivity: r.resolve(ConnectivityManager.self)!,
-                    localDatabase: r.resolve(LocalDatabase.self)!,
-                    router: r.resolve(ConnectionsNavigationRouter.self)!
+                    router: r.resolve(ConnectionsNavigationRouter.self)!,
+                    wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!
                 )
             )
         }.inObjectScope(.transient)
@@ -183,7 +183,8 @@ class ViewControllerModule: Assembly {
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     vpnManager: r.resolve(VPNManager.self)!,
                     vpnStateRepository: r.resolve(VPNStateRepository.self)!,
-                    protocolManager: r.resolve(ProtocolManagerType.self)!
+                    protocolManager: r.resolve(ProtocolManagerType.self)!,
+                    wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!
                 )
             )
         }.inObjectScope(.transient)
@@ -377,7 +378,7 @@ class ViewControllerModule: Assembly {
         container.register(PrivacyInfoView.self) { r in
             PrivacyInfoView(viewModel: PrivacyInfoViewModelImpl(
                 preferences: r.resolve(Preferences.self)!,
-                networkRepository: r.resolve(SecuredNetworkRepository.self)!,
+                networkRepository: r.resolve(WifiNetworkRepository.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,

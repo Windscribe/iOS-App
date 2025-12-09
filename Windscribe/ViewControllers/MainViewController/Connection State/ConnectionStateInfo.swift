@@ -42,7 +42,7 @@ struct ConnectionStateInfo {
     let state: ConnectionState
     let isCustomConfigSelected: Bool
     let internetConnectionAvailable: Bool
-    let connectedWifi: WifiNetwork?
+    let connectedWifi: WifiNetworkModel?
 
     static func defaultValue(startState _: ConnectionState = .disconnected) -> ConnectionStateInfo {
         return ConnectionStateInfo(state: .disconnected, isCustomConfigSelected: false, internetConnectionAvailable: true, connectedWifi: nil)

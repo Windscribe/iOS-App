@@ -103,8 +103,11 @@ class Repository: Assembly {
         container.register(PortMapRepository.self) { r in
             PortMapRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
         }.inObjectScope(.userScope)
-        container.register(SecuredNetworkRepository.self) { r in
-            SecuredNetworkRepositoryImpl(preferences: r.resolve(Preferences.self)!, localdatabase: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(ConnectivityManager.self)!, logger: logger)
+        container.register(WifiNetworkRepository.self) { r in
+            WifiNetworkRepositoryImpl(preferences: r.resolve(Preferences.self)!,
+                                         localDatabase: r.resolve(LocalDatabase.self)!,
+                                         connectivity: r.resolve(ConnectivityManager.self)!,
+                                         logger: logger)
         }.inObjectScope(.userScope)
         container.register(LatencyRepository.self) { r in
             LatencyRepositoryImpl(pingManager: r.resolve(LocalPingManager.self)!,
@@ -251,6 +254,7 @@ class Managers: Assembly {
                            alertManager: r.resolve(AlertManagerV2.self)!,
                            locationsManager: r.resolve(LocationsManager.self)!,
                            vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                           wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                            bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
                            userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.userScope)
@@ -279,7 +283,7 @@ class Managers: Assembly {
             ProtocolManager(logger: r.resolve(FileLogger.self)!,
                             connectivity: r.resolve(ConnectivityManager.self)!,
                             preferences: r.resolve(Preferences.self)!,
-                            securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
+                            securedNetwork: r.resolve(WifiNetworkRepository.self)!,
                             localDatabase: r.resolve(LocalDatabase.self)!,
                             locationManager: r.resolve(LocationsManager.self)!,
                             vpnStateRepository: r.resolve(VPNStateRepository.self)!)

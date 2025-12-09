@@ -53,8 +53,8 @@ struct NetworkSettingsView: View {
 }
 
 final class NetworkFlowContext: ObservableObject {
-    @Published var displayNetwork: WifiNetwork
-    init(displayNetwork: WifiNetwork) {
+    @Published var displayNetwork: WifiNetworkModel
+    init(displayNetwork: WifiNetworkModel) {
         self.displayNetwork = displayNetwork
     }
 }

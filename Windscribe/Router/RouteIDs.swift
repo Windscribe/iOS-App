@@ -34,7 +34,7 @@ enum RouteID {
     case connection
     case language
     case networkSecurity
-    case network(with: WifiNetwork)
+    case network(with: WifiNetworkModel)
     case submitTicket
 
     // MARK: - Pop Up

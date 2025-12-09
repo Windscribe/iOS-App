@@ -46,7 +46,6 @@ protocol LocalDatabase {
     func getIpSync() -> MyIP?
     func saveIp(myip: MyIP) -> Disposable
     func getNetworks() -> Observable<[WifiNetwork]>
-    func getPublishedNetworks() -> AnyPublisher<[WifiNetwork], Never>
     func saveNetwork(wifiNetwork: WifiNetwork)
     func removeNetwork(wifiNetwork: WifiNetwork)
     func addPingData(pingData: PingData)
@@ -66,12 +65,6 @@ protocol LocalDatabase {
     func removeFavourite(groupId: String)
 
     func toggleRobertRule(id: String)
-    func updateNetworkWithPreferredProtocolSwitch(network: WifiNetwork, status: Bool)
-    func updateTrustNetwork(network: WifiNetwork, status: Bool)
-    func updateWifiNetwork(network: WifiNetwork, property: String, value: Any)
-    func updateWifiNetwork(network: WifiNetwork, properties: [String: Any])
-    func updateNetworkDismissCount(network: WifiNetwork, dismissCount: Int)
-    func updateNetworkDontAskAgainForPreferredProtocol(network: WifiNetwork, status: Bool)
     func updateCustomConfigName(customConfigId: String, name: String)
     func updateCustomConfigCredentials(customConfigId: String, username: String, password: String)
     func saveOldSession()
@@ -81,5 +74,4 @@ protocol LocalDatabase {
     func updateConnectionMode(value: String)
     func getCustomConfigs() -> [CustomConfig]
     func clean()
-    func getNetworksSync() -> [WifiNetwork]?
 }

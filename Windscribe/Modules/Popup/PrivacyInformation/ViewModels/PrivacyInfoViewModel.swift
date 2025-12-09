@@ -21,7 +21,7 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
     @Published var shouldDismiss: Bool = false
 
     private let preferences: Preferences
-    private let networkRepository: SecuredNetworkRepository
+    private let networkRepository: WifiNetworkRepository
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let lookAndFeelRepository: LookAndFeelRepositoryType
@@ -29,7 +29,7 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     init(preferences: Preferences,
-         networkRepository: SecuredNetworkRepository,
+         networkRepository: WifiNetworkRepository,
          localDatabase: LocalDatabase,
          logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,

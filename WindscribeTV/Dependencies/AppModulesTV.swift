@@ -77,7 +77,7 @@ class TVViewModels: Assembly {
                              userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
-            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(ConnectivityManager.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!)
+            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(ConnectivityManager.self)!, networkRepository: r.resolve(WifiNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ViewLogViewModel.self) { r in
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
@@ -105,7 +105,7 @@ class TVViewModels: Assembly {
                                 preferences: r.resolve(Preferences.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
                                 wifiManager: WifiManager.shared,
-                                securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
+                                wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 localDB: r.resolve(LocalDatabase.self)!,
@@ -132,6 +132,7 @@ class TVViewModels: Assembly {
                               protocolManager: r.resolve(ProtocolManagerType.self)!,
                               hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                               userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                              wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                               sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
@@ -184,7 +185,7 @@ class TVViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(PrivacyViewModelType.self) { r in
-            PrivacyViewModel(preferences: r.resolve(Preferences.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!)
+            PrivacyViewModel(preferences: r.resolve(Preferences.self)!, networkRepository: r.resolve(WifiNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
         container.register(OutOfDataAccountPopupModelType.self) { r in

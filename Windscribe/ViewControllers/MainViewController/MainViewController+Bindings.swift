@@ -46,10 +46,10 @@ extension MainViewController {
                 self?.updateSelectedLocationUI()
             }.store(in: &cancellables)
 
-        Observable.combineLatest(viewModel.wifiNetwork,
-                                 vpnConnectionViewModel.selectedProtoPort).bind { [weak self] (network, protocolPort) in
-            self?.refreshProtocol(from: network, with: protocolPort)
-        }.disposed(by: disposeBag)
+        viewModel.wifiNetwork.combineLatest(vpnConnectionViewModel.selectedProtoPort.asPublisher().replaceError(with: nil).eraseToAnyPublisher())
+            .sink { [weak self] (network, protocolPort) in
+                self?.refreshProtocol(from: network, with: protocolPort)
+            }.store(in: &cancellables)
 
         vpnConnectionViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }

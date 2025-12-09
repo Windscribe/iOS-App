@@ -16,6 +16,7 @@ class MockLocalDatabase: LocalDatabase {
 
     let sessionSubject = BehaviorSubject<Windscribe.Session?>(value: nil)
     let notificationsSubject = BehaviorSubject<[Windscribe.Notice]>(value: [])
+    let networksSubject = BehaviorSubject<[Windscribe.WifiNetwork]>(value: [])
 
     var mockServers: [Server]? = []
     // PortMap tracking
@@ -39,6 +40,15 @@ class MockLocalDatabase: LocalDatabase {
     // MobilePlan tracking
     var mobilePlansToReturn: [Windscribe.MobilePlan]?
     var saveMobilePlansCalled = false
+
+    // WifiNetwork tracking
+    var mockWifiNetworks: [Windscribe.WifiNetwork] = [] {
+        didSet {
+            networksSubject.onNext(mockWifiNetworks)
+        }
+    }
+    var saveNetworkCalled = false
+    var lastSavedNetwork: Windscribe.WifiNetwork?
 
     func migrate() {}
 
@@ -156,11 +166,12 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getNetworks() -> Observable<[Windscribe.WifiNetwork]> {
-        return Observable.just([])
+        return networksSubject.asObservable()
     }
 
-
-    func removeNetwork(wifiNetwork: Windscribe.WifiNetwork) {}
+    func removeNetwork(wifiNetwork: Windscribe.WifiNetwork) {
+        mockWifiNetworks.removeAll { $0.SSID == wifiNetwork.SSID }
+    }
 
     func addPingData(pingData: Windscribe.PingData) {}
 
@@ -200,18 +211,6 @@ class MockLocalDatabase: LocalDatabase {
 
     func toggleRobertRule(id: String) {}
 
-    func updateNetworkWithPreferredProtocolSwitch(network: Windscribe.WifiNetwork, status: Bool) {}
-
-    func updateTrustNetwork(network: Windscribe.WifiNetwork, status: Bool) {}
-
-    func updateWifiNetwork(network: Windscribe.WifiNetwork, property: String, value: Any) {}
-
-    func updateWifiNetwork(network: Windscribe.WifiNetwork, properties: [String: Any]) {}
-
-    func updateNetworkDismissCount(network: Windscribe.WifiNetwork, dismissCount: Int) {}
-
-    func updateNetworkDontAskAgainForPreferredProtocol(network: Windscribe.WifiNetwork, status: Bool) {}
-
     func updateCustomConfigName(customConfigId: String, name: String) {}
 
     func updateCustomConfigCredentials(customConfigId: String, username: String, password: String) {}
@@ -238,18 +237,20 @@ class MockLocalDatabase: LocalDatabase {
         return []
     }
 
-    func clean() {}
-
-    func getNetworksSync() -> [Windscribe.WifiNetwork]? {
-        return []
-    }
-
-    func getPublishedNetworks() -> AnyPublisher<[Windscribe.WifiNetwork], Never> {
-        return Just([]).eraseToAnyPublisher()
+    func clean() {
+        saveNetworkCalled = false
+        lastSavedNetwork = nil
+        mockWifiNetworks = []
     }
 
     func saveNetwork(wifiNetwork: Windscribe.WifiNetwork) {
-        // Mock implementation - no-op
+        saveNetworkCalled = true
+        lastSavedNetwork = wifiNetwork
+        if let index = mockWifiNetworks.firstIndex(where: { $0.SSID == wifiNetwork.SSID }) {
+            mockWifiNetworks[index] = wifiNetwork
+        } else {
+            mockWifiNetworks.append(wifiNetwork)
+        }
     }
 
     func saveFavourite(favourite: Windscribe.Favourite) -> any RxSwift.Disposable {

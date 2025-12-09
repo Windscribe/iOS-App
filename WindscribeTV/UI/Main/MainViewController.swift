@@ -360,8 +360,7 @@ class MainViewController: PreferredFocusedViewController {
             }
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(
-            viewModel.wifiNetwork.asPublisher().replaceError(with: nil),
+        viewModel.wifiNetwork.combineLatest(
             vpnConnectionViewModel.selectedProtoPort.asPublisher().replaceError(with: nil)
         )
         .sink { (network, protocolPort) in
@@ -369,10 +368,10 @@ class MainViewController: PreferredFocusedViewController {
         }.store(in: &cancellables)
 
         languageManager.activelanguage
-        .receive(on: DispatchQueue.main)
-        .sink { [self] _ in
-            localisation()
-        }.store(in: &cancellables)
+            .receive(on: DispatchQueue.main)
+            .sink { [self] _ in
+                localisation()
+            }.store(in: &cancellables)
 
         viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
             self.setFlagImages()
@@ -495,7 +494,7 @@ class MainViewController: PreferredFocusedViewController {
         if [.connecting].contains(info.state) { connectionButtonRing.rotate() } else { connectionButtonRing.stopRotating() }
     }
 
-    func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
+    func refreshProtocol(from network: WifiNetworkModel?, with protoPort: ProtocolPort?) {
         DispatchQueue.main.async {
             guard let protoPort = protoPort else { return }
             self.protocolLabel.text = protoPort.protocolName

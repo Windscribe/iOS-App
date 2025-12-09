@@ -58,7 +58,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let localDb: LocalDatabase
     private let connectivity: ConnectivityManager
-    private let networkRepository: SecuredNetworkRepository
+    private let networkRepository: WifiNetworkRepository
     private let languageManager: LanguageManager
     private let protocolManager: ProtocolManagerType
     private let dnsSettingsManager: DNSSettingsManagerType
@@ -83,7 +83,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
          lookAndFeelRepository: LookAndFeelRepositoryType,
          localDb: LocalDatabase,
          connectivity: ConnectivityManager,
-         networkRepository: SecuredNetworkRepository,
+         networkRepository: WifiNetworkRepository,
          languageManager: LanguageManager,
          protocolManager: ProtocolManagerType,
          dnsSettingsManager: DNSSettingsManagerType) {

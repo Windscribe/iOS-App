@@ -273,7 +273,7 @@ class ViewModels: Assembly {
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
-                securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
+                wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.transient)
@@ -281,13 +281,13 @@ class ViewModels: Assembly {
         container.register((any ProtocolConnectionResultViewModel).self) { r in
             ProtocolConnectionResultViewModelImpl(
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
-                preferences: r.resolve(Preferences.self)!
+                preferences: r.resolve(Preferences.self)!,
+                wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!
             )
         }.inObjectScope(.transient)
 
@@ -316,7 +316,7 @@ class ViewModels: Assembly {
         container.register((any PrivacyInfoViewModel).self) { r in
             PrivacyInfoViewModelImpl(
                 preferences: r.resolve(Preferences.self)!,
-                networkRepository: r.resolve(SecuredNetworkRepository.self)!,
+                networkRepository: r.resolve(WifiNetworkRepository.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -324,24 +324,25 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(MainViewModel.self) { r in
             MainViewModelImpl(localDatabase: r.resolve(LocalDatabase.self)!,
-                          vpnManager: r.resolve(VPNManager.self)!,
-                          logger: r.resolve(FileLogger.self)!,
-                          serverRepository: r.resolve(ServerRepository.self)!,
-                          portMapRepo: r.resolve(PortMapRepository.self)!,
-                          staticIpRepository: r.resolve(StaticIpRepository.self)!,
-                          preferences: r.resolve(Preferences.self)!,
-                          latencyRepo: r.resolve(LatencyRepository.self)!,
-                          lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                          pushNotificationsManager: r.resolve(PushNotificationManager.self)!,
-                          notificationsRepo: r.resolve(NotificationRepository.self)!,
-                          credentialsRepository: r.resolve(CredentialsRepository.self)!,
-                          connectivity: r.resolve(ConnectivityManager.self)!,
-                          livecycleManager: r.resolve(LivecycleManagerType.self)!,
-                          locationsManager: r.resolve(LocationsManager.self)!,
-                          protocolManager: r.resolve(ProtocolManagerType.self)!,
-                          hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                          userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                          sessionManager: r.resolve(SessionManager.self)!)
+                              vpnManager: r.resolve(VPNManager.self)!,
+                              logger: r.resolve(FileLogger.self)!,
+                              serverRepository: r.resolve(ServerRepository.self)!,
+                              portMapRepo: r.resolve(PortMapRepository.self)!,
+                              staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                              preferences: r.resolve(Preferences.self)!,
+                              latencyRepo: r.resolve(LatencyRepository.self)!,
+                              lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                              pushNotificationsManager: r.resolve(PushNotificationManager.self)!,
+                              notificationsRepo: r.resolve(NotificationRepository.self)!,
+                              credentialsRepository: r.resolve(CredentialsRepository.self)!,
+                              connectivity: r.resolve(ConnectivityManager.self)!,
+                              livecycleManager: r.resolve(LivecycleManagerType.self)!,
+                              locationsManager: r.resolve(LocationsManager.self)!,
+                              protocolManager: r.resolve(ProtocolManagerType.self)!,
+                              hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                              userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                              wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
+                              sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -361,7 +362,7 @@ class ViewModels: Assembly {
                                 preferences: r.resolve(Preferences.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
                                 wifiManager: WifiManager.shared,
-                                securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
+                                wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 localDB: r.resolve(LocalDatabase.self)!,

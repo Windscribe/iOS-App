@@ -45,7 +45,7 @@ class ProtocolManager: ProtocolManagerType {
     private var cancellables = Set<AnyCancellable>()
     private let connectivity: ConnectivityManager
     private let localDatabase: LocalDatabase
-    private let securedNetwork: SecuredNetworkRepository
+    private let securedNetwork: WifiNetworkRepository
     private let preferences: Preferences
     private let locationManager: LocationsManager
     private let vpnStateRepository: VPNStateRepository
@@ -91,7 +91,7 @@ class ProtocolManager: ProtocolManagerType {
     init(logger: FileLogger,
          connectivity: ConnectivityManager,
          preferences: Preferences,
-         securedNetwork: SecuredNetworkRepository,
+         securedNetwork: WifiNetworkRepository,
          localDatabase: LocalDatabase,
          locationManager: LocationsManager,
          vpnStateRepository: VPNStateRepository) {
@@ -168,7 +168,6 @@ class ProtocolManager: ProtocolManagerType {
             .store(in: &cancellables)
 
         securedNetwork.networks
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {

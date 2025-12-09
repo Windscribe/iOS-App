@@ -187,20 +187,14 @@ class LocalDatabaseImpl: LocalDatabase {
         return getSafeRealmObservable(type: WifiNetwork.self)
     }
 
-    func getPublishedNetworks() -> AnyPublisher<[WifiNetwork], Never> {
-        return getSafeRealmPublisher(type: WifiNetwork.self)
-    }
-
-    func getNetworksSync() -> [WifiNetwork]? {
-        return getRealmObjects(type: WifiNetwork.self)
-    }
-
     func saveNetwork(wifiNetwork: WifiNetwork) {
         return updateRealmObject(object: wifiNetwork)
     }
 
     func removeNetwork(wifiNetwork: WifiNetwork) {
-        deleteRealmObject(object: wifiNetwork)
+        if let managedNetwork = getRealmObject(type: WifiNetwork.self, primaryKey: wifiNetwork.SSID) {
+            deleteRealmObject(object: managedNetwork)
+        }
     }
 
     func getAllPingData() -> [PingData] {
@@ -331,18 +325,6 @@ class LocalDatabaseImpl: LocalDatabase {
                     filter.status = 0
                     filter.enabled = false
                 }
-            }
-        } catch {
-            fatalError("")
-        }
-    }
-
-    func updateNetworkWithPreferredProtocolSwitch(network: WifiNetwork, status: Bool) {
-        let updated = network
-        do {
-            let realm = try Realm()
-            try realm.safeWrite {
-                updated.preferredProtocolStatus = status
             }
         } catch {
             fatalError("")

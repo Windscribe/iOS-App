@@ -31,6 +31,7 @@ class MainViewModelImpl: MainViewModel {
     let hapticFeedbackManager: HapticFeedbackManager
     private let userSessionRepository: UserSessionRepository
     private let sessionManager: SessionManager
+    private let wifiNetworkRepository: WifiNetworkRepository
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
@@ -46,7 +47,7 @@ class MainViewModelImpl: MainViewModel {
     var selectedPort = BehaviorSubject<String>(value: DefaultValues.port)
     var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
     var appNetwork = BehaviorSubject<AppNetwork>(value: AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
-    var wifiNetwork = BehaviorSubject<WifiNetwork?>(value: nil)
+    var wifiNetwork = CurrentValueSubject<WifiNetworkModel?, Never>(nil)
     var sessionModel = CurrentValueSubject<SessionModel?, Never>(nil)
     var favouriteGroups = BehaviorSubject<[GroupModel]>(value: [])
     let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
@@ -90,6 +91,7 @@ class MainViewModelImpl: MainViewModel {
          protocolManager: ProtocolManagerType,
          hapticFeedbackManager: HapticFeedbackManager,
          userSessionRepository: UserSessionRepository,
+         wifiNetworkRepository: WifiNetworkRepository,
          sessionManager: SessionManager) {
 
         self.localDatabase = localDatabase
@@ -111,6 +113,7 @@ class MainViewModelImpl: MainViewModel {
         self.hapticFeedbackManager = hapticFeedbackManager
         self.userSessionRepository = userSessionRepository
         self.sessionManager = sessionManager
+        self.wifiNetworkRepository = wifiNetworkRepository
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
@@ -199,16 +202,15 @@ class MainViewModelImpl: MainViewModel {
     }
 
     private func observeWifiNetwork() {
-        Publishers.CombineLatest(localDatabase.getPublishedNetworks(), connectivity.network.eraseToAnyPublisher())
+        wifiNetworkRepository.networks.combineLatest(connectivity.network.eraseToAnyPublisher())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] (networks, appNetwork) in
+            .sink { [weak self] (networks, appNetwork) in
                 guard let self = self else { return }
                 guard let matchingNetwork = networks.first(where: {
-                    $0.isInvalidated == false && $0.SSID == appNetwork.name
+                    $0.SSID == appNetwork.name
                 }) else { return }
-                self.wifiNetwork.onNext(matchingNetwork)
-            })
+                self.wifiNetwork.send(matchingNetwork)
+            }
             .store(in: &cancellables)
     }
 
@@ -557,24 +559,16 @@ class MainViewModelImpl: MainViewModel {
             .store(in: &cancellables)
     }
 
-    func updatePreferred(port: String, and proto: String, for network: WifiNetwork) {
-        localDatabase.updateWifiNetwork(network: network,
-                                        properties: [
-                                            Fields.WifiNetwork.preferredProtocol: proto,
-                                            Fields.WifiNetwork.preferredPort: port
-                                        ])
+    func updatePreferred(port: String, and proto: String, for network: WifiNetworkModel) async {
+        wifiNetworkRepository.updateNetworkPreferredProtocol(network: network, protocol: proto, port: port)
     }
 
-    func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool) {
-        localDatabase.updateNetworkWithPreferredProtocolSwitch(network: network, status: preferredProtocolStatus)
+    func updatePreferredProtocolSwitch(network: WifiNetworkModel, preferredProtocolStatus: Bool) {
+        wifiNetworkRepository.updateNetworkPreferredProtocolStatus(network: network, status: preferredProtocolStatus)
     }
 
-    func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool) {
-        localDatabase.updateWifiNetwork(network: network,
-                                        properties: [
-                                            Fields.WifiNetwork.trustStatus: !status,
-                                            Fields.WifiNetwork.preferredProtocolStatus: false
-                                        ])
+    func updateTrustNetworkSwitch(network: WifiNetworkModel, status: Bool) {
+        wifiNetworkRepository.updateNetworkTrustStatus(network: network, trusted: status)
     }
 
     func loadServerList() {

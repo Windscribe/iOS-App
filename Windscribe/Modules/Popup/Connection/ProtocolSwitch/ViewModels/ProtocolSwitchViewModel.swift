@@ -36,7 +36,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     private let vpnStateRepository: VPNStateRepository
     private let vpnManager: VPNManager
     private let localDatabase: LocalDatabase
-    private let securedNetwork: SecuredNetworkRepository
+    private let wifiNetworkRepository: WifiNetworkRepository
     private let logger: FileLogger
 
     private var cancellables = Set<AnyCancellable>()
@@ -52,7 +52,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         vpnStateRepository: VPNStateRepository,
         vpnManager: VPNManager,
         localDatabase: LocalDatabase,
-        securedNetwork: SecuredNetworkRepository,
+        wifiNetworkRepository: WifiNetworkRepository,
         logger: FileLogger
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
@@ -60,7 +60,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
         self.localDatabase = localDatabase
-        self.securedNetwork = securedNetwork
+        self.wifiNetworkRepository = wifiNetworkRepository
         self.logger = logger
 
         isDarkMode = lookAndFeelRepository.isDarkMode
@@ -200,7 +200,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     /// Checks if we should show the "Set as Preferred Protocol" popup
     /// Returns true if the protocol is NOT already set as preferred for the current network
     private func shouldShowPreferredProtocolPopup(for protocolName: String) -> Bool {
-        guard let network = securedNetwork.getCurrentNetwork() else {
+        guard let network = wifiNetworkRepository.getCurrentNetwork() else {
             return true // Show popup if we can't determine network
         }
 

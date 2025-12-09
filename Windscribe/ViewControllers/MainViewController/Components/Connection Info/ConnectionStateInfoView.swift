@@ -200,10 +200,7 @@ class ConnectionStateInfoView: UIView {
         portLabel.text = value.portName
     }
 
-    func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?, isNetworkCellularWhileConnecting: Bool) {
-        if network?.isInvalidated == true {
-            return
-        }
+    func refreshProtocol(from network: WifiNetworkModel?, with protoPort: ProtocolPort?, isNetworkCellularWhileConnecting: Bool) {
         guard let protoPort = protoPort else {
             preferredIcon.isHidden = true
             return

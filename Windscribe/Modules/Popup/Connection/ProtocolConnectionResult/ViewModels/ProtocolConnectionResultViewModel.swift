@@ -35,13 +35,13 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     @Published var isLoading: Bool = false
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let securedNetwork: SecuredNetworkRepository
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
     private let protocolManager: ProtocolManagerType
     private let preferences: Preferences
+    private let wifiNetworkRepository: WifiNetworkRepository
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -98,22 +98,22 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
 
     init(
         lookAndFeelRepository: LookAndFeelRepositoryType,
-        securedNetwork: SecuredNetworkRepository,
         localDatabase: LocalDatabase,
         logger: FileLogger,
         userSessionRepository: UserSessionRepository,
         apiManager: APIManager,
         protocolManager: ProtocolManagerType,
-        preferences: Preferences
+        preferences: Preferences,
+        wifiNetworkRepository: WifiNetworkRepository
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
-        self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
         self.logger = logger
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.protocolManager = protocolManager
         self.preferences = preferences
+        self.wifiNetworkRepository = wifiNetworkRepository
 
         setupBindings()
     }
@@ -143,7 +143,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     /// Sets the current protocol as preferred for the current network
     /// This saves the protocol preference to the local database for WiFi networks
     func setAsPreferred() {
-        guard let network = securedNetwork.getCurrentNetwork() else {
+        guard let network = wifiNetworkRepository.getCurrentNetwork() else {
             logger.logI("ProtocolConnectionResultViewModel", "No current network found")
             return
         }
@@ -158,14 +158,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
                    "Setting preferred protocol: \(protocolName) port: \(defaultPort) for network: \(network.SSID)")
 
         // Update the WiFi network with preferred protocol settings
-        localDatabase.updateWifiNetwork(
-            network: network,
-            properties: [
-                Fields.WifiNetwork.preferredProtocol: protocolName,
-                Fields.WifiNetwork.preferredPort: defaultPort,
-                Fields.WifiNetwork.preferredProtocolStatus: true
-            ]
-        )
+        wifiNetworkRepository.updateNetworkPreferredProtocolWithStatus(network: network, protocol: protocolName, port: defaultPort, status: true)
 
         // Trigger reactive completion
         preferredProtocolSetTrigger.send()

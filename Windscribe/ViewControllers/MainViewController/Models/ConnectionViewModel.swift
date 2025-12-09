@@ -63,7 +63,7 @@ protocol ConnectionViewModelType {
     func getBestLocationId() -> String
     func getBestLocation() -> BestLocationModel?
     func getLocationType() -> LocationType?
-    func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool
+    func isNetworkCellularWhileConnecting(for network: WifiNetworkModel?) -> Bool
     func isNetworkCellularWhileConnecting(for network: AppNetwork?) -> Bool
 }
 
@@ -101,7 +101,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let preferences: Preferences
     let connectivity: ConnectivityManager
     let wifiManager: WifiManager
-    let securedNetwork: SecuredNetworkRepository
+    let wifiNetworkRepository: WifiNetworkRepository
     let credentialsRepository: CredentialsRepository
     let ipRepository: IPRepository
     let localDB: LocalDatabase
@@ -127,7 +127,7 @@ class ConnectionViewModel: ConnectionViewModelType {
          preferences: Preferences,
          connectivity: ConnectivityManager,
          wifiManager: WifiManager,
-         securedNetwork: SecuredNetworkRepository,
+         wifiNetworkRepository: WifiNetworkRepository,
          credentialsRepository: CredentialsRepository,
          ipRepository: IPRepository,
          localDB: LocalDatabase,
@@ -143,7 +143,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.preferences = preferences
         self.connectivity = connectivity
         self.wifiManager = wifiManager
-        self.securedNetwork = securedNetwork
+        self.wifiNetworkRepository = wifiNetworkRepository
         self.ipRepository = ipRepository
         self.credentialsRepository = credentialsRepository
         self.localDB = localDB
@@ -219,19 +219,20 @@ class ConnectionViewModel: ConnectionViewModelType {
                 self.currentNetwork = network
             }.store(in: &cancellables)
 
-        localDB.getNetworks()
-            .subscribe(onNext: { [weak self] in
+        wifiNetworkRepository.networks
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] wifiNetworks in
                 guard let self = self else { return }
-                guard let matchingNetwork = $0.first(where: { network in
-                    network.isInvalidated == false && network.SSID == self.currentNetwork?.name
-                }) else { return }
+                let matchingNetwork = wifiNetworks.first { $0.SSID == self.currentNetwork?.name }
+                guard let matchingNetwork = matchingNetwork else { return }
                 if matchingNetwork.status == true, !self.currentWifiAutoSecured {
                     if self.isConnected() || self.isConnecting() {
                         self.disableConnection()
                     }
                 }
                 self.currentWifiAutoSecured = matchingNetwork.status
-            }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         appReviewManager.reviewRequestTrigger
             .receive(on: DispatchQueue.main)
@@ -271,7 +272,7 @@ extension ConnectionViewModel {
         locationsManager.isCustomConfigSelected()
     }
 
-    func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
+    func isNetworkCellularWhileConnecting(for network: WifiNetworkModel?) -> Bool {
         if isConnecting() && network?.SSID == "Cellular" { return true }
         if isConnecting() || isConnected() {
             return connectivity.network.value.networkType == NetworkType.none
@@ -336,7 +337,7 @@ extension ConnectionViewModel {
                 return
             }
 
-            let network = localDB.getNetworksSync()?.filter {$0.SSID == connectivity.getNetwork().name}.first
+            let network = wifiNetworkRepository.networks.value.filter {$0.SSID == connectivity.getNetwork().name}.first
             if .connected == info.status {
                 wifiManager.saveCurrentWifiNetworks()
                 if network?.preferredProtocol == info.selectedProtocol  && network?.preferredPort == info.selectedPort {
@@ -388,7 +389,7 @@ extension ConnectionViewModel {
             guard !WifiManager.shared.isConnectedWifiTrusted() else {
                 logger.logI("ConnectionViewModel", "User joining untrusted network")
 
-                let currentNetwork = securedNetwork.getCurrentNetwork()
+                let currentNetwork = wifiNetworkRepository.getCurrentNetwork()
                 vpnStateRepository.setUntrustedOneTimeOnlySSID(currentNetwork?.SSID ?? "")
                 vpnManager.simpleEnableConnection()
                 return
@@ -496,7 +497,7 @@ extension ConnectionViewModel {
     private func checkShouldShowPreferredProtocol() {
         guard currentConnectionType == .failover else { return }
 
-        let network = localDB.getNetworksSync()?.first { $0.SSID == connectivity.getNetwork().name }
+        let network = wifiNetworkRepository.networks.value.first { $0.SSID == connectivity.getNetwork().name }
         guard let network = network else { return }
 
         let nextProtocol = protocolManager.getProtocol()
