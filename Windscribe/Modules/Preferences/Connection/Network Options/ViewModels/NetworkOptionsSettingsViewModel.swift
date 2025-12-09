@@ -27,7 +27,7 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
     @Published var networkListEntry: NetworkOptionsEntryType?
     @Published var router: ConnectionsNavigationRouter
 
-    private var networks: [WifiNetwork] = []
+    private var networks: [WifiNetworkModel] = []
     private var currentNetwork: AppNetwork?
     private var isAutoSecureEnabled = DefaultValues.autoSecure
     private var hasLoaded = false
@@ -35,19 +35,19 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
     // MARK: - Dependencies
     private let preferences: Preferences
     private let connectivity: ConnectivityManager
-    private let localDatabase: LocalDatabase
+    private let wifiNetworkRepository: WifiNetworkRepository
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
          connectivity: ConnectivityManager,
-         localDatabase: LocalDatabase,
-         router: ConnectionsNavigationRouter) {
+         router: ConnectionsNavigationRouter,
+         wifiNetworkRepository: WifiNetworkRepository) {
         self.preferences = preferences
         self.connectivity = connectivity
-        self.localDatabase = localDatabase
         self.router = router
+        self.wifiNetworkRepository = wifiNetworkRepository
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -79,16 +79,15 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
             })
             .store(in: &cancellables)
 
-        localDatabase.getNetworks()
-            .toPublisher()
+        wifiNetworkRepository.networks
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.logger.logE("NetworkOptionsSecurityViewModel", "Getting Networks error: \(error)")
                 }
-            }, receiveValue: { [weak self] networks in
+            }, receiveValue: { [weak self] wifiNetworks in
                 guard let self = self else { return }
-                self.networks = networks
+                self.networks = wifiNetworks
                 self.reloadItems()
             })
             .store(in: &cancellables)
@@ -123,7 +122,7 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
         reloadItems()
     }
 
-    private func getCurrentWifiNetwork() -> WifiNetwork? {
+    private func getCurrentWifiNetwork() -> WifiNetworkModel? {
         guard let currentSSID = currentNetwork?.name else { return nil }
         return networks.first { $0.SSID == currentSSID }
     }

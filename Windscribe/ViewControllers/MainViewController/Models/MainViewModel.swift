@@ -27,7 +27,7 @@ protocol MainViewModel {
     var selectedPort: BehaviorSubject<String> { get }
     var connectionMode: BehaviorSubject<String> { get }
     var appNetwork: BehaviorSubject<AppNetwork> { get }
-    var wifiNetwork: BehaviorSubject<WifiNetwork?> { get }
+    var wifiNetwork: CurrentValueSubject<WifiNetworkModel?, Never> { get }
     var sessionModel: CurrentValueSubject<SessionModel?, Never> { get }
     var favouriteGroups: BehaviorSubject<[GroupModel]> { get }
     var bestLocationUpdated: PassthroughSubject<Void, Never> { get }
@@ -58,11 +58,10 @@ protocol MainViewModel {
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
     func isPrivacyPopupAccepted() -> Bool
-    func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool)
-    func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool)
+    func updateTrustNetworkSwitch(network: WifiNetworkModel, status: Bool)
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
-    func updatePreferred(port: String, and proto: String, for network: WifiNetwork) async
+    func updatePreferred(port: String, and proto: String, for network: WifiNetworkModel) async
     func updateSSID()
     func getServerModel(from groupId: Int) -> ServerModel?
     func runHapticFeedback(level: HapticFeedbackLevel)

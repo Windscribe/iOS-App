@@ -491,8 +491,7 @@
 		59FC74502C515E5400021CD1 /* UIConstants+ImagesAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */; };
 		59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1D2B50799C004FA857 /* SKPaymentTransaction+Ext.swift */; };
 		59FC74532C51605300021CD1 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FF02885AFB90026E544 /* UIStackView+Extension.swift */; };
-		59FC74552C51605E00021CD1 /* SecuredNetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFC2B4E5FE9004FA857 /* SecuredNetworkRepository.swift */; };
-		59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFE2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift */; };
+		59FC74562C51606200021CD1 /* WifiNetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFE2B4E5FFC004FA857 /* WifiNetworkRepository.swift */; };
 		59FC74572C51612D00021CD1 /* NWInterface+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5947B4B12A2638BA00C95CF2 /* NWInterface+Extension.swift */; };
 		59FC74582C51613000021CD1 /* VPNManager+Selector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93AE6682744BA060097843B /* VPNManager+Selector.swift */; };
 		59FC74592C51616100021CD1 /* UIEdgeInsets+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FEE2885AF900026E544 /* UIEdgeInsets+ Extension.swift */; };
@@ -820,8 +819,7 @@
 		C580FDEC2B4D711D004FA857 /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
 		C580FDF62B4DB735004FA857 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDF52B4DB735004FA857 /* ConnectivityManager.swift */; };
 		C580FDFA2B4DE80A004FA857 /* AppNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDF92B4DE80A004FA857 /* AppNetwork.swift */; };
-		C580FDFD2B4E5FE9004FA857 /* SecuredNetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFC2B4E5FE9004FA857 /* SecuredNetworkRepository.swift */; };
-		C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFE2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift */; };
+		C580FDFF2B4E5FFC004FA857 /* WifiNetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFE2B4E5FFC004FA857 /* WifiNetworkRepository.swift */; };
 		C580FE042B4F254E004FA857 /* PushNotificationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */; };
 		C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE152B507883004FA857 /* UncompletedTransactions.swift */; };
 		C580FE182B5078B3004FA857 /* WindscribeInAppProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE172B5078B3004FA857 /* WindscribeInAppProduct.swift */; };
@@ -1209,6 +1207,8 @@
 		F49E61D12E00A23B0087386F /* CustomSoundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
+		F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A20BCF2EE88F620003D880 /* WifiNetworkRepositoryTests.swift */; };
+		F4A20BD22EE88F850003D880 /* MockConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A20BD12EE88F850003D880 /* MockConnectivityManager.swift */; };
 		F4A36AAA2E13282600CCFFAA /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE82D7B3DAD00B980D3 /* RxCocoa */; };
 		F4A36AAC2E132A9600CCFFAA /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F4A36AAB2E132A9600CCFFAA /* SnapKit */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
@@ -1891,8 +1891,7 @@
 		C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainDatabaseImpl.swift; sourceTree = "<group>"; };
 		C580FDF52B4DB735004FA857 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		C580FDF92B4DE80A004FA857 /* AppNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNetwork.swift; sourceTree = "<group>"; };
-		C580FDFC2B4E5FE9004FA857 /* SecuredNetworkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuredNetworkRepository.swift; sourceTree = "<group>"; };
-		C580FDFE2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuredNetworkRepositoryImpl.swift; sourceTree = "<group>"; };
+		C580FDFE2B4E5FFC004FA857 /* WifiNetworkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiNetworkRepository.swift; sourceTree = "<group>"; };
 		C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManagerImpl.swift; sourceTree = "<group>"; };
 		C580FE152B507883004FA857 /* UncompletedTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncompletedTransactions.swift; sourceTree = "<group>"; };
 		C580FE172B5078B3004FA857 /* WindscribeInAppProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindscribeInAppProduct.swift; sourceTree = "<group>"; };
@@ -2165,6 +2164,8 @@
 		F49C45C92DCD335E007E5EF1 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		F49C45CD2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsViewModel.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		F4A20BCF2EE88F620003D880 /* WifiNetworkRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiNetworkRepositoryTests.swift; sourceTree = "<group>"; };
+		F4A20BD12EE88F850003D880 /* MockConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockConnectivityManager.swift; sourceTree = "<group>"; };
 		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
@@ -3167,6 +3168,7 @@
 				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
 				F40419412D8231DA0005EF97 /* MockHTMLParser.swift */,
 				F437917F2E95A20800ED6141 /* MockAPIManager.swift */,
+				F4A20BD12EE88F850003D880 /* MockConnectivityManager.swift */,
 				F4433D102E8315800012EA34 /* MockKeychainManager.swift */,
 				F43791812E95A21900ED6141 /* MockSessionManager.swift */,
 				F49935402DA9973100108558 /* MockSoundManager.swift */,
@@ -3923,13 +3925,12 @@
 			path = Connectivity;
 			sourceTree = "<group>";
 		};
-		C580FDFB2B4E5FC3004FA857 /* Secured */ = {
+		C580FDFB2B4E5FC3004FA857 /* WifiNetwork */ = {
 			isa = PBXGroup;
 			children = (
-				C580FDFC2B4E5FE9004FA857 /* SecuredNetworkRepository.swift */,
-				C580FDFE2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift */,
+				C580FDFE2B4E5FFC004FA857 /* WifiNetworkRepository.swift */,
 			);
-			path = Secured;
+			path = WifiNetwork;
 			sourceTree = "<group>";
 		};
 		C580FE002B4F250D004FA857 /* PushNotification */ = {
@@ -4120,7 +4121,7 @@
 				C50F20732B606AF200266B23 /* WGConfig */,
 				C50AF6C22B6024DF00A3FBE0 /* EmergencyConnect */,
 				C580FE262B508274004FA857 /* Latency */,
-				C580FDFB2B4E5FC3004FA857 /* Secured */,
+				C580FDFB2B4E5FC3004FA857 /* WifiNetwork */,
 				C5A930ED2B44AA3D0001CFA0 /* PortMap */,
 				C5A930E22B4470F90001CFA0 /* Server */,
 				C5A930DD2B43EFE30001CFA0 /* Credentials */,
@@ -4599,6 +4600,7 @@
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
 				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
 				F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */,
+				F4A20BCF2EE88F620003D880 /* WifiNetworkRepositoryTests.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -6505,7 +6507,7 @@
 				1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */,
 				59FC74572C51612D00021CD1 /* NWInterface+Extension.swift in Sources */,
 				F49C45832DC951F5007E5EF1 /* CustomBackgroundEffectType.swift in Sources */,
-				59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */,
+				59FC74562C51606200021CD1 /* WifiNetworkRepository.swift in Sources */,
 				59FC73D12C514AD600021CD1 /* WireguardConfigRepository.swift in Sources */,
 				1EF7CEFA2EA146CE001AE14E /* VPNStateRepository.swift in Sources */,
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
@@ -6646,7 +6648,6 @@
 				1EF7BB422C74C2E20032A4DF /* RateUsPopupModel.swift in Sources */,
 				59A218692C3C9C21000D89FA /* Preferences.swift in Sources */,
 				592CA79A2C4EC0FF0078D487 /* LoginViewController.swift in Sources */,
-				59FC74552C51605E00021CD1 /* SecuredNetworkRepository.swift in Sources */,
 				59FC73EC2C5150E000021CD1 /* WSNetErrors.swift in Sources */,
 				F434A1BF2D84A7210059415F /* HTMLParsing.swift in Sources */,
 				59FC73DE2C514BD900021CD1 /* AppNetwork.swift in Sources */,
@@ -6850,7 +6851,6 @@
 				AF54C6C8228B378B00DAAB07 /* AutomaticMode.swift in Sources */,
 				F431AB992E26CD350072A1B4 /* EnterCredentialsViewModel.swift in Sources */,
 				F49C45B42DCD290D007E5EF1 /* AccountSettingsViewModel.swift in Sources */,
-				C580FDFD2B4E5FE9004FA857 /* SecuredNetworkRepository.swift in Sources */,
 				F40B8AF02E54FB8500609902 /* ScreenTestRouteID.swift in Sources */,
 				1ED6167E2DD75BF9006CDC99 /* PreferencesActionButton.swift in Sources */,
 				F4888E342D930EC3005EF149 /* AuthenticationRouteID.swift in Sources */,
@@ -6901,7 +6901,7 @@
 				F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift in Sources */,
 				1EC6C7832BE268E30036248B /* ListSelectionView.swift in Sources */,
 				AFFA715C21C407E700349195 /* Notice.swift in Sources */,
-				C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */,
+				C580FDFF2B4E5FFC004FA857 /* WifiNetworkRepository.swift in Sources */,
 				F4F51A782D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */,
 				1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */,
 				F43653542DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */,
@@ -7300,6 +7300,7 @@
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
 				F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */,
 				F4B4C1F62EA16A6C0024D824 /* StaticIpRepositoryTests.swift in Sources */,
+				F4A20BD22EE88F850003D880 /* MockConnectivityManager.swift in Sources */,
 				F458F60F2E982DE30034A92A /* LookAndFeelRepositoryTests.swift in Sources */,
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
 				F4B4C1F42EA169920024D824 /* SampleDataStaticIP.swift in Sources */,
@@ -7316,6 +7317,7 @@
 				F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
+				F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */,
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,

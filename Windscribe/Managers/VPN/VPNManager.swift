@@ -58,6 +58,7 @@ class VPNManagerImpl: VPNManager {
     let vpnStateRepository: VPNStateRepository
     let bridgeAPI: WSNetBridgeAPI
     let userSessionRepository: UserSessionRepository
+    let wifiNetworkRepository: WifiNetworkRepository
 
     var connectionTaskPublisher: AnyCancellable?
 
@@ -80,6 +81,7 @@ class VPNManagerImpl: VPNManager {
          alertManager: AlertManagerV2,
          locationsManager: LocationsManager,
          vpnStateRepository: VPNStateRepository,
+         wifiNetworkRepository: WifiNetworkRepository,
          bridgeAPI: WSNetBridgeAPI,
          userSessionRepository: UserSessionRepository) {
         self.logger = logger
@@ -92,6 +94,7 @@ class VPNManagerImpl: VPNManager {
         self.alertManager = alertManager
         self.locationsManager = locationsManager
         self.vpnStateRepository = vpnStateRepository
+        self.wifiNetworkRepository = wifiNetworkRepository
         self.bridgeAPI = bridgeAPI
         self.userSessionRepository = userSessionRepository
 
@@ -166,24 +169,23 @@ class VPNManagerImpl: VPNManager {
 extension VPNManagerImpl {
     private func getOnDemandRules() -> [NEOnDemandRule] {
         var onDemandRules: [NEOnDemandRule] = []
-        if let networks = localDB.getNetworksSync() {
-            networks.filter { $0.status == true }.forEach { network in
-                if network.SSID == TextsAsset.cellular && network.SSID != vpnStateRepository.untrustedOneTimeOnlySSID {
-                    let ruleDisconnect = NEOnDemandRuleDisconnect()
-                    #if os(iOS)
-                        ruleDisconnect.interfaceTypeMatch = .cellular
-                    #endif
-                    onDemandRules.append(ruleDisconnect)
-                    logger.logD("VPNManager", "Added On demand disconnect rule for cellular network.")
-                }
-            }
-            let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != vpnStateRepository.untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
-            if unsecureWifiNetworks.count > 0 {
+        let networks = wifiNetworkRepository.networks.value
+        networks.filter { $0.status == true }.forEach { network in
+            if network.SSID == TextsAsset.cellular && network.SSID != vpnStateRepository.untrustedOneTimeOnlySSID {
                 let ruleDisconnect = NEOnDemandRuleDisconnect()
-                ruleDisconnect.ssidMatch = unsecureWifiNetworks
+#if os(iOS)
+                ruleDisconnect.interfaceTypeMatch = .cellular
+#endif
                 onDemandRules.append(ruleDisconnect)
-                logger.logD("VPNManager", "Added On demand disconnect rule for Wi-fi networks. \(unsecureWifiNetworks.joined(separator: "-").description)")
+                logger.logD("VPNManager", "Added On demand disconnect rule for cellular network.")
             }
+        }
+        let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != vpnStateRepository.untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
+        if unsecureWifiNetworks.count > 0 {
+            let ruleDisconnect = NEOnDemandRuleDisconnect()
+            ruleDisconnect.ssidMatch = unsecureWifiNetworks
+            onDemandRules.append(ruleDisconnect)
+            logger.logD("VPNManager", "Added On demand disconnect rule for Wi-fi networks. \(unsecureWifiNetworks.joined(separator: "-").description)")
         }
         let ruleConnect = NEOnDemandRuleConnect()
         onDemandRules.append(ruleConnect)

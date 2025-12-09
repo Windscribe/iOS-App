@@ -56,7 +56,7 @@ class WifiInfoViewModel: WifiInfoViewModelType {
 
 class WifiInfoView: UIView {
     let disposeBag = DisposeBag()
-    let wifiTriggerSubject = PublishSubject<WifiNetwork>()
+    let wifiTriggerSubject = PublishSubject<WifiNetworkModel>()
     let unknownWifiTriggerSubject = PublishSubject<Void>()
 
     var viewModel: WifiInfoViewModelType! {
@@ -72,7 +72,7 @@ class WifiInfoView: UIView {
     var actionImage = UIImageView()
     var stackView = UIStackView()
     var nameLabelSpacerView = UIView()
-    private var network: WifiNetwork?
+    private var network: WifiNetworkModel?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -150,7 +150,7 @@ class WifiInfoView: UIView {
         }
     }
 
-    func updateNetwork(network: WifiNetwork?) {
+    func updateNetwork(network: WifiNetworkModel?) {
         self.network = network
         trustedIcon.image = UIImage(named: viewModel.trustedNetworkImage)?
             .withRenderingMode(.alwaysTemplate)

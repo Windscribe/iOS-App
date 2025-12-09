@@ -10,7 +10,7 @@ import SwiftUI
 
 enum ConnectionsRouteID: BaseRouteID {
     case networkOptions
-    case networkSettings(network: WifiNetwork)
+    case networkSettings(network: WifiNetworkModel)
 
     var id: Int {
         switch self {

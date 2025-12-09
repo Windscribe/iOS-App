@@ -15,14 +15,14 @@ protocol NetworkSettingsViewModel: PreferencesBaseViewModel {
     var entries: [NetworkSettingsEntryTpe] { get }
 
     func entrySelected(_ entry: NetworkSettingsEntryTpe, action: MenuEntryActionResponseType)
-    func updateDisplayingNetworks(with network: WifiNetwork)
+    func updateDisplayingNetworks(with network: WifiNetworkModel)
 }
 
 class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSettingsViewModel {
     @Published var shouldDismiss: Bool = false
     @Published var entries: [NetworkSettingsEntryTpe] = []
 
-    private var displayingNetwork: WifiNetwork?
+    private var displayingNetwork: WifiNetworkModel?
     private var preferredProtocol: String?
     private var preferredPort: String?
 
@@ -32,6 +32,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     private let vpnManager: VPNManager
     private let vpnStateRepository: VPNStateRepository
     private let protocolManager: ProtocolManagerType
+    private let wifiNetworkRepository: WifiNetworkRepository
 
     private let disposeBag = DisposeBag()
 
@@ -42,12 +43,14 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
          localDatabase: LocalDatabase,
          vpnManager: VPNManager,
          vpnStateRepository: VPNStateRepository,
-         protocolManager: ProtocolManagerType) {
+         protocolManager: ProtocolManagerType,
+         wifiNetworkRepository: WifiNetworkRepository) {
         self.connectivity = connectivity
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.vpnStateRepository = vpnStateRepository
         self.protocolManager = protocolManager
+        self.wifiNetworkRepository = wifiNetworkRepository
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -57,21 +60,18 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     override func bindSubjects() {
         super.bindSubjects()
 
-        localDatabase.getNetworks()
-            .toPublisher(initialValue: [])
+        wifiNetworkRepository.networks
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.logger.logE("NetworkOptionsSecurityViewModel", "darkTheme error: \(error)")
                 }
-            }, receiveValue: { [weak self] networks in
+            }, receiveValue: { [weak self] wifiNetworks in
                 guard let self = self else { return }
-                guard !(self.displayingNetwork?.isInvalidated ?? true) else { return }
-                let network = networks
-                    .filter { !$0.isInvalidated }
+                let mappedNetwork = wifiNetworks
                     .first { $0.SSID == self.displayingNetwork?.SSID }
-                guard let network = network else { return }
-                self.displayingNetwork = network
+                guard let mappedNetwork = mappedNetwork else { return }
+                self.displayingNetwork = mappedNetwork
                 self.reloadItems()
             })
             .store(in: &cancellables)
@@ -96,7 +96,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
         }
     }
 
-    func updateDisplayingNetworks(with network: WifiNetwork) {
+    func updateDisplayingNetworks(with network: WifiNetworkModel) {
         displayingNetwork = network
         reloadItems()
     }
@@ -127,14 +127,13 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     private func updatePreferredProtocolSwitch(_ status: Bool) {
         guard let network = displayingNetwork else { return }
         if network.status == true { return }
-        localDatabase.updateNetworkWithPreferredProtocolSwitch(network: network, status: status)
+        wifiNetworkRepository.updateNetworkPreferredProtocolStatus(network: network, status: status)
     }
 
     private func updatePreferredProtocol(value: String) {
         guard let network = displayingNetwork else { return }
         let port = getPorts(by: value).first ?? DefaultValues.port
-        let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: value, preferredPort: port, preferredProtocolStatus: network.preferredProtocolStatus)
-        localDatabase.saveNetwork(wifiNetwork: updated)
+        wifiNetworkRepository.updateNetworkPreferredProtocol(network: network, protocol: value, port: port)
         Task {
             self.logger.logI("NetworkSettingsViewModel", "updatePreferredProtocol for getNextProtocol")
             await protocolManager.refreshProtocols(shouldReset: true,
@@ -144,8 +143,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
 
     private func updatePreferredPort(value: String) {
         guard let network = displayingNetwork else { return }
-        let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: network.preferredProtocol, preferredPort: value, preferredProtocolStatus: network.preferredProtocolStatus)
-        localDatabase.saveNetwork(wifiNetwork: updated)
+        wifiNetworkRepository.updateNetworkPreferredPort(network: network, port: value)
         reloadItems()
     }
 
@@ -160,14 +158,14 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
 
     private func updateTrustNetwork(_ status: Bool) {
         guard let network = displayingNetwork else { return }
-        localDatabase.updateTrustNetwork(network: network, status: status)
+        wifiNetworkRepository.updateNetworkTrustStatus(network: network, trusted: status)
         vpnManager.updateOnDemandRules()
         reloadItems()
     }
 
     private func forgetNetwork() {
         guard let network = displayingNetwork else { return }
-        localDatabase.removeNetwork(wifiNetwork: network)
+        wifiNetworkRepository.removeNetwork(network: network)
         shouldDismiss = true
     }
 }

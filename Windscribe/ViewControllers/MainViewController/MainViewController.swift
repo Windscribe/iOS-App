@@ -128,8 +128,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var listSelectionViewTopConstraint: NSLayoutConstraint!
     var listSelectionViewBottomConstraint: NSLayoutConstraint!
 
-    var displayingNetwork: WifiNetwork? {
-        return try? viewModel.wifiNetwork.value() ?? WifiManager.shared.getConnectedNetwork()
+    var displayingNetwork: WifiNetworkModel? {
+        return viewModel.wifiNetwork.value ?? WifiManager.shared.getConnectedNetwork()
     }
 
     lazy var serverListTableViewRefreshControl: WSRefreshControl = {

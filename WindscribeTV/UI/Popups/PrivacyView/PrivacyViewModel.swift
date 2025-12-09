@@ -18,12 +18,12 @@ class PrivacyViewModel: PrivacyViewModelType {
     // MARK: - Dependencies
 
     let preferences: Preferences
-    let networkRepository: SecuredNetworkRepository
+    let networkRepository: WifiNetworkRepository
     let localDatabase: LocalDatabase
     let logger: FileLogger
 
     init(preferences: Preferences,
-         networkRepository: SecuredNetworkRepository,
+         networkRepository: WifiNetworkRepository,
          localDatabase: LocalDatabase,
          logger: FileLogger) {
         self.preferences = preferences

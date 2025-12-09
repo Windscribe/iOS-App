@@ -159,12 +159,9 @@ extension MainViewController {
                                             buttonText: TextsAsset.okay)
     }
 
-    func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
+    func refreshProtocol(from network: WifiNetworkModel?, with protoPort: ProtocolPort?) {
         DispatchQueue.main.async {
             self.wifiInfoView.updateNetwork(network: network)
-            if network?.isInvalidated == true {
-                return
-            }
             let isNetworkCellularWhileConnecting = self.vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network)
             self.connectionStateInfoView.refreshProtocol(from: network, with: protoPort,
                                                          isNetworkCellularWhileConnecting: isNetworkCellularWhileConnecting)
