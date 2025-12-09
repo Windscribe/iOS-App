@@ -190,18 +190,30 @@ extension ConfigurationsManager {
                                    port: String,
                                    vpnSettings: VPNUserSettings) async throws -> VPNConfiguration? {
 
-        try await withThrowingTaskGroup(of: VPNConfiguration?.self) { group in
-            group.addTask {
-                try await self.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
-            }
-            group.addTask {
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<VPNConfiguration?, Error>) in
+            var hasResumed = false
+            var cancelableTask: Task<(), Never>?
+
+            let timeoutTask = Task {
                 try await Task.sleep(nanoseconds: 30_000_000_000)
-                return nil
+                if !hasResumed {
+                    hasResumed = true
+                    cancelableTask?.cancel()
+                    continuation.resume(returning: nil)
+                }
             }
-            // Return first completed task and cancel the rest
-            guard let config = try await group.next() else { return nil }
-            group.cancelAll()
-            return config
+
+            cancelableTask = Task {
+                let config = try? await self.buildConfig(location: locationID,
+                                                         proto: proto,
+                                                         port: port,
+                                                         userSettings: vpnSettings)
+                if !hasResumed {
+                    hasResumed = true
+                    timeoutTask.cancel()
+                    continuation.resume(returning: config)
+                }
+            }
         }
     }
 
