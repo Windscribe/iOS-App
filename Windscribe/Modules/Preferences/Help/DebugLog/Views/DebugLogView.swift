@@ -33,7 +33,7 @@ struct DebugLogView: View {
             ZStack {
                 if viewModel.showProgress {
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .progressViewStyle(CircularProgressViewStyle(tint: .from(.iconColor, viewModel.isDarkMode)))
                 } else {
                     ScrollViewReader { proxy in
                         ScrollView {
