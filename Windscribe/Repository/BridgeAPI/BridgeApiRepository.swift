@@ -71,7 +71,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                 if isConnected {
                     initialListenning = false
                     let currentHost = preferences.getLastNodeIP() ?? ""
-                    let currentProtocol = protocolManager.currentProtocolSubject.value?.protocolName ?? ""
+                    let currentProtocol = vpnStateRepository.vpnInfo.value?.selectedProtocol ?? ""
                     if currentProtocol == "WireGuard" {
                         self.bridgeAPI.setCurrentHost(currentHost)
                     } else {
