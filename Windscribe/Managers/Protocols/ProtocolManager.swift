@@ -21,6 +21,7 @@ protocol ProtocolManagerType {
     var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
     var showNoInternetBeforeFailoverTrigger: PassthroughSubject<Void, Never> { get }
     var showConnectionModeTriggeer: PassthroughSubject<Void, Never> { get }
+    var disconnectConnectionTrigger: PassthroughSubject<Void, Never> { get }
 
     var displayProtocolsSubject: CurrentValueSubject<[DisplayProtocolPort], Never> { get }
 
@@ -85,6 +86,7 @@ class ProtocolManager: ProtocolManagerType {
     let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
     let showNoInternetBeforeFailoverTrigger = PassthroughSubject<Void, Never>()
     let showConnectionModeTriggeer = PassthroughSubject<Void, Never>()
+    let disconnectConnectionTrigger = PassthroughSubject<Void, Never>()
 
     let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
@@ -219,7 +221,7 @@ class ProtocolManager: ProtocolManagerType {
             setPriority(proto: goodProtocol.protocolName, type: .normal)
         }
 
-        if connectionMode == Fields.Values.manual {
+        if preferences.getConnectionModeSync() == Fields.Values.manual {
             logger.logI("ProtocolManager", "Manual protocol : \(manualProtocol)")
             appendPort(proto: manualProtocol, port: manualPort)
             setPriority(proto: manualProtocol, type: .normal)
@@ -353,20 +355,23 @@ class ProtocolManager: ProtocolManagerType {
 
     /// Current protocol failed to connect, lower its priority.
     func onProtocolFail() async {
-        if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
-            // If the Network has a preferred protocol do not show Protocol Switch View
-            return
-        }
-
-        guard TextsAsset.General.manual != preferences.getConnectionModeSync() else {
-            // The connection failed while user on Manual mode, show message to change to Auto mode
-            showConnectionModeTriggeer.send(())
-            return
-        }
         userSelected = nil
         let failedProtocol = await getNextProtocol()
         logger.logI("ProtocolManager", "\(failedProtocol.protocolName) failed to connect.")
         setPriority(proto: failedProtocol.protocolName, type: .fail)
+
+        if securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true {
+            // If the Network has a preferred protocol do not show Protocol Switch View
+            return
+        }
+
+        // Check Manual mode FIRST - always show warning regardless of preferred protocol
+        guard Fields.Values.manual != preferences.getConnectionModeSync() else {
+            // The connection failed while user on Manual mode, show message to change to Auto mode
+            showConnectionModeTriggeer.send(())
+            return
+        }
+
         if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
             logger.logI("ProtocolManager", "No more protocol left to connect.")
             await reset()

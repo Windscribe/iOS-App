@@ -230,9 +230,9 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         // Save Auto mode to preferences
         preferences.saveConnectionMode(mode: Fields.Values.auto)
 
-        // Refresh protocols to use Auto mode failover order
+        // Refresh protocols AND reconnect with Auto mode failover
         Task {
-            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
         }
 
         // Reset automatic mode failure counts for fresh start
@@ -242,13 +242,20 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         shouldDismiss = true
     }
 
-    /// Handles cancel action - resets failure counts and dismisses
+    /// Handles cancel action - stays in Manual mode and continues with next protocol
     func cancel() {
         logger.logD("ProtocolConnectionResultViewModel", "User canceled protocol result dialog")
 
-        // Reset automatic mode failure counts when user cancels
+        // Reset automatic mode failure counts
         AutomaticMode.shared.resetFailCounts()
 
+        // For Manual Mode Warning, trigger disconnect to stop active connection attempt
+        if viewType == .manualFail {
+            logger.logI("ProtocolConnectionResultViewModel", "Manual mode warning canceled - triggering disconnect")
+            protocolManager.disconnectConnectionTrigger.send(())
+        }
+
+        // Dismiss dialog
         shouldDismiss = true
     }
 

@@ -36,6 +36,7 @@ protocol MainViewModel {
     var showNotificationsTrigger: PassthroughSubject<Void, Never> { get }
     var becameActiveTrigger: PassthroughSubject<Void, Never> { get }
     var showConnectionModeTriggeer: PassthroughSubject<Void, Never> { get }
+    var disconnectConnectionTrigger: PassthroughSubject<Void, Never> { get }
     var updateSSIDTrigger: PublishSubject<Void> { get }
     var showProtocolSwitchTrigger: PublishSubject<Void> { get }
     var showAllProtocolsFailedTrigger: PublishSubject<Void> { get }
