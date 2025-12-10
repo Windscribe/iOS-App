@@ -338,7 +338,9 @@ class SignUpViewModelImpl: SignUpViewModel {
                 }
             }.sink { _ in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    self.latencyRepository.loadLatency()
+                    Task {
+                        try? await self.latencyRepository.loadLatency()
+                    }
                 }
                 self.showLoadingView.onNext(false)
                 self.routeTo.onNext(.main)

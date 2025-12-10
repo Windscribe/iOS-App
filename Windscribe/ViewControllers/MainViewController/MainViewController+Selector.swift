@@ -46,16 +46,6 @@ extension MainViewController {
         latencyLoadTimeOut(selectBestLocation: true, connectToBestLocation: true)
     }
 
-    @objc func configureBestLocationDefault() {
-        if serverListTableViewDataSource.bestLocation == nil, noSelectedNodeToConnect() {
-            configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
-            reloadServerList()
-        } else {
-            configureBestLocation(selectBestLocation: false, connectToBestLocation: false)
-            reloadServerList()
-        }
-    }
-
     func updateUIForSession(session: SessionModel?) {
         guard let session = session else { return }
         logger.logD("MainViewController", "Looking for account state changes.")

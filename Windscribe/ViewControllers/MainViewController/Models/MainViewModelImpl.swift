@@ -462,7 +462,9 @@ class MainViewModelImpl: MainViewModel {
             .first(where: { !$0.isEmpty })
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.latencyRepo.loadLatency()
+                Task {
+                    try? await self.latencyRepo.loadLatency()
+                }
             }
             .store(in: &cancellables)
 

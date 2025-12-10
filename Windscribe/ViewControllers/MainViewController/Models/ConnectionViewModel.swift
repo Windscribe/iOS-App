@@ -48,7 +48,6 @@ protocol ConnectionViewModelType {
     func enableConnection()
     func disableConnection()
     func saveLastSelectedLocation(with locationID: String)
-    func saveBestLocation(with locationID: String)
     func selectBestLocation(with locationID: String)
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
     func displayLocalIPAddress()
@@ -308,10 +307,6 @@ extension ConnectionViewModel {
 
     func saveLastSelectedLocation(with locationID: String) {
         locationsManager.saveLastSelectedLocation(with: locationID)
-    }
-
-    func saveBestLocation(with locationID: String) {
-        locationsManager.saveBestLocation(with: locationID)
     }
 
     func selectBestLocation(with locationID: String) {

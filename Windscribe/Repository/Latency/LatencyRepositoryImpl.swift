@@ -30,6 +30,8 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let favList: BehaviorSubject<[Favourite]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
+    private var startTimeStamp = Date()
+    private var hasPassedInitialTimer = false
 
     init(pingManager: LocalPingManager,
          database: LocalDatabase,
@@ -67,15 +69,21 @@ class LatencyRepositoryImpl: LatencyRepository {
         return value?.first { !$0.isInvalidated && $0.ip == ip }
     }
 
-    func loadLatency() {
-        loadAllServerLatency()
-            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onCompleted: {})
-            .disposed(by: disposeBag)
+    func loadLatency() async throws {
+        // If the app launches and the VPN is connected the app does not know straight away
+        // that it is connected, we wait 1 sec until eveything is loaded an then we can
+        // load the latencies, otherwise it will get the latency of the connected location
+        let timeSince = Date().timeIntervalSince(startTimeStamp)
+        guard timeSince >= 1 || hasPassedInitialTimer else {
+            try? await Task.sleep(nanoseconds: 100_000_000)
+            try await loadLatency()
+            return
+        }
+        hasPassedInitialTimer = true
+        try await loadAllServerLatency().value
     }
 
-    func loadAllServerLatency() -> Completable {
+    private func loadAllServerLatency() -> Completable {
         logger.logI("LatencyRepositoryImpl", "Attempting to update latency data.")
         let pingServers = getServerPingAndHosts()
         if pingServers.count == 0 {

@@ -209,7 +209,7 @@ class SessionManagerImpl: SessionManager {
     private func loadLatency() {
         Task { @MainActor in
             do {
-                try await latencyRepo.loadAllServerLatency().value
+                try await latencyRepo.loadLatency()
                 self.logger.logI("SessionManager", "Successfully update latency.")
             } catch let error {
                 self.logger.logE("SessionManager", "Failed to update latency wit error: \(error).")

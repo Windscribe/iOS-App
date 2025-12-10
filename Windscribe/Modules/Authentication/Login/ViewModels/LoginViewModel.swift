@@ -360,7 +360,9 @@ class LoginViewModelImpl: LoginViewModel {
             }.sink { _ in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self.latencyRepository.refreshBestLocation()
-                    self.latencyRepository.loadLatency()
+                    Task {
+                        try? await self.latencyRepository.loadLatency()
+                    }
                 }
                 self.showLoadingView = false
                 self.routeToMainView.send(true)
