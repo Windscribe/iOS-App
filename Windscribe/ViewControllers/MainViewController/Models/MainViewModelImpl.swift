@@ -61,6 +61,7 @@ class MainViewModelImpl: MainViewModel {
     let showAllProtocolsFailedTrigger = PublishSubject<Void>()
     let showNoInternetBeforeFailoverTrigger = PublishSubject<Void>()
     var showConnectionModeTriggeer = PassthroughSubject<Void, Never>()
+    var disconnectConnectionTrigger = PassthroughSubject<Void, Never>()
 
     var oldSession: SessionModel? { userSessionRepository.oldSessionModel }
 
@@ -190,6 +191,12 @@ class MainViewModelImpl: MainViewModel {
         protocolManager.showConnectionModeTriggeer
             .sink { [weak self] _ in
                 self?.showConnectionModeTriggeer.send(())
+            }
+            .store(in: &cancellables)
+
+        protocolManager.disconnectConnectionTrigger
+            .sink { [weak self] _ in
+                self?.disconnectConnectionTrigger.send(())
             }
             .store(in: &cancellables)
 

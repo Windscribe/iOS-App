@@ -205,6 +205,13 @@ extension MainViewController {
                 self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: .manualFail), from: self)
             }.store(in: &cancellables)
 
+        viewModel.disconnectConnectionTrigger
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] in
+                guard let self = self else { return }
+                self.vpnConnectionViewModel.disableConnection()
+            }.store(in: &cancellables)
+
         viewModel.showNoInternetBeforeFailoverTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             // Show no internet alert instead of protocol failover when no connectivity detected
