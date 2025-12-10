@@ -215,8 +215,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         Task { @MainActor [weak self] in
             guard let self = self else { return }
             do {
-                try await sessionManager.updateSession()
-                try await self.sessionManager.updateSession(token)
+                try await sessionManager.updateSession(token)
                 self.logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
                 self.preferences.saveRegisteredForPushNotifications(bool: true)
             } catch {
