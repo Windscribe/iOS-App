@@ -58,7 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         if preferences.userSessionAuth() != nil {
             delay(2) {
-                self.latencyRepository.loadLatency()
+                Task {
+                    try? await self.latencyRepository.loadLatency()
+                }
             }
         }
         Task { @MainActor [weak self] in
@@ -76,9 +78,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Task.detached { [unowned self] in
             try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
             if await preferences.userSessionAuth() != nil {
-                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-                await self.latencyRepository.loadLatency()
-                }
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                try? await self.latencyRepository.loadLatency()
+            }
         }
 
         return true

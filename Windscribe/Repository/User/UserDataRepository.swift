@@ -73,7 +73,9 @@ class UserDataRepositoryImpl: UserDataRepository {
         }.map { _ in
             DispatchQueue.main.async {
                 if !self.emergencyRepository.isConnected() {
-                    self.latencyRepository.loadLatency()
+                    Task {
+                        try? await self.latencyRepository.loadLatency()
+                    }
                 }
             }
         }

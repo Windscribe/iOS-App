@@ -36,8 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var purchaseManager: InAppPurchaseManager = Assembler.resolve(InAppPurchaseManager.self)
 
-    private lazy var latencyRepository: LatencyRepository = Assembler.resolve(LatencyRepository.self)
-
     private lazy var pushNotificationManager: PushNotificationManager = Assembler.resolve(PushNotificationManager.self)
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)

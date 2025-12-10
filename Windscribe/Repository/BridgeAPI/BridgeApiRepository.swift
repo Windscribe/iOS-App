@@ -64,7 +64,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                     WSNet.instance().setIsConnectedToVpnState(isConnected)
                     return
                 }
-                guard Date().timeIntervalSince(startTimeStamp) < 2 else {
+                guard Date().timeIntervalSince(startTimeStamp) < 1 else {
                     initialListenning = false
                     return
                 }

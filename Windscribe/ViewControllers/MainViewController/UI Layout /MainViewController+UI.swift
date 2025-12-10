@@ -32,6 +32,9 @@ extension MainViewController {
         serverListTableView.dataSource = serverListTableViewDataSource
         serverListTableView.delegate = serverListTableViewDataSource
         serverListTableViewDataSource.delegate = self
+        if let bestLocation = vpnConnectionViewModel.getBestLocation() {
+            serverListTableViewDataSource.bestLocation = bestLocation
+        }
 
         favTableView.dataSource = favNodesListTableViewDataSource
         favTableView.delegate = favNodesListTableViewDataSource

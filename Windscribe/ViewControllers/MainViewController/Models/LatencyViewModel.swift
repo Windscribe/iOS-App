@@ -45,15 +45,14 @@ class LatencyViewModelImpl: LatencyViewModel {
                     onExitCompletion()
                 })
                 .disposed(by: self.disposeBag)
-            self.latencyRepo.loadAllServerLatency()
-                .observe(on: MainScheduler.asyncInstance)
-                .subscribe(onCompleted: {
-                    onAllServerCompletion()
-                    onExitCompletion()
-                }, onError: { _ in
-                    onExitCompletion()
-                })
-                .disposed(by: self.disposeBag)
+
+            do {
+                try await latencyRepo.loadLatency()
+                onAllServerCompletion()
+                onExitCompletion()
+            } catch {
+                onExitCompletion()
+            }
 
             self.latencyRepo.loadCustomConfigLatency()
                 .observe(on: MainScheduler.asyncInstance)

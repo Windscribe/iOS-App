@@ -391,7 +391,9 @@ class SignUpViewModelImpl: SignUpViewModel {
                 guard let self = self else { return }
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    self.latencyRepository.loadLatency()
+                    Task {
+                        try? await self.latencyRepository.loadLatency()
+                    }
                 }
                 self.routeTo.send(.main)
                 self.showLoadingView = false
