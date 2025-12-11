@@ -31,12 +31,4 @@ extension MainViewController {
             self.updateRefreshControls()
         }
     }
-
-    func updateSelectedLocationUI() {
-        let location = vpnConnectionViewModel.getSelectedCountryInfo()
-        guard !location.countryCode.isEmpty else { return }
-        DispatchQueue.main.async {
-            self.locationNameView.update(mainName: location.cityName, nickName: location.nickName)
-        }
-    }
 }

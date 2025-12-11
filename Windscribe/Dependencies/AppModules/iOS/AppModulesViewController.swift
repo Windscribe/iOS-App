@@ -423,6 +423,12 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(FlagsBackgroundViewModelType.self)
         }.inObjectScope(.transient)
 
+        container.register(LocationNameView.self) { _ in
+            LocationNameView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(LocationNameViewModel.self)
+        }.inObjectScope(.transient)
+
         container.register(ConnectButtonView.self) { _ in
             ConnectButtonView()
         }.initCompleted { r, c in

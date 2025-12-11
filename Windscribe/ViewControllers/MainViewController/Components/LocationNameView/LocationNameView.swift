@@ -7,9 +7,41 @@
 //
 
 import UIKit
+import Combine
+
+protocol LocationNameViewModel {
+    var locationInfoUpdatedTrigger: CurrentValueSubject<LocationUIInfo?, Never> { get }
+}
+
+class LocationNameViewModelImpl: LocationNameViewModel {
+
+    let locationInfoUpdatedTrigger = CurrentValueSubject<LocationUIInfo?, Never>(nil)
+
+    private let languageManager: LanguageManager
+    private let locationsManager: LocationsManager
+
+    private var cancellables = Set<AnyCancellable>()
+
+    init(languageManager: LanguageManager,
+         locationsManager: LocationsManager) {
+        self.languageManager = languageManager
+        self.locationsManager = locationsManager
+
+        self.locationInfoUpdatedTrigger.send(locationsManager.getLocationUIInfo())
+
+        locationsManager.selectedLocationUpdated
+            .combineLatest(locationsManager.bestLocationUpdated, languageManager.activelanguage)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+            guard let self = self else { return }
+                self.locationInfoUpdatedTrigger.send(locationsManager.getLocationUIInfo())
+        }.store(in: &cancellables)
+    }
+}
 
 class LocationNameView: UIView {
 
+    private var cancellables = Set<AnyCancellable>()
     private let spacerView = UIView()
 
     private let mainNameLabel: UILabel = {
@@ -42,6 +74,12 @@ class LocationNameView: UIView {
         return stackView.heightAnchor.constraint(equalToConstant: 68)
     }()
 
+    var viewModel: LocationNameViewModel! {
+        didSet {
+            bindViewModel()
+        }
+    }
+
     // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,6 +89,15 @@ class LocationNameView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
+    }
+
+    private func bindViewModel() {
+        viewModel.locationInfoUpdatedTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] info in
+            guard let self = self, let info = info else { return }
+                self.update(mainName: info.cityName, nickName: info.nickName)
+        }.store(in: &cancellables)
     }
 
     // MARK: - Setup
@@ -75,8 +122,7 @@ class LocationNameView: UIView {
         ])
     }
 
-    // MARK: - Public Methods
-    func update(mainName: String?, nickName: String?) {
+    private func update(mainName: String?, nickName: String?) {
         mainNameLabel.text = mainName
         nickNameLabel.text = nickName
 
