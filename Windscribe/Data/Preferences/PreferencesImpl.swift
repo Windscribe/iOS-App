@@ -560,6 +560,14 @@ class PreferencesImpl: Preferences {
     func getLastNodeIP() -> String? {
         return sharedDefault?.string(forKey: SharedKeys.lasUsedNodeIP)
     }
+
+    func saveIgnorePinIP(status: Bool) {
+        sharedDefault?.set(status, forKey: SharedKeys.ignorePinIP)
+    }
+
+    func getIgnorePinIP() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.ignorePinIP) ?? false
+    }
 }
 
 // MARK: Utility Methods

@@ -65,9 +65,12 @@ final class BridgeApiFailedViewModelImpl: BridgeApiFailedViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let preferences: Preferences
 
-    init(lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(lookAndFeelRepository: LookAndFeelRepositoryType,
+         preferences: Preferences) {
         self.lookAndFeelRepository = lookAndFeelRepository
+        self.preferences = preferences
         bind()
     }
 
@@ -89,6 +92,10 @@ final class BridgeApiFailedViewModelImpl: BridgeApiFailedViewModel {
     }
 
     func handleDismissAction() {
+        if popupType == .pinIp {
+            preferences.saveIgnorePinIP(status: true)
+            NotificationCenter.default.post(Notification(name: Notifications.configureVPN))
+        }
         shouldDismiss = true
     }
 }

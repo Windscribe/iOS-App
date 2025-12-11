@@ -349,14 +349,16 @@ extension ConfigurationsManager {
                 return node
             }
 
-            // Check if we have a pinned ip for this location
-            let pinnedNodeIp = localDatabase.getFavouriteList().first {
-                $0.id == String(group.id) && $0.pinnedNodeIp != nil
-            }?.pinnedNodeIp
-            if let pinnedNodeIp = pinnedNodeIp,
-               let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
-                logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedNode)")
-                return pinnedNode
+            if !preferences.getIgnorePinIP() {
+                // Check if we have a pinned ip for this location
+                let pinnedNodeIp = localDatabase.getFavouriteList().first {
+                    $0.id == String(group.id) && $0.pinnedNodeIp != nil
+                }?.pinnedNodeIp
+                if let pinnedNodeIp = pinnedNodeIp,
+                   let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
+                    logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedNode)")
+                    return pinnedNode
+                }
             }
 
              logger.logI("ConfigurationsManager", "getNodeFrom found no pinned or forced node so trying random")

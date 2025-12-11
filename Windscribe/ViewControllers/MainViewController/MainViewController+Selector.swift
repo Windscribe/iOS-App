@@ -174,7 +174,7 @@ extension MainViewController {
         vpnConnectionViewModel.disableConnection()
     }
 
-    @objc func enableVPNConnection() {
+    func enableVPNConnection() {
         vpnConnectionViewModel.enableConnection()
     }
 

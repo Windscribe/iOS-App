@@ -275,21 +275,25 @@ extension ConfigurationsManager {
         var shouldCheckPinning = false
         var hasPinnedNodeMismatch = false
 
-        let favourite = localDatabase.getFavouriteList().first { $0.id == forLocationId }
-        if let favourite = favourite {
-            shouldCheckPinning = favourite.pinnedNodeIp != nil
-            hasPinnedNodeMismatch = shouldCheckPinning && favourite.pinnedNodeIp != currentHost
+        if !preferences.getIgnorePinIP() {
+            let favourite = localDatabase.getFavouriteList().first { $0.id == forLocationId }
+            if let favourite = favourite {
+                shouldCheckPinning = favourite.pinnedNodeIp != nil
+                hasPinnedNodeMismatch = shouldCheckPinning && favourite.pinnedNodeIp != currentHost
 
-            if let pinnedIp = favourite.pinnedIp {
-                logger.logI("ConfigurationsManager","Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
-                do {
-                    _ = try await api.pinIp(ip: pinnedIp)
-                    logger.logI("ConfigurationsManager", "IP pinned successfully")
-                } catch {
-                    logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
-                    ipPinningFailed = true
+                if let pinnedIp = favourite.pinnedIp {
+                    logger.logI("ConfigurationsManager","Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
+                    do {
+                        _ = try await api.pinIp(ip: pinnedIp)
+                        logger.logI("ConfigurationsManager", "IP pinned successfully")
+                    } catch {
+                        logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
+                        ipPinningFailed = true
+                    }
                 }
             }
+        } else {
+            preferences.saveIgnorePinIP(status: false)
         }
 
         for attempt in 1 ... maxConnectivityTestAttempts {
