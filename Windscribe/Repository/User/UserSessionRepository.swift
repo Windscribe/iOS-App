@@ -16,7 +16,7 @@ protocol UserSessionRepository {
     var oldSessionModel: SessionModel? { get }
     var sessionModelSubject: CurrentValueSubject<SessionModel?, Never> { get }
 
-    func update(sessionModel: SessionModel)
+    func update(sessionModel: SessionModel) async
     func clearSession()
     func canAccesstoProLocation() -> Bool
 }
@@ -38,7 +38,8 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         self.preferences = preferences
     }
 
-    func update(sessionModel: SessionModel) {
+    @MainActor
+    func update(sessionModel: SessionModel) async {
         self.oldSessionModel = self.sessionModel
         self.sessionModel = sessionModel
         sessionModelSubject.send(sessionModel)
