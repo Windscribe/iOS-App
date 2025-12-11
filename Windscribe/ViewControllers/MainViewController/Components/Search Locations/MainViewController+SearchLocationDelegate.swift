@@ -69,6 +69,8 @@ extension MainViewController: SearchCountryViewDelegate {
                 let sortedModels = self.find(groupList: serverModels, keyword: text)
                 resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: text.isEmpty)}
                 self.serverListTableViewDataSource.updateServerList(with: resultServerSections)
+                // Sync tableView with new section count before expanding/collapsing
+                self.serverListTableView.reloadData()
                 for (index, serverSection) in resultServerSections.enumerated() {
                     if serverSection.collapsed == false, !text.isEmpty {
                         self.serverListTableView.expand(index)
