@@ -83,7 +83,7 @@ extension SSOManager: ASAuthorizationControllerDelegate {
                 // Get session from "\GET" will not have session auth set.
                 session.sessionAuthHash = ssoSession.sessionAuth
 
-                userSessionRepository.update(sessionModel: SessionModel(session: session))
+                await userSessionRepository.update(sessionModel: SessionModel(session: session))
                 await MainActor.run {
                     self.ssoSession?.send(session)
                     self.ssoSession?.send(completion: .finished)

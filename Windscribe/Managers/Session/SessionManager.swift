@@ -104,32 +104,31 @@ class SessionManagerImpl: SessionManager {
 
     func keepSessionUpdated() {
         Task { @MainActor in
-            if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
-                guard let currentSession = localDatabase.getSessionSync() else {
-                    self.logoutUser()
-                    return
-                }
-                if userSessionRepository.sessionModel == nil {
-                    userSessionRepository.update(sessionModel: SessionModel(session: currentSession))
-                }
-                sessionFetchInProgress = true
-                localDatabase.saveOldSession()
+            guard preferences.getSessionAuthHash() != nil else { return }
 
-                do {
-                    try await self.updateSession()
-                    self.sessionFetchInProgress = false
-                } catch let error {
-                    if let errors = error as? Errors,
-                       (errors == .sessionIsInvalid  || errors == .validationFailure) {
-                        self.logoutUser()
-                    } else {
-                        self.logger.logE("SessionManager", "Failed to update error: \(error)")
-                    }
-                    self.sessionFetchInProgress = false
-                }
-
-                updateServerConfigs()
+            guard let currentSession = localDatabase.getSessionSync() else {
+                self.logoutUser()
+                return
             }
+
+            if userSessionRepository.sessionModel == nil {
+                await userSessionRepository.update(sessionModel: SessionModel(session: currentSession))
+            }
+
+            localDatabase.saveOldSession()
+
+            do {
+                try await self.updateSession()
+            } catch let error {
+                if let errors = error as? Errors,
+                   (errors == .sessionIsInvalid  || errors == .validationFailure) {
+                    self.logoutUser()
+                } else {
+                    self.logger.logE("SessionManager", "Failed to update error: \(error)")
+                }
+            }
+
+            updateServerConfigs()
         }
     }
 
@@ -140,11 +139,17 @@ class SessionManagerImpl: SessionManager {
     func updateSession(_ appleID: String) async throws {
         try await updateSessionUsing(token: appleID)
     }
-
-    private func updateSessionUsing(token: String?) async throws {
+    
+    @MainActor
+    private func updateSessionUsing(token: String?, retryCount: Int = 0) async throws {
+        // Check if update is already in progress
+        guard !sessionFetchInProgress else { return }
+        
+        sessionFetchInProgress = true
         let session = try await apiManager.getSession(token)
         logger.logI("SessionManager", "Session updated for \(session.username)")
         processUpdatedSession(session: session)
+        sessionFetchInProgress = false
     }
 
     func login(auth: String) async throws {
@@ -161,9 +166,12 @@ class SessionManagerImpl: SessionManager {
     }
 
     private func processUpdatedSession(session: Session) {
-        userSessionRepository.update(sessionModel: SessionModel(session: session))
         localDatabase.saveOldSession()
         localDatabase.saveSession(session: session)
+        let model = SessionModel(session: session)
+        Task {
+            await userSessionRepository.update(sessionModel: model)
+        }
     }
 
     func listenForSessionChanges() {
