@@ -17,6 +17,7 @@ struct LocationUIInfo {
 
 protocol LocationsManager {
     func getBestLocationModel(from groupId: String) -> BestLocationModel?
+    func getBestLocationModel() -> BestLocationModel?
     func getLocation(from groupId: String) throws -> (ServerModel, GroupModel)
     func getLocationUIInfo() -> LocationUIInfo
     func saveLastSelectedLocation(with locationID: String)
@@ -75,6 +76,10 @@ class LocationsManagerImpl: LocationsManager {
                 self?.selectedLocationUpdated.send(false)
             })
             .store(in: &cancellables)
+    }
+
+    func getBestLocationModel() -> BestLocationModel? {
+        getBestLocationModel(from: getBestLocation())
     }
 
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {
@@ -226,7 +231,9 @@ class LocationsManagerImpl: LocationsManager {
             }
             return
         }
-        if !userSessionRepository.canAccesstoProLocation() && currentLocation.1.premiumOnly {
+        if userSessionRepository.sessionModel != nil,
+           !userSessionRepository.canAccesstoProLocation(),
+           currentLocation.1.premiumOnly {
             updateToBestLocation()
         }
     }

@@ -40,12 +40,6 @@ extension MainViewController {
             self?.showConnectionFailed()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.selectedLocationUpdated
-            .delay(for: .seconds(vpnConnectionViewModel.getSelectedCountryInfo().countryCode.isEmpty ? 2 : 0), scheduler: RunLoop.main)
-            .sink { [weak self] _ in
-                self?.updateSelectedLocationUI()
-            }.store(in: &cancellables)
-
         viewModel.wifiNetwork.combineLatest(vpnConnectionViewModel.selectedProtoPort.asPublisher().replaceError(with: nil).eraseToAnyPublisher())
             .sink { [weak self] (network, protocolPort) in
                 self?.refreshProtocol(from: network, with: protocolPort)
@@ -217,15 +211,6 @@ extension MainViewController {
             // Show no internet alert instead of protocol failover when no connectivity detected
             self.displayInternetConnectionLostAlert()
         }).disposed(by: disposeBag)
-
-        viewModel.bestLocationUpdated
-            .receive(on: DispatchQueue.main)
-            .sink {[weak self] in
-                guard let self = self else { return }
-                if let bestLocation = vpnConnectionViewModel.getBestLocation() {
-                    serverListTableViewDataSource.bestLocation = bestLocation
-                }
-            }.store(in: &cancellables)
 
         setNetworkSsid()
     }

@@ -424,6 +424,11 @@ class ViewModels: Assembly {
                                      backgroundFileManager: r.resolve(BackgroundFileManaging.self)!)
         }.inObjectScope(.transient)
 
+        container.register(LocationNameViewModel.self) { r in
+            LocationNameViewModelImpl(languageManager: r.resolve(LanguageManager.self)!,
+                                     locationsManager: r.resolve(LocationsManager.self)!)
+        }.inObjectScope(.transient)
+
         container.register(ConnectButtonViewModelType.self) { r in
             ConnectButtonViewModel(vpnStateRepository: r.resolve(VPNStateRepository.self)!)
         }.inObjectScope(.transient)

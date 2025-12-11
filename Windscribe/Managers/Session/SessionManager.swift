@@ -17,7 +17,6 @@ protocol SessionManager {
     func setSessionTimer()
     func listenForSessionChanges()
     func logoutUser()
-    func checkForSessionChange()
     func updateSession() async throws
     func updateSession(_ appleID: String) async throws
     func login(auth: String) async throws
@@ -173,7 +172,10 @@ class SessionManagerImpl: SessionManager {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.checkForStatus()
-                self.checkForSessionChange()
+                Task { @MainActor in
+                    await self.checkForSessionChange()
+                    await self.latencyRepo.checkLocationsValidity()
+                }
             }
             .store(in: &cancellables)
     }
@@ -206,35 +208,14 @@ class SessionManagerImpl: SessionManager {
         }
     }
 
-    private func loadLatency() {
-        Task { @MainActor in
-            do {
-                try await latencyRepo.loadLatency()
-                self.logger.logI("SessionManager", "Successfully update latency.")
-            } catch let error {
-                self.logger.logE("SessionManager", "Failed to update latency wit error: \(error).")
-            }
-            self.refreshLocations()
-        }
-    }
-
-    private func refreshLocations() {
-        Task { @MainActor in
-            latencyRepo.pickBestLocation(pingData: localDatabase.getAllPingData())
-        }
-    }
-
     private func checkLocationValidity() {
         Task { @MainActor in
-            if vpnStateRepository.isConnected() {
-                latencyRepo.refreshBestLocation()
-            } else {
-                loadLatency()
-            }
+            
         }
     }
 
-    func checkForSessionChange() {
+    @MainActor
+    func checkForSessionChange() async {
         logger.logD("SessionManager", "Comparing new session with old session.")
         guard let newSession = userSessionRepository.sessionModel,
               let oldLocalSession = localDatabase.getOldSession() else {
@@ -242,53 +223,41 @@ class SessionManagerImpl: SessionManager {
             return
         }
         let oldSession = SessionModel(session: oldLocalSession)
-        Task { @MainActor in
-            if oldSession.locHash != newSession.locHash {
-                try? await serverRepo.updatedServers()
-            }
-            if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
-                logger.logI("SessionManager", "ALC changes detected. Request to retrieve server list")
-                do {
-                    try await serverRepo.updatedServers()
-                    checkLocationValidity()
-                } catch { }
-            }
-            let sipCount = localDatabase.getStaticIPs()?.count ?? 0
-            if sipCount != newSession.getSipCount() {
-                logger.logI("SessionManager", "SIP changes detected. Request to retrieve static ip list")
-                _ = try? await staticIPRepo.getStaticServers()
-                self.checkLocationValidity()
-                _ = try? await self.latencyRepo.loadStaticIpLatency().value
-            }
-            if !newSession.isPremium && oldSession.isPremium {
-                logger.logI("SessionManager", "User's pro plan expired.")
-                _ = try? await Task.sleep(nanoseconds: 3_000_000_000)
-                self.logger.logI("SessionManager", "Updated server list.")
-                do {
-                    try await serverRepo.updatedServers()
-                } catch let error {
-                    self.logger.logE("SessionManager", "Failed to update server list with error: \(error).")
-                }
-                self.checkLocationValidity()
-                _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
-                _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
-            }
-            if newSession.isPremium && !oldSession.isPremium {
-                try? await serverRepo.updatedServers()
-                self.refreshLocations()
-                _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
-                _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
-            }
-            if (oldSession.status == 3 && newSession.status == 1) || (oldSession.status == 2 && newSession.status == 1) {
-                _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
-                _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
-            }
-            guard let portMaps = localDatabase.getPortMap()?.filter({ $0.heading == wireGuard }) else { return }
+        if oldSession.locHash != newSession.locHash {
+            try? await serverRepo.updatedServers()
+        }
+        if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
+            logger.logI("SessionManager", "ALC changes detected. Request to retrieve server list")
+            try? await serverRepo.updatedServers()
+        }
+        let sipCount = localDatabase.getStaticIPs()?.count ?? 0
+        if sipCount != newSession.getSipCount() {
+            logger.logI("SessionManager", "SIP changes detected. Request to retrieve static ip list")
+            _ = try? await staticIPRepo.getStaticServers()
+            _ = try? await self.latencyRepo.loadStaticIpLatency().value
+        }
+        if !newSession.isPremium && oldSession.isPremium {
+            logger.logI("SessionManager", "User's pro plan expired.")
+            _ = try? await Task.sleep(nanoseconds: 3_000_000_000)
+            self.logger.logI("SessionManager", "Updated server list.")
+            try? await serverRepo.updatedServers()
+            _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
+            _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
+        }
+        if newSession.isPremium && !oldSession.isPremium {
+            try? await serverRepo.updatedServers()
+            _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
+            _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
+        }
+        if (oldSession.status == 3 && newSession.status == 1) || (oldSession.status == 2 && newSession.status == 1) {
+            _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
+            _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
+        }
+        guard let portMaps = localDatabase.getPortMap()?.filter({ $0.heading == wireGuard }) else { return }
 
-            if portMaps.first == nil {
-                try? await serverRepo.updatedServers()
-                _ = try? await portmapRepo.getUpdatedPortMap()
-            }
+        if portMaps.first == nil {
+            try? await serverRepo.updatedServers()
+            _ = try? await portmapRepo.getUpdatedPortMap()
         }
     }
 
@@ -296,18 +265,18 @@ class SessionManagerImpl: SessionManager {
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
             window.rootViewController?.dismiss(animated: false, completion: nil)
 #if os(iOS)
-                let welcomeRootView = DeviceTypeProvider { Assembler.resolve(WelcomeView.self) }
+            let welcomeRootView = DeviceTypeProvider { Assembler.resolve(WelcomeView.self) }
 
-                DispatchQueue.main.async {
-                    UIView.transition(
-                        with: window,
-                        duration: 0.3,
-                        options: .transitionCrossDissolve,
-                        animations: {
-                            window.rootViewController = UIHostingController(rootView: welcomeRootView)
-                        },
-                        completion: nil)
-                }
+            DispatchQueue.main.async {
+                UIView.transition(
+                    with: window,
+                    duration: 0.3,
+                    options: .transitionCrossDissolve,
+                    animations: {
+                        window.rootViewController = UIHostingController(rootView: welcomeRootView)
+                    },
+                    completion: nil)
+            }
 #elseif os(tvOS)
             let firstViewController =  Assembler.resolve(WelcomeViewController.self)
             DispatchQueue.main.async {

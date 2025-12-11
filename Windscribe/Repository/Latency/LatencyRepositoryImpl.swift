@@ -54,6 +54,8 @@ class LatencyRepositoryImpl: LatencyRepository {
 
         latency.onNext(self.database.getAllPingData())
         observeFavouriteList()
+
+        refreshBestLocation()
     }
 
     private func observeFavouriteList() {
@@ -75,12 +77,13 @@ class LatencyRepositoryImpl: LatencyRepository {
         // load the latencies, otherwise it will get the latency of the connected location
         let timeSince = Date().timeIntervalSince(startTimeStamp)
         guard timeSince >= 1 || hasPassedInitialTimer else {
-            try? await Task.sleep(nanoseconds: 100_000_000)
+            try? await Task.sleep(nanoseconds: 50_000_000)
             try await loadLatency()
             return
         }
         hasPassedInitialTimer = true
         try await loadAllServerLatency().value
+        refreshBestLocation()
     }
 
     private func loadAllServerLatency() -> Completable {
@@ -104,17 +107,22 @@ class LatencyRepositoryImpl: LatencyRepository {
         latencySingles.subscribe(
             onSuccess: { _ in
                 self.logger.logI("LatencyRepositoryImpl", "Successfully updated latency data.")
-                self.refreshBestLocation()
             },
             onFailure: { _ in
                 self.logger.logE("LatencyRepositoryImpl", "Failure to update latency data.")
-                self.refreshBestLocation()
             })
         .disposed(by: self.disposeBag)
 
         return latencySingles.asCompletable()
     }
-
+    
+    func checkLocationsValidity() async {
+        refreshBestLocation()
+        if !vpnStateRepository.isConnected() {
+            try? await loadLatency()
+        }
+    }
+    
     func loadStreamingServerLatency() -> Completable {
         let streamingServersToPing = serverRepository.currentServerModels
             .filter { $0.locType == "streaming" }
@@ -289,14 +297,19 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     func pickBestLocation(pingData: [PingData]) {
         let servers = serverRepository.currentServerModels
+        var locationFound = false
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
             outerLoop: for server in servers {
                 for group in server.groups where group.pingIp == lowestPingIp {
                     self.logger.logI("LatencyRepositoryImpl", "Selected best location based on pingData: \(group)")
                     locationsManager.saveBestLocation(with: "\(group.id)")
+                    locationFound = true
                     break outerLoop
                 }
             }
+        }
+        if !locationFound {
+            self.pickBestLocation()
         }
     }
 
@@ -368,7 +381,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Build and save the best location using the selected server, group, and node
     private func buildAndSaveBestLocation(group: GroupModel) -> String {
-        logger.logI("LatencyRepositoryImpl", "Saving best location: \(group.id)")
+        logger.logI("LatencyRepositoryImpl", "Saving best location: \(group.id), name: \(group.city)  country:\(group.countryCode ?? "--")")
         locationsManager.saveBestLocation(with: "\(group.id)")
         return group.city
     }

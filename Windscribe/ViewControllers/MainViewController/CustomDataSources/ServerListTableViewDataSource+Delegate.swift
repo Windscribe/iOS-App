@@ -23,29 +23,18 @@ protocol ServerListTableViewDataSource: WExpyTableViewDataSource,
                                         WExpyTableViewDataSourceDelegate,
                                         WTableViewDataSourceDelegate {
     var delegate: ServerListTableViewDelegate? { get set }
-    var bestLocation: BestLocationModel? { get set }
     var scrollHappened: Bool { get set }
 
     var serverSections: [ServerSection] { get }
 
     func updateServerList(with serverSections: [ServerSection])
     func updateShouldColapse(with value: Bool)
+    func clearBestLocation()
+    func refreshBestLocation()
 }
 
 class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
                                          ServerListTableViewDataSource {
-    var bestLocation: BestLocationModel? {
-        didSet {
-            if bestLocation != nil,
-               serverSections.first?.server?.name != Fields.Values.bestLocation,
-               let groupId = bestLocation?.groupId,
-               let serverModel = getServerModel(from: groupId) {
-                let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
-                serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
-            }
-            delegate?.reloadServerListTableView()
-        }
-    }
 
     weak var delegate: ServerListTableViewDelegate?
     var serverSections: [ServerSection] = []
@@ -55,6 +44,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     private var cancellables = Set<AnyCancellable>()
     private var favList: [Favourite] = []
     private var locationLoad: Bool = false
+    private var bestLocation: BestLocationModel? = nil
 
     private let locationsManager: LocationsManager
     private let lookAndFeelRepository: LookAndFeelRepositoryType
@@ -86,6 +76,8 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
         scrollViewDelegate = self
         expyDelegate = self
+
+        updateBestlocation(with: locationsManager.getBestLocationModel())
 
         bind()
     }
@@ -124,6 +116,31 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
                 self?.delegate?.reloadServerListTableView()
             }
             .store(in: &cancellables)
+
+        locationsManager.bestLocationUpdated
+            .sink { [weak self] _ in
+                self?.refreshBestLocation()
+            }.store(in: &cancellables)
+    }
+
+    func clearBestLocation() {
+        updateBestlocation(with: nil)
+    }
+
+    func refreshBestLocation() {
+        updateBestlocation(with: locationsManager.getBestLocationModel())
+    }
+
+    private func updateBestlocation(with value: BestLocationModel?) {
+        bestLocation = value
+        if bestLocation != nil,
+           serverSections.first?.server?.name != Fields.Values.bestLocation,
+           let groupId = bestLocation?.groupId,
+           let serverModel = getServerModel(from: groupId) {
+            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
+            serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
+        }
+        delegate?.reloadServerListTableView()
     }
 
     func updateServerList(with serverSections: [ServerSection]) {

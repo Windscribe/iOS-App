@@ -18,7 +18,6 @@ class MockSessionManager: SessionManager {
     var setSessionTimerCalled = false
     var listenForSessionChangesCalled = false
     var logoutUserCalled = false
-    var checkForSessionChangeCalled = false
     var updateSessionCalled = false
     var loginCalled = false
     var updateFromCalled = false
@@ -33,7 +32,6 @@ class MockSessionManager: SessionManager {
         setSessionTimerCalled = false
         listenForSessionChangesCalled = false
         logoutUserCalled = false
-        checkForSessionChangeCalled = false
         updateSessionCalled = false
         loginCalled = false
         updateFromCalled = false
@@ -61,9 +59,6 @@ class MockSessionManager: SessionManager {
         session = nil
     }
 
-    func checkForSessionChange() {
-        checkForSessionChangeCalled = true
-    }
     func keepSessionUpdated() {
         keepSessionUpdatedCalled = true
     }

@@ -160,7 +160,7 @@ extension MainViewController: SearchCountryViewDelegate {
         lastSelectedHeaderViewTab = selectedHeaderViewTab ?? .all
         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
         toggleSearchViews(to: true)
-        serverListTableViewDataSource?.bestLocation = nil
+        serverListTableViewDataSource.clearBestLocation()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.expandedSections = self.serverListTableView.expandedSections

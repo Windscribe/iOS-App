@@ -18,4 +18,5 @@ protocol LatencyRepository {
     func pickBestLocation(pingData: [PingData])
     func pickBestLocation()
     func refreshBestLocation()
+    func checkLocationsValidity() async
 }
