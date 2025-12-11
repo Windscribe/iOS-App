@@ -157,6 +157,8 @@ protocol Preferences {
     func getLocationType(id: String) -> LocationType?
     func saveLastNodeIP(nodeIp: String)
     func getLastNodeIP() -> String?
+    func saveIgnorePinIP(status: Bool)
+    func getIgnorePinIP() -> Bool
 
     // AspectRatio
     func saveAspectRatio(value: String)

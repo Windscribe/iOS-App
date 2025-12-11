@@ -469,7 +469,8 @@ class ViewModels: Assembly {
 
         container.register((any BridgeApiFailedViewModel).self) { r in
             BridgeApiFailedViewModelImpl(
-                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                preferences: r.resolve(Preferences.self)!
             )
         }.inObjectScope(.transient)
     }

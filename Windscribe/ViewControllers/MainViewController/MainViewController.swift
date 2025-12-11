@@ -17,6 +17,7 @@ import StoreKit
 import Swinject
 import UIKit
 import WidgetKit
+import Combine
 
 class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var preferencesTapAreaButton: LargeTapAreaImageButton!
@@ -146,26 +147,37 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func configureNotificationListeners() {
-        NotificationCenter.default.addObserver(self, selector: #selector(popoverDismissed), name: Notifications.popoverDismissed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadServerListOrder), name: Notifications.serverListOrderPrefChanged, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableViews), name: Notifications.reloadTableViews, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: Notifications.reachabilityChanged, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(checkForUnreadNotifications), name: Notifications.checkForNotifications, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(disconnectVPNIntentReceived), name: Notifications.disconnectVPN, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(connectVPNIntentReceived), name: Notifications.connectToVPN, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(enableVPNConnection), name: Notifications.configureVPN, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showCustomConfigTab), name: Notifications.showCustomConfigTab, object: nil)
+        subscriveNotification(notification: Notifications.popoverDismissed, with: popoverDismissed)
+        subscriveNotification(notification: Notifications.serverListOrderPrefChanged, with: reloadServerListOrder)
+        subscriveNotification(notification: Notifications.reloadTableViews, with: reloadTableViews)
+        subscriveNotification(notification: Notifications.reachabilityChanged, with: reachabilityChanged)
+        subscriveNotification(notification: Notifications.checkForNotifications, with: checkForUnreadNotifications)
+        subscriveNotification(notification: Notifications.disconnectVPN, with: disconnectVPNIntentReceived)
+        subscriveNotification(notification: Notifications.connectToVPN, with: connectVPNIntentReceived)
+        subscriveNotification(notification: Notifications.showCustomConfigTab, with: showCustomConfigTab)
+        subscriveNotification(notification: Notifications.configureVPN, with: enableVPNConnection)
+
         pushNotificationManager?.notification
             .compactMap { $0 }
             .sink { [weak self] in
                 self?.pushNotificationReceived(payload: $0)
             }
             .store(in: &cancellables)
+
+
         if let payload = pushNotificationManager?.notification.value {
             if payload.type == "promo" {
                 launchPromoView(payload: payload)
             }
         }
+    }
+
+    private func subscriveNotification(notification: Notification.Name, with callback: @escaping () -> Void) {
+        NotificationCenter.default.publisher(for: notification)
+            .sink { _ in
+                callback()
+            }
+            .store(in: &cancellables)
     }
 
     func launchPromoView(payload: PushNotificationPayload) {

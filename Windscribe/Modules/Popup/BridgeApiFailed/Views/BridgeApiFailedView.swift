@@ -69,7 +69,7 @@ struct BridgeApiFailedView: View, ResponsivePopupLayoutProvider {
                         .frame(maxWidth: maxWidth)
 
                         Button(action: {
-                            dismiss()
+                            viewModel.handleDismissAction()
                         }, label: {
                             Text(TextsAsset.BridgeAPI.backButton)
                                 .frame(maxWidth: .infinity)

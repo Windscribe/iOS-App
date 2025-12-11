@@ -493,7 +493,8 @@ class ViewControllerModule: Assembly {
         container.register(BridgeApiFailedView.self) { r in
             BridgeApiFailedView(
                 viewModel: BridgeApiFailedViewModelImpl(
-                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    preferences: r.resolve(Preferences.self)!
                 )
             )
         }.inObjectScope(.transient)

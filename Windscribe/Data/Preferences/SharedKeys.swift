@@ -27,6 +27,7 @@ enum SharedKeys {
     static let advanceParams = "AdvanceParams"
     static let serverSettings = "ServerSettings"
     static let lasUsedNodeIP = "LastUsedNodeIP"
+    static let ignorePinIP = "IgnorePinIP"
 
     // UserPreferenceManager
     static let orderLocationsBy = "OrderLocationsBy"
