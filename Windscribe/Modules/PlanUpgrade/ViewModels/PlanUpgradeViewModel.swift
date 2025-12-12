@@ -60,7 +60,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private var pushNotificationPayload: PushNotificationPayload?
     private var pcpID: String?
     private var selectedPlan: WindscribeInAppProduct?
-    private var mobilePlans: [MobilePlan]?
+    private var mobilePlans: [MobilePlanModel]?
     private let disposeBag = DisposeBag()
 
     init(alertManager: AlertManagerV2,

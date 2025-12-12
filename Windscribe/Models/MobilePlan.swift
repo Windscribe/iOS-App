@@ -41,6 +41,17 @@ import RealmSwift
         discount = try container.decodeIfPresent(Int.self, forKey: .discount) ?? -1
     }
 
+    convenience init(from: MobilePlanModel) {
+        self.init()
+        active = from.active
+        extId = from.extId
+        name = from.name
+        price = from.price
+        type = from.type
+        duration = from.duration
+        discount = from.discount
+    }
+
     override class func primaryKey() -> String? {
         return "extId"
     }
@@ -65,5 +76,26 @@ struct MobilePlanList: Decodable {
     func setMobilePlans(array: [MobilePlan]) {
         mobilePlans.removeAll()
         mobilePlans.append(objectsIn: array)
+    }
+}
+
+
+struct MobilePlanModel: Equatable {
+    var active: Bool = false
+    var extId: String = ""
+    var name: String = ""
+    var price: String = ""
+    var type: String = ""
+    var duration: Int = 0
+    var discount: Int = 0
+
+    init(from: MobilePlan) {
+        active = from.active
+        extId = from.extId
+        name = from.name
+        price = from.price
+        type = from.type
+        duration = from.duration
+        discount = from.discount
     }
 }

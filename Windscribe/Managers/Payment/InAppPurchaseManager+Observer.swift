@@ -50,7 +50,7 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
         }
 
         let windscribeProducts = products.map { item in
-            WindscribeInAppProduct(product: item, plans: Array(plans))
+            WindscribeInAppProduct(product: item, plans: plans.map { MobilePlanModel.init(from: $0) })
         }
         iapProducts = windscribeProducts
 

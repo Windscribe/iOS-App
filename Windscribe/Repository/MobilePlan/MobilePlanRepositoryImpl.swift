@@ -9,7 +9,7 @@
 import Foundation
 
 protocol MobilePlanRepository {
-    func getMobilePlans(promo: String?) async throws -> [MobilePlan]
+    func getMobilePlans(promo: String?) async throws -> [MobilePlanModel]
 }
 
 class MobilePlanRepositoryImpl: MobilePlanRepository {
@@ -23,18 +23,18 @@ class MobilePlanRepositoryImpl: MobilePlanRepository {
         self.logger = logger
     }
 
-    func getMobilePlans(promo: String?) async throws -> [MobilePlan] {
+    func getMobilePlans(promo: String?) async throws -> [MobilePlanModel] {
         do {
             let plans = try await apiManager.getMobileBillingPlans(promo: promo)
             localDatabase.saveMobilePlans(mobilePlansList: Array(plans.mobilePlans))
 
-            return Array(plans.mobilePlans)
+            return Array(plans.mobilePlans).map { MobilePlanModel.init(from: $0) }
         } catch {
             logger.logE("MobilePlanRepository", "Error getting mobile plans: \(error)")
 
             // Fallback to cached data if available and not empty
             if let cachedPlans = localDatabase.getMobilePlans(), !cachedPlans.isEmpty {
-                return cachedPlans
+                return cachedPlans.map { MobilePlanModel.init(from: $0) }
             } else {
                 throw error
             }
