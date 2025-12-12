@@ -147,15 +147,15 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func configureNotificationListeners() {
-        subscriveNotification(notification: Notifications.popoverDismissed, with: popoverDismissed)
-        subscriveNotification(notification: Notifications.serverListOrderPrefChanged, with: reloadServerListOrder)
-        subscriveNotification(notification: Notifications.reloadTableViews, with: reloadTableViews)
-        subscriveNotification(notification: Notifications.reachabilityChanged, with: reachabilityChanged)
-        subscriveNotification(notification: Notifications.checkForNotifications, with: checkForUnreadNotifications)
-        subscriveNotification(notification: Notifications.disconnectVPN, with: disconnectVPNIntentReceived)
-        subscriveNotification(notification: Notifications.connectToVPN, with: connectVPNIntentReceived)
-        subscriveNotification(notification: Notifications.showCustomConfigTab, with: showCustomConfigTab)
-        subscriveNotification(notification: Notifications.configureVPN, with: enableVPNConnection)
+        subscribeNotification(notification: Notifications.popoverDismissed, with: popoverDismissed)
+        subscribeNotification(notification: Notifications.serverListOrderPrefChanged, with: reloadServerListOrder)
+        subscribeNotification(notification: Notifications.reloadTableViews, with: reloadTableViews)
+        subscribeNotification(notification: Notifications.reachabilityChanged, with: reachabilityChanged)
+        subscribeNotification(notification: Notifications.checkForNotifications, with: checkForUnreadNotifications)
+        subscribeNotification(notification: Notifications.disconnectVPN, with: disconnectVPNIntentReceived)
+        subscribeNotification(notification: Notifications.connectToVPN, with: connectVPNIntentReceived)
+        subscribeNotification(notification: Notifications.showCustomConfigTab, with: showCustomConfigTab)
+        subscribeNotification(notification: Notifications.configureVPN, with: enableVPNConnection)
 
         pushNotificationManager?.notification
             .compactMap { $0 }
@@ -164,7 +164,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             }
             .store(in: &cancellables)
 
-
         if let payload = pushNotificationManager?.notification.value {
             if payload.type == "promo" {
                 launchPromoView(payload: payload)
@@ -172,7 +171,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }
     }
 
-    private func subscriveNotification(notification: Notification.Name, with callback: @escaping () -> Void) {
+    private func subscribeNotification(notification: Notification.Name, with callback: @escaping () -> Void) {
         NotificationCenter.default.publisher(for: notification)
             .sink { _ in
                 callback()

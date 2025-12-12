@@ -102,7 +102,8 @@ extension VPNManagerImpl {
     ///   - port: The port number for the protocol.
     /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
     private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
-        configManager.clearFailedNode()
+        // Clear failed nodes if user changed location, keep them if same location for retry filtering
+        configManager.clearFailedNodesIfLocationChanged(currentLocationId: id)
         return configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings(): self.makeUserSettings(), connectionType: connectionType)
             .catch { error in
                 self.logger.logE("VPNConfiguration", "Fail to connect with error: \(error).")

@@ -34,6 +34,7 @@ class MockPreferences: Preferences {
     var mockBestLocation: String = ""
     var clearWireGuardConfigurationCalled = false
     var mockLastNodeIP: String?
+    var mockIgnorePinIP: Bool?
 
     // UserSessionRepository tracking
     var sessionAuthToReturn: String?
@@ -630,5 +631,13 @@ class MockPreferences: Preferences {
 
     func getSelectedPortSync() -> String? {
         return mockSelectedPort
+    }
+
+    func saveIgnorePinIP(status: Bool) {
+        mockIgnorePinIP = status
+    }
+
+    func getIgnorePinIP() -> Bool {
+        return mockIgnorePinIP ?? false
     }
 }
