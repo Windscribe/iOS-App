@@ -15,6 +15,7 @@ import RealmSwift
 import Combine
 
 class LatencyRepositoryImpl: LatencyRepository {
+
     private let pingManager: LocalPingManager
     private let database: LocalDatabase
     private let logger: FileLogger
@@ -26,7 +27,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let userSessionRepository: UserSessionRepository
 
     private let disposeBag = DisposeBag()
-    let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
+    let latency: BehaviorSubject<[PingDataModel]> = BehaviorSubject(value: [])
     private let favList: BehaviorSubject<[Favourite]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
@@ -52,7 +53,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.serverRepository = serverRepository
         self.userSessionRepository = userSessionRepository
 
-        latency.onNext(self.database.getAllPingData())
+        latency.onNext(self.database.getAllPingData().map { PingDataModel(from: $0) })
         observeFavouriteList()
 
         refreshBestLocation()
@@ -66,9 +67,9 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     /// Returns latency data for ip.
-    func getPingData(ip: String) -> PingData? {
+    func getPingData(ip: String) -> PingDataModel? {
         let value = try? latency.value()
-        return value?.first { !$0.isInvalidated && $0.ip == ip }
+        return value?.first { $0.ip == ip }
     }
 
     func loadLatency() async throws {
@@ -103,7 +104,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         let latencySingles = createLatencyTask(from: pingServers)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
+            .timeout(.seconds(20), other: Single<[PingDataModel]>.error(RxError.timeout), scheduler: MainScheduler.instance)
         latencySingles.subscribe(
             onSuccess: { _ in
                 self.logger.logI("LatencyRepositoryImpl", "Successfully updated latency data.")
@@ -132,16 +133,16 @@ class LatencyRepositoryImpl: LatencyRepository {
         return createLatencyTask(from: streamingServersToPing)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
+            .do(onSuccess: { _ in self.latency.onNext(self.getPingDataModel()) })
             .asCompletable()
     }
 
-    func loadStaticIpLatency() -> Single<[PingData]> {
+    func loadStaticIpLatency() -> Single<[PingDataModel]> {
         createLatencyTask(from: getStaticPingAndHosts())
             .observe(on: MainScheduler.instance)
             .do(onSuccess: { _ in
                 DispatchQueue.main.async {
-                    self.latency.onNext(self.database.getAllPingData())
+                    self.latency.onNext(self.getPingDataModel())
                 }
             })
     }
@@ -150,20 +151,23 @@ class LatencyRepositoryImpl: LatencyRepository {
         getCustomConfigLatency()
             .observe(on: MainScheduler.instance)
             .do(onSuccess: { _ in
-                let pingData = self.database.getAllPingData()
-                self.latency.onNext(pingData)
+                self.latency.onNext(self.getPingDataModel())
             }).asCompletable()
     }
 
-    private func getCustomConfigLatency() -> Single<[PingData]> {
-        return Single<[PingData]>.create { completion in
+    private func getPingDataModel() -> [PingDataModel] {
+        database.getAllPingData().map { PingDataModel(from: $0)}
+    }
+
+    private func getCustomConfigLatency() -> Single<[PingDataModel]> {
+        return Single<[PingDataModel]>.create { completion in
             autoreleasepool {
                 DispatchQueue.global().async {
                 let threadSafeConfigs = Array(self.database.getCustomConfigs()).map { ThreadSafeReference(to: $0) }
-                var tasks: [Single<PingData>] = []
+                var tasks: [Single<PingDataModel>] = []
                 if let realm = try? Realm() {
                     for ref in threadSafeConfigs {
-                        let task = Single<PingData>.create { innerCompletion in
+                        let task = Single<PingDataModel>.create { innerCompletion in
                             autoreleasepool {
                                     if let config = realm.resolve(ref) {
                                         let pingData = PingData(ip: config.serverAddress, latency: -1)
@@ -172,7 +176,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                                                 pingData.latency = minTime
                                                 self.database.addPingData(pingData: pingData)
                                             }
-                                            innerCompletion(.success(pingData))
+                                            innerCompletion(.success(PingDataModel(from: pingData)))
                                         }
                                     } else {
                                         innerCompletion(.failure(Realm.Error(.fail)))
@@ -216,7 +220,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 #endif
     }
 
-    private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
+    private func findLowestLatencyIP(from pingDataArray: [PingDataModel]) -> String? {
         let pingIps = serverRepository.currentServerModels
             .compactMap { region in Array(region.groups)}
             .reduce([], +)
@@ -233,18 +237,18 @@ class LatencyRepositoryImpl: LatencyRepository {
         return minLatencyPingData?.ip
     }
 
-    private func createLatencyTask(from: [(String, String)]) -> Single<[PingData]> {
+    private func createLatencyTask(from: [(String, String)]) -> Single<[PingDataModel]> {
         let maxConcurrentTasks = 20
         return Single.create { single in
             let pingPublishers = from.map { (ip, host) in
-                Future<PingData, Never> { promise in
+                Future<PingDataModel, Never> { promise in
                     var hasDeliveredResult = false
                     let timeoutCancellable = Just(PingData(ip: ip, latency: -1))
                         .delay(for: .seconds(3), scheduler: DispatchQueue.global(qos: .userInitiated))
                         .sink {
                             if !hasDeliveredResult {
                                 hasDeliveredResult = true
-                                promise(.success($0))
+                                promise(.success(PingDataModel(from: $0)))
                             }
                         }
 
@@ -257,7 +261,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                             if success {
                                 self.database.addPingData(pingData: pingData)
                             }
-                            promise(.success(pingData))
+                            promise(.success(PingDataModel(from: pingData)))
                         }
                     }
                 }
@@ -290,12 +294,12 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func refreshBestLocation() {
-        let pingData = self.database.getAllPingData()
+        let pingData = self.database.getAllPingData().map { PingDataModel.init(from: $0) }
         self.latency.onNext(pingData)
         self.pickBestLocation(pingData: pingData)
     }
 
-    func pickBestLocation(pingData: [PingData]) {
+    func pickBestLocation(pingData: [PingDataModel]) {
         let servers = serverRepository.currentServerModels
         var locationFound = false
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {

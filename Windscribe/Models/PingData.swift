@@ -19,11 +19,27 @@ import RealmSwift
         self.latency = latency
     }
 
+    convenience init(from: PingDataModel) {
+        self.init()
+        ip = from.ip
+        latency = from.latency
+    }
+
     override static func primaryKey() -> String? {
         return "ip"
     }
 
     override var description: String {
         return "IP: \(ip) Latency: \(latency)"
+    }
+}
+
+struct PingDataModel {
+    var ip: String = ""
+    var latency = -1
+
+    init(from: PingData) {
+        ip = from.ip
+        latency = from.latency
     }
 }
