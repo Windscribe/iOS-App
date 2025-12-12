@@ -18,8 +18,8 @@ enum UpgradeState {
 }
 
 enum Plans {
-    case discounted(WindscribeInAppProduct, MobilePlan)
-    case standardPlans([WindscribeInAppProduct], [MobilePlan])
+    case discounted(WindscribeInAppProduct, MobilePlanModel)
+    case standardPlans([WindscribeInAppProduct], [MobilePlanModel])
     case unableToLoad
 }
 
@@ -74,7 +74,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     private var cancellables = Set<AnyCancellable>()
     var pcpID: String?
     var pushNotificationPayload: PushNotificationPayload?
-    private var mobilePlans: [MobilePlan]?
+    private var mobilePlans: [MobilePlanModel]?
 
     init(alertManager: AlertManagerV2,
          localDatabase: LocalDatabase,

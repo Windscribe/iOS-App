@@ -23,7 +23,7 @@ struct WindscribeInAppProduct {
     var planDiscount = ""
     var product: SKProduct
 
-    init(product: SKProduct, plans: [MobilePlan]) {
+    init(product: SKProduct, plans: [MobilePlanModel]) {
         self.product = product
         price = formatterCurrency(number: product.price, locale: product.priceLocale) ?? ""
         planProductPrice = product.price
@@ -150,7 +150,7 @@ struct WindscribeInAppProduct {
         return NSNumber(value: Double(formattedPrice) ?? fullPrice)
     }
 
-    private func setupDiscountLabel(product: SKProduct, plan: MobilePlan) -> NSMutableAttributedString? {
+    private func setupDiscountLabel(product: SKProduct, plan: MobilePlanModel) -> NSMutableAttributedString? {
 
         let originalPrice = fullPlanPriceFromDiscount(price: product.price, discountPercentage: plan.discount)
 

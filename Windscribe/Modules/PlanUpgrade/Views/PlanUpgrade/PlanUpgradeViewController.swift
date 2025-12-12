@@ -271,7 +271,7 @@ class PlanUpgradeViewController: WSUIViewController {
 
     // MARK: Render Plan Details
 
-    private func renderStandardPlans(applePlans: [WindscribeInAppProduct], appPlans: [MobilePlan]) {
+    private func renderStandardPlans(applePlans: [WindscribeInAppProduct], appPlans: [MobilePlanModel]) {
         // Standard Plans are monthly and yearly
         guard applePlans.count >= 2 else {
             endLoading()
@@ -296,7 +296,7 @@ class PlanUpgradeViewController: WSUIViewController {
         endLoading()
     }
 
-    private func renderPromoPlans(applePlan: WindscribeInAppProduct, appPlan: MobilePlan) {
+    private func renderPromoPlans(applePlan: WindscribeInAppProduct, appPlan: MobilePlanModel) {
         firstPlanExtID = appPlan.extId
         selectDesiredPlan(planExtID: firstPlanExtID)
 

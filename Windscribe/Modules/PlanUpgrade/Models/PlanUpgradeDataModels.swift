@@ -17,8 +17,8 @@ enum PlanUpgradeState {
 }
 
 enum PlanTypes {
-    case discounted(WindscribeInAppProduct, MobilePlan)
-    case standardPlans([WindscribeInAppProduct], [MobilePlan])
+    case discounted(WindscribeInAppProduct, MobilePlanModel)
+    case standardPlans([WindscribeInAppProduct], [MobilePlanModel])
     case unableToLoad
 }
 
