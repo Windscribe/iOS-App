@@ -40,7 +40,7 @@ class MainViewModelImpl: MainViewModel {
     var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
     var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
-    let latencies = BehaviorSubject<[PingData]>(value: [])
+    let latencies = BehaviorSubject<[PingDataModel]>(value: [])
     var notices = CurrentValueSubject<[Notice], Never>([])
     private var isFirstNotificationCheck = true  // Skip auto-show on first check (stale database data)
     var selectedProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)

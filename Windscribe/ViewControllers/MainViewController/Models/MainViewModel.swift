@@ -20,7 +20,7 @@ protocol MainViewModel {
     var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
     var oldSession: SessionModel? { get }
     var locationOrderBy: BehaviorSubject<String> { get }
-    var latencies: BehaviorSubject<[PingData]> { get }
+    var latencies: BehaviorSubject<[PingDataModel]> { get }
     var notices: CurrentValueSubject<[Notice], Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var selectedProtocol: BehaviorSubject<String> { get }
