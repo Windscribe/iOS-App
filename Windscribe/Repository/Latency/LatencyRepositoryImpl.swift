@@ -115,14 +115,14 @@ class LatencyRepositoryImpl: LatencyRepository {
 
         return latencySingles.asCompletable()
     }
-    
+
     func checkLocationsValidity() async {
         refreshBestLocation()
         if !vpnStateRepository.isConnected() {
             try? await loadLatency()
         }
     }
-    
+
     func loadStreamingServerLatency() -> Completable {
         let streamingServersToPing = serverRepository.currentServerModels
             .filter { $0.locType == "streaming" }

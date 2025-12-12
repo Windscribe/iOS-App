@@ -138,12 +138,12 @@ class SessionManagerImpl: SessionManager {
     func updateSession(_ appleID: String) async throws {
         try await updateSessionUsing(token: appleID)
     }
-    
+
     @MainActor
     private func updateSessionUsing(token: String?, retryCount: Int = 0) async throws {
         // Check if update is already in progress
         guard !sessionFetchInProgress else { return }
-        
+
         sessionFetchInProgress = true
         let session = try await apiManager.getSession(token)
         logger.logI("SessionManager", "Session updated for \(session.username)")
@@ -218,7 +218,7 @@ class SessionManagerImpl: SessionManager {
 
     private func checkLocationValidity() {
         Task { @MainActor in
-            
+
         }
     }
 

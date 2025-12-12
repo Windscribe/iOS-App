@@ -385,20 +385,26 @@ extension ConfigurationsManager {
             // Filter out nodes under maintenance
             var validNodes = nodes.filter { $0.forceDisconnect == false }
 
-            // Filter out previously failed node to avoid retry on same host
-            if let failedHostname = failedNodeHostname {
+            // Filter out all previously failed nodes to avoid retry
+            if !failedNodeHostnames.isEmpty {
                 let beforeCount = validNodes.count
-                validNodes = validNodes.filter { $0.hostname != failedHostname }
-                if validNodes.count < beforeCount {
-                    logger.logI("ConfigurationsManager", "Excluded failed node \(failedHostname) from selection")
+                validNodes = validNodes.filter { !failedNodeHostnames.contains($0.hostname) }
+                let excludedCount = beforeCount - validNodes.count
+                if excludedCount > 0 {
+                    logger.logI("ConfigurationsManager", "Excluded \(excludedCount) failed nodes from selection, \(validNodes.count) nodes remaining")
                 }
-                // Clear immediately after filtering - only needed for this retry
-                clearFailedNode()
             }
 
-            // If no valid nodes remain after filtering, throw error (handles single-node edge case)
+            // If all nodes exhausted after filtering, clear failed list and retry
+            if validNodes.isEmpty && !failedNodeHostnames.isEmpty {
+                logger.logI("ConfigurationsManager", "All nodes tried, clearing failed list and retrying from scratch")
+                clearFailedNodes()
+                validNodes = nodes.filter { $0.forceDisconnect == false }
+            }
+
+            // If still no valid nodes, throw error
             guard !validNodes.isEmpty else {
-                logger.logE("ConfigurationsManager", "No valid nodes available after filtering failed nodes")
+                logger.logE("ConfigurationsManager", "No valid nodes available in location")
                 throw VPNConfigurationErrors.noValidNodeFound
             }
 

@@ -38,6 +38,8 @@ extension VPNManagerImpl {
                     self.checkIfUserIsOutOfData()
                 case .connected:
                     self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Connected")
+                    // Clear all failed nodes on successful connection - fresh start for next connection attempt
+                    self.configManager.clearFailedNodes()
                     vpnStateRepository.setUntrustedOneTimeOnlySSID("")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                         self?.updateUserIpIfRequired()

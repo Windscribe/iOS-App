@@ -39,7 +39,7 @@ class UserSessionRepositoryTests: XCTestCase {
 
     // MARK: GetUpdatedUser Tests
 
-    func test_updateSession() {
+    func test_updateSession() async {
         // Given
         let mockSession = createMockSessionModel()
         let mockSessionSecond = createMockSessionModelSecond()
@@ -47,16 +47,16 @@ class UserSessionRepositoryTests: XCTestCase {
         XCTAssertNil(repository.sessionModel, "Session should be nil at the beginning")
         XCTAssertNil(repository.oldSessionModel, "Old Session should be nil at the beginning")
 
-        repository.update(sessionModel: mockSession)
+        await repository.update(sessionModel: mockSession)
         XCTAssertEqual(repository.sessionModel, mockSession, "The session should now update to the new one")
         XCTAssertNil(repository.oldSessionModel, "Old Session should still be nil")
 
-        repository.update(sessionModel: mockSessionSecond)
+        await repository.update(sessionModel: mockSessionSecond)
         XCTAssertEqual(repository.sessionModel, mockSessionSecond, "The session should now update to the new one")
         XCTAssertEqual(repository.oldSessionModel, mockSession, "Old Session should now update to the first one")
     }
 
-    func test_clearSession() {
+    func test_clearSession() async {
         // Given
         let mockSession = createMockSessionModel()
         let mockSessionSecond = createMockSessionModelSecond()
@@ -64,8 +64,8 @@ class UserSessionRepositoryTests: XCTestCase {
         XCTAssertNil(repository.sessionModel, "Session should be nil at the beginning")
         XCTAssertNil(repository.oldSessionModel, "Old Session should be nil at the beginning")
 
-        repository.update(sessionModel: mockSession)
-        repository.update(sessionModel: mockSessionSecond)
+        await repository.update(sessionModel: mockSession)
+        await repository.update(sessionModel: mockSessionSecond)
         XCTAssertNotNil(repository.sessionModel, "The session should not be nil after 2 updates")
         XCTAssertNotNil(repository.oldSessionModel, "Old Session should not be nil after 2 updates")
 
@@ -74,15 +74,15 @@ class UserSessionRepositoryTests: XCTestCase {
         XCTAssertNil(repository.oldSessionModel, "Old Session should be nil after clear")
     }
 
-    func test_canAccesstoProLocation() {
+    func test_canAccesstoProLocation() async {
         // Given
         let mockSession = createMockSessionModel()
         let mockSessionSecond = createMockSessionModelSecond()
 
-        repository.update(sessionModel: mockSession)
+        await repository.update(sessionModel: mockSession)
         XCTAssertTrue(repository.canAccesstoProLocation(), "First Session IS pro and CAN Access to Pro Location")
 
-        repository.update(sessionModel: mockSessionSecond)
+        await repository.update(sessionModel: mockSessionSecond)
         XCTAssertFalse(repository.canAccesstoProLocation(), "Second Session is NOT pro and CANNOT Access to Pro Location")
     }
 

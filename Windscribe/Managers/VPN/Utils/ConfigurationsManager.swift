@@ -44,9 +44,12 @@ class ConfigurationsManager {
     var reloadManagersTrigger = CurrentValueSubject<Void, Never>(())
     var cancellables = Set<AnyCancellable>()
 
-    /// Tracks the node hostname that failed during current connection attempt
-    /// Used to prevent retrying the same failed node on second attempt
-    var failedNodeHostname: String?
+    /// Tracks all node hostnames that failed during current location session
+    /// Cleared when location changes, all nodes exhausted, or connection succeeds
+    var failedNodeHostnames: Set<String> = []
+
+    /// Tracks current location ID to detect location changes and clear failed nodes
+    private var lastLocationId: String?
 
     /// Wait for disconnect event after manager is disabled.
     let disconnectWaitTimeout = 5.0
@@ -310,17 +313,28 @@ class ConfigurationsManager {
 
     // MARK: - Failed Node Tracking
 
-    /// Saves the failed node hostname to exclude it from retry
+    /// Adds the failed node hostname to the exclusion list for current location session
     func updateFailedNode() {
-        failedNodeHostname = preferences.getLastNodeIP()
-        logger.logI("ConfigurationsManager", "Marked node as failed: \(failedNodeHostname ?? "nil")")
+        if let hostname = preferences.getLastNodeIP() {
+            failedNodeHostnames.insert(hostname)
+            logger.logI("ConfigurationsManager", "Added failed node: \(hostname), total failed: \(failedNodeHostnames.count)")
+        }
     }
 
-    /// Clears the failed node (called on success or disconnect)
-    func clearFailedNode() {
-        if let hostname = failedNodeHostname {
-            logger.logI("ConfigurationsManager", "Cleared failed node: \(hostname)")
-            failedNodeHostname = nil
+    /// Clears all failed nodes (called on success, location change, or all nodes exhausted)
+    func clearFailedNodes() {
+        if !failedNodeHostnames.isEmpty {
+            logger.logI("ConfigurationsManager", "Cleared \(failedNodeHostnames.count) failed nodes")
+            failedNodeHostnames.removeAll()
+        }
+    }
+
+    /// Clears failed nodes if location has changed
+    func clearFailedNodesIfLocationChanged(currentLocationId: String) {
+        if lastLocationId != currentLocationId {
+            logger.logI("ConfigurationsManager", "Location changed from \(lastLocationId ?? "nil") to \(currentLocationId)")
+            clearFailedNodes()
+            lastLocationId = currentLocationId
         }
     }
 }
