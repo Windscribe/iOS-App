@@ -147,15 +147,41 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func configureNotificationListeners() {
-        subscribeNotification(notification: Notifications.popoverDismissed, with: popoverDismissed)
-        subscribeNotification(notification: Notifications.serverListOrderPrefChanged, with: reloadServerListOrder)
-        subscribeNotification(notification: Notifications.reloadTableViews, with: reloadTableViews)
-        subscribeNotification(notification: Notifications.reachabilityChanged, with: reachabilityChanged)
-        subscribeNotification(notification: Notifications.checkForNotifications, with: checkForUnreadNotifications)
-        subscribeNotification(notification: Notifications.disconnectVPN, with: disconnectVPNIntentReceived)
-        subscribeNotification(notification: Notifications.connectToVPN, with: connectVPNIntentReceived)
-        subscribeNotification(notification: Notifications.showCustomConfigTab, with: showCustomConfigTab)
-        subscribeNotification(notification: Notifications.configureVPN, with: enableVPNConnection)
+        NotificationCenter.default.publisher(for: Notifications.popoverDismissed)
+            .sink { [weak self] _ in self?.popoverDismissed() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.serverListOrderPrefChanged)
+            .sink { [weak self] _ in self?.reloadServerListOrder() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.reloadTableViews)
+            .sink { [weak self] _ in self?.reloadTableViews() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.reachabilityChanged)
+            .sink { [weak self] _ in self?.reachabilityChanged() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.checkForNotifications)
+            .sink { [weak self] _ in self?.checkForUnreadNotifications() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.disconnectVPN)
+            .sink { [weak self] _ in self?.disconnectVPNIntentReceived() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.connectToVPN)
+            .sink { [weak self] _ in self?.connectVPNIntentReceived() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.showCustomConfigTab)
+            .sink { [weak self] _ in self?.showCustomConfigTab() }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.configureVPN)
+            .sink { [weak self] _ in self?.enableVPNConnection() }
+            .store(in: &cancellables)
 
         pushNotificationManager?.notification
             .compactMap { $0 }
@@ -169,14 +195,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 launchPromoView(payload: payload)
             }
         }
-    }
-
-    private func subscribeNotification(notification: Notification.Name, with callback: @escaping () -> Void) {
-        NotificationCenter.default.publisher(for: notification)
-            .sink { _ in
-                callback()
-            }
-            .store(in: &cancellables)
     }
 
     func launchPromoView(payload: PushNotificationPayload) {
@@ -299,6 +317,10 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func openConnectionChangeDialog() {
         router?.routeTo(to: RouteID.protocolSwitch(type: .change, error: nil), from: self)
+    }
+
+    deinit {
+        print("MainViewController deinit called")
     }
 }
 

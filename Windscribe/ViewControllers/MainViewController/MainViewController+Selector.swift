@@ -189,9 +189,9 @@ extension MainViewController {
     }
 
     @objc func loadServerList() {
-        viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
+        viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] _ in
             DispatchQueue.main.async {
-                self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
+                self?.loadServerTable(servers: (try? self?.viewModel.serverList.value()) ?? [])
             }
         }).disposed(by: disposeBag)
         reloadFavouriteOrder()

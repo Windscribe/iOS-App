@@ -29,8 +29,8 @@ extension MainViewController {
                         self.wifiInfoView.updateWifiName(name: TextsAsset.NetworkSecurity.unknownNetwork)
                     }
                 }
-            }, onError: { _ in
-                self.wifiInfoView.updateWifiName(name: TextsAsset.noNetworksAvailable)
+            }, onError: { [weak self] _ in
+                self?.wifiInfoView.updateWifiName(name: TextsAsset.noNetworksAvailable)
             }).disposed(by: disposeBag)
     }
 }
