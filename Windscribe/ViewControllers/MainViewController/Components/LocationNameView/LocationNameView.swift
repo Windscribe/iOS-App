@@ -10,12 +10,13 @@ import UIKit
 import Combine
 
 protocol LocationNameViewModel {
-    var locationInfoUpdatedTrigger: CurrentValueSubject<LocationUIInfo?, Never> { get }
+    var locationInfoUpdatedTrigger: PassthroughSubject<Void, Never> { get }
+    func getInfo() -> LocationUIInfo?
 }
 
 class LocationNameViewModelImpl: LocationNameViewModel {
 
-    let locationInfoUpdatedTrigger = CurrentValueSubject<LocationUIInfo?, Never>(nil)
+    let locationInfoUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     private let languageManager: LanguageManager
     private let locationsManager: LocationsManager
@@ -27,15 +28,32 @@ class LocationNameViewModelImpl: LocationNameViewModel {
         self.languageManager = languageManager
         self.locationsManager = locationsManager
 
-        self.locationInfoUpdatedTrigger.send(locationsManager.getLocationUIInfo())
+        self.locationInfoUpdatedTrigger.send()
 
         locationsManager.selectedLocationUpdated
-            .combineLatest(locationsManager.bestLocationUpdated, languageManager.activelanguage)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
             guard let self = self else { return }
-                self.locationInfoUpdatedTrigger.send(locationsManager.getLocationUIInfo())
+                self.locationInfoUpdatedTrigger.send()
         }.store(in: &cancellables)
+
+        locationsManager.bestLocationUpdated
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+            guard let self = self else { return }
+                self.locationInfoUpdatedTrigger.send()
+        }.store(in: &cancellables)
+
+        languageManager.activelanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+            guard let self = self else { return }
+                self.locationInfoUpdatedTrigger.send()
+        }.store(in: &cancellables)
+    }
+
+    func getInfo() -> LocationUIInfo? {
+        locationsManager.getLocationUIInfo()
     }
 }
 
@@ -95,7 +113,7 @@ class LocationNameView: UIView {
         viewModel.locationInfoUpdatedTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] info in
-            guard let self = self, let info = info else { return }
+            guard let self = self, let info = self.viewModel.getInfo() else { return }
                 self.update(mainName: info.cityName, nickName: info.nickName)
         }.store(in: &cancellables)
     }

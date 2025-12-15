@@ -37,7 +37,7 @@ protocol LocationsManager {
     func checkForForceDisconnect() -> Bool
 
     var selectedLocationUpdated: CurrentValueSubject<Bool, Never> { get }
-    var bestLocationUpdated: PassthroughSubject<Void, Never> { get }
+    var bestLocationUpdated: CurrentValueSubject<String, Never> { get }
 }
 
 class LocationsManagerImpl: LocationsManager {
@@ -52,7 +52,7 @@ class LocationsManagerImpl: LocationsManager {
     private var cancellables = Set<AnyCancellable>()
 
     let selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
-    let bestLocationUpdated = PassthroughSubject<Void, Never>()
+    let bestLocationUpdated = CurrentValueSubject<String, Never>("")
 
     init(localDatabase: LocalDatabase,
          preferences: Preferences,
@@ -168,7 +168,7 @@ class LocationsManagerImpl: LocationsManager {
         preferences.saveBestLocation(with: locationID)
         self.logger.logI("LocationsManager", "Saved BestLocation ID: \(locationID)")
         checkLocationValidity()
-        bestLocationUpdated.send(())
+        bestLocationUpdated.send(locationID)
     }
 
     func selectBestLocation(with locationID: String) {
