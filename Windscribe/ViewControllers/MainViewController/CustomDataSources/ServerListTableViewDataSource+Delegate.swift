@@ -247,10 +247,10 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
                 cell.serverCellViewModel = ServerSectionCellModel()
             }
 
-            if let expanded = tableView.expandedSections[section] {
+            if let expanded = tableView.expandedSections[section], section < serverSections.count {
                 serverSections[section].collapsed = !expanded
             }
-            if serverSections.count > 0 {
+            if section < serverSections.count {
                 cell.serverCellViewModel?.update(serverModel: serverSections[section].server,
                                                  locationLoad: locationLoad,
                                                  isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
@@ -267,6 +267,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     }
 
     func changeForSection(tableView: UITableView, state: ExpyState, section: Int) {
+        guard section < serverSections.count else { return }
         guard let cell = tableView.cellForRow(at: IndexPath(item: 0, section: section)) as? ServerSectionCell else { return }
         switch state {
         case .willExpand:
