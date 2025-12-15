@@ -305,7 +305,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
             outerLoop: for server in servers {
                 for group in server.groups where group.pingIp == lowestPingIp {
-                    self.logger.logI("LatencyRepositoryImpl", "Selected best location based on pingData: \(group)")
+                    self.logger.logI("LatencyRepositoryImpl", "Selected best location based on pingData: \(group.countryCode ?? "??") \(group.city) \(group.nick)")
                     locationsManager.saveBestLocation(with: "\(group.id)")
                     locationFound = true
                     break outerLoop

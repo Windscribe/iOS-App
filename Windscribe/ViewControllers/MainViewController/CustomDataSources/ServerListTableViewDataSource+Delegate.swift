@@ -121,6 +121,11 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             .sink { [weak self] _ in
                 self?.refreshBestLocation()
             }.store(in: &cancellables)
+
+        locationsManager.selectedLocationUpdated
+            .sink { [weak self] _ in
+                self?.refreshBestLocation()
+            }.store(in: &cancellables)
     }
 
     func clearBestLocation() {
