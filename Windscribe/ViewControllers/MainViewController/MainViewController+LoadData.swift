@@ -45,8 +45,8 @@ extension MainViewController {
                 favNodesListTableViewDataSource.updateFavoriteList(with: orderedFavList)
             }
 
-        }, onError: { error in
-            self.logger.logE("MainViewController", "Realm server list notification error \(error.localizedDescription)")
+        }, onError: { [weak self] error in
+            self?.logger.logE("MainViewController", "Realm server list notification error \(error.localizedDescription)")
 
         }).disposed(by: disposeBag)
     }
@@ -65,8 +65,8 @@ extension MainViewController {
                 self.loadStaticIPLatencyValues()
             }
 
-        }, onError: { [self] error in
-            self.logger.logE("MainViewController", "Realm static ip list notification error \(error.localizedDescription)")
+        }, onError: { [weak self] error in
+            self?.logger.logE("MainViewController", "Realm static ip list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
     }
 
@@ -80,8 +80,8 @@ extension MainViewController {
                 customConfigs.append(result.getModel())
             }
             customConfigListTableViewDataSource.updateCustomConfigList(with: customConfigs)
-        }, onError: { [self] error in
-            self.logger.logE("MainViewController", "Realm custom config list notification error \(error.localizedDescription)")
+        }, onError: { [weak self] error in
+            self?.logger.logE("MainViewController", "Realm custom config list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
     }
 
@@ -111,9 +111,13 @@ extension MainViewController {
             if self.vpnConnectionViewModel.isDisconnected() || force ||
                 self.isAnyRefreshControlIsRefreshing() {
                 if self.vpnConnectionViewModel.isBestLocationSelected(), connectToBestLocation {
-                    Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.latencyLoadTimeOutWithSelectAndConnectBestLocation), userInfo: nil, repeats: false)
+                    Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+                        self?.latencyLoadTimeOutWithSelectAndConnectBestLocation()
+                    }
                 } else {
-                    Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.latencyLoadTimeOut), userInfo: nil, repeats: false)
+                    Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+                        self?.latencyLoadTimeOut()
+                    }
                 }
             } else {
                 self.logger.logD("MainViewController", "Connected to VPN Stopping latency refresh.")

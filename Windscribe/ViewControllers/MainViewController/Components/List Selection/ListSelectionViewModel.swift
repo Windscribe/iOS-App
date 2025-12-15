@@ -18,7 +18,7 @@ enum CardHeaderButtonType {
     case startSearch
 }
 
-protocol ListSelectionViewDelegate {
+protocol ListSelectionViewDelegate: AnyObject {
     func cardHeaderWasSelected(with type: CardHeaderButtonType)
 }
 
@@ -38,7 +38,7 @@ protocol ListSelectionViewModelType {
 }
 
 class ListSelectionViewModel: ListSelectionViewModelType {
-    var delegate: ListSelectionViewDelegate?
+    weak var delegate: ListSelectionViewDelegate?
     var isActive = BehaviorSubject<Bool>(value: true)
     var isDarkMode: CurrentValueSubject<Bool, Never>
     var selectedAction = BehaviorSubject<CardHeaderButtonType>(value: .all)
