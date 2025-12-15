@@ -184,11 +184,12 @@ class FileLoggerImpl: FileLogger {
     }
 
     private func addLogBufferModelToBatch(_ logEntry: LogBufferModel, flushImmediately: Bool) {
-#if DEVELOPMENT
-        print(logEntry.toOrderedJSONString())
-#endif
         batchQueue.async { [weak self] in
             guard let self = self else { return }
+#if DEVELOPMENT
+            // Print inside async block to avoid concurrent access to DateFormatter
+            print(logEntry.toOrderedJSONString())
+#endif
             self.logBuffer.append(logEntry)
             self.currentBufferSize += logEntry.message.count + "\(logEntry.tag)".count
 

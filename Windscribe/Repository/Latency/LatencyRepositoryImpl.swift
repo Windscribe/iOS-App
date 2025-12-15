@@ -273,7 +273,10 @@ class LatencyRepositoryImpl: LatencyRepository {
                 .sink(receiveCompletion: { _ in }, receiveValue: { results in
                     single(.success(results))
                 })
-            cancellable.store(in: &self.cancellables)
+            // Store cancellable on main thread to avoid concurrent access to cancellables set
+            DispatchQueue.main.async {
+                cancellable.store(in: &self.cancellables)
+            }
             return Disposables.create {
                 cancellable.cancel()
             }

@@ -66,10 +66,9 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObjects(type: CustomConfig.self) ?? []
     }
 
-    @MainActor
-    func saveCustomConfig(customConfig: CustomConfig) async {
+    func saveCustomConfig(customConfig: CustomConfig) {
         do {
-            let realm = try await Realm()
+            let realm = try Realm()
             try realm.safeWrite {
                 realm.add(customConfig, update: .modified)
             }
