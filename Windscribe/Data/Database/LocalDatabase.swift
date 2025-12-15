@@ -50,7 +50,7 @@ protocol LocalDatabase {
     func removeNetwork(wifiNetwork: WifiNetwork)
     func addPingData(pingData: PingData)
     func getAllPingData() -> [PingData]
-    func saveCustomConfig(customConfig: CustomConfig)
+    func saveCustomConfig(customConfig: CustomConfig) async
     func removeCustomConfig(fileId: String)
     func getCustomConfig() -> Observable<[CustomConfig]>
     func getPorts(protocolType: String) -> [String]?
