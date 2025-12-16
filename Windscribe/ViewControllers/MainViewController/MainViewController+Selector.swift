@@ -204,14 +204,15 @@ extension MainViewController {
     }
 
     func loadServerTable(servers: [ServerModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
-        viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: servers) { serverSectionsOrdered in
+        viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: servers) { [weak self] serverSectionsOrdered in
+            guard let self = self else { return }
 
             self.serverListTableViewDataSource.updateServerList(with: serverSectionsOrdered)
             self.serverListTableViewDataSource.updateShouldColapse(with: shouldColapse)
 
             reloadFinishedCompletion?()
-            DispatchQueue.main.async {
-                self.reloadServerList()
+            DispatchQueue.main.async { [weak self] in
+                self?.reloadServerList()
             }
         }
     }
