@@ -108,10 +108,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                 Task {
                     do {
                         let customConfig = try await self.saveConfiguration(data: data, configInfo: configInfo)
-                        // LocationsManager call must be on main thread
-                        await MainActor.run {
-                            self.locationsManager.saveCustomConfig(withID: customConfig.id)
-                        }
+                        self.locationsManager.saveCustomConfig(withID: customConfig.id)
                         promise(.success(customConfig))
                     } catch {
                         promise(.failure(error))
