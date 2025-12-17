@@ -108,6 +108,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let customSoundPlaybackManager: CustomSoundPlaybackManaging
     let privacyStateManager: PrivacyStateManaging
     let userSessionRepository: UserSessionRepository
+    private let bridgeApiRepository: BridgeApiRepository
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -132,6 +133,7 @@ class ConnectionViewModel: ConnectionViewModelType {
          localDB: LocalDatabase,
          customSoundPlaybackManager: CustomSoundPlaybackManaging,
          privacyStateManager: PrivacyStateManaging,
+         bridgeApiRepository: BridgeApiRepository,
          userSessionRepository: UserSessionRepository) {
         self.logger = logger
         self.apiManager = apiManager
@@ -149,6 +151,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.customSoundPlaybackManager = customSoundPlaybackManager
         self.privacyStateManager = privacyStateManager
         self.userSessionRepository = userSessionRepository
+        self.bridgeApiRepository = bridgeApiRepository
 
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
@@ -426,6 +429,7 @@ extension ConnectionViewModel {
                         self.updateState(with: .connected)
                         self.checkPreferencesForTriggers()
                         self.checkShouldShowPreferredProtocol()
+                        self.bridgeApiRepository.setWSNetConnected()
                     case let .vpn(status):
                         self.logger.logI("ConnectionViewModel", "Enable connection new status: \(status.rawValue)")
                     case .validating:

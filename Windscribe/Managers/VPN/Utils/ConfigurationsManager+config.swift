@@ -349,15 +349,17 @@ extension ConfigurationsManager {
                 return node
             }
 
-            if !preferences.getIgnorePinIP() {
-                // Check if we have a pinned ip for this location
-                let pinnedNodeIp = localDatabase.getFavouriteList().first {
-                    $0.id == String(group.id) && $0.pinnedNodeIp != nil
-                }?.pinnedNodeIp
-                if let pinnedNodeIp = pinnedNodeIp,
-                   let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
+            // Check if we have a pinned ip for this location
+            let pinnedNodeIp = localDatabase.getFavouriteList().first {
+                $0.id == String(group.id) && $0.pinnedNodeIp != nil
+            }?.pinnedNodeIp
+            if let pinnedNodeIp = pinnedNodeIp,
+               let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
+                if !preferences.getIgnorePinIP() {
                     logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedNode)")
                     return pinnedNode
+                } else {
+                    updateFailedNode()
                 }
             }
 
