@@ -415,7 +415,7 @@
 
 "Apply voucher code to your account" = "Gutscheincode auf dein Konto anwenden.";
 "Sweet, Voucher code is applied successfully" = "Super, der Gutscheincode wurde erfolgreich angewendet.";
-"Your account is already on the plan this code provides" = "Ihr Konto ist bereits im Plan, den dieser Code bereitstellt.";
+"A voucher is already applied to this account or this voucher code is already used." = "Für dieses Konto ist bereits ein Gutschein eingelöst oder dieser Gutscheincode wurde bereits verwendet.";
 "Voucher provided is invalid or expired." = "Der angegebene Gutscheincode ist ungültig oder abgelaufen.";
 "Confirmed email is required." = "Eine bestätigte E-Mail-Adresse ist erforderlich.";
 "Make advanced tweaks to the way the app functions" = "Erweiterte Anpassungen an der Funktionsweise der App vornehmen.";

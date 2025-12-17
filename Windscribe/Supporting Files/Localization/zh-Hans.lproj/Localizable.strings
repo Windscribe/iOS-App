@@ -415,7 +415,7 @@
 
 "Apply voucher code to your account" = "将优惠券代码应用到您的账户。";
 "Sweet, Voucher code is applied successfully" = "太棒了，优惠券代码已成功应用！";
-"Your account is already on the plan this code provides" = "您的帐户已使用此代码提供的套餐。";
+"A voucher is already applied to this account or this voucher code is already used." = "此账户已应用优惠券或此优惠券代码已被使用。";
 "Voucher provided is invalid or expired." = "提供的优惠券代码无效或已过期。";
 "Confirmed email is required." = "需要确认的电子邮件。";
 "Make advanced tweaks to the way the app functions" = "对应用功能进行高级调整。";

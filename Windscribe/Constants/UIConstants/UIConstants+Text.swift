@@ -908,7 +908,7 @@ enum TextsAsset {
         }
 
         static var voucherAlreadyMessage: String {
-            return "Your account is already on the plan this code provides".localized
+            return "A voucher is already applied to this account or this voucher code is already used.".localized
         }
 
         static var invalidVoucherCode: String {

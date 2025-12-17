@@ -440,7 +440,7 @@
 
 "Apply voucher code to your account" = "अपने खाते में वाउचर कोड लागू करें।";
 "Sweet, Voucher code is applied successfully" = "शानदार, वाउचर कोड सफलतापूर्वक लागू किया गया।";
-"Your account is already on the plan this code provides" = "आपका खाता पहले से ही इस कोड द्वारा प्रदान की गई योजना पर है";
+"A voucher is already applied to this account or this voucher code is already used." = "इस खाते में पहले से ही एक वाउचर लागू है या इस वाउचर कोड का पहले ही उपयोग हो चुका है।";
 "Voucher provided is invalid or expired." = "प्रदान किया गया वाउचर अमान्य है या समाप्त हो चुका है।";
 "Confirmed email is required." = "पुष्ट ईमेल आवश्यक है।";
 "Make advanced tweaks to the way the app functions" = "ऐप के कार्य करने के तरीके में उन्नत समायोजन करें।";
