@@ -418,7 +418,7 @@
 
 "Apply voucher code to your account" = "バウチャーコードをアカウントに適用します。";
 "Sweet, Voucher code is applied successfully" = "バウチャーコードが正常に適用されました！";
-"Your account is already on the plan this code provides" = "あなたのアカウントは既にこのコードで提供されるプランに加入しています";
+"A voucher is already applied to this account or this voucher code is already used." = "このアカウントには既にバウチャーが適用されているか、このバウチャー コードが既に使用されています。";
 "Voucher provided is invalid or expired." = "提供されたバウチャーコードは無効または期限切れです。";
 "Confirmed email is required." = "確認済みのメールアドレスが必要です。";
 "Make advanced tweaks to the way the app functions" = "アプリの動作を高度にカスタマイズします。";

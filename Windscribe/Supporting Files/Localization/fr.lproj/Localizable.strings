@@ -415,7 +415,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 
 "Apply voucher code to your account" = "Appliquez le code de bon à votre compte.";
 "Sweet, Voucher code is applied successfully" = "Super, le code de bon a été appliqué avec succès.";
-"Your account is already on the plan this code provides" = "Votre compte est déjà sur le plan fourni par ce code.";
+"A voucher is already applied to this account or this voucher code is already used." = "Un bon d'achat a déjà été appliqué à ce compte ou ce code de bon d'achat a déjà été utilisé.";
 "Voucher provided is invalid or expired." = "Le code de bon fourni est invalide ou expiré.";
 "Confirmed email is required." = "Un e-mail confirmé est requis.";
 "Make advanced tweaks to the way the app functions" = "Apportez des ajustements avancés au fonctionnement de l’application.";

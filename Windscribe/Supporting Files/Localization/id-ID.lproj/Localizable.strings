@@ -415,7 +415,7 @@
 
 "Apply voucher code to your account" = "Terapkan kode voucher ke akun Anda.";
 "Sweet, Voucher code is applied successfully" = "Mantap, kode voucher berhasil diterapkan.";
-"Your account is already on the plan this code provides" = "Akun Anda sudah ada di paket yang disediakan kode ini.";
+"A voucher is already applied to this account or this voucher code is already used." = "Voucher sudah diterapkan ke akun ini atau kode voucher ini sudah digunakan.";
 "Voucher provided is invalid or expired." = "Kode voucher yang diberikan tidak valid atau sudah kedaluwarsa.";
 "Confirmed email is required." = "Email yang dikonfirmasi diperlukan.";
 "Make advanced tweaks to the way the app functions" = "Lakukan penyesuaian lanjutan pada cara aplikasi berfungsi.";

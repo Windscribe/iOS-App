@@ -413,7 +413,7 @@
 
 "Apply voucher code to your account" = "Applica il codice voucher al tuo account.";
 "Sweet, Voucher code is applied successfully" = "Perfetto, il codice voucher è stato applicato con successo.";
-"Your account is already on the plan this code provides" = "Il tuo account è già incluso nel piano fornito da questo codice.";
+"A voucher is already applied to this account or this voucher code is already used." = "Un buono è già stato applicato a questo account oppure questo codice buono è già stato utilizzato.";
 "Voucher provided is invalid or expired." = "Il codice voucher fornito non è valido o è scaduto.";
 "Confirmed email is required." = "È richiesta un'email confermata.";
 "Make advanced tweaks to the way the app functions" = "Apporta modifiche avanzate al funzionamento dell'app.";

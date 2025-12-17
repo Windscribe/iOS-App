@@ -417,7 +417,7 @@
 
 "Apply voucher code to your account" = "Применить код ваучера к вашему аккаунту.";
 "Sweet, Voucher code is applied successfully" = "Отлично, код ваучера успешно применён.";
-"Your account is already on the plan this code provides" = "Ваш аккаунт уже включен в план, который предоставляет этот код.";
+"A voucher is already applied to this account or this voucher code is already used." = "К этому аккаунту уже применен ваучер или этот код ваучера уже использован.";
 "Voucher provided is invalid or expired." = "Предоставленный код ваучера недействителен или истёк.";
 "Confirmed email is required." = "Требуется подтверждённый адрес электронной почты.";
 "Make advanced tweaks to the way the app functions" = "Внесите расширенные настройки в работу приложения.";
