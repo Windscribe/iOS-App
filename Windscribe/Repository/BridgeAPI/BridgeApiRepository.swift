@@ -12,6 +12,8 @@ import Combine
 protocol BridgeApiRepository {
     var bridgeIsAvailable: CurrentValueSubject<Bool, Never> { get }
     var isReady: Bool { get }
+
+    func setWSNetConnected()
 }
 
 class BridgeApiRepositoryImpl: BridgeApiRepository {
@@ -49,6 +51,11 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
         observeBridgeApi()
     }
 
+    func setWSNetConnected() {
+        self.logger.logI("BridgeApiRepository", "wsnet setIsConnectedToVpnState to true")
+        WSNet.instance().setIsConnectedToVpnState(true)
+    }
+
     private func observeBridgeApi() {
         vpnStateRepository.getStatus()
             .map { $0 == .connected }
@@ -58,12 +65,10 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                 if !isConnected {
                     self.logger.logI("BridgeApiRepository", "wsnet BridgeAPI_impl VPN Disconnected setting bridgeAPI to Connected State: false")
                     self.bridgeAPI.setConnectedState(false)
+                    self.logger.logI("BridgeApiRepository", "wsnet setIsConnectedToVpnState to false")
+                    WSNet.instance().setIsConnectedToVpnState(false)
                 }
-                guard initialListenning else {
-                    self.logger.logI("BridgeApiRepository", "wsnet setIsConnectedToVpnState to isConnected: \(isConnected)")
-                    WSNet.instance().setIsConnectedToVpnState(isConnected)
-                    return
-                }
+                guard initialListenning else { return }
                 guard Date().timeIntervalSince(startTimeStamp) < 1 else {
                     initialListenning = false
                     return
@@ -79,6 +84,11 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                     }
                     self.bridgeAPI.setIgnoreSslErrors(true)
                     self.bridgeAPI.setConnectedState(true)
+                    Task {
+                        // we need to wait on the first time, other wise we might might the tokens for bridge api
+                        try? await Task.sleep(nanoseconds: 200_000_000)
+                        WSNet.instance().setIsConnectedToVpnState(isConnected)
+                    }
                 }
             }
             .store(in: &cancellables)

@@ -25,6 +25,7 @@ extension VPNManagerImpl {
     /// Usage:
     /// Call this function to start the disconnection process. See more: DisconnectTask
     func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error> {
+        preferences.saveIgnorePinIP(status: false)
         connectionTaskPublisher?.cancel()
         return configManager.disconnectAsync()
             .handleEvents(receiveSubscription: { _ in
@@ -139,6 +140,7 @@ extension VPNManagerImpl {
                     default: ()
                     }
                 }
+                self.preferences.saveIgnorePinIP(status: false)
                 return Fail(error: error).eraseToAnyPublisher()
             }.eraseToAnyPublisher()
     }
