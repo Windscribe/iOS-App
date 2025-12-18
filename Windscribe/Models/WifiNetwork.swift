@@ -114,7 +114,6 @@ struct WifiNetworkModel: WifiNetworkProtocol, Hashable {
     }
 }
 
-
 enum WifiNetworkValues {
     case status(value: Bool)
     case protocolType(value: String)

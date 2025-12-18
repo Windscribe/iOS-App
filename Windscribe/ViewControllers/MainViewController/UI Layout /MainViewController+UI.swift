@@ -263,7 +263,7 @@ extension MainViewController {
 
     func arrangeListsFooterViews(for sessionModel: SessionModel) {
         let visible = sessionModel.isUserPro || !isSpaceAvailableForGetMoreDataView()
-        staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource.shouldHideFooter() ?? true) || !visible
+        staticIPTableViewFooterView.isHidden = staticIPListTableViewDataSource.shouldHideFooter() || !visible
         customConfigTableViewFooterView.isHidden = !visible
         if customConfigListTableViewDataSource.customConfigs.count == 0 {
             customConfigTableViewFooterView.isHidden = true
