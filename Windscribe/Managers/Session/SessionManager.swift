@@ -119,9 +119,10 @@ class SessionManagerImpl: SessionManager {
             do {
                 try await self.updateSession()
             } catch let error {
-                if let errors = error as? Errors,
-                   (errors == .sessionIsInvalid  || errors == .validationFailure) {
-                    self.logoutUser()
+                if let errors = error as? Errors {
+                    if (errors == .sessionIsInvalid  || errors == .validationFailure) {
+                        self.logoutUser()
+                    }
                 } else {
                     self.logger.logE("SessionManager", "Failed to update error: \(error)")
                 }

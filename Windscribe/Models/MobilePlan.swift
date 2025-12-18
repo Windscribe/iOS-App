@@ -79,7 +79,6 @@ struct MobilePlanList: Decodable {
     }
 }
 
-
 struct MobilePlanModel: Equatable {
     var active: Bool = false
     var extId: String = ""

@@ -44,7 +44,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     private var cancellables = Set<AnyCancellable>()
     private var favList: [Favourite] = []
     private var locationLoad: Bool = false
-    private var bestLocation: BestLocationModel? = nil
+    private var bestLocation: BestLocationModel?
 
     private let locationsManager: LocationsManager
     private let lookAndFeelRepository: LookAndFeelRepositoryType
