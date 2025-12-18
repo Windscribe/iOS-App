@@ -167,10 +167,13 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     private func handleLoginSuccess(session: Session) {
+        // Extract username before accessing to avoid Realm threading issues
+        let username = session.username
+
         preferences.saveLoginDate(date: Date())
         WifiManager.shared.saveCurrentWifiNetworks()
         sessionManager.updateFrom(session: session)
-        logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
+        logger.logI("LoginViewModel", "Login successful. Preparing user data for \(username)")
 
         prepareUserData()
     }
@@ -250,17 +253,36 @@ class LoginViewModelImpl: LoginViewModel {
 
                         do {
                             try await sessionManager.login(auth: auth)
-                            if let session = userSessionRepository.sessionModel {
-                                WifiManager.shared.saveCurrentWifiNetworks()
 
-                                self.preferences.saveLoginDate(date: Date())
-                                self.timerCancellable?.cancel()
-                                self.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")
-                                self.prepareUserData()
-                                self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                            // Wait for repository update (SessionManager updates in separate Task)
+                            // Use Combine to wait for the next non-nil session with 2-second timeout
+                            let session: SessionModel = try await withTimeout(seconds: 2) {
+                                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<SessionModel, Error>) in
+                                    var cancellable: AnyCancellable?
+                                    cancellable = self.userSessionRepository.sessionModelSubject
+                                        .compactMap { $0 }  // Filter for non-nil
+                                        .first()            // Take first emission
+                                        .sink { model in
+                                            cancellable?.cancel()
+                                            continuation.resume(returning: model)
+                                        }
+                                }
                             }
-                        } catch {
-                            // Handle getSession error silently, just like the original code
+
+                            WifiManager.shared.saveCurrentWifiNetworks()
+                            self.preferences.saveLoginDate(date: Date())
+                            self.timerCancellable?.cancel()
+                            self.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")
+                            self.prepareUserData()
+                            self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+
+                        } catch let error {
+                            // Log and handle login errors (fixed: was silently swallowed)
+                            self.logger.logE("LoginViewModel", "Lazy login failed: \(error.localizedDescription)")
+                            self.timerCancellable?.cancel()
+                            await MainActor.run {
+                                self.failedState.onNext(.network(error.localizedDescription))
+                            }
                         }
                     } catch {
                         await MainActor.run {
