@@ -1,8 +1,8 @@
 //
-//  CaptchaView.swift
-//  Windscribe
+//  CaptchaPopupView.swift
+//  WindscribeTV
 //
-//  Created by Soner Yuksel on 2025-06-30.
+//  Created by Soner Yuksel on 2025-12-17.
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
@@ -13,15 +13,25 @@ import RxCocoa
 
 final class CaptchaView: UIView {
 
-    private let asciiImageView = UIImageView()
+    // MARK: - UI Components
+
+    private let containerView = UIView()
+    private let captchaImageView = UIImageView()
+    private let refreshButton = UIButton(type: .custom)
     private let titleLabel = UILabel()
     private let codeTextField = CaptchaCodeTextField()
-    private let submitButton = UIButton(type: .custom)
+    private let verifyButton = UIButton(type: .custom)
     private let backButton = UIButton(type: .custom)
+    private let loadingView = UIActivityIndicatorView(style: .large)
+
+    // MARK: - Public Observables
 
     let submitTap = PublishSubject<String>()
     let cancelTap = PublishSubject<Void>()
+    let refreshTap = PublishSubject<Void>()
     private let disposeBag = DisposeBag()
+
+    // MARK: - Initialization
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,18 +42,33 @@ final class CaptchaView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: Bindings
+    // MARK: - Bindings
+
     func bind(to viewModel: CaptchaViewModel) {
         viewModel.captchaImage
             .observe(on: MainScheduler.instance)
-            .bind(to: asciiImageView.rx.image)
+            .bind(to: captchaImageView.rx.image)
             .disposed(by: disposeBag)
 
-        submitButton.addTarget(self, action: #selector(didTapSubmit), for: .primaryActionTriggered)
+        viewModel.isLoading
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isLoading in
+                if isLoading {
+                    self?.loadingView.startAnimating()
+                } else {
+                    self?.loadingView.stopAnimating()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        verifyButton.addTarget(self, action: #selector(didTapVerify), for: .primaryActionTriggered)
         backButton.addTarget(self, action: #selector(didTapBack), for: .primaryActionTriggered)
+        refreshButton.addTarget(self, action: #selector(didTapRefresh), for: .primaryActionTriggered)
     }
 
-    @objc private func didTapSubmit() {
+    // MARK: - Actions
+
+    @objc private func didTapVerify() {
         submitTap.onNext(codeTextField.text ?? "")
     }
 
@@ -51,137 +76,200 @@ final class CaptchaView: UIView {
         cancelTap.onNext(())
     }
 
-    // MARK: Layout Setup
+    @objc private func didTapRefresh() {
+        refreshTap.onNext(())
+    }
+
+    // MARK: - UI Setup
+
     private func setupUI() {
-        backgroundColor = .black
+        backgroundColor = .clear
 
-        // 1. LEFT SIDE BACKGROUND IMAGE
-        let leftBackgroundView = UIImageView()
-        leftBackgroundView.contentMode = .scaleAspectFill
-        leftBackgroundView.image = UIImage(named: "WelcomeBackground")
-        leftBackgroundView.clipsToBounds = true
-        addSubview(leftBackgroundView)
+        // Container view (the modal popup)
+        containerView.backgroundColor = UIColor(red: 15/255, green: 18/255, blue: 26/255, alpha: 1.0)
+        containerView.layer.cornerRadius = 20
+        containerView.clipsToBounds = true
+        addSubview(containerView)
 
-        leftBackgroundView.snp.makeConstraints {
-            $0.leading.top.bottom.equalToSuperview()
-            $0.width.equalToSuperview().multipliedBy(0.66)
+        containerView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.width.equalTo(640)
+            $0.height.equalTo(580)
         }
 
-        // 2. ASCII IMAGE VIEW (centered inside left)
-        asciiImageView.contentMode = .scaleAspectFit
-        asciiImageView.backgroundColor = .black
-        asciiImageView.layer.cornerRadius = 12
-        asciiImageView.clipsToBounds = true
-        addSubview(asciiImageView)
+        // Code TextField
+        codeTextField.placeholder = ""
+        codeTextField.textAlignment = .center
+        codeTextField.font = UIFont.systemFont(ofSize: 32, weight: .medium)
+        codeTextField.textColor = .white
+        codeTextField.borderStyle = .none
+        codeTextField.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+        codeTextField.layer.cornerRadius = 22
+        codeTextField.layer.masksToBounds = true
+        codeTextField.tintColor = .white
 
-        asciiImageView.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(149)
-            $0.width.equalTo(980)
-            $0.height.equalTo(457)
-        }
+        // Add left padding to text field
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 50))
+        codeTextField.leftView = paddingView
+        codeTextField.leftViewMode = .always
+        codeTextField.rightView = paddingView
+        codeTextField.rightViewMode = .always
 
-        // 3. RIGHT PANEL
-        let rightPanel = UIView()
-        rightPanel.backgroundColor = UIColor(red: 2/255, green: 13/255, blue: 28/255, alpha: 1.0)
-        addSubview(rightPanel)
+        containerView.addSubview(codeTextField)
 
-        rightPanel.snp.makeConstraints {
-            $0.top.trailing.bottom.equalToSuperview()
-            $0.leading.equalTo(leftBackgroundView.snp.trailing)
-        }
-
-        // 4. Form elements in stack
-        titleLabel.text = "Complete the Puzzle to Continue"
-        titleLabel.textColor = .white
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 34)
-        titleLabel.textAlignment = .center
-        titleLabel.numberOfLines = 2
-
-        codeTextField.placeholder = "Code"
-        codeTextField.textAlignment = .left
-        codeTextField.font = UIFont.boldSystemFont(ofSize: 30)
-        codeTextField.textColor = UIColor.white.withAlphaComponent(0.5)
-        codeTextField.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        codeTextField.layer.cornerRadius = 10
-        codeTextField.clipsToBounds = true
-        codeTextField.tintColor = .clear
-        codeTextField.attributedPlaceholder = NSAttributedString(
-            string: "Code",
-            attributes: [
-                .foregroundColor: UIColor.white.withAlphaComponent(0.3),
-                .font: UIFont.boldSystemFont(ofSize: 30)
-            ]
-        )
-
-        submitButton.setTitle("Submit", for: .normal)
-        submitButton.setTitleColor(UIColor.white.withAlphaComponent(0.5), for: .normal)
-        submitButton.setTitleColor(.white, for: .focused)
-        submitButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 35)
-        submitButton.setBackgroundImage(UIImage.imageWithColor(UIColor.white.withAlphaComponent(0.25)), for: .focused)
-        submitButton.setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
-        submitButton.layer.cornerRadius = 75 / 2
-        submitButton.layer.borderWidth = 2
-        submitButton.layer.borderColor = UIColor.white.withAlphaComponent(0.5).cgColor
-        submitButton.clipsToBounds = true
-
-        backButton.setTitle("Back", for: .normal)
-        backButton.setTitleColor(.lightGray, for: .normal)
-        backButton.setTitleColor(.white, for: .focused)
-        backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 35)
-        backButton.backgroundColor = .clear
-
-        let controlStack = UIStackView(arrangedSubviews: [titleLabel, codeTextField, submitButton, backButton])
-        controlStack.axis = .vertical
-        controlStack.spacing = 40
-        controlStack.alignment = .center
-
-        rightPanel.addSubview(controlStack)
-
-        controlStack.snp.makeConstraints {
+        codeTextField.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview()
-            $0.width.equalTo(450)
+            $0.width.equalTo(520)
+            $0.height.equalTo(65)
         }
 
-        codeTextField.snp.makeConstraints { $0.height.equalTo(75); $0.width.equalToSuperview() }
-        submitButton.snp.makeConstraints { $0.height.equalTo(75); $0.width.equalToSuperview() }
-        backButton.snp.makeConstraints { $0.height.equalTo(60); $0.width.equalToSuperview() }
+        // Captcha Container (black background with rounded corners)
+        let captchaContainer = UIView()
+        captchaContainer.backgroundColor = .black
+        captchaContainer.layer.cornerRadius = 8
+        captchaContainer.clipsToBounds = true
+        containerView.addSubview(captchaContainer)
 
+        captchaContainer.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(40)
+            $0.leading.equalToSuperview().offset(60)  // FIXED LEFT OFFSET!
+            $0.height.equalTo(180)
+            $0.width.equalTo(435)
+        }
+
+        // Captcha Image (inside container with bigger top/bottom padding)
+        captchaImageView.contentMode = .scaleToFill  // Stretch to fill, don't clip
+        captchaImageView.backgroundColor = .clear
+        captchaContainer.addSubview(captchaImageView)
+
+        captchaImageView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview().inset(15)  // 15pt padding top/bottom
+            $0.leading.trailing.equalToSuperview().inset(5)  // 5pt padding left/right
+        }
+
+        // Loading View (centered on captcha container)
+        loadingView.color = .white
+        loadingView.hidesWhenStopped = true
+        containerView.addSubview(loadingView)
+
+        loadingView.snp.makeConstraints {
+            $0.center.equalTo(captchaContainer)
+        }
+
+        // Refresh Button (vertically CENTERED with captcha container, right-aligned)
+        refreshButton.setImage(UIImage(named: ImagesAsset.TvAsset.refreshButton), for: .normal)
+        refreshButton.backgroundColor = .clear
+        containerView.addSubview(refreshButton)
+
+        refreshButton.snp.makeConstraints {
+            $0.centerY.equalTo(captchaContainer)  // CENTERED WITH CAPTCHA CONTAINER!
+            $0.trailing.equalTo(codeTextField.snp.trailing)
+            $0.width.height.equalTo(60)
+        }
+
+        // Title Label
+        titleLabel.text = TextsAsset.TVAsset.captchaTitle
+        titleLabel.textColor = .white
+        titleLabel.font = UIFont.text(size: 24)
+        titleLabel.textAlignment = .center
+        containerView.addSubview(titleLabel)
+
+        titleLabel.snp.makeConstraints {
+            $0.top.equalTo(captchaContainer.snp.bottom).offset(40)
+            $0.centerX.equalToSuperview()
+        }
+
+        // Update text field top constraint
+        codeTextField.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(30)
+        }
+
+        // Verify Button
+        verifyButton.setTitle(TextsAsset.TVAsset.captchaAction, for: .normal)
+        verifyButton.setTitleColor(.white, for: .normal)
+        verifyButton.setTitleColor(.white, for: .focused)
+        verifyButton.titleLabel?.font = UIFont.text(size: 24)
+        verifyButton.backgroundColor = .clear
+        verifyButton.layer.cornerRadius = 32
+        verifyButton.layer.borderWidth = 2
+        verifyButton.layer.borderColor = UIColor.white.withAlphaComponent(0.5).cgColor
+        verifyButton.clipsToBounds = true
+        containerView.addSubview(verifyButton)
+
+        verifyButton.snp.makeConstraints {
+            $0.top.equalTo(codeTextField.snp.bottom).offset(30)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(520)
+            $0.height.equalTo(64)
+        }
+
+        // Back Button
+        backButton.setTitle(TextsAsset.back, for: .normal)
+        backButton.setTitleColor(UIColor.white.withAlphaComponent(0.6), for: .normal)
+        backButton.setTitleColor(.white, for: .focused)
+        backButton.titleLabel?.font = UIFont.text(size: 24)
+        backButton.backgroundColor = .clear
+        containerView.addSubview(backButton)
+
+        backButton.snp.makeConstraints {
+            $0.top.equalTo(verifyButton.snp.bottom).offset(20)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(50)
+        }
+
+        // Set initial focus
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-          self.setNeedsFocusUpdate()
-          self.updateFocusIfNeeded()
+            self.setNeedsFocusUpdate()
+            self.updateFocusIfNeeded()
         }
     }
+
+    // MARK: - Focus Management
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocus(in: context, with: coordinator)
 
-        let isSubmitFocused = context.nextFocusedView === submitButton
+        let isVerifyFocused = context.nextFocusedView === verifyButton
         let isBackFocused = context.nextFocusedView === backButton
         let isCodeFocused = context.nextFocusedView === codeTextField
+        let isRefreshFocused = context.nextFocusedView === refreshButton
 
         coordinator.addCoordinatedAnimations {
-            // Submit button (rounded, WS style)
-            self.submitButton.backgroundColor = isSubmitFocused ? UIColor.white.withAlphaComponent(0.25) : .clear
-            self.submitButton.setTitleColor(isSubmitFocused ? .white : UIColor.white.withAlphaComponent(0.5), for: .normal)
-            self.submitButton.layer.borderColor = isSubmitFocused ? UIColor.clear.cgColor : UIColor.white.withAlphaComponent(0.5).cgColor
+            // Verify button focus
+            if isVerifyFocused {
+                self.verifyButton.backgroundColor = UIColor.white.withAlphaComponent(0.25)
+                self.verifyButton.layer.borderColor = UIColor.clear.cgColor
+                self.verifyButton.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+            } else {
+                self.verifyButton.backgroundColor = .clear
+                self.verifyButton.layer.borderColor = UIColor.white.withAlphaComponent(0.5).cgColor
+                self.verifyButton.transform = .identity
+            }
 
-            // Back button
-            self.backButton.setTitleColor(isBackFocused ? .white : UIColor.white.withAlphaComponent(0.5), for: .normal)
+            // Back button focus
+            self.backButton.alpha = isBackFocused ? 1.0 : 0.6
 
-            // Code text field
-            self.codeTextField.backgroundColor = isCodeFocused ? UIColor.white.withAlphaComponent(0.19) : UIColor.white.withAlphaComponent(0.1)
-            self.codeTextField.textColor = isCodeFocused ? .white : UIColor.white.withAlphaComponent(0.5)
+            // Code text field focus
+            self.codeTextField.backgroundColor = isCodeFocused
+                ? UIColor.white.withAlphaComponent(0.25)
+                : UIColor.white.withAlphaComponent(0.15)
+
+            // Refresh button focus (only scale, no background)
+            if isRefreshFocused {
+                self.refreshButton.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+            } else {
+                self.refreshButton.transform = .identity
+            }
         }
     }
 
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         return [codeTextField]
     }
-
 }
 
+// MARK: - Custom TextField
+
 class CaptchaCodeTextField: UITextField {
-  override var canBecomeFocused: Bool { true }
+    override var canBecomeFocused: Bool { true }
 }

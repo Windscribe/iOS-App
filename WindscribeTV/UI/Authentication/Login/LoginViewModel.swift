@@ -110,6 +110,7 @@ class LoginViewModelImpl: LoginViewModel {
                             password: password,
                             twoFactorCode: twoFactorCode,
                             secureToken: response.data.token,
+                            isSignup: false,
                             apiCallManager: self.apiCallManager,
                             logger: self.logger
                         )

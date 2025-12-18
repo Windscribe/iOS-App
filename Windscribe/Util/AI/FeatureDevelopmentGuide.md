@@ -1659,3 +1659,388 @@ var currentValue: Int { get }
 ---
 
 **Key Takeaway**: Repository conversion is straightforward when following this pattern. The most time-consuming part is creating comprehensive mocks and tests, but this ensures reliability and prevents regressions.
+
+---
+
+## CRITICAL: Realm Threading Best Practices
+
+### ⚠️ MANDATORY PATTERN - DO NOT STORE REALM OBJECTS IN MEMORY
+
+**This is a CRITICAL architecture pattern that must be followed for all future development involving Realm.**
+
+### The Problem: Realm Threading Violations
+
+Realm objects are **NOT thread-safe** and cause crashes when:
+- Created on one thread and accessed from another
+- Stored in memory (BehaviorSubjects, properties) and accessed later from different threads
+- Passed between async contexts without proper handling
+
+**Common Crash:**
+```
+*** Terminating app due to uncaught exception 'RLMException',
+reason: 'Realm accessed from incorrect thread.'
+```
+
+### ❌ WRONG: Storing Realm Objects Directly
+
+**DO NOT DO THIS:**
+```swift
+// BAD - Storing Realm objects that can be accessed from multiple threads
+class LatencyRepositoryImpl {
+    let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
+    //                             ^^^^^^^^^ Realm Object - WRONG!
+
+    func getPingData(ip: String) -> PingData? {
+        let value = try? latency.value()
+        return value?.first { !$0.isInvalidated && $0.ip == ip }
+        // Crash! Accessing Realm object from different thread
+    }
+}
+```
+
+**Why This Fails:**
+1. `PingData` is a Realm `Object` class
+2. Stored in `BehaviorSubject` on Thread A
+3. Accessed from Thread B (e.g., table view rendering on main thread)
+4. **Result**: Threading violation crash
+
+### ✅ CORRECT: Use Plain Value Types (Model Pattern)
+
+**The Solution - Create Thread-Safe Model Structs:**
+
+#### Step 1: Create Plain Value Model
+
+Add model struct in the same file as the Realm object:
+
+```swift
+// In PingData.swift
+import RealmSwift
+
+@objcMembers class PingData: Object {
+    dynamic var ip: String = ""
+    dynamic var latency = -1
+
+    convenience init(ip: String, latency: Int) {
+        self.init()
+        self.ip = ip
+        self.latency = latency
+    }
+
+    // Add reverse conversion for database operations
+    convenience init(from: PingDataModel) {
+        self.init()
+        ip = from.ip
+        latency = from.latency
+    }
+
+    override static func primaryKey() -> String? {
+        return "ip"
+    }
+}
+
+// ✅ Thread-safe value type
+struct PingDataModel {
+    var ip: String = ""
+    var latency = -1
+
+    // Convert FROM Realm object
+    init(from: PingData) {
+        ip = from.ip
+        latency = from.latency
+    }
+}
+```
+
+#### Step 2: Store Models Instead of Realm Objects
+
+```swift
+class LatencyRepositoryImpl {
+    // ✅ Store plain models, NOT Realm objects
+    let latency: BehaviorSubject<[PingDataModel]> = BehaviorSubject(value: [])
+
+    // Helper to convert Realm objects to models
+    private func getPingDataModel() -> [PingDataModel] {
+        database.getAllPingData().map { PingDataModel(from: $0) }
+    }
+
+    // ✅ Safe - returns plain model
+    func getPingData(ip: String) -> PingDataModel? {
+        let value = try? latency.value()
+        return value?.first { $0.ip == ip }
+        // No threading issues - plain struct!
+    }
+}
+```
+
+#### Step 3: Convert at Storage Boundaries
+
+**Convert Realm → Model immediately when storing:**
+
+```swift
+// ✅ In init
+init(...) {
+    latency.onNext(database.getAllPingData().map { PingDataModel(from: $0) })
+}
+
+// ✅ After database operations
+func loadLatency() {
+    createLatencyTask(...)
+        .do(onSuccess: { _ in
+            self.latency.onNext(self.getPingDataModel())
+        })
+}
+
+// ✅ When refreshing data
+func refreshBestLocation() {
+    let pingData = database.getAllPingData().map { PingDataModel(from: $0) }
+    self.latency.onNext(pingData)
+    self.pickBestLocation(pingData: pingData)
+}
+```
+
+### Real-World Example: LatencyRepository Fix (Issue #904)
+
+**Problem:** App crashed on startup with `RLMException: Realm accessed from incorrect thread`
+
+**Root Cause:**
+- Commit `8f4a99ce` added `refreshBestLocation()` to `init()`
+- This stored Realm `PingData` objects in `latency` BehaviorSubject
+- Later accessed from main thread (table view) → crash
+
+**Solution Applied (Commit cd5ece0f):**
+
+1. Created `PingDataModel` struct in `PingData.swift`
+2. Changed BehaviorSubject: `BehaviorSubject<[PingData]>` → `BehaviorSubject<[PingDataModel]>`
+3. Added `getPingDataModel()` helper method
+4. Converted all `.onNext()` calls to use models
+5. Removed Realm-specific `isInvalidated` checks
+6. Updated protocol and all consumers
+
+**Files Changed:**
+- `Windscribe/Models/PingData.swift` - Added `PingDataModel` struct
+- `Windscribe/Repository/Latency/LatencyRepository.swift` - Updated protocol
+- `Windscribe/Repository/Latency/LatencyRepositoryImpl.swift` - Implementation
+- `Windscribe/ViewControllers/MainViewController/Models/MainViewModel.swift` - Updated consumer
+
+### Mandatory Checklist for Realm Usage
+
+**Before storing ANY Realm object in memory, ask:**
+
+- [ ] ❓ Will this object be accessed from multiple threads?
+- [ ] ❓ Is this stored in a property, BehaviorSubject, or other long-lived storage?
+- [ ] ❓ Could this be accessed after async operations?
+
+**If YES to any → Use Model Pattern:**
+
+- [ ] ✅ Create a plain `struct` with `Model` suffix (e.g., `PingDataModel`)
+- [ ] ✅ Add `init(from: RealmObject)` to model
+- [ ] ✅ Add `convenience init(from: Model)` to Realm object (for reverse conversion)
+- [ ] ✅ Store models in BehaviorSubjects/properties, NOT Realm objects
+- [ ] ✅ Convert Realm → Model at storage boundaries (`.map { Model(from: $0) }`)
+- [ ] ✅ Update protocols and consumers to use Model type
+- [ ] ✅ Remove Realm-specific checks like `isInvalidated`
+
+### When NOT to Use Model Pattern
+
+**You can use Realm objects directly when:**
+- ✅ Accessing within a single synchronous function
+- ✅ Querying and immediately using the result
+- ✅ Inside a `DispatchQueue.main.sync/async` block that queries Realm
+
+```swift
+// ✅ OK - Synchronous, immediate use
+func getServerCount() -> Int {
+    return database.getAllServers().count
+}
+
+// ✅ OK - Query and use on same thread
+func displayServer(id: String) {
+    if let server = database.getServer(id: id) {
+        print(server.name)  // Immediate use
+    }
+}
+```
+
+### Common Mistakes to Avoid
+
+#### ❌ Mistake 1: Storing Realm Results
+```swift
+// BAD
+class MyRepository {
+    var servers: Results<Server>?  // Will crash across threads!
+}
+```
+
+#### ❌ Mistake 2: Passing Realm Objects Through Async
+```swift
+// BAD
+func loadData() async {
+    let data = database.getData()  // Realm object
+    await processData(data)  // Crash! Different execution context
+}
+```
+
+#### ❌ Mistake 3: Storing in Publishers/Subjects
+```swift
+// BAD
+let serverSubject = BehaviorSubject<Server>(value: nil)  // Realm object - wrong!
+```
+
+### Performance Considerations
+
+**Q: Won't copying data impact performance?**
+
+**A:** Minimal impact, major benefits:
+- ✅ Structs are lightweight value types
+- ✅ Only copying primitive values (String, Int, etc.)
+- ✅ Prevents crashes that are much more expensive
+- ✅ Enables proper caching without Realm constraints
+
+**Benchmark:** Converting 1000 `PingData` objects to `PingDataModel`: **< 1ms**
+
+### Future Development Guidelines
+
+**IMPORTANT:** This pattern is **MANDATORY** for all new features and refactors involving Realm.
+
+**When reviewing code, check for:**
+1. Realm objects stored in properties/subjects
+2. Realm objects returned from repository methods that store in memory
+3. Missing model conversion at storage boundaries
+4. Threading assumptions in Realm access
+
+**Pattern Name:** "Model Conversion Pattern" or "Thread-Safe Data Pattern"
+
+**Related Issues:**
+- Issue #904: Latency Realm threading crash
+- Commit cd5ece0f: Fix implementation example
+
+---
+
+## Refactoring Existing Realm Usage
+
+### ⚠️ TECHNICAL DEBT: Existing Violations
+
+**Many existing Realm objects in the codebase may violate this pattern and need refactoring.**
+
+### Identifying Violations
+
+**Search for these patterns in the codebase:**
+
+1. **BehaviorSubjects/Properties storing Realm objects:**
+```bash
+# Search for BehaviorSubject with Realm types
+grep -r "BehaviorSubject<.*\[.*\]>" --include="*.swift" | grep -E "(Server|Session|Notice|CustomConfig|StaticIP|Favourite|WifiNetwork)"
+```
+
+2. **Repository methods returning Realm objects for storage:**
+```swift
+// Look for methods like:
+var servers: BehaviorSubject<[Server]> { get }
+var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
+var staticIPs: BehaviorSubject<[StaticIP]?> { get }
+```
+
+3. **Properties holding Realm objects:**
+```swift
+class SomeRepository {
+    var cachedServers: [Server] = []  // Potential violation
+    var currentSession: Session?      // Potential violation
+}
+```
+
+### Known Violations Requiring Refactoring
+
+**Common Realm types that likely need Model conversion:**
+
+- [ ] **Server** → `ServerModel`
+- [ ] **Session** → `SessionModel` (✅ Already done)
+- [ ] **StaticIP** → `StaticIPModel`
+- [ ] **CustomConfig** → `CustomConfigModel`
+- [ ] **Notice** → `NoticeModel`
+- [ ] **Favourite** → `FavouriteModel`
+- [ ] **WifiNetwork** → `WifiNetworkModel`
+- [ ] **MobilePlan** → `MobilePlanModel`
+- [ ] **PortMap** → `PortMapModel`
+
+### How to Request Refactoring
+
+**When you encounter potential violations:**
+
+1. **Identify the Realm type** being stored in memory
+2. **Request refactoring** using this prompt:
+
+```
+I found [RealmType] being stored in a BehaviorSubject/property in [FileName].
+Please refactor this to use the Model Pattern following the FeatureDevelopmentGuide.md
+Realm Threading Best Practices section.
+
+File: [path/to/file]
+Line: [line number]
+Realm Type: [RealmType]
+Storage: [BehaviorSubject/property/etc]
+```
+
+3. **Expected refactor steps:**
+   - Create `[RealmType]Model` struct in the Realm object file
+   - Update BehaviorSubject/property type
+   - Add conversion helper methods
+   - Update all storage points to convert
+   - Update protocol signatures
+   - Update consumers
+
+### Refactoring Priority
+
+**High Priority (Crash Risk):**
+- Any Realm types stored in subjects accessed from UI (table views, collection views)
+- Any Realm types passed through async/await boundaries
+- Any Realm types stored in ViewModels
+
+**Medium Priority (Potential Issues):**
+- Repository layer storing Realm objects
+- Manager classes caching Realm results
+
+**Low Priority (Safe for now):**
+- Synchronous, single-thread access only
+- Immediate query and use patterns
+
+### Example Refactoring Request
+
+```
+Refactor MainViewModel to use Model Pattern:
+
+File: Windscribe/ViewControllers/MainViewController/Models/MainViewModelImpl.swift
+Issue: Multiple BehaviorSubjects storing Realm objects:
+- Line 39: var servers = BehaviorSubject<[Server]>(value: [])
+- Line 40: var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
+- Line 41: var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
+
+Please apply Model Pattern following FeatureDevelopmentGuide.md Realm Threading Best Practices.
+```
+
+### Gradual Migration Strategy
+
+**Don't refactor everything at once:**
+
+1. **Incident-Driven**: Fix violations when crashes occur
+2. **Feature-Driven**: Refactor when touching related code
+3. **Proactive**: Gradually refactor high-priority violations
+4. **Document**: Track refactored types in this guide
+
+**Updated List of Converted Types:**
+- ✅ `PingData` → `PingDataModel` (Issue #904, Commit cd5ece0f)
+- ✅ `Session` → `SessionModel` (Already existed)
+- ⏳ [Add more as they're converted]
+
+### Testing Refactored Code
+
+**After applying Model Pattern, verify:**
+
+1. App doesn't crash on startup
+2. Table views/collection views load data correctly
+3. No threading assertions in console
+4. Data updates propagate correctly
+5. All unit tests pass
+
+---
+
+**Remember:** This is technical debt that should be addressed gradually. Don't ignore violations, but prioritize based on crash risk and feature development needs.

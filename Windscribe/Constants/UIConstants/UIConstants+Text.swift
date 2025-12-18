@@ -2419,6 +2419,14 @@ extension TextsAsset {
         static var supportBody: String {
             return "Go to the address above on your phone or computer for all support related inquiries.".localized
         }
+
+        static var captchaTitle: String {
+            return "Type the word above".localized
+        }
+
+        static var captchaAction: String {
+            return "Verify".localized
+        }
     }
 }
 

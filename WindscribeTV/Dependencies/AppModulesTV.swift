@@ -111,6 +111,7 @@ class TVViewModels: Assembly {
                                 localDB: r.resolve(LocalDatabase.self)!,
                                 customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
                                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
+                                bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
                                 userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModel.self) { r in

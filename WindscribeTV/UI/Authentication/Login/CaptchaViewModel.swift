@@ -13,6 +13,7 @@ import RxCocoa
 class CaptchaViewModel {
     let submitCaptcha = PublishSubject<String>()
     let cancel = PublishSubject<Void>()
+    let refreshCaptcha = PublishSubject<Void>()
 
     let captchaImage = BehaviorSubject<UIImage?>(value: nil)
     let isLoading = BehaviorSubject<Bool>(value: false)
@@ -28,7 +29,8 @@ class CaptchaViewModel {
     private let username: String
     private let password: String
     private let twoFactorCode: String?
-    private let secureToken: String
+    private var secureToken: String
+    private let isSignup: Bool
 
     private let apiCallManager: APIManager
     private let logger: FileLogger
@@ -39,6 +41,7 @@ class CaptchaViewModel {
         password: String,
         twoFactorCode: String?,
         secureToken: String,
+        isSignup: Bool,
         apiCallManager: APIManager,
         logger: FileLogger
     ) {
@@ -47,6 +50,7 @@ class CaptchaViewModel {
         self.password = password
         self.twoFactorCode = twoFactorCode
         self.secureToken = secureToken
+        self.isSignup = isSignup
         self.apiCallManager = apiCallManager
         self.logger = logger
         setupBindings()
@@ -74,6 +78,12 @@ class CaptchaViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Refresh
+        refreshCaptcha
+            .subscribe(onNext: { [weak self] in
+                self?.fetchNewCaptcha()
+            })
+            .disposed(by: disposeBag)
     }
 
     private func verifyCaptchaAndLogin(with solution: String) {
@@ -105,6 +115,47 @@ class CaptchaViewModel {
                     self.isLoading.onNext(false)
                     self.captchaDismiss.onNext(())
                     self.loginError.onNext(error)
+                }
+            }
+        }
+    }
+
+    private func fetchNewCaptcha() {
+        isLoading.onNext(true)
+        logger.logD("CaptchaViewModel", "Fetching new captcha...")
+
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let response: AuthTokenResponse
+                if self.isSignup {
+                    response = try await self.apiCallManager.authTokenSignup(useAsciiCaptcha: true)
+                } else {
+                    response = try await self.apiCallManager.authTokenLogin(useAsciiCaptcha: true)
+                }
+
+                await MainActor.run {
+                    // Update secure token
+                    self.secureToken = response.data.token
+
+                    // Update captcha image
+                    if let asciiArt = response.data.captcha?.asciiArt,
+                       let image = UIImage.fromAsciiBase64(asciiArt) {
+                        self.captchaImage.onNext(image)
+                        self.logger.logD("CaptchaViewModel", "Captcha refreshed successfully")
+                    } else {
+                        self.errorMessage.onNext("Unable to render new captcha image.")
+                        self.logger.logE("CaptchaViewModel", "Failed to decode new captcha image")
+                    }
+
+                    self.isLoading.onNext(false)
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("CaptchaViewModel", "Failed to refresh captcha: \(error)")
+                    self.errorMessage.onNext("Failed to refresh captcha. Please try again.")
+                    self.isLoading.onNext(false)
                 }
             }
         }

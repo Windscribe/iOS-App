@@ -299,6 +299,7 @@ enum ImagesAsset {
         static let connectionButtonOn = "connectionButton_on"
         static let disconnectedRing = "disconnected_ring"
         static let staticIp = "static_ip"
+        static let refreshButton = "refresh_button"
         static let allIcon = "all_icon"
         static let favnavIcon = "favnav_icon"
         static let flixIcon = "flix_icon"

@@ -139,6 +139,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                             password: password,
                             twoFactorCode: twoFactorCode,
                             secureToken: response.data.token,
+                            isSignup: true,
                             apiCallManager: self.apiCallManager,
                             logger: self.logger
                         )

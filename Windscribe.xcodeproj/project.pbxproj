@@ -981,7 +981,6 @@
 		F410FABD2E709C97007762A1 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
 		F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
-		F41541FF2E12F94A00833EC5 /* CaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41541FE2E12F94400833EC5 /* CaptchaView.swift */; };
 		F41AC7A02EA950E400673A11 /* UserSessionRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */; };
 		F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AC7A22EA95CC200673A11 /* MockWgCredentials.swift */; };
 		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
@@ -1060,6 +1059,7 @@
 		F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */; };
 		F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */; };
 		F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */; };
+		F45BD5A92EF3315B00490072 /* CaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BD5A82EF3315B00490072 /* CaptchaView.swift */; };
 		F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */; };
 		F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */; };
 		F45DF73F2E2FF57700B00F09 /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */; };
@@ -2011,7 +2011,6 @@
 		F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsManager.swift; sourceTree = "<group>"; };
 		F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
-		F41541FE2E12F94400833EC5 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
 		F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionRepositoryTests.swift; sourceTree = "<group>"; };
 		F41AC7A22EA95CC200673A11 /* MockWgCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWgCredentials.swift; sourceTree = "<group>"; };
 		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
@@ -2064,6 +2063,7 @@
 		F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessLogoView.swift; sourceTree = "<group>"; };
 		F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessBenefitView.swift; sourceTree = "<group>"; };
 		F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessShareView.swift; sourceTree = "<group>"; };
+		F45BD5A82EF3315B00490072 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
 		F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
 		F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailView.swift; sourceTree = "<group>"; };
 		F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -5765,7 +5765,7 @@
 			children = (
 				592CA7992C4EC0FF0078D487 /* LoginViewController.swift */,
 				C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */,
-				F41541FE2E12F94400833EC5 /* CaptchaView.swift */,
+				F45BD5A82EF3315B00490072 /* CaptchaView.swift */,
 				F44A0E682E0F2A48008297CA /* CaptchaViewModel.swift */,
 				592CA7A22C4FF8910078D487 /* Login2FA.xib */,
 			);
@@ -6593,7 +6593,6 @@
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
 				59FC73DD2C514BCD00021CD1 /* ConnectivityManager.swift in Sources */,
-				F41541FF2E12F94A00833EC5 /* CaptchaView.swift in Sources */,
 				59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */,
 				59FC73E62C51506C00021CD1 /* APIManagerImpl+Robert.swift in Sources */,
 				59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */,
@@ -6606,6 +6605,7 @@
 				59FC74742C51726700021CD1 /* InAppPurchaseManager+Observer.swift in Sources */,
 				59FC74582C51613000021CD1 /* VPNManager+Selector.swift in Sources */,
 				1EF7BB392C6F93670032A4DF /* UILabel+Extension.swift in Sources */,
+				F45BD5A92EF3315B00490072 /* CaptchaView.swift in Sources */,
 				59A218752C3CA091000D89FA /* TVAssembler.swift in Sources */,
 				F4B692FF2EC3C7C40062AD27 /* BridgeApiFailedViewModel.swift in Sources */,
 				1E2CBFF02CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */,

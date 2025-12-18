@@ -61,11 +61,30 @@ extension Container {
         if let deviceLanguage = preferredLanguages.first {
             language = String(deviceLanguage.prefix(2))
         }
-        #if STAGING
-            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: true, language: language, persistentSettings: preferences.getServerSettings())
+
+        #if os(tvOS)
+            let platform = "appletv"
         #else
-            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: false, language: language, persistentSettings: preferences.getServerSettings())
+            let platform = "ios"
         #endif
+
+        #if STAGING
+            let isStaging = true
+        #else
+            let isStaging = false
+        #endif
+
+        WSNet.initialize(
+            platform,
+            platformName: platform,
+            appVersion: Bundle.main.releaseVersionNumber ?? "",
+            deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "",
+            openVpnVersion: APIParameterValues.openVPNVersion,
+            sessionTypeId: "4",
+            isUseStagingDomains: isStaging,
+            language: language,
+            persistentSettings: preferences.getServerSettings()
+        )
         WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])
         WSNet.instance().setConnectivityState(true)
         WSNet.instance().setIsConnectedToVpnState(false)

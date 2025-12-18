@@ -29,7 +29,8 @@ class LoginViewController: PreferredFocusedViewController {
     var loadingView: UIActivityIndicatorView!
     @IBOutlet var infoLabel: UILabel!
     @IBOutlet var infoView: UIView!
-    private var captchaView: CaptchaView?
+    private var captchaOverlayView: UIView?
+    private var captchaPopupView: CaptchaView?
     var is2FA: Bool = false
 
     // MARK: - State properties
@@ -282,60 +283,105 @@ class LoginViewController: PreferredFocusedViewController {
             .subscribe(onNext: { [weak self] captchaVM in
                 guard let self = self else { return }
 
-                let captchaView = CaptchaView()
-                captchaView.bind(to: captchaVM)
+                let captchaPopupView = CaptchaView()
+                captchaPopupView.bind(to: captchaVM)
 
-                captchaView.submitTap
+                captchaPopupView.submitTap
                   .observe(on: MainScheduler.instance)
                   .subscribe(onNext: { code in
                     captchaVM.submitCaptcha.onNext(code)
                   })
                   .disposed(by: disposeBag)
 
-                captchaView.cancelTap
+                captchaPopupView.cancelTap
                     .observe(on: MainScheduler.instance)
                     .subscribe(onNext: { [weak self] in
-                        self?.captchaView?.removeFromSuperview()
-                        self?.captchaView = nil
+                        self?.dismissCaptchaPopup()
+                    })
+                    .disposed(by: disposeBag)
+
+                captchaPopupView.refreshTap
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(onNext: {
+                        captchaVM.refreshCaptcha.onNext(())
                     })
                     .disposed(by: disposeBag)
 
                 captchaVM.captchaDismiss
                     .observe(on: MainScheduler.instance)
                     .subscribe(onNext: { [weak self] in
-                        self?.captchaView?.removeFromSuperview()
-                        self?.captchaView = nil
+                        self?.dismissCaptchaPopup()
                     })
                     .disposed(by: self.disposeBag)
 
-                self.showCaptchaUI(captchaView: captchaView)
+                self.showCaptchaPopup(captchaPopupView: captchaPopupView)
             })
             .disposed(by: disposeBag)
     }
 
-    private func showCaptchaUI(captchaView: CaptchaView) {
-        self.captchaView = captchaView
-        captchaView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(captchaView)
+    private func showCaptchaPopup(captchaPopupView: CaptchaView) {
+        // Create overlay view (dimmed background)
+        let overlayView = UIView()
+        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.75)
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(overlayView)
 
         NSLayoutConstraint.activate([
-            captchaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            captchaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            captchaView.topAnchor.constraint(equalTo: view.topAnchor),
-            captchaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            overlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            overlayView.topAnchor.constraint(equalTo: view.topAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+
+        self.captchaOverlayView = overlayView
+
+        // Add popup view on top of overlay
+        captchaPopupView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(captchaPopupView)
+
+        NSLayoutConstraint.activate([
+            captchaPopupView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            captchaPopupView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            captchaPopupView.topAnchor.constraint(equalTo: view.topAnchor),
+            captchaPopupView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        self.captchaPopupView = captchaPopupView
+
+        // Animate fade in
+        overlayView.alpha = 0
+        captchaPopupView.alpha = 0
+
+        UIView.animate(withDuration: 0.3) {
+            overlayView.alpha = 1
+            captchaPopupView.alpha = 1
+        }
 
         DispatchQueue.main.async {
             self.setNeedsFocusUpdate()
             self.updateFocusIfNeeded()
         }
+    }
 
-        captchaView.cancelTap
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                self?.captchaView?.removeFromSuperview()
-                self?.captchaView = nil
-            })
-            .disposed(by: disposeBag)
+    private func dismissCaptchaPopup() {
+        guard let overlayView = captchaOverlayView,
+              let popupView = captchaPopupView else { return }
+
+        UIView.animate(withDuration: 0.3, animations: {
+            overlayView.alpha = 0
+            popupView.alpha = 0
+        }, completion: { _ in
+            overlayView.removeFromSuperview()
+            popupView.removeFromSuperview()
+            self.captchaOverlayView = nil
+            self.captchaPopupView = nil
+        })
+    }
+
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        if let captchaPopup = captchaPopupView {
+            return [captchaPopup]
+        }
+        return super.preferredFocusEnvironments
     }
 }
