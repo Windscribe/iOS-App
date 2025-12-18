@@ -179,7 +179,7 @@ class MockLocalDatabase: LocalDatabase {
         return []
     }
 
-    func saveCustomConfig(customConfig: Windscribe.CustomConfig) async {
+    func saveCustomConfig(customConfig: Windscribe.CustomConfig) {
         // Mock implementation - no-op
     }
 
