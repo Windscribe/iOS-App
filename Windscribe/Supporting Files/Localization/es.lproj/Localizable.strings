@@ -586,3 +586,8 @@
 
 "Type the word above" = "Escribe la palabra de arriba";
 "Verify" = "Verificar";
+
+"Reset Password" = "Restablecer contraseña";
+"Password Reset" = "Restablecimiento de contraseña";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Si proporcionaste un correo electrónico durante el registro, recibirás en breve un enlace para restablecer la contraseña. Asegúrate de revisar la carpeta de Spam.";
+"Email is required to reset password." = "Se requiere un correo electrónico para restablecer la contraseña.";

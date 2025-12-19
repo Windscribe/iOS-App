@@ -601,3 +601,8 @@
 
 "Type the word above" = "Geben Sie das oben stehende Wort ein";
 "Verify" = "Bestätigen";
+
+"Reset Password" = "Passwort zurücksetzen";
+"Password Reset" = "Passwort-Zurücksetzung";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Wenn Sie bei der Registrierung eine E-Mail angegeben haben, erhalten Sie in Kürze einen Link zum Zurücksetzen des Passworts. Bitte überprüfen Sie auch Ihren Spam-Ordner.";
+"Email is required to reset password." = "Eine E-Mail-Adresse ist erforderlich, um das Passwort zurückzusetzen.";

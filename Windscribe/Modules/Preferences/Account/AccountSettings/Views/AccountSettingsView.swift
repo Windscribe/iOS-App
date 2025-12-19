@@ -75,6 +75,14 @@ struct AccountSettingsView: View {
                 MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: false)
             }
         }
+        .fullScreenCover(isPresented: $viewModel.showPasswordResetSuccess) {
+            PasswordResetSuccessView(
+                isDarkMode: viewModel.isDarkMode,
+                onClose: {
+                    viewModel.dismissPasswordResetSuccess()
+                }
+            )
+        }
         .dynamicTypeSize(dynamicTypeRange)
         .navigationTitle(TextsAsset.Account.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -185,18 +193,36 @@ struct AccountSettingsView: View {
                     .padding(.horizontal, 16)
             })
 
-            Button(action: {
-                presentDialog(for: .password)
-            }, label: {
-                Text(TextsAsset.Account.cancelAccount)
-                    .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
-                    .font(.medium(.callout))
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(14)
-                    .background(Color.from(.backgroundColor, viewModel.isDarkMode))
-                    .cornerRadius(12)
-                    .padding(.horizontal, 16)
-            })
+            if viewModel.shouldShowDeleteAccountButton {
+                Button(action: {
+                    presentDialog(for: .password)
+                }, label: {
+                    Text(TextsAsset.Account.cancelAccount)
+                        .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+                        .font(.medium(.callout))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(14)
+                        .background(Color.from(.backgroundColor, viewModel.isDarkMode))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 16)
+                })
+            }
+
+            // Reset Password button (only for SSO users) - Always at the bottom
+            if viewModel.shouldShowResetPasswordButton && !viewModel.resetPasswordButtonHidden {
+                Button(action: {
+                    viewModel.resetPassword()
+                }, label: {
+                    Text(TextsAsset.Account.resetPasswordActionTitle)
+                        .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+                        .font(.medium(.callout))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(14)
+                        .background(Color.from(.backgroundColor, viewModel.isDarkMode))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 16)
+                })
+            }
         }
     }
 

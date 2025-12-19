@@ -587,3 +587,8 @@
 
 "Type the word above" = "Введіть слово вище";
 "Verify" = "Підтвердити";
+
+"Reset Password" = "Скинути пароль";
+"Password Reset" = "Скидання пароля";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Якщо ви вказали електронну пошту під час реєстрації, незабаром отримаєте посилання для скидання пароля. Обов’язково перевірте папку «Спам».";
+"Email is required to reset password." = "Для скидання пароля потрібна електронна пошта.";

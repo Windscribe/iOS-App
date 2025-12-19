@@ -597,3 +597,8 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 
 "Type the word above" = "Nhập từ phía trên";
 "Verify" = "Xác minh";
+
+"Reset Password" = "Đặt lại mật khẩu";
+"Password Reset" = "Đặt lại mật khẩu";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Nếu bạn đã cung cấp email khi đăng ký, bạn sẽ sớm nhận được liên kết đặt lại mật khẩu. Hãy nhớ kiểm tra thư mục Spam.";
+"Email is required to reset password." = "Cần có email để đặt lại mật khẩu.";

@@ -14,9 +14,15 @@ protocol AccountSettingsViewModel: PreferencesBaseViewModel {
     var sections: [AccountSectionModel] { get }
     var loadingState: AccountState { get }
     var showUpgradeWithPromo: String? { get }
+    var shouldShowResetPasswordButton: Bool { get }
+    var resetPasswordButtonHidden: Bool { get }
+    var showPasswordResetSuccess: Bool { get }
+    var shouldShowDeleteAccountButton: Bool { get }
 
     func loadSession()
     func handleRowAction(_ action: AccountRowAction)
+    func resetPassword()
+    func dismissPasswordResetSuccess()
 }
 
 final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountSettingsViewModel {
@@ -26,6 +32,9 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     @Published var alertMessage: AccountSettingsAlertContent?
     @Published private(set) var accountEmailStatus: AccountEmailStatusType = .unknown
     @Published var showUpgradeWithPromo: String?
+    @Published private(set) var shouldShowResetPasswordButton: Bool = false
+    @Published private(set) var resetPasswordButtonHidden: Bool = false
+    @Published var showPasswordResetSuccess: Bool = false
 
     // Dependencies
     private let preferences: Preferences
@@ -45,7 +54,15 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     }
 
     var shouldShowPlanActionButtons: Bool {
-        accountEmailStatus == .missing || accountEmailStatus == .unverified
+        accountEmailStatus == .missing || accountEmailStatus == .unverified || shouldShowResetPasswordButton
+    }
+
+    var shouldShowDeleteAccountButton: Bool {
+        guard let session = userSessionRepository.sessionModel else {
+            return false
+        }
+        // Hide delete button for free users with 0 or negative bandwidth
+        return session.isUserPro || (session.trafficMax - session.trafficUsed > 0)
     }
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
@@ -192,6 +209,10 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
 
         sections.append(.init(type: .plan, items: planRows))
         sections.append(.init(type: .other, items: otherRows))
+
+        // Check if user logged in via SSO and has verified email for Reset Password button
+        let ssoProvider = preferences.getSSOProvider()
+        shouldShowResetPasswordButton = (ssoProvider == "apple" || ssoProvider == "google") && !session.email.isEmpty && session.emailStatus
     }
 
     func handleRowAction(_ action: AccountRowAction) {
@@ -329,6 +350,67 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
                         title: TextsAsset.voucherCode,
                         message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
+                }
+            }
+        }
+    }
+
+    func dismissPasswordResetSuccess() {
+        showPasswordResetSuccess = false
+    }
+
+    func resetPassword() {
+        loadingState = .loading(isFullScreen: false)
+
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            // Get email from session
+            guard let session = userSessionRepository.sessionModel,
+                  !session.email.isEmpty else {
+                await MainActor.run {
+                    self.loadingState = .error("Email not found")
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.error,
+                        message: TextsAsset.Account.resetPasswordEmailRequired,
+                        buttonText: TextsAsset.okay
+                    )
+                }
+                return
+            }
+
+            do {
+                let response = try await apiManager.resetPassword(email: session.email)
+
+                await MainActor.run {
+                    if response.success {
+                        // Password reset successful
+                        self.loadingState = .success
+
+                        // Hide button after successful reset (session-based)
+                        self.resetPasswordButtonHidden = true
+
+                        // Show custom success popup
+                        self.showPasswordResetSuccess = true
+                    } else {
+                        // API returned failure (e.g., rate limiting, banned account)
+                        self.loadingState = .error(response.message)
+                        self.alertMessage = AccountSettingsAlertContent(
+                            title: TextsAsset.error,
+                            message: response.message,
+                            buttonText: TextsAsset.okay
+                        )
+                    }
+                }
+            } catch {
+                // Network or parsing error
+                await MainActor.run {
+                    self.loadingState = .error(error.localizedDescription)
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.error,
+                        message: self.fetchErrorMessage(from: error),
+                        buttonText: TextsAsset.okay
+                    )
                 }
             }
         }

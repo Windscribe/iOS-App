@@ -586,3 +586,8 @@
 
 "Type the word above" = "Wpisz słowo powyżej";
 "Verify" = "Zweryfikuj";
+
+"Reset Password" = "Repor palavra-passe";
+"Password Reset" = "Reposição de palavra-passe";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Se forneceu um e-mail durante o registo, irá receber em breve um link para repor a palavra-passe. Não se esqueça de verificar a pasta de Spam.";
+"Email is required to reset password." = "É necessário um e-mail para repor a palavra-passe.";

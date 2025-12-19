@@ -585,3 +585,8 @@
 
 "Type the word above" = "위의 단어를 입력하세요";
 "Verify" = "확인";
+
+"Reset Password" = "비밀번호 재설정";
+"Password Reset" = "비밀번호 재설정";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "회원가입 시 이메일을 제공했다면 곧 비밀번호 재설정 링크를 받게 됩니다. 스팸 폴더도 확인하세요.";
+"Email is required to reset password." = "비밀번호를 재설정하려면 이메일이 필요합니다.";

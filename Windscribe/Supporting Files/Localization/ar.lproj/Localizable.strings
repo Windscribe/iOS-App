@@ -583,3 +583,8 @@
 
 "Type the word above" = "اكتب الكلمة أعلاه";
 "Verify" = "تحقق";
+
+"Reset Password" = "إعادة تعيين كلمة المرور";
+"Password Reset" = "إعادة تعيين كلمة المرور";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "إذا قمت بتقديم بريد إلكتروني أثناء التسجيل، فستتلقى قريبًا رابط إعادة تعيين كلمة المرور. تأكد من التحقق من مجلد البريد غير الهام.";
+"Email is required to reset password." = "البريد الإلكتروني مطلوب لإعادة تعيين كلمة المرور.";
