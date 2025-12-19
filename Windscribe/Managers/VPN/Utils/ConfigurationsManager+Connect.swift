@@ -257,7 +257,6 @@ extension ConfigurationsManager {
                                              forLocationId: String,
                                              proto: String,
                                              checkIsTaskCancelled: () -> Bool) async throws {
-        try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
 
         let currentHost = preferences.getLastNodeIP() ?? ""
 
@@ -270,6 +269,10 @@ extension ConfigurationsManager {
 
         bridgeAPI.setIgnoreSslErrors(true)
         bridgeAPI.setConnectedState(true)
+
+        try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
+        self.logger.logI("ConfigurationsManager", "wsnet setIsConnectedToVpnState to true")
+        WSNet.instance().setIsConnectedToVpnState(true)
 
         var ipPinningFailed = false
         var shouldCheckPinning = false
