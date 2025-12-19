@@ -497,6 +497,14 @@ class PreferencesImpl: Preferences {
         setBool(value, forKey: SharedKeys.forceDisconnect)
     }
 
+    func saveSSOProvider(provider: String?) {
+        setString(provider, forKey: SharedKeys.ssoProvider)
+    }
+
+    func getSSOProvider() -> String? {
+        return getString(forKey: SharedKeys.ssoProvider)
+    }
+
     func getForceDisconnect() -> AnyPublisher<Bool?, Never> {
         return observeKey(SharedKeys.forceDisconnect, type: Bool.self, defaultValue: false)
     }

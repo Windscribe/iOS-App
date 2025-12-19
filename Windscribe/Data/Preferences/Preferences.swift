@@ -221,4 +221,8 @@ protocol Preferences {
     func getOrderLocationsBySync() -> String?
     func getSelectedProtocolSync() -> String?
     func getSelectedPortSync() -> String?
+
+    // SSO Provider Tracking
+    func saveSSOProvider(provider: String?)
+    func getSSOProvider() -> String?
 }

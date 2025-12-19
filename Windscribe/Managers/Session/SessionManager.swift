@@ -307,6 +307,9 @@ class SessionManagerImpl: SessionManager {
         // Clear Apple SSO Session
         ssoManager.signOut()
 
+        // Clear SSO Provider preference
+        preferences.saveSSOProvider(provider: nil)
+
         // Delete Session
         Task {
             do {

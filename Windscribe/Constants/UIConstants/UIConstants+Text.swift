@@ -835,6 +835,22 @@ enum TextsAsset {
             return "Manage Account".localized
         }
 
+        static var resetPasswordActionTitle: String {
+            return "Reset Password".localized
+        }
+
+        static var resetPasswordTitle: String {
+            return "Password Reset".localized
+        }
+
+        static var resetPasswordSuccess: String {
+            return "If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder.".localized
+        }
+
+        static var resetPasswordEmailRequired: String {
+            return "Email is required to reset password.".localized
+        }
+
         static var addEmail: String {
             return "Add".localized
         }

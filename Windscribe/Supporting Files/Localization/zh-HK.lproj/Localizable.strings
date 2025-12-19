@@ -585,3 +585,8 @@
 
 "Type the word above" = "輸入上方的字詞";
 "Verify" = "驗證";
+
+"Reset Password" = "重設密碼";
+"Password Reset" = "密碼重設";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "如果您在註冊時提供了電郵地址，您將很快收到密碼重設連結。請務必檢查垃圾郵件資料夾。";
+"Email is required to reset password." = "重設密碼需要電郵地址。";

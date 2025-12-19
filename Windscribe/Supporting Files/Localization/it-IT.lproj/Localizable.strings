@@ -583,3 +583,8 @@
 
 "Type the word above" = "Digita la parola sopra";
 "Verify" = "Verifica";
+
+"Reset Password" = "Reimposta password";
+"Password Reset" = "Reimpostazione password";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Se hai fornito un'email durante la registrazione, riceverai a breve un link per reimpostare la password. Controlla anche la cartella Spam.";
+"Email is required to reset password." = "È necessaria un'email per reimpostare la password.";

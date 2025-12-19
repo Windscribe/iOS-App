@@ -585,3 +585,8 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 
 "Type the word above" = "Saisissez le mot ci-dessus";
 "Verify" = "Vérifier";
+
+"Reset Password" = "Réinitialiser le mot de passe";
+"Password Reset" = "Réinitialisation du mot de passe";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Si vous avez fourni une adresse e-mail lors de l'inscription, vous recevrez bientôt un lien de réinitialisation du mot de passe. Pensez à vérifier votre dossier Spam.";
+"Email is required to reset password." = "Une adresse e-mail est requise pour réinitialiser le mot de passe.";

@@ -585,3 +585,8 @@
 
 "Type the word above" = "Ketik kata di atas";
 "Verify" = "Verifikasi";
+
+"Reset Password" = "Atur Ulang Kata Sandi";
+"Password Reset" = "Pengaturan Ulang Kata Sandi";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Jika Anda memberikan email saat pendaftaran, Anda akan segera menerima tautan pengaturan ulang kata sandi. Pastikan untuk memeriksa folder Spam.";
+"Email is required to reset password." = "Email diperlukan untuk mengatur ulang kata sandi.";

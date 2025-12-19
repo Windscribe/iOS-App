@@ -1060,6 +1060,7 @@
 		F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */; };
 		F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */; };
 		F45BD5A92EF3315B00490072 /* CaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BD5A82EF3315B00490072 /* CaptchaView.swift */; };
+		F45BD5AB2EF5DC9300490072 /* PasswordResetSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BD5AA2EF5DC9300490072 /* PasswordResetSuccessView.swift */; };
 		F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */; };
 		F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */; };
 		F45DF73F2E2FF57700B00F09 /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */; };
@@ -2064,6 +2065,7 @@
 		F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessBenefitView.swift; sourceTree = "<group>"; };
 		F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessShareView.swift; sourceTree = "<group>"; };
 		F45BD5A82EF3315B00490072 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
+		F45BD5AA2EF5DC9300490072 /* PasswordResetSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetSuccessView.swift; sourceTree = "<group>"; };
 		F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
 		F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailView.swift; sourceTree = "<group>"; };
 		F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -5249,6 +5251,7 @@
 			isa = PBXGroup;
 			children = (
 				F49C45B12DCD28BF007E5EF1 /* AccountSettingsView.swift */,
+				F45BD5AA2EF5DC9300490072 /* PasswordResetSuccessView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -7157,6 +7160,7 @@
 				C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */,
 				E9D3D36F274D1BA800283285 /* MainViewController+Selector.swift in Sources */,
 				1E5553C02D91CDBB00F16AF0 /* WifiInfoView.swift in Sources */,
+				F45BD5AB2EF5DC9300490072 /* PasswordResetSuccessView.swift in Sources */,
 				E9219FEF2885AF900026E544 /* UIEdgeInsets+ Extension.swift in Sources */,
 				C545A0DD2D47639500F3333E /* Completable+Extension.swift in Sources */,
 				C56FCBF22B2B9F37008DE7D4 /* AppModulesCommon.swift in Sources */,

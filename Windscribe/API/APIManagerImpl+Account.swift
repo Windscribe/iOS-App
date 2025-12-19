@@ -125,6 +125,12 @@ extension APIManagerImpl {
         }
     }
 
+    func resetPassword(email: String) async throws -> APIMessage {
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
+            self.api.passwordRecovery(email, callback: completion)
+        }
+    }
+
     func claimAccount(username: String, password: String, email: String) async throws -> APIMessage {
         guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure

@@ -56,6 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)sso:(NSString*)provider token:(NSString*)token callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)authTokenLogin:(BOOL)useAsciiCaptcha callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)authTokenSignup:(BOOL)useAsciiCaptcha callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)passwordRecovery:(NSString*)email callback:(void(^)(int, NSString*))callback;
 
 @end
 

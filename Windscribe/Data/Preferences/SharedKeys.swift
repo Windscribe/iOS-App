@@ -73,6 +73,7 @@ enum SharedKeys {
     static let selectedLanguage = "selectedLanguage"
     static let defaultLanguage = "defaultLanguage"
     static let appleLanguage = "AppleLanguages"
+    static let ssoProvider = "ssoProvider"
 
     // Widget GroupPersistenceManager keys
     static let serverNameKey = "server-name"

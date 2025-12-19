@@ -590,3 +590,8 @@
 
 "Type the word above" = "上の単語を入力してください";
 "Verify" = "確認";
+
+"Reset Password" = "パスワードをリセット";
+"Password Reset" = "パスワードリセット";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "登録時にメールアドレスを入力している場合、まもなくパスワードリセット用のリンクが届きます。迷惑メールフォルダもご確認ください。";
+"Email is required to reset password." = "パスワードをリセットするにはメールアドレスが必要です。";

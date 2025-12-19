@@ -175,6 +175,10 @@ class MockAPIManager: APIManager {
         fatalError("Not implemented")
     }
 
+    func resetPassword(email: String) async throws -> APIMessage {
+        return APIMessage()
+    }
+
     func claimAccount(username: String, password: String, email: String) async throws -> APIMessage {
         fatalError("Not implemented")
     }

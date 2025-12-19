@@ -303,6 +303,12 @@ class MockPreferences: Preferences {
         return nil
     }
 
+    func saveSSOProvider(provider: String?) {}
+
+    func getSSOProvider() -> String? {
+        return nil
+    }
+
     func saveLastNotificationTimestamp(timeStamp: Double?) {}
 
     func getLastNotificationTimestamp() -> Double? {

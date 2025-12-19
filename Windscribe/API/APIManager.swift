@@ -41,6 +41,7 @@ protocol APIManager {
     // Account
     func addEmail(email: String) async throws -> APIMessage
     func confirmEmail() async throws -> APIMessage
+    func resetPassword(email: String) async throws -> APIMessage
     func claimAccount(username: String, password: String, email: String) async throws -> APIMessage
     func getXpressLoginCode() async throws -> XPressLoginCodeResponse
     func verifyXPressLoginCode(code: String, sig: String) async throws -> XPressLoginVerifyResponse

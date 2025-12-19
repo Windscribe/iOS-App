@@ -604,3 +604,8 @@
 
 "Type the word above" = "Введите слово выше";
 "Verify" = "Подтвердить";
+
+"Reset Password" = "Сбросить пароль";
+"Password Reset" = "Сброс пароля";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Если вы указали электронную почту при регистрации, вы вскоре получите ссылку для сброса пароля. Обязательно проверьте папку «Спам».";
+"Email is required to reset password." = "Для сброса пароля требуется электронная почта.";

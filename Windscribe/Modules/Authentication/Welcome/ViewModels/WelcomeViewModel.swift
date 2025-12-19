@@ -103,6 +103,10 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 }
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
+
+                // Save SSO provider for password reset feature
+                self.preferences.saveSSOProvider(provider: "apple")
+
                 self.sessionManager.updateFrom(session: session)
                 self.logger.logI("WelcomeViewModel", "Apple sign in successful")
                 self.prepareUserData()

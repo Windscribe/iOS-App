@@ -601,3 +601,10 @@
 
 "Type the word above" = "Yukarıdaki kelimeyi yazın";
 "Verify" = "Doğrula";
+
+
+"Reset Password" = "Şifreyi Sıfırla";
+"Password Reset" = "Şifre Sıfırlama";
+"If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Kayıt sırasında bir e-posta adresi verdiyseniz, kısa süre içinde bir şifre sıfırlama bağlantısı alacaksınız. Spam klasörünüzü kontrol etmeyi unutmayın.";
+"Email is required to reset password." = "Şifreyi sıfırlamak için e-posta gereklidir.";
+
