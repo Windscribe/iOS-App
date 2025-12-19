@@ -110,13 +110,14 @@ extension MainViewController {
             guard let self = self else { return }
             if self.vpnConnectionViewModel.isDisconnected() || force ||
                 self.isAnyRefreshControlIsRefreshing() {
-                if self.vpnConnectionViewModel.isBestLocationSelected(), connectToBestLocation {
-                    Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
-                        self?.latencyLoadTimeOutWithSelectAndConnectBestLocation()
-                    }
-                } else {
-                    Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
-                        self?.latencyLoadTimeOut()
+                Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+                    guard let self = self else { return }
+                    if self.vpnConnectionViewModel.isDisconnected(),
+                       self.vpnConnectionViewModel.isBestLocationSelected(),
+                       connectToBestLocation {
+                            self.latencyLoadTimeOutWithSelectAndConnectBestLocation()
+                    } else {
+                        self.latencyLoadTimeOut()
                     }
                 }
             } else {
