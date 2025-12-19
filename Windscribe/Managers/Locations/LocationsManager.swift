@@ -215,25 +215,31 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func checkLocationValidity() {
+        let locationType = getLocationType() ?? .server
+
         let locationID = getLastSelectedLocation()
         guard !locationID.isEmpty, locationID != "0" else {
             self.logger.logI("LocationsManager", "Location is empty or invalid.. Switching to Best location.")
             updateToBestLocation()
             return
         }
-        guard let currentLocation = try? getLocation(from: locationID) else {
-            self.logger.logI("LocationsManager", "Unable to find location with ID: \(locationID). Switching to Sister location.")
-            if let sisterLocationID = getSisterLocationID(from: locationID) {
-                saveLastSelectedLocation(with: sisterLocationID)
-            } else {
-                self.logger.logI("LocationsManager", "Unable to find sister location. Switching to Best location.")
-                updateToBestLocation()
+        var isPremiumOnly = false
+        if locationType == .server {
+            guard let currentLocation = try? getLocation(from: locationID) else {
+                self.logger.logI("LocationsManager", "Unable to find location with ID: \(locationID). Switching to Sister location.")
+                if let sisterLocationID = getSisterLocationID(from: locationID) {
+                    saveLastSelectedLocation(with: sisterLocationID)
+                } else {
+                    self.logger.logI("LocationsManager", "Unable to find sister location. Switching to Best location.")
+                    updateToBestLocation()
+                }
+                return
             }
-            return
+            isPremiumOnly = currentLocation.1.premiumOnly
         }
         if userSessionRepository.sessionModel != nil,
            !userSessionRepository.canAccesstoProLocation(),
-           currentLocation.1.premiumOnly {
+           isPremiumOnly {
             updateToBestLocation()
         }
     }
