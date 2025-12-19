@@ -12,8 +12,6 @@ import Combine
 protocol BridgeApiRepository {
     var bridgeIsAvailable: CurrentValueSubject<Bool, Never> { get }
     var isReady: Bool { get }
-
-    func setWSNetConnected()
 }
 
 class BridgeApiRepositoryImpl: BridgeApiRepository {
@@ -49,11 +47,6 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
         self.protocolManager = protocolManager
         self.preferences = preferences
         observeBridgeApi()
-    }
-
-    func setWSNetConnected() {
-        self.logger.logI("BridgeApiRepository", "wsnet setIsConnectedToVpnState to true")
-        WSNet.instance().setIsConnectedToVpnState(true)
     }
 
     private func observeBridgeApi() {
