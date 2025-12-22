@@ -1061,6 +1061,7 @@
 		F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */; };
 		F45BD5A92EF3315B00490072 /* CaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BD5A82EF3315B00490072 /* CaptchaView.swift */; };
 		F45BD5AB2EF5DC9300490072 /* PasswordResetSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BD5AA2EF5DC9300490072 /* PasswordResetSuccessView.swift */; };
+		F45BD5AD2EF9A46100490072 /* APIMessage+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BD5AC2EF9A46100490072 /* APIMessage+Test.swift */; };
 		F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */; };
 		F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */; };
 		F45DF73F2E2FF57700B00F09 /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */; };
@@ -2066,6 +2067,7 @@
 		F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessShareView.swift; sourceTree = "<group>"; };
 		F45BD5A82EF3315B00490072 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
 		F45BD5AA2EF5DC9300490072 /* PasswordResetSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetSuccessView.swift; sourceTree = "<group>"; };
+		F45BD5AC2EF9A46100490072 /* APIMessage+Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIMessage+Test.swift"; sourceTree = "<group>"; };
 		F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
 		F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailView.swift; sourceTree = "<group>"; };
 		F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -5570,6 +5572,7 @@
 			isa = PBXGroup;
 			children = (
 				1E022C472E93FDD600AF8AA7 /* TestLocalDatabase.swift */,
+				F45BD5AC2EF9A46100490072 /* APIMessage+Test.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -7290,6 +7293,7 @@
 			files = (
 				1EFFD0532E9FD8D4005603FB /* AdvanceRepositoryTests.swift in Sources */,
 				F48DDC1D2E8C50EB00B66315 /* MockFileDatabase.swift in Sources */,
+				F45BD5AD2EF9A46100490072 /* APIMessage+Test.swift in Sources */,
 				1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,

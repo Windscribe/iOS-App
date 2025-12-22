@@ -176,7 +176,7 @@ class MockAPIManager: APIManager {
     }
 
     func resetPassword(email: String) async throws -> APIMessage {
-        return APIMessage()
+        return APIMessage.mock(success: true)
     }
 
     func claimAccount(username: String, password: String, email: String) async throws -> APIMessage {
