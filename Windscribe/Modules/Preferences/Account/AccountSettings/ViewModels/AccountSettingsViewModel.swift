@@ -14,10 +14,11 @@ protocol AccountSettingsViewModel: PreferencesBaseViewModel {
     var sections: [AccountSectionModel] { get }
     var loadingState: AccountState { get }
     var showUpgradeWithPromo: String? { get }
+    var shouldShowUpgradeButton: Bool { get }
+    var shouldShowDeleteAccountButton: Bool { get }
     var shouldShowResetPasswordButton: Bool { get }
     var resetPasswordButtonHidden: Bool { get }
     var showPasswordResetSuccess: Bool { get }
-    var shouldShowDeleteAccountButton: Bool { get }
 
     func loadSession()
     func handleRowAction(_ action: AccountRowAction)
@@ -53,16 +54,22 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         return session.email.isEmpty == true
     }
 
-    var shouldShowPlanActionButtons: Bool {
-        accountEmailStatus == .missing || accountEmailStatus == .unverified || shouldShowResetPasswordButton
+    // MARK: - Plan Action Buttons - Individual Logic
+
+    var shouldShowUpgradeButton: Bool {
+        guard let session = userSessionRepository.sessionModel else {
+            return false
+        }
+        // Show only for non-pro users
+        return !session.isUserPro
     }
 
     var shouldShowDeleteAccountButton: Bool {
         guard let session = userSessionRepository.sessionModel else {
             return false
         }
-        // Hide delete button for free users with 0 or negative bandwidth
-        return session.isUserPro || (session.trafficMax - session.trafficUsed > 0)
+        // Show only if user has not used any data
+        return session.trafficUsed <= 0
     }
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,

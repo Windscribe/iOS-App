@@ -55,7 +55,7 @@ struct AccountSettingsView: View {
                                     infoActionButtons()
                                 }
 
-                                if section.type == .plan, viewModel.shouldShowPlanActionButtons {
+                                if section.type == .plan {
                                     planActionButtons()
                                 }
                             }
@@ -180,19 +180,23 @@ struct AccountSettingsView: View {
     @ViewBuilder
     private func planActionButtons() -> some View {
         VStack(spacing: 12) {
-            Button(action: {
-                showUpgradeModal = true
-            }, label: {
-                Text(TextsAsset.Account.upgradeToProActionTitle)
-                    .foregroundColor(.actionGreen)
-                    .font(.medium(.callout))
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(14)
-                    .background(Color.actionGreen.opacity(0.20))
-                    .cornerRadius(12)
-                    .padding(.horizontal, 16)
-            })
+            // Button 1: Upgrade to Pro
+            if viewModel.shouldShowUpgradeButton {
+                Button(action: {
+                    showUpgradeModal = true
+                }, label: {
+                    Text(TextsAsset.Account.upgradeToProActionTitle)
+                        .foregroundColor(.actionGreen)
+                        .font(.medium(.callout))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(14)
+                        .background(Color.actionGreen.opacity(0.20))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 16)
+                })
+            }
 
+            // Button 2: Delete Account
             if viewModel.shouldShowDeleteAccountButton {
                 Button(action: {
                     presentDialog(for: .password)
@@ -208,7 +212,7 @@ struct AccountSettingsView: View {
                 })
             }
 
-            // Reset Password button (only for SSO users) - Always at the bottom
+            // Button 3: Reset Password
             if viewModel.shouldShowResetPasswordButton && !viewModel.resetPasswordButtonHidden {
                 Button(action: {
                     viewModel.resetPassword()
