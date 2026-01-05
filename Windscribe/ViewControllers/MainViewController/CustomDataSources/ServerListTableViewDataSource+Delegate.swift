@@ -29,8 +29,7 @@ protocol ServerListTableViewDataSource: WExpyTableViewDataSource,
 
     func updateServerList(with serverSections: [ServerSection])
     func updateShouldColapse(with value: Bool)
-    func clearBestLocation()
-    func refreshBestLocation()
+    func setBestLocationVisibility(to visible: Bool)
 }
 
 class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
@@ -44,7 +43,8 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     private var cancellables = Set<AnyCancellable>()
     private var favList: [Favourite] = []
     private var locationLoad: Bool = false
-    private var bestLocation: BestLocationModel?
+    private var bestLocationModel: BestLocationModel?
+    private var bestLocationVisible: Bool = true
 
     private let locationsManager: LocationsManager
     private let lookAndFeelRepository: LookAndFeelRepositoryType
@@ -117,19 +117,21 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             }
             .store(in: &cancellables)
 
-        locationsManager.bestLocationUpdated
-            .sink { [weak self] _ in
-                self?.refreshBestLocation()
-            }.store(in: &cancellables)
-
-        locationsManager.selectedLocationUpdated
-            .sink { [weak self] _ in
-                self?.refreshBestLocation()
-            }.store(in: &cancellables)
+        Publishers.CombineLatest(
+            locationsManager.bestLocationUpdated,
+            locationsManager.selectedLocationUpdated
+        )
+        .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] _ in
+            self?.refreshBestLocation()
+        }
+        .store(in: &cancellables)
     }
 
-    func clearBestLocation() {
-        updateBestlocation(with: nil)
+    func setBestLocationVisibility(to visible: Bool) {
+        bestLocationVisible = visible
+        delegate?.reloadServerListTableView()
     }
 
     func refreshBestLocation() {
@@ -137,14 +139,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     }
 
     private func updateBestlocation(with value: BestLocationModel?) {
-        bestLocation = value
-        if bestLocation != nil,
-           serverSections.first?.server?.name != Fields.Values.bestLocation,
-           let groupId = bestLocation?.groupId,
-           let serverModel = getServerModel(from: groupId) {
-            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
-            serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
-        }
+        bestLocationModel = value
         delegate?.reloadServerListTableView()
     }
 
@@ -164,20 +159,22 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     }
 
     func numberOfSections(in _: UITableView) -> Int {
-        if bestLocation != nil,
-           serverSections.first?.server?.name != Fields.Values.bestLocation,
-           let groupId = bestLocation?.groupId,
-           let serverModel = getServerModel(from: groupId) {
-            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
-            serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
-        }
-        return serverSections.count
+        return serverSections.count + (showBestLocation() ? 1 : 0)
+    }
+
+    private func showBestLocation() -> Bool {
+        return bestLocationModel != nil && bestLocationVisible
+    }
+
+    private func getCalculatedSection(from section: Int) -> Int {
+        return section + (showBestLocation() ? -1 : 0)
     }
 
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 && bestLocation != nil { return 1 }
-        if serverSections.indices.contains(section) {
-            guard let count = serverSections[section].server?.groups.count else { return 0 }
+        if section == 0 && showBestLocation() { return 1 }
+        let calculatedSection = getCalculatedSection(from: section)
+        if serverSections.indices.contains(calculatedSection) {
+            guard let count = serverSections[calculatedSection].server?.groups.count else { return 0 }
             return count + 1
         } else {
             return 0
@@ -188,8 +185,9 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         let cell = tableView.dequeueReusableCell(
             withIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell
         ?? NodeTableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
-        if (serverSections.count > indexPath.section) && ((serverSections[indexPath.section].server?.groups.count ?? 0) > indexPath.row - 1) {
-            let group = serverSections[indexPath.section].server?.groups[indexPath.row - 1]
+        let calculatedSection = getCalculatedSection(from: indexPath.section)
+        if (serverSections.count > calculatedSection) && ((serverSections[calculatedSection].server?.groups.count ?? 0) > indexPath.row - 1) {
+            let group = serverSections[calculatedSection].server?.groups[indexPath.row - 1]
 
             var latency = -1
             if let group = group {
@@ -213,17 +211,18 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 && bestLocation != nil {
+        if indexPath.section == 0 && showBestLocation() {
             delegate?.connectToBestLocation()
         }
         if indexPath.row == 0 { return }
-        guard let server = serverSections[indexPath.section].server else { return }
+        let calculatedSection = getCalculatedSection(from: indexPath.section)
+        guard let server = serverSections[calculatedSection].server else { return }
         let group = server.groups[indexPath.row - 1]
         delegate?.setSelectedServerAndGroup(server: server, group: group)
     }
 
     func tableView(_ tableView: ExpyTableView, expandableCellForSection section: Int) -> UITableViewCell {
-        if section == 0 && bestLocation != nil {
+        if section == 0 && showBestLocation() {
             let bestLocationCell = tableView.dequeueReusableCell(
                 withIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)! as? BestLocationCell
             ?? BestLocationCell(
@@ -232,12 +231,13 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             if bestLocationCell.bestCellViewModel == nil {
                 bestLocationCell.bestCellViewModel = BestLocationCellModel()
             }
-            bestLocationCell.bestCellViewModel?.update(bestLocationModel: bestLocation,
+            bestLocationCell.bestCellViewModel?.update(bestLocationModel: bestLocationModel,
                                                        locationLoad: locationLoad,
                                                        isDarkMode: lookAndFeelRepository.isDarkMode)
             bestLocationCell.refreshUI()
             return bestLocationCell
         } else {
+            let calculatedSection = getCalculatedSection(from: section)
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)! as? ServerSectionCell
             ?? ServerSectionCell(
@@ -247,15 +247,15 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
                 cell.serverCellViewModel = ServerSectionCellModel()
             }
 
-            if let expanded = tableView.expandedSections[section], section < serverSections.count {
-                serverSections[section].collapsed = !expanded
+            if let expanded = tableView.expandedSections[section], calculatedSection < serverSections.count {
+                serverSections[calculatedSection].collapsed = !expanded
             }
             if section < serverSections.count {
-                cell.serverCellViewModel?.update(serverModel: serverSections[section].server,
+                cell.serverCellViewModel?.update(serverModel: serverSections[calculatedSection].server,
                                                  locationLoad: locationLoad,
                                                  isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
                                                  isDarkMode: lookAndFeelRepository.isDarkMode)
-                cell.setCollapsed(collapsed: serverSections[section].collapsed)
+                cell.setCollapsed(collapsed: serverSections[calculatedSection].collapsed)
                 cell.refreshUI()
             }
             return cell
@@ -268,13 +268,14 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
     func changeForSection(tableView: UITableView, state: ExpyState, section: Int) {
         guard section < serverSections.count else { return }
+        let calculatedSection = getCalculatedSection(from: section)
         guard let cell = tableView.cellForRow(at: IndexPath(item: 0, section: section)) as? ServerSectionCell else { return }
         switch state {
         case .willExpand:
-            serverSections[section].collapsed = false
+            serverSections[calculatedSection].collapsed = false
             cell.expand()
         case .willCollapse:
-            serverSections[section].collapsed = true
+            serverSections[calculatedSection].collapsed = true
             cell.collapse()
         default:
             return
