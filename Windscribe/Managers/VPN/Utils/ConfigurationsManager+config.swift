@@ -118,6 +118,7 @@ extension ConfigurationsManager {
             let ip = location.wgIp
             let hostname = node.hostname
             let publickey = location.wgPublicKey
+            preferences.saveLastNodeIP(nodeIp: node.hostname)
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
