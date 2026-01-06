@@ -23,11 +23,11 @@ extension MainViewController {
     }
 
     func addDataSources() {
-        serverListTableViewDataSource = Assembler.container.resolve(ServerListTableViewDataSource.self)!
-        favNodesListTableViewDataSource = Assembler.container.resolve(FavouriteListTableViewDataSource.self)!
-        staticIPListTableViewDataSource = Assembler.container.resolve(StaticIPListTableViewDataSource.self)!
+        serverListTableViewDataSource = Assembler.resolve(ServerListTableViewDataSource.self)
+        favNodesListTableViewDataSource = Assembler.resolve(FavouriteListTableViewDataSource.self)
+        staticIPListTableViewDataSource = Assembler.resolve(StaticIPListTableViewDataSource.self)
 
-        customConfigListTableViewDataSource = Assembler.container.resolve(CustomConfigListTableViewDataSource.self)!
+        customConfigListTableViewDataSource = Assembler.resolve(CustomConfigListTableViewDataSource.self)
 
         serverListTableView.dataSource = serverListTableViewDataSource
         serverListTableView.delegate = serverListTableViewDataSource
@@ -82,7 +82,7 @@ extension MainViewController {
         scrollView.addSubview(serverListTableView)
 
         // Set table headers
-        serverHeaderView = Assembler.container.resolve(ServerInfoView.self)!
+        serverHeaderView = Assembler.resolve(ServerInfoView.self)
         serverListTableView.tableHeaderView = serverHeaderView
 
         favTableView = PlainTableView()
@@ -95,7 +95,7 @@ extension MainViewController {
         favTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         favTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         favTableViewRefreshControl.backView = RefreshControlBackView(frame: favTableViewRefreshControl.bounds)
-        let favHeaderView = Assembler.container.resolve(ListHeaderView.self)!
+        let favHeaderView = Assembler.resolve(ListHeaderView.self)
         favHeaderView.viewModel.updateType(with: .favNodes)
         favTableView.tableHeaderView = favHeaderView
 
@@ -115,7 +115,7 @@ extension MainViewController {
         staticIpTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         staticIpTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         staticIpTableViewRefreshControl.backView = RefreshControlBackView(frame: staticIpTableViewRefreshControl.bounds)
-        let staticHeaderView = Assembler.container.resolve(ListHeaderView.self)!
+        let staticHeaderView = Assembler.resolve(ListHeaderView.self)
         staticHeaderView.viewModel.updateType(with: .staticIP)
         staticIpTableView.tableHeaderView = staticHeaderView
 
@@ -135,14 +135,14 @@ extension MainViewController {
         customConfigsTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         customConfigsTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         customConfigsTableViewRefreshControl.backView = RefreshControlBackView(frame: customConfigsTableViewRefreshControl.bounds)
-        let customHeaderView = Assembler.container.resolve(ListHeaderView.self)!
+        let customHeaderView = Assembler.resolve(ListHeaderView.self)
         customHeaderView.viewModel.updateType(with: .customConfig)
         customConfigTableView.tableHeaderView = customHeaderView
 
         addDataSources()
         addRefreshControls()
 
-        freeAccountViewFooterView = Assembler.container.resolve(FreeAccountFooterView.self)!
+        freeAccountViewFooterView = Assembler.resolve(FreeAccountFooterView.self)
         freeAccountViewFooterView.delegate = self
         scrollView.addSubview(freeAccountViewFooterView)
 
