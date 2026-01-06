@@ -301,16 +301,7 @@ extension ConfigurationsManager {
 
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
-                try await withCheckedThrowingContinuation { continuation in
-                    _ = ipRepository.getIp().subscribe(
-                        onSuccess: { _ in
-                            continuation.resume(returning: ())
-                        },
-                        onFailure: { _ in
-                            continuation.resume(throwing: VPNConfigurationErrors.connectivityTestFailed)
-                        }
-                    )
-                }
+                try await ipRepository.getIp()
                 if hasPinnedNodeMismatch || ipPinningFailed {
                     showFailedPinIpTrigger.send()
                 }

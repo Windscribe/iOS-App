@@ -70,7 +70,7 @@ protocol APIManager {
     // Other
     func recordInstall(platform: String) async throws -> APIMessage
     func getNotifications(pcpid: String) async throws -> NoticeList
-    func getIp() async throws -> MyIP
+    func getIp() async throws -> String
     func sendDebugLog(username: String, log: String) async throws -> APIMessage
     func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) async throws -> APIMessage
     func getShakeForDataLeaderboard() async throws -> Leaderboard

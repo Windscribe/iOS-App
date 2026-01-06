@@ -70,23 +70,8 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
     }
 
     func getMyIp() async throws -> String {
-        let result = try await apiUtil.makeApiCall(modalType: IntentMyIP.self) { completion in
-            self.resolver.getApi().myIP(completion)
+        return try await apiUtil.makeApiCall(modalType: String.self) { completion in
+            self.resolver.getApi().pingTest(5000, callback: completion)
         }
-        return result.userIp
-    }
-}
-
-private struct IntentMyIP: Decodable {
-    dynamic var userIp: String = ""
-    enum CodingKeys: String, CodingKey {
-        case data
-        case userIp = "user_ip"
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        userIp = try data.decode(String.self, forKey: .userIp)
     }
 }

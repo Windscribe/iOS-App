@@ -72,20 +72,18 @@ class IPInfoViewModel: IPInfoViewModelType {
         ipRepository.ipState
             .asPublisher()
             .receive(on: DispatchQueue.main)
-            .compactMap { state -> MyIP? in
-                guard case .available(let ip) = state, !ip.isInvalidated else {
+            .compactMap { state -> String? in
+                guard case .available(let ipAddress) = state else {
                     return nil
                 }
-                return ip
+                return ipAddress
             }
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.logger.logE("IPInfoViewModel", "Unable to get ip State, error: \(error)")
                 }
-            }, receiveValue: { [weak self] myip in
-                if !myip.isInvalidated {
-                    self?.ipAddressSubject.send(myip.userIp)
-                }
+            }, receiveValue: { [weak self] ipAddress in
+                self?.ipAddressSubject.send(ipAddress)
             })
             .store(in: &cancellables)
 
@@ -170,7 +168,7 @@ class IPInfoViewModel: IPInfoViewModelType {
             logger.logI("IPInfoViewModel", "Rotate IP request successful")
             let currentIp = ipAddressSubject.value ?? " -- "
             do {
-                try await ipRepository.getIp().value
+                try await ipRepository.getIp()
                 guard let newIp = ipRepository.currentIp.value else {
                     logger.logE("IPInfoViewModel", "Could not get ip after rotation")
                     return false

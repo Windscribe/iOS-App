@@ -112,9 +112,23 @@ class LivecycleManager: LivecycleManagerType {
     private func testConnectivity() -> Task<Void, Error> {
         return Task { @MainActor in
             do {
-                try await ipRepository.getIp().retry(3).value
-                testTask = nil
-                self.logger.logI("LivecycleManager", "Internet connectivity validated for \(connectivity.getNetwork())!")
+                // Retry up to 3 times
+                var lastError: Error?
+                for attempt in 1...3 {
+                    do {
+                        try await ipRepository.getIp()
+                        testTask = nil
+                        self.logger.logI("LivecycleManager", "Internet connectivity validated for \(connectivity.getNetwork())!")
+                        return
+                    } catch {
+                        lastError = error
+                        if attempt < 3 {
+                            self.logger.logI("LivecycleManager", "IP fetch attempt \(attempt) failed, retrying...")
+                            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay between retries
+                        }
+                    }
+                }
+                throw lastError ?? Errors.notDefined
             } catch {
                 testTask = nil
                 self.logger.logE("LivecycleManager", "Connected to VPN but no internet. \(error)")

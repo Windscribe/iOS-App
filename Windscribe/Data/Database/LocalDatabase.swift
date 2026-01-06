@@ -42,9 +42,22 @@ protocol LocalDatabase {
     func getReadNotices() -> [ReadNotice]?
     func getReadNoticesObservable() -> Observable<[ReadNotice]>
     func saveReadNotices(readNotices: [ReadNotice])
+
+    /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddressObservable() instead.
+    /// This method is kept for migration support only. Will be removed in v3.10.0+
+    @available(*, deprecated, message: "Use Preferences.getCurrentIpAddressObservable() instead")
     func getIp() -> Observable<MyIP?>
+
+    /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddress() instead.
+    /// This method is kept for migration support only. Will be removed in v3.10.0+
+    @available(*, deprecated, message: "Use Preferences.getCurrentIpAddress() instead")
     func getIpSync() -> MyIP?
+
+    /// DEPRECATED - Issue #911: Use Preferences.saveCurrentIpAddress(ip:) instead.
+    /// This method is kept for migration support only. Will be removed in v3.10.0+
+    @available(*, deprecated, message: "Use Preferences.saveCurrentIpAddress(ip:) instead")
     func saveIp(myip: MyIP) -> Disposable
+
     func getNetworks() -> Observable<[WifiNetwork]>
     func saveNetwork(wifiNetwork: WifiNetwork)
     func removeNetwork(wifiNetwork: WifiNetwork)

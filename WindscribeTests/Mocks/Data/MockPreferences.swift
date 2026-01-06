@@ -36,6 +36,10 @@ class MockPreferences: Preferences {
     var mockLastNodeIP: String?
     var mockIgnorePinIP: Bool?
 
+    // IP Address - Issue #911
+    var mockCurrentIpAddress: String?
+    private let currentIpAddressSubject = CurrentValueSubject<String?, Never>(nil)
+
     // UserSessionRepository tracking
     var sessionAuthToReturn: String?
     var lastSavedSessionAuth: String?
@@ -645,5 +649,18 @@ class MockPreferences: Preferences {
 
     func getIgnorePinIP() -> Bool {
         return mockIgnorePinIP ?? false
+    }
+
+    func saveCurrentIpAddress(ip: String?) {
+        mockCurrentIpAddress = ip
+        currentIpAddressSubject.send(ip)
+    }
+
+    func getCurrentIpAddress() -> String? {
+        return mockCurrentIpAddress
+    }
+
+    func getCurrentIpAddressObservable() -> AnyPublisher<String?, Never> {
+        return currentIpAddressSubject.eraseToAnyPublisher()
     }
 }

@@ -13,11 +13,12 @@ import Swinject
 import Combine
 
 enum IPState: Equatable {
-    case available(MyIP), updating, unavailable
+    case available(String), updating, unavailable
 }
 class IPRepositoryImpl: IPRepository {
     private let apiManager: APIManager
-    private let localDatabase: LocalDatabase
+    private let localDatabase: LocalDatabase  // Kept for migration from older versions
+    private let preferences: Preferences
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
     private var wasObserved = false
@@ -26,52 +27,58 @@ class IPRepositoryImpl: IPRepository {
     let ipState: BehaviorSubject<IPState?>
     let currentIp: CurrentValueSubject<String?, Never>
 
-    init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
+    init(apiManager: APIManager, localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
+        self.preferences = preferences
         self.logger = logger
 
-        // Load cached IP synchronously and initialize BehaviorSubject with correct initial state
+        // Migration: Check if IP exists in Realm (from older app versions)
+        // If yes, migrate it to Preferences for future use
+        if let realmIp = localDatabase.getIpSync() {
+            logger.logI("IPRepositoryImpl", "Migrating IP from Realm to Preferences: \(realmIp.userIp)")
+            preferences.saveCurrentIpAddress(ip: realmIp.userIp)
+        }
+
+        // Load cached IP from Preferences and initialize BehaviorSubject with correct initial state
         // This ensures subscribers immediately get the correct value without race conditions
         let initialState: IPState?
-        if let cachedIp = localDatabase.getIpSync() {
-            logger.logI("IPRepositoryImpl", "Loaded cached IP synchronously: \(cachedIp.userIp)")
+        if let cachedIp = preferences.getCurrentIpAddress() {
+            logger.logI("IPRepositoryImpl", "Loaded cached IP from Preferences: \(cachedIp)")
             initialState = .available(cachedIp)
-            self.currentIp = CurrentValueSubject<String?, Never>(cachedIp.userIp)
+            self.currentIp = CurrentValueSubject<String?, Never>(cachedIp)
             wasObserved = true
         } else {
-            logger.logI("IPRepositoryImpl", "No cached IP found in database")
+            logger.logI("IPRepositoryImpl", "No cached IP found in Preferences")
             initialState = .unavailable
             self.currentIp = CurrentValueSubject<String?, Never>(nil)
         }
 
         self.ipState = BehaviorSubject<IPState?>(value: initialState)
 
-        // Set up async observation for database changes
+        // Set up async observation for Preferences changes
         load()
     }
 
-    /// Observes database changes for IP updates
+    /// Observes Preferences changes for IP updates
     private func load() {
-        localDatabase.getIp()
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] myIp in
+        preferences.getCurrentIpAddressObservable()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] ipAddress in
                 guard let self = self else { return }
                 self.wasObserved = true
-                if let myIp = myIp {
-                    self.updateState(.available(myIp))
-                    self.currentIp.send(myIp.userIp)
+                if let ipAddress = ipAddress {
+                    self.updateState(.available(ipAddress))
+                    self.currentIp.send(ipAddress)
                 } else {
                     self.updateState(.unavailable)
                 }
-            }, onError: { [weak self] error in
-                self?.updateState(.unavailable)
-                self?.logger.logE("ip", "Failed to load IP from database: \(error)")
-            }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
-    /// Fetches the current IP from the API and updates the local database
-    func getIp() -> Single<Void> {
+    /// Fetches the current IP from the API and updates Preferences
+    func getIp() async throws {
         let lastState = try? ipState.value()
 
         // Only show .updating if we don't have a valid IP already
@@ -83,38 +90,23 @@ class IPRepositoryImpl: IPRepository {
             updateState(.updating)
         }
 
-        return Single.create { single in
-            let task = Task { [weak self] in
-                guard let self = self else {
-                    single(.success(()))
-                    return
-                }
-
-                do {
-                    let data = try await self.apiManager.getIp()
-                    if !self.wasObserved {
-                        await MainActor.run {
-                            self.load()
-                            self.updateState(.available(data))
-                        }
-                    }
-
-                    self.logger.logI("IPRepositoryImpl", "Ip was refreshed with: \(data.userIp) Windscribe IP: \(data.isOurIp)")
-                    currentIp.send(data.userIp)
-                    _ = self.localDatabase.saveIp(myip: data)
-
-                    single(.success(()))
-                } catch {
-                    await MainActor.run {
-                        self.updateState(lastState)
-                        single(.failure(error))
-                    }
+        do {
+            let ipAddress = try await apiManager.getIp()
+            if !wasObserved {
+                await MainActor.run {
+                    load()
+                    updateState(.available(ipAddress))
                 }
             }
 
-            return Disposables.create {
-                task.cancel()
+            logger.logI("IPRepositoryImpl", "IP was refreshed with: \(ipAddress)")
+            currentIp.send(ipAddress)
+            preferences.saveCurrentIpAddress(ip: ipAddress)
+        } catch {
+            await MainActor.run {
+                updateState(lastState)
             }
+            throw error
         }
     }
 

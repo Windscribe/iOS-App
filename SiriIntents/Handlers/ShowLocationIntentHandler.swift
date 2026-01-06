@@ -24,8 +24,8 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
     func handle(intent _: ShowLocationIntent, completion: @escaping (ShowLocationIntentResponse) -> Void) {
         Task {
             do {
-                let ip = try await apiUtil.makeApiCall(modalType: IntentMyIP.self) { completion in
-                    self.api.myIP(completion)
+                let ip = try await apiUtil.makeApiCall(modalType: String.self) { completion in
+                    self.api.pingTest(5000, callback: completion)
                 }
 
                 let protocolType = self.preferences.getActiveManagerKey() ?? "WireGuard"
@@ -40,31 +40,17 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
                             return
                         }
                         if manager.connection.status == .connected {
-                            completion(ShowLocationIntentResponse.success(cityName: serverName, nickName: nickName, ipAddress: ip.userIp))
+                            completion(ShowLocationIntentResponse.success(cityName: serverName, nickName: nickName, ipAddress: ip))
                         } else {
-                            completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip.userIp))
+                            completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip))
                         }
                     case .failure:
-                        completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip.userIp))
+                        completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip))
                     }
                 }
             } catch {
                 completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
             }
         }
-    }
-}
-
-private struct IntentMyIP: Decodable {
-    dynamic var userIp: String = ""
-    enum CodingKeys: String, CodingKey {
-        case data
-        case userIp = "user_ip"
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        userIp = try data.decode(String.self, forKey: .userIp)
     }
 }

@@ -83,6 +83,9 @@ enum SharedKeys {
     static let forceDisconnect = "force-disconnect"
     static let widgetConnectionRequested = "widget-connection-requested"
 
+    // IP Address - Issue #911
+    static let currentIpAddress = "current-ip-address"
+
     // language manager
     static let languageManagerSelectedLanguage = "LanguageManagerSelectedLanguage"
     static let languageManagerDefaultLanguage = "LanguageManagerDefaultLanguage"
