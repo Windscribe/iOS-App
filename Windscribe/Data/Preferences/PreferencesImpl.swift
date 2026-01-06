@@ -517,6 +517,19 @@ class PreferencesImpl: Preferences {
         return sharedDefault?.bool(forKey: SharedKeys.widgetConnectionRequested) ?? false
     }
 
+    // MARK: - IP Address Storage - Issue #911
+    func saveCurrentIpAddress(ip: String?) {
+        setString(ip, forKey: SharedKeys.currentIpAddress)
+    }
+
+    func getCurrentIpAddress() -> String? {
+        return getString(forKey: SharedKeys.currentIpAddress)
+    }
+
+    func getCurrentIpAddressObservable() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.currentIpAddress, type: String.self, defaultValue: nil)
+    }
+
     func clearSelectedLocations() {
         sharedDefault?.set("", forKey: SharedKeys.savedLastLocation)
     }

@@ -146,6 +146,11 @@ protocol Preferences {
     func saveConnectionRequested(value: Bool)
     func getConnectionRequested() -> Bool
 
+    // IP Address - Issue #911
+    func saveCurrentIpAddress(ip: String?)
+    func getCurrentIpAddress() -> String?
+    func getCurrentIpAddressObservable() -> AnyPublisher<String?, Never>
+
     // Locations
     func clearSelectedLocations()
     func saveLastSelectedLocation(with locationID: String)

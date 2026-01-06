@@ -69,13 +69,14 @@ extension VPNManagerImpl {
             return
         }
         switch ipState {
-        case .available(let ip):
-            // Ip is available but its a NON VPN IP.
-            if !ip.isInvalidated && !ip.isOurIp {
-                logger.logI("VPNManager", "Updating non VPN IP after connection update from on demand mode.")
-                Task { @MainActor in
-                    try? await ipRepository.getIp().value
-                }
+        case .available(_):
+            // - The /myip API endpoint that provided isOurIp flag can be blocked in restrictive
+            //   regions where censorship is active (China, Iran, etc.)
+            // - We now use wsNetServerAPI.pingTest(5000) which is more reliable but only
+            //   returns the IP string without metadata
+            logger.logI("VPNManager", "Refreshing IP after VPN connection from on-demand mode.")
+            Task { @MainActor in
+                try? await ipRepository.getIp()
             }
         default: ()
         }

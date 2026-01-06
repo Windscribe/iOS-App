@@ -15,9 +15,9 @@ extension APIManagerImpl {
         }
     }
 
-    func getIp() async throws -> MyIP {
-        return try await apiUtil.makeApiCall(modalType: MyIP.self) { completion in
-            self.api.myIP(completion)
+    func getIp() async throws -> String {
+        return try await apiUtil.makeApiCall(modalType: String.self) { completion in
+            self.api.pingTest(5000, callback: completion)
         }
     }
 

@@ -319,8 +319,12 @@ class MockAPIManager: APIManager {
         return noticeList
     }
 
-    func getIp() async throws -> MyIP {
-        fatalError("Not implemented")
+    func getIp() async throws -> String {
+        if shouldThrowError {
+            throw customError
+        }
+        // Return a mock IP address for testing
+        return "192.168.1.100"
     }
 
     func sendDebugLog(username: String, log: String) async throws -> APIMessage {

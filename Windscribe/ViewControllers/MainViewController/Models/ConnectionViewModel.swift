@@ -356,11 +356,16 @@ extension ConnectionViewModel {
         if !gettingIpAddress && !isConnecting() {
             logger.logD("ConnectionViewModel", "Displaying local IP Address.")
             gettingIpAddress = true
-            ipRepository.getIp().subscribe(onSuccess: { [weak self] _ in
-                self?.gettingIpAddress = false
-            }, onFailure: { [weak self] _ in
-                self?.gettingIpAddress = false
-            }).disposed(by: disposeBag)
+            Task { [weak self] in
+                do {
+                    try await self?.ipRepository.getIp()
+                } catch {
+                    // Error already logged in repository
+                }
+                await MainActor.run {
+                    self?.gettingIpAddress = false
+                }
+            }
         }
     }
 
@@ -528,11 +533,16 @@ extension ConnectionViewModel {
     private func updateToLocalIPAddress() {
         logger.logD("ConnectionViewModel", "Displaying local IP Address.")
         gettingIpAddress = true
-        ipRepository.getIp().subscribe(onSuccess: { [weak self] _ in
-            self?.gettingIpAddress = false
-        }, onFailure: { [weak self] _ in
-            self?.gettingIpAddress = false
-        }).disposed(by: disposeBag)
+        Task { [weak self] in
+            do {
+                try await self?.ipRepository.getIp()
+            } catch {
+                // Error already logged in repository
+            }
+            await MainActor.run {
+                self?.gettingIpAddress = false
+            }
+        }
     }
 
     private func saveDataForWidget() {

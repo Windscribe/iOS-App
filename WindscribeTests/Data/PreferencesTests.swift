@@ -253,4 +253,89 @@ class PreferencesTests: XCTestCase {
         preferences.saveBestLocation(with: originalBestLocation)
         preferences.clearSelectedLocations()
     }
+
+    func testIpAddressPreferences() {
+        let preferences = mockContainer.resolve(Preferences.self)!
+        let testIpAddress = "192.168.1.100"
+        let originalIpAddress = preferences.getCurrentIpAddress()
+
+        // Test synchronous save and get
+        preferences.saveCurrentIpAddress(ip: testIpAddress)
+        let retrievedIp = preferences.getCurrentIpAddress()
+        XCTAssertEqual(retrievedIp, testIpAddress, "IP address should be saved and retrieved correctly")
+
+        // Test observable
+        let expectation = self.expectation(description: "Get IP address via observable")
+        preferences.getCurrentIpAddressObservable()
+            .first()
+            .sink { ip in
+                XCTAssertEqual(ip, testIpAddress, "Observable should emit the saved IP address")
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+
+        // Cleanup - restore original value
+        preferences.saveCurrentIpAddress(ip: originalIpAddress)
+    }
+
+    func testIpAddressObservableUpdates() {
+        let preferences = mockContainer.resolve(Preferences.self)!
+        let testIpAddress1 = "10.0.0.1"
+        let testIpAddress2 = "10.0.0.2"
+
+        var receivedIps: [String?] = []
+        let expectation = self.expectation(description: "Observe multiple IP address updates")
+
+        // Subscribe to observable and collect first 3 emissions
+        preferences.getCurrentIpAddressObservable()
+            .prefix(3)
+            .collect()
+            .sink { ips in
+                receivedIps = ips
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        // Trigger updates
+        preferences.saveCurrentIpAddress(ip: testIpAddress1)
+        preferences.saveCurrentIpAddress(ip: testIpAddress2)
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+
+        // Verify received values
+        XCTAssertEqual(receivedIps.count, 3, "Should receive initial nil and 2 updates")
+        XCTAssertNil(receivedIps[0], "First value should be nil (initial)")
+        XCTAssertEqual(receivedIps[1], testIpAddress1, "Second value should be first IP")
+        XCTAssertEqual(receivedIps[2], testIpAddress2, "Third value should be second IP")
+
+        // Cleanup
+        preferences.saveCurrentIpAddress(ip: nil)
+    }
+
+    func testIpAddressNilHandling() {
+        let preferences = mockContainer.resolve(Preferences.self)!
+
+        // Save a value first
+        preferences.saveCurrentIpAddress(ip: "192.168.1.1")
+        XCTAssertNotNil(preferences.getCurrentIpAddress())
+
+        // Test clearing by setting to nil
+        preferences.saveCurrentIpAddress(ip: nil)
+        let clearedIp = preferences.getCurrentIpAddress()
+        XCTAssertNil(clearedIp, "IP address should be nil after clearing")
+
+        // Verify observable also emits nil
+        let expectation = self.expectation(description: "Observable should emit nil")
+        preferences.getCurrentIpAddressObservable()
+            .first()
+            .sink { ip in
+                XCTAssertNil(ip, "Observable should emit nil after clearing")
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
 }
