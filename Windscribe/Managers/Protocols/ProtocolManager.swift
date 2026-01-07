@@ -50,6 +50,7 @@ class ProtocolManager: ProtocolManagerType {
     private let preferences: Preferences
     private let locationManager: LocationsManager
     private let vpnStateRepository: VPNStateRepository
+    private let portMapRepository: PortMapRepository
 
     private let defaultCountdownTime = 10
     private var countdownTimer: DispatchSourceTimer?
@@ -96,6 +97,7 @@ class ProtocolManager: ProtocolManagerType {
          securedNetwork: WifiNetworkRepository,
          localDatabase: LocalDatabase,
          locationManager: LocationsManager,
+         portMapRepository: PortMapRepository,
          vpnStateRepository: VPNStateRepository) {
         self.logger = logger
         self.connectivity = connectivity
@@ -104,6 +106,7 @@ class ProtocolManager: ProtocolManagerType {
         self.localDatabase = localDatabase
         self.locationManager = locationManager
         self.vpnStateRepository = vpnStateRepository
+        self.portMapRepository = portMapRepository
 
         logger.logI("ProtocolManager", "Starting connection manager.")
         bindData()
@@ -454,7 +457,7 @@ class ProtocolManager: ProtocolManagerType {
 
     /// Protocol list in app preferred order.
     private func getProtocolList() {
-        if localDatabase.getPortMap()?.isEmpty  ?? true {
+        if portMapRepository.currentPortMaps.isEmpty {
             protocolsToConnectList = [
                 DisplayProtocolPort(protocolPort: ProtocolPort("WireGuard", "443"), viewType: .normal),
                 DisplayProtocolPort(protocolPort: ProtocolPort("IKEv2", "500"), viewType: .normal),

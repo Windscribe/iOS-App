@@ -14,24 +14,32 @@ class PortMapRepositoryImpl: PortMapRepository {
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
 
+    var currentPortMaps = [PortMapModel]()
+
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
+
+        if let portMaps = localDatabase.getPortMap() {
+            currentPortMaps = portMaps.map { $0.getModel() }
+        }
     }
 
-    func getUpdatedPortMap() async throws -> [PortMap] {
+    func getUpdatedPortMap() async throws -> [PortMapModel] {
         do {
             let portList = try await apiManager.getPortMap(version: APIParameterValues.portMapVersion, forceProtocols: APIParameterValues.forceProtocols)
             localDatabase.savePortMap(portMap: Array(portList.portMaps))
             if let suggested = portList.suggested {
                 localDatabase.saveSuggestedPorts(suggestedPorts: [suggested])
             }
-            return Array(portList.portMaps)
+            currentPortMaps = Array(portList.portMaps).map { $0.getModel() }
+            return currentPortMaps
         } catch {
             // Fallback to cached data on error
             if let portMaps = localDatabase.getPortMap(), !portMaps.isEmpty {
-                return portMaps
+                currentPortMaps = portMaps.map { $0.getModel() }
+                return currentPortMaps
             } else {
                 throw error
             }

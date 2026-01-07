@@ -262,8 +262,8 @@ class SessionManagerImpl: SessionManager {
             _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
             _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
         }
-        guard let portMaps = localDatabase.getPortMap()?.filter({ $0.heading == wireGuard }) else { return }
 
+        let portMaps = portmapRepo.currentPortMaps.filter({ $0.heading == wireGuard })
         if portMaps.first == nil {
             try? await serverRepo.updatedServers()
             _ = try? await portmapRepo.getUpdatedPortMap()

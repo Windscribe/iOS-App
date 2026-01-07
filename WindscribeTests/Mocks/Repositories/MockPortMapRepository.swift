@@ -14,13 +14,13 @@ class MockPortMapRepository: PortMapRepository {
     // Control flags
     var shouldThrowError = false
     var errorToThrow: Error = NSError(domain: "MockPortMapRepository", code: -1, userInfo: nil)
-    var portMapsToReturn: [PortMap] = []
+    var portMapsToReturn: [PortMapModel] = []
 
     // Call tracking
     var getUpdatedPortMapCalled = false
     var callCount = 0
 
-    func getUpdatedPortMap() async throws -> [PortMap] {
+    func getUpdatedPortMap() async throws -> [PortMapModel] {
         getUpdatedPortMapCalled = true
         callCount += 1
 

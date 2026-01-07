@@ -9,5 +9,6 @@
 import Foundation
 
 protocol PortMapRepository {
-    func getUpdatedPortMap() async throws -> [PortMap]
+    var currentPortMaps: [PortMapModel] { get }
+    func getUpdatedPortMap() async throws -> [PortMapModel]
 }

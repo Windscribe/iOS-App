@@ -366,7 +366,7 @@ class MainViewModelImpl: MainViewModel {
 
     func loadPortMap() {
         Task { @MainActor in
-            let headings = self.localDatabase.getPortMap()?.map { $0.heading } ?? []
+            let headings = self.portMapRepo.currentPortMaps.map { $0.heading }
             self.portMapHeadings.onNext(headings)
         }
     }
