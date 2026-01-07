@@ -9,8 +9,8 @@
 import Foundation
 import Realm
 import RealmSwift
-import Swinject
 
+// NOTE: This class is only ever used in Migration it no longer needs any implementation
 @objcMembers class AutomaticMode: Object, Decodable {
     static let shared: AutomaticMode = .init()
     dynamic var SSID: String = ""
@@ -23,35 +23,5 @@ import Swinject
 
     override static func primaryKey() -> String? {
         return "SSID"
-    }
-
-    func increaseFailCount(type: String) {
-        let logger = Assembler.resolve(FileLogger.self)
-        logger.logE("AutomaticMode", "Automatic Connection Mode: Increase fail count for \(type)")
-        switch type {
-        case TextsAsset.General.protocols[0]:
-            wgFailed += 1
-        case TextsAsset.General.protocols[1]:
-            ikev2Failed += 1
-        case TextsAsset.General.protocols[2]:
-            udpFailed += 1
-        case TextsAsset.General.protocols[3]:
-            tcpFailed += 1
-        case TextsAsset.General.protocols[4]:
-            stealthFailed += 1
-        case TextsAsset.General.protocols[5]:
-            wsTunnelFailed += 1
-        default:
-            return
-        }
-    }
-
-    func resetFailCounts() {
-        ikev2Failed = 0
-        udpFailed = 0
-        tcpFailed = 0
-        wgFailed = 0
-        wsTunnelFailed = 0
-        stealthFailed = 0
     }
 }

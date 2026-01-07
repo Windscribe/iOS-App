@@ -432,7 +432,6 @@
 		59FC74032C5153B700021CD1 /* WifiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA804252209F13100F8E379 /* WifiNetwork.swift */; };
 		59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0221B09B6400B225FF /* VPNProtocols.swift */; };
 		59FC74052C5153CE00021CD1 /* BestNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6E8A6D2215D378005887E0 /* BestNode.swift */; };
-		59FC74062C5153D100021CD1 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92F1221DCBEC0054580D /* Email.swift */; };
 		59FC74072C5153D300021CD1 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92EB221CA1C50054580D /* UserPreferences.swift */; };
 		59FC74082C5153D700021CD1 /* ClosestCountry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16C98C2225CDAB00997A2A /* ClosestCountry.swift */; };
 		59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */; };
@@ -591,7 +590,6 @@
 		AF45E644226E20A900C1C108 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AF45E645226E216800C1C108 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AF4B92EC221CA1C50054580D /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92EB221CA1C50054580D /* UserPreferences.swift */; };
-		AF4B92F2221DCBEC0054580D /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92F1221DCBEC0054580D /* Email.swift */; };
 		AF4C9AD122F4A03D004A9FA6 /* CustomConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9AD022F4A03D004A9FA6 /* CustomConfig.swift */; };
 		AF4C9AD522F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9AD422F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift */; };
 		AF4E91D521ED277A00A3F584 /* MobilePlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E91D421ED277A00A3F584 /* MobilePlan.swift */; };
@@ -1741,7 +1739,6 @@
 		AF3FC11C227B68EB0050B224 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		AF443D6C22C170FD004986DA /* ImageButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		AF4B92EB221CA1C50054580D /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
-		AF4B92F1221DCBEC0054580D /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
 		AF4C9AD022F4A03D004A9FA6 /* CustomConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfig.swift; sourceTree = "<group>"; };
 		AF4C9AD422F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigListTableViewDataSource.swift; sourceTree = "<group>"; };
 		AF4E91D321E7BF1600A3F584 /* Windscribe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Windscribe.entitlements; sourceTree = "<group>"; };
@@ -3452,7 +3449,6 @@
 				AFA8041D22089ED200F8E379 /* APIEmailSent.swift */,
 				AFA804252209F13100F8E379 /* WifiNetwork.swift */,
 				AF6E8A6D2215D378005887E0 /* BestNode.swift */,
-				AF4B92F1221DCBEC0054580D /* Email.swift */,
 				AF4B92EB221CA1C50054580D /* UserPreferences.swift */,
 				AF16C98C2225CDAB00997A2A /* ClosestCountry.swift */,
 				AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */,
@@ -6509,7 +6505,6 @@
 				5998C6232C86A73000558233 /* ServerListViewModel.swift in Sources */,
 				F4B7F7AF2D833D9900CB4CEF /* WelcomeViewModel.swift in Sources */,
 				F43653532DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */,
-				59FC74062C5153D100021CD1 /* Email.swift in Sources */,
 				1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */,
 				59FC74572C51612D00021CD1 /* NWInterface+Extension.swift in Sources */,
 				F49C45832DC951F5007E5EF1 /* CustomBackgroundEffectType.swift in Sources */,
@@ -6970,7 +6965,6 @@
 				F40B8AE42E54F13700609902 /* ScreenTestView.swift in Sources */,
 				E90FD02527394FA800721874 /* UIConstants+Fields.swift in Sources */,
 				AF914A7223CD0C7D002D3041 /* PromptBackgroundView.swift in Sources */,
-				AF4B92F2221DCBEC0054580D /* Email.swift in Sources */,
 				F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */,
 				AF36BF1222FC975600FCC6F4 /* WSActionButton.swift in Sources */,
 				AF4E927621F8D17500A3F584 /* MainViewController+UI.swift in Sources */,

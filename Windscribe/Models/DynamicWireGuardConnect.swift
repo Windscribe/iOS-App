@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objcMembers class DynamicWireGuardConnect: Decodable {
+class DynamicWireGuardConnect: Decodable {
     dynamic var address: String?
     dynamic var dns: String?
 

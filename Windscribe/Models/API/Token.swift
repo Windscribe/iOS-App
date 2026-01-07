@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objcMembers class Token: Decodable {
+struct Token: Decodable {
     var id: String = ""
     var token: String = ""
     var signature: String = ""
@@ -22,8 +22,7 @@ import Foundation
         case time
     }
 
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
         id = try data.decodeIfPresent(String.self, forKey: .id) ?? ""

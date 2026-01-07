@@ -56,7 +56,7 @@ class PrivacyViewModel: PrivacyViewModelType {
             logger.logD("PrivacyViewModel", "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
         }
 
-        localDatabase.updateConnectionMode(value: Fields.Values.manual)
+        preferences.saveConnectionMode(mode: Fields.Values.manual)
         networkRepository.updateNetworkPreferredProtocol(with: defaultProtocol, andPort: defaultPort)
         completionHandler?()
     }

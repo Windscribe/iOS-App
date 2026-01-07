@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objcMembers class DynamicWireGuardConfig: Decodable {
+class DynamicWireGuardConfig: Decodable {
     dynamic var id: String = "DynamicWireGuardConfig"
     dynamic var presharedKey: String?
     dynamic var allowedIPs: String?

@@ -34,7 +34,7 @@ class MainViewModelImpl: MainViewModel {
     private let wifiNetworkRepository: WifiNetworkRepository
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
-    var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
+    var lastConnection = BehaviorSubject<VPNConnectionModel?>(value: nil)
     var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
     var favouriteList = BehaviorSubject<[FavouriteGroupModel]?>(value: nil)
     var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
@@ -360,7 +360,7 @@ class MainViewModelImpl: MainViewModel {
     func loadLastConnection() {
         localDatabase.getLastConnection().subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
-            self.lastConnection.onNext(data)
+            self.lastConnection.onNext(data?.getModel())
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 

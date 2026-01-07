@@ -84,7 +84,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_: UIApplication) {
         logger.logI("AppDelegate", "App state changed to Active.")
         registerForPushNotifications()
-        AutomaticMode.shared.resetFailCounts()
         livecycleManager.appEnteredForeground()
     }
 
