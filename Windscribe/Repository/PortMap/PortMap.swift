@@ -51,6 +51,26 @@ import RealmSwift
     override class func primaryKey() -> String? {
         return "connectionProtocol"
     }
+
+    func getModel() -> PortMapModel {
+        .init(from: self)
+    }
+}
+
+struct PortMapModel: Equatable {
+    let connectionProtocol: String
+    let heading: String
+    let use: String
+    let ports: [String]
+    let legacyPorts: [String]
+
+    init(from: PortMap) {
+        connectionProtocol = from.connectionProtocol
+        heading = from.heading
+        use = from.use
+        ports = Array(from.ports)
+        legacyPorts = Array(from.legacyPorts)
+    }
 }
 
 struct PortMapList: Decodable {

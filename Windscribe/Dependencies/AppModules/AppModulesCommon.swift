@@ -286,6 +286,7 @@ class Managers: Assembly {
                             securedNetwork: r.resolve(WifiNetworkRepository.self)!,
                             localDatabase: r.resolve(LocalDatabase.self)!,
                             locationManager: r.resolve(LocationsManager.self)!,
+                            portMapRepository: r.resolve(PortMapRepository.self)!,
                             vpnStateRepository: r.resolve(VPNStateRepository.self)!)
         }.inObjectScope(.userScope)
 
