@@ -10,6 +10,7 @@ import Foundation
 import Realm
 import RealmSwift
 
+// NOTE: This class is only ever used in Migration it no longer needs any implementation
 @objcMembers class UserPreferences: Object {
     dynamic var id: String = "1"
     dynamic var connectionMode: String = ""
@@ -25,35 +26,6 @@ import RealmSwift
     dynamic var showServerHealth: Bool = false
     dynamic var protocolType: String = ""
     dynamic var port: String = ""
-
-    convenience init(connectionMode: String,
-                     language: String,
-                     latencyType: String,
-                     orderLocationsBy: String,
-                     protocolType: String,
-                     port: String,
-                     appearance: String,
-                     firewall: Bool,
-                     killSwiitch: Bool,
-                     allowLan: Bool,
-                     autoSecureNewNetworks: Bool,
-                     hapticFeedback: Bool,
-                     showServerHealth: Bool) {
-        self.init()
-        self.connectionMode = connectionMode
-        self.language = language
-        self.latencyType = latencyType
-        self.orderLocationsBy = orderLocationsBy
-        self.appearance = appearance
-        self.firewall = firewall
-        killSwitch = killSwiitch
-        self.allowLan = allowLan
-        self.autoSecureNewNetworks = autoSecureNewNetworks
-        self.hapticFeedback = hapticFeedback
-        self.protocolType = protocolType
-        self.port = port
-        self.showServerHealth = showServerHealth
-    }
 
     override static func primaryKey() -> String? {
         return "id"

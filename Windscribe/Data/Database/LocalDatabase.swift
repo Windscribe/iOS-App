@@ -84,7 +84,6 @@ protocol LocalDatabase {
     func getOldSession() -> OldSession?
     func saveBestNode(node: BestNode) -> Disposable
     func getBestNode() -> [BestNode]?
-    func updateConnectionMode(value: String)
     func getCustomConfigs() -> [CustomConfig]
     func clean()
 }

@@ -10,31 +10,6 @@ import Foundation
 import Realm
 import RealmSwift
 
-@objcMembers class ServerCredentials: Object, Decodable {
-    dynamic var username: String = ""
-    dynamic var password: String = ""
-
-    enum CodingKeys: String, CodingKey {
-        case data
-        case username
-        case password
-    }
-
-    required convenience init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        let username = try data.decodeIfPresent(String.self, forKey: .username) ?? ""
-        let password = try data.decodeIfPresent(String.self, forKey: .password) ?? ""
-        self.init(username: username, password: password)
-    }
-
-    convenience init(username: String, password: String) {
-        self.init()
-        self.username = username
-        self.password = password
-    }
-}
-
 struct StaticIPCredentialsModel {
     let username: String?
     let password: String?
@@ -78,6 +53,31 @@ class LastConnectedNodeStaticIPCredentials: StaticIPCredentials {
         self.init()
         username = staticIPCredentials.username ?? ""
         password = staticIPCredentials.password ?? ""
+    }
+}
+
+class ServerCredentials: Object, Decodable {
+    dynamic var username: String = ""
+    dynamic var password: String = ""
+
+    enum CodingKeys: String, CodingKey {
+        case data
+        case username
+        case password
+    }
+
+    required convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
+        let username = try data.decodeIfPresent(String.self, forKey: .username) ?? ""
+        let password = try data.decodeIfPresent(String.self, forKey: .password) ?? ""
+        self.init(username: username, password: password)
+    }
+
+    convenience init(username: String, password: String) {
+        self.init()
+        self.username = username
+        self.password = password
     }
 }
 

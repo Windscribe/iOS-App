@@ -231,7 +231,6 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         } else {
             // Not connected - trigger disconnect and reset failure counts
             logger.logI("ProtocolSwitchViewModel", "Canceling protocol selection - disconnecting")
-            AutomaticMode.shared.resetFailCounts()
             disconnectTrigger.send()
         }
     }

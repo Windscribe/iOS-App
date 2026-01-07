@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objcMembers class WebSession: Decodable {
+class WebSession: Decodable {
     var tempSession: String = ""
 
     enum CodingKeys: String, CodingKey {

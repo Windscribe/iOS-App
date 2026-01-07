@@ -228,10 +228,6 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObject(type: RobertFilters.self)
     }
 
-    func getUserPreferences() -> UserPreferences? {
-        return getRealmObject(type: UserPreferences.self)
-    }
-
     func saveRobertFilters(filters: RobertFilters) -> Disposable {
         return updateRealmObject(object: filters)
     }
@@ -436,19 +432,6 @@ class LocalDatabaseImpl: LocalDatabase {
             }
         } catch {
             fatalError("")
-        }
-    }
-
-    func updateConnectionMode(value: String) {
-        if let userPreferences = getUserPreferences() {
-            do {
-                let realm = try Realm()
-                try realm.safeWrite {
-                    userPreferences.connectionMode = value
-                }
-            } catch {
-                fatalError("")
-            }
         }
     }
 }

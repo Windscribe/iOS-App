@@ -20,7 +20,7 @@ enum SSOSessionType: String {
     }
 }
 
-@objcMembers class SSOSession: Decodable {
+class SSOSession: Decodable {
 
     var sessionAuth: String = ""
     var isNewUserUser: Bool = false

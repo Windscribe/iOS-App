@@ -235,9 +235,6 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
             await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
         }
 
-        // Reset automatic mode failure counts for fresh start
-        AutomaticMode.shared.resetFailCounts()
-
         // Dismiss dialog
         shouldDismiss = true
     }
@@ -245,9 +242,6 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     /// Handles cancel action - stays in Manual mode and continues with next protocol
     func cancel() {
         logger.logD("ProtocolConnectionResultViewModel", "User canceled protocol result dialog")
-
-        // Reset automatic mode failure counts
-        AutomaticMode.shared.resetFailCounts()
 
         // For Manual Mode Warning, trigger disconnect to stop active connection attempt
         if viewType == .manualFail {
