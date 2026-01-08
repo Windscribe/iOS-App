@@ -34,10 +34,17 @@ struct MenuTextFieldDialogView: View {
                 SecureField(placeholder, text: $input)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             } else if isLazyCode {
-                TextField(placeholder, text: $input)
-                    .onChange(of: input) { newValue in
+                TextField(placeholder, text: Binding(
+                    get: {
+                        return input
+                    },
+                    set: { newValue in
                         input = newValue.formattedLazyLoginCode()
                     }
+                ))
+                .autocapitalization(.allCharacters)
+                .disableAutocorrection(true)
+                .keyboardType(.asciiCapable)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             } else {
                 TextField(placeholder, text: $input)

@@ -1064,6 +1064,7 @@
 		F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */; };
 		F45DF73F2E2FF57700B00F09 /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */; };
 		F45DF7412E2FF58700B00F09 /* PushNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF7402E2FF58700B00F09 /* PushNotificationView.swift */; };
+		F45E4F9B2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45E4F9A2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift */; };
 		F45F19122D7A1D540028D0C2 /* UIConstants+ImagesAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */; };
 		F45F191A2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
 		F45F191B2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
@@ -2069,6 +2070,7 @@
 		F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailView.swift; sourceTree = "<group>"; };
 		F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
 		F45DF7402E2FF58700B00F09 /* PushNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationView.swift; sourceTree = "<group>"; };
+		F45E4F9A2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyLoginCodeAlertView.swift; sourceTree = "<group>"; };
 		F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Extension.swift"; sourceTree = "<group>"; };
 		F465A6362D5D37EF00579B5F /* AppReviewManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManagerTests.swift; sourceTree = "<group>"; };
 		F465A6382D5D3B6000579B5F /* MockPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPreferences.swift; sourceTree = "<group>"; };
@@ -2999,12 +3001,12 @@
 		1ED616722DD4C040006CDC99 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */,
 				1EB67FAE2DEDD6D000729052 /* PreferencesBaseView.swift */,
 				F49C458C2DC96AF7007E5EF1 /* MenuCategoryRow.swift */,
 				1ED616492DCA70E2006CDC99 /* MenuEntryView.swift */,
 				F48705B52DE61A67007435EB /* MenuTextFieldDialogView.swift */,
 				F48705B72DE61AA4007435EB /* MenuLoadingOverlayView.swift */,
+				1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5250,6 +5252,7 @@
 			children = (
 				F49C45B12DCD28BF007E5EF1 /* AccountSettingsView.swift */,
 				F45BD5AA2EF5DC9300490072 /* PasswordResetSuccessView.swift */,
+				F45E4F9A2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6973,6 +6976,7 @@
 				F4D3C0442E733102006E5AFA /* LocationsManager.swift in Sources */,
 				F489F25A2E4E561100E0D898 /* RestrictiveNetworkViewModel.swift in Sources */,
 				C57BDE3D29B93E9900337E63 /* NSDate+Extension.swift in Sources */,
+				F45E4F9B2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift in Sources */,
 				1A88F5842819250F00FCD310 /* WSView.swift in Sources */,
 				C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Extension.swift in Sources */,
 				1EC6C77E2BE136190036248B /* MainViewController+SearchLocationDelegate.swift in Sources */,

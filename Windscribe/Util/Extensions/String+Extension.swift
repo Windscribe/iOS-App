@@ -124,11 +124,13 @@ extension String {
             .prefix(8)
         let prefix = clean.prefix(4)
         let suffix = clean.dropFirst(4)
+        let result: String
         if suffix.isEmpty {
-            return String(prefix)
+            result = String(prefix)
         } else {
-            return "\(prefix)-\(suffix)"
+            result = "\(prefix)-\(suffix)"
         }
+        return result
     }
 }
 

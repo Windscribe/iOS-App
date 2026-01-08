@@ -23,6 +23,7 @@ struct AccountSettingsView: View {
     @State private var showUpgradeModal = false
     @State private var upgradePromoCode: String?
     @State private var hasLoaded = false
+    @State private var showCustomLazyLoginAlert = false
 
     init(viewModel: any AccountSettingsViewModel) {
         guard let model = viewModel as? AccountSettingsViewModelImpl else {
@@ -94,16 +95,11 @@ struct AccountSettingsView: View {
             )
         }
         .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
-            get: { dialog != nil },
+            get: { dialog != nil && dialog != .lazyLogin },
             set: { if !$0 { dialog = nil } }
         ), actions: {
             if dialog == .password {
                 SecureField(dialogPlaceHolder(dialog), text: $inputText)
-            } else if dialog == .lazyLogin {
-                TextField(dialogPlaceHolder(dialog), text: $inputText)
-                    .onChange(of: inputText) { newValue in
-                        inputText = newValue.formattedLazyLoginCode()
-                    }
             } else {
                 TextField(dialogPlaceHolder(dialog), text: $inputText)
             }
@@ -151,6 +147,35 @@ struct AccountSettingsView: View {
         .onAppear {
             viewModel.actionSelected()
         }
+        .overlay(
+            ZStack {
+                if showCustomLazyLoginAlert {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                        .transition(.opacity)
+                        .onTapGesture {
+                            showCustomLazyLoginAlert = false
+                        }
+
+                    LazyLoginCodeAlertView(
+                        title: TextsAsset.Account.loginCodeTitle,
+                        message: TextsAsset.Account.lazyLoginDescription,
+                        code: $inputText,
+                        isDarkMode: viewModel.isDarkMode,
+                        onConfirm: {
+                            showCustomLazyLoginAlert = false
+                            handleConfirm(dialog: .lazyLogin, input: inputText)
+                        },
+                        onCancel: {
+                            showCustomLazyLoginAlert = false
+                            inputText = ""
+                        }
+                    )
+                    .transition(.opacity)
+                }
+            }
+            .animation(.easeInOut(duration: 0.2), value: showCustomLazyLoginAlert)
+        )
     }
 
     @ViewBuilder
@@ -293,7 +318,9 @@ struct AccountSettingsView: View {
 
     private func presentDialog(for type: AccountInputDialog) {
         inputText = ""
-        if #available(iOS 16, *) {
+        if type == .lazyLogin {
+            showCustomLazyLoginAlert = true
+        } else if #available(iOS 16, *) {
             dialog = type
         } else {
             fallbackDialog = type
