@@ -12,7 +12,7 @@ import Swinject
 import Combine
 
 protocol UserDataRepository {
-    func prepareUserData() -> Single<Void>
+    func prepareUserData() async throws
 }
 
 class UserDataRepositoryImpl: UserDataRepository {
@@ -39,45 +39,31 @@ class UserDataRepositoryImpl: UserDataRepository {
         self.logger = logger
     }
 
-    func prepareUserData() -> Single<Void> {
-
+    func prepareUserData() async throws {
         logger.logI("UserDataRepository", "Getting server list.")
+        try await serverRepository.updatedServers()
 
-        return Single.create { single in
-            let task = Task { [weak self] in
-                try? await self?.serverRepository.updatedServers()
-                single(.success(()))
-            }
-            return Disposables.create { task.cancel() }
-        }.flatMap { _ in
-            self.latencyRepository.pickBestLocation()
-            self.logger.logD("UserDataRepository", "Getting iKEv2 credentials.")
-            return self.credentialsRepository
-                .getUpdatedIKEv2Crendentials()
-                .catchAndReturn(nil)
-        }.flatMap { _ in
-            self.logger.logI("UserDataRepository", "Getting OpenVPN Server config.")
-            return self.credentialsRepository.getUpdatedServerConfig()
-        }.flatMap { _ in
-            self.logger.logI("UserDataRepository", "Getting OpenVPN crendentials.")
-            return self.credentialsRepository.getUpdatedOpenVPNCrendentials().catchAndReturn(nil)
-        }.flatMap { _ in
-            self.logger.logI("UserDataRepository", "Getting PortMap.")
-            return asyncToSingle { try await self.portMapRepository.getUpdatedPortMap() }
-        }.flatMap { _ in
-            self.logger.logI("UserDataRepository", "Getting Static IPs.")
-            return asyncToSingle { try await self.staticIpRepository.getStaticServers() }.catchAndReturn([])
-        }.flatMap { _ in
-            self.logger.logI("UserDataRepository", "Getting Notifications.")
-            return asyncToSingle { try await self.notificationsRepository.getUpdatedNotifications() }.catchAndReturn([])
-        }.map { _ in
-            DispatchQueue.main.async {
-                if !self.emergencyRepository.isConnected() {
-                    Task {
-                        try? await self.latencyRepository.loadLatency()
-                    }
-                }
-            }
+        latencyRepository.pickBestLocation()
+        logger.logD("UserDataRepository", "Getting iKEv2 credentials.")
+        try await credentialsRepository.getUpdatedIKEv2Crendentials()
+
+        logger.logI("UserDataRepository", "Getting OpenVPN Server config.")
+        try await credentialsRepository.getUpdatedServerConfig()
+
+        logger.logI("UserDataRepository", "Getting OpenVPN crendentials.")
+        try await credentialsRepository.getUpdatedOpenVPNCrendentials()
+
+        logger.logI("UserDataRepository", "Getting PortMap.")
+        _ = try await portMapRepository.getUpdatedPortMap()
+
+        logger.logI("UserDataRepository", "Getting Static IPs.")
+        _ = try await staticIpRepository.getStaticServers()
+
+        logger.logI("UserDataRepository", "Getting Notifications.")
+        _ = try await notificationsRepository.getUpdatedNotifications()
+
+        if !self.emergencyRepository.isConnected() {
+            try? await self.latencyRepository.loadLatency()
         }
     }
 }

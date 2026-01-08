@@ -56,7 +56,17 @@ class LastConnectedNodeStaticIPCredentials: StaticIPCredentials {
     }
 }
 
-class ServerCredentials: Object, Decodable {
+struct ServerCredentialsModel {
+    let username: String
+    let password: String
+
+    init(from: ServerCredentials) {
+        username = from.username
+        password = from.password
+    }
+}
+
+@objcMembers class ServerCredentials: Object, Decodable {
     dynamic var username: String = ""
     dynamic var password: String = ""
 
@@ -79,16 +89,20 @@ class ServerCredentials: Object, Decodable {
         self.username = username
         self.password = password
     }
+
+    func getModel() -> ServerCredentialsModel {
+        .init(from: self)
+    }
 }
 
-class OpenVPNServerCredentials: ServerCredentials {
+@objcMembers class OpenVPNServerCredentials: ServerCredentials {
     dynamic var id: String = "OpenVPNServerCredentials"
     override class func primaryKey() -> String? {
         return "id"
     }
 }
 
-class IKEv2ServerCredentials: ServerCredentials {
+@objcMembers class IKEv2ServerCredentials: ServerCredentials {
     dynamic var id: String = "IKEv2ServerCredentials"
     override class func primaryKey() -> String? {
         return "id"

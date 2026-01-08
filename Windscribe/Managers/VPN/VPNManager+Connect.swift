@@ -163,8 +163,8 @@ extension VPNManagerImpl {
                 do {
                     try await self.connectivity.awaitNetwork(maxTime: 3)
                     try await self.sessionManager.updateSession()
-                    _ = try await self.credentialsRepository.getUpdatedOpenVPNCrendentials().value
-                    _ = try await self.credentialsRepository.getUpdatedIKEv2Crendentials().value
+                    try await self.credentialsRepository.getUpdatedOpenVPNCrendentials()
+                    try await self.credentialsRepository.getUpdatedIKEv2Crendentials()
                     try await self.serverRepository.updatedServers()
                     do {
                         if let updatedLocation = try await self.configManager.validateLocation(lastLocation: locationID) {

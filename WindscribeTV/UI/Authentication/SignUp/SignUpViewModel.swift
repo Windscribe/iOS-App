@@ -350,39 +350,40 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func prepareUserData(ignoreError: Bool = false) {
-        userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] _ in
-            DispatchQueue.main.async { [weak self] in
-                self?.logger.logD("SignUpViewModelImpl", "User data is ready")
-                self?.emergencyConnectRepository.cleansEmergencyConfigs()
-                if self?.emergencyConnectRepository.isConnected() == true {
-                    self?.disconnectFromEmergencyConnect()
-                } else {
-                    self?.showLoadingView.onNext(false)
-                    self?.routeTo.onNext(.main)
-                }
-            }
-        }, onFailure: { [weak self] error in
-            self?.showLoadingView.onNext(false)
-            if ignoreError {
-                self?.routeTo.onNext(.main)
-            } else {
-                self?.preferences.saveUserSessionAuth(sessionAuth: nil)
-                self?.userSessionRepository.clearSession()
-                self?.logger.logE("SignUpViewModelImpl", "Failed to prepare user data: \(error)")
+        Task {
+            do {
+                try await userDataRepository.prepareUserData()
 
-                switch error {
-                case let Errors.apiError(e):
-                    self?.failedState.onNext(SignUpErrorState.api(e.errorMessage ?? ""))
-                default:
-                    if let error = error as? Errors {
-                        self?.failedState.onNext(SignUpErrorState.network(error.description))
-                    } else {
-                        self?.failedState.onNext(SignUpErrorState.network(error.localizedDescription))
+                logger.logD("SignUpViewModelImpl", "User data is ready")
+                emergencyConnectRepository.cleansEmergencyConfigs()
+                if emergencyConnectRepository.isConnected() == true {
+                    disconnectFromEmergencyConnect()
+                } else {
+                    showLoadingView.onNext(false)
+                    routeTo.onNext(.main)
+                }
+            } catch {
+                showLoadingView.onNext(false)
+                if ignoreError {
+                    routeTo.onNext(.main)
+                } else {
+                    preferences.saveUserSessionAuth(sessionAuth: nil)
+                    userSessionRepository.clearSession()
+                    logger.logE("SignUpViewModelImpl", "Failed to prepare user data: \(error)")
+
+                    switch error {
+                    case let Errors.apiError(e):
+                        failedState.onNext(SignUpErrorState.api(e.errorMessage ?? ""))
+                    default:
+                        if let error = error as? Errors {
+                            failedState.onNext(SignUpErrorState.network(error.description))
+                        } else {
+                            failedState.onNext(SignUpErrorState.network(error.localizedDescription))
+                        }
                     }
                 }
-
             }
-        }).disposed(by: disposeBag)
+        }
     }
 
     func referralViewTapped() {

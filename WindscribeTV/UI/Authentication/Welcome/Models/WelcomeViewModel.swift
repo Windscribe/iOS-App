@@ -92,26 +92,30 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     }
 
     private func prepareUserData() {
-        userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] _ in
-            self?.logger.logD("WelcomeViewModelImpl", "User data is ready")
-            self?.showLoadingView.onNext(false)
-            self?.routeToMainView.onNext(true)
-        }, onFailure: { [weak self] error in
-            self?.preferences.saveUserSessionAuth(sessionAuth: nil)
-            self?.userSessionRepository.clearSession()
-            self?.logger.logE("WelcomeViewModelImpl", "Failed to prepare user data: \(error)")
-            self?.showLoadingView.onNext(false)
-            switch error {
-            case Errors.apiError(let e):
-                self?.failedState.onNext(e.errorMessage ?? "")
-            default:
-                if let error = error as? Errors {
-                    self?.failedState.onNext(error.description)
-                } else {
-                    self?.failedState.onNext(error.localizedDescription)
+        Task {
+            do {
+                try await userDataRepository.prepareUserData()
+
+                logger.logD("WelcomeViewModelImpl", "User data is ready")
+                showLoadingView.onNext(false)
+                routeToMainView.onNext(true)
+            } catch {
+                preferences.saveUserSessionAuth(sessionAuth: nil)
+                userSessionRepository.clearSession()
+                logger.logE("WelcomeViewModelImpl", "Failed to prepare user data: \(error)")
+                showLoadingView.onNext(false)
+                switch error {
+                case Errors.apiError(let e):
+                    failedState.onNext(e.errorMessage ?? "")
+                default:
+                    if let error = error as? Errors {
+                        failedState.onNext(error.description)
+                    } else {
+                        failedState.onNext(error.localizedDescription)
+                    }
                 }
             }
-        }).disposed(by: disposeBag)
+        }
     }
 
     private func listenForVPNStateChange() {

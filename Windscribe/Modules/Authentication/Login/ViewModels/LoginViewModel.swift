@@ -370,47 +370,41 @@ class LoginViewModelImpl: LoginViewModel {
 
     /// Prepare User Data
     private func prepareUserData() {
-        userDataRepository.prepareUserData()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
+        Task {
+            do {
+                try await userDataRepository.prepareUserData()
 
-                if case let .failure(error) = completion {
-                    self.preferences.saveUserSessionAuth(sessionAuth: nil)
-                    self.userSessionRepository.clearSession()
-                    self.logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
-                    self.showLoadingView = false
+                logger.logI("LoginViewModel", "User data is ready")
+                emergencyConnectRepository.cleansEmergencyConfigs()
 
-                    switch error {
-                    case let Errors.apiError(e):
-                        self.failedState = .api(e.errorMessage ?? "")
-                    case Errors.failOverFailed:
-                        self.showRestrictiveNetworkModal.send(true)
-                        return
-                    default:
-                        if let error = error as? Errors {
-                            self.failedState = .network(error.description)
-                        } else {
-                            self.failedState = .network(error.localizedDescription)
-                        }
+                if emergencyConnectRepository.isConnected() == true {
+                    logger.logI("LoginViewModel", "Disconnecting emergency connect.")
+                    disconnectFromEmergencyConnect()
+                } else {
+                    showLoadingView = false
+                    routeToMainView.send(true)
+                }
+            } catch {
+                preferences.saveUserSessionAuth(sessionAuth: nil)
+                userSessionRepository.clearSession()
+                logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
+                showLoadingView = false
+
+                switch error {
+                case let Errors.apiError(e):
+                    failedState = .api(e.errorMessage ?? "")
+                case Errors.failOverFailed:
+                    showRestrictiveNetworkModal.send(true)
+                    return
+                default:
+                    if let error = error as? Errors {
+                        failedState = .network(error.description)
+                    } else {
+                        failedState = .network(error.localizedDescription)
                     }
                 }
-            }, receiveValue: { [weak self] _ in
-                guard let self = self else { return }
-
-                self.logger.logI("LoginViewModel", "User data is ready")
-                self.emergencyConnectRepository.cleansEmergencyConfigs()
-
-                if self.emergencyConnectRepository.isConnected() == true {
-                    logger.logI("LoginViewModel", "Disconnecting emergency connect.")
-                    self.disconnectFromEmergencyConnect()
-                } else {
-                    self.showLoadingView = false
-                    self.routeToMainView.send(true)
-                }
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     /// Network Listener

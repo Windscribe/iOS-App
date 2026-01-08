@@ -141,7 +141,7 @@ extension ConfigurationsManager {
         }
         switch locationType {
         case .server:
-            guard let credentials = localDatabase.getIKEv2ServerCredentials() else {
+            guard let credentials = credentialsRepository.ikev2Crendentials else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
             let username = credentials.username.base64Decoded()
@@ -186,7 +186,7 @@ extension ConfigurationsManager {
         }
         switch locationType {
         case .server:
-            guard let credentials = localDatabase.getOpenVPNServerCredentials() else { throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN) }
+            guard let credentials = credentialsRepository.openVPNCrendentials else { throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN) }
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
