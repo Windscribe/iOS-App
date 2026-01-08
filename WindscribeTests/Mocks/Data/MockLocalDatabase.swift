@@ -223,14 +223,6 @@ class MockLocalDatabase: LocalDatabase {
         return nil
     }
 
-    func saveBestNode(node: Windscribe.BestNode) -> Disposable {
-        return Disposables.create()
-    }
-
-    func getBestNode() -> [Windscribe.BestNode]? {
-        return []
-    }
-
     func updateConnectionMode(value: String) {}
 
     func getCustomConfigs() -> [Windscribe.CustomConfig] {

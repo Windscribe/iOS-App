@@ -245,28 +245,6 @@ struct BestLocationModel {
     let linkSpeed: String
     let health: Int
 
-    init(serverName: String,
-         countryCode: String,
-         hostname: String,
-         cityName: String,
-         nickName: String,
-         dnsHostname: String,
-         ipAddress: String,
-         groupId: Int,
-         linkSpeed: String,
-         health: Int) {
-        self.serverName = serverName
-        self.countryCode = countryCode
-        self.hostname = hostname
-        self.cityName = cityName
-        self.nickName = nickName
-        self.dnsHostname = dnsHostname
-        self.ipAddress = ipAddress
-        self.groupId = groupId
-        self.linkSpeed = linkSpeed
-        self.health = health
-    }
-
     init(node: NodeModel, group: GroupModel, server: ServerModel) {
         serverName = group.city
         countryCode = server.countryCode
@@ -281,6 +259,7 @@ struct BestLocationModel {
     }
 }
 
+// NOTE: This class is only ever used in Migration it no longer needs any implementation
 @objcMembers class BestLocation: Object, Decodable {
     dynamic var serverName: String = ""
     dynamic var countryCode: String = ""
@@ -294,34 +273,19 @@ struct BestLocationModel {
     dynamic var health: Int = 0
     dynamic var id = "BestLocation"
 
-    convenience init(node: NodeModel, group: GroupModel, server: ServerModel) {
-        self.init()
-        serverName = group.city
-        countryCode = server.countryCode
-        hostname = node.hostname
-        cityName = group.city
-        nickName = group.nick
-        dnsHostname = server.dnsHostname
-        ipAddress = node.ip2
-        groupId = group.id
-        linkSpeed = group.linkSpeed
-        health = group.health
-    }
-
     override static func primaryKey() -> String? {
         return "id"
     }
+}
 
-    func getBestLocationModel() -> BestLocationModel {
-        return BestLocationModel(serverName: serverName,
-                                 countryCode: countryCode,
-                                 hostname: hostname,
-                                 cityName: cityName,
-                                 nickName: nickName,
-                                 dnsHostname: dnsHostname,
-                                 ipAddress: ipAddress,
-                                 groupId: groupId,
-                                 linkSpeed: linkSpeed,
-                                 health: health)
+// NOTE: This class is only ever used in Migration it no longer needs any implementation
+@objcMembers class BestNode: Object {
+    dynamic var hostname: String = ""
+    dynamic var pingIp: String = ""
+    dynamic var minTime: Int = 0
+
+    override static func primaryKey() -> String? {
+        return "hostname"
     }
+
 }
