@@ -115,20 +115,16 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     }
 
     private func prepareUserData() {
-        userDataRepository.prepareUserData()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                self.showLoadingView = false
-                if case .failure(let error) = completion {
-                    self.handleError(error)
-                }
-            }, receiveValue: { [weak self] _ in
-                guard let self = self else { return }
-                self.routeToMainView.send(true)
-            })
-            .store(in: &cancellables)
+        Task {
+            do {
+                try await userDataRepository.prepareUserData()
+                showLoadingView = false
+                routeToMainView.send(true)
+            } catch {
+                showLoadingView = false
+                handleError(error)
+            }
+        }
     }
 
     private func handleError(_ error: Error) {

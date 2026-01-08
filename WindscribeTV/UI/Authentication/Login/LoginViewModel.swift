@@ -347,32 +347,36 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     private func prepareUserData() {
-        userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
-            logger.logD("LoginViewModel", "User data is ready")
-            emergencyConnectRepository.cleansEmergencyConfigs()
-            if emergencyConnectRepository.isConnected() == true {
-                logger.logD("LoginViewModel", "Disconnecting emergency connect.")
-                disconnectFromEmergencyConnect()
-            } else {
-                showLoadingView.onNext(false)
-                routeToMainView.onNext(true)
-            }
-        }, onFailure: { [weak self] error in
-            self?.preferences.saveUserSessionAuth(sessionAuth: nil)
-            self?.userSessionRepository.clearSession()
-            self?.logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
-            self?.showLoadingView.onNext(false)
-            switch error {
-            case let Errors.apiError(e):
-                self?.failedState.onNext(.api(e.errorMessage ?? ""))
-            default:
-                if let error = error as? Errors {
-                    self?.failedState.onNext(.network(error.description))
+        Task {
+            do {
+                try await userDataRepository.prepareUserData()
+
+                logger.logD("LoginViewModel", "User data is ready")
+                emergencyConnectRepository.cleansEmergencyConfigs()
+                if emergencyConnectRepository.isConnected() == true {
+                    logger.logD("LoginViewModel", "Disconnecting emergency connect.")
+                    disconnectFromEmergencyConnect()
                 } else {
-                    self?.failedState.onNext(.network(error.localizedDescription))
+                    showLoadingView.onNext(false)
+                    routeToMainView.onNext(true)
+                }
+            } catch {
+                preferences.saveUserSessionAuth(sessionAuth: nil)
+                userSessionRepository.clearSession()
+                logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
+                showLoadingView.onNext(false)
+                switch error {
+                case let Errors.apiError(e):
+                    failedState.onNext(.api(e.errorMessage ?? ""))
+                default:
+                    if let error = error as? Errors {
+                        failedState.onNext(.network(error.description))
+                    } else {
+                        failedState.onNext(.network(error.localizedDescription))
+                    }
                 }
             }
-        }).disposed(by: disposeBag)
+        }
     }
 
     private func registerNetworkEventListener() {

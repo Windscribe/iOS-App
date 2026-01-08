@@ -10,9 +10,12 @@ import Foundation
 import RxSwift
 
 protocol CredentialsRepository {
-    func getUpdatedOpenVPNCrendentials() -> Single<OpenVPNServerCredentials?>
-    func getUpdatedIKEv2Crendentials() -> Single<IKEv2ServerCredentials?>
-    func getUpdatedServerConfig() -> Single<String>
+    var openVPNCrendentials: ServerCredentialsModel? { get }
+    var ikev2Crendentials: ServerCredentialsModel? { get }
+
+    func getUpdatedOpenVPNCrendentials() async throws
+    func getUpdatedIKEv2Crendentials() async throws
+    func getUpdatedServerConfig() async throws
     func selectedServerCredentialsType() -> ServerCredentials.Type
     func updateServerConfig()
 }

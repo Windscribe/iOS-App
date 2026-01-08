@@ -155,7 +155,9 @@ class Repository: Assembly {
                                   userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                   serverRepository: r.resolve(ServerRepository.self)!,
                                   bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
-                                  bridgeApiRepository: r.resolve(BridgeApiRepository.self)!)
+                                  bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
+
+            credentialsRepository: r.resolve(CredentialsRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LookAndFeelRepositoryType.self) { r in

@@ -332,48 +332,40 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func prepareUserData(ignoreError: Bool = false) {
         logger.logD("SignUpViewModel", "Preparing user data.")
-
-        userDataRepository.prepareUserData()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] result in
-                guard let self = self else { return }
-
-                if case .failure(let error) = result {
-                    if ignoreError {
-                        self.routeTo.send(.main)
-                    } else {
-                        self.preferences.saveUserSessionAuth(sessionAuth: nil)
-                        self.userSessionRepository.clearSession()
-                        switch error {
-                        case let Errors.apiError(e):
-                            self.failedState = .api(e.errorMessage ?? "")
-                        case Errors.failOverFailed:
-                            self.showRestrictiveNetworkModal.send(true)
-                            return
-                        default:
-                            if let error = error as? Errors {
-                                self.failedState = .network(error.description)
-                            } else {
-                                self.failedState = .network(error.localizedDescription)
-                            }
-                        }
-                    }
-                }
-
-                self.showLoadingView = false
-            }, receiveValue: { [weak self] _ in
-                guard let self = self else { return }
+        Task {
+            do {
+                try await userDataRepository.prepareUserData()
 
                 self.emergencyConnectRepository.cleansEmergencyConfigs()
 
-                if self.emergencyConnectRepository.isConnected() == true {
-                    self.disconnectFromEmergencyConnect()
+                if emergencyConnectRepository.isConnected() == true {
+                    disconnectFromEmergencyConnect()
                 } else {
-                    self.routeTo.send(.main)
-                    self.showLoadingView = false
+                    routeTo.send(.main)
+                    showLoadingView = false
                 }
-            }).store(in: &cancellables)
+            } catch {
+                if ignoreError {
+                    routeTo.send(.main)
+                } else {
+                    preferences.saveUserSessionAuth(sessionAuth: nil)
+                    userSessionRepository.clearSession()
+                    switch error {
+                    case let Errors.apiError(e):
+                        failedState = .api(e.errorMessage ?? "")
+                    case Errors.failOverFailed:
+                        self.showRestrictiveNetworkModal.send(true)
+                        return
+                    default:
+                        if let error = error as? Errors {
+                            failedState = .network(error.description)
+                        } else {
+                            failedState = .network(error.localizedDescription)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private func disconnectFromEmergencyConnect() {

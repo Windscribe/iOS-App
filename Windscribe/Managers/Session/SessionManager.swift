@@ -196,8 +196,8 @@ class SessionManagerImpl: SessionManager {
             if hoursPassed > 23 {
                 lastCheckForServerConfig = timeNow
                 Task {
-                    _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
-                    _ = try? await credentialsRepo.getUpdatedServerConfig().value
+                    try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
+                    try? await credentialsRepo.getUpdatedServerConfig()
                 }
             }
         }
@@ -214,12 +214,6 @@ class SessionManagerImpl: SessionManager {
         } else if status == 2 && !locationsManager.isCustomConfigSelected() {
             logger.logI("SessionManager", "User is out of data.")
             vpnManager.simpleDisableConnection()
-        }
-    }
-
-    private func checkLocationValidity() {
-        Task { @MainActor in
-
         }
     }
 
@@ -250,17 +244,17 @@ class SessionManagerImpl: SessionManager {
             _ = try? await Task.sleep(nanoseconds: 3_000_000_000)
             self.logger.logI("SessionManager", "Updated server list.")
             try? await serverRepo.updatedServers()
-            _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
-            _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
+            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
+            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
         }
         if newSession.isPremium && !oldSession.isPremium {
             try? await serverRepo.updatedServers()
-            _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
-            _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
+            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
+            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
         }
         if (oldSession.status == 3 && newSession.status == 1) || (oldSession.status == 2 && newSession.status == 1) {
-            _ = try? await credentialsRepo.getUpdatedIKEv2Crendentials().value
-            _ = try? await credentialsRepo.getUpdatedOpenVPNCrendentials().value
+            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
+            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
         }
 
         let portMaps = portmapRepo.currentPortMaps.filter({ $0.heading == wireGuard })
