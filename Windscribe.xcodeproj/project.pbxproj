@@ -431,7 +431,6 @@
 		59FC74022C5153B500021CD1 /* APIEmailSent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA8041D22089ED200F8E379 /* APIEmailSent.swift */; };
 		59FC74032C5153B700021CD1 /* WifiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA804252209F13100F8E379 /* WifiNetwork.swift */; };
 		59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0221B09B6400B225FF /* VPNProtocols.swift */; };
-		59FC74052C5153CE00021CD1 /* BestNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6E8A6D2215D378005887E0 /* BestNode.swift */; };
 		59FC74072C5153D300021CD1 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92EB221CA1C50054580D /* UserPreferences.swift */; };
 		59FC74082C5153D700021CD1 /* ClosestCountry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16C98C2225CDAB00997A2A /* ClosestCountry.swift */; };
 		59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */; };
@@ -622,7 +621,6 @@
 		AF619C4A24AA348900BB331C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF619C5224AA351D00BB331C /* ErrorNotifier.swift */; };
 		AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF619DF224AB5DAE00BB331C /* CustomConfigListFooterView.swift */; };
-		AF6E8A6E2215D378005887E0 /* BestNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6E8A6D2215D378005887E0 /* BestNode.swift */; };
 		AF7F3088237B38670097C6D6 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7F3087237B38670097C6D6 /* UIImageView+Extension.swift */; };
 		AF87DB522214A8BC001A3F24 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB512214A8BC001A3F24 /* libresolv.tbd */; settings = {ATTRIBUTES = (Required, ); }; };
 		AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB582214AAFF001A3F24 /* libresolv.9.tbd */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -1779,7 +1777,6 @@
 		AF619C4F24AA351A00BB331C /* WireGuardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WireGuardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		AF619C5224AA351D00BB331C /* ErrorNotifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorNotifier.swift; sourceTree = "<group>"; };
 		AF619DF224AB5DAE00BB331C /* CustomConfigListFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigListFooterView.swift; sourceTree = "<group>"; };
-		AF6E8A6D2215D378005887E0 /* BestNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestNode.swift; sourceTree = "<group>"; };
 		AF7F3087237B38670097C6D6 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		AF87DB512214A8BC001A3F24 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		AF87DB582214AAFF001A3F24 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
@@ -3448,7 +3445,6 @@
 				AF04982F21FA43690046D33B /* Section.swift */,
 				AFA8041D22089ED200F8E379 /* APIEmailSent.swift */,
 				AFA804252209F13100F8E379 /* WifiNetwork.swift */,
-				AF6E8A6D2215D378005887E0 /* BestNode.swift */,
 				AF4B92EB221CA1C50054580D /* UserPreferences.swift */,
 				AF16C98C2225CDAB00997A2A /* ClosestCountry.swift */,
 				AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */,
@@ -6760,7 +6756,6 @@
 				59FC743C2C515B8100021CD1 /* StaticIpRepositoryImpl.swift in Sources */,
 				59656F6A2C72E05500707EA2 /* SideMenuOptionsView.swift in Sources */,
 				F43791862E95AFD400ED6141 /* PrivacyStateManager.swift in Sources */,
-				59FC74052C5153CE00021CD1 /* BestNode.swift in Sources */,
 				F4433D042E830A340012EA34 /* KeychainManager.swift in Sources */,
 				1E0D9D7A2C6105A2008AFF2D /* GeneralViewModel.swift in Sources */,
 				59FC73F52C5152C500021CD1 /* MobilePlan.swift in Sources */,
@@ -7003,7 +6998,6 @@
 				E943750B27DEF6AD00F74F2D /* ErrorResponse.swift in Sources */,
 				AF0AED3F22035E9700039CAF /* FavNodesListTableViewDataSource+Delegate.swift in Sources */,
 				AF36BF0422FB11FE00FCC6F4 /* RefreshControlBackView.swift in Sources */,
-				AF6E8A6E2215D378005887E0 /* BestNode.swift in Sources */,
 				F47EC53C2DEA1BA300AF5089 /* DebugLogViewModel.swift in Sources */,
 				E9B5AD3827DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift in Sources */,
 				AF0420EC21C19FE0002132DE /* Server.swift in Sources */,

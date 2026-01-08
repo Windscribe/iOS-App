@@ -82,8 +82,6 @@ protocol LocalDatabase {
     func updateCustomConfigCredentials(customConfigId: String, username: String, password: String)
     func saveOldSession()
     func getOldSession() -> OldSession?
-    func saveBestNode(node: BestNode) -> Disposable
-    func getBestNode() -> [BestNode]?
     func getCustomConfigs() -> [CustomConfig]
     func clean()
 }

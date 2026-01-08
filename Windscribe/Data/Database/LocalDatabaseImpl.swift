@@ -273,14 +273,6 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObject(type: OldSession.self)
     }
 
-    func saveBestNode(node: BestNode) -> Disposable {
-        updateRealmObject(object: node)
-    }
-
-    func getBestNode() -> [BestNode]? {
-        return getRealmObjects(type: BestNode.self)
-    }
-
     func clean() {
         let realm = try? Realm()
 
