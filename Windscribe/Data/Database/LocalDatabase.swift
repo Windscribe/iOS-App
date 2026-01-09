@@ -36,7 +36,6 @@ protocol LocalDatabase {
     func savePortMap(portMap: [PortMap])
     func saveSuggestedPorts(suggestedPorts: [SuggestedPorts])
     func getSuggestedPorts() -> [SuggestedPorts]?
-    func getNotifications() -> [Notice]?
     func getNotificationsObservable() -> Observable<[Notice]>
     func saveNotifications(notifications: [Notice]) async
     func getReadNotices() -> [ReadNotice]?

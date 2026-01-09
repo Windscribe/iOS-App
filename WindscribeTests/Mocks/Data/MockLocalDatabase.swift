@@ -128,10 +128,6 @@ class MockLocalDatabase: LocalDatabase {
         return []
     }
 
-    func getNotifications() -> [Windscribe.Notice]? {
-        return notificationsToReturn
-    }
-
     func getNotificationsObservable() -> Observable<[Windscribe.Notice]> {
         return notificationsSubject.asObservable()
     }

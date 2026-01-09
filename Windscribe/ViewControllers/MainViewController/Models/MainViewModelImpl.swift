@@ -41,7 +41,7 @@ class MainViewModelImpl: MainViewModel {
     var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
     let latencies = BehaviorSubject<[PingDataModel]>(value: [])
-    var notices = CurrentValueSubject<[Notice], Never>([])
+    var notices = CurrentValueSubject<[NoticeModel], Never>([])
     private var isFirstNotificationCheck = true  // Skip auto-show on first check (stale database data)
     var selectedProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     var selectedPort = BehaviorSubject<String>(value: DefaultValues.port)
@@ -468,8 +468,8 @@ class MainViewModelImpl: MainViewModel {
 
     func getNotices() {
         Publishers.CombineLatest(
-            localDatabase.getReadNoticesObservable().toPublisher().replaceError(with: []),
-            localDatabase.getNotificationsObservable().toPublisher().replaceError(with: [])
+            notificationsRepo.readNotices,
+            notificationsRepo.notices
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] (_, notifications) in
@@ -482,24 +482,14 @@ class MainViewModelImpl: MainViewModel {
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void) {
         logger.logD("MainViewController", "Checking for unread notifications.")
         DispatchQueue.main.async {
-            guard let readNotices = self.localDatabase.getReadNotices() else {
-                return
-            }
-            guard let notices = self.retrieveNotifications() else {
-                return
-            }
-            guard let notice = notices.first else {
-                return
-            }
-            guard let noticeId = notice.id, let noticePopup = notice.popup else {
-                return
-            }
+            let notices = self.retrieveNotifications()
+            guard let notice = notices.first else { return }
 
-            let readNoticeIds = Set(readNotices.filter { $0.isInvalidated == false }.map {  $0.id })
+            let readNoticeIds = self.notificationsRepo.readNotices.value
             let noticeIds = Set(notices.compactMap { $0.id })
 
             // Only auto-show on fresh API data (skip first check with stale database data)
-            if !self.isFirstNotificationCheck && noticePopup && !readNoticeIds.contains(noticeId) {
+            if !self.isFirstNotificationCheck && notice.popup && !readNoticeIds.contains(notice.id) {
                 self.logger.logD("MainViewController", "New notification to read with popup.")
                 completion(true, 0)
                 return
@@ -525,14 +515,10 @@ class MainViewModelImpl: MainViewModel {
         }
     }
 
-    func retrieveNotifications() -> [NoticeModel]? {
+    func retrieveNotifications() -> [NoticeModel] {
         let notices = notices.value
-        if notices.filter({$0.isInvalidated}).count > 0 {
-            return nil
-        }
         // Sort by date (descending) to match NewsFeedViewModel sorting, take 5 newest
-        let noticeModels = Array(notices.compactMap { $0.getModel() }.reversed().sorted(by: { $0.date! > $1.date! }).prefix(5))
-        return noticeModels
+        return Array(notices.reversed().sorted(by: { $0.date > $1.date }).prefix(5))
     }
 
     func saveLastNotificationTimestamp() {

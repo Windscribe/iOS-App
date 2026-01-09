@@ -9,26 +9,17 @@
 import Foundation
 import RealmSwift
 
-struct NoticeModel {
-    let id: Int?
-    let title: String?
-    let message: String?
-    let date: Int?
-    let popup: Bool?
-    let action: NoticeAction?
+struct NoticeActionModel {
+    let type: String?
+    let pcpid: String?
+    let promoCode: String?
+    let label: String?
 
-    init(id: Int,
-         title: String,
-         message: String,
-         date: Int,
-         popup: Bool,
-         action: NoticeAction?) {
-        self.id = id
-        self.title = title
-        self.message = message
-        self.date = date
-        self.popup = popup
-        self.action = action
+    init(from: NoticeAction) {
+        self.type = from.type
+        self.pcpid = from.pcpid
+        self.promoCode = from.promoCode
+        self.label = from.label
     }
 }
 
@@ -54,6 +45,42 @@ struct NoticeModel {
         setValue(try container.decodeIfPresent(String.self, forKey: .pcpid), forKey: "pcpid")
         setValue(try container.decodeIfPresent(String.self, forKey: .promoCode), forKey: "promoCode")
         setValue(try container.decodeIfPresent(String.self, forKey: .label), forKey: "label")
+    }
+
+    func getModel() -> NoticeActionModel {
+        .init(from: self)
+    }
+}
+
+struct NoticeModel {
+    let id: Int
+    let title: String
+    let message: String
+    let date: Int
+    let popup: Bool
+    let action: NoticeActionModel?
+
+    init(id: Int,
+         title: String,
+         message: String,
+         date: Int,
+         popup: Bool,
+         action: NoticeActionModel?) {
+        self.id = id
+        self.title = title
+        self.message = message
+        self.date = date
+        self.popup = popup
+        self.action = action
+    }
+
+    init(from: Notice) {
+        self.id = from.id
+        self.title = from.title
+        self.message = from.message
+        self.date = from.date
+        self.popup = from.popup
+        self.action = from.action?.getModel()
     }
 }
 
@@ -99,12 +126,7 @@ struct NoticeModel {
     }
 
     func getModel() -> NoticeModel {
-        return NoticeModel(id: id,
-                           title: title,
-                           message: message,
-                           date: date,
-                           popup: popup,
-                           action: action)
+        .init(from: self)
     }
 }
 
@@ -128,6 +150,7 @@ struct NoticeList: Decodable {
     }
 }
 
+/// This does not need a model, it's never used outside it's own imediate call.
 @objcMembers class ReadNotice: Object {
     dynamic var id: Int = 0
 
