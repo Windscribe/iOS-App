@@ -10,6 +10,7 @@ import Foundation
 
 import RxCocoa
 import RxSwift
+import Combine
 
 protocol NewsFeedModelType {
     var newsfeedData: BehaviorSubject<[NewsFeedDataModel]> { get }
@@ -21,6 +22,7 @@ protocol NewsFeedModelType {
 class NewsFeedModel: NewsFeedModelType {
     let localDatabase: LocalDatabase
     let sessionManager: SessionManager
+    let notificationRepository: NotificationRepository
     let logger: FileLogger
     let htmlParser: HTMLParsing
     let disposeBag = DisposeBag()
@@ -28,23 +30,25 @@ class NewsFeedModel: NewsFeedModelType {
     let readStatus: BehaviorSubject<[Int]> = BehaviorSubject(value: [])
     let viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> = BehaviorSubject(value: .unknown)
 
-    init(localDatabase: LocalDatabase, sessionManager: SessionManager, fileLogger: FileLogger, htmlParser: HTMLParsing) {
+    private var cancellables = Set<AnyCancellable>()
+
+    init(localDatabase: LocalDatabase,
+         sessionManager: SessionManager,
+         fileLogger: FileLogger,
+         htmlParser: HTMLParsing,
+         notificationRepository: NotificationRepository) {
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
         self.htmlParser = htmlParser
+        self.notificationRepository = notificationRepository
         logger = fileLogger
         loadReadStatus()
         loadNewsFeedData()
     }
 
     private func loadNewsFeedData() {
-        localDatabase.getNotificationsObservable()
-            .take(1)
-            .filter { notifications in
-                notifications.map { notification in
-                    notification.isInvalidated == true
-                }.count > 0
-            }
+        notificationRepository.notices
+            .prefix(1)
             .map { notifications in
                 let limitedNotifications = notifications.reversed().sorted(by: { $0.id > $1.id }).prefix(5)
                 let openByDefault: Int? = limitedNotifications.first(where: {
@@ -84,12 +88,11 @@ class NewsFeedModel: NewsFeedModelType {
                         action: action)
                 }
             }
-            .subscribe(on: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { newsfeedData in
+            .receive(on: DispatchQueue.main)
+            .sink { newsfeedData in
                 self.newsfeedData.onNext(newsfeedData)
-            }, onError: { _ in }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     private func isRead(id: Int) -> Bool {
@@ -97,25 +100,13 @@ class NewsFeedModel: NewsFeedModelType {
     }
 
     private func loadReadStatus() {
-        let ids = localDatabase.getReadNotices()?.compactMap { $0.id } ?? []
-        readStatus.onNext(ids)
-        localDatabase.getReadNoticesObservable()
-            .filter { readNotificationIds in
-                readNotificationIds.map { id in
-                    id.isInvalidated == true
-                }.count > 0
-            }
-            .map {
-                $0.map { notice in
-                    notice.id
-                }
-            }.compactMap { $0 }
-            .subscribe(on: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { readNotificationIds in
+        readStatus.onNext(notificationRepository.readNotices.value)
+        notificationRepository.readNotices
+            .receive(on: DispatchQueue.main)
+            .sink { readNotificationIds in
                 self.readStatus.onNext(readNotificationIds)
-            }, onError: { _ in }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     private func getMessage(description: String) -> (String, ActionLinkModel?) {
@@ -124,14 +115,11 @@ class NewsFeedModel: NewsFeedModelType {
     }
 
     private func updateReadNotice(for noticeID: Int) {
-        var readNotifications = localDatabase.getReadNotices() ?? [ReadNotice]()
-        let setReadNotificationIDs = Set(readNotifications.map { $0.id })
+        var setReadNotificationIDs = Set(notificationRepository.readNotices.value)
         if setReadNotificationIDs.contains(noticeID) {
             return
         }
-        let readNotice = ReadNotice(noticeID: noticeID)
-        readNotifications.append(readNotice)
-        localDatabase.saveReadNotices(readNotices: readNotifications)
+        notificationRepository.readNotice(with: noticeID)
     }
 
     func didTapToExpand(id: Int) {

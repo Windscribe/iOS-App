@@ -14,7 +14,9 @@ class NotificationRepositoryImpl: NotificationRepository {
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let pushNotificationsManager: PushNotificationManager
-    let notices = CurrentValueSubject<[Notice], Never>([])
+
+    let notices = CurrentValueSubject<[NoticeModel], Never>([])
+    let readNotices = CurrentValueSubject<[Int], Never>([])
     private var cancellables = Set<AnyCancellable>()
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger, pushNotificationsManager: PushNotificationManager) {
@@ -33,14 +35,32 @@ class NotificationRepositoryImpl: NotificationRepository {
                     }
                 },
                 receiveValue: { [weak self] notifications in
-                    self?.notices.send(notifications)
+                    self?.notices.send(notifications.compactMap {
+                        $0.isInvalidated ? nil : $0.getModel()
+                    })
+                }
+            )
+            .store(in: &cancellables)
+
+        localDatabase.getReadNoticesObservable()
+            .toPublisher()
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.logger.logE("NotificationRepositoryImpl", "Failed to observe read notices: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] notifications in
+                    self?.readNotices.send(notifications.compactMap {
+                        $0.isInvalidated ? nil : $0.id
+                    })
                 }
             )
             .store(in: &cancellables)
     }
 
     @MainActor
-    func getUpdatedNotifications() async throws -> [Notice] {
+    func getUpdatedNotifications() async throws -> [NoticeModel] {
         let pcpid = pushNotificationsManager.notification.value?.pcpid ?? ""
 
         if !pcpid.isEmpty {
@@ -53,7 +73,7 @@ class NotificationRepositoryImpl: NotificationRepository {
         // Save to database - this will trigger the reactive publisher chain
         await localDatabase.saveNotifications(notifications: notificationsArray)
 
-        return notificationsArray
+        return notificationsArray.map { $0.getModel() }
     }
 
     func loadNotifications() async {
@@ -64,5 +84,12 @@ class NotificationRepositoryImpl: NotificationRepository {
         } catch {
             logger.logE("NotificationRepository", "Failed to load notifications: \(error)")
         }
+    }
+
+    func readNotice(with id: Int) {
+        var readNotifications = localDatabase.getReadNotices() ?? [ReadNotice]()
+        let readNotice = ReadNotice(noticeID: id)
+        readNotifications.append(readNotice)
+        localDatabase.saveReadNotices(readNotices: readNotifications)
     }
 }

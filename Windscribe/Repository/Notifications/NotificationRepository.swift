@@ -10,7 +10,9 @@ import Foundation
 import Combine
 
 protocol NotificationRepository {
-    var notices: CurrentValueSubject<[Notice], Never> { get }
-    func getUpdatedNotifications() async throws -> [Notice]
+    var notices: CurrentValueSubject<[NoticeModel], Never> { get }
+    var readNotices: CurrentValueSubject<[Int], Never> { get }
+    func getUpdatedNotifications() async throws -> [NoticeModel]
     func loadNotifications() async
+    func readNotice(with id: Int)
 }

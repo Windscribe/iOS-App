@@ -131,10 +131,6 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObjects(objects: portMap)
     }
 
-    func getNotifications() -> [Notice]? {
-        return getRealmObjects(type: Notice.self)
-    }
-
     func getNotificationsObservable() -> Observable<[Notice]> {
         return getSafeRealmObservable(type: Notice.self)
     }

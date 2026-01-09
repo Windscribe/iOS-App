@@ -85,7 +85,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     }
 
     // Step 1: Extract Sorting Logic - Take 5 newest by date
-    private func sortNotifications(_ notifications: [Notice]) -> [Notice] {
+    private func sortNotifications(_ notifications: [NoticeModel]) -> [NoticeModel] {
         return Array(
             notifications
                 .reversed()
@@ -95,7 +95,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     }
 
     // Step 2: Extract Data Mapping Logic
-    private func mapToNewsFeedDataModels(_ notifications: [Notice]) -> [NewsFeedDataModel] {
+    private func mapToNewsFeedDataModels(_ notifications: [NoticeModel]) -> [NewsFeedDataModel] {
         let openByDefaultID = notifications.first { !isRead(id: $0.id) }?.id
 
         if let id = openByDefaultID {
@@ -137,7 +137,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     }
 
     // Step 3: Extract Notification Validation
-    private func validateNotifications(_ notifications: [Notice]) throws -> [Notice] {
+    private func validateNotifications(_ notifications: [NoticeModel]) throws -> [NoticeModel] {
         guard !notifications.isEmpty else {
             throw URLError(.badServerResponse)
         }
@@ -176,11 +176,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
         // Update in-memory cache immediately
         readStatus.insert(noticeID)
 
-        // Persist to database
-        var readNotifications = localDatabase.getReadNotices() ?? [ReadNotice]()
-        let readNotice = ReadNotice(noticeID: noticeID)
-        readNotifications.append(readNotice)
-        localDatabase.saveReadNotices(readNotices: readNotifications)
+        notificationRepository.readNotice(with: noticeID)
     }
 
     // MARK: Read Status Management
@@ -191,23 +187,15 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
 
     private func loadReadStatus() {
         // Get initial value synchronously
-        let initialReadNotices = localDatabase.getReadNotices() ?? []
-        let readNotificationIds = initialReadNotices.compactMap { $0.id }
-        self.readStatus = Set(readNotificationIds)
+
+        self.readStatus = Set(notificationRepository.readNotices.value)
 
         // Keep reactive subscription for future updates
-        localDatabase.getReadNoticesObservable()
-            .toPublisher()
-            .catch { [weak self] error -> Just<[ReadNotice]> in
-                self?.logger.logE("ReadStatus", "Failed to observe read notices: \(error.localizedDescription)")
-                return Just([])
-            }
+        notificationRepository.readNotices
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] readNotices in
-                let readNotificationIds = readNotices.compactMap { $0.id }
-                let newReadStatus = Set(readNotificationIds)
+            .sink { readNotificationIds in
                 // Merge with existing instead of replacing to avoid race conditions
-                self?.readStatus.formUnion(newReadStatus)
+                self.readStatus.formUnion(Set(readNotificationIds))
             }
             .store(in: &cancellables)
     }

@@ -164,7 +164,8 @@ class TVViewModels: Assembly {
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
                 fileLogger: r.resolve(FileLogger.self)!,
-                htmlParser: r.resolve(HTMLParsing.self)!)
+                htmlParser: r.resolve(HTMLParsing.self)!,
+                notificationRepository: r.resolve(NotificationRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register(PreferencesMainViewModelOld.self) { r in
