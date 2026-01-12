@@ -1063,6 +1063,9 @@
 		F45DF73F2E2FF57700B00F09 /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */; };
 		F45DF7412E2FF58700B00F09 /* PushNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF7402E2FF58700B00F09 /* PushNotificationView.swift */; };
 		F45E4F9B2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45E4F9A2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift */; };
+		F45E4F9D2F105BB200C9F0DB /* MockLocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45E4F9C2F105BB200C9F0DB /* MockLocationsManager.swift */; };
+		F45E4FA22F105C8900C9F0DB /* FavouriteListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45E4FA02F105C8900C9F0DB /* FavouriteListViewModelTests.swift */; };
+		F45E4FA42F10638C00C9F0DB /* MockProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45E4FA32F10638C00C9F0DB /* MockProtocolManager.swift */; };
 		F45F19122D7A1D540028D0C2 /* UIConstants+ImagesAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */; };
 		F45F191A2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
 		F45F191B2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
@@ -2068,6 +2071,9 @@
 		F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
 		F45DF7402E2FF58700B00F09 /* PushNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationView.swift; sourceTree = "<group>"; };
 		F45E4F9A2F0EB4F700C9F0DB /* LazyLoginCodeAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyLoginCodeAlertView.swift; sourceTree = "<group>"; };
+		F45E4F9C2F105BB200C9F0DB /* MockLocationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocationsManager.swift; sourceTree = "<group>"; };
+		F45E4FA02F105C8900C9F0DB /* FavouriteListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteListViewModelTests.swift; sourceTree = "<group>"; };
+		F45E4FA32F10638C00C9F0DB /* MockProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProtocolManager.swift; sourceTree = "<group>"; };
 		F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Extension.swift"; sourceTree = "<group>"; };
 		F465A6362D5D37EF00579B5F /* AppReviewManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManagerTests.swift; sourceTree = "<group>"; };
 		F465A6382D5D3B6000579B5F /* MockPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPreferences.swift; sourceTree = "<group>"; };
@@ -3173,6 +3179,8 @@
 				F43791812E95A21900ED6141 /* MockSessionManager.swift */,
 				F49935402DA9973100108558 /* MockSoundManager.swift */,
 				F4B4C1E82EA022320024D824 /* MockPushNotificationManager.swift */,
+				F45E4F9C2F105BB200C9F0DB /* MockLocationsManager.swift */,
+				F45E4FA32F10638C00C9F0DB /* MockProtocolManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -3485,6 +3493,7 @@
 				F437917D2E95A1E500ED6141 /* Repository */,
 				C5D983C52B34E5690069FF3A /* API */,
 				F48DDC132E85B90400B66315 /* Protocol */,
+				F45E4FA12F105C8900C9F0DB /* ViewModels */,
 				F4B4C1F92EA2BCBA0024D824 /* Extensions */,
 				F4EF7A092D5D31A200E4EB9F /* Mocks */,
 				F434A1B22D834A3D0059415F /* SampleData */,
@@ -4761,6 +4770,14 @@
 			isa = PBXGroup;
 			children = (
 				F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F45E4FA12F105C8900C9F0DB /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F45E4FA02F105C8900C9F0DB /* FavouriteListViewModelTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -7289,6 +7306,8 @@
 				1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,
+				F45E4F9D2F105BB200C9F0DB /* MockLocationsManager.swift in Sources */,
+				F45E4FA42F10638C00C9F0DB /* MockProtocolManager.swift in Sources */,
 				F465A6392D5D3B6000579B5F /* MockPreferences.swift in Sources */,
 				F48DDC162E85BEA800B66315 /* WireGuardCredentialsTests.swift in Sources */,
 				F48DDC1F2E8C9BCC00B66315 /* FileDatabaseTests.swift in Sources */,
@@ -7318,6 +7337,7 @@
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
 				F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */,
+				F45E4FA22F105C8900C9F0DB /* FavouriteListViewModelTests.swift in Sources */,
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,

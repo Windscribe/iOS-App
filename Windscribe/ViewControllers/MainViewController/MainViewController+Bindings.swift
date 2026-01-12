@@ -260,6 +260,11 @@ extension MainViewController {
             case .disconnecting: self?.displayDisconnectingAlert()
             }
         }.disposed(by: disposeBag)
+        favNodesListViewModel.showMaintenanceLocationTrigger
+            .sink { [weak self] _ in
+                self?.showMaintenanceLocationView(isStaticIp: false)
+            }
+            .store(in: &cancellables)
         favNodesListViewModel.showUpgradeTrigger.subscribe { [weak self] _ in
             self?.showUpgradeView()
         }.disposed(by: disposeBag)

@@ -1,0 +1,76 @@
+//
+//  MockLocationsManager.swift
+//  WindscribeTests
+//
+//  Created by Soner Yuksel on 2026-01-08.
+//  Copyright © 2026 Windscribe. All rights reserved.
+//
+
+import Foundation
+import Combine
+@testable import Windscribe
+
+class MockLocationsManager: LocationsManager {
+
+    // MARK: Protocol Properties
+    var mockLocation: (ServerModel, GroupModel)?
+    var mockLocationError: Error?
+
+    var getLocationCalled = false
+    var saveLastSelectedLocationCalled = false
+    var lastSavedLocationID: String?
+
+    var selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
+    var bestLocationUpdated = CurrentValueSubject<String, Never>("")
+
+    // MARK: Protocol Methods
+
+    func getLocation(from groupId: String) throws -> (ServerModel, GroupModel) {
+        getLocationCalled = true
+
+        if let error = mockLocationError {
+            throw error
+        }
+
+        guard let location = mockLocation else {
+            throw VPNConfigurationErrors.locationNotFound(groupId)
+        }
+
+        return location
+    }
+
+    func saveLastSelectedLocation(with locationID: String) {
+        saveLastSelectedLocationCalled = true
+        lastSavedLocationID = locationID
+    }
+
+    func getBestLocationModel(from groupId: String) -> BestLocationModel? { return nil }
+    func getBestLocationModel() -> BestLocationModel? { return nil }
+    func getLocationUIInfo() -> LocationUIInfo {
+        return LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
+    }
+    func saveStaticIP(withID staticID: Int?) {}
+    func saveCustomConfig(withID staticID: String?) {}
+    func clearLastSelectedLocation() {}
+    func saveBestLocation(with locationID: String) {}
+    func selectBestLocation(with locationID: String) {}
+    func getBestLocation() -> String { return "" }
+    func getLastSelectedLocation() -> String { return "" }
+    func getLocationType() -> LocationType? { return nil }
+    func getLocationType(id: String) -> LocationType? { return nil }
+    func getId() -> String { return "" }
+    func getId(location: String) -> String { return "" }
+    func isCustomConfigSelected() -> Bool { return false }
+    func checkLocationValidity() {}
+    func checkForForceDisconnect() -> Bool { return false }
+
+    // MARK: Helper Methods
+
+    func reset() {
+        mockLocation = nil
+        mockLocationError = nil
+        getLocationCalled = false
+        saveLastSelectedLocationCalled = false
+        lastSavedLocationID = nil
+    }
+}
