@@ -163,6 +163,12 @@ class Repository: Assembly {
         container.register(LookAndFeelRepositoryType.self) { r in
             LookAndFeelRepository(preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
+
+        container.register(RobertyFiltersRepository.self) { r in
+            RobertyFiltersRepositoryImpl(logger: r.resolve(FileLogger.self)!,
+                                         apiManager: r.resolve(APIManager.self)!,
+                                         localDatabase: r.resolve(LocalDatabase.self)!)
+        }.inObjectScope(.userScope)
     }
 }
 

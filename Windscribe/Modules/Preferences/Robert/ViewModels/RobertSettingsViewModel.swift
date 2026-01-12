@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import RxSwift
 
 enum RobertEntryType: MenuEntryHeaderType, Hashable, Equatable {
     case customRules
@@ -25,10 +24,10 @@ protocol RobertSettingsViewModel: PreferencesBaseViewModel {
     var description: AttributedString { get set }
     var errorMessage: String? { get set }
     var safariURL: URL? { get }
-    var entries: [RobertFilter] { get set }
+    var entries: [RobertFilterModel] { get set }
     var customRulesEntry: RobertEntryType { get }
 
-    func filterSelected(_ filter: RobertFilter)
+    func filterSelected(_ filter: RobertFilterModel)
     func infoSelected()
     func customRulesSelected()
 }
@@ -37,26 +36,21 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
     @Published var description: AttributedString = AttributedString("")
     @Published var errorMessage: String?
     @Published var safariURL: URL?
-    @Published var entries: [RobertFilter] = []
+    @Published var entries: [RobertFilterModel] = []
     @Published var customRulesEntry: RobertEntryType = .customRules
     @Published var isLoading: Bool = false
 
+    private let robertyFiltersRepository: RobertyFiltersRepository
+
     private let apiManager: APIManager
-    private let localDB: LocalDatabase
-
-    private let disposeBag = DisposeBag()
-
-    private var robertFilters: RobertFilters?
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          apiManager: APIManager,
-         localDB: LocalDatabase) {
+         robertyFiltersRepository: RobertyFiltersRepository) {
         self.apiManager = apiManager
-        self.localDB = localDB
-
-        entries = localDB.getRobertFilters()?.getRules() ?? []
+        self.robertyFiltersRepository = robertyFiltersRepository
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -77,10 +71,7 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
         Task { @MainActor [weak self] in
             guard let self = self else { return }
             do {
-                let robertFilters = try await apiManager.getRobertFilters()
-                self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
-                self.robertFilters = robertFilters
-                self.reloadItems()
+                try await robertyFiltersRepository.refreshFilters()
             } catch {
                 if let error = error as? Errors {
                     var newError = ""
@@ -92,80 +83,43 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
                     }
                     self.logger.logE("GeneralSettingsViewModel", newError)
                     self.errorMessage = newError
-                    if self.entries.isEmpty {
-                        self.entries = self.localDB.getRobertFilters()?.getRules() ?? []
-                    }
                 }
             }
+
+            robertyFiltersRepository.robertFilters
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] robertFilters in
+                    self?.entries = robertFilters
+                }
+                .store(in: &cancellables)
         }
     }
 
     override func reloadItems() {
-        guard let robertFilters = robertFilters else { return }
-        entries = robertFilters.getRules()
+        entries = robertyFiltersRepository.robertFilters.value
     }
 
-    func filterSelected(_ filter: RobertFilter) {
+    func filterSelected(_ filter: RobertFilterModel) {
         actionSelected()
 
-        // Extract Realm object properties on main thread before entering Task
-        let filterId = filter.id
-        let status: Int32 = filter.enabled ? 0 : 1
         isLoading = true
 
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                _ = try await apiManager.updateRobertSettings(id: filterId, status: status)
-
-                // Sync Robert filters after successful update
-                do {
-                    _ = try await apiManager.syncRobertFilters()
-
-                    // Only update toggle state after both API calls succeed
-                    await MainActor.run {
-                        self.localDB.toggleRobertRule(id: filterId)
-                        guard let robertFilters = self.localDB.getRobertFilters() else {
-                            let newError = "Unable to load robert rules. Check your network connection."
-                            self.logger.logE("GeneralSettingsViewModel", self.errorMessage ?? "")
-                            self.errorMessage = newError
-                            self.isLoading = false
-                            return
-                        }
-                        self.entries = robertFilters.getRules()
-                        self.isLoading = false
-                    }
-                } catch {
-                    await MainActor.run {
-                        if let error = error as? Errors {
-                            var newError = ""
-                            switch error {
-                            case let .apiError(e):
-                                newError = e.errorMessage ?? "Failed to sync Robert Settings."
-                            default:
-                                newError = "Failed to sync Robert Settings. \(error.description)"
-                            }
-                            self.logger.logE("GeneralSettingsViewModel", newError)
-                            self.errorMessage = newError
-                        }
-                        self.isLoading = false
-                    }
-                }
+                try await robertyFiltersRepository.updateFilter(filter)
             } catch {
-                await MainActor.run {
-                    self.isLoading = false
-                    if let error = error as? Errors {
-                        var newError = ""
+                if let error = error as? RobertFilterErrors {
+                    await MainActor.run {
                         switch error {
-                        case let .apiError(e):
-                            newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
-                        default:
-                            newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
+                        case .failedSync(let message), .failedUpdate(let message):
+                            self.errorMessage = message
                         }
-                        self.logger.logE("GeneralSettingsViewModel", newError)
-                        self.errorMessage = newError
                     }
                 }
+            }
+            await MainActor.run {
+                self.isLoading = false
             }
         }
     }

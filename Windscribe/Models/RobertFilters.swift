@@ -28,14 +28,6 @@ import RealmSwift
     override static func primaryKey() -> String? {
         return "id"
     }
-
-    func getRules() -> [RobertFilter] {
-        var filterArray = [RobertFilter]()
-        for filter in filters {
-            filterArray.append(filter)
-        }
-        return filterArray
-    }
 }
 
 @objcMembers class RobertFilter: Object, Decodable {
@@ -64,5 +56,25 @@ import RealmSwift
         } else {
             enabled = false
         }
+    }
+
+    func getModel() -> RobertFilterModel {
+        .init(from: self)
+    }
+}
+
+struct RobertFilterModel: Equatable, Hashable {
+    var id: String
+    var title: String
+    var filterDescription: String
+    var status: Int
+    let enabled: Bool
+
+    init(from: RobertFilter) {
+        id = from.id
+        title = from.title
+        filterDescription = from.filterDescription
+        status = from.status
+        enabled = from.enabled
     }
 }
