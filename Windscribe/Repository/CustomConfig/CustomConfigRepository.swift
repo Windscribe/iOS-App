@@ -7,11 +7,19 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol CustomConfigRepository {
-    func saveWgConfig(url: URL) async -> RepositoryError?
+    var customConfigs: CurrentValueSubject<[CustomConfigModel], Never> { get }
+
+    func saveWgConfig(url: URL) async throws
     func removeWgConfig(fileId: String) async
-    func saveOpenVPNConfig(url: URL) async -> RepositoryError?
+    func saveOpenVPNConfig(url: URL) async throws
     func removeOpenVPNConfig(fileId: String) async
+
+    func removeCustomConfig(fileId: String)
+
+    func saveOpenVPNCustomConfig(data: Data,
+                                 configInfo: OpenVPNConnectionInfo,
+                                 configuationName: String) async throws -> CustomConfigModel
 }

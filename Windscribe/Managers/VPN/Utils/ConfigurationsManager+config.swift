@@ -71,9 +71,9 @@ extension ConfigurationsManager {
         guard let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel() else {
             throw VPNConfigurationErrors.configNotFound
         }
-        let username = config.username?.base64Decoded() == "" ? config.username : config.username?.base64Decoded()
-        let password = config.password?.base64Decoded() == "" ? config.password : config.password?.base64Decoded()
-        return OpenVPNConfiguration(proto: config.protocolType ?? udp, ip: config.serverAddress ?? "", username: username, password: password, path: configFilePath, data: configData)
+        let username = config.username.base64Decoded() == "" ? config.username : config.username.base64Decoded()
+        let password = config.password.base64Decoded() == "" ? config.password : config.password.base64Decoded()
+        return OpenVPNConfiguration(proto: config.protocolType, ip: config.serverAddress, username: username, password: password, path: configFilePath, data: configData)
     }
 
     /// Loads a WireGuard configuration from a file path.

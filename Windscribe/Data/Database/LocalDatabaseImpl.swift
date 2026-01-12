@@ -77,8 +77,17 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func getCustomConfig() -> Observable<[CustomConfig]> {
+    func removeCustomConfig(fileId: String) {
+        if let object = getRealmObject(type: CustomConfig.self, primaryKey: fileId) {
+            deleteRealmObject(object: object)
+        }
+    }
+
+    func getCustomConfigObservable() -> Observable<[CustomConfig]> {
         return getSafeRealmObservable(type: CustomConfig.self)
+    }
+    func getCustomConfig() -> [CustomConfig] {
+        return getRealmObjects(type: CustomConfig.self) ?? []
     }
 
     func getStaticIPs() -> [StaticIP]? {
@@ -211,12 +220,6 @@ class LocalDatabaseImpl: LocalDatabase {
             try? realm?.write {
                 realm?.add(pingData, update: .modified)
             }
-        }
-    }
-
-    func removeCustomConfig(fileId: String) {
-        if let object = getRealmObject(type: CustomConfig.self, primaryKey: fileId) {
-            deleteRealmObject(object: object)
         }
     }
 

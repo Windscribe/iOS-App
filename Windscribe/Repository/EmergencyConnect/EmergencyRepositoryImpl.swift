@@ -19,6 +19,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let logger: FileLogger
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
+    private let customConfigRepository: CustomConfigRepository
     private let disposeBag = DisposeBag()
     private let configuationName = "emergency-connect"
 
@@ -29,7 +30,8 @@ class EmergencyRepositoryImpl: EmergencyRepository {
          localDatabase: LocalDatabase,
          logger: FileLogger,
          locationsManager: LocationsManager,
-         protocolManager: ProtocolManagerType) {
+         protocolManager: ProtocolManagerType,
+         customConfigRepository: CustomConfigRepository) {
         self.wsnetEmergencyConnect = wsnetEmergencyConnect
         self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
@@ -38,6 +40,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         self.logger = logger
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
+        self.customConfigRepository = customConfigRepository
     }
 
     /// Loads Emergency connect configurations from WSNet.
@@ -75,12 +78,13 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             let bestLocation = locationsManager.getBestLocation()
             locationsManager.saveBestLocation(with: bestLocation)
         }
-        localDatabase.getCustomConfigs().filter { config in
-            config.name == configuationName && config.isInvalidated == false
-        }.forEach {
-            localDatabase.removeCustomConfig(fileId: $0.id)
-        }
         Task {
+            customConfigRepository.customConfigs.value.filter { config in
+                config.name == configuationName
+            }
+            .forEach { config in
+                customConfigRepository.removeCustomConfig(fileId: config.id)
+            }
             logger.logI("EmergencyRepository", "cleansEmergencyConfigs for getRefreshedProtocols")
             await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
         }
@@ -103,11 +107,15 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                 }
             }
         }
-        .flatMap { data -> AnyPublisher<CustomConfig, Error> in
-            Future<CustomConfig, Error> { promise in
+        .flatMap { data -> AnyPublisher<CustomConfigModel, Error> in
+            Future<CustomConfigModel, Error> { promise in
                 Task {
                     do {
-                        let customConfig = try await self.saveConfiguration(data: data, configInfo: configInfo)
+                        let customConfig = try await self
+                            .customConfigRepository
+                            .saveOpenVPNCustomConfig(data: data,
+                                                     configInfo: configInfo,
+                                                     configuationName: self.configuationName)
                         self.locationsManager.saveCustomConfig(withID: customConfig.id)
                         promise(.success(customConfig))
                     } catch {
@@ -133,23 +141,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             .eraseToAnyPublisher()
         }
         .eraseToAnyPublisher()
-    }
-
-    /// Saves configuration as file and custom config model
-    private func saveConfiguration(data: Data, configInfo: OpenVPNConnectionInfo) async throws -> CustomConfig {
-        let fileId = UUID().uuidString
-        let path = "\(fileId).ovpn"
-
-        // Async file operation
-        try await fileDatabase.saveFile(data: data, path: path)
-
-        // Create config model
-        let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true)
-
-        // Realm operations must be on main thread
-        await localDatabase.saveCustomConfig(customConfig: customConfig)
-
-        return customConfig
     }
 
     /// Builds OpenVPN Configuration from OpenVPNConnectionInfo

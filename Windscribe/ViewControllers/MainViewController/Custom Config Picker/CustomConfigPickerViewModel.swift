@@ -9,6 +9,7 @@
 import Foundation
 import MobileCoreServices
 import RxSwift
+import Combine
 import UIKit
 import UniformTypeIdentifiers
 
@@ -36,7 +37,6 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     let alertManager: AlertManagerV2
     let customConfigRepository: CustomConfigRepository
     let vpnStateRepository: VPNStateRepository
-    let localDataBase: LocalDatabase
     let connectivity: ConnectivityManager
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
@@ -47,13 +47,12 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     var presentDocumentPickerTrigger = PublishSubject<UIDocumentPickerViewController>()
     var showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
 
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
          alertManager: AlertManagerV2,
          customConfigRepository: CustomConfigRepository,
          vpnStateRepository: VPNStateRepository,
-         localDataBase: LocalDatabase,
          connectivity: ConnectivityManager,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
@@ -61,7 +60,6 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
         self.alertManager = alertManager
         self.customConfigRepository = customConfigRepository
         self.vpnStateRepository = vpnStateRepository
-        self.localDataBase = localDataBase
         self.connectivity = connectivity
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
@@ -74,28 +72,33 @@ extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
         logger.logD("CustomConfigPickerViewModel", "Importing WireGuard/OpenVPN .conf file")
         urls.forEach { url in
             let fileName = url.lastPathComponent.replacingOccurrences(of: ".\(url.pathExtension)", with: "")
-            localDataBase.getCustomConfig().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: {
-                let config = $0.first { $0.name == fileName }
-                if config != nil {
-                    self.alertManager.showSimpleAlert(viewController: nil, title: TextsAsset.error, message: TextsAsset.customConfigWithSameFileNameError, buttonText: TextsAsset.okay)
-                    return
-                }
-                guard url.startAccessingSecurityScopedResource() else {
-                    self.logger.logI("CustomConfigPickerViewModel", "Error when accessing config file")
-                    return
-                }
-                if url.isFileURL, url.pathExtension == "ovpn" {
-                    Task {
-                        _ = await self.customConfigRepository.saveOpenVPNConfig(url: url)
-                        url.stopAccessingSecurityScopedResource()
+            customConfigRepository.customConfigs
+                .prefix(1)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] customConfigs in
+                    guard let self = self else { return }
+                    let config = customConfigs.first { $0.name == fileName }
+                    if config != nil {
+                        self.alertManager.showSimpleAlert(viewController: nil, title: TextsAsset.error, message: TextsAsset.customConfigWithSameFileNameError, buttonText: TextsAsset.okay)
+                        return
                     }
-                } else if url.isFileURL, url.pathExtension == "conf" {
-                    Task {
-                        _ = await self.customConfigRepository.saveWgConfig(url: url)
-                        url.stopAccessingSecurityScopedResource()
+                    guard url.startAccessingSecurityScopedResource() else {
+                        self.logger.logI("CustomConfigPickerViewModel", "Error when accessing config file")
+                        return
+                    }
+                    if url.isFileURL, url.pathExtension == "ovpn" {
+                        Task {
+                            try? await self.customConfigRepository.saveOpenVPNConfig(url: url)
+                            url.stopAccessingSecurityScopedResource()
+                        }
+                    } else if url.isFileURL, url.pathExtension == "conf" {
+                        Task {
+                            try? await self.customConfigRepository.saveWgConfig(url: url)
+                            url.stopAccessingSecurityScopedResource()
+                        }
                     }
                 }
-            }).disposed(by: disposeBag)
+                .store(in: &cancellables)
         }
     }
 }

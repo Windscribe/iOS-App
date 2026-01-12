@@ -102,9 +102,7 @@ class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConf
         let customConfig = customConfigs[indexPath.row]
 
         var latency = -1
-        if let pingIP = customConfig.serverAddress {
-            latency = latencyRepository.getPingData(ip: pingIP)?.latency ?? latency
-        }
+        latency = latencyRepository.getPingData(ip: customConfig.serverAddress)?.latency ?? latency
 
         if cell.customConfigCellViewModel == nil {
             cell.customConfigCellViewModel = CustomConfigCellModel()
@@ -154,10 +152,9 @@ class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConf
         guard orientation == .right else { return nil }
         let customConfig = customConfigs[indexPath.row]
 
-        guard let fileId = customConfig.id, let protocolType = customConfig.protocolType else { return nil }
-
         let deleteAction = SwipeAction(style: .destructive, title: nil) { _, _ in
-            self.logicDelegate?.showRemoveAlertForCustomConfig(id: fileId, protocolType: protocolType)
+            self.logicDelegate?.showRemoveAlertForCustomConfig(id: customConfig.id,
+                                                               protocolType: customConfig.protocolType)
         }
         let editAction = SwipeAction(style: .destructive, title: nil) { _, _ in
             self.logicDelegate?.showEditCustomConfig(customConfig: customConfig)
@@ -177,7 +174,7 @@ class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConf
             editAction.image = UIImage(named: ImagesAsset.DarkMode.edit)
         }
 
-        if customConfig.authRequired ?? false {
+        if customConfig.authRequired {
             return [deleteAction, editAction]
         }
         return [deleteAction]

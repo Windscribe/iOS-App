@@ -64,7 +64,8 @@ protocol LocalDatabase {
     func getAllPingData() -> [PingData]
     func saveCustomConfig(customConfig: CustomConfig)
     func removeCustomConfig(fileId: String)
-    func getCustomConfig() -> Observable<[CustomConfig]>
+    func getCustomConfigObservable() -> Observable<[CustomConfig]>
+    func getCustomConfig() -> [CustomConfig]
     func getPorts(protocolType: String) -> [String]?
     func getRobertFilters() -> RobertFilters?
     func saveRobertFilters(filters: RobertFilters) -> Disposable

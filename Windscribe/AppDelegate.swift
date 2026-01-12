@@ -135,33 +135,41 @@ extension AppDelegate {
         return true
     }
 
+    @MainActor
+    private func showCustomConfigTab() async {
+        NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
+    }
+
+    @MainActor
+    private func showCustomConfigError(with error: Error) async {
+        if let error = error as? RepositoryError {
+            await MainActor.run {
+                AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+            }
+        }
+    }
+
     /// Called when url is loaded in to app.
     func application(_: UIApplication, open url: URL, sourceApplication _: String?, annotation _: Any) -> Bool {
         if preferences.userSessionAuth() != nil {
             if url.isFileURL && url.pathExtension == "ovpn" {
                 logger.logI("AppDelegate", "Importing OpenVPN .ovpn file")
                 Task {
-                    if let error = await customConfigRepository.saveOpenVPNConfig(url: url) {
-                        await MainActor.run {
-                            AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
-                        }
-                    } else {
-                        await MainActor.run {
-                            NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
-                        }
+                    do {
+                        try await customConfigRepository.saveOpenVPNConfig(url: url)
+                        await showCustomConfigTab()
+                    } catch {
+                        await showCustomConfigError(with: error)
                     }
                 }
             } else if url.isFileURL && url.pathExtension == "conf" {
                 logger.logI("AppDelegate", "Importing WireGuard .conf file")
                 Task {
-                    if let error = await customConfigRepository.saveWgConfig(url: url) {
-                        await MainActor.run {
-                            AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
-                        }
-                    } else {
-                        await MainActor.run {
-                            NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
-                        }
+                    do {
+                        try await customConfigRepository.saveWgConfig(url: url)
+                        await showCustomConfigTab()
+                    } catch {
+                        await showCustomConfigError(with: error)
                     }
                 }
             } else {
