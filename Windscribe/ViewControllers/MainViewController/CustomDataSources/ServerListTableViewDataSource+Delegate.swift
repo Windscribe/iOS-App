@@ -41,7 +41,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
     private var shouldColapse: Bool = false
     private var cancellables = Set<AnyCancellable>()
-    private var favList: [Favourite] = []
+    private var favList: [FavouriteModel] = []
     private var locationLoad: Bool = false
     private var bestLocationModel: BestLocationModel?
     private var bestLocationVisible: Bool = true
@@ -107,7 +107,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             .replaceError(with: [])
             .sink {[weak self] _ in
                 self?.delegate?.reloadServerListTableView()
-                self?.favList = self?.localDatabase.getFavouriteList() ?? []
+                self?.favList = self?.localDatabase.getFavouriteList().map { $0.getModel() } ?? []
             }
             .store(in: &cancellables)
 
@@ -310,7 +310,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
     private func isGroupFavorite(_ groupId: Int?) -> Bool {
         guard let groupId = groupId else { return false }
-        return favList.filter { !$0.isInvalidated }
+        return favList
             .map { $0.id }
             .contains(String(groupId))
     }

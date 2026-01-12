@@ -104,7 +104,7 @@ struct FavouriteGroupModel {
     var pinnedNodeIp: String?
     var groupModel: GroupModel
 
-    init(favourite: Favourite, groupModel: GroupModel) {
+    init(favourite: FavouriteModel, groupModel: GroupModel) {
         self.pinnedIp = favourite.pinnedIp
         self.pinnedNodeIp = favourite.pinnedNodeIp
         self.groupModel = groupModel
