@@ -8,17 +8,20 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 enum FavouritesIPAlertType { case connecting; case disconnecting }
 
 protocol FavouriteListViewModelType {
     var presentAlertTrigger: PublishSubject<FavouritesIPAlertType> { get }
+    var showMaintenanceLocationTrigger: PassthroughSubject<Void, Never> { get }
     var showUpgradeTrigger: PublishSubject<Void> { get }
     func setSelectedFav(favourite: GroupModel)
 }
 
 class FavouriteListViewModel: FavouriteListViewModelType {
     var presentAlertTrigger = PublishSubject<FavouritesIPAlertType>()
+    var showMaintenanceLocationTrigger = PassthroughSubject<Void, Never>()
     var showUpgradeTrigger = PublishSubject<Void>()
 
     var logger: FileLogger
@@ -48,6 +51,10 @@ class FavouriteListViewModel: FavouriteListViewModelType {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
+        if checkMaintenanceLocation(favourite: favourite) {
+            showMaintenanceLocationTrigger.send()
+            return
+        }
         if !canAccesstoProLocation() && favourite.premiumOnly {
             showUpgradeTrigger.onNext(())
             return
@@ -66,5 +73,43 @@ class FavouriteListViewModel: FavouriteListViewModelType {
     private func canAccesstoProLocation() -> Bool {
         guard let session = userSessionRepository.sessionModel else { return false }
         return session.isPremium
+    }
+}
+
+extension FavouriteListViewModel {
+    /// Checks if the selected favourite location is under maintenance or has disabled status.
+    /// - Parameter favourite: The GroupModel representing the selected favourite location
+    /// - Returns: true if location is under maintenance or disabled, false otherwise
+    private func checkMaintenanceLocation(favourite: GroupModel) -> Bool {
+        // Get the parent server to check status
+        guard let location = try? locationsManager.getLocation(from: "\(favourite.id)") else {
+            // Location not found in server list - treat as maintenance
+            logger.logD("FavouriteListViewModel", "Location not found for favourite \(favourite.id), treating as maintenance")
+            return true
+        }
+
+        let server = location.0
+        let group = location.1
+
+        // Check if server is disabled
+        if server.status == false {
+            logger.logD("FavouriteListViewModel", "Server \(server.name) is disabled (status=false)")
+            return true
+        }
+
+        // Check if no nodes available for non-premium locations
+        if !group.isNodesAvailable() && !group.premiumOnly {
+            logger.logD("FavouriteListViewModel", "No nodes available for non-premium location \(group.city)")
+            return true
+        }
+
+        // Check if no nodes available for premium locations (when user is premium)
+        if !group.isNodesAvailable() && group.premiumOnly &&
+            userSessionRepository.sessionModel?.isPremium == true {
+            logger.logD("FavouriteListViewModel", "No nodes available for premium location \(group.city)")
+            return true
+        }
+
+        return false
     }
 }
