@@ -196,7 +196,7 @@ class ViewControllerModule: Assembly {
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     apiManager: r.resolve(APIManager.self)!,
-                    localDB: r.resolve(LocalDatabase.self)!
+                    robertyFiltersRepository: r.resolve(RobertyFiltersRepository.self)!
                 )
             )
         }.inObjectScope(.transient)

@@ -87,8 +87,8 @@ struct RobertSettingsView: View {
 
 struct FilterView: View {
     let isDarkMode: Bool
-    let filter: RobertFilter
-    let action: @MainActor (RobertFilter) -> Void
+    let filter: RobertFilterModel
+    let action: @MainActor (RobertFilterModel) -> Void
 
     var body: some View {
         HStack(spacing: 12) {
