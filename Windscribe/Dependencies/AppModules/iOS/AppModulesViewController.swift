@@ -382,7 +382,8 @@ class ViewControllerModule: Assembly {
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
+                privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
+                portMapRepository: r.resolve(PortMapRepository.self)!)
             )
         }.inObjectScope(.transient)
 

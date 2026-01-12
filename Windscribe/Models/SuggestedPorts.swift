@@ -9,6 +9,16 @@
 import Foundation
 import RealmSwift
 
+struct SuggestedPortsModel: Equatable {
+    let protocolType: String
+    let port: String
+
+    init(from: SuggestedPorts) {
+        self.protocolType = from.protocolType
+        self.port = from.port
+    }
+}
+
 @objcMembers class SuggestedPorts: Object, Decodable {
     dynamic var id: String = "SuggestedPorts"
     dynamic var protocolType: String = ""
@@ -35,5 +45,9 @@ import RealmSwift
         } else {
             port = ""
         }
+    }
+
+    func getModel() -> SuggestedPortsModel {
+        .init(from: self)
     }
 }

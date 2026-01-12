@@ -23,6 +23,7 @@ class WifiManager {
     private lazy var logger = Assembler.resolve(FileLogger.self)
     private lazy var vpnManager = Assembler.resolve(VPNManager.self)
     private let wifiNetworkRepository = Assembler.resolve(WifiNetworkRepository.self)
+    private lazy var portMapRepository = Assembler.resolve(PortMapRepository.self)
 
     var selectedProtocol: String?
     var selectedPort: String?
@@ -88,7 +89,7 @@ class WifiManager {
                 var defaultProtocol = TextsAsset.General.protocols[0]
                 var defaultPort = self.localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
-                if let suggestedPorts = self.localDatabase.getSuggestedPorts()?.first,
+                if let suggestedPorts = self.portMapRepository.suggestedPorts,
                    suggestedPorts.protocolType != "",
                    suggestedPorts.port != "" {
                     defaultProtocol = suggestedPorts.protocolType
