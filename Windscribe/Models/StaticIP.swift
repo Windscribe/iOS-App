@@ -10,55 +10,42 @@ import Foundation
 import RealmSwift
 
 struct StaticIPModel {
-    let id: Int?
-    let staticIP: String?
-    let connectIP: String?
-    let type: String?
-    let name: String?
-    let countryCode: String?
-    let deviceName: String?
-    let cityName: String?
+    let id: Int
+    let staticIP: String
+    let connectIP: String
+    let type: String
+    let name: String
+    let countryCode: String
+    let deviceName: String
+    let cityName: String
     let expiry: Date?
     let isActive: Bool
-    let credentials: [StaticIPCredentialsModel]?
+    let credentials: [ServerCredentialsModel]
     let bestNode: NodeModel?
-    let wgPublicKey: String?
-    let ovpnX509: String?
-    let wgIp: String?
-    let pingHost: String?
+    let wgPublicKey: String
+    let ovpnX509: String
+    let wgIp: String
+    let pingHost: String
+    let nodes: [NodeModel]
 
-    init(id: Int,
-         staticIP: String,
-         connectIP: String,
-         type: String,
-         name: String,
-         countryCode: String,
-         deviceName: String,
-         cityName: String,
-         expiry: Date?,
-         isActive: Bool,
-         credentials: [StaticIPCredentialsModel],
-         bestNode: NodeModel,
-         wgPublicKey: String,
-         ovpnX509: String,
-         wgIp: String,
-         pingHost: String) {
-        self.id = id
-        self.staticIP = staticIP
-        self.connectIP = connectIP
-        self.type = type
-        self.name = name
-        self.countryCode = countryCode
-        self.deviceName = deviceName
-        self.expiry = expiry
-        self.isActive = isActive
-        self.cityName = cityName
-        self.credentials = credentials
-        self.bestNode = bestNode
-        self.wgPublicKey = wgPublicKey
-        self.wgIp = wgIp
-        self.ovpnX509 = ovpnX509
-        self.pingHost = pingHost
+    init(from: StaticIP) {
+        self.id = from.id
+        self.staticIP = from.staticIP
+        self.connectIP = from.connectIP
+        self.type = from.type
+        self.name = from.name
+        self.countryCode = from.countryCode
+        self.deviceName = from.deviceName
+        self.expiry = from.expiry
+        self.isActive = from.isActive
+        self.cityName = from.cityName
+        self.credentials = from.credentials.map { $0.getModel() }
+        self.bestNode = from.bestNode?.getNodeModel()
+        self.wgPublicKey = from.wgPublicKey
+        self.wgIp = from.wgIp
+        self.ovpnX509 = from.ovpnX509
+        self.pingHost = from.pingHost
+        self.nodes = from.nodes.map { $0.getNodeModel() }
     }
 }
 
@@ -180,28 +167,8 @@ struct StaticIPModel {
         credentials.append(object)
     }
 
-    func getStaticIPModel() -> StaticIPModel? {
-        guard let username = credentials.first?.username,
-              let password = credentials.first?.password,
-              let bestNodeModel = bestNode?.getNodeModel() else { return nil }
-        let credentialsModel = StaticIPCredentialsModel(username: username, password: password)
-
-        return StaticIPModel(id: id,
-                             staticIP: staticIP,
-                             connectIP: connectIP,
-                             type: type,
-                             name: name,
-                             countryCode: countryCode,
-                             deviceName: deviceName,
-                             cityName: cityName,
-                             expiry: expiry,
-                             isActive: isActive,
-                             credentials: [credentialsModel],
-                             bestNode: bestNodeModel,
-                             wgPublicKey: wgPublicKey,
-                             ovpnX509: ovpnX509,
-                             wgIp: wgIp,
-                             pingHost: pingHost)
+    func getModel() -> StaticIPModel {
+        .init(from: self)
     }
 }
 

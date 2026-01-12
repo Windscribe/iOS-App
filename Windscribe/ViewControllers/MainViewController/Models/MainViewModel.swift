@@ -16,7 +16,7 @@ protocol MainViewModel {
     var lastConnection: BehaviorSubject<VPNConnectionModel?> { get }
     var portMapHeadings: BehaviorSubject<[String]?> { get }
     var favouriteList: BehaviorSubject<[FavouriteGroupModel]?> { get }
-    var staticIPs: BehaviorSubject<[StaticIP]?> { get }
+    var staticIPs: BehaviorSubject<[StaticIPModel]?> { get }
     var customConfigs: CurrentValueSubject<[CustomConfigModel], Never> { get }
     var oldSession: SessionModel? { get }
     var locationOrderBy: BehaviorSubject<String> { get }
@@ -55,7 +55,7 @@ protocol MainViewModel {
     func saveLastNotificationTimestamp()
     func getLastNotificationTimestamp() -> Double?
     func sortFavouriteNodesUsingUserPreferences(favList: [FavouriteGroupModel]) -> [FavouriteGroupModel]
-    func getStaticIp() -> [StaticIP]
+    func getStaticIp() -> [StaticIPModel]
     func getLatency(ip: String?) -> Int
     func isPrivacyPopupAccepted() -> Bool
     func updateTrustNetworkSwitch(network: WifiNetworkModel, status: Bool)

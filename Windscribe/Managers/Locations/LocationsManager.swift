@@ -44,7 +44,7 @@ class LocationsManagerImpl: LocationsManager {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
     private let logger: FileLogger
-
+    private let staticIpRepository: StaticIpRepository
     private let languageManager: LanguageManager
     private let serverRepository: ServerRepository
     private let userSessionRepository: UserSessionRepository
@@ -59,13 +59,15 @@ class LocationsManagerImpl: LocationsManager {
          logger: FileLogger,
          languageManager: LanguageManager,
          userSessionRepository: UserSessionRepository,
-         serverRepository: ServerRepository) {
+         serverRepository: ServerRepository,
+         staticIpRepository: StaticIpRepository) {
         self.localDatabase = localDatabase
         self.preferences = preferences
         self.logger = logger
         self.languageManager = languageManager
         self.userSessionRepository = userSessionRepository
         self.serverRepository = serverRepository
+        self.staticIpRepository = staticIpRepository
 
         languageManager.activelanguage.sink { [weak self] _ in
             self?.selectedLocationUpdated.send(false)
@@ -121,7 +123,7 @@ class LocationsManagerImpl: LocationsManager {
                 }
                 return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation, isServer: false)
             } else if locationType == .staticIP {
-                guard let staticIP = localDatabase.getStaticIPs()?.first(where: { locationID == "\($0.id)" }) else {
+                guard let staticIP = staticIpRepository.getStaticIp(id: locationID) else {
                     return getEmptyUIInfo()
                 }
                 return LocationUIInfo(nickName: staticIP.staticIP, cityName: staticIP.cityName, countryCode: staticIP.countryCode, isServer: false)

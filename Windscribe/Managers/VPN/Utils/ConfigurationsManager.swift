@@ -34,6 +34,7 @@ class ConfigurationsManager {
     let bridgeAPI: WSNetBridgeAPI
     let bridgeApiRepository: BridgeApiRepository
     let credentialsRepository: CredentialsRepository
+    let staticIpRepository: StaticIpRepository
     var api: APIManager {
         return Assembler.resolve(APIManager.self)
     }
@@ -89,7 +90,8 @@ class ConfigurationsManager {
          serverRepository: ServerRepository,
          bridgeAPI: WSNetBridgeAPI,
          bridgeApiRepository: BridgeApiRepository,
-         credentialsRepository: CredentialsRepository) {
+         credentialsRepository: CredentialsRepository,
+         staticIpRepository: StaticIpRepository) {
         self.logger = logger
         self.localDatabase = localDatabase
         self.keychainDb = keychainDb
@@ -105,6 +107,7 @@ class ConfigurationsManager {
         self.bridgeAPI = bridgeAPI
         self.bridgeApiRepository = bridgeApiRepository
         self.credentialsRepository = credentialsRepository
+        self.staticIpRepository = staticIpRepository
         loadTunnelManagers()
         load()
     }

@@ -55,12 +55,7 @@ extension MainViewController {
         viewModel.staticIPs.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                var staticIPModels = [StaticIPModel]()
-                let staticips = self.viewModel.getStaticIp()
-                for result in staticips {
-                    guard let staticIPModel = result.getStaticIPModel() else { return }
-                    staticIPModels.append(staticIPModel)
-                }
+                let staticIPModels = self.viewModel.getStaticIp()
                 self.staticIPListTableViewDataSource.updateStaticIPList(with: staticIPModels)
                 self.loadStaticIPLatencyValues()
             }

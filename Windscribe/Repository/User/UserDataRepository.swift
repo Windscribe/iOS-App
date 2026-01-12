@@ -57,7 +57,7 @@ class UserDataRepositoryImpl: UserDataRepository {
         _ = try await portMapRepository.getUpdatedPortMap()
 
         logger.logI("UserDataRepository", "Getting Static IPs.")
-        _ = try await staticIpRepository.getStaticServers()
+        try await staticIpRepository.updateStaticServers()
 
         logger.logI("UserDataRepository", "Getting Notifications.")
         _ = try await notificationsRepository.getUpdatedNotifications()

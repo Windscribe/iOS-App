@@ -153,7 +153,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         viewModel.staticIPs.subscribe(onNext: { [weak self] _ in
             guard let self else { return }
             staticIPModels = self.viewModel.getStaticIp()
-                .compactMap { $0.getStaticIPModel() }
             self.changeEmptyViewVisibility()
         }).disposed(by: disposeBag)
         viewModel.favouriteGroups.subscribe(onNext: { [weak self] favourites in

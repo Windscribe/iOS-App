@@ -10,17 +10,20 @@ import Foundation
 import Realm
 import RealmSwift
 
-struct StaticIPCredentialsModel {
-    let username: String?
-    let password: String?
+protocol ServerCredentialType {
+    var username: String { get }
+    var password: String { get }
 
-    init(username: String, password: String) {
-        self.username = username
-        self.password = password
+    func getModel() -> ServerCredentialsModel
+}
+
+extension ServerCredentialType {
+    func getModel() -> ServerCredentialsModel {
+        .init(from: self)
     }
 }
 
-@objcMembers class StaticIPCredentials: Object, Decodable {
+@objcMembers class StaticIPCredentials: Object, ServerCredentialType, Decodable {
     dynamic var username: String = ""
     dynamic var password: String = ""
 
@@ -41,32 +44,19 @@ struct StaticIPCredentialsModel {
         self.username = username
         self.password = password
     }
-
-    func getModel() -> StaticIPCredentialsModel {
-        return StaticIPCredentialsModel(username: username,
-                                        password: password)
-    }
 }
 
-class LastConnectedNodeStaticIPCredentials: StaticIPCredentials {
-    convenience init(staticIPCredentials: StaticIPCredentialsModel) {
-        self.init()
-        username = staticIPCredentials.username ?? ""
-        password = staticIPCredentials.password ?? ""
-    }
-}
-
-struct ServerCredentialsModel {
+struct ServerCredentialsModel: ServerCredentialType {
     let username: String
     let password: String
 
-    init(from: ServerCredentials) {
+    init(from: ServerCredentialType) {
         username = from.username
         password = from.password
     }
 }
 
-@objcMembers class ServerCredentials: Object, Decodable {
+@objcMembers class ServerCredentials: Object, ServerCredentialType, Decodable {
     dynamic var username: String = ""
     dynamic var password: String = ""
 
@@ -88,10 +78,6 @@ struct ServerCredentialsModel {
         self.init()
         self.username = username
         self.password = password
-    }
-
-    func getModel() -> ServerCredentialsModel {
-        .init(from: self)
     }
 }
 
