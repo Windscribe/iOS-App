@@ -38,7 +38,7 @@ class MainViewModelImpl: MainViewModel {
     var lastConnection = BehaviorSubject<VPNConnectionModel?>(value: nil)
     var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
     var favouriteList = BehaviorSubject<[FavouriteGroupModel]?>(value: nil)
-    var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
+    var staticIPs = BehaviorSubject<[StaticIPModel]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
     let latencies = BehaviorSubject<[PingDataModel]>(value: [])
     var notices = CurrentValueSubject<[NoticeModel], Never>([])
@@ -413,8 +413,8 @@ class MainViewModelImpl: MainViewModel {
     func loadStaticIps() {
         Task { @MainActor in
             do {
-                let data = try await staticIpRepository.getStaticServers()
-                staticIPs.onNext(data)
+                try await staticIpRepository.updateStaticServers()
+                staticIPs.onNext(staticIpRepository.staticIPs)
             } catch {
                 logger.logE("MainViewModel", "Failed to load static IPs: \(error)")
             }
@@ -566,8 +566,8 @@ class MainViewModelImpl: MainViewModel {
         }
     }
 
-    func getStaticIp() -> [StaticIP] {
-        return localDatabase.getStaticIPs() ?? []
+    func getStaticIp() -> [StaticIPModel] {
+        return staticIpRepository.staticIPs
     }
 
     func isPrivacyPopupAccepted() -> Bool {

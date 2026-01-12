@@ -118,7 +118,8 @@ class Repository: Assembly {
                                   preferences: r.resolve(Preferences.self)!,
                                   advanceRepository: r.resolve(AdvanceRepository.self)!,
                                   serverRepository: r.resolve(ServerRepository.self)!,
-                                  userSessionRepository: r.resolve(UserSessionRepository.self)!)
+                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                  staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
             EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(),
@@ -157,8 +158,8 @@ class Repository: Assembly {
                                   serverRepository: r.resolve(ServerRepository.self)!,
                                   bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
                                   bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
-
-            credentialsRepository: r.resolve(CredentialsRepository.self)!)
+                                  credentialsRepository: r.resolve(CredentialsRepository.self)!,
+                                  staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LookAndFeelRepositoryType.self) { r in
@@ -241,7 +242,8 @@ class Managers: Assembly {
                                  logger: r.resolve(FileLogger.self)!,
                                  languageManager: r.resolve(LanguageManager.self)!,
                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                                 serverRepository: r.resolve(ServerRepository.self)!)
+                                 serverRepository: r.resolve(ServerRepository.self)!,
+                                 staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(VPNStateRepository.self) { r in
             VPNStateRepositoryImpl(logger: r.resolve(FileLogger.self)!)

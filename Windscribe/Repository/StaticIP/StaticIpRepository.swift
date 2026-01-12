@@ -9,6 +9,8 @@
 import Foundation
 
 protocol StaticIpRepository {
-    func getStaticServers() async throws -> [StaticIP]
-    func getStaticIp(id: Int) -> StaticIP?
+    var staticIPs: [StaticIPModel] { get }
+    func updateStaticServers() async throws
+    func getStaticIp(id: Int) -> StaticIPModel?
+    func getStaticIp(id: String) -> StaticIPModel?
 }

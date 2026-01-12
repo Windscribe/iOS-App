@@ -25,6 +25,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let advanceRepository: AdvanceRepository
     private let serverRepository: ServerRepository
     private let userSessionRepository: UserSessionRepository
+    private let staticIpRepository: StaticIpRepository
 
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingDataModel]> = BehaviorSubject(value: [])
@@ -42,7 +43,8 @@ class LatencyRepositoryImpl: LatencyRepository {
          preferences: Preferences,
          advanceRepository: AdvanceRepository,
          serverRepository: ServerRepository,
-         userSessionRepository: UserSessionRepository) {
+         userSessionRepository: UserSessionRepository,
+         staticIpRepository: StaticIpRepository) {
         self.pingManager = pingManager
         self.database = database
         self.vpnStateRepository = vpnStateRepository
@@ -52,6 +54,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.advanceRepository = advanceRepository
         self.serverRepository = serverRepository
         self.userSessionRepository = userSessionRepository
+        self.staticIpRepository = staticIpRepository
 
         latency.onNext(self.database.getAllPingData().map { PingDataModel(from: $0) })
         observeFavouriteList()
@@ -284,8 +287,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func getStaticPingAndHosts() -> [(String, String)] {
-        return database.getStaticIPs()?.compactMap { $0 }
-            .map { city in (city.nodes.first?.ip ?? "", city.pingHost) } ?? []
+        return staticIpRepository.staticIPs.map { ($0.nodes.first?.ip1 ?? "", $0.pingHost) }
     }
 
     /// Returns ping IP and Host array from database.

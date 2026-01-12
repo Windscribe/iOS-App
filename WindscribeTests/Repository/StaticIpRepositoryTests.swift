@@ -63,14 +63,15 @@ class StaticIpRepositoryTests: XCTestCase {
 
     // MARK: Success Tests
 
-    func test_getStaticServers_success_shouldReturnStaticIPs() async throws {
+    func test_updateStaticServers_success_shouldReturnStaticIPs() async throws {
         // Given
         let jsonData = SampleDataStaticIP.staticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
         mockAPIManager.staticIPListToReturn = staticIPList
 
         // When
-        let result = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
+        let result = repository.staticIPs
 
         // Then
         XCTAssertEqual(result.count, 2)
@@ -79,7 +80,7 @@ class StaticIpRepositoryTests: XCTestCase {
         XCTAssertTrue(mockAPIManager.getStaticIpListCalled)
     }
 
-    func test_getStaticServers_success_shouldSaveToLocalDatabase() async throws {
+    func test_updateStaticServers_success_shouldSaveToLocalDatabase() async throws {
         // Given
         let jsonData = SampleDataStaticIP.staticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
@@ -87,7 +88,7 @@ class StaticIpRepositoryTests: XCTestCase {
         mockLocalDatabase.saveStaticIPsCalled = false
 
         // When
-        _ = try await repository.getStaticServers()
+        _ = try await repository.updateStaticServers()
 
         // Then
         XCTAssertTrue(mockLocalDatabase.saveStaticIPsCalled, "Should save static IPs to local database")
@@ -95,7 +96,7 @@ class StaticIpRepositoryTests: XCTestCase {
         XCTAssertEqual(mockLocalDatabase.staticIPsToReturn?.count, 2)
     }
 
-    func test_getStaticServers_success_shouldDeleteOldStaticIPs() async throws {
+    func test_updateStaticServers_success_shouldDeleteOldStaticIPs() async throws {
         // Given
         let jsonData = SampleDataStaticIP.staticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
@@ -103,7 +104,7 @@ class StaticIpRepositoryTests: XCTestCase {
         mockLocalDatabase.deleteStaticIpsCalled = false
 
         // When
-        _ = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
 
         // Then
         XCTAssertTrue(mockLocalDatabase.deleteStaticIpsCalled, "Should delete old static IPs before saving new ones")
@@ -111,14 +112,15 @@ class StaticIpRepositoryTests: XCTestCase {
         XCTAssertEqual(mockLocalDatabase.lastDeletedStaticIPsIgnoreList?.count, 2)
     }
 
-    func test_getStaticServers_singleIP_shouldReturnCorrectly() async throws {
+    func test_updateStaticServers_singleIP_shouldReturnCorrectly() async throws {
         // Given
         let jsonData = SampleDataStaticIP.singleStaticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
         mockAPIManager.staticIPListToReturn = staticIPList
 
         // When
-        let result = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
+        let result = repository.staticIPs
 
         // Then
         XCTAssertEqual(result.count, 1)
@@ -128,7 +130,7 @@ class StaticIpRepositoryTests: XCTestCase {
 
     // MARK: Fallback Tests
 
-    func test_getStaticServers_apiFailure_withCachedData_shouldReturnCachedData() async throws {
+    func test_updateStaticServers_apiFailure_withCachedData_shouldReturnCachedData() async throws {
         // Given
         let cachedStaticIPs = createMockStaticIPs()
         mockAPIManager.shouldThrowError = true
@@ -136,14 +138,15 @@ class StaticIpRepositoryTests: XCTestCase {
         mockLocalDatabase.staticIPsToReturn = cachedStaticIPs
 
         // When
-        let result = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
+        let result = repository.staticIPs
 
         // Then
         XCTAssertEqual(result.count, cachedStaticIPs.count)
         XCTAssertEqual(result.first?.staticIP, cachedStaticIPs.first?.staticIP)
     }
 
-    func test_getStaticServers_apiFailure_noCachedData_shouldThrowError() async {
+    func test_updateStaticServers_apiFailure_noCachedData_shouldThrowError() async {
         // Given
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = NSError(domain: "TestError", code: 500, userInfo: nil)
@@ -151,14 +154,14 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // When/Then
         do {
-            _ = try await repository.getStaticServers()
+            _ = try await repository.updateStaticServers()
             XCTFail("Should throw error when API fails and no cached data")
         } catch {
             XCTAssertNotNil(error)
         }
     }
 
-    func test_getStaticServers_apiFailure_emptyCachedData_shouldThrowError() async {
+    func test_updateStaticServers_apiFailure_emptyCachedData_shouldThrowError() async {
         // Given
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = NSError(domain: "TestError", code: 500, userInfo: nil)
@@ -166,7 +169,7 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // When/Then
         do {
-            _ = try await repository.getStaticServers()
+            _ = try await repository.updateStaticServers()
             XCTFail("Should throw error when API fails and cached data is empty")
         } catch {
             XCTAssertNotNil(error)
@@ -227,26 +230,28 @@ class StaticIpRepositoryTests: XCTestCase {
 
     // MARK: - Integration Tests
 
-    func test_getStaticServers_multipleCalls_shouldWorkCorrectly() async throws {
+    func test_updateStaticServers_multipleCalls_shouldWorkCorrectly() async throws {
         // Given
         let jsonData = SampleDataStaticIP.staticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
         mockAPIManager.staticIPListToReturn = staticIPList
 
         // When - call multiple times
-        let result1 = try await repository.getStaticServers()
-        let result2 = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
+        let result1 = repository.staticIPs
+        try await repository.updateStaticServers()
+        let result2 = repository.staticIPs
 
         // Then
         XCTAssertEqual(result1.count, result2.count)
         XCTAssertEqual(result1.first?.staticIP, result2.first?.staticIP)
     }
 
-    func test_getStaticServers_apiSuccess_afterPreviousFailure_shouldReturnNewData() async throws {
+    func test_updateStaticServers_apiSuccess_afterPreviousFailure_shouldReturnNewData() async throws {
         // Given - first call fails
         mockAPIManager.shouldThrowError = true
         mockLocalDatabase.staticIPsToReturn = createMockStaticIPs()
-        _ = try await repository.getStaticServers()
+        _ = try await repository.updateStaticServers()
 
         // When - second call succeeds
         mockAPIManager.shouldThrowError = false
@@ -254,22 +259,24 @@ class StaticIpRepositoryTests: XCTestCase {
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
         mockAPIManager.staticIPListToReturn = staticIPList
 
-        let result = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
+        let result = repository.staticIPs
 
         // Then
         XCTAssertEqual(result.count, 2)
         XCTAssertEqual(result.first?.staticIP, "192.168.1.100")
     }
 
-    func test_fullFlow_getStaticServers_thenLookup() async throws {
+    func test_fullFlow_updateStaticServers_thenLookup() async throws {
         // Given
         let jsonData = SampleDataStaticIP.staticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
         mockAPIManager.staticIPListToReturn = staticIPList
 
         // When - fetch static IPs
-        let fetchedIPs = try await repository.getStaticServers()
-        let firstId = fetchedIPs.first!.id
+        try await repository.updateStaticServers()
+        let result = repository.staticIPs
+        let firstId = result.first!.id
 
         // Then - lookup should work
         let lookedUpIP = repository.getStaticIp(id: firstId)
@@ -279,27 +286,29 @@ class StaticIpRepositoryTests: XCTestCase {
 
     // MARK: Edge Cases
 
-    func test_getStaticServers_emptyStaticIPList_shouldReturnEmptyArray() async throws {
+    func test_updateStaticServers_emptyStaticIPList_shouldReturnEmptyArray() async throws {
         // Given
         let jsonData = SampleDataStaticIP.emptyStaticIPListJSON.data(using: .utf8)!
         let emptyStaticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
         mockAPIManager.staticIPListToReturn = emptyStaticIPList
 
         // When
-        let result = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
+        let result = repository.staticIPs
 
         // Then
         XCTAssertEqual(result.count, 0)
     }
 
-    func test_getStaticServers_verifyStaticIPProperties() async throws {
+    func test_updateStaticServers_verifyStaticIPProperties() async throws {
         // Given
         let jsonData = SampleDataStaticIP.singleStaticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
         mockAPIManager.staticIPListToReturn = staticIPList
 
         // When
-        let result = try await repository.getStaticServers()
+        try await repository.updateStaticServers()
+        let result = repository.staticIPs
 
         // Then
         let staticIP = result.first!
@@ -313,7 +322,7 @@ class StaticIpRepositoryTests: XCTestCase {
         XCTAssertTrue(staticIP.isActive)
     }
 
-    func test_getStaticServers_withDifferentErrors_shouldHandleCorrectly() async {
+    func test_updateStaticServers_withDifferentErrors_shouldHandleCorrectly() async {
         // Given
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = Errors.notDefined
@@ -321,7 +330,7 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // When/Then
         do {
-            _ = try await repository.getStaticServers()
+            try await repository.updateStaticServers()
             XCTFail("Should throw error")
         } catch let error as Errors {
             XCTAssertEqual(error, Errors.notDefined)

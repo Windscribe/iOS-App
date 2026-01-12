@@ -13,32 +13,41 @@ class StaticIpRepositoryImpl: StaticIpRepository {
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
 
+    var staticIPs = [StaticIPModel]()
+
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
+
+        staticIPs = localDatabase.getStaticIPs()?.map { $0.getModel() } ?? []
     }
 
     /// Fetches static IPs and updates the local database.
-    func getStaticServers() async throws -> [StaticIP] {
+    func updateStaticServers() async throws {
         do {
             let result = try await apiManager.getStaticIpList()
             localDatabase.deleteStaticIps(ignore: Array(result.staticIPs).map { $0.staticIP })
             localDatabase.saveStaticIPs(staticIps: Array(result.staticIPs))
-            return Array(result.staticIPs)
+            staticIPs = result.staticIPs.map { $0.getModel() }
         } catch {
             logger.logE("StaticIpRepository", "Error getting static IPs: \(error)")
 
             // Fallback to cached data if available and not empty
             if let cachedIps = localDatabase.getStaticIPs(), !cachedIps.isEmpty {
-                return cachedIps
+                staticIPs = cachedIps.map { $0.getModel() }
             } else {
                 throw error
             }
         }
     }
 
-    func getStaticIp(id: Int) -> StaticIP? {
-        return localDatabase.getStaticIPs()?.first { $0.id == id }
+    func getStaticIp(id: Int) -> StaticIPModel? {
+        return localDatabase.getStaticIPs()?.first { $0.id == id }?.getModel()
+    }
+
+    func getStaticIp(id: String) -> StaticIPModel? {
+        guard let staticID = Int(id) else { return nil }
+        return getStaticIp(id: staticID)
     }
 }

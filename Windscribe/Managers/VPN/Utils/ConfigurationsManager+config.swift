@@ -158,8 +158,7 @@ extension ConfigurationsManager {
             return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
-            let nodeModels = Array(location.nodes).map({ $0.getNodeModel() })
-            let node = try getRandomNode(nodes: nodeModels)
+            let node = try getRandomNode(nodes: location.nodes)
             let ip = node.ip1
             let hostname = node.hostname
             preferences.saveLastNodeIP(nodeIp: node.hostname)
@@ -199,8 +198,7 @@ extension ConfigurationsManager {
             return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
         case .staticIP:
             let location = try getStaticIPLocation(id: locationID)
-            let nodeModels = Array(location.nodes).map({ $0.getNodeModel() })
-            let node = try getRandomNode(nodes: nodeModels)
+            let node = try getRandomNode(nodes: location.nodes)
             guard let credentials = location.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN)
             }
@@ -321,12 +319,13 @@ extension ConfigurationsManager {
     }
 
     /// Gets static ip location from database.
-    private func getStaticIPLocation(id: String) throws -> StaticIP {
+    private func getStaticIPLocation(id: String) throws -> StaticIPModel {
         let ipId = locationsManager.getId(location: id)
-        guard let location = localDatabase.getStaticIPs()?.first(where: { ipId == "\($0.id)" }) else {
+        guard let staticId = Int(id),
+              let staticIP = staticIpRepository.getStaticIp(id: staticId) else {
             throw VPNConfigurationErrors.locationNotFound(id)
         }
-        return location
+        return staticIP
     }
 
     /// Selects a node from the group, checks is there is a pinned iP or a forced node, if not then
@@ -450,8 +449,7 @@ extension ConfigurationsManager {
                 return lastLocation
             case .staticIP:
                 let location = try getStaticIPLocation(id: locationID)
-                let nodeModels = Array(location.nodes).map({ $0.getNodeModel() })
-                _ = try getRandomNode(nodes: nodeModels)
+                _ = try getRandomNode(nodes: location.nodes)
                 return lastLocation
             case .custom:
                 do {

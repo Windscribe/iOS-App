@@ -48,6 +48,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     lazy var preferences = Assembler.resolve(Preferences.self)
     lazy var serverRepository = Assembler.resolve(ServerRepository.self)
     lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)
+    lazy var staticIpRepository = Assembler.resolve(StaticIpRepository.self)
 
     var displayingGroup: GroupModel?
     var displayingNodeServer: ServerModel?
@@ -406,7 +407,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     func isHostStillActive(hostname: String, isStaticIP _: Bool = false) -> Bool {
-        guard let staticIPNodes = localDB.getStaticIPs()?.flatMap({ $0.nodes }) else { return false }
+        let staticIPNodes = staticIpRepository.staticIPs.flatMap({ $0.nodes })
         let nodesList = serverRepository.currentServerModels.flatMap { $0.groups.flatMap { $0.nodes } }
         for node in nodesList {
             if node.hostname == hostname && node.forceDisconnect == false {

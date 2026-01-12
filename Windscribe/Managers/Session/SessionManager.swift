@@ -233,10 +233,10 @@ class SessionManagerImpl: SessionManager {
             logger.logI("SessionManager", "ALC changes detected. Request to retrieve server list")
             try? await serverRepo.updatedServers()
         }
-        let sipCount = localDatabase.getStaticIPs()?.count ?? 0
+        let sipCount = staticIPRepo.staticIPs.count
         if sipCount != newSession.getSipCount() {
             logger.logI("SessionManager", "SIP changes detected. Request to retrieve static ip list")
-            _ = try? await staticIPRepo.getStaticServers()
+            _ = try? await staticIPRepo.updateStaticServers()
             _ = try? await self.latencyRepo.loadStaticIpLatency().value
         }
         if !newSession.isPremium && oldSession.isPremium {
