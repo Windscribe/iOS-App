@@ -320,7 +320,8 @@ class ViewModels: Assembly {
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
+                privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
+                portMapRepository: r.resolve(PortMapRepository.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModel.self) { r in
             MainViewModelImpl(localDatabase: r.resolve(LocalDatabase.self)!,

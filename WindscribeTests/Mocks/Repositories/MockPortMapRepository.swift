@@ -10,7 +10,9 @@ import Foundation
 @testable import Windscribe
 
 class MockPortMapRepository: PortMapRepository {
+
     var currentPortMaps = [Windscribe.PortMapModel]()
+    var suggestedPorts: Windscribe.SuggestedPortsModel?
 
     // Control flags
     var shouldThrowError = false

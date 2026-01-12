@@ -187,7 +187,11 @@ class TVViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(PrivacyViewModelType.self) { r in
-            PrivacyViewModel(preferences: r.resolve(Preferences.self)!, networkRepository: r.resolve(WifiNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!)
+            PrivacyViewModel(preferences: r.resolve(Preferences.self)!,
+                             networkRepository: r.resolve(WifiNetworkRepository.self)!,
+                             localDatabase: r.resolve(LocalDatabase.self)!,
+                             logger: r.resolve(FileLogger.self)!,
+                             portMapRepository: r.resolve(PortMapRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register(OutOfDataAccountPopupModelType.self) { r in

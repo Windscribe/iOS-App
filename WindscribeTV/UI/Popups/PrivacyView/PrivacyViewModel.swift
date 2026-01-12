@@ -21,15 +21,18 @@ class PrivacyViewModel: PrivacyViewModelType {
     let networkRepository: WifiNetworkRepository
     let localDatabase: LocalDatabase
     let logger: FileLogger
+    private let portMapRepository: PortMapRepository
 
     init(preferences: Preferences,
          networkRepository: WifiNetworkRepository,
          localDatabase: LocalDatabase,
-         logger: FileLogger) {
+         logger: FileLogger,
+         portMapRepository: PortMapRepository,) {
         self.preferences = preferences
         self.networkRepository = networkRepository
         self.localDatabase = localDatabase
         self.logger = logger
+        self.portMapRepository = portMapRepository
     }
 
     func action(completionHandler: @escaping (() -> Void)) {
@@ -46,12 +49,12 @@ class PrivacyViewModel: PrivacyViewModelType {
         var defaultProtocol = TextsAsset.General.protocols[0]
         var defaultPort = localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
-        if let suggestedProtocol = localDatabase.getSuggestedPorts()?.first,
-           suggestedProtocol.protocolType != "",
-           suggestedProtocol.port != "" {
-            defaultProtocol = suggestedProtocol.protocolType
-            defaultPort = suggestedProtocol.port
-            logger.logD("PrivacyViewModel", "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
+        if let suggestedPorts = portMapRepository.suggestedPorts,
+           suggestedPorts.protocolType != "",
+           suggestedPorts.port != "" {
+            defaultProtocol = suggestedPorts.protocolType
+            defaultPort = suggestedPorts.port
+            logger.logD("PrivacyViewModel", "Detected Suggested Protocol: Protocol selection set to \(suggestedPorts.protocolType):\(suggestedPorts.port)")
         } else {
             logger.logD("PrivacyViewModel", "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
         }

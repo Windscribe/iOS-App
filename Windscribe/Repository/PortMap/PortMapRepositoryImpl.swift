@@ -15,6 +15,7 @@ class PortMapRepositoryImpl: PortMapRepository {
     private let logger: FileLogger
 
     var currentPortMaps = [PortMapModel]()
+    var suggestedPorts: SuggestedPortsModel?
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager
@@ -24,6 +25,7 @@ class PortMapRepositoryImpl: PortMapRepository {
         if let portMaps = localDatabase.getPortMap() {
             currentPortMaps = portMaps.map { $0.getModel() }
         }
+        suggestedPorts = localDatabase.getSuggestedPorts()?.first?.getModel()
     }
 
     func getUpdatedPortMap() async throws -> [PortMapModel] {
@@ -32,6 +34,7 @@ class PortMapRepositoryImpl: PortMapRepository {
             localDatabase.savePortMap(portMap: Array(portList.portMaps))
             if let suggested = portList.suggested {
                 localDatabase.saveSuggestedPorts(suggestedPorts: [suggested])
+                suggestedPorts = suggested.getModel()
             }
             currentPortMaps = Array(portList.portMaps).map { $0.getModel() }
             return currentPortMaps
