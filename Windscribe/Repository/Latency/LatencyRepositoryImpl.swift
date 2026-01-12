@@ -29,7 +29,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingDataModel]> = BehaviorSubject(value: [])
-    private let favList: BehaviorSubject<[Favourite]> = BehaviorSubject(value: [])
+    private let favList: BehaviorSubject<[FavouriteModel]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
     private var startTimeStamp = Date()
@@ -64,7 +64,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     private func observeFavouriteList() {
         database.getFavouriteListObservable().subscribe(onNext: { favList in
-            self.favList.onNext(favList)
+            self.favList.onNext(favList.map { $0.getModel() })
         }, onError: { _ in
         }).disposed(by: disposeBag)
     }

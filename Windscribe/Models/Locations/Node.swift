@@ -69,66 +69,6 @@ struct NodeModel: Equatable {
 
 class StaticIPNode: Node {}
 
-struct FavNodeModel {
-    let groupId: String?
-    let serverName: String?
-    let countryCode: String?
-    let hostname: String?
-    let cityName: String?
-    let nickName: String?
-    let dnsHostname: String?
-    let ipAddress: String?
-    let pingIp: String?
-    let linkSpeed: String?
-    let health: Int?
-    let isPremiumOnly: Bool?
-
-    init(groupId: String,
-         serverName: String,
-         countryCode: String,
-         hostname: String,
-         cityName: String,
-         nickName: String,
-         dnsHostname: String,
-         ipAddress: String,
-         pingIp: String,
-         linkSpeed: String,
-         health: Int,
-         isPremiumOnly: Bool) {
-        self.groupId = groupId
-        self.serverName = serverName
-        self.countryCode = countryCode
-        self.hostname = hostname
-        self.cityName = cityName
-        self.nickName = nickName
-        self.dnsHostname = dnsHostname
-        self.ipAddress = ipAddress
-        self.pingIp = pingIp
-        self.linkSpeed = linkSpeed
-        self.health = health
-        self.isPremiumOnly = isPremiumOnly
-    }
-
-    init(node: NodeModel, group: GroupModel, server: ServerModel) {
-        if group.id >= 0 {
-            self.groupId = "\(group.id)"
-        } else {
-            groupId = node.hostname
-        }
-        serverName = group.city
-        countryCode = server.countryCode
-        hostname = node.hostname
-        cityName = group.city
-        nickName = group.nick
-        dnsHostname = server.dnsHostname
-        ipAddress = node.ip2
-        pingIp = group.pingIp
-        linkSpeed = group.linkSpeed
-        health = group.health
-        isPremiumOnly = group.premiumOnly
-    }
-}
-
 @objcMembers class Favourite: Object, Decodable {
     @Persisted(primaryKey: true) var id: String
     @Persisted var pinnedIp: String?
@@ -142,8 +82,37 @@ struct FavNodeModel {
         self.pinnedIp = pinnedIp
         self.pinnedNodeIp = pinnedNodeIp
     }
+
+    convenience init(from: FavouriteModel) {
+        self.init()
+        self.id = from.id
+        self.pinnedIp = from.pinnedIp
+        self.pinnedNodeIp = from.pinnedNodeIp
+    }
+
+    func getModel() -> FavouriteModel {
+        .init(from: self)
+    }
 }
 
+struct FavouriteModel: Equatable {
+    let id: String
+    let pinnedIp: String?
+    let pinnedNodeIp: String?
+
+    init(from: Favourite) {
+        self.id = from.id
+        self.pinnedIp = from.pinnedIp
+        self.pinnedNodeIp = from.pinnedNodeIp
+    }
+
+    func getObject() -> Favourite {
+        .init(from: self)
+    }
+}
+
+// NOTE: This class is only ever used in Migration it no longer needs any implementation
+@available(*, deprecated, message: "Use Favourite instead")
 @objcMembers class FavNode: Object, Decodable {
     dynamic var groupId: String = ""
     dynamic var serverName: String = ""
@@ -159,78 +128,10 @@ struct FavNodeModel {
     dynamic var pingHost: String = ""
     dynamic var linkSpeed: String = ""
     dynamic var health: Int = 0
-
-    convenience init(node: Node, group: Group, server: Server) {
-        self.init()
-        groupId = "\(group.id)"
-        serverName = server.name
-        countryCode = server.countryCode
-        hostname = node.hostname
-        cityName = group.city
-        nickName = group.nick
-        dnsHostname = server.dnsHostname
-        ipAddress = node.ip2
-        pingIp = group.pingIp
-        pingHost = group.pingHost
-        linkSpeed = group.linkSpeed
-        health = group.health
-        isPremiumOnly = group.premiumOnly
-    }
-
-    convenience init(node: NodeModel, group: GroupModel, server: ServerModel) {
-        self.init()
-        guard group.id >= 0  else { return }
-        self.groupId = "\(group.id)"
-        serverName = server.name
-        countryCode = server.countryCode
-        hostname = node.hostname
-        cityName = group.city
-        nickName = group.nick
-        dnsHostname = server.dnsHostname
-        ipAddress = node.ip2
-        pingIp = group.pingIp
-        pingHost = group.pingHost
-        linkSpeed = group.linkSpeed
-        health = group.health
-        isPremiumOnly = group.premiumOnly
-    }
-
-    override static func primaryKey() -> String? {
-        return "hostname"
-    }
-
-    func getFavNodeModel() -> FavNodeModel? {
-        return FavNodeModel(groupId: groupId,
-                            serverName: serverName,
-                            countryCode: countryCode,
-                            hostname: hostname,
-                            cityName: cityName,
-                            nickName: nickName,
-                            dnsHostname: dnsHostname,
-                            ipAddress: ipAddress,
-                            pingIp: pingIp,
-                            linkSpeed: linkSpeed,
-                            health: health,
-                            isPremiumOnly: isPremiumOnly)
-    }
-
-    func getFavNodeModel(with customCity: String?, and customNick: String?) -> FavNodeModel? {
-        return FavNodeModel(groupId: groupId,
-                            serverName: serverName,
-                            countryCode: countryCode,
-                            hostname: hostname,
-                            cityName: customCity ?? cityName,
-                            nickName: customNick ?? nickName,
-                            dnsHostname: dnsHostname,
-                            ipAddress: ipAddress,
-                            pingIp: pingIp,
-                            linkSpeed: linkSpeed,
-                            health: health,
-                            isPremiumOnly: isPremiumOnly)
-    }
 }
 
 // NOTE: This class is only ever used in Migration it no longer needs any implementation
+@available(*, deprecated, message: "Don't use it anymore it is here for old data migration purposes only")
 class LastConnectedNode: FavNode { }
 
 struct BestLocationModel {

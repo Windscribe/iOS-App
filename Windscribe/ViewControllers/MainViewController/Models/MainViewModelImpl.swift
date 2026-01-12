@@ -403,7 +403,7 @@ class MainViewModelImpl: MainViewModel {
                 .compactMap { favNode in
                     return serverModels.flatMap { $0.groups }
                         .first { "\($0.id)" == favNode.id }
-                        .map { FavouriteGroupModel(favourite: favNode, groupModel: $0)}
+                        .map { FavouriteGroupModel(favourite: favNode.getModel(), groupModel: $0)}
                 }
             favouriteList.onNext(favGroupModels)
         }
