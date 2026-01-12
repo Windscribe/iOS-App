@@ -128,7 +128,8 @@ class Repository: Assembly {
                                     localDatabase: r.resolve(LocalDatabase.self)!,
                                     logger: r.resolve(FileLogger.self)!,
                                     locationsManager: r.resolve(LocationsManager.self)!,
-                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
+                                    protocolManager: r.resolve(ProtocolManagerType.self)!,
+                                    customConfigRepository: r.resolve(CustomConfigRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(CustomConfigRepository.self) { r in
             CustomConfigRepositoryImpl(fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!)

@@ -17,7 +17,7 @@ protocol MainViewModel {
     var portMapHeadings: BehaviorSubject<[String]?> { get }
     var favouriteList: BehaviorSubject<[FavouriteGroupModel]?> { get }
     var staticIPs: BehaviorSubject<[StaticIP]?> { get }
-    var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
+    var customConfigs: CurrentValueSubject<[CustomConfigModel], Never> { get }
     var oldSession: SessionModel? { get }
     var locationOrderBy: BehaviorSubject<String> { get }
     var latencies: BehaviorSubject<[PingDataModel]> { get }

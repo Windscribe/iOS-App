@@ -54,9 +54,9 @@ final class EnterCredentialsViewModelImpl: EnterCredentialsViewModel {
     func setConfig(_ config: CustomConfigModel, isUpdating: Bool) {
         self.displayingCustomConfig = config
         self.isUpdating = isUpdating
-        self.title = config.name ?? ""
-        self.username = config.username?.base64Decoded() ?? ""
-        self.password = config.password?.base64Decoded() ?? ""
+        self.title = config.name
+        self.username = config.username.base64Decoded()
+        self.password = config.password.base64Decoded()
     }
 
     private func bind() {

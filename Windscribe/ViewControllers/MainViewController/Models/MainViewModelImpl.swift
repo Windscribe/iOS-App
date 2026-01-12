@@ -32,13 +32,13 @@ class MainViewModelImpl: MainViewModel {
     private let userSessionRepository: UserSessionRepository
     private let sessionManager: SessionManager
     private let wifiNetworkRepository: WifiNetworkRepository
+    private let customConfigRepository: CustomConfigRepository
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnectionModel?>(value: nil)
     var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
     var favouriteList = BehaviorSubject<[FavouriteGroupModel]?>(value: nil)
     var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
-    var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
     let latencies = BehaviorSubject<[PingDataModel]>(value: [])
     var notices = CurrentValueSubject<[NoticeModel], Never>([])
@@ -52,6 +52,7 @@ class MainViewModelImpl: MainViewModel {
     var favouriteGroups = BehaviorSubject<[GroupModel]>(value: [])
     let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
 
+    let customConfigs = CurrentValueSubject<[CustomConfigModel], Never>([])
     let showNetworkSecurityTrigger: PassthroughSubject<Void, Never>
     let showNotificationsTrigger: PassthroughSubject<Void, Never>
     let becameActiveTrigger: PassthroughSubject<Void, Never>
@@ -92,7 +93,8 @@ class MainViewModelImpl: MainViewModel {
          hapticFeedbackManager: HapticFeedbackManager,
          userSessionRepository: UserSessionRepository,
          wifiNetworkRepository: WifiNetworkRepository,
-         sessionManager: SessionManager) {
+         sessionManager: SessionManager,
+         customConfigRepository: CustomConfigRepository) {
 
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
@@ -114,6 +116,7 @@ class MainViewModelImpl: MainViewModel {
         self.userSessionRepository = userSessionRepository
         self.sessionManager = sessionManager
         self.wifiNetworkRepository = wifiNetworkRepository
+        self.customConfigRepository = customConfigRepository
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
@@ -419,14 +422,13 @@ class MainViewModelImpl: MainViewModel {
     }
 
     func loadCustomConfigs() {
-        localDatabase.getCustomConfig().filter {$0.filter({$0.isInvalidated}).count == 0}
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] data in
+        customConfigRepository.customConfigs
+            .sink { [weak self] data in
                 guard let self = self else { return }
-                self.customConfigs.onNext(data)
+                self.customConfigs.send(data)
                 self.updateCustomConfigLatency()
-            }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     func updateCustomConfigLatency() {

@@ -299,13 +299,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func reloadCustomConfigs() {
-        guard let results = try? viewModel.customConfigs.value() else { return }
-        var customConfigModels = [CustomConfigModel]()
-        for result in results {
-            customConfigModels.append(result.getModel())
-        }
-
-        customConfigListTableViewDataSource.updateCustomConfigList(with: customConfigModels)
+        customConfigListTableViewDataSource.updateCustomConfigList(with: viewModel.customConfigs.value)
     }
 
     func tableViewScrolled(toTop: Bool) {

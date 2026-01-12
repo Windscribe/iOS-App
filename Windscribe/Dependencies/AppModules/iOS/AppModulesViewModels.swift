@@ -342,7 +342,8 @@ class ViewModels: Assembly {
                               hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                               userSessionRepository: r.resolve(UserSessionRepository.self)!,
                               wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
-                              sessionManager: r.resolve(SessionManager.self)!)
+                              sessionManager: r.resolve(SessionManager.self)!,
+                              customConfigRepository: r.resolve(CustomConfigRepository.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -381,7 +382,6 @@ class ViewModels: Assembly {
                                         alertManager: r.resolve(AlertManagerV2.self)!,
                                         customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                                         vpnStateRepository: r.resolve(VPNStateRepository.self)!,
-                                        localDataBase: r.resolve(LocalDatabase.self)!,
                                         connectivity: r.resolve(ConnectivityManager.self)!,
                                         locationsManager: r.resolve(LocationsManager.self)!,
                                         protocolManager: r.resolve(ProtocolManagerType.self)!)

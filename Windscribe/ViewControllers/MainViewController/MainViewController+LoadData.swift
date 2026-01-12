@@ -72,17 +72,13 @@ extension MainViewController {
 
     func loadCustomConfigs() {
         logger.logD("MainViewController", "Loading custom configs list from disk.")
-        viewModel.customConfigs.subscribe(on: MainScheduler.instance).observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] customconfigs in
-            guard let self = self else { return }
-            var customConfigs = [CustomConfigModel]()
-            guard let customconfigs = customconfigs else { return }
-            for result in customconfigs where !result.isInvalidated {
-                customConfigs.append(result.getModel())
-            }
-            customConfigListTableViewDataSource.updateCustomConfigList(with: customConfigs)
-        }, onError: { [weak self] error in
-            self?.logger.logE("MainViewController", "Realm custom config list notification error \(error.localizedDescription)")
-        }).disposed(by: disposeBag)
+        viewModel.customConfigs
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] customConfigs in
+                self?.customConfigListTableViewDataSource.updateCustomConfigList(with: customConfigs)
+            })
+            .store(in: &cancellables)
     }
 
     func loadStaticIPLatencyValues() {

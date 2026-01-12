@@ -252,9 +252,9 @@ class ProtocolManager: ProtocolManagerType {
         if !locationID.isEmpty,
            let locationType = locationManager.getLocationType(),
            locationType == .custom,
-           let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel(),
-           let protocolName = config.protocolType, let portName = config.port {
-            appendPort(proto: protocolName, port: portName)
+           let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel() {
+            let protocolName = config.protocolType
+            appendPort(proto: protocolName, port: config.port)
             setPriority(proto: protocolName, type: .normal)
         }
 
