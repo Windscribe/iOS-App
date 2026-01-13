@@ -123,6 +123,8 @@ enum ImagesAsset {
     enum Servers {
         static let serversAll = "servers-all"
         static let staticIP = "servers-static-ip"
+        static let staticIPDatacenter = "servers-static-ip-center"
+        static let staticIPResidential = "servers-static-ip-residential"
         static let config = "servers-config"
         static let allSelected = "servers-all-selected"
         static let staticIPSelected = "servers-static-ip-selected"
