@@ -23,7 +23,21 @@ class StaticIPNodeCellModel: BaseNodeCellViewModel {
 
     override var iconAspect: UIView.ContentMode { .scaleAspectFit }
     override var iconImage: UIImage? {
-        UIImage(named: ImagesAsset.Servers.staticIP)?.withRenderingMode(.alwaysTemplate)
+        guard let staticIP = displayingStaticIP else {
+            return UIImage(named: ImagesAsset.Servers.staticIP)?.withRenderingMode(.alwaysTemplate)
+        }
+
+        let iconName: String
+        switch staticIP.ipType {
+        case .datacenter:
+            iconName = ImagesAsset.Servers.staticIPDatacenter
+        case .residential:
+            iconName = ImagesAsset.Servers.staticIPResidential
+        case .unknown:
+            iconName = ImagesAsset.Servers.staticIP
+        }
+
+        return UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate)
     }
 
     override var actionImage: UIImage? { nil }

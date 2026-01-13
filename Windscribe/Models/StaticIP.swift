@@ -9,6 +9,23 @@
 import Foundation
 import RealmSwift
 
+enum StaticIPType {
+    case datacenter
+    case residential
+    case unknown
+
+    init(from typeString: String) {
+        let normalizedType = typeString.lowercased()
+        if normalizedType.contains("datacenter") || normalizedType.contains("dc") {
+            self = .datacenter
+        } else if normalizedType.contains("residential") || normalizedType.contains("res") {
+            self = .residential
+        } else {
+            self = .unknown
+        }
+    }
+}
+
 struct StaticIPModel {
     let id: Int
     let staticIP: String
@@ -27,6 +44,10 @@ struct StaticIPModel {
     let wgIp: String
     let pingHost: String
     let nodes: [NodeModel]
+
+    var ipType: StaticIPType {
+        StaticIPType(from: type)
+    }
 
     init(from: StaticIP) {
         self.id = from.id
