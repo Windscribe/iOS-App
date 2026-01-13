@@ -190,7 +190,7 @@ class PreferencesImpl: Preferences {
     }
 
     func saveActiveAppleID(id: String?) {
-        setString(id, forKey: SharedKeys.activeAppleData)
+        setString(id, forKey: SharedKeys.activeAppleID)
     }
 
     func getActiveAppleID() -> String? {
