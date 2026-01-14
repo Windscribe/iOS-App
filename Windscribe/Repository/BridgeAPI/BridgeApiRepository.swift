@@ -96,7 +96,6 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
     private func checkAndEmitApiAvailability(ready: Bool) {
         if ready {
             preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
-            let persistantSettings = WSNet.instance().currentPersistentSettings()
         }
         guard let sessionModel = self.userSessionRepository.sessionModel else {
             self.bridgeIsAvailable.send(false)

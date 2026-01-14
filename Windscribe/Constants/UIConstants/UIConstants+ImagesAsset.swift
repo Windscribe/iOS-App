@@ -170,7 +170,7 @@ enum ImagesAsset {
     }
 
     enum Robert {
-        static let mask = "robert-mask-2"
+        static let mask = "robert-mask"
         static let filterIcons = ["malware": "malware", "ads": "ads", "social": "social",
                                   "porn": "porn", "gambling": "gambling", "fakenews": "fake-news",
                                   "competitors": "other-vpn", "cryptominers": "crypto"]
