@@ -71,8 +71,8 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 let result = try await self.apiManager.regToken()
                 let session = try await self.apiManager.signUpUsingToken(token: result.token)
 
-                self.sessionManager.updateFrom(session: session)
-                await MainActor.run {
+                Task { @MainActor in
+                    await self.sessionManager.updateFrom(session: session)
                     self.keyChainDatabase.setGhostAccountCreated()
                     self.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(session.userId)")
                     self.prepareUserData()

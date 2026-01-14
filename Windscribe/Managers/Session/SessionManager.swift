@@ -20,7 +20,7 @@ protocol SessionManager {
     func updateSession() async throws
     func updateSession(_ appleID: String) async throws
     func login(auth: String) async throws
-    func updateFrom(session: Session)
+    func updateFrom(session: Session) async
     func keepSessionUpdated()
 }
 
@@ -148,7 +148,10 @@ class SessionManagerImpl: SessionManager {
         sessionFetchInProgress = true
         let session = try await apiManager.getSession(token)
         logger.logI("SessionManager", "Session updated for \(session.username)")
-        processUpdatedSession(session: session)
+
+        Task {
+            await processUpdatedSession(session: session)
+        }
         sessionFetchInProgress = false
     }
 
@@ -158,20 +161,20 @@ class SessionManagerImpl: SessionManager {
         if session.sessionAuthHash.isEmpty {
             session.sessionAuthHash = auth
         }
-        updateFrom(session: session)
+        Task {
+            await updateFrom(session: session)
+        }
     }
 
-    func updateFrom(session: Session) {
-        processUpdatedSession(session: session)
+    func updateFrom(session: Session) async {
+        await processUpdatedSession(session: session)
     }
 
-    private func processUpdatedSession(session: Session) {
+    private func processUpdatedSession(session: Session) async {
         localDatabase.saveOldSession()
         localDatabase.saveSession(session: session)
         let model = SessionModel(session: session)
-        Task {
-            await userSessionRepository.update(sessionModel: model)
-        }
+        await userSessionRepository.update(sessionModel: model)
     }
 
     func listenForSessionChanges() {

@@ -194,14 +194,16 @@ class LoginViewModelImpl: LoginViewModel {
         // Cache current Wi-Fi state to use for reconnect logic
         WifiManager.shared.saveCurrentWifiNetworks()
 
-        // Store authenticated session
-        sessionManager.updateFrom(session: session)
+        Task {
+            // Store authenticated session
+            await sessionManager.updateFrom(session: session)
 
-        // Log the success with the username
-        logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
+            // Log the success with the username
+            logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
 
-        // Continue with user-specific data preparation and transition to main app screen
-        prepareUserData()
+            // Continue with user-specific data preparation and transition to main app screen
+            prepareUserData()
+        }
     }
 
     private func loginWithCredentials(
