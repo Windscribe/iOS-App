@@ -320,9 +320,7 @@ extension ConfigurationsManager {
 
     /// Gets static ip location from database.
     private func getStaticIPLocation(id: String) throws -> StaticIPModel {
-        let ipId = locationsManager.getId(location: id)
-        guard let staticId = Int(id),
-              let staticIP = staticIpRepository.getStaticIp(id: staticId) else {
+        guard let staticIP = staticIpRepository.getStaticIp(id: id) else {
             throw VPNConfigurationErrors.locationNotFound(id)
         }
         return staticIP

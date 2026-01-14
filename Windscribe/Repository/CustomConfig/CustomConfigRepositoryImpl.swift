@@ -60,8 +60,9 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 let serverName = String(fileName)
                 let fileId = UUID().uuidString
                 let path = "\(fileId).conf"
-                guard let stringData = String(data: data, encoding: String.Encoding.utf8) else
-                { throw RepositoryError.invalidConfigData }
+                guard let stringData = String(data: data, encoding: String.Encoding.utf8) else{
+                    throw RepositoryError.invalidConfigData
+                }
 
                 let lines = stringData.components(separatedBy: "\n")
                 var serverAddress = ""
