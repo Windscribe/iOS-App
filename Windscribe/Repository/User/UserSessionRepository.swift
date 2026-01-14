@@ -38,6 +38,8 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         self.preferences = preferences
     }
 
+    /// This needs to run in the main actor because it can be upgraded from several places at the same time
+    /// That was causing a crash, making it sure to run on a single thread makes it safer
     @MainActor
     func update(sessionModel: SessionModel) async {
         self.oldSessionModel = self.sessionModel

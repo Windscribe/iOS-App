@@ -228,9 +228,11 @@ class SignUpViewModelImpl: SignUpViewModel {
         // Extract username before accessing to avoid Realm threading issues
         let username = session.username
 
-        sessionManager.updateFrom(session: session)
-        logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(username)")
-        prepareUserData()
+        Task {
+            await sessionManager.updateFrom(session: session)
+            logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(username)")
+            prepareUserData()
+        }
     }
 
     private func handleAuthTokenError(_ error: Error) {

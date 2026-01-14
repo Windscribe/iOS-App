@@ -86,9 +86,6 @@ class LocalDatabaseImpl: LocalDatabase {
     func getCustomConfigObservable() -> Observable<[CustomConfig]> {
         return getSafeRealmObservable(type: CustomConfig.self)
     }
-    func getCustomConfig() -> [CustomConfig] {
-        return getRealmObjects(type: CustomConfig.self) ?? []
-    }
 
     func getStaticIPs() -> [StaticIP]? {
         return getRealmObjects(type: StaticIP.self)

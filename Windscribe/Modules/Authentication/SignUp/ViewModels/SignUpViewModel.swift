@@ -268,9 +268,11 @@ class SignUpViewModelImpl: SignUpViewModel {
                         captchaTrailY: captchaTrailY
                     )
 
-                    self.sessionManager.updateFrom(session: session)
-                    self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
-                    self.prepareUserData()
+                    Task {
+                        await self.sessionManager.updateFrom(session: session)
+                        self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
+                        self.prepareUserData()
+                    }
                 } catch {
                     await MainActor.run {
                         self.logger.logE("SignUpViewModel", "Failed to signup: \(error)")

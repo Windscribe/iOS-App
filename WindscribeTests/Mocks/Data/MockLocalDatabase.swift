@@ -181,10 +181,6 @@ class MockLocalDatabase: LocalDatabase {
 
     func removeCustomConfig(fileId: String) {}
 
-    func getCustomConfig() -> Observable<[Windscribe.CustomConfig]> {
-        return Observable.just([])
-    }
-
     func getPorts(protocolType: String) -> [String]? {
         return []
     }
@@ -221,10 +217,6 @@ class MockLocalDatabase: LocalDatabase {
 
     func updateConnectionMode(value: String) {}
 
-    func getCustomConfigs() -> [Windscribe.CustomConfig] {
-        return []
-    }
-
     func clean() {
         saveNetworkCalled = false
         lastSavedNetwork = nil
@@ -255,5 +247,13 @@ class MockLocalDatabase: LocalDatabase {
 
     func removeFavourite(groupId: String) {
         // Mock implementation - no-op
+    }
+
+    func getCustomConfigObservable() -> RxSwift.Observable<[Windscribe.CustomConfig]> {
+        return Observable.just([])
+    }
+
+    func getCustomConfigs() -> [Windscribe.CustomConfig] {
+        return []
     }
 }

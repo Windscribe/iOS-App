@@ -172,10 +172,13 @@ class LoginViewModelImpl: LoginViewModel {
 
         preferences.saveLoginDate(date: Date())
         WifiManager.shared.saveCurrentWifiNetworks()
-        sessionManager.updateFrom(session: session)
-        logger.logI("LoginViewModel", "Login successful. Preparing user data for \(username)")
+        Task {
+            await
+            sessionManager.updateFrom(session: session)
+            logger.logI("LoginViewModel", "Login successful. Preparing user data for \(username)")
 
-        prepareUserData()
+            prepareUserData()
+        }
     }
 
     private func handleLoginError(_ error: Error) {
