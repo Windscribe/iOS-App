@@ -20,7 +20,8 @@ extension MainViewController {
                 guard let self = self else { return }
                 guard !self.vpnConnectionViewModel.isConnecting() else { return }
                 guard !vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network) else { return }
-                if self.locationPermissionManager.getStatus() == .authorizedWhenInUse || self.locationPermissionManager.getStatus() == .authorizedAlways {
+                let locationStatus = self.locationPermissionManager.locationStatusSubject.value
+                if locationStatus == .authorizedWhenInUse || locationStatus == .authorizedAlways {
                     if network.networkType == .cellular || network.networkType == .wifi {
                         if let name = network.name {
                             self.wifiInfoView.updateWifiName(name: name)

@@ -381,26 +381,30 @@ class LoginViewModelImpl: LoginViewModel {
                     logger.logI("LoginViewModel", "Disconnecting emergency connect.")
                     disconnectFromEmergencyConnect()
                 } else {
-                    showLoadingView = false
-                    routeToMainView.send(true)
+                    await MainActor.run {
+                        showLoadingView = false
+                        routeToMainView.send(true)
+                    }
                 }
             } catch {
                 preferences.saveUserSessionAuth(sessionAuth: nil)
                 userSessionRepository.clearSession()
                 logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
-                showLoadingView = false
 
-                switch error {
-                case let Errors.apiError(e):
-                    failedState = .api(e.errorMessage ?? "")
-                case Errors.failOverFailed:
-                    showRestrictiveNetworkModal.send(true)
-                    return
-                default:
-                    if let error = error as? Errors {
-                        failedState = .network(error.description)
-                    } else {
-                        failedState = .network(error.localizedDescription)
+                await MainActor.run {
+                    showLoadingView = false
+
+                    switch error {
+                    case let Errors.apiError(e):
+                        failedState = .api(e.errorMessage ?? "")
+                    case Errors.failOverFailed:
+                        showRestrictiveNetworkModal.send(true)
+                    default:
+                        if let error = error as? Errors {
+                            failedState = .network(error.description)
+                        } else {
+                            failedState = .network(error.localizedDescription)
+                        }
                     }
                 }
             }
