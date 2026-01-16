@@ -41,7 +41,7 @@ protocol LocationsManager {
 }
 
 class LocationsManagerImpl: LocationsManager {
-    private let localDatabase: LocalDatabase
+    private let customConfigRepository: CustomConfigRepository
     private let preferences: Preferences
     private let logger: FileLogger
     private let staticIpRepository: StaticIpRepository
@@ -54,14 +54,14 @@ class LocationsManagerImpl: LocationsManager {
     let selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
     let bestLocationUpdated = CurrentValueSubject<String, Never>("")
 
-    init(localDatabase: LocalDatabase,
+    init(customConfigRepository: CustomConfigRepository,
          preferences: Preferences,
          logger: FileLogger,
          languageManager: LanguageManager,
          userSessionRepository: UserSessionRepository,
          serverRepository: ServerRepository,
          staticIpRepository: StaticIpRepository) {
-        self.localDatabase = localDatabase
+        self.customConfigRepository = customConfigRepository
         self.preferences = preferences
         self.logger = logger
         self.languageManager = languageManager
@@ -118,7 +118,7 @@ class LocationsManagerImpl: LocationsManager {
         } else {
             let locationID = getId()
             if locationType == .custom {
-                guard let customConfig = localDatabase.getCustomConfigs().first(where: { locationID == "\($0.id)" }) else {
+                guard let customConfig = customConfigRepository.getCustomConfig(fileId:  locationID) else {
                     return getEmptyUIInfo()
                 }
                 return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation, isServer: false)

@@ -41,4 +41,8 @@ class MockPortMapRepository: PortMapRepository {
         getUpdatedPortMapCalled = false
         callCount = 0
     }
+
+    func getPorts(protocolType: String) -> [String]? {
+        return []
+    }
 }

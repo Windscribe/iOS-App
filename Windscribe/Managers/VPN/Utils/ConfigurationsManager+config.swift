@@ -68,7 +68,10 @@ extension ConfigurationsManager {
             logger.logE("ConfigurationsManager", "Error reading custom config \(configFilePath): \(error.localizedDescription)")
             throw VPNConfigurationErrors.configNotFound
         }
-        guard let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel() else {
+
+
+
+        guard let config = customConfigRepository.getCustomConfig(fileId: locationID) else {
             throw VPNConfigurationErrors.configNotFound
         }
         let username = config.username.base64Decoded() == "" ? config.username : config.username.base64Decoded()
@@ -348,9 +351,7 @@ extension ConfigurationsManager {
             }
 
             // Check if we have a pinned ip for this location
-            let pinnedNodeIp = localDatabase.getFavouriteList().first {
-                $0.id == String(group.id) && $0.pinnedNodeIp != nil
-            }?.pinnedNodeIp
+            let pinnedNodeIp = serverRepository.getLocationPinned(for: group.id)
             if let pinnedNodeIp = pinnedNodeIp,
                let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
                 if !preferences.getIgnorePinIP() {
@@ -517,11 +518,11 @@ extension ConfigurationsManager {
                     }
                 case .custom:
                     let customID = self.locationsManager.getId(location: locationID)
-                    guard let customConfig = self.localDatabase.getCustomConfigs().first(where: { $0.id == customID })?.getModel() else {
+                    guard let customConfig = self.customConfigRepository.getCustomConfig(fileId: locationID) else {
                         promise(.failure(VPNConfigurationErrors.customConfigSupportNotAvailable))
                         return
                     }
-                    if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
+                    if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired) {
                         promise(.failure(VPNConfigurationErrors.customConfigMissingCredentials(customConfig)))
                         return
                     }

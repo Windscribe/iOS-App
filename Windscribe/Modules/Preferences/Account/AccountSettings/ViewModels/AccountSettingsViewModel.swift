@@ -42,7 +42,6 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     private let sessionManager: SessionManager
     private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
-    private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
 
     private let disposeBag = DisposeBag()
@@ -77,7 +76,6 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
          sessionManager: SessionManager,
          userSessionRepository: UserSessionRepository,
          apiManager: APIManager,
-         localDatabase: LocalDatabase,
          languageManager: LanguageManager,
          logger: FileLogger,
          hapticFeedbackManager: HapticFeedbackManager) {
@@ -85,7 +83,6 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         self.sessionManager = sessionManager
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
-        self.localDatabase = localDatabase
         self.languageManager = languageManager
 
         super.init(logger: logger,

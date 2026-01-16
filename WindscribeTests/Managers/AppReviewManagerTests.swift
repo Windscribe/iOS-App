@@ -26,7 +26,6 @@ class AppReviewManagerTests: XCTestCase {
         mockLogger = MockLogger()
         reviewManager = AppReviewManager(
             preferences: mockPreferences,
-            localDatabase: mockDatabase,
             logger: mockLogger)
     }
 
@@ -48,7 +47,7 @@ class AppReviewManagerTests: XCTestCase {
         mockPreferences.mockLoginDate = Date().addingTimeInterval(-3 * 24 * 60 * 60) // Logged in 3 days ago
         mockPreferences.mockLastReviewDate = Date().addingTimeInterval(-190 * 24 * 60 * 60) // Last review 190 days ago
 
-        XCTAssertTrue(reviewManager.shouldShowReviewRequest(session: SessionModel(session: mockSession)))
+        XCTAssertTrue(reviewManager.shouldShowReviewRequest(session: mockSession.getModel()))
     }
 
     func test_ShouldNotShowReviewRequest_TooSoonAfterLastReview() {
@@ -61,7 +60,7 @@ class AppReviewManagerTests: XCTestCase {
         mockPreferences.mockHasReviewed = true
         mockPreferences.mockLastReviewDate = Date().addingTimeInterval(-10 * 24 * 60 * 60) // Only 10 days ago
 
-        XCTAssertFalse(reviewManager.shouldShowReviewRequest(session: SessionModel(session: mockSession)))
+        XCTAssertFalse(reviewManager.shouldShowReviewRequest(session: mockSession.getModel()))
     }
 
     func test_ShouldNotShowReviewRequest_NotEnoughDataUsed() {
@@ -73,7 +72,7 @@ class AppReviewManagerTests: XCTestCase {
         mockPreferences.mockLoginDate = Date().addingTimeInterval(-3 * 24 * 60 * 60)
         mockPreferences.mockLastReviewDate = Date().addingTimeInterval(-190 * 24 * 60 * 60)
 
-        XCTAssertFalse(reviewManager.shouldShowReviewRequest(session: SessionModel(session: mockSession)))
+        XCTAssertFalse(reviewManager.shouldShowReviewRequest(session: mockSession.getModel()))
     }
 
     func test_ShouldNotShowReviewRequest_IfBannedUser() {
@@ -85,7 +84,7 @@ class AppReviewManagerTests: XCTestCase {
         mockPreferences.mockLoginDate = Date().addingTimeInterval(-3 * 24 * 60 * 60)
         mockPreferences.mockLastReviewDate = Date().addingTimeInterval(-190 * 24 * 60 * 60)
 
-        XCTAssertFalse(reviewManager.shouldShowReviewRequest(session: SessionModel(session: mockSession)))
+        XCTAssertFalse(reviewManager.shouldShowReviewRequest(session: mockSession.getModel()))
     }
 
     func test_RequestReviewIfAvailable_TriggersPromptReview() {
@@ -97,7 +96,7 @@ class AppReviewManagerTests: XCTestCase {
         mockPreferences.mockLoginDate = Date().addingTimeInterval(-3 * 24 * 60 * 60)
         mockPreferences.mockLastReviewDate = Date().addingTimeInterval(-190 * 24 * 60 * 60)
 
-        reviewManager.requestReviewIfAvailable(session: SessionModel(session: mockSession))
+        reviewManager.requestReviewIfAvailable(session: mockSession.getModel())
 
         let expectation = expectation(description: "Wait for 1 second")
 

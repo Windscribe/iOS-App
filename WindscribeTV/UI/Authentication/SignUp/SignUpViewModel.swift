@@ -227,7 +227,6 @@ class SignUpViewModelImpl: SignUpViewModel {
     private func handleSignupSuccess(session: Session) async {
         // Extract username before accessing to avoid Realm threading issues
         let username = session.username
-
         Task {
             await sessionManager.updateFrom(session: session)
             logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(username)")

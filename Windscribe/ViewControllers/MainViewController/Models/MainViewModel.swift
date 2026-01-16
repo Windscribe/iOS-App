@@ -13,7 +13,6 @@ import StoreKit
 
 protocol MainViewModel {
     var serverList: BehaviorSubject<[ServerModel]> { get }
-    var lastConnection: BehaviorSubject<VPNConnectionModel?> { get }
     var portMapHeadings: BehaviorSubject<[String]?> { get }
     var favouriteList: BehaviorSubject<[FavouriteGroupModel]?> { get }
     var staticIPs: BehaviorSubject<[StaticIPModel]?> { get }

@@ -27,7 +27,6 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     private let userSessionRepository: UserSessionRepository
     private let sessionManager: SessionManager
-    private let localDatabase: LocalDatabase
     private let apiManager: APIManager
     private let logger: FileLogger
     private let lookAndFeelRepository: LookAndFeelRepositoryType
@@ -36,13 +35,11 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     init(userSessionRepository: UserSessionRepository,
          sessionManager: SessionManager,
-         localDatabase: LocalDatabase,
          apiManager: APIManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
         self.userSessionRepository = userSessionRepository
         self.sessionManager = sessionManager
-        self.localDatabase = localDatabase
         self.apiManager = apiManager
         self.logger = logger
         self.lookAndFeelRepository = lookAndFeelRepository

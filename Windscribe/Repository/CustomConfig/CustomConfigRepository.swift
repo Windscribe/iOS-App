@@ -22,4 +22,9 @@ protocol CustomConfigRepository {
     func saveOpenVPNCustomConfig(data: Data,
                                  configInfo: OpenVPNConnectionInfo,
                                  configuationName: String) async throws -> CustomConfigModel
+
+    func getCustomConfig(fileId: String) -> CustomConfigModel?
+
+    func saveCustomConfig(customConfig: CustomConfigModel)
+
 }

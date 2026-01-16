@@ -78,6 +78,22 @@ class PortMapRepositoryTests: XCTestCase {
         XCTAssertEqual(result.first?.heading, "TCP")
     }
 
+    func test_getUpdatedPortMap_should_return_ports() async throws {
+        // Given
+        let expectedPortMaps = createMockPortMaps()
+        let portMapList = createMockPortMapList(portMaps: expectedPortMaps, suggested: nil)
+        mockAPIManager.portMapListToReturn = portMapList
+
+        // When
+        _ = try await repository.getUpdatedPortMap()
+
+        let udpPorts = repository.getPorts(protocolType: "UDP") ?? []
+
+        // Then["53", "1194"]
+        XCTAssertEqual(udpPorts.count, 2)
+        XCTAssertEqual(udpPorts.first, "53")
+    }
+
     func test_getUpdatedPortMap_success_shouldSaveToLocalDatabase() async throws {
         // Given
         let expectedPortMaps = createMockPortMaps()

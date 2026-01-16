@@ -36,23 +36,23 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
 
     // MARK: - Dependencies
     private let preferences: Preferences
-    private let localDatabase: LocalDatabase
     private let protocolManager: ProtocolManagerType
     private let dnsSettingsManager: DNSSettingsManagerType
+    private let portMapRepository: PortMapRepository
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
-         localDatabase: LocalDatabase,
          router: ConnectionsNavigationRouter,
          protocolManager: ProtocolManagerType,
-         dnsSettingsManager: DNSSettingsManagerType) {
+         dnsSettingsManager: DNSSettingsManagerType,
+         portMapRepository: PortMapRepository) {
         self.preferences = preferences
-        self.localDatabase = localDatabase
         self.router = router
         self.protocolManager = protocolManager
         self.dnsSettingsManager = dnsSettingsManager
+        self.portMapRepository = portMapRepository
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -219,7 +219,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     }
 
     private func getPorts(by protocolType: String) -> [String] {
-        guard let portsArray = localDatabase.getPorts(protocolType: protocolType) else { return [] }
+        guard let portsArray = portMapRepository.getPorts(protocolType: protocolType) else { return [] }
         return portsArray
     }
 
@@ -233,7 +233,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
 
     private func updateProtocol(value: String) {
         preferences.saveSelectedProtocol(selectedProtocol: value)
-        if let port = localDatabase.getPorts(protocolType: value) {
+        if let port = portMapRepository.getPorts(protocolType: value) {
             preferences.saveSelectedPort(port: port[0])
         }
     }

@@ -247,6 +247,59 @@ class ServerRepositoryTests: XCTestCase {
         XCTAssertEqual(server?.name, region?.country)
         XCTAssertEqual(group?.city, city?.name)
         XCTAssertEqual(group?.nick, city?.nickname)
+
+    }
+
+    func testFavouritsStartEmpty() async {
+        // Then
+        XCTAssertEqual(repository.favouriteListSubject.value.count, 0)
+    }
+
+    func testSavingFavorite() async {
+        // Given
+        let mockFavorite = FavouriteModel(id: "1")
+
+        repository.saveFavorite(for: mockFavorite)
+
+        // Then
+        XCTAssertEqual(repository.getFavorite(from: mockFavorite.id), mockFavorite)
+    }
+
+    func testRemoveFavorite() async {
+        // Given
+        let mockFavorite1 = FavouriteModel(id: "1")
+        let mockFavorite2 = FavouriteModel(id: "2")
+
+        repository.saveFavorite(for: mockFavorite1)
+        repository.saveFavorite(for: mockFavorite2)
+
+        XCTAssertEqual(repository.getFavorite(from: mockFavorite1.id), mockFavorite1)
+        XCTAssertEqual(repository.getFavorite(from: mockFavorite2.id), mockFavorite2)
+
+        repository.removeFavorite(with: "1")
+
+        // Then
+        XCTAssertEqual(repository.getFavorite(from: mockFavorite1.id), nil)
+        XCTAssertEqual(repository.getFavorite(from: mockFavorite2.id), mockFavorite2)
+
+        repository.removeFavorite(with: 2)
+
+        // And then
+        XCTAssertEqual(repository.getFavorite(from: mockFavorite1.id), nil)
+        XCTAssertEqual(repository.getFavorite(from: mockFavorite2.id), nil)
+    }
+
+    func testLocationPinned() async {
+        // Given
+        let mockFavorite1 = FavouriteModel(id: "1", pinnedIp: "1:1:1:1", pinnedNodeIp: "11:11:11:11")
+        let mockFavorite2 = FavouriteModel(id: "2")
+
+        repository.saveFavorite(for: mockFavorite1)
+        repository.saveFavorite(for: mockFavorite2)
+
+        // Then
+        XCTAssertEqual(repository.getLocationPinned(for: 1), mockFavorite1.pinnedNodeIp)
+        XCTAssertEqual(repository.getLocationPinned(for: 2), nil)
     }
 }
 
@@ -258,7 +311,7 @@ extension ServerRepositoryTests {
         session.userId = "test-user-id"
         session.username = "testuser"
         session.sessionAuthHash = "test-auth-hash"
-        return SessionModel(session: session)
+        return session.getModel()
     }
 
     private func createMockServerList() -> ServerList? {

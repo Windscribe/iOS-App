@@ -20,7 +20,6 @@ protocol NewsFeedModelType {
 }
 
 class NewsFeedModel: NewsFeedModelType {
-    let localDatabase: LocalDatabase
     let sessionManager: SessionManager
     let notificationRepository: NotificationRepository
     let logger: FileLogger
@@ -32,12 +31,10 @@ class NewsFeedModel: NewsFeedModelType {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(localDatabase: LocalDatabase,
-         sessionManager: SessionManager,
+    init(sessionManager: SessionManager,
          fileLogger: FileLogger,
          htmlParser: HTMLParsing,
          notificationRepository: NotificationRepository) {
-        self.localDatabase = localDatabase
         self.sessionManager = sessionManager
         self.htmlParser = htmlParser
         self.notificationRepository = notificationRepository

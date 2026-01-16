@@ -65,11 +65,8 @@ protocol LocalDatabase {
     func saveCustomConfig(customConfig: CustomConfig)
     func removeCustomConfig(fileId: String)
     func getCustomConfigObservable() -> Observable<[CustomConfig]>
-    func getPorts(protocolType: String) -> [String]?
     func getRobertFilters() -> RobertFilters?
     func saveRobertFilters(filters: RobertFilters) -> Disposable
-    func getLastConnection() -> Observable<VPNConnection?>
-    func saveLastConnetion(vpnConnection: VPNConnection) -> Disposable
 
     func saveFavourite(favourite: Favourite) -> Disposable
     func getFavouriteListObservable() -> Observable<[Favourite]>
@@ -77,8 +74,6 @@ protocol LocalDatabase {
     func removeFavourite(groupId: String)
 
     func toggleRobertRule(id: String)
-    func updateCustomConfigName(customConfigId: String, name: String)
-    func updateCustomConfigCredentials(customConfigId: String, username: String, password: String)
     func saveOldSession()
     func getOldSession() -> OldSession?
     func getCustomConfigs() -> [CustomConfig]

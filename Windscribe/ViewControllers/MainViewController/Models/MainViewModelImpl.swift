@@ -13,7 +13,6 @@ import StoreKit
 
 class MainViewModelImpl: MainViewModel {
     let lookAndFeelRepository: LookAndFeelRepositoryType
-    let localDatabase: LocalDatabase
     let vpnManager: VPNManager
     let logger: FileLogger
     let serverRepository: ServerRepository
@@ -35,7 +34,6 @@ class MainViewModelImpl: MainViewModel {
     private let customConfigRepository: CustomConfigRepository
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
-    var lastConnection = BehaviorSubject<VPNConnectionModel?>(value: nil)
     var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
     var favouriteList = BehaviorSubject<[FavouriteGroupModel]?>(value: nil)
     var staticIPs = BehaviorSubject<[StaticIPModel]?>(value: nil)
@@ -74,8 +72,7 @@ class MainViewModelImpl: MainViewModel {
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    init(localDatabase: LocalDatabase,
-         vpnManager: VPNManager,
+    init(vpnManager: VPNManager,
          logger: FileLogger,
          serverRepository: ServerRepository,
          portMapRepo: PortMapRepository,
@@ -96,7 +93,6 @@ class MainViewModelImpl: MainViewModel {
          sessionManager: SessionManager,
          customConfigRepository: CustomConfigRepository) {
 
-        self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.logger = logger
         self.serverRepository = serverRepository
@@ -139,7 +135,6 @@ class MainViewModelImpl: MainViewModel {
                 self.locationOrderBy.onNext(order ?? DefaultValues.orderLocationsBy)
             }
             .store(in: &cancellables)
-        loadLastConnection()
         loadLatencies()
         getNotices()
         preferences.getSelectedProtocol()
@@ -360,13 +355,6 @@ class MainViewModelImpl: MainViewModel {
         }
     }
 
-    func loadLastConnection() {
-        localDatabase.getLastConnection().subscribe(onNext: { [weak self] data in
-            guard let self = self else { return }
-            self.lastConnection.onNext(data?.getModel())
-        }, onError: { _ in }).disposed(by: disposeBag)
-    }
-
     func loadPortMap() {
         Task { @MainActor in
             let headings = self.portMapRepo.currentPortMaps.map { $0.heading }
@@ -393,17 +381,15 @@ class MainViewModelImpl: MainViewModel {
 
     func loadFavourite() {
         serverRepository.serverListSubject.combineLatest(
-            localDatabase.getFavouriteListObservable()
-                .toPublisherIncludingEmpty()
-                .replaceError(with: []))
+            serverRepository.favouriteListSubject)
         .receive(on: RunLoop.main)
         .sink { [weak self] (serverModels, favList) in
             guard let self = self else { return }
-            let favGroupModels = favList.filter { !$0.isInvalidated }
+            let favGroupModels = favList
                 .compactMap { favNode in
                     return serverModels.flatMap { $0.groups }
                         .first { "\($0.id)" == favNode.id }
-                        .map { FavouriteGroupModel(favourite: favNode.getModel(), groupModel: $0)}
+                        .map { FavouriteGroupModel(favourite: favNode, groupModel: $0)}
                 }
             favouriteList.onNext(favGroupModels)
         }
@@ -576,7 +562,7 @@ class MainViewModelImpl: MainViewModel {
 
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel? {
         guard let id = customConfigID else { return nil }
-        return localDatabase.getCustomConfigs().first { $0.id == id }?.getModel()
+        return customConfigRepository.getCustomConfig(fileId: id)
     }
 
     func updateSSID() {

@@ -186,10 +186,13 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // When
         let result = repository.getStaticIp(id: targetId)
+        let resultFromString = repository.getStaticIp(id: "\(targetId)")
 
         // Then
         XCTAssertNotNil(result)
+        XCTAssertNotNil(resultFromString)
         XCTAssertEqual(result?.id, targetId)
+        XCTAssertEqual(resultFromString?.id, targetId)
         XCTAssertEqual(result?.staticIP, "192.168.1.100")
     }
 

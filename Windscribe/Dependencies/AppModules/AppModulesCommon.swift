@@ -57,7 +57,8 @@ class Repository: Assembly {
     func assemble(container: Container) {
         let logger = container.resolve(FileLogger.self)!
         container.register(UserSessionRepository.self) { r in
-            UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!)
+            UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!,
+                                      localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.userScope)
 
         container.register(BridgeApiRepository.self) { r in
@@ -133,7 +134,10 @@ class Repository: Assembly {
                                     customConfigRepository: r.resolve(CustomConfigRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(CustomConfigRepository.self) { r in
-            CustomConfigRepositoryImpl(fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
+            CustomConfigRepositoryImpl(fileDatabase: r.resolve(FileDatabase.self)!,
+                                       localDatabase: r.resolve(LocalDatabase.self)!,
+                                       logger: r.resolve(FileLogger.self)!,
+                                       portMapRepository: r.resolve(PortMapRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(AdvanceRepository.self) { r in
             AdvanceRepositoryImpl(preferences: r.resolve(Preferences.self)!,
@@ -145,7 +149,6 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
         container.register(ConfigurationsManager.self) { r in
             ConfigurationsManager(logger: r.resolve(FileLogger.self)!,
-                                  localDatabase: r.resolve(LocalDatabase.self)!,
                                   keychainDb: r.resolve(KeyChainDatabase.self)!,
                                   fileDatabase: r.resolve(FileDatabase.self)!,
                                   advanceRepository: r.resolve(AdvanceRepository.self)!,
@@ -159,7 +162,8 @@ class Repository: Assembly {
                                   bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
                                   bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
                                   credentialsRepository: r.resolve(CredentialsRepository.self)!,
-                                  staticIpRepository: r.resolve(StaticIpRepository.self)!)
+                                  staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                                  customConfigRepository: r.resolve(CustomConfigRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LookAndFeelRepositoryType.self) { r in
@@ -170,6 +174,10 @@ class Repository: Assembly {
             RobertyFiltersRepositoryImpl(logger: r.resolve(FileLogger.self)!,
                                          apiManager: r.resolve(APIManager.self)!,
                                          localDatabase: r.resolve(LocalDatabase.self)!)
+        }.inObjectScope(.userScope)
+
+        container.register(MigrationRepository.self) { r in
+            MigrationRepositoryImpl(localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.userScope)
     }
 }
@@ -182,7 +190,7 @@ class Managers: Assembly {
             InAppPurchaseManagerImpl(apiManager: r.resolve(APIManager.self)!,
                                      preferences: r.resolve(Preferences.self)!,
                                      logger: r.resolve(FileLogger.self)!,
-                                     localDatabase: r.resolve(LocalDatabase.self)!,
+                                     mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
                                      sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.userScope)
 
@@ -191,7 +199,7 @@ class Managers: Assembly {
                 apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                localDatabase: r.resolve(LocalDatabase.self)!,
+                mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
                 sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.userScope)
 
@@ -220,7 +228,6 @@ class Managers: Assembly {
             SessionManagerImpl(wgCredentials: r.resolve(WgCredentials.self)!,
                                logger: r.resolve(FileLogger.self)!,
                                apiManager: r.resolve(APIManager.self)!,
-                               localDatabase: r.resolve(LocalDatabase.self)!,
                                credentialsRepo: r.resolve(CredentialsRepository.self)!,
                                serverRepo: r.resolve(ServerRepository.self)!,
                                staticIPRepo: r.resolve(StaticIpRepository.self)!,
@@ -243,7 +250,7 @@ class Managers: Assembly {
             AlertManager()
         }.inObjectScope(.userScope)
         container.register(LocationsManager.self) { r in
-            LocationsManagerImpl(localDatabase: r.resolve(LocalDatabase.self)!,
+            LocationsManagerImpl(customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                                  preferences: r.resolve(Preferences.self)!,
                                  logger: r.resolve(FileLogger.self)!,
                                  languageManager: r.resolve(LanguageManager.self)!,
@@ -256,7 +263,6 @@ class Managers: Assembly {
         }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
             VPNManagerImpl(logger: r.resolve(FileLogger.self)!,
-                           localDB: r.resolve(LocalDatabase.self)!,
                            serverRepository: r.resolve(ServerRepository.self)!,
                            staticIpRepository: r.resolve(StaticIpRepository.self)!,
                            preferences: r.resolve(Preferences.self)!,
@@ -295,7 +301,7 @@ class Managers: Assembly {
                             connectivity: r.resolve(ConnectivityManager.self)!,
                             preferences: r.resolve(Preferences.self)!,
                             securedNetwork: r.resolve(WifiNetworkRepository.self)!,
-                            localDatabase: r.resolve(LocalDatabase.self)!,
+                            customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                             locationManager: r.resolve(LocationsManager.self)!,
                             portMapRepository: r.resolve(PortMapRepository.self)!,
                             vpnStateRepository: r.resolve(VPNStateRepository.self)!)

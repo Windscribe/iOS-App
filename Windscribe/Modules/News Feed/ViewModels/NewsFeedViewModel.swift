@@ -17,31 +17,27 @@ protocol NewsFeedViewModelProtocol: ObservableObject {
 }
 
 class NewsFeedViewModel: NewsFeedViewModelProtocol {
-
     @Published private(set) var newsFeedData: [NewsFeedDataModel] = []
     @Published var viewToLaunch: NewsFeedViewToLaunch = .unknown
     @Published var loadState: NewsFeedLoadState = .idle
     @Published private(set) var readStatus: Set<Int> = []
     @Published var isDarkMode: Bool = false
 
-    let localDatabase: LocalDatabase
-    let sessionManager: SessionManager
-    let lookAndFeelRepository: LookAndFeelRepositoryType
-    let logger: FileLogger
-    let router: AccountRouter
-    let htmlParser: HTMLParsing
-    let notificationRepository: NotificationRepository
+    private let sessionManager: SessionManager
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let logger: FileLogger
+    private let router: AccountRouter
+    private let htmlParser: HTMLParsing
+    private let notificationRepository: NotificationRepository
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(localDatabase: LocalDatabase,
-         sessionManager: SessionManager,
+    init(sessionManager: SessionManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger,
          router: AccountRouter,
          htmlParser: HTMLParsing,
          notificationRepository: NotificationRepository) {
-        self.localDatabase = localDatabase
         self.sessionManager = sessionManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger

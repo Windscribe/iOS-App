@@ -279,7 +279,7 @@ extension ConfigurationsManager {
         var hasPinnedNodeMismatch = false
 
         if !preferences.getIgnorePinIP() {
-            let favourite = localDatabase.getFavouriteList().first { $0.id == forLocationId }
+            let favourite = serverRepository.getFavorite(from: forLocationId)
             if let favourite = favourite {
                 shouldCheckPinning = favourite.pinnedNodeIp != nil
                 hasPinnedNodeMismatch = shouldCheckPinning && favourite.pinnedNodeIp != currentHost

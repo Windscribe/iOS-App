@@ -173,10 +173,8 @@ class LoginViewModelImpl: LoginViewModel {
         preferences.saveLoginDate(date: Date())
         WifiManager.shared.saveCurrentWifiNetworks()
         Task {
-            await
-            sessionManager.updateFrom(session: session)
+            await sessionManager.updateFrom(session: session)
             logger.logI("LoginViewModel", "Login successful. Preparing user data for \(username)")
-
             prepareUserData()
         }
     }

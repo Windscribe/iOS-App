@@ -20,7 +20,6 @@ protocol ConfigurationsManagerDelegate: AnyObject {
 
 class ConfigurationsManager {
     let logger: FileLogger // = Assembler.resolve(FileLogger.self)
-    let localDatabase: LocalDatabase // = Assembler.resolve(LocalDatabase.self)
     let keychainDb: KeyChainDatabase // = Assembler.resolve(KeyChainDatabase.self)
     let fileDatabase: FileDatabase // = Assembler.resolve(FileDatabase.self)
     let advanceRepository: AdvanceRepository
@@ -35,6 +34,7 @@ class ConfigurationsManager {
     let bridgeApiRepository: BridgeApiRepository
     let credentialsRepository: CredentialsRepository
     let staticIpRepository: StaticIpRepository
+    let customConfigRepository: CustomConfigRepository
     var api: APIManager {
         return Assembler.resolve(APIManager.self)
     }
@@ -77,7 +77,6 @@ class ConfigurationsManager {
     private let tunnelManagerLock = NSLock()
 
     init(logger: FileLogger,
-         localDatabase: LocalDatabase,
          keychainDb: KeyChainDatabase,
          fileDatabase: FileDatabase,
          advanceRepository: AdvanceRepository,
@@ -91,9 +90,10 @@ class ConfigurationsManager {
          bridgeAPI: WSNetBridgeAPI,
          bridgeApiRepository: BridgeApiRepository,
          credentialsRepository: CredentialsRepository,
-         staticIpRepository: StaticIpRepository) {
+         staticIpRepository: StaticIpRepository,
+         customConfigRepository: CustomConfigRepository) {
         self.logger = logger
-        self.localDatabase = localDatabase
+        self.customConfigRepository = customConfigRepository
         self.keychainDb = keychainDb
         self.fileDatabase = fileDatabase
         self.advanceRepository = advanceRepository

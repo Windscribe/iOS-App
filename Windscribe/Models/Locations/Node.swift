@@ -106,6 +106,15 @@ struct FavouriteModel: Equatable {
         self.pinnedNodeIp = from.pinnedNodeIp
     }
 
+    init(id: String,
+         pinnedIp: String? = nil,
+         pinnedNodeIp: String? = nil) {
+        self.id = id
+        self.pinnedIp = pinnedIp
+        self.pinnedNodeIp = pinnedNodeIp
+    }
+
+
     func getObject() -> Favourite {
         .init(from: self)
     }

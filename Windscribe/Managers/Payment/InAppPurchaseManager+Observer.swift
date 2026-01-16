@@ -35,8 +35,8 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
             }
             return
         }
-
-        guard let plans = localDatabase.getMobilePlans() else {
+        let plans = mobilePlanRepository.mobilePlans
+        guard plans.count > 0 else {
             let error = InAppPurchaseError.productsFetchFailed("Failed to load mobile plans")
             availableProductsSubject.send(.failed(error: error))
 
@@ -50,7 +50,7 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
         }
 
         let windscribeProducts = products.map { item in
-            WindscribeInAppProduct(product: item, plans: plans.map { MobilePlanModel.init(from: $0) })
+            WindscribeInAppProduct(product: item, plans: plans)
         }
         iapProducts = windscribeProducts
 

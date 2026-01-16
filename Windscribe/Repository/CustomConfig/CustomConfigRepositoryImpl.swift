@@ -12,17 +12,20 @@ import Combine
 class CustomConfigRepositoryImpl: CustomConfigRepository {
     private let fileDatabase: FileDatabase
     private let localDatabase: LocalDatabase
-    private let latencyRepo: LatencyRepository
+    private let portMapRepository: PortMapRepository
     private let logger: FileLogger
 
     private var cancellables = Set<AnyCancellable>()
     var customConfigs = CurrentValueSubject<[CustomConfigModel], Never>([])
 
-    init(fileDatabase: FileDatabase, localDatabase: LocalDatabase, latencyRepo: LatencyRepository, logger: FileLogger) {
+    init(fileDatabase: FileDatabase,
+         localDatabase: LocalDatabase,
+         logger: FileLogger,
+         portMapRepository: PortMapRepository) {
         self.fileDatabase = fileDatabase
         self.localDatabase = localDatabase
-        self.latencyRepo = latencyRepo
         self.logger = logger
+        self.portMapRepository = portMapRepository
 
         self.localDatabase.getCustomConfigObservable()
             .toPublisher().replaceError(with: [])
@@ -158,7 +161,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     lines.insert("proto \(protocolType.lowercased())", at: remoteLineNumber)
                 }
                 if port == "" {
-                    guard let portsArray = localDatabase.getPorts(protocolType: protocolType) else { throw RepositoryError.invalidConfigData }
+                    guard let portsArray = portMapRepository.getPorts(protocolType: protocolType) else { throw RepositoryError.invalidConfigData }
                     port = portsArray[0]
                 }
 
@@ -212,5 +215,15 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
     func removeCustomConfig(fileId: String) {
         localDatabase.removeCustomConfig(fileId: fileId)
         customConfigs.send(localDatabase.getCustomConfigs().map {$0.getModel()})
+    }
+
+    func getCustomConfig(fileId: String) -> CustomConfigModel? {
+        localDatabase.getCustomConfigs()
+            .first { fileId == $0.id }?
+            .getModel()
+    }
+
+    func saveCustomConfig(customConfig: CustomConfigModel) {
+        localDatabase.saveCustomConfig(customConfig: customConfig.getRealmObject())
     }
 }

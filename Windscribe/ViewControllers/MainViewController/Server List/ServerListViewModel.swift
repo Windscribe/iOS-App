@@ -29,7 +29,6 @@ class ServerListViewModel: ServerListViewModelType {
     private let logger: FileLogger
     private let vpnStateRepository: VPNStateRepository
     private let connectivity: ConnectivityManager
-    private let localDataBase: LocalDatabase
     private let userSessionRepository: UserSessionRepository
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
@@ -39,14 +38,12 @@ class ServerListViewModel: ServerListViewModelType {
     init(logger: FileLogger,
          vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
-         localDataBase: LocalDatabase,
          userSessionRepository: UserSessionRepository,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
-        self.localDataBase = localDataBase
         self.userSessionRepository = userSessionRepository
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager

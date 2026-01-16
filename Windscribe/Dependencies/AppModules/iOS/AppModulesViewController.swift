@@ -97,7 +97,6 @@ class ViewControllerModule: Assembly {
                 viewModel: ConfirmEmailViewModelImpl(
                     userSessionRepository: r.resolve(UserSessionRepository.self)!,
                     sessionManager: r.resolve(SessionManager.self)!,
-                    localDatabase: r.resolve(LocalDatabase.self)!,
                     apiManager: r.resolve(APIManager.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     logger: r.resolve(FileLogger.self)!
@@ -137,7 +136,6 @@ class ViewControllerModule: Assembly {
                     sessionManager: r.resolve(SessionManager.self)!,
                     userSessionRepository: r.resolve(UserSessionRepository.self)!,
                     apiManager: r.resolve(APIManager.self)!,
-                    localDatabase: r.resolve(LocalDatabase.self)!,
                     languageManager: r.resolve(LanguageManager.self)!,
                     logger: r.resolve(FileLogger.self)!,
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
@@ -151,10 +149,10 @@ class ViewControllerModule: Assembly {
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     preferences: r.resolve(Preferences.self)!,
-                    localDatabase: r.resolve(LocalDatabase.self)!,
                     router: r.resolve(ConnectionsNavigationRouter.self)!,
                     protocolManager: r.resolve(ProtocolManagerType.self)!,
-                    dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!
+                    dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!,
+                    portMapRepository: r.resolve(PortMapRepository.self)!
                 )
            )
         }.inObjectScope(.transient)
@@ -180,11 +178,11 @@ class ViewControllerModule: Assembly {
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     connectivity: r.resolve(ConnectivityManager.self)!,
-                    localDatabase: r.resolve(LocalDatabase.self)!,
                     vpnManager: r.resolve(VPNManager.self)!,
                     vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                     protocolManager: r.resolve(ProtocolManagerType.self)!,
-                    wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!
+                    wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
+                    portMapRepository: r.resolve(PortMapRepository.self)!
                 )
             )
         }.inObjectScope(.transient)
@@ -351,7 +349,6 @@ class ViewControllerModule: Assembly {
 
         container.register(NewsFeedView.self) { r in
             NewsFeedView(viewModel: NewsFeedViewModel(
-                localDatabase: r.resolve(LocalDatabase.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
@@ -379,7 +376,6 @@ class ViewControllerModule: Assembly {
             PrivacyInfoView(viewModel: PrivacyInfoViewModelImpl(
                 preferences: r.resolve(Preferences.self)!,
                 networkRepository: r.resolve(WifiNetworkRepository.self)!,
-                localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
@@ -392,7 +388,7 @@ class ViewControllerModule: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
-                localDatabase: r.resolve(LocalDatabase.self)!)
+                customConfigRepository: r.resolve(CustomConfigRepository.self)!)
             )
         }.inObjectScope(.transient)
 
@@ -511,7 +507,7 @@ class ViewControllerModule: Assembly {
                                               lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                               hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                                               preferences: r.resolve(Preferences.self)!,
-                                              localDatabase: r.resolve(LocalDatabase.self)!,
+                                              serverRepository: r.resolve(ServerRepository.self)!,
                                               userSessionRepository: r.resolve(UserSessionRepository.self)! ,
                                               latencyRepository: r.resolve(LatencyRepository.self)!,
                                               languageManager: r.resolve(LanguageManager.self)!)
@@ -521,7 +517,7 @@ class ViewControllerModule: Assembly {
             FavouriteListTableViewDataSourceImpl(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                                  hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                                                  preferences: r.resolve(Preferences.self)!,
-                                                 localDatabase: r.resolve(LocalDatabase.self)!,
+                                                 serverRepository: r.resolve(ServerRepository.self)!,
                                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                                  languageManager: r.resolve(LanguageManager.self)!,
                                                  latencyRepository: r.resolve(LatencyRepository.self)!)

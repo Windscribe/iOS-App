@@ -13,4 +13,5 @@ protocol PortMapRepository {
     var suggestedPorts: SuggestedPortsModel? { get }
 
     func getUpdatedPortMap() async throws -> [PortMapModel]
+    func getPorts(protocolType: String) -> [String]?
 }

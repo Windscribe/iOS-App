@@ -9,17 +9,28 @@
 import Foundation
 import RealmSwift
 import Combine
+import RxSwift
 
 protocol ServerRepository {
     var serverListSubject: CurrentValueSubject<[ServerModel], Never> { get }
     var currentServerModels: [ServerModel] { get }
     var currentGroupModels: [GroupModel] { get }
+    var favouriteListSubject: CurrentValueSubject<[FavouriteModel], Never> { get }
+
     func updatedServers() async throws
     func updateRegions(with regions: [ExportedRegion])
+
+    func getFavorite(from locationId: String) -> FavouriteModel?
+    func getLocationPinned(for groupId: Int) -> String?
+
+    func removeFavorite(with groupId: String)
+    func removeFavorite(with groupId: Int)
+    func saveFavorite(for favourite: FavouriteModel)
 }
 
 class ServerRepositoryImpl: ServerRepository {
     var serverListSubject = CurrentValueSubject<[ServerModel], Never>([])
+    var favouriteListSubject = CurrentValueSubject<[FavouriteModel], Never>([])
 
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
@@ -28,6 +39,7 @@ class ServerRepositoryImpl: ServerRepository {
     private let preferences: Preferences
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
+    private let disposeBag = DisposeBag()
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, userSessionRepository: UserSessionRepository, preferences: Preferences, advanceRepository: AdvanceRepository, logger: FileLogger) {
         self.apiManager = apiManager
@@ -38,6 +50,18 @@ class ServerRepositoryImpl: ServerRepository {
         self.logger = logger
 
         loadInitialServers()
+
+        localDatabase.getFavouriteListObservable()
+            .toPublisher(initialValue: [])
+            .replaceError(with: [])
+            .sink { [weak self] favouriteList in
+                self?.favouriteListSubject.send(
+                    favouriteList
+                        .filter { !$0.isInvalidated }
+                        .map { $0.getModel() }
+                )
+            }
+            .store(in: &cancellables)
     }
 
     var currentServerModels: [ServerModel] {
@@ -129,5 +153,30 @@ class ServerRepositoryImpl: ServerRepository {
             serverListSubject.send(mergedModels)
             return
         }
+    }
+
+    func getFavorite(from locationId: String) -> FavouriteModel? {
+        localDatabase.getFavouriteList()
+            .first { $0.id == locationId }?
+            .getModel()
+    }
+
+    func getLocationPinned(for groupId: Int) -> String? {
+        localDatabase.getFavouriteList().first {
+            $0.id == String(groupId) && $0.pinnedNodeIp != nil
+        }?.pinnedNodeIp
+    }
+
+    func removeFavorite(with groupId: String) {
+        localDatabase.removeFavourite(groupId: groupId)
+    }
+
+    func removeFavorite(with groupId: Int) {
+        removeFavorite(with: "\(groupId)")
+    }
+
+    func saveFavorite(for favourite: FavouriteModel) {
+        localDatabase.saveFavourite(favourite: favourite.getObject())
+            .disposed(by: disposeBag)
     }
 }

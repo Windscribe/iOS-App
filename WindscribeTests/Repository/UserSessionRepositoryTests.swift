@@ -23,9 +23,13 @@ class UserSessionRepositoryTests: XCTestCase {
         mockContainer.register(Preferences.self) { _ in
             return MockPreferences()
         }
+        mockContainer.register(LocalDatabase.self) { _ in
+            return MockLocalDatabase()
+        }
 
         mockContainer.register(UserSessionRepository.self) { r in
-            return UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!)
+            return UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!,
+                                             localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.container)
 
         repository = mockContainer.resolve(UserSessionRepository.self)!
@@ -41,31 +45,31 @@ class UserSessionRepositoryTests: XCTestCase {
 
     func test_updateSession() async {
         // Given
-        let mockSession = createMockSessionModel()
-        let mockSessionSecond = createMockSessionModelSecond()
+        let mockSession = createMockSession()
+        let mockSessionSecond = createMockSessionSecond()
 
         XCTAssertNil(repository.sessionModel, "Session should be nil at the beginning")
         XCTAssertNil(repository.oldSessionModel, "Old Session should be nil at the beginning")
 
-        await repository.update(sessionModel: mockSession)
-        XCTAssertEqual(repository.sessionModel, mockSession, "The session should now update to the new one")
+        await repository.update(session: mockSession)
+        XCTAssertEqual(repository.sessionModel, mockSession.getModel(), "The session should now update to the new one")
         XCTAssertNil(repository.oldSessionModel, "Old Session should still be nil")
 
-        await repository.update(sessionModel: mockSessionSecond)
-        XCTAssertEqual(repository.sessionModel, mockSessionSecond, "The session should now update to the new one")
-        XCTAssertEqual(repository.oldSessionModel, mockSession, "Old Session should now update to the first one")
+        await repository.update(session: mockSessionSecond)
+        XCTAssertEqual(repository.sessionModel, mockSessionSecond.getModel(), "The session should now update to the new one")
+        XCTAssertEqual(repository.oldSessionModel, mockSession.getModel(), "Old Session should now update to the first one")
     }
 
     func test_clearSession() async {
         // Given
-        let mockSession = createMockSessionModel()
-        let mockSessionSecond = createMockSessionModelSecond()
+        let mockSession = createMockSession()
+        let mockSessionSecond = createMockSessionSecond()
 
         XCTAssertNil(repository.sessionModel, "Session should be nil at the beginning")
         XCTAssertNil(repository.oldSessionModel, "Old Session should be nil at the beginning")
 
-        await repository.update(sessionModel: mockSession)
-        await repository.update(sessionModel: mockSessionSecond)
+        await repository.update(session: mockSession)
+        await repository.update(session: mockSessionSecond)
         XCTAssertNotNil(repository.sessionModel, "The session should not be nil after 2 updates")
         XCTAssertNotNil(repository.oldSessionModel, "Old Session should not be nil after 2 updates")
 
@@ -76,35 +80,35 @@ class UserSessionRepositoryTests: XCTestCase {
 
     func test_canAccesstoProLocation() async {
         // Given
-        let mockSession = createMockSessionModel()
-        let mockSessionSecond = createMockSessionModelSecond()
+        let mockSession = createMockSession()
+        let mockSessionSecond = createMockSessionSecond()
 
-        await repository.update(sessionModel: mockSession)
+        await repository.update(session: mockSession)
         XCTAssertTrue(repository.canAccesstoProLocation(), "First Session IS pro and CAN Access to Pro Location")
 
-        await repository.update(sessionModel: mockSessionSecond)
+        await repository.update(session: mockSessionSecond)
         XCTAssertFalse(repository.canAccesstoProLocation(), "Second Session is NOT pro and CANNOT Access to Pro Location")
     }
 
     // MARK: - Helper Methods
 
-    private func createMockSessionModel() -> SessionModel {
+    private func createMockSession() -> Session {
         let session = Session()
         session.userId = "123"
         session.username = "TestUser"
         session.sessionAuthHash = "test-auth-hash"
         session.isPremium = true
         session.locHash = "test-loc-hash"
-        return SessionModel(session: session)
+        return session
     }
 
-    private func createMockSessionModelSecond() -> SessionModel {
+    private func createMockSessionSecond() -> Session {
         let session = Session()
         session.userId = "123"
         session.username = "TestUser"
         session.sessionAuthHash = "test-auth-hash-second"
         session.isPremium = false
         session.locHash = "test-loc-hash-second"
-        return SessionModel(session: session)
+        return session
     }
 }

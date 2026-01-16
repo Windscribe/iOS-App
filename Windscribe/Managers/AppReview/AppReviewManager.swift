@@ -21,15 +21,13 @@ class AppReviewManager: AppReviewManaging {
     }
 
     let preferences: Preferences
-    let localDatabase: LocalDatabase
     let logger: FileLogger
     var reviewCriteria: [AppReviewCriteriaType]
     private var cancellables = Set<AnyCancellable>()
     let reviewRequestTrigger = PassthroughSubject<Void, Never>()
 
-    init (preferences: Preferences, localDatabase: LocalDatabase, logger: FileLogger) {
+    init (preferences: Preferences, logger: FileLogger) {
         self.preferences = preferences
-        self.localDatabase = localDatabase
         self.logger = logger
 
         // Criteria for requesting review can be changed dynamically

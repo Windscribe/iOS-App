@@ -35,13 +35,13 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     @Published var isLoading: Bool = false
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
     private let protocolManager: ProtocolManagerType
     private let preferences: Preferences
     private let wifiNetworkRepository: WifiNetworkRepository
+    private let portMapRepository: PortMapRepository
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -98,7 +98,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
 
     init(
         lookAndFeelRepository: LookAndFeelRepositoryType,
-        localDatabase: LocalDatabase,
+        portMapRepository: PortMapRepository,
         logger: FileLogger,
         userSessionRepository: UserSessionRepository,
         apiManager: APIManager,
@@ -107,7 +107,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         wifiNetworkRepository: WifiNetworkRepository
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
-        self.localDatabase = localDatabase
+        self.portMapRepository = portMapRepository
         self.logger = logger
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
@@ -148,7 +148,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
             return
         }
 
-        guard let portsArray = localDatabase.getPorts(protocolType: protocolName),
+        guard let portsArray = portMapRepository.getPorts(protocolType: protocolName),
               let defaultPort = portsArray.first else {
             logger.logE("ProtocolConnectionResultViewModel", "No ports found for protocol: \(protocolName)")
             return

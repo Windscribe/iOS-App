@@ -73,18 +73,23 @@ class TVViewModels: Assembly {
                              sessionManager: r.resolve(SessionManager.self)!,
                              logger: r.resolve(FileLogger.self)!,
                              languageManager: r.resolve(LanguageManager.self)!,
-                             localDatabase: r.resolve(LocalDatabase.self)!,
                              userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
-            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(ConnectivityManager.self)!, networkRepository: r.resolve(WifiNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!)
+            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!,
+                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                 portMapRepository: r.resolve(PortMapRepository.self)!,
+                                 connectivity: r.resolve(ConnectivityManager.self)!,
+                                 networkRepository: r.resolve(WifiNetworkRepository.self)!,
+                                 languageManager: r.resolve(LanguageManager.self)!,
+                                 protocolManager: r.resolve(ProtocolManagerType.self)!,
+                                 dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ViewLogViewModel.self) { r in
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(UpgradeViewModel.self) { r in
             UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!,
-                                 localDatabase: r.resolve(LocalDatabase.self)!,
                                  apiManager: r.resolve(APIManager.self)!,
                                  sessionManager: r.resolve(SessionManager.self)!,
                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
@@ -108,14 +113,12 @@ class TVViewModels: Assembly {
                                 wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                 ipRepository: r.resolve(IPRepository.self)!,
-                                localDB: r.resolve(LocalDatabase.self)!,
                                 customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
                                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
                                 userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModel.self) { r in
-            MainViewModelImpl(localDatabase: r.resolve(LocalDatabase.self)!,
-                              vpnManager: r.resolve(VPNManager.self)!,
+            MainViewModelImpl(vpnManager: r.resolve(VPNManager.self)!,
                               logger: r.resolve(FileLogger.self)!,
                               serverRepository: r.resolve(ServerRepository.self)!,
                               portMapRepo: r.resolve(PortMapRepository.self)!,
@@ -162,7 +165,6 @@ class TVViewModels: Assembly {
 
         container.register(NewsFeedModelType.self) { r in
             NewsFeedModel(
-                localDatabase: r.resolve(LocalDatabase.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
                 fileLogger: r.resolve(FileLogger.self)!,
                 htmlParser: r.resolve(HTMLParsing.self)!,
@@ -189,7 +191,6 @@ class TVViewModels: Assembly {
         container.register(PrivacyViewModelType.self) { r in
             PrivacyViewModel(preferences: r.resolve(Preferences.self)!,
                              networkRepository: r.resolve(WifiNetworkRepository.self)!,
-                             localDatabase: r.resolve(LocalDatabase.self)!,
                              logger: r.resolve(FileLogger.self)!,
                              portMapRepository: r.resolve(PortMapRepository.self)!)
         }.inObjectScope(.transient)
@@ -214,7 +215,6 @@ class TVViewModels: Assembly {
             ServerListViewModel(logger: r.resolve(FileLogger.self)!,
                                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
-                                localDataBase: r.resolve(LocalDatabase.self)!,
                                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
                                 protocolManager: r.resolve(ProtocolManagerType.self)!)
@@ -239,7 +239,6 @@ class TVViewModels: Assembly {
                             ipRepository: r.resolve(IPRepository.self)!,
                             preferences: r.resolve(Preferences.self)!,
                             locationManager: r.resolve(LocationsManager.self)!,
-                            localDatabase: r.resolve(LocalDatabase.self)!,
                             apiManager: r.resolve(APIManager.self)!,
                             userSessionRepository: r.resolve(UserSessionRepository.self)!,
                             bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,

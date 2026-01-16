@@ -253,6 +253,8 @@
 		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
 		1EDAA9242CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
+		1EDB2CA22F190C0D00A5966D /* MigrationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */; };
+		1EDB2CA32F190C0D00A5966D /* MigrationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */; };
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
@@ -1576,6 +1578,7 @@
 		1ED836DA2F1517AA00CE6D12 /* RobertyFiltersRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertyFiltersRepository.swift; sourceTree = "<group>"; };
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
+		1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationRepository.swift; sourceTree = "<group>"; };
 		1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepository.swift; sourceTree = "<group>"; };
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
 		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
@@ -3100,6 +3103,14 @@
 			path = "Robert Filters";
 			sourceTree = "<group>";
 		};
+		1EDB2CA02F190BFD00A5966D /* Migration */ = {
+			isa = PBXGroup;
+			children = (
+				1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */,
+			);
+			path = Migration;
+			sourceTree = "<group>";
+		};
 		1EE74F852BD94A580031185F /* ShakeData */ = {
 			isa = PBXGroup;
 			children = (
@@ -4126,6 +4137,7 @@
 		C5D983BC2B34C1B10069FF3A /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1EDB2CA02F190BFD00A5966D /* Migration */,
 				1ED836D92F15179A00CE6D12 /* Robert Filters */,
 				1EA80E172EAFE50F0003322D /* BridgeAPI */,
 				1EF7CEFC2EA146DD001AE14E /* VPN State */,
@@ -6598,6 +6610,7 @@
 				59A218712C3C9E22000D89FA /* AppModulesTV.swift in Sources */,
 				1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailAction.swift in Sources */,
 				59FC74702C51699100021CD1 /* ConnectionStateInfo.swift in Sources */,
+				1EDB2CA22F190C0D00A5966D /* MigrationRepository.swift in Sources */,
 				F43374512E4682B000333190 /* ProtocolSwitchModels.swift in Sources */,
 				59FC742F2C5156A000021CD1 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				59A2186A2C3C9C24000D89FA /* PreferencesImpl.swift in Sources */,
@@ -7248,6 +7261,7 @@
 				1E5553BD2D8D883700F16AF0 /* ConnectionStateInfoView.swift in Sources */,
 				1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */,
 				F470F5532E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
+				1EDB2CA32F190C0D00A5966D /* MigrationRepository.swift in Sources */,
 				E90FD02B273977C100721874 /* SearchLocationsView.swift in Sources */,
 				C5592B832B39408E00F2F110 /* IPRepository.swift in Sources */,
 				1EA91DCE2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift in Sources */,

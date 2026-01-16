@@ -65,7 +65,6 @@ class MainViewController: PreferredFocusedViewController {
         setupUI()
         bindViews()
         setupSwipeDownGesture()
-        loadLastConnection()
         sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
         NotificationCenter.default.addObserver(self, selector: #selector(appEnteredForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -390,13 +389,6 @@ class MainViewController: PreferredFocusedViewController {
     func localisation() {
         locationsLabel.text = TextsAsset.Permission.locationPermissionLabel
         upgradeButton.updateText()
-    }
-
-    func loadLastConnection() {
-        viewModel.lastConnection.subscribe(onNext: { lastconnection in
-            self.protocolLabel.text = lastconnection?.protocolType
-            self.portLabel.text = lastconnection?.port
-        }).disposed(by: disposeBag)
     }
 
     func noSelectedNodeToConnect() -> Bool {

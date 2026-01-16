@@ -44,7 +44,6 @@ class AccountViewModel: AccountViewModelType {
     let apiCallManager: APIManager
     let logger: FileLogger
     let sessionManager: SessionManager
-    let localDatabase: LocalDatabase
     let userSessionRepository: UserSessionRepository
 
     var sections = [AccountSectionItem]()
@@ -61,12 +60,10 @@ class AccountViewModel: AccountViewModelType {
          sessionManager: SessionManager,
          logger: FileLogger,
          languageManager: LanguageManager,
-         localDatabase: LocalDatabase,
          userSessionRepository: UserSessionRepository) {
         self.apiCallManager = apiCallManager
         self.logger = logger
         self.sessionManager = sessionManager
-        self.localDatabase = localDatabase
         self.alertManager = alertManager
         self.userSessionRepository = userSessionRepository
 

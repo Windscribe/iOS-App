@@ -28,11 +28,11 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
 
     // MARK: - Dependencies
     private let connectivity: ConnectivityManager
-    private let localDatabase: LocalDatabase
     private let vpnManager: VPNManager
     private let vpnStateRepository: VPNStateRepository
     private let protocolManager: ProtocolManagerType
     private let wifiNetworkRepository: WifiNetworkRepository
+    private let portMapRepository: PortMapRepository
 
     private let disposeBag = DisposeBag()
 
@@ -40,17 +40,17 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          connectivity: ConnectivityManager,
-         localDatabase: LocalDatabase,
          vpnManager: VPNManager,
          vpnStateRepository: VPNStateRepository,
          protocolManager: ProtocolManagerType,
-         wifiNetworkRepository: WifiNetworkRepository) {
+         wifiNetworkRepository: WifiNetworkRepository,
+         portMapRepository: PortMapRepository) {
         self.connectivity = connectivity
-        self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.vpnStateRepository = vpnStateRepository
         self.protocolManager = protocolManager
         self.wifiNetworkRepository = wifiNetworkRepository
+        self.portMapRepository = portMapRepository
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -148,7 +148,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     }
 
     private func getPorts(by protocolType: String) -> [String] {
-        guard let portsArray = localDatabase.getPorts(protocolType: protocolType) else { return [] }
+        guard let portsArray = portMapRepository.getPorts(protocolType: protocolType) else { return [] }
         return portsArray
     }
 

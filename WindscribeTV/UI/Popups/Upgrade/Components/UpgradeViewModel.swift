@@ -51,7 +51,6 @@ protocol UpgradeViewModel {
 
 class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, ConfirmEmailViewControllerDelegate {
     let alertManager: AlertManagerV2
-    let localDatabase: LocalDatabase
     let apiManager: APIManager
     let sessionManager: SessionManager
     let userSessionRepository: UserSessionRepository
@@ -77,7 +76,6 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     private var mobilePlans: [MobilePlanModel]?
 
     init(alertManager: AlertManagerV2,
-         localDatabase: LocalDatabase,
          apiManager: APIManager,
          sessionManager: SessionManager,
          userSessionRepository: UserSessionRepository,
@@ -88,7 +86,6 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
          logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager
-        self.localDatabase = localDatabase
         self.apiManager = apiManager
         self.userSessionRepository = userSessionRepository
         self.sessionManager = sessionManager

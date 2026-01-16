@@ -43,20 +43,19 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
     private let userSessionRepository: UserSessionRepository
     private let languageManager: LanguageManager
     private let latencyRepository: LatencyRepository
-
-    let localDatabase: LocalDatabase
+    private let serverRepository: ServerRepository
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
-         localDatabase: LocalDatabase,
+         serverRepository: ServerRepository,
          userSessionRepository: UserSessionRepository,
          languageManager: LanguageManager,
          latencyRepository: LatencyRepository) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.hapticFeedbackManager = hapticFeedbackManager
         self.preferences = preferences
-        self.localDatabase = localDatabase
+        self.serverRepository = serverRepository
         self.userSessionRepository = userSessionRepository
         self.languageManager = languageManager
         self.latencyRepository = latencyRepository
@@ -187,17 +186,13 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
 
 extension FavouriteListTableViewDataSourceImpl: NodeTableViewCellModelDelegate {
     func saveAsFavorite(groupId: String) {
-        Task {
-            localDatabase.saveFavourite(favourite: Favourite(id: "\(groupId)"))
-        }
+        serverRepository.saveFavorite(for: FavouriteModel(id: "\(groupId)"))
     }
 
     func removeFavorite(groupId: String) {
         let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            Task { @MainActor in
-                self.localDatabase.removeFavourite(groupId: "\(groupId)")
-            }
+            self.serverRepository.removeFavorite(with: groupId)
         }
         AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
                                       message: TextsAsset.Favorites.removeMessage,
