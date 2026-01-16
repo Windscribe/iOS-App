@@ -19,7 +19,6 @@ class WifiManager {
 
     lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)
 
-    private lazy var localDatabase = Assembler.resolve(LocalDatabase.self)
     private lazy var logger = Assembler.resolve(FileLogger.self)
     private lazy var vpnManager = Assembler.resolve(VPNManager.self)
     private let wifiNetworkRepository = Assembler.resolve(WifiNetworkRepository.self)
@@ -87,7 +86,7 @@ class WifiManager {
                       let wifiSSID = wifiSSID else { return }
 
                 var defaultProtocol = TextsAsset.General.protocols[0]
-                var defaultPort = self.localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+                var defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
                 if let suggestedPorts = self.portMapRepository.suggestedPorts,
                    suggestedPorts.protocolType != "",
@@ -163,7 +162,7 @@ class WifiManager {
 
     private func saveNewNetwork(wifiSSID: String) {
         let defaultProtocol = TextsAsset.General.protocols[0]
-        let defaultPort = localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+        let defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
         let status = !autoSecureNewNetworks.value
         logger.logI("WifiManager", "Adding \"\(wifiSSID)\" to \(status ? "Unsecured" : "secured") networks database.")
         wifiNetworkRepository.addNetwork(wifiSSID: wifiSSID,

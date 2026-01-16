@@ -12,12 +12,12 @@ import RealmSwift
 
 struct CustomConfigModel: Equatable {
     let id: String
-    let name: String
+    var name: String
     let serverAddress: String
     let protocolType: String
     let port: String
-    let username: String
-    let password: String
+    var username: String
+    var password: String
     let authRequired: Bool
 
     init(from: CustomConfig) {
@@ -29,6 +29,17 @@ struct CustomConfigModel: Equatable {
         self.username = from.username
         self.password = from.password
         self.authRequired = from.authRequired
+    }
+
+    func getRealmObject() -> CustomConfig {
+        .init(id: id,
+              name: name,
+              serverAddress: serverAddress,
+              protocolType: protocolType,
+              port: port,
+              username: username,
+              password: password,
+              authRequired: authRequired)
     }
 }
 

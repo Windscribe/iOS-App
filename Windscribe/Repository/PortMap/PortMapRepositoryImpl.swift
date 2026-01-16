@@ -48,4 +48,12 @@ class PortMapRepositoryImpl: PortMapRepository {
             }
         }
     }
+
+    func getPorts(protocolType: String) -> [String]? {
+        let selectedProtocolPorts = currentPortMaps.filter { $0.heading == protocolType }
+        var portsArray = [String]()
+        guard let portsList = selectedProtocolPorts.first?.ports else { return nil }
+        portsArray.append(contentsOf: portsList)
+        return portsArray
+    }
 }

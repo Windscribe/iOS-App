@@ -9,6 +9,7 @@
 import Foundation
 
 protocol MobilePlanRepository {
+    var mobilePlans: [MobilePlanModel] { get }
     func getMobilePlans(promo: String?) async throws -> [MobilePlanModel]
 }
 
@@ -17,10 +18,21 @@ class MobilePlanRepositoryImpl: MobilePlanRepository {
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
 
+    var mobilePlans: [MobilePlanModel] = []
+
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
+
+        loadMobilePlans()
+    }
+
+    private func loadMobilePlans() {
+        let localPlans = localDatabase.getMobilePlans() ?? []
+        mobilePlans = localPlans
+            .filter { !$0.isInvalidated }
+            .map { $0.getModel() }
     }
 
     func getMobilePlans(promo: String?) async throws -> [MobilePlanModel] {
@@ -29,6 +41,8 @@ class MobilePlanRepositoryImpl: MobilePlanRepository {
             let plans = Array(plansList.mobilePlans)
             let planModels = plans.map { MobilePlanModel.init(from: $0) }
             localDatabase.saveMobilePlans(mobilePlansList: plans)
+
+            loadMobilePlans()
 
             return planModels
         } catch {

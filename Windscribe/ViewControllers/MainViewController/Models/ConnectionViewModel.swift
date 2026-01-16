@@ -103,7 +103,6 @@ class ConnectionViewModel: ConnectionViewModelType {
     let wifiNetworkRepository: WifiNetworkRepository
     let credentialsRepository: CredentialsRepository
     let ipRepository: IPRepository
-    let localDB: LocalDatabase
     let appReviewManager: AppReviewManaging
     let customSoundPlaybackManager: CustomSoundPlaybackManaging
     let privacyStateManager: PrivacyStateManaging
@@ -129,7 +128,6 @@ class ConnectionViewModel: ConnectionViewModelType {
          wifiNetworkRepository: WifiNetworkRepository,
          credentialsRepository: CredentialsRepository,
          ipRepository: IPRepository,
-         localDB: LocalDatabase,
          customSoundPlaybackManager: CustomSoundPlaybackManaging,
          privacyStateManager: PrivacyStateManaging,
          userSessionRepository: UserSessionRepository) {
@@ -145,12 +143,11 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.wifiNetworkRepository = wifiNetworkRepository
         self.ipRepository = ipRepository
         self.credentialsRepository = credentialsRepository
-        self.localDB = localDB
         self.customSoundPlaybackManager = customSoundPlaybackManager
         self.privacyStateManager = privacyStateManager
         self.userSessionRepository = userSessionRepository
 
-        appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
+        appReviewManager = AppReviewManager(preferences: preferences, logger: logger)
 
         showFailedPinIpTrigger = vpnManager.showFailedPinIpTrigger
 

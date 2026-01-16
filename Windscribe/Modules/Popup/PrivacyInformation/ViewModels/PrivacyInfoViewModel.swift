@@ -22,7 +22,6 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
 
     private let preferences: Preferences
     private let networkRepository: WifiNetworkRepository
-    private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let privacyStateManager: PrivacyStateManaging
@@ -31,14 +30,12 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
 
     init(preferences: Preferences,
          networkRepository: WifiNetworkRepository,
-         localDatabase: LocalDatabase,
          logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          privacyStateManager: PrivacyStateManaging,
          portMapRepository: PortMapRepository) {
         self.preferences = preferences
         self.networkRepository = networkRepository
-        self.localDatabase = localDatabase
         self.logger = logger
         self.lookAndFeelRepository = lookAndFeelRepository
         self.privacyStateManager = privacyStateManager
@@ -77,7 +74,7 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
 
     private func setupDefaultProtocol() {
         var defaultProtocol = TextsAsset.General.protocols[0]
-        var defaultPort = localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+        var defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
         if let suggestedPorts = portMapRepository.suggestedPorts,
            suggestedPorts.protocolType != "",

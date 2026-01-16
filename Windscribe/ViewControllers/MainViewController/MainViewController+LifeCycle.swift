@@ -27,7 +27,6 @@ extension MainViewController {
         loadServerList()
         loadStaticIPs()
         loadCustomConfigs()
-        loadLastConnection()
         sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
         setupIntentsForSiri()

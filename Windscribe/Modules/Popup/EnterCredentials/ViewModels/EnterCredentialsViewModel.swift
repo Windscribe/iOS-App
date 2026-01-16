@@ -36,17 +36,17 @@ final class EnterCredentialsViewModelImpl: EnterCredentialsViewModel {
     private let logger: FileLogger
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let vpnManager: VPNManager
-    private let localDatabase: LocalDatabase
+    private let customConfigRepository: CustomConfigRepository
     private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          vpnManager: VPNManager,
-         localDatabase: LocalDatabase) {
+         customConfigRepository: CustomConfigRepository) {
         self.logger = logger
         self.lookAndFeelRepository = lookAndFeelRepository
         self.vpnManager = vpnManager
-        self.localDatabase = localDatabase
+        self.customConfigRepository = customConfigRepository
 
         bind()
     }
@@ -69,36 +69,26 @@ final class EnterCredentialsViewModelImpl: EnterCredentialsViewModel {
     }
 
     func submit() {
-        guard  let customConfigId = displayingCustomConfig?.id else {
-            logger.logE("EnterCredentialsViewModel", "Submit failed - missing required data")
-            return
-        }
-
-        let username = username.base64Encoded()
-        let password = password.base64Encoded()
-
-        logger.logD("EnterCredentialsViewModel", "Submitting credentials for config: \(customConfigId)")
-
-        // Update config name if title is provided
-        if !title.isEmpty {
-            localDatabase.updateCustomConfigName(customConfigId: customConfigId, name: title)
-        }
-
-        // Validate config has required fields
-        guard displayingCustomConfig?.id != nil,
+        guard var updatedConfig = displayingCustomConfig,
+                displayingCustomConfig?.id != nil,
               displayingCustomConfig?.protocolType != nil,
-              displayingCustomConfig?.port != nil
-        else {
-            logger.logE("EnterCredentialsViewModel", "Submit failed - invalid config")
+              displayingCustomConfig?.port != nil else {
+            logger.logE("EnterCredentialsViewModel", "Submit failed - missing required data - invalid config")
             return
         }
 
         // Update credentials if username is provided
         if !username.isEmpty {
-            localDatabase.updateCustomConfigCredentials(customConfigId: customConfigId,
-                                                        username: username,
-                                                        password: password)
+            updatedConfig.username = username.base64Encoded()
+            updatedConfig.password = password.base64Encoded()
         }
+
+        // Update config name if title is provided
+        if !title.isEmpty {
+            updatedConfig.name = title
+        }
+
+        customConfigRepository.saveCustomConfig(customConfig: updatedConfig)
 
         // Configure VPN if this is a new config (not updating)
         if !isUpdating {

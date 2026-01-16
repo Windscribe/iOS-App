@@ -129,6 +129,10 @@ struct DataLeftModel {
         sipCount.removeAll()
         sipCount.append(objectsIn: array)
     }
+
+    func getModel() -> SessionModel {
+        .init(from: self)
+    }
 }
 
 class OldSession: Session {
@@ -236,25 +240,25 @@ struct SessionModel: Equatable {
         status == 3
     }
 
-    init(session: Session) {
-        sessionAuthHash = session.sessionAuthHash
-        username = session.username
-        userId = session.userId
-        trafficUsed = session.trafficUsed
-        trafficMax = session.trafficMax
-        status = session.status
-        email = session.email
-        emailStatus = session.emailStatus
-        billingPlanId = session.billingPlanId
-        isPremium = session.isPremium
-        premiumExpiryDate = session.premiumExpiryDate
-        regDate = session.regDate
-        lastReset = session.lastReset
-        locRev = session.locRev
-        locHash = session.locHash
+    init(from: Session) {
+        sessionAuthHash = from.sessionAuthHash
+        username = from.username
+        userId = from.userId
+        trafficUsed = from.trafficUsed
+        trafficMax = from.trafficMax
+        status = from.status
+        email = from.email
+        emailStatus = from.emailStatus
+        billingPlanId = from.billingPlanId
+        isPremium = from.isPremium
+        premiumExpiryDate = from.premiumExpiryDate
+        regDate = from.regDate
+        lastReset = from.lastReset
+        locRev = from.locRev
+        locHash = from.locHash
 
-        alc = Array(session.alc)
-        sipCount = Array(session.sipCount.map { SipCountModel(countNumber: $0.countNumber)})
+        alc = Array(from.alc)
+        sipCount = Array(from.sipCount.map { SipCountModel(countNumber: $0.countNumber)})
 
         planType = isUserPro ? "1" : "0"
     }

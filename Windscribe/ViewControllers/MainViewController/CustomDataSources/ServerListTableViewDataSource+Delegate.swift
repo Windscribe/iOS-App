@@ -53,14 +53,13 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     private let userSessionRepository: UserSessionRepository
     private let latencyRepository: LatencyRepository
     private let languageManager: LanguageManager
-
-    let localDatabase: LocalDatabase
+    private let serverRepository: ServerRepository
 
     init(locationsManager: LocationsManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
-         localDatabase: LocalDatabase,
+         serverRepository: ServerRepository,
          userSessionRepository: UserSessionRepository,
          latencyRepository: LatencyRepository,
          languageManager: LanguageManager) {
@@ -68,7 +67,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         self.lookAndFeelRepository = lookAndFeelRepository
         self.hapticFeedbackManager = hapticFeedbackManager
         self.preferences = preferences
-        self.localDatabase = localDatabase
+        self.serverRepository = serverRepository
         self.userSessionRepository = userSessionRepository
         self.latencyRepository = latencyRepository
         self.languageManager = languageManager
@@ -102,12 +101,11 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             }
             .store(in: &cancellables)
 
-        localDatabase.getFavouriteListObservable()
-            .toPublisherIncludingEmpty()
-            .replaceError(with: [])
+        serverRepository.favouriteListSubject
             .sink {[weak self] _ in
-                self?.delegate?.reloadServerListTableView()
-                self?.favList = self?.localDatabase.getFavouriteList().map { $0.getModel() } ?? []
+                guard let self = self else { return }
+                self.delegate?.reloadServerListTableView()
+                self.favList = self.serverRepository.favouriteListSubject.value
             }
             .store(in: &cancellables)
 
@@ -318,17 +316,13 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
 extension ServerListTableViewDataSourceImpl: NodeTableViewCellModelDelegate {
     func saveAsFavorite(groupId: String) {
-        Task {
-            localDatabase.saveFavourite(favourite: Favourite(id: "\(groupId)"))
-        }
+        serverRepository.saveFavorite(for: FavouriteModel(id: "\(groupId)"))
     }
 
     func removeFavorite(groupId: String) {
         let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            Task { @MainActor in
-                self.localDatabase.removeFavourite(groupId: "\(groupId)")
-            }
+            self.serverRepository.removeFavorite(with: groupId)
         }
         AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
                                       message: TextsAsset.Favorites.removeMessage,

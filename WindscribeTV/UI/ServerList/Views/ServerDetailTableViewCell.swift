@@ -44,7 +44,6 @@ class ServerDetailTableViewCell: UITableViewCell {
 
     @IBOutlet var connectButtonTrailing: NSLayoutConstraint!
     let latencyRepository = Assembler.resolve(LatencyRepository.self)
-    lazy var localDB = Assembler.resolve(LocalDatabase.self)
     lazy var preferences = Assembler.resolve(Preferences.self)
     lazy var serverRepository = Assembler.resolve(ServerRepository.self)
     lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)

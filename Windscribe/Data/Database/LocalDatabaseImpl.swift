@@ -228,14 +228,6 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObject(object: filters)
     }
 
-    func getLastConnection() -> Observable<VPNConnection?> {
-        return getSafeRealmObservable(type: VPNConnection.self)
-    }
-
-    func saveLastConnetion(vpnConnection: VPNConnection) -> Disposable {
-        return updateRealmObject(object: vpnConnection)
-    }
-
     func saveFavourite(favourite: Favourite) -> Disposable {
         return updateRealmObject(object: favourite)
     }
@@ -290,15 +282,6 @@ class LocalDatabaseImpl: LocalDatabase {
                 }
             }
         }
-    }
-
-    func getPorts(protocolType: String) -> [String]? {
-        guard let ports = getPortMap() else { return nil }
-        let selectedProtocolPorts = ports.filter { $0.heading == protocolType }
-        var portsArray = [String]()
-        guard let portsList = selectedProtocolPorts.first?.ports else { return nil }
-        portsArray.append(contentsOf: portsList)
-        return portsArray
     }
 
     func toggleRobertRule(id: String) {
@@ -390,33 +373,6 @@ class LocalDatabaseImpl: LocalDatabase {
             let realm = try Realm()
             try realm.safeWrite {
                 updated.dontAskAgainForPreferredProtocol = status
-            }
-        } catch {
-            fatalError("")
-        }
-    }
-
-    func updateCustomConfigName(customConfigId: String, name: String) {
-        guard let customConfig = getRealmObject(type: CustomConfig.self, primaryKey: customConfigId) else { return }
-
-        do {
-            let realm = try Realm()
-            try realm.safeWrite {
-                customConfig.name = name
-            }
-        } catch {
-            fatalError("")
-        }
-    }
-
-    func updateCustomConfigCredentials(customConfigId: String, username: String, password: String) {
-        guard let customConfig = getRealmObject(type: CustomConfig.self, primaryKey: customConfigId) else { return }
-
-        do {
-            let realm = try Realm()
-            try realm.safeWrite {
-                customConfig.username = username
-                customConfig.password = password
             }
         } catch {
             fatalError("")

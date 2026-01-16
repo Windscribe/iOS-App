@@ -87,7 +87,10 @@ class NotificationRepositoryImpl: NotificationRepository {
     }
 
     func readNotice(with id: Int) {
-        var readNotifications = localDatabase.getReadNotices() ?? [ReadNotice]()
+        var readNotifications = localDatabase.getReadNotices() ?? []
+        guard readNotifications.first(where: { $0.id == id }) == nil else {
+            return
+        }
         let readNotice = ReadNotice(noticeID: id)
         readNotifications.append(readNotice)
         localDatabase.saveReadNotices(readNotices: readNotifications)

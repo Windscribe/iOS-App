@@ -35,7 +35,6 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     private let protocolManager: ProtocolManagerType
     private let vpnStateRepository: VPNStateRepository
     private let vpnManager: VPNManager
-    private let localDatabase: LocalDatabase
     private let wifiNetworkRepository: WifiNetworkRepository
     private let logger: FileLogger
 
@@ -51,7 +50,6 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         protocolManager: ProtocolManagerType,
         vpnStateRepository: VPNStateRepository,
         vpnManager: VPNManager,
-        localDatabase: LocalDatabase,
         wifiNetworkRepository: WifiNetworkRepository,
         logger: FileLogger
     ) {
@@ -59,7 +57,6 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         self.protocolManager = protocolManager
         self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
-        self.localDatabase = localDatabase
         self.wifiNetworkRepository = wifiNetworkRepository
         self.logger = logger
 

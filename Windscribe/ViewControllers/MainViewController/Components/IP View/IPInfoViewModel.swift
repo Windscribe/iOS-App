@@ -28,7 +28,6 @@ class IPInfoViewModel: IPInfoViewModelType {
     private let preferences: Preferences
     private let ipRepository: IPRepository
     private let locationManager: LocationsManager
-    private let localDatabase: LocalDatabase
     private let apiManager: APIManager
     private let userSessionRepository: UserSessionRepository
     private let bridgeApiRepository: BridgeApiRepository
@@ -52,7 +51,6 @@ class IPInfoViewModel: IPInfoViewModelType {
          ipRepository: IPRepository,
          preferences: Preferences,
          locationManager: LocationsManager,
-         localDatabase: LocalDatabase,
          apiManager: APIManager,
          userSessionRepository: UserSessionRepository,
          bridgeApiRepository: BridgeApiRepository,
@@ -62,7 +60,6 @@ class IPInfoViewModel: IPInfoViewModelType {
         self.preferences = preferences
         self.locationManager = locationManager
         self.ipRepository = ipRepository
-        self.localDatabase = localDatabase
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.bridgeApiRepository = bridgeApiRepository
@@ -87,12 +84,7 @@ class IPInfoViewModel: IPInfoViewModelType {
             })
             .store(in: &cancellables)
 
-        let favouriteListPublisher = localDatabase.getFavouriteListObservable()
-            .toPublisher(initialValue: [])
-            .replaceError(with: [])
-            .eraseToAnyPublisher()
-
-        favouriteListPublisher.combineLatest(locationManager.selectedLocationUpdated)
+        serverRepository.favouriteListSubject.combineLatest(locationManager.selectedLocationUpdated)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else { return }
@@ -132,7 +124,7 @@ class IPInfoViewModel: IPInfoViewModelType {
     }
 
     private func isLocationPinned(groupId: String) -> Bool {
-        let favourites = localDatabase.getFavouriteList()
+        let favourites = serverRepository.favouriteListSubject.value
         return favourites.first { $0.id == groupId &&  $0.pinnedIp != nil } != nil
     }
 
@@ -145,7 +137,7 @@ class IPInfoViewModel: IPInfoViewModelType {
     private func performPinIp() async {
         let groupId = locationManager.getLastSelectedLocation()
         if isLocationPinned(groupId: groupId) {
-            localDatabase.removeFavourite(groupId: groupId)
+            serverRepository.removeFavorite(with: groupId)
             return
         } else {
             guard let pinnedIp = ipAddressSubject.value else { return }
@@ -153,8 +145,8 @@ class IPInfoViewModel: IPInfoViewModelType {
                 _ = try await apiManager.pinIp(ip: pinnedIp)
                 logger.logI("IPInfoViewModel", "Pin IP request successful")
                 let nodeIp = preferences.getLastNodeIP()
-                localDatabase.saveFavourite(favourite: Favourite(id: groupId, pinnedIp: pinnedIp, pinnedNodeIp: nodeIp))
-                    .disposed(by: disposeBag)
+                serverRepository.saveFavorite(for: FavouriteModel(id: groupId,
+                                                                  pinnedIp: pinnedIp, pinnedNodeIp: nodeIp))
             } catch {
                 logger.logE("IPInfoViewModel", "Pin IP request failed: \(error)")
                 actionFailedSubject.send(.pinIp)

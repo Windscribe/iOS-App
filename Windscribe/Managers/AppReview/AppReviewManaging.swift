@@ -11,7 +11,6 @@ import Combine
 
 protocol AppReviewManaging {
     var preferences: Preferences { get }
-    var localDatabase: LocalDatabase { get }
     var logger: FileLogger { get }
 
     var reviewRequestTrigger: PassthroughSubject<Void, Never> { get }

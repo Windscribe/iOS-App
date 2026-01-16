@@ -35,7 +35,6 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     // MARK: Dependencies
 
     private let alertManager: AlertManagerV2
-    private let localDatabase: LocalDatabase
     private let apiManager: APIManager
     private let upgradeRouter: UpgradeRouter
     private let sessionManager: SessionManager
@@ -64,7 +63,6 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private let disposeBag = DisposeBag()
 
     init(alertManager: AlertManagerV2,
-         localDatabase: LocalDatabase,
          apiManager: APIManager,
          upgradeRouter: UpgradeRouter,
          sessionManager: SessionManager,
@@ -75,7 +73,6 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
          lookAndFeelRepository: LookAndFeelRepositoryType,
          userSessionRepository: UserSessionRepository) {
         self.alertManager = alertManager
-        self.localDatabase = localDatabase
         self.apiManager = apiManager
         self.upgradeRouter = upgradeRouter
         self.sessionManager = sessionManager

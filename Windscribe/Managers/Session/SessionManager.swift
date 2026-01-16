@@ -34,7 +34,6 @@ class SessionManagerImpl: SessionManager {
     private let wgCredentials: WgCredentials
     private let logger: FileLogger
     private let apiManager: APIManager
-    private let localDatabase: LocalDatabase
     private let credentialsRepo: CredentialsRepository
     private let serverRepo: ServerRepository
     private let staticIPRepo: StaticIpRepository
@@ -53,7 +52,6 @@ class SessionManagerImpl: SessionManager {
     init (wgCredentials: WgCredentials,
           logger: FileLogger,
           apiManager: APIManager,
-          localDatabase: LocalDatabase,
           credentialsRepo: CredentialsRepository,
           serverRepo: ServerRepository,
           staticIPRepo: StaticIpRepository,
@@ -68,7 +66,6 @@ class SessionManagerImpl: SessionManager {
         self.wgCredentials = wgCredentials
         self.logger = logger
         self.apiManager = apiManager
-        self.localDatabase = localDatabase
         self.credentialsRepo = credentialsRepo
         self.serverRepo = serverRepo
         self.staticIPRepo = staticIPRepo
@@ -105,16 +102,10 @@ class SessionManagerImpl: SessionManager {
         Task { @MainActor in
             guard preferences.getSessionAuthHash() != nil else { return }
 
-            guard let currentSession = localDatabase.getSessionSync() else {
+            guard await userSessionRepository.syncSession() else {
                 self.logoutUser()
                 return
             }
-
-            if userSessionRepository.sessionModel == nil {
-                await userSessionRepository.update(sessionModel: SessionModel(session: currentSession))
-            }
-
-            localDatabase.saveOldSession()
 
             do {
                 try await self.updateSession()
@@ -150,7 +141,7 @@ class SessionManagerImpl: SessionManager {
         logger.logI("SessionManager", "Session updated for \(session.username)")
 
         Task {
-            await processUpdatedSession(session: session)
+            await updateFrom(session: session)
         }
         sessionFetchInProgress = false
     }
@@ -167,14 +158,7 @@ class SessionManagerImpl: SessionManager {
     }
 
     func updateFrom(session: Session) async {
-        await processUpdatedSession(session: session)
-    }
-
-    private func processUpdatedSession(session: Session) async {
-        localDatabase.saveOldSession()
-        localDatabase.saveSession(session: session)
-        let model = SessionModel(session: session)
-        await userSessionRepository.update(sessionModel: model)
+        await userSessionRepository.update(session: session)
     }
 
     func listenForSessionChanges() {
@@ -224,11 +208,10 @@ class SessionManagerImpl: SessionManager {
     func checkForSessionChange() async {
         logger.logD("SessionManager", "Comparing new session with old session.")
         guard let newSession = userSessionRepository.sessionModel,
-              let oldLocalSession = localDatabase.getOldSession() else {
+              let oldSession = userSessionRepository.oldSessionModel else {
             logger.logI("SessionManager", "No old session found")
             return
         }
-        let oldSession = SessionModel(session: oldLocalSession)
         if oldSession.locHash != newSession.locHash {
             try? await serverRepo.updatedServers()
         }
@@ -337,8 +320,8 @@ class SessionManagerImpl: SessionManager {
         preferences.saveConnectionCount(count: 0)
         Assembler.resolve(PushNotificationManager.self).setNotificationCount(count: 0)
 
-        // Clear the local data base
-        localDatabase.clean()
+        // Clear the user information
+        userSessionRepository.clean()
 
         // Clearn favourites, Saved session location
         preferences.clearFavourites()

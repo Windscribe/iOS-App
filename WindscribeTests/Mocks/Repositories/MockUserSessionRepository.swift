@@ -33,10 +33,10 @@ class MockUserSessionRepository: UserSessionRepository {
 
     // MARK: UserSessionRepository Protocol
 
-    func update(sessionModel: SessionModel) {
+    func update(session: Session) async {
         updateCalled = true
         self.oldSessionModel = self.sessionModel
-        self.sessionModel = sessionModel
+        self.sessionModel = session.getModel()
         sessionModelSubject.send(sessionModel)
     }
 
@@ -53,7 +53,8 @@ class MockUserSessionRepository: UserSessionRepository {
         mockSession.userId = "123"
         mockSession.username = "TestUser"
         mockSession.sessionAuthHash = sessionAuth ?? "mock-auth-hash"
-        return SessionModel(session: mockSession)
+        sessionModel = mockSession.getModel()
+        return mockSession.getModel()
     }
 
     // MARK: Helper Methods
@@ -63,7 +64,7 @@ class MockUserSessionRepository: UserSessionRepository {
         mockSession.userId = userId
         mockSession.username = username
         mockSession.isPremium = isPremium
-        self.sessionModel = SessionModel(session: mockSession)
+        self.sessionModel = mockSession.getModel()
     }
 
     func reset() {
@@ -74,5 +75,13 @@ class MockUserSessionRepository: UserSessionRepository {
         lastUpdateSession = nil
         shouldThrowError = false
         errorToThrow = Errors.notDefined
+    }
+
+    func syncSession() async -> Bool {
+        false
+    }
+
+    func clean() {
+
     }
 }

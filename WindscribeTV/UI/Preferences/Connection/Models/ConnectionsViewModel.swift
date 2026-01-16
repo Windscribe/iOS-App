@@ -56,7 +56,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     // MARK: - Dependencies
     private let preferences: Preferences
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let localDb: LocalDatabase
+    private let portMapRepository: PortMapRepository
     private let connectivity: ConnectivityManager
     private let networkRepository: WifiNetworkRepository
     private let languageManager: LanguageManager
@@ -81,7 +81,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     init(preferences: Preferences,
          lookAndFeelRepository: LookAndFeelRepositoryType,
-         localDb: LocalDatabase,
+         portMapRepository: PortMapRepository,
          connectivity: ConnectivityManager,
          networkRepository: WifiNetworkRepository,
          languageManager: LanguageManager,
@@ -89,7 +89,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
          dnsSettingsManager: DNSSettingsManagerType) {
         self.preferences = preferences
         self.lookAndFeelRepository = lookAndFeelRepository
-        self.localDb = localDb
+        self.portMapRepository = portMapRepository
         self.connectivity = connectivity
         self.networkRepository = networkRepository
         self.languageManager = languageManager
@@ -238,7 +238,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     func updateProtocol(value: String) {
         preferences.saveSelectedProtocol(selectedProtocol: value)
-        if let port = localDb.getPorts(protocolType: value) {
+        if let port = portMapRepository.getPorts(protocolType: value) {
             preferences.saveSelectedPort(port: port[0])
         }
         Task {
@@ -262,7 +262,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func getPorts() -> [String] {
-        return localDb.getPorts(protocolType: getCurrentProtocol()) ?? []
+        return portMapRepository.getPorts(protocolType: getCurrentProtocol()) ?? []
     }
 
     func getProtocols() -> [String] {
@@ -270,7 +270,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func getPort(by protocolType: String) -> [String] {
-        guard let portsArray = localDb.getPorts(protocolType: protocolType) else { return [] }
+        guard let portsArray = portMapRepository.getPorts(protocolType: protocolType) else { return [] }
         return portsArray
     }
 

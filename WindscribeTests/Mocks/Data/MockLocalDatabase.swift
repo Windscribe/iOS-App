@@ -15,10 +15,13 @@ import Combine
 class MockLocalDatabase: LocalDatabase {
 
     let sessionSubject = BehaviorSubject<Windscribe.Session?>(value: nil)
+    let oldSessionSubject = BehaviorSubject<Windscribe.OldSession?>(value: nil)
     let notificationsSubject = BehaviorSubject<[Windscribe.Notice]>(value: [])
     let networksSubject = BehaviorSubject<[Windscribe.WifiNetwork]>(value: [])
+    let readNoticesSubject = BehaviorSubject<[Windscribe.ReadNotice]>(value: [])
 
     var mockServers: [Server]? = []
+    let mockFavoritesSubject = BehaviorSubject<[String: Favourite]>(value: [:])
     // PortMap tracking
     var savePortMapCalled = false
     var saveSuggestedPortsCalled = false
@@ -51,19 +54,6 @@ class MockLocalDatabase: LocalDatabase {
     var lastSavedNetwork: Windscribe.WifiNetwork?
 
     func migrate() {}
-
-    func getSession() -> Observable<Windscribe.Session?> {
-        return sessionSubject.asObservable()
-    }
-
-    func getSessionSync() -> Windscribe.Session? {
-        return try? sessionSubject.value()
-    }
-
-    func saveSession(session: Windscribe.Session) {
-        // Trigger the subject to simulate Realm notification
-        sessionSubject.onNext(session)
-    }
 
     func getMobilePlans() -> [Windscribe.MobilePlan]? {
         return mobilePlansToReturn
@@ -140,14 +130,16 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getReadNotices() -> [Windscribe.ReadNotice]? {
-        return []
+        return try? readNoticesSubject.value()
     }
 
     func getReadNoticesObservable() -> Observable<[Windscribe.ReadNotice]> {
-        return Observable.just([])
+        return readNoticesSubject
     }
 
-    func saveReadNotices(readNotices: [Windscribe.ReadNotice]) {}
+    func saveReadNotices(readNotices: [Windscribe.ReadNotice]) {
+        readNoticesSubject.onNext(readNotices)
+    }
 
     func getIp() -> Observable<Windscribe.MyIP?> {
         return Observable.just(nil)
@@ -193,10 +185,6 @@ class MockLocalDatabase: LocalDatabase {
         return Disposables.create()
     }
 
-    func getLastConnection() -> Observable<Windscribe.VPNConnection?> {
-        return Observable.just(nil)
-    }
-
     func saveLastConnetion(vpnConnection: Windscribe.VPNConnection) -> Disposable {
         return Disposables.create()
     }
@@ -209,10 +197,27 @@ class MockLocalDatabase: LocalDatabase {
 
     func saveOldSession() {
         saveOldSessionCalled = true
+        guard let oldSession = try? sessionSubject.value() else {
+            return
+        }
+        oldSessionSubject.onNext(OldSession(session: oldSession))
     }
 
     func getOldSession() -> Windscribe.OldSession? {
-        return nil
+        return try? oldSessionSubject.value()
+    }
+
+    func getSession() -> Observable<Windscribe.Session?> {
+        return sessionSubject.asObservable()
+    }
+
+    func getSessionSync() -> Windscribe.Session? {
+        return try? sessionSubject.value()
+    }
+
+    func saveSession(session: Windscribe.Session) {
+        // Trigger the subject to simulate Realm notification
+        sessionSubject.onNext(session)
     }
 
     func updateConnectionMode(value: String) {}
@@ -234,19 +239,43 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func saveFavourite(favourite: Windscribe.Favourite) -> any RxSwift.Disposable {
+        guard var favourites = try? mockFavoritesSubject.value() else {
+            return Disposables.create()
+        }
+        favourites[favourite.id] = favourite
+        mockFavoritesSubject.onNext(favourites)
         return Disposables.create()
     }
 
     func getFavouriteListObservable() -> RxSwift.Observable<[Windscribe.Favourite]> {
-        return Observable.just([])
+        return mockFavoritesSubject
+            .map { $0.count > 0 ? Array($0.values) : [] }
+            .asObservable()
     }
 
     func getFavouriteList() -> [Windscribe.Favourite] {
-        return []
+        guard let favourites = try? mockFavoritesSubject.value() else {
+            return []
+        }
+        return favourites
+            .map { $0.value }
     }
 
     func removeFavourite(groupId: String) {
-        // Mock implementation - no-op
+        guard var favourites = try? mockFavoritesSubject.value() else {
+            return
+        }
+        favourites.removeValue(forKey: groupId)
+        mockFavoritesSubject.onNext(favourites)
+        return
+    }
+
+    func getCustomConfigObservable() -> RxSwift.Observable<[Windscribe.CustomConfig]> {
+        return Observable.just([])
+    }
+
+    func getCustomConfig() -> [Windscribe.CustomConfig] {
+        return []
     }
 
     func getCustomConfigObservable() -> RxSwift.Observable<[Windscribe.CustomConfig]> {

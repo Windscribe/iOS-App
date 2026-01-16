@@ -19,18 +19,15 @@ class PrivacyViewModel: PrivacyViewModelType {
 
     let preferences: Preferences
     let networkRepository: WifiNetworkRepository
-    let localDatabase: LocalDatabase
     let logger: FileLogger
     private let portMapRepository: PortMapRepository
 
     init(preferences: Preferences,
          networkRepository: WifiNetworkRepository,
-         localDatabase: LocalDatabase,
          logger: FileLogger,
          portMapRepository: PortMapRepository,) {
         self.preferences = preferences
         self.networkRepository = networkRepository
-        self.localDatabase = localDatabase
         self.logger = logger
         self.portMapRepository = portMapRepository
     }
@@ -47,7 +44,7 @@ class PrivacyViewModel: PrivacyViewModelType {
         preferences.savePrivacyPopupAccepted(bool: true)
         NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
         var defaultProtocol = TextsAsset.General.protocols[0]
-        var defaultPort = localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+        var defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
         if let suggestedPorts = portMapRepository.suggestedPorts,
            suggestedPorts.protocolType != "",

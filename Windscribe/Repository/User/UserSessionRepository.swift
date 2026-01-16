@@ -16,13 +16,17 @@ protocol UserSessionRepository {
     var oldSessionModel: SessionModel? { get }
     var sessionModelSubject: CurrentValueSubject<SessionModel?, Never> { get }
 
-    func update(sessionModel: SessionModel) async
+    func update(session: Session) async
     func clearSession()
     func canAccesstoProLocation() -> Bool
+    func syncSession() async -> Bool
+
+    func clean()
 }
 
 class UserSessionRepositoryImpl: UserSessionRepository {
     private let preferences: Preferences
+    private let localDatabase: LocalDatabase
 
     var sessionModel: SessionModel?
     var oldSessionModel: SessionModel?
@@ -34,19 +38,25 @@ class UserSessionRepositoryImpl: UserSessionRepository {
 
     var keepSessionUpdatedTrigger = PassthroughSubject<Void, Never>()
 
-    init(preferences: Preferences) {
+    init(preferences: Preferences,
+         localDatabase: LocalDatabase) {
         self.preferences = preferences
+        self.localDatabase = localDatabase
     }
 
-    /// This needs to run in the main actor because it can be upgraded from several places at the same time
-    /// That was causing a crash, making it sure to run on a single thread makes it safer
-    @MainActor
-    func update(sessionModel: SessionModel) async {
-        self.oldSessionModel = self.sessionModel
-        self.sessionModel = sessionModel
-        sessionModelSubject.send(sessionModel)
-        if !sessionModel.sessionAuthHash.isEmpty {
-            preferences.saveUserSessionAuth(sessionAuth: sessionModel.sessionAuthHash)
+    func update(session: Session) async {
+        localDatabase.saveOldSession()
+        localDatabase.saveSession(session: session)
+        let model = session.getModel()
+        await MainActor.run {
+            [weak self] in
+               guard let self = self else { return }
+               self.oldSessionModel = self.sessionModel
+               self.sessionModel = model
+               sessionModelSubject.send(model)
+               if !model.sessionAuthHash.isEmpty {
+                   preferences.saveUserSessionAuth(sessionAuth: model.sessionAuthHash)
+               }
         }
     }
 
@@ -57,5 +67,22 @@ class UserSessionRepositoryImpl: UserSessionRepository {
 
     func canAccesstoProLocation() -> Bool {
         sessionModel?.isPremium ?? false
+    }
+
+    func syncSession() async -> Bool {
+        guard let currentSession = localDatabase.getSessionSync() else {
+            return false
+        }
+
+        if sessionModel == nil {
+            await update(session: currentSession)
+        }
+
+        localDatabase.saveOldSession()
+        return true
+    }
+
+    func clean() {
+        localDatabase.clean()
     }
 }

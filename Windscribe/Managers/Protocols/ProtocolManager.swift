@@ -45,7 +45,7 @@ class ProtocolManager: ProtocolManagerType {
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
     private let connectivity: ConnectivityManager
-    private let localDatabase: LocalDatabase
+    private let customConfigRepository: CustomConfigRepository
     private let securedNetwork: WifiNetworkRepository
     private let preferences: Preferences
     private let locationManager: LocationsManager
@@ -95,7 +95,7 @@ class ProtocolManager: ProtocolManagerType {
          connectivity: ConnectivityManager,
          preferences: Preferences,
          securedNetwork: WifiNetworkRepository,
-         localDatabase: LocalDatabase,
+         customConfigRepository: CustomConfigRepository,
          locationManager: LocationsManager,
          portMapRepository: PortMapRepository,
          vpnStateRepository: VPNStateRepository) {
@@ -103,7 +103,7 @@ class ProtocolManager: ProtocolManagerType {
         self.connectivity = connectivity
         self.preferences = preferences
         self.securedNetwork = securedNetwork
-        self.localDatabase = localDatabase
+        self.customConfigRepository = customConfigRepository
         self.locationManager = locationManager
         self.vpnStateRepository = vpnStateRepository
         self.portMapRepository = portMapRepository
@@ -252,7 +252,7 @@ class ProtocolManager: ProtocolManagerType {
         if !locationID.isEmpty,
            let locationType = locationManager.getLocationType(),
            locationType == .custom,
-           let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel() {
+           let config = customConfigRepository.getCustomConfig(fileId: locationID) {
             let protocolName = config.protocolType
             appendPort(proto: protocolName, port: config.port)
             setPriority(proto: protocolName, type: .normal)
@@ -471,7 +471,7 @@ class ProtocolManager: ProtocolManagerType {
         let listProtocol = getAppSupportedProtocol()
         var lstConnection: [ProtocolPort] = []
         for protocolName in listProtocol {
-            if let lstPort = localDatabase.getPorts(protocolType: protocolName),
+            if let lstPort = portMapRepository.getPorts(protocolType: protocolName),
                let firstPort = lstPort.first {
                 lstConnection.append((protocolName, firstPort))
             }

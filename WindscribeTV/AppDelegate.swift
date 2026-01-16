@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var vpnStateRepository: VPNStateRepository = Assembler.resolve(VPNStateRepository.self)
 
-    private lazy var localDatabase: LocalDatabase = Assembler.resolve(LocalDatabase.self)
+    private lazy var migrationRepository: MigrationRepository = Assembler.resolve(MigrationRepository.self)
 
     private lazy var purchaseManager: InAppPurchaseManager = Assembler.resolve(InAppPurchaseManager.self)
 
@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        localDatabase.migrate()
+        migrationRepository.runMigrations()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
         connectivity.refreshNetwork()

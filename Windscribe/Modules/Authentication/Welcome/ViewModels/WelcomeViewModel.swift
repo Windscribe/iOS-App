@@ -106,7 +106,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
                 // Save SSO provider for password reset feature
                 self.preferences.saveSSOProvider(provider: "apple")
-
                 Task {
                     await self.sessionManager.updateFrom(session: session)
                     self.logger.logI("WelcomeViewModel", "Apple sign in successful")

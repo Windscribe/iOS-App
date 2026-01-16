@@ -200,6 +200,44 @@ class NotificationRepositoryTests: XCTestCase {
         // Should not crash or throw
     }
 
+    // MARK: Read notices Tests
+
+    func test_readNotice() async {
+        do {
+            _ = try await repository.getUpdatedNotifications()
+
+            XCTAssertEqual(repository.readNotices.value.count, 0)
+
+            repository.readNotice(with: 1)
+
+            XCTAssertEqual(repository.readNotices.value.count, 1)
+        } catch {
+            XCTFail("Expected success, but got error: \(error)")
+        }
+    }
+
+    func test_readNotice_multiple_times() async {
+        do {
+            _ = try await repository.getUpdatedNotifications()
+
+            XCTAssertEqual(repository.readNotices.value.count, 0)
+
+            repository.readNotice(with: 1)
+
+            XCTAssertEqual(repository.readNotices.value.count, 1)
+
+            repository.readNotice(with: 1)
+
+            XCTAssertEqual(repository.readNotices.value.count, 1)
+
+            repository.readNotice(with: 2)
+
+            XCTAssertEqual(repository.readNotices.value.count, 2)
+        } catch {
+            XCTFail("Expected success, but got error: \(error)")
+        }
+    }
+
     // MARK: Reactive notices Subject Tests
 
     func test_notices_shouldEmitWhenDatabaseChanges() async {

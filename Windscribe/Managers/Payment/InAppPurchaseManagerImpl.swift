@@ -43,17 +43,17 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
     let apiManager: APIManager
     let preferences: Preferences
     let logger: FileLogger
-    let localDatabase: LocalDatabase
+    let mobilePlanRepository: MobilePlanRepository
     let sessionManager: SessionManager
 
     init(apiManager: APIManager,
          preferences: Preferences,
          logger: FileLogger,
-         localDatabase: LocalDatabase,
+         mobilePlanRepository: MobilePlanRepository,
          sessionManager: SessionManager) {
         self.apiManager = apiManager
         self.preferences = preferences
-        self.localDatabase = localDatabase
+        self.mobilePlanRepository = mobilePlanRepository
         self.logger = logger
         self.sessionManager = sessionManager
         super.init()

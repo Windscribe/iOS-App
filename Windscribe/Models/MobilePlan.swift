@@ -55,6 +55,10 @@ import RealmSwift
     override class func primaryKey() -> String? {
         return "extId"
     }
+
+    func getModel() -> MobilePlanModel {
+        .init(from: self)
+    }
 }
 
 struct MobilePlanList: Decodable {

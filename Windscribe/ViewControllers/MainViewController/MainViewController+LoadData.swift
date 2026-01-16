@@ -12,15 +12,6 @@ import RxSwift
 import UIKit
 
 extension MainViewController {
-    func loadLastConnection() {
-        viewModel.lastConnection.subscribe(onNext: { [weak self] lastconnection in
-            self?.connectionStateInfoView.updateProtoPort(ProtocolPort(
-                lastconnection?.protocolType ?? "",
-                lastconnection?.port ?? ""
-            ))
-        }).disposed(by: disposeBag)
-    }
-
     func loadPortMap() {
         let appProtocols = TextsAsset.General.protocols.sorted()
         viewModel.portMapHeadings.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] headings in
