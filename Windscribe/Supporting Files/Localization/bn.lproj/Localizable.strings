@@ -396,7 +396,6 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "Go to the address above on your phone or computer for all support related inquiries." = "সমস্ত সাপোর্ট সম্পর্কিত জিজ্ঞাসাবাদের জন্য আপনার ফোন বা কম্পিউটারে উপরের ঠিকানায় যান।.";
 "Enter Code" = "কোড লিখুন";
 "Enter code here" = "এখানে কোড লিখুন";
-"Login into Windscribe's TV apps with a short code" = "Windscribe-এর TV অ্যাপে একটি সংক্ষিপ্ত কোড ব্যবহার করে লগইন করুন।";
 "Sweet, you should be all good to go now" = "মিষ্টি, এখন যেতে তোমার ভালো হওয়া উচিত";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "এই স্থানটি মেরামতের অধীনে। পরে আবার চেষ্টা করুন অথবা আরও তথ্যের জন্য আমাদের স্ট্যাটাস পৃষ্ঠা দেখুন https://windscribe.com/status";
 "Location Maintenance" = "অবস্থান রক্ষণাবেক্ষণ";
@@ -622,3 +621,5 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "Password Reset" = "পাসওয়ার্ড রিসেট";
 "If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "আপনি যদি নিবন্ধনের সময় ইমেইল প্রদান করে থাকেন, তবে শীঘ্রই একটি পাসওয়ার্ড রিসেট লিংক পাবেন। অনুগ্রহ করে স্প্যাম ফোল্ডারও পরীক্ষা করুন।";
 "Email is required to reset password." = "পাসওয়ার্ড রিসেট করার জন্য ইমেইল প্রয়োজন।";
+
+"Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV অ্যাপে লগ ইন করতে আপনার টিভি স্ক্রিনে দেখানো কোডটি লিখুন";
