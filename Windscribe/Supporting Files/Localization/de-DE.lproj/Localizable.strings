@@ -363,7 +363,6 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Gehe auf die oben genannte Adresse auf deinem Telefon oder Computer für alle supportbezogenen Anfragen.";
 "Enter Code" = "Code eingeben";
 "Enter code here" = "Geben Sie hier den Code ein";
-"Login into Windscribe's TV apps with a short code" = "Melde dich mit einem kurzen Code bei den TV-Apps von Windscribe an";
 "Sweet, you should be all good to go now" = "Süße, jetzt solltest du startklar sein";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "Dieser Standort wird derzeit gewartet. Versuche es später noch einmal oder besuche unsere Statusseite, um weitere Informationen zu erhalten. https://windscribe.com/status";
 "Location Maintenance" = "Standortpflege";
@@ -606,3 +605,5 @@
 "Password Reset" = "Passwort-Zurücksetzung";
 "If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Wenn Sie bei der Registrierung eine E-Mail angegeben haben, erhalten Sie in Kürze einen Link zum Zurücksetzen des Passworts. Bitte überprüfen Sie auch Ihren Spam-Ordner.";
 "Email is required to reset password." = "Eine E-Mail-Adresse ist erforderlich, um das Passwort zurückzusetzen.";
+
+"Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Geben Sie den auf Ihrem Fernseher angezeigten Code ein, um sich bei der Windscribe TV-App anzumelden";

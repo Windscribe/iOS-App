@@ -366,7 +366,6 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "サポート関連のすべての問い合わせについては、携帯電話またはコンピューターの上記のアドレスにアクセスしてください。";
 "Enter Code" = "コードを入力";
 "Enter code here" = "ここにコードを入力してください";
-"Login into Windscribe's TV apps with a short code" = "ショートコードでWindscribeのテレビアプリにログインします。";
 "Sweet, you should be all good to go now" = "スイート、もう大丈夫ですよ";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "この場所はメンテナンス中です。しばらくしてからもう一度お試しいただくか、ステータスページで詳細をご確認ください。https://windscribe.com/status";
 "Location Maintenance" = "ロケーションのメンテナンス";
@@ -595,3 +594,5 @@
 "Password Reset" = "パスワードリセット";
 "If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "登録時にメールアドレスを入力している場合、まもなくパスワードリセット用のリンクが届きます。迷惑メールフォルダもご確認ください。";
 "Email is required to reset password." = "パスワードをリセットするにはメールアドレスが必要です。";
+
+"Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV アプリにログインするには、テレビ画面に表示されているコードを入力してください";

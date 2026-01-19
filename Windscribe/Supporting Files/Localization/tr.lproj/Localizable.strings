@@ -379,7 +379,6 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Destekle ilgili tüm sorularınız için telefonunuzda veya bilgisayarınızda yukarıdaki adrese gidin.";
 "Enter Code" = "Kodu Girin";
 "Enter code here" = "Kodu buraya girin";
-"Login into Windscribe's TV apps with a short code" = "Windscribe'ın TV uygulamalarına kısa bir kodla giriş yapın";
 "Sweet, you should be all good to go now" = "Tatlım, artık gidebilirsin";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "Bu konum bakım altındadır. Daha sonra tekrar deneyin veya daha fazla bilgi için Durum sayfamıza gidin. https://windscribe.com/status";
 "Location Maintenance" = "Konum Bakımı";
@@ -608,3 +607,4 @@
 "If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "Kayıt sırasında bir e-posta adresi verdiyseniz, kısa süre içinde bir şifre sıfırlama bağlantısı alacaksınız. Spam klasörünüzü kontrol etmeyi unutmayın.";
 "Email is required to reset password." = "Şifreyi sıfırlamak için e-posta gereklidir.";
 
+"Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV uygulamasına giriş yapmak için TV ekranınızda gösterilen kodu girin";

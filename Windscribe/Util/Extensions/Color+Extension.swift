@@ -145,6 +145,7 @@ extension Color {
     static let positiveGreen = Color(red: 28 / 255, green: 223 / 255, blue: 142 / 255)
     static let darkInfoColor = Color(red: 0.50, green: 0.53, blue: 0.56)
     static let grayishDarkColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
+    static let alertDarkBackground = Color(red: 8 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
     static let deepSlate = Color(red: 15 / 255.0, green: 18 / 255.0, blue: 26 / 255.0)
     static let brightBlue = Color(red: 0 / 255.0, green: 106 / 255.0, blue: 255 / 255.0)
 }

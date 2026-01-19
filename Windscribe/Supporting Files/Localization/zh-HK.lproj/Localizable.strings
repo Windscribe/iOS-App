@@ -363,7 +363,6 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "转到手机或计算机上的上述地址，以获取所有与支持相关的查询。";
 "Enter Code" = "输入代码";
 "Enter code here" = "在此输入代码";
-"Login into Windscribe's TV apps with a short code" = "使用短代码登录 Windscribe 的TV应用程序。";
 "Sweet, you should be all good to go now" = "亲爱的，你现在应该可以走了";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "此位置正在维护中。请稍后重试或转到我们的状态页面以获取更多信息。https://windscribe.com/status";
 "Location Maintenance" = "位置维护";
@@ -590,3 +589,5 @@
 "Password Reset" = "密碼重設";
 "If you provided an email during registration, you will get a password reset link shortly. Be sure to check your Spam folder." = "如果您在註冊時提供了電郵地址，您將很快收到密碼重設連結。請務必檢查垃圾郵件資料夾。";
 "Email is required to reset password." = "重設密碼需要電郵地址。";
+
+"Enter the code show on your tv screen to Log into Windscribe’s TV app" = "輸入電視畫面上顯示的代碼以登入 Windscribe TV 應用程式";
