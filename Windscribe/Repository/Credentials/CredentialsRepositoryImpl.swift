@@ -66,7 +66,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     func getUpdatedOpenVPNCrendentials() async throws {
         do {
             let credentials = try await self.apiManager.getOpenVPNServerCredentials()
-            self.localDatabase.saveOpenVPNServerCredentials(credentials: credentials).disposed(by: self.disposeBag)
+            self.localDatabase.saveOpenVPNServerCredentials(credentials: credentials)
             openVPNCrendentials = credentials.getModel()
         } catch {
             guard let credentials = localDatabase.getOpenVPNServerCredentials() else {
@@ -79,7 +79,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     func getUpdatedIKEv2Crendentials() async throws {
         do {
             let credentials = try await self.apiManager.getIKEv2ServerCredentials()
-            self.localDatabase.saveIKEv2ServerCredentials(credentials: credentials).disposed(by: self.disposeBag)
+            self.localDatabase.saveIKEv2ServerCredentials(credentials: credentials)
             ikev2Crendentials = credentials.getModel()
         } catch {
             guard let credentials = localDatabase.getIKEv2ServerCredentials() else {

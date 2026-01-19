@@ -7,21 +7,20 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 
 @testable import Windscribe
 
 class MockLocalDatabase: LocalDatabase {
 
-    let sessionSubject = BehaviorSubject<Windscribe.Session?>(value: nil)
-    let oldSessionSubject = BehaviorSubject<Windscribe.OldSession?>(value: nil)
-    let notificationsSubject = BehaviorSubject<[Windscribe.Notice]>(value: [])
-    let networksSubject = BehaviorSubject<[Windscribe.WifiNetwork]>(value: [])
-    let readNoticesSubject = BehaviorSubject<[Windscribe.ReadNotice]>(value: [])
+    let sessionSubject = CurrentValueSubject<Windscribe.Session?, Never>(nil)
+    let oldSessionSubject = CurrentValueSubject<Windscribe.OldSession?, Never>(nil)
+    let notificationsSubject = CurrentValueSubject<[Windscribe.Notice], Never>([])
+    let networksSubject = CurrentValueSubject<[Windscribe.WifiNetwork], Never>([])
+    let readNoticesSubject = CurrentValueSubject<[Windscribe.ReadNotice], Never>([])
 
     var mockServers: [Server]? = []
-    let mockFavoritesSubject = BehaviorSubject<[String: Favourite]>(value: [:])
+    let mockFavoritesSubject = CurrentValueSubject<[String: Favourite], Never>([:])
     // PortMap tracking
     var savePortMapCalled = false
     var saveSuggestedPortsCalled = false
@@ -47,7 +46,7 @@ class MockLocalDatabase: LocalDatabase {
     // WifiNetwork tracking
     var mockWifiNetworks: [Windscribe.WifiNetwork] = [] {
         didSet {
-            networksSubject.onNext(mockWifiNetworks)
+            networksSubject.send(mockWifiNetworks)
         }
     }
     var saveNetworkCalled = false
@@ -90,16 +89,16 @@ class MockLocalDatabase: LocalDatabase {
         return nil
     }
 
-    func saveOpenVPNServerCredentials(credentials: Windscribe.OpenVPNServerCredentials) -> Disposable {
-        return Disposables.create()
+    func saveOpenVPNServerCredentials(credentials: Windscribe.OpenVPNServerCredentials) {
+
     }
 
     func getIKEv2ServerCredentials() -> Windscribe.IKEv2ServerCredentials? {
         return nil
     }
 
-    func saveIKEv2ServerCredentials(credentials: Windscribe.IKEv2ServerCredentials) -> Disposable {
-        return Disposables.create()
+    func saveIKEv2ServerCredentials(credentials: Windscribe.IKEv2ServerCredentials) {
+
     }
 
     func getPortMap() -> [Windscribe.PortMap]? {
@@ -118,43 +117,43 @@ class MockLocalDatabase: LocalDatabase {
         return []
     }
 
-    func getNotificationsObservable() -> Observable<[Windscribe.Notice]> {
-        return notificationsSubject.asObservable()
+    func getNotificationsPublisher() -> AnyPublisher<[Windscribe.Notice], Never> {
+        return notificationsSubject.eraseToAnyPublisher()
     }
 
-    func saveNotifications(notifications: [Windscribe.Notice]) async {
+    func saveNotifications(notifications: [Windscribe.Notice]) {
         saveNotificationsCalled = true
         notificationsToReturn = notifications
         // Trigger the subject to simulate Realm notification
-        notificationsSubject.onNext(notifications)
+        notificationsSubject.send(notifications)
     }
 
     func getReadNotices() -> [Windscribe.ReadNotice]? {
-        return try? readNoticesSubject.value()
+        return readNoticesSubject.value
     }
 
-    func getReadNoticesObservable() -> Observable<[Windscribe.ReadNotice]> {
-        return readNoticesSubject
+    func getReadNoticesPublisher() -> AnyPublisher<[Windscribe.ReadNotice], Never> {
+        return readNoticesSubject.eraseToAnyPublisher()
     }
 
     func saveReadNotices(readNotices: [Windscribe.ReadNotice]) {
-        readNoticesSubject.onNext(readNotices)
+        readNoticesSubject.send(readNotices)
     }
 
-    func getIp() -> Observable<Windscribe.MyIP?> {
-        return Observable.just(nil)
+    func getIpPublisher() -> AnyPublisher<Windscribe.MyIP?, Never> {
+        Just<MyIP?>(nil).eraseToAnyPublisher()
     }
 
-    func getIpSync() -> Windscribe.MyIP? {
+    func getIp() -> Windscribe.MyIP? {
         return nil
     }
 
-    func saveIp(myip: Windscribe.MyIP) -> Disposable {
-        return Disposables.create()
+    func saveIp(myip: Windscribe.MyIP) {
+
     }
 
-    func getNetworks() -> Observable<[Windscribe.WifiNetwork]> {
-        return networksSubject.asObservable()
+    func getNetworksPublisher() -> AnyPublisher<[Windscribe.WifiNetwork], Never> {
+        return networksSubject.eraseToAnyPublisher()
     }
 
     func removeNetwork(wifiNetwork: Windscribe.WifiNetwork) {
@@ -181,12 +180,12 @@ class MockLocalDatabase: LocalDatabase {
         return nil
     }
 
-    func saveRobertFilters(filters: Windscribe.RobertFilters) -> Disposable {
-        return Disposables.create()
+    func saveRobertFilters(filters: Windscribe.RobertFilters) {
+
     }
 
-    func saveLastConnetion(vpnConnection: Windscribe.VPNConnection) -> Disposable {
-        return Disposables.create()
+    func saveLastConnetion(vpnConnection: Windscribe.VPNConnection) {
+
     }
 
     func toggleRobertRule(id: String) {}
@@ -197,27 +196,27 @@ class MockLocalDatabase: LocalDatabase {
 
     func saveOldSession() {
         saveOldSessionCalled = true
-        guard let oldSession = try? sessionSubject.value() else {
+        guard let oldSession = sessionSubject.value else {
             return
         }
-        oldSessionSubject.onNext(OldSession(session: oldSession))
+        oldSessionSubject.send(OldSession(session: oldSession))
     }
 
     func getOldSession() -> Windscribe.OldSession? {
-        return try? oldSessionSubject.value()
+        return oldSessionSubject.value
     }
 
-    func getSession() -> Observable<Windscribe.Session?> {
-        return sessionSubject.asObservable()
+    func getSessionPublisher() -> AnyPublisher<Windscribe.Session?, Never> {
+        return sessionSubject.eraseToAnyPublisher()
     }
 
-    func getSessionSync() -> Windscribe.Session? {
-        return try? sessionSubject.value()
+    func getSession() -> Windscribe.Session? {
+        return sessionSubject.value
     }
 
     func saveSession(session: Windscribe.Session) {
         // Trigger the subject to simulate Realm notification
-        sessionSubject.onNext(session)
+        sessionSubject.send(session)
     }
 
     func updateConnectionMode(value: String) {}
@@ -238,51 +237,37 @@ class MockLocalDatabase: LocalDatabase {
         }
     }
 
-    func saveFavourite(favourite: Windscribe.Favourite) -> any RxSwift.Disposable {
-        guard var favourites = try? mockFavoritesSubject.value() else {
-            return Disposables.create()
-        }
+    func saveFavourite(favourite: Windscribe.Favourite) {
+        var favourites = mockFavoritesSubject.value
         favourites[favourite.id] = favourite
-        mockFavoritesSubject.onNext(favourites)
-        return Disposables.create()
+        mockFavoritesSubject.send(favourites)
+
     }
 
-    func getFavouriteListObservable() -> RxSwift.Observable<[Windscribe.Favourite]> {
+    func getFavouriteListPublisher() -> AnyPublisher<[Windscribe.Favourite], Never> {
         return mockFavoritesSubject
             .map { $0.count > 0 ? Array($0.values) : [] }
-            .asObservable()
+            .eraseToAnyPublisher()
     }
 
     func getFavouriteList() -> [Windscribe.Favourite] {
-        guard let favourites = try? mockFavoritesSubject.value() else {
-            return []
-        }
-        return favourites
+        return mockFavoritesSubject.value
             .map { $0.value }
     }
 
     func removeFavourite(groupId: String) {
-        guard var favourites = try? mockFavoritesSubject.value() else {
-            return
-        }
+        var favourites = mockFavoritesSubject.value
         favourites.removeValue(forKey: groupId)
-        mockFavoritesSubject.onNext(favourites)
+        mockFavoritesSubject.send(favourites)
         return
     }
 
-    func getCustomConfigObservable() -> RxSwift.Observable<[Windscribe.CustomConfig]> {
-        return Observable.just([])
-    }
-
-    func getCustomConfig() -> [Windscribe.CustomConfig] {
-        return []
-    }
-
-    func getCustomConfigObservable() -> RxSwift.Observable<[Windscribe.CustomConfig]> {
-        return Observable.just([])
+    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never> {
+        Just<[CustomConfig]>([])
+                .eraseToAnyPublisher()
     }
 
     func getCustomConfigs() -> [Windscribe.CustomConfig] {
-        return []
+        []
     }
 }

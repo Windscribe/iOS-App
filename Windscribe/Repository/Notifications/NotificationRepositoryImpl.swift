@@ -26,8 +26,7 @@ class NotificationRepositoryImpl: NotificationRepository {
         self.pushNotificationsManager = pushNotificationsManager
 
         // Subscribe to database notifications observable for reactive updates
-        localDatabase.getNotificationsObservable()
-            .toPublisher()
+        localDatabase.getNotificationsPublisher()
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
@@ -42,8 +41,7 @@ class NotificationRepositoryImpl: NotificationRepository {
             )
             .store(in: &cancellables)
 
-        localDatabase.getReadNoticesObservable()
-            .toPublisher()
+        localDatabase.getReadNoticesPublisher()
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {

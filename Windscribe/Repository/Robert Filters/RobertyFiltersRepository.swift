@@ -51,9 +51,7 @@ class RobertyFiltersRepositoryImpl: RobertyFiltersRepository {
     func refreshFilters() async throws {
         do {
             let apiFilters = try await apiManager.getRobertFilters()
-            Task {
-                localDatabase.saveRobertFilters(filters: apiFilters)
-            }
+            localDatabase.saveRobertFilters(filters: apiFilters)
             robertFilters.send(apiFilters.filters
                 .map { $0.getModel() })
         } catch {

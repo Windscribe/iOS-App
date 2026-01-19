@@ -51,9 +51,7 @@ class ServerRepositoryImpl: ServerRepository {
 
         loadInitialServers()
 
-        localDatabase.getFavouriteListObservable()
-            .toPublisher(initialValue: [])
-            .replaceError(with: [])
+        localDatabase.getFavouriteListPublisher()
             .sink { [weak self] favouriteList in
                 self?.favouriteListSubject.send(
                     favouriteList
@@ -177,6 +175,5 @@ class ServerRepositoryImpl: ServerRepository {
 
     func saveFavorite(for favourite: FavouriteModel) {
         localDatabase.saveFavourite(favourite: favourite.getObject())
-            .disposed(by: disposeBag)
     }
 }

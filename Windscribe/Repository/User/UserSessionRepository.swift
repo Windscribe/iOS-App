@@ -70,7 +70,7 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     }
 
     func syncSession() async -> Bool {
-        guard let currentSession = localDatabase.getSessionSync() else {
+        guard let currentSession = localDatabase.getSession() else {
             return false
         }
 

@@ -265,7 +265,7 @@ class NotificationRepositoryTests: XCTestCase {
         secondNotice.message = "Test"
         secondNotice.date = 1697530800
 
-        mockLocalDatabase.notificationsSubject.onNext([noticesArray[0], secondNotice])
+        mockLocalDatabase.notificationsSubject.send([noticesArray[0], secondNotice])
 
         await fulfillment(of: [expectation], timeout: 1.0)
     }
@@ -297,14 +297,14 @@ class NotificationRepositoryTests: XCTestCase {
             .store(in: &cancellables)
 
         // First update
-        mockLocalDatabase.notificationsSubject.onNext([Notice()])
+        mockLocalDatabase.notificationsSubject.send([Notice()])
 
         // Second update
         let notice1 = Notice()
         notice1.id = 1
         let notice2 = Notice()
         notice2.id = 2
-        mockLocalDatabase.notificationsSubject.onNext([notice1, notice2])
+        mockLocalDatabase.notificationsSubject.send([notice1, notice2])
 
         await fulfillment(of: [expectation], timeout: 1.0)
         XCTAssertEqual(emissionCount, 3)

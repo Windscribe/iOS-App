@@ -63,10 +63,11 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func observeFavouriteList() {
-        database.getFavouriteListObservable().subscribe(onNext: { favList in
-            self.favList.onNext(favList.map { $0.getModel() })
-        }, onError: { _ in
-        }).disposed(by: disposeBag)
+        database.getFavouriteListPublisher()
+            .sink { favList in
+                self.favList.onNext(favList.map { $0.getModel() })
+            }
+            .store(in: &self.cancellables)
     }
 
     /// Returns latency data for ip.

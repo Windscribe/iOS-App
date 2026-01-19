@@ -51,8 +51,7 @@ class WifiNetworkRepositoryImpl: WifiNetworkRepository {
     /// Observers and Loads saved networks from data base
     private func loadNetworks() {
         isObserving = true
-        localDatabase.getNetworks()
-            .toPublisherIncludingEmpty()
+        localDatabase.getNetworksPublisher()
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
