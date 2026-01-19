@@ -8,7 +8,6 @@
 
 import Foundation
 import RealmSwift
-import RxSwift
 import Combine
 
 protocol LocalDatabase {
@@ -18,8 +17,8 @@ protocol LocalDatabase {
     func getServers() -> [Server]?
     func saveServers(servers: [Server])
 
-    func getSession() -> Observable<Session?>
-    func getSessionSync() -> Session?
+    func getSessionPublisher() -> AnyPublisher<Session?, Never>
+    func getSession() -> Session?
     func saveSession(session: Session)
 
     // MARK: Before Modelization of Databas)
@@ -29,47 +28,47 @@ protocol LocalDatabase {
     func saveStaticIPs(staticIps: [StaticIP])
     func deleteStaticIps(ignore: [String])
     func getOpenVPNServerCredentials() -> OpenVPNServerCredentials?
-    func saveOpenVPNServerCredentials(credentials: OpenVPNServerCredentials) -> Disposable
+    func saveOpenVPNServerCredentials(credentials: OpenVPNServerCredentials)
     func getIKEv2ServerCredentials() -> IKEv2ServerCredentials?
-    func saveIKEv2ServerCredentials(credentials: IKEv2ServerCredentials) -> Disposable
+    func saveIKEv2ServerCredentials(credentials: IKEv2ServerCredentials)
     func getPortMap() -> [PortMap]?
     func savePortMap(portMap: [PortMap])
     func saveSuggestedPorts(suggestedPorts: [SuggestedPorts])
     func getSuggestedPorts() -> [SuggestedPorts]?
-    func getNotificationsObservable() -> Observable<[Notice]>
-    func saveNotifications(notifications: [Notice]) async
+    func getNotificationsPublisher() -> AnyPublisher<[Notice], Never>
+    func saveNotifications(notifications: [Notice])
     func getReadNotices() -> [ReadNotice]?
-    func getReadNoticesObservable() -> Observable<[ReadNotice]>
+    func getReadNoticesPublisher() -> AnyPublisher<[ReadNotice], Never>
     func saveReadNotices(readNotices: [ReadNotice])
 
-    /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddressObservable() instead.
+    /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddressPublisher() instead.
     /// This method is kept for migration support only. Will be removed in v3.10.0+
-    @available(*, deprecated, message: "Use Preferences.getCurrentIpAddressObservable() instead")
-    func getIp() -> Observable<MyIP?>
+    @available(*, deprecated, message: "Use Preferences.getCurrentIpAddressPublisher() instead")
+    func getIpPublisher() -> AnyPublisher<MyIP?, Never>
 
     /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddress() instead.
     /// This method is kept for migration support only. Will be removed in v3.10.0+
     @available(*, deprecated, message: "Use Preferences.getCurrentIpAddress() instead")
-    func getIpSync() -> MyIP?
+    func getIp() -> MyIP?
 
     /// DEPRECATED - Issue #911: Use Preferences.saveCurrentIpAddress(ip:) instead.
     /// This method is kept for migration support only. Will be removed in v3.10.0+
     @available(*, deprecated, message: "Use Preferences.saveCurrentIpAddress(ip:) instead")
-    func saveIp(myip: MyIP) -> Disposable
+    func saveIp(myip: MyIP)
 
-    func getNetworks() -> Observable<[WifiNetwork]>
+    func getNetworksPublisher() -> AnyPublisher<[WifiNetwork], Never>
     func saveNetwork(wifiNetwork: WifiNetwork)
     func removeNetwork(wifiNetwork: WifiNetwork)
     func addPingData(pingData: PingData)
     func getAllPingData() -> [PingData]
     func saveCustomConfig(customConfig: CustomConfig)
     func removeCustomConfig(fileId: String)
-    func getCustomConfigObservable() -> Observable<[CustomConfig]>
+    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never>
     func getRobertFilters() -> RobertFilters?
-    func saveRobertFilters(filters: RobertFilters) -> Disposable
+    func saveRobertFilters(filters: RobertFilters)
 
-    func saveFavourite(favourite: Favourite) -> Disposable
-    func getFavouriteListObservable() -> Observable<[Favourite]>
+    func saveFavourite(favourite: Favourite)
+    func getFavouriteListPublisher() -> AnyPublisher<[Favourite], Never>
     func getFavouriteList() -> [Favourite]
     func removeFavourite(groupId: String)
 

@@ -27,8 +27,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         self.logger = logger
         self.portMapRepository = portMapRepository
 
-        self.localDatabase.getCustomConfigObservable()
-            .toPublisher().replaceError(with: [])
+        self.localDatabase.getCustomConfigPublisher()
             .filter {$0.filter({$0.isInvalidated}).count == 0}
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] customConfig in

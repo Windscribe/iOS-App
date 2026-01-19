@@ -35,7 +35,7 @@ class IPRepositoryImpl: IPRepository {
 
         // Migration: Check if IP exists in Realm (from older app versions)
         // If yes, migrate it to Preferences for future use
-        if let realmIp = localDatabase.getIpSync() {
+        if let realmIp = localDatabase.getIp() {
             logger.logI("IPRepositoryImpl", "Migrating IP from Realm to Preferences: \(realmIp.userIp)")
             preferences.saveCurrentIpAddress(ip: realmIp.userIp)
         }

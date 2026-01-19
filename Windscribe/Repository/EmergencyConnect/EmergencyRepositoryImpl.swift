@@ -15,7 +15,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let vpnManager: VPNManager
     private let vpnStateRepository: VPNStateRepository
     private let fileDatabase: FileDatabase
-    private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
@@ -27,7 +26,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
          vpnManager: VPNManager,
          vpnStateRepository: VPNStateRepository,
          fileDatabase: FileDatabase,
-         localDatabase: LocalDatabase,
          logger: FileLogger,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
@@ -36,7 +34,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
         self.fileDatabase = fileDatabase
-        self.localDatabase = localDatabase
         self.logger = logger
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager

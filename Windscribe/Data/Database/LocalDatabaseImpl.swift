@@ -9,13 +9,10 @@
 import Foundation
 import Realm
 import RealmSwift
-import RxSwift
 import Combine
 
 class LocalDatabaseImpl: LocalDatabase {
     let logger: FileLogger
-    let disposeBag = DisposeBag()
-    let cleanTrigger = PublishSubject<Void>()
     let cleanSubject = PassthroughSubject<Void, Never>()
     let preferences: Preferences
 
@@ -26,7 +23,7 @@ class LocalDatabaseImpl: LocalDatabase {
 
     // MARK: - After Modelization of Database
     func getServers() -> [Server]? {
-        return getRealmObjects(type: Server.self)
+        return getRealmObjectList(type: Server.self)
     }
 
     func saveServers(servers: [Server]) {
@@ -44,18 +41,18 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func getSession() -> Observable<Session?> {
-        return getSafeRealmObservable(type: Session.self)
+    func getSessionPublisher() -> AnyPublisher<Session?, Never> {
+        return getSafeRealmObjectPublisher(type: Session.self)
     }
 
-    func getSessionSync() -> Session? {
+    func getSession() -> Session? {
         return getRealmObject(type: Session.self)
     }
 
     // MARK: - Before Modelization of Database
 
     func getMobilePlans() -> [MobilePlan]? {
-        return getRealmObjects(type: MobilePlan.self)
+        return getRealmObjectList(type: MobilePlan.self)
     }
 
     func saveMobilePlans(mobilePlansList: [MobilePlan]) {
@@ -63,7 +60,7 @@ class LocalDatabaseImpl: LocalDatabase {
     }
 
     func getCustomConfigs() -> [CustomConfig] {
-        return getRealmObjects(type: CustomConfig.self) ?? []
+        return getRealmObjectList(type: CustomConfig.self) ?? []
     }
 
     func saveCustomConfig(customConfig: CustomConfig) {
@@ -83,12 +80,12 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func getCustomConfigObservable() -> Observable<[CustomConfig]> {
-        return getSafeRealmObservable(type: CustomConfig.self)
+    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never> {
+        return getSafeRealmArrayPublisher(type: CustomConfig.self)
     }
 
     func getStaticIPs() -> [StaticIP]? {
-        return getRealmObjects(type: StaticIP.self)
+        return getRealmObjectList(type: StaticIP.self)
     }
 
     func saveStaticIPs(staticIps: [StaticIP]) {
@@ -96,7 +93,7 @@ class LocalDatabaseImpl: LocalDatabase {
     }
 
     func deleteStaticIps(ignore: [String]) {
-        if let objects = getRealmObjects(type: StaticIP.self) {
+        if let objects = getRealmObjectList(type: StaticIP.self) {
             for stat in objects {
                 if stat.isInvalidated == false && !ignore.contains(stat.staticIP) {
                     deleteRealmObject(object: stat)
@@ -109,7 +106,7 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObject(type: OpenVPNServerCredentials.self)
     }
 
-    func saveOpenVPNServerCredentials(credentials: OpenVPNServerCredentials) -> Disposable {
+    func saveOpenVPNServerCredentials(credentials: OpenVPNServerCredentials) {
         return updateRealmObject(object: credentials)
     }
 
@@ -117,16 +114,16 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObject(type: IKEv2ServerCredentials.self)
     }
 
-    func saveIKEv2ServerCredentials(credentials: IKEv2ServerCredentials) -> Disposable {
+    func saveIKEv2ServerCredentials(credentials: IKEv2ServerCredentials) {
         return updateRealmObject(object: credentials)
     }
 
     func getPortMap() -> [PortMap]? {
-        return getRealmObjects(type: PortMap.self)
+        return getRealmObjectList(type: PortMap.self)
     }
 
     func getSuggestedPorts() -> [SuggestedPorts]? {
-        return getRealmObjects(type: SuggestedPorts.self)
+        return getRealmObjectList(type: SuggestedPorts.self)
     }
 
     func saveSuggestedPorts(suggestedPorts: [SuggestedPorts]) {
@@ -137,14 +134,13 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObjects(objects: portMap)
     }
 
-    func getNotificationsObservable() -> Observable<[Notice]> {
-        return getSafeRealmObservable(type: Notice.self)
+    func getNotificationsPublisher() -> AnyPublisher<[Notice], Never> {
+        return getSafeRealmArrayPublisher(type: Notice.self)
     }
 
-    @MainActor
-    func saveNotifications(notifications: [Notice]) async {
+    func saveNotifications(notifications: [Notice]) {
         do {
-            let realm = try await Realm()
+            let realm = try Realm()
             try realm.safeWrite {
                 // Delete all existing notifications first to remove stale ones
                 let existingNotifications = realm.objects(Notice.self)
@@ -160,41 +156,41 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func getReadNoticesObservable() -> Observable<[ReadNotice]> {
-        return getSafeRealmObservable(type: ReadNotice.self)
+    func getReadNoticesPublisher() -> AnyPublisher<[ReadNotice], Never> {
+        return getSafeRealmArrayPublisher(type: ReadNotice.self)
     }
 
     func getReadNotices() -> [ReadNotice]? {
-        return getRealmObjects(type: ReadNotice.self)
+        return getRealmObjectList(type: ReadNotice.self)
     }
 
     func saveReadNotices(readNotices: [ReadNotice]) {
         return updateRealmObjects(objects: readNotices)
     }
 
-    /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddressObservable() instead.
+    /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddressPublisher() instead.
     /// This method is kept for migration support only. Will be removed in v3.10.0+
-    @available(*, deprecated, message: "Use Preferences.getCurrentIpAddressObservable() instead")
-    func getIp() -> Observable<MyIP?> {
-        return getSafeRealmObservable(type: MyIP.self)
+    @available(*, deprecated, message: "Use Preferences.getCurrentIpAddressPublisher() instead")
+    func getIpPublisher() -> AnyPublisher<MyIP?, Never> {
+        return getSafeRealmObjectPublisher(type: MyIP.self)
     }
 
     /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddress() instead.
     /// This method is kept for migration support only. Will be removed in v3.10.0+
     @available(*, deprecated, message: "Use Preferences.getCurrentIpAddress() instead")
-    func getIpSync() -> MyIP? {
+    func getIp() -> MyIP? {
         return getRealmObject(type: MyIP.self)
     }
 
     /// DEPRECATED - Issue #911: Use Preferences.saveCurrentIpAddress(ip:) instead.
     /// This method is kept for migration support only. Will be removed in v3.10.0+
     @available(*, deprecated, message: "Use Preferences.saveCurrentIpAddress(ip:) instead")
-    func saveIp(myip: MyIP) -> Disposable {
+    func saveIp(myip: MyIP) {
         return updateRealmObject(object: myip)
     }
 
-    func getNetworks() -> Observable<[WifiNetwork]> {
-        return getSafeRealmObservable(type: WifiNetwork.self)
+    func getNetworksPublisher() -> AnyPublisher<[WifiNetwork], Never> {
+        return getSafeRealmArrayPublisher(type: WifiNetwork.self)
     }
 
     func saveNetwork(wifiNetwork: WifiNetwork) {
@@ -208,7 +204,7 @@ class LocalDatabaseImpl: LocalDatabase {
     }
 
     func getAllPingData() -> [PingData] {
-        return getRealmObjects(type: PingData.self) ?? []
+        return getRealmObjectList(type: PingData.self) ?? []
     }
 
     func addPingData(pingData: PingData) {
@@ -224,20 +220,20 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObject(type: RobertFilters.self)
     }
 
-    func saveRobertFilters(filters: RobertFilters) -> Disposable {
+    func saveRobertFilters(filters: RobertFilters) {
         return updateRealmObject(object: filters)
     }
 
-    func saveFavourite(favourite: Favourite) -> Disposable {
+    func saveFavourite(favourite: Favourite) {
         return updateRealmObject(object: favourite)
     }
 
-    func getFavouriteListObservable() -> Observable<[Favourite]> {
-        return getSafeRealmObservable(type: Favourite.self)
+    func getFavouriteListPublisher() -> AnyPublisher<[Favourite], Never> {
+        return getSafeRealmArrayPublisher(type: Favourite.self)
     }
 
     func getFavouriteList() -> [Favourite] {
-        return getRealmObjects(type: Favourite.self) ?? []
+        return getRealmObjectList(type: Favourite.self) ?? []
     }
 
     func removeFavourite(groupId: String) {
@@ -264,7 +260,6 @@ class LocalDatabaseImpl: LocalDatabase {
     func clean() {
         let realm = try? Realm()
 
-        cleanTrigger.onNext(())
         cleanSubject.send(())
         guard let realm = realm else { return }
 

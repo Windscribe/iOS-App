@@ -127,7 +127,6 @@ class Repository: Assembly {
                                     vpnManager: r.resolve(VPNManager.self)!,
                                     vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                     fileDatabase: r.resolve(FileDatabase.self)!,
-                                    localDatabase: r.resolve(LocalDatabase.self)!,
                                     logger: r.resolve(FileLogger.self)!,
                                     locationsManager: r.resolve(LocationsManager.self)!,
                                     protocolManager: r.resolve(ProtocolManagerType.self)!,
