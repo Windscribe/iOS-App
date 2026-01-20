@@ -34,7 +34,7 @@ protocol CustomConfigPickerViewModelType: CustomConfigListModelDelegate {
 
 class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     let logger: FileLogger
-    let alertManager: AlertManagerV2
+    let alertManager: AlertManager
     let customConfigRepository: CustomConfigRepository
     let vpnStateRepository: VPNStateRepository
     let connectivity: ConnectivityManager
@@ -50,7 +50,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
-         alertManager: AlertManagerV2,
+         alertManager: AlertManager,
          customConfigRepository: CustomConfigRepository,
          vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
@@ -146,7 +146,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
                 self.resetConnectionStatus()
             }
         }
-        AlertManager.shared.showAlert(title: TextsAsset.RemoveCustomConfig.title,
+        alertManager.showAlert(title: TextsAsset.RemoveCustomConfig.title,
                                       message: TextsAsset.RemoveCustomConfig.message,
                                       buttonText: TextsAsset.cancel,
                                       actions: [yesAction])

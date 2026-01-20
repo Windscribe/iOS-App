@@ -11,7 +11,6 @@ import Combine
 import CoreData
 import NetworkExtension
 import RealmSwift
-import RxSwift
 import StoreKit
 import Swinject
 import SwiftUI
@@ -45,12 +44,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var protocolManager: ProtocolManagerType = Assembler.resolve(ProtocolManagerType.self)
 
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
+    private lazy var alertManager: AlertManager = Assembler.resolve(AlertManager.self)
 
     var window: UIWindow?
 
     var shortcutType = ShortcutType.none
-
-    private let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     func application(_: UIApplication,
@@ -144,7 +142,7 @@ extension AppDelegate {
     private func showCustomConfigError(with error: Error) async {
         if let error = error as? RepositoryError {
             await MainActor.run {
-                AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+                alertManager.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
             }
         }
     }

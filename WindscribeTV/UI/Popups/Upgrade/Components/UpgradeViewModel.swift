@@ -50,7 +50,7 @@ protocol UpgradeViewModel {
 }
 
 class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, ConfirmEmailViewControllerDelegate {
-    let alertManager: AlertManagerV2
+    let alertManager: AlertManager
     let apiManager: APIManager
     let sessionManager: SessionManager
     let userSessionRepository: UserSessionRepository
@@ -75,7 +75,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     var pushNotificationPayload: PushNotificationPayload?
     private var mobilePlans: [MobilePlanModel]?
 
-    init(alertManager: AlertManagerV2,
+    init(alertManager: AlertManager,
          apiManager: APIManager,
          sessionManager: SessionManager,
          userSessionRepository: UserSessionRepository,

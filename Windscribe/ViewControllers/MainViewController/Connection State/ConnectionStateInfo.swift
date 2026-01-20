@@ -8,7 +8,6 @@
 
 import Foundation
 import NetworkExtension
-import RxSwift
 import UIKit
 
 enum ConnectionState {

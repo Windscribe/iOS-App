@@ -11,7 +11,7 @@ import RxSwift
 import Combine
 
 protocol EnterEmailViewModel {
-    var alertManager: AlertManagerV2 { get }
+    var alertManager: AlertManager { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var currentEmail: String? { get }
     func changeEmailAddress(email: String) -> Single<APIMessage>
@@ -19,7 +19,7 @@ protocol EnterEmailViewModel {
 
 class EnterEmailViewModelImpl: EnterEmailViewModel {
     let userSessionRepository: UserSessionRepository
-    let alertManager: AlertManagerV2
+    let alertManager: AlertManager
     let apiManager: APIManager
     let isDarkMode: CurrentValueSubject<Bool, Never>
 
@@ -28,7 +28,7 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
     }
 
     init(userSessionRepository: UserSessionRepository,
-         alertManager: AlertManagerV2,
+         alertManager: AlertManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          apiManager: APIManager) {
         self.userSessionRepository = userSessionRepository

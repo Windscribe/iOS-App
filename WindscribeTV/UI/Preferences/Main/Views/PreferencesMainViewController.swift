@@ -192,15 +192,15 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     }
 
     private func handleCancelAccount() {
-        logger.logD("PreferencesMainViewController", "Showing delete account popup.")
-        viewModel.alertManager.askPasswordToDeleteAccount(viewController: self).subscribe(onSuccess: { [weak self] password in
-            guard let self = self else { return }
-            if let password = password, !password.isEmpty {
+        Task {
+            logger.logD("PreferencesMainViewController", "Showing delete account popup.")
+            if let password = await viewModel.alertManager.askPasswordToDeleteAccount(viewController: self),
+               !password.isEmpty {
                 self.accountViewModel.cancelAccount(password: password)
             } else {
                 self.logger.logD("PreferencesMainViewController", "Entered password is nil/empty.")
             }
-        }, onFailure: { _ in }).disposed(by: disposeBag)
+        }
     }
 
     private func hideLoading() {

@@ -52,7 +52,7 @@ class VPNManagerImpl: VPNManager {
     let preferences: Preferences
     let connectivity: ConnectivityManager
     let configManager: ConfigurationsManager
-    let alertManager: AlertManagerV2
+    let alertManager: AlertManager
     let locationsManager: LocationsManager
     let vpnStateRepository: VPNStateRepository
     let bridgeAPI: WSNetBridgeAPI
@@ -76,7 +76,7 @@ class VPNManagerImpl: VPNManager {
          preferences: Preferences,
          connectivity: ConnectivityManager,
          configManager: ConfigurationsManager,
-         alertManager: AlertManagerV2,
+         alertManager: AlertManager,
          locationsManager: LocationsManager,
          vpnStateRepository: VPNStateRepository,
          wifiNetworkRepository: WifiNetworkRepository,

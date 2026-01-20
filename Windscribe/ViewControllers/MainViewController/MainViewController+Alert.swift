@@ -11,7 +11,7 @@ import UIKit
 
 extension MainViewController {
     func displayConnectingAlert() {
-        AlertManager.shared.showSimpleAlert(
+        viewModel.showSimpleAlert(
             viewController: self,
             title: TextsAsset.ConnectingAlert.title,
             message: TextsAsset.ConnectingAlert.message,
@@ -20,7 +20,7 @@ extension MainViewController {
     }
 
     func displayDisconnectingAlert() {
-        AlertManager.shared.showSimpleAlert(
+        viewModel.showSimpleAlert(
             viewController: self,
             title: TextsAsset.DisconnectingAlert.title,
             message: TextsAsset.DisconnectingAlert.message,
@@ -29,7 +29,7 @@ extension MainViewController {
     }
 
     func displayInternetConnectionLostAlert() {
-        AlertManager.shared.showSimpleAlert(
+        viewModel.showSimpleAlert(
             viewController: self,
             title: TextsAsset.NoInternetAlert.title,
             message: TextsAsset.NoInternetAlert.message,
@@ -55,7 +55,7 @@ extension MainViewController {
             self?.vpnConnectionViewModel.appReviewManager.openAppStoreForReview()
         })
 
-        AlertManager.shared.showAlert(
+        viewModel.showAlert(
             title: TextsAsset.RateUs.title,
             message: TextsAsset.RateUs.description,
             actions: [showAction, cancelAction])

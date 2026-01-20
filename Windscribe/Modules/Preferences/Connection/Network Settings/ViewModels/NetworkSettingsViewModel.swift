@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import RxSwift
 
 protocol NetworkSettingsViewModel: PreferencesBaseViewModel {
     var shouldDismiss: Bool { get }
@@ -33,8 +32,6 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     private let protocolManager: ProtocolManagerType
     private let wifiNetworkRepository: WifiNetworkRepository
     private let portMapRepository: PortMapRepository
-
-    private let disposeBag = DisposeBag()
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,

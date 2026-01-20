@@ -7,12 +7,10 @@
 //
 
 import Combine
-import RxSwift
 import Swinject
 import UIKit
 
 class WSRefreshControl: UIRefreshControl {
-    var disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     var backView: RefreshControlBackView! {
@@ -57,7 +55,6 @@ class WSRefreshControl: UIRefreshControl {
 
     private func updateDarkMode(isDarkMode: Bool) {
         guard backView != nil else {
-            disposeBag = DisposeBag()
             return
         }
         tintColor = .from(.iconColor, isDarkMode)

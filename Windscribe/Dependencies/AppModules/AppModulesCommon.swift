@@ -19,7 +19,7 @@ class App: Assembly {
             WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!, keychainManager: r.resolve(KeychainManager.self)!)
         }.inObjectScope(.userScope)
         container.register(WireguardConfigRepository.self) { r in
-            WireguardConfigRepositoryImpl(apiCallManager: r.resolve(WireguardAPIManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, wgCrendentials: r.resolve(WgCredentials.self)!, alertManager: r.resolve(AlertManagerV2.self), logger: r.resolve(FileLogger.self)!)
+            WireguardConfigRepositoryImpl(apiCallManager: r.resolve(WireguardAPIManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, wgCrendentials: r.resolve(WgCredentials.self)!, alertManager: r.resolve(AlertManager.self), logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
     }
 }
@@ -245,8 +245,8 @@ class Managers: Assembly {
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.userScope)
-        container.register(AlertManagerV2.self) { _ in
-            AlertManager()
+        container.register(AlertManager.self) { _ in
+            AlertManagerImpl()
         }.inObjectScope(.userScope)
         container.register(LocationsManager.self) { r in
             LocationsManagerImpl(customConfigRepository: r.resolve(CustomConfigRepository.self)!,
@@ -267,7 +267,7 @@ class Managers: Assembly {
                            preferences: r.resolve(Preferences.self)!,
                            connectivity: r.resolve(ConnectivityManager.self)!,
                            configManager: r.resolve(ConfigurationsManager.self)!,
-                           alertManager: r.resolve(AlertManagerV2.self)!,
+                           alertManager: r.resolve(AlertManager.self)!,
                            locationsManager: r.resolve(LocationsManager.self)!,
                            vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                            wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,

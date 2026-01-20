@@ -39,14 +39,14 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
 
     private let sessionManager: SessionManager
     private let userSessionRepository: UserSessionRepository
-    private let alertManager: AlertManagerV2
+    private let alertManager: AlertManager
     private let languageManager: LanguageManager
     private let preferences: Preferences
 
     init(
         sessionManager: SessionManager,
         userSessionRepository: UserSessionRepository,
-        alertManager: AlertManagerV2,
+        alertManager: AlertManager,
         logger: FileLogger,
         lookAndFeelRepository: LookAndFeelRepositoryType,
         languageManager: LanguageManager,

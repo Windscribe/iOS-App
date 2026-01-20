@@ -573,7 +573,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     private func displayConnectingAlert() {
-        AlertManager.shared.showSimpleAlert(
+        viewModel.showSimpleAlert(
             viewController: self,
             title: TextsAsset.ConnectingAlert.title,
             message: TextsAsset.ConnectingAlert.message,
@@ -582,14 +582,14 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     private func showAuthFailurePopup() {
-        AlertManager.shared.showSimpleAlert(viewController: self,
+        viewModel.showSimpleAlert(viewController: self,
                                             title: TextsAsset.AuthFailure.title,
                                             message: TextsAsset.AuthFailure.message,
                                             buttonText: TextsAsset.okay)
     }
 
     private func displayInternetConnectionLostAlert() {
-        AlertManager.shared.showSimpleAlert(
+        viewModel.showSimpleAlert(
             viewController: self,
             title: TextsAsset.NoInternetAlert.title,
             message: TextsAsset.NoInternetAlert.message,

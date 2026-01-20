@@ -54,6 +54,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     private let latencyRepository: LatencyRepository
     private let languageManager: LanguageManager
     private let serverRepository: ServerRepository
+    private let alertManager: AlertManager
 
     init(locationsManager: LocationsManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
@@ -62,7 +63,8 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
          serverRepository: ServerRepository,
          userSessionRepository: UserSessionRepository,
          latencyRepository: LatencyRepository,
-         languageManager: LanguageManager) {
+         languageManager: LanguageManager,
+         alertManager: AlertManager) {
         self.locationsManager = locationsManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.hapticFeedbackManager = hapticFeedbackManager
@@ -71,6 +73,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         self.userSessionRepository = userSessionRepository
         self.latencyRepository = latencyRepository
         self.languageManager = languageManager
+        self.alertManager = alertManager
         super.init()
 
         scrollViewDelegate = self
@@ -324,7 +327,7 @@ extension ServerListTableViewDataSourceImpl: NodeTableViewCellModelDelegate {
             guard let self = self else { return }
             self.serverRepository.removeFavorite(with: groupId)
         }
-        AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
+        alertManager.showAlert(title: TextsAsset.Favorites.removeTitle,
                                       message: TextsAsset.Favorites.removeMessage,
                                       buttonText: TextsAsset.cancel, actions: [yesAction])
     }

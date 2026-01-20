@@ -9,7 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-import RxSwift
 import Swinject
 
 // MARK: ViewControllerModule
@@ -86,7 +85,7 @@ class ViewControllerModule: Assembly {
             EnterEmailView(viewModel: EnterEmailViewModelImpl(
                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
-                alertManager: r.resolve(AlertManagerV2.self)!,
+                alertManager: r.resolve(AlertManager.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
             ))
@@ -108,7 +107,7 @@ class ViewControllerModule: Assembly {
                 viewModel: PreferencesMainCategoryViewModelImpl(
                     sessionManager: r.resolve(SessionManager.self)!,
                     userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                    alertManager: r.resolve(AlertManagerV2.self)!,
+                    alertManager: r.resolve(AlertManager.self)!,
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     languageManager: r.resolve(LanguageManager.self)!,
@@ -510,7 +509,8 @@ class ViewControllerModule: Assembly {
                                               serverRepository: r.resolve(ServerRepository.self)!,
                                               userSessionRepository: r.resolve(UserSessionRepository.self)! ,
                                               latencyRepository: r.resolve(LatencyRepository.self)!,
-                                              languageManager: r.resolve(LanguageManager.self)!)
+                                              languageManager: r.resolve(LanguageManager.self)!,
+                                              alertManager: r.resolve(AlertManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(FavouriteListTableViewDataSource.self) { r in
@@ -520,7 +520,8 @@ class ViewControllerModule: Assembly {
                                                  serverRepository: r.resolve(ServerRepository.self)!,
                                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                                  languageManager: r.resolve(LanguageManager.self)!,
-                                                 latencyRepository: r.resolve(LatencyRepository.self)!)
+                                                 latencyRepository: r.resolve(LatencyRepository.self)!,
+                                                 alertManager: r.resolve(AlertManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(StaticIPListTableViewDataSource.self) { r in

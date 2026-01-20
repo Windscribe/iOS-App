@@ -12,13 +12,13 @@ import Combine
 import Swinject
 
 protocol SubmitLogViewModel {
-    var alertManager: AlertManagerV2 { get }
+    var alertManager: AlertManager { get }
     var networkStatus: NetworkStatus { get }
     func submitDebugLog(username: String?, completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
 }
 
 class SubmitLogViewModelImpl: SubmitLogViewModel {
-    var alertManager: AlertManagerV2
+    var alertManager: AlertManager
     let userSessionRepository: UserSessionRepository
     let apiManager: APIManager
     let connectivity: ConnectivityManager
@@ -29,7 +29,7 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
 
     init(userSessionRepository: UserSessionRepository,
          apiManager: APIManager,
-         alertManager: AlertManagerV2,
+         alertManager: AlertManager,
          connectivity: ConnectivityManager) {
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager

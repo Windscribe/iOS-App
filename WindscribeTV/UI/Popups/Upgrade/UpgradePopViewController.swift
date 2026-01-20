@@ -26,6 +26,8 @@ class UpgradePopViewController: UIViewController {
     var promoCode: String?
     var pcpID: String?
 
+    lazy var alertManager = Assembler.resolve(AlertManager.self)
+
     // MARK: Overrides
 
     override func viewDidLoad() {
@@ -114,7 +116,7 @@ class UpgradePopViewController: UIViewController {
                     self.showLoading()
                 case let .error(error):
                     self.endLoading()
-                    AlertManager.shared.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+                    self.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
                 case .none:
                     self.endLoading()
                 }

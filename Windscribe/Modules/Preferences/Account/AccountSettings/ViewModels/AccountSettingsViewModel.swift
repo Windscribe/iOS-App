@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import RxSwift
 
 protocol AccountSettingsViewModel: PreferencesBaseViewModel {
     var sections: [AccountSectionModel] { get }
@@ -43,8 +42,6 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
     private let languageManager: LanguageManager
-
-    private let disposeBag = DisposeBag()
 
     var shouldShowAddEmailButton: Bool {
         guard let session = userSessionRepository.sessionModel else {

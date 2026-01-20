@@ -31,7 +31,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
     @Published private(set) var showLoading: Bool = false
 
     private let userSessionRepository: UserSessionRepository
-    private let alertManager: AlertManagerV2
+    private let alertManager: AlertManager
     private let apiManager: APIManager
     private let sessionManager: SessionManager
 
@@ -55,7 +55,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
 
     init(userSessionRepository: UserSessionRepository,
          sessionManager: SessionManager,
-         alertManager: AlertManagerV2,
+         alertManager: AlertManager,
          apiManager: APIManager,
          lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.userSessionRepository = userSessionRepository

@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 import Swinject
 import UIKit
 
@@ -40,7 +39,6 @@ class WSTextField: UITextField, UITextFieldDelegate {
 }
 
 class AuthenticationTextField: UITextField {
-    let disposeBag = DisposeBag()
     fileprivate var cancellables = Set<AnyCancellable>()
     var padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 5)
 

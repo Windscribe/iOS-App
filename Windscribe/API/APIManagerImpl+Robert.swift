@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 
 extension APIManagerImpl {
     func getRobertFilters() async throws -> RobertFilters {

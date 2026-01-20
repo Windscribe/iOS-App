@@ -34,7 +34,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
 
     // MARK: Dependencies
 
-    private let alertManager: AlertManagerV2
+    private let alertManager: AlertManager
     private let apiManager: APIManager
     private let upgradeRouter: UpgradeRouter
     private let sessionManager: SessionManager
@@ -62,7 +62,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private var mobilePlans: [MobilePlanModel]?
     private let disposeBag = DisposeBag()
 
-    init(alertManager: AlertManagerV2,
+    init(alertManager: AlertManager,
          apiManager: APIManager,
          upgradeRouter: UpgradeRouter,
          sessionManager: SessionManager,

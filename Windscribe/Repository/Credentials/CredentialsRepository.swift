@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 
 protocol CredentialsRepository {
     var openVPNCrendentials: ServerCredentialsModel? { get }

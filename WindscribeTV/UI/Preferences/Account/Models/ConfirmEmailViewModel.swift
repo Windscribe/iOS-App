@@ -11,17 +11,17 @@ import RxSwift
 import Combine
 
 protocol ConfirmEmailViewModel {
-    var alertManager: AlertManagerV2 { get }
+    var alertManager: AlertManager { get }
     var apiManager: APIManager { get }
 }
 
 class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
-    var alertManager: AlertManagerV2
+    var alertManager: AlertManager
     let apiManager: APIManager
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(alertManager: AlertManagerV2,
+    init(alertManager: AlertManager,
          apiManager: APIManager) {
         self.alertManager = alertManager
         self.apiManager = apiManager

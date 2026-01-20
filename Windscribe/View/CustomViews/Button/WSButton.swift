@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 import UIKit
 
 enum WSButtonType {
@@ -25,7 +24,6 @@ class WSButton: UIButton {
     private(set) var type: WSButtonType
     private(set) var size: WSButtonSize
     private(set) var text: String
-    private let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     init(type: WSButtonType, size: WSButtonSize, text: String, isDarkMode: CurrentValueSubject<Bool, Never>) {

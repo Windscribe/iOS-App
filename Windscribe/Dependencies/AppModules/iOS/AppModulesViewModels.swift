@@ -9,7 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-import RxSwift
 import Swinject
 
 // MARK: ViewModels
@@ -64,7 +63,7 @@ class ViewModels: Assembly {
 
         container.register(PlanUpgradeViewModel.self) { r in
             DefaultUpgradePlanViewModel(
-                alertManager: r.resolve(AlertManagerV2.self)!,
+                alertManager: r.resolve(AlertManager.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 upgradeRouter: r.resolve(UpgradeRouter.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
@@ -89,7 +88,7 @@ class ViewModels: Assembly {
             EnterEmailViewModelImpl(
                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
-                alertManager: r.resolve(AlertManagerV2.self)!,
+                alertManager: r.resolve(AlertManager.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
@@ -114,7 +113,7 @@ class ViewModels: Assembly {
             PreferencesMainCategoryViewModelImpl(
                 sessionManager: r.resolve(SessionManager.self)!,
                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                alertManager: r.resolve(AlertManagerV2.self)!,
+                alertManager: r.resolve(AlertManager.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 languageManager: r.resolve(LanguageManager.self)!,
@@ -337,7 +336,8 @@ class ViewModels: Assembly {
                               userSessionRepository: r.resolve(UserSessionRepository.self)!,
                               wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                               sessionManager: r.resolve(SessionManager.self)!,
-                              customConfigRepository: r.resolve(CustomConfigRepository.self)!)
+                              customConfigRepository: r.resolve(CustomConfigRepository.self)!,
+                              alertManager: r.resolve(AlertManager.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -372,7 +372,7 @@ class ViewModels: Assembly {
 
         container.register(CustomConfigPickerViewModelType.self) { r in
             CustomConfigPickerViewModel(logger: r.resolve(FileLogger.self)!,
-                                        alertManager: r.resolve(AlertManagerV2.self)!,
+                                        alertManager: r.resolve(AlertManager.self)!,
                                         customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                                         vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                         connectivity: r.resolve(ConnectivityManager.self)!,
