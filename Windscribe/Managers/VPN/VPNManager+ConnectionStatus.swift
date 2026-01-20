@@ -95,7 +95,7 @@ extension VPNManagerImpl {
                 return
             }
             if error == .credentialsFailure {
-                AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
+                self.alertManager.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
                 self.logger.logE("VPNManager", "VPN disconnected due to credential failure")
                 Task { @MainActor in
                     await self.resetProfiles()

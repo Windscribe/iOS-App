@@ -7,12 +7,10 @@
 //
 
 import Combine
-import RxSwift
 import UIKit
 
 class SwitchButton: UIButton {
     var isDarkMode: CurrentValueSubject<Bool, Never>
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     /*
      // Only override draw() if you perform custom drawing.

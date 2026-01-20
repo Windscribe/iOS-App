@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import Swinject
 import Combine
 
@@ -27,7 +26,6 @@ class UserDataRepositoryImpl: UserDataRepository {
     }
 
     private let logger: FileLogger
-    private let disposeBag = DisposeBag()
 
     init(serverRepository: ServerRepository, credentialsRepository: CredentialsRepository, portMapRepository: PortMapRepository, latencyRepository: LatencyRepository, staticIpRepository: StaticIpRepository, notificationsRepository: NotificationRepository, logger: FileLogger) {
         self.serverRepository = serverRepository

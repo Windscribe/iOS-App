@@ -25,6 +25,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var logoStackView: UIStackView!
     var logoIcon: ImageButton!
     var proIcon: ImageButton!
+
     var notificationDot: UIButton!
 
     // MARK: background views

@@ -19,7 +19,7 @@ enum ManageAccountState: Equatable {
 
 protocol AccountViewModelType {
     var apiCallManager: APIManager { get }
-    var alertManager: AlertManagerV2 { get }
+    var alertManager: AlertManager { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var cancelAccountState: BehaviorSubject<ManageAccountState> { get }
     var languageUpdatedTrigger: PublishSubject<Void> { get }
@@ -40,7 +40,7 @@ protocol AccountViewModelType {
 }
 
 class AccountViewModel: AccountViewModelType {
-    let alertManager: AlertManagerV2
+    let alertManager: AlertManager
     let apiCallManager: APIManager
     let logger: FileLogger
     let sessionManager: SessionManager
@@ -55,7 +55,7 @@ class AccountViewModel: AccountViewModelType {
     var sessionUpdatedTrigger = PublishSubject<Void>()
 
     init(apiCallManager: APIManager,
-         alertManager: AlertManagerV2,
+         alertManager: AlertManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          sessionManager: SessionManager,
          logger: FileLogger,

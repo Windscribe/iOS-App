@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 
 protocol IPInfoViewModelType {
     var isBlurStaticIpAddress: Bool { get }
@@ -33,8 +32,6 @@ class IPInfoViewModel: IPInfoViewModelType {
     private let bridgeApiRepository: BridgeApiRepository
     private let serverRepository: ServerRepository
     private let hapticFeedbackManager: HapticFeedbackManager
-
-    private let disposeBag = DisposeBag()
 
     let statusSubject = CurrentValueSubject<ConnectionState?, Never>(nil)
     let ipAddressSubject = CurrentValueSubject<String?, Never>(nil)

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import StoreKit
 import Combine
 
@@ -30,7 +29,6 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
     var isComingFromRestore: Bool = false
     var hasAddObserver: Bool = false
     var uncompletedTransactions: [UncompletedTransactions] = []
-    let dispose = DisposeBag()
 
     // MARK: - Async Continuation Storage
 

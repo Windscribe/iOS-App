@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 import Combine
-import RxSwift
 
 protocol ServerRepository {
     var serverListSubject: CurrentValueSubject<[ServerModel], Never> { get }
@@ -39,7 +38,6 @@ class ServerRepositoryImpl: ServerRepository {
     private let preferences: Preferences
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
-    private let disposeBag = DisposeBag()
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, userSessionRepository: UserSessionRepository, preferences: Preferences, advanceRepository: AdvanceRepository, logger: FileLogger) {
         self.apiManager = apiManager

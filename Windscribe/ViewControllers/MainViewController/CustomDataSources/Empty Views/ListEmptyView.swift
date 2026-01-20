@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import RxSwift
 import UIKit
 
 enum ListEmptyViewType {
@@ -60,7 +59,6 @@ enum ListEmptyViewType {
 class ListEmptyView: UIView {
     var isDarkMode: CurrentValueSubject<Bool, Never>
     var activeLanguage: CurrentValueSubject<Languages, Never>
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     let label = UILabel()

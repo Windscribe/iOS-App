@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import RxSwift
 
 class EmergencyRepositoryImpl: EmergencyRepository {
     private let wsnetEmergencyConnect: WSNetEmergencyConnect
@@ -19,7 +18,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
     private let customConfigRepository: CustomConfigRepository
-    private let disposeBag = DisposeBag()
     private let configuationName = "emergency-connect"
 
     init(wsnetEmergencyConnect: WSNetEmergencyConnect,

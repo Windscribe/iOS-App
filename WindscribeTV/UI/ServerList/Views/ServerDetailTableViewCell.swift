@@ -6,7 +6,6 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
 import Combine
 import Swinject
 import UIKit
@@ -48,11 +47,11 @@ class ServerDetailTableViewCell: UITableViewCell {
     lazy var serverRepository = Assembler.resolve(ServerRepository.self)
     lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)
     lazy var staticIpRepository = Assembler.resolve(StaticIpRepository.self)
+    lazy var alertManager = Assembler.resolve(AlertManager.self)
 
     var displayingGroup: GroupModel?
     var displayingNodeServer: ServerModel?
     var favIDs: [String] = []
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     let vpnManager = Assembler.resolve(VPNManager.self)
     var myPreferredFocusedView: UIView?
@@ -386,10 +385,10 @@ class ServerDetailTableViewCell: UITableViewCell {
             return
         }
         if !canAccessServer() {
-            AlertManager.shared.showSimpleAlert(viewController: delegate as? UIViewController,
-                                                title: TextsAsset.TVAsset.locationMaintenanceTitle,
-                                                message: TextsAsset.TVAsset.locationMaintenanceDescription,
-                                                buttonText: TextsAsset.okay)
+            alertManager.showSimpleAlert(viewController: delegate as? UIViewController,
+                                         title: TextsAsset.TVAsset.locationMaintenanceTitle,
+                                         message: TextsAsset.TVAsset.locationMaintenanceDescription,
+                                         buttonText: TextsAsset.okay)
             return
         }
         if favButton.isHidden {

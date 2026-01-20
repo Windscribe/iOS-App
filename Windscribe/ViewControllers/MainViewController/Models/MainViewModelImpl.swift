@@ -32,6 +32,7 @@ class MainViewModelImpl: MainViewModel {
     private let sessionManager: SessionManager
     private let wifiNetworkRepository: WifiNetworkRepository
     private let customConfigRepository: CustomConfigRepository
+    private let alertManager: AlertManager
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
@@ -91,7 +92,8 @@ class MainViewModelImpl: MainViewModel {
          userSessionRepository: UserSessionRepository,
          wifiNetworkRepository: WifiNetworkRepository,
          sessionManager: SessionManager,
-         customConfigRepository: CustomConfigRepository) {
+         customConfigRepository: CustomConfigRepository,
+         alertManager: AlertManager) {
 
         self.vpnManager = vpnManager
         self.logger = logger
@@ -113,6 +115,7 @@ class MainViewModelImpl: MainViewModel {
         self.sessionManager = sessionManager
         self.wifiNetworkRepository = wifiNetworkRepository
         self.customConfigRepository = customConfigRepository
+        self.alertManager = alertManager
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
@@ -595,5 +598,16 @@ class MainViewModelImpl: MainViewModel {
 
     func keepSessionUpdated() {
         sessionManager.keepSessionUpdated()
+    }
+
+    func showSimpleAlert(viewController: UIViewController?, title: String, message: String, buttonText: String) {
+        alertManager.showSimpleAlert(viewController: viewController,
+                                     title: title,
+                                     message: message,
+                                     buttonText: buttonText)
+    }
+
+    func showAlert(title: String, message: String, actions: [UIAlertAction]) {
+        alertManager.showAlert(title: title, message: message, actions: actions)
     }
 }

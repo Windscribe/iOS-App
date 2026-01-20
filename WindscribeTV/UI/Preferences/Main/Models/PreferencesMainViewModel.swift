@@ -23,7 +23,7 @@ protocol PreferencesMainViewModelOld {
     var actionDisplay: BehaviorSubject<PreferencesActionDisplay> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var currentLanguage: BehaviorSubject<String?> { get }
-    var alertManager: AlertManagerV2 { get }
+    var alertManager: AlertManager { get }
     func getActionButtonDisplay()
     func logoutUser()
     func isUserGhost() -> Bool
@@ -43,7 +43,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let logger: FileLogger
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
-    let alertManager: AlertManagerV2
+    let alertManager: AlertManager
     let preferences: Preferences
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let languageManager: LanguageManager
@@ -51,7 +51,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     init(userSessionRepository: UserSessionRepository,
          sessionManager: SessionManager,
          logger: FileLogger,
-         alertManager: AlertManagerV2,
+         alertManager: AlertManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
          languageManager: LanguageManager) {

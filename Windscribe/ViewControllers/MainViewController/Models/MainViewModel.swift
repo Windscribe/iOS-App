@@ -66,4 +66,7 @@ protocol MainViewModel {
     func runHapticFeedback(level: HapticFeedbackLevel)
     func checkAccountWasDowngraded(for serverList: [ServerModel]) -> Bool
     func keepSessionUpdated()
+
+    func showSimpleAlert(viewController: UIViewController?, title: String, message: String, buttonText: String)
+    func showAlert(title: String, message: String, actions: [UIAlertAction])
 }

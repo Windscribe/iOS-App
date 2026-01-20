@@ -136,17 +136,17 @@ extension MainViewController {
     }
 
     func showConnectionFailed() {
-        AlertManager.shared.showSimpleAlert(viewController: self,
-                                            title: TextsAsset.UnableToConnect.title,
-                                            message: TextsAsset.UnableToConnect.message,
-                                            buttonText: TextsAsset.okay)
+        viewModel.showSimpleAlert(viewController: self,
+                                  title: TextsAsset.UnableToConnect.title,
+                                  message: TextsAsset.UnableToConnect.message,
+                                  buttonText: TextsAsset.okay)
     }
 
     func showAuthFailurePopup() {
-        AlertManager.shared.showSimpleAlert(viewController: self,
-                                            title: TextsAsset.AuthFailure.title,
-                                            message: TextsAsset.AuthFailure.message,
-                                            buttonText: TextsAsset.okay)
+        viewModel.showSimpleAlert(viewController: self,
+                                  title: TextsAsset.AuthFailure.title,
+                                  message: TextsAsset.AuthFailure.message,
+                                  buttonText: TextsAsset.okay)
     }
 
     func refreshProtocol(from network: WifiNetworkModel?, with protoPort: ProtocolPort?) {

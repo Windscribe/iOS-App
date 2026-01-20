@@ -19,9 +19,9 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private let logger: FileLogger
     private let fileDatabase: FileDatabase
     private let wgCrendentials: WgCredentials
-    private let alertManager: AlertManagerV2?
+    private let alertManager: AlertManager?
 
-    init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManagerV2?, logger: FileLogger) {
+    init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManager?, logger: FileLogger) {
         self.apiCallManager = apiCallManager
         self.fileDatabase = fileDatabase
         self.wgCrendentials = wgCrendentials
@@ -57,7 +57,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                 self.wgCrendentials.saveInitResponse(config: config)
                 return
             }
-            let accept = try await alertManager.askUser(message: error.description).value
+            let accept = await alertManager.askUser(message: error.description)
             guard accept else { throw Errors.handled }
 
             let config = try await self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)

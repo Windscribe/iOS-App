@@ -44,6 +44,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
     private let languageManager: LanguageManager
     private let latencyRepository: LatencyRepository
     private let serverRepository: ServerRepository
+    private let alertManager: AlertManager
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
@@ -51,7 +52,8 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
          serverRepository: ServerRepository,
          userSessionRepository: UserSessionRepository,
          languageManager: LanguageManager,
-         latencyRepository: LatencyRepository) {
+         latencyRepository: LatencyRepository,
+         alertManager: AlertManager) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.hapticFeedbackManager = hapticFeedbackManager
         self.preferences = preferences
@@ -59,6 +61,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
         self.userSessionRepository = userSessionRepository
         self.languageManager = languageManager
         self.latencyRepository = latencyRepository
+        self.alertManager = alertManager
         super.init()
         scrollViewDelegate = self
 
@@ -194,8 +197,8 @@ extension FavouriteListTableViewDataSourceImpl: NodeTableViewCellModelDelegate {
             guard let self = self else { return }
             self.serverRepository.removeFavorite(with: groupId)
         }
-        AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
-                                      message: TextsAsset.Favorites.removeMessage,
-                                      buttonText: TextsAsset.cancel, actions: [yesAction])
+        alertManager.showAlert(title: TextsAsset.Favorites.removeTitle,
+                               message: TextsAsset.Favorites.removeMessage,
+                               buttonText: TextsAsset.cancel, actions: [yesAction])
     }
 }

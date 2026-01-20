@@ -9,7 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-import RxSwift
 import Swinject
 import UIKit
 
@@ -68,7 +67,7 @@ class TVViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(AccountViewModelType.self) { r in
             AccountViewModel(apiCallManager: r.resolve(APIManager.self)!,
-                             alertManager: r.resolve(AlertManagerV2.self)!,
+                             alertManager: r.resolve(AlertManager.self)!,
                              lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                              sessionManager: r.resolve(SessionManager.self)!,
                              logger: r.resolve(FileLogger.self)!,
@@ -89,7 +88,7 @@ class TVViewModels: Assembly {
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(UpgradeViewModel.self) { r in
-            UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!,
+            UpgradeViewModelImpl(alertManager: r.resolve(AlertManager.self)!,
                                  apiManager: r.resolve(APIManager.self)!,
                                  sessionManager: r.resolve(SessionManager.self)!,
                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
@@ -153,13 +152,13 @@ class TVViewModels: Assembly {
 
         container.register(EnterEmailViewModel.self) { r in
             EnterEmailViewModelImpl(userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                                    alertManager: r.resolve(AlertManagerV2.self)!,
+                                    alertManager: r.resolve(AlertManager.self)!,
                                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                     apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(ConfirmEmailViewModel.self) { r in
-            ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!,
+            ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManager.self)!,
                                       apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
 
@@ -175,7 +174,7 @@ class TVViewModels: Assembly {
             PreferencesMainViewModelImpOld(userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                            sessionManager: r.resolve(SessionManager.self)!,
                                            logger: r.resolve(FileLogger.self)!,
-                                           alertManager: r.resolve(AlertManagerV2.self)!,
+                                           alertManager: r.resolve(AlertManager.self)!,
                                            lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                            preferences: r.resolve(Preferences.self)!,
                                            languageManager: r.resolve(LanguageManager.self)!)
@@ -184,7 +183,7 @@ class TVViewModels: Assembly {
         container.register(SubmitLogViewModel.self) { r in
             SubmitLogViewModelImpl(userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                    apiManager: r.resolve(APIManager.self)!,
-                                   alertManager: r.resolve(AlertManagerV2.self)!,
+                                   alertManager: r.resolve(AlertManager.self)!,
                                    connectivity: r.resolve(ConnectivityManager.self)!)
         }.inObjectScope(.transient)
 
@@ -360,7 +359,7 @@ class TVViewControllers: Assembly {
             vc.viewModel = r.resolve(NewsFeedModelType.self)
             vc.router = r.resolve(HomeRouter.self)
             vc.logger = r.resolve(FileLogger.self)
-            vc.alertManager = r.resolve(AlertManagerV2.self)
+            vc.alertManager = r.resolve(AlertManager.self)
         }.inObjectScope(.transient)
 
         container.register(ServerListViewController.self) { _ in

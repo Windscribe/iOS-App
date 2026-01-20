@@ -18,7 +18,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
 
     var button = WSPillButton()
 
-    var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!, alertManager: AlertManagerV2!
+    var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!, alertManager: AlertManager!
     let disposeBag = DisposeBag()
     var selectedActionLink: NewsFeedActionType?
 

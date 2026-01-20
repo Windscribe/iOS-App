@@ -10,7 +10,6 @@ import Foundation
 import Combine
 import UserNotifications
 import UIKit
-import RxSwift
 
 protocol ConnectionSettingsViewModel: PreferencesBaseViewModel {
     var entries: [ConnectionsEntryType] { get set }

@@ -8,7 +8,6 @@
 
 import Combine
 import NetworkExtension
-import RxSwift
 import Swinject
 
 enum ConnectionType {

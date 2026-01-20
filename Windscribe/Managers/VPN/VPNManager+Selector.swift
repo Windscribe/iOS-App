@@ -10,7 +10,6 @@ import Foundation
 import NetworkExtension
 import RealmSwift
 import Combine
-import RxSwift
 import Swinject
 
 extension VPNManagerImpl {
