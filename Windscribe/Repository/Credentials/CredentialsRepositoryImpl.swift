@@ -8,7 +8,6 @@
 
 import Foundation
 import RealmSwift
-import RxSwift
 import Combine
 
 class CredentialsRepositoryImpl: CredentialsRepository {
@@ -19,10 +18,9 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     private let wifiManager: WifiManager
     private let logger: FileLogger
     private let preferences: Preferences
-    private let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
-    let connectionMode: BehaviorSubject<String?> = BehaviorSubject(value: nil)
-    let selectedProtocol: BehaviorSubject<String?> = BehaviorSubject(value: nil)
+    private var connectionMode: String?
+    private var selectedProtocol: String?
 
     var openVPNCrendentials: ServerCredentialsModel?
     var ikev2Crendentials: ServerCredentialsModel?
@@ -48,14 +46,14 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         preferences.getConnectionMode()
             .receive(on: DispatchQueue.main)
             .sink { [self] data in
-                connectionMode.onNext(data)
+                connectionMode = data
             }
             .store(in: &cancellables)
 
         preferences.getSelectedProtocol()
             .receive(on: DispatchQueue.main)
             .sink { [self] data in
-                selectedProtocol.onNext(data)
+                selectedProtocol = data
             }
             .store(in: &cancellables)
 
@@ -118,7 +116,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
             }
             return OpenVPNServerCredentials.self
         } else {
-            if let connection = try? connectionMode.value(), let selectedprotocol = try? selectedProtocol.value() {
+            if let connection = connectionMode, let selectedprotocol = selectedProtocol {
                 if connection == Fields.Values.manual {
                     if selectedprotocol == TextsAsset.iKEv2 {
                         return IKEv2ServerCredentials.self

@@ -9,13 +9,18 @@
 import Foundation
 import NetworkExtension
 import Realm
-import RxSwift
+import Combine
 import Swinject
 import RealmSwift
-import Combine
+
+enum TCPLatencyError: Error {
+    case cancelled
+    case vpnConnected
+    case pingFailed
+    case notIOS
+}
 
 class LatencyRepositoryImpl: LatencyRepository {
-
     private let pingManager: LocalPingManager
     private let database: LocalDatabase
     private let logger: FileLogger
@@ -27,9 +32,8 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let userSessionRepository: UserSessionRepository
     private let staticIpRepository: StaticIpRepository
 
-    private let disposeBag = DisposeBag()
-    let latency: BehaviorSubject<[PingDataModel]> = BehaviorSubject(value: [])
-    private let favList: BehaviorSubject<[FavouriteModel]> = BehaviorSubject(value: [])
+    let latency = CurrentValueSubject<[PingDataModel], Never>([])
+    private let favList = CurrentValueSubject<[FavouriteModel], Never>([])
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
     private var startTimeStamp = Date()
@@ -56,7 +60,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.userSessionRepository = userSessionRepository
         self.staticIpRepository = staticIpRepository
 
-        latency.onNext(self.database.getAllPingData().map { PingDataModel(from: $0) })
+        latency.send(self.database.getAllPingData().map { PingDataModel(from: $0) })
         observeFavouriteList()
 
         refreshBestLocation()
@@ -65,162 +69,143 @@ class LatencyRepositoryImpl: LatencyRepository {
     private func observeFavouriteList() {
         database.getFavouriteListPublisher()
             .sink { favList in
-                self.favList.onNext(favList.map { $0.getModel() })
+                self.favList.send(favList.map { $0.getModel() })
             }
             .store(in: &self.cancellables)
     }
 
     /// Returns latency data for ip.
     func getPingData(ip: String) -> PingDataModel? {
-        let value = try? latency.value()
-        return value?.first { $0.ip == ip }
+        let value = latency.value
+        return value.first { $0.ip == ip }
     }
 
-    func loadLatency() async throws {
+    func loadLatency() async {
         // If the app launches and the VPN is connected the app does not know straight away
         // that it is connected, we wait 1 sec until eveything is loaded an then we can
         // load the latencies, otherwise it will get the latency of the connected location
         let timeSince = Date().timeIntervalSince(startTimeStamp)
         guard timeSince >= 1 || hasPassedInitialTimer else {
             try? await Task.sleep(nanoseconds: 50_000_000)
-            try await loadLatency()
+            await loadLatency()
             return
         }
         hasPassedInitialTimer = true
-        try await loadAllServerLatency().value
+        await loadAllServerLatency()
         refreshBestLocation()
     }
 
-    private func loadAllServerLatency() -> Completable {
+    private func loadAllServerLatency() async {
         logger.logI("LatencyRepositoryImpl", "Attempting to update latency data.")
         let pingServers = getServerPingAndHosts()
-        if pingServers.count == 0 {
+        guard pingServers.count != 0 else {
             logger.logI("LatencyRepositoryImpl", "Server list not ready for latency update.")
-            return Completable.empty()
+            return
         }
         if locationsManager.getBestLocation() == "0" {
             self.pickBestLocation()
         }
-        if vpnStateRepository.isConnected() {
+        guard !vpnStateRepository.isConnected() else {
             self.logger.logI("LatencyRepositoryImpl", "Latency not updated as vpn is connected")
-            return Completable.empty()
+            return
         }
-        let latencySingles = createLatencyTask(from: pingServers)
-            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-            .observe(on: MainScheduler.asyncInstance)
-            .timeout(.seconds(20), other: Single<[PingDataModel]>.error(RxError.timeout), scheduler: MainScheduler.instance)
-        latencySingles.subscribe(
-            onSuccess: { _ in
-                self.logger.logI("LatencyRepositoryImpl", "Successfully updated latency data.")
-            },
-            onFailure: { _ in
-                self.logger.logE("LatencyRepositoryImpl", "Failure to update latency data.")
-            })
-        .disposed(by: self.disposeBag)
-
-        return latencySingles.asCompletable()
+        do {
+            try await createLatencyTask(from: pingServers)
+            self.logger.logI("LatencyRepositoryImpl", "Successfully updated latency data.")
+        } catch {
+            self.logger.logE("LatencyRepositoryImpl", "Failure to update latency data.")
+        }
     }
 
     func checkLocationsValidity() async {
         refreshBestLocation()
         if !vpnStateRepository.isConnected() {
-            try? await loadLatency()
+            await loadLatency()
         }
     }
 
-    func loadStreamingServerLatency() -> Completable {
-        let streamingServersToPing = serverRepository.currentServerModels
+    func loadStreamingServerLatency() async {
+        let streamingServersToPing = database.getServers()?
             .filter { $0.locType == "streaming" }
             .compactMap { region in Array(region.groups) }
             .reduce([], +)
             .map { city in (city.pingIp, city.pingHost) }
-        return createLatencyTask(from: streamingServersToPing)
-            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-            .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in self.latency.onNext(self.getPingDataModel()) })
-            .asCompletable()
+        try? await createLatencyTask(from: streamingServersToPing ?? [])
+        latency.send(self.getPingDataModel())
     }
 
-    func loadStaticIpLatency() -> Single<[PingDataModel]> {
-        createLatencyTask(from: getStaticPingAndHosts())
-            .observe(on: MainScheduler.instance)
-            .do(onSuccess: { _ in
-                DispatchQueue.main.async {
-                    self.latency.onNext(self.getPingDataModel())
-                }
-            })
+    func loadStaticIpLatency() async {
+        try? await createLatencyTask(from: getStaticPingAndHosts())
+        latency.send(self.getPingDataModel())
     }
 
-    func loadCustomConfigLatency() -> Completable {
-        getCustomConfigLatency()
-            .observe(on: MainScheduler.instance)
-            .do(onSuccess: { _ in
-                self.latency.onNext(self.getPingDataModel())
-            }).asCompletable()
+    func loadCustomConfigLatency() async {
+        await getCustomConfigLatency()
+        latency.send(self.getPingDataModel())
     }
 
     private func getPingDataModel() -> [PingDataModel] {
         database.getAllPingData().map { PingDataModel(from: $0)}
     }
 
-    private func getCustomConfigLatency() -> Single<[PingDataModel]> {
-        return Single<[PingDataModel]>.create { completion in
-            autoreleasepool {
-                DispatchQueue.global().async {
-                let threadSafeConfigs = Array(self.database.getCustomConfigs()).map { ThreadSafeReference(to: $0) }
-                var tasks: [Single<PingDataModel>] = []
-                if let realm = try? Realm() {
-                    for ref in threadSafeConfigs {
-                        let task = Single<PingDataModel>.create { innerCompletion in
-                            autoreleasepool {
-                                    if let config = realm.resolve(ref) {
-                                        let pingData = PingData(ip: config.serverAddress, latency: -1)
-                                        self.getTCPLatency(pingIp: config.serverAddress) { minTime in
-                                            if minTime != -1 {
-                                                pingData.latency = minTime
-                                                self.database.addPingData(pingData: pingData)
-                                            }
-                                            innerCompletion(.success(PingDataModel(from: pingData)))
-                                        }
-                                    } else {
-                                        innerCompletion(.failure(Realm.Error(.fail)))
-                                    }
-                                return Disposables.create()
-                            }
-                        }
-                        tasks.append(task)
+    private func getCustomConfigLatency() async {
+        let configs = database.getCustomConfigs()
+        let serverAddresses = configs.map { $0.serverAddress }
+
+        await withTaskGroup(of: Void.self) { group in
+            for address in serverAddresses {
+                group.addTask {
+                    do {
+                        let latency = try await self.getTCPLatency(pingIp: address)
+
+                        let pingData = PingData(
+                            ip: address,
+                            latency: latency
+                        )
+
+                        self.database.addPingData(pingData: pingData)
+
+                    } catch TCPLatencyError.vpnConnected {
+                        self.logger.logI("LatencyRepositoryImpl", "getCustomConfigLatency - vpn connected")
+                    } catch TCPLatencyError.cancelled {
+                        self.logger.logI("LatencyRepositoryImpl", "getCustomConfigLatency - ping was cancelled for \(address)")
+                    } catch {
+                        self.logger.logE(
+                            "LatencyRepositoryImpl",
+                            "TCP ping failed for \(address)"
+                        )
                     }
-                    Observable.zip(tasks.map { $0.asObservable() })
-                        .asSingle()
-                        .subscribe(onSuccess: { result in
-                            completion(.success(result))
-                        }, onFailure: { error in
-                            completion(.failure(error))
-                        })
-                        .disposed(by: self.disposeBag)
-                }
                 }
             }
-            return Disposables.create()
         }
     }
 
-    private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
+    private func getTCPLatency(pingIp: String) async throws -> Int {
 #if os(iOS)
+        if Task.isCancelled { // Kinda important for unstructured concurrency
+            throw TCPLatencyError.cancelled
+        }
+
         if vpnStateRepository.isConnected() {
-            completion(-1)
-        } else {
-            _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {
-                QNNTcpPing.start(pingIp) { result in
-                    if let minTime = result?.minTime {
-                        completion(Int(minTime))
-                    } else {
-                        self.logger.logE("LatencyRepositoryImpl", "Error when performing TCP ping to given node. \(pingIp)")
-                        completion(-1)
-                    }
+            throw TCPLatencyError.vpnConnected
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            QNNTcpPing.start(pingIp) { result in
+                if Task.isCancelled {
+                    continuation.resume(throwing: TCPLatencyError.cancelled)
+                    return
+                }
+
+                if let minTime = result?.minTime {
+                    continuation.resume(returning: Int(minTime))
+                } else {
+                    continuation.resume(throwing: TCPLatencyError.pingFailed)
                 }
             }
         }
+#else
+        return -1
 #endif
     }
 
@@ -241,48 +226,54 @@ class LatencyRepositoryImpl: LatencyRepository {
         return minLatencyPingData?.ip
     }
 
-    private func createLatencyTask(from: [(String, String)]) -> Single<[PingDataModel]> {
-        let maxConcurrentTasks = 20
-        return Single.create { single in
-            let pingPublishers = from.map { (ip, host) in
-                Future<PingDataModel, Never> { promise in
-                    var hasDeliveredResult = false
-                    let timeoutCancellable = Just(PingData(ip: ip, latency: -1))
-                        .delay(for: .seconds(3), scheduler: DispatchQueue.global(qos: .userInitiated))
-                        .sink {
-                            if !hasDeliveredResult {
-                                hasDeliveredResult = true
-                                promise(.success(PingDataModel(from: $0)))
-                            }
-                        }
+    // MARK: Ping Methods
+    private func performPing(ip: String, host: String, pingType: Int32) async {
+        var result = await withCheckedContinuation { continuation in
+            self.pingManager.ping(ip, hostname: host, pingType: pingType) { _, _, time, success in
+                continuation.resume(returning: (time: time, success: success))
+            }
+        }
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        if Task.isCancelled {
+            result.success = false
+        }
+        self.database.addPingData(pingData: PingData(ip: ip, latency: result.success ? Int(result.time) : -1))
+    }
 
-                    self.pingManager.ping(ip, hostname: host,
-                                          pingType: self.advanceRepository.getPingType()) { ip, _, time, success in
-                        if !hasDeliveredResult {
-                            hasDeliveredResult = true
-                            timeoutCancellable.cancel() // Cancel timeout if we get a response
-                            let pingData = PingData(ip: ip, latency: success ? Int(time) : -1)
-                            if success {
-                                self.database.addPingData(pingData: pingData)
-                            }
-                            promise(.success(PingDataModel(from: pingData)))
-                        }
-                    }
+    private func performPingTask(ip: String, host: String, pingType: Int32) async {
+        // Race between ping and timeout using async/await
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask { await self.performPing(ip: ip, host: host, pingType: pingType) }
+            group.addTask {
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+            } // 3 secs timeout
+
+            // Wait for first task to complete
+            await group.next()
+            group.cancelAll() // Cancel the slower task
+        }
+    }
+
+    private func createLatencyTask(from: [(String, String)]) async throws {
+        let maxConcurrentTasks = 20
+        let pingType = advanceRepository.getPingType()
+
+        await withTaskGroup(of: Void.self) { group in
+            var index = 0
+
+            // Add initial batch of tasks up to maxConcurrentTasks
+            for (ip, host) in from.prefix(maxConcurrentTasks) {
+                group.addTask { await self.performPingTask(ip: ip, host: host, pingType: pingType) }
+                index += 1
+            }
+            // Process results and add new tasks as they complete
+            for await _ in group {
+                // Add next task if there are more
+                if index < from.count {
+                    let (ip, host) = from[index]
+                    group.addTask { await self.performPingTask(ip: ip, host: host, pingType: pingType) }
+                    index += 1
                 }
-            }
-            let cancellable = pingPublishers
-                .publisher
-                .flatMap(maxPublishers: .max(maxConcurrentTasks)) { $0 }
-                .collect()
-                .sink(receiveCompletion: { _ in }, receiveValue: { results in
-                    single(.success(results))
-                })
-            // Store cancellable on main thread to avoid concurrent access to cancellables set
-            DispatchQueue.main.async {
-                cancellable.store(in: &self.cancellables)
-            }
-            return Disposables.create {
-                cancellable.cancel()
             }
         }
     }
@@ -301,7 +292,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     func refreshBestLocation() {
         let pingData = self.database.getAllPingData().map { PingDataModel.init(from: $0) }
-        self.latency.onNext(pingData)
+        self.latency.send(pingData)
         self.pickBestLocation(pingData: pingData)
     }
 

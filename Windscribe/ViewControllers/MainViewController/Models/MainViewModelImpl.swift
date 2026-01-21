@@ -421,23 +421,23 @@ class MainViewModelImpl: MainViewModel {
     }
 
     func updateCustomConfigLatency() {
-        self.latencyRepo.loadCustomConfigLatency().subscribe(onCompleted: {}).disposed(by: self.disposeBag)
+        Task {
+            await latencyRepo.loadCustomConfigLatency()
+        }
     }
 
     func loadStaticIPLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {
-        latencyRepo.loadStaticIpLatency().subscribe(onSuccess: { _ in
+        Task {
+            await latencyRepo.loadStaticIpLatency()
             completion(true, nil)
-        }, onFailure: { error in
-            completion(nil, error.localizedDescription)
-        }).disposed(by: disposeBag)
+        }
     }
 
     func loadCustomConfigLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {
-        latencyRepo.loadCustomConfigLatency().subscribe(onCompleted: {
+        Task {
+            await latencyRepo.loadCustomConfigLatency()
             completion(true, nil)
-        }, onError: { error in
-            completion(nil, error.localizedDescription)
-        }).disposed(by: disposeBag)
+        }
     }
 
     func loadLatencies() {
@@ -451,10 +451,12 @@ class MainViewModelImpl: MainViewModel {
             }
             .store(in: &cancellables)
 
-        latencyRepo.latency.bind(onNext: { [weak self] data in
-            guard let self = self else { return }
-            self.latencies.onNext(data)
-        }).disposed(by: disposeBag)
+        latencyRepo.latency
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                self.latencies.onNext(data)
+            }
+            .store(in: &cancellables)
     }
 
     func getNotices() {

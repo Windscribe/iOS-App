@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         Task.detached { [unowned self] in
-            try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
+            await latencyRepository.loadCustomConfigLatency()
             if await preferences.userSessionAuth() != nil {
                 try? await Task.sleep(nanoseconds: 2_000_000_000)
                 try? await self.latencyRepository.loadLatency()
