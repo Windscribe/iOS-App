@@ -47,11 +47,15 @@ class ConfigurationsManager {
     var cancellables = Set<AnyCancellable>()
 
     /// Tracks all node hostnames that failed during current location session
-    /// Cleared when location changes, all nodes exhausted, or connection succeeds
+    /// Cleared when location changes, protocol changes, or connection succeeds
     var failedNodeHostnames: Set<String> = []
 
     /// Tracks current location ID to detect location changes and clear failed nodes
     private var lastLocationId: String?
+
+    /// Tracks current protocol to detect protocol changes during failover and clear failed nodes
+    /// This allows different protocols to try the same nodes that failed with previous protocols
+    private var currentConnectionProtocol: String = ""
 
     /// Wait for disconnect event after manager is disabled.
     let disconnectWaitTimeout = 5.0
@@ -327,11 +331,12 @@ class ConfigurationsManager {
         }
     }
 
-    /// Clears all failed nodes (called on success, location change, or all nodes exhausted)
+    /// Clears all failed nodes and resets protocol tracking (called on success, location change, or protocol change)
     func clearFailedNodes() {
         if !failedNodeHostnames.isEmpty {
             logger.logI("ConfigurationsManager", "Cleared \(failedNodeHostnames.count) failed nodes")
             failedNodeHostnames.removeAll()
+            currentConnectionProtocol = ""  // Reset protocol tracking for fresh start
         }
     }
 
