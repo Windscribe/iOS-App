@@ -28,18 +28,23 @@ extension MainViewController {
                         guard let self else { return }
 
                         self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
-                        self.favTableView.reloadData()
+                        DispatchQueue.main.async {
+                            self.favTableView.reloadData()
+                        }
                         self.endRefreshControls(update: false)
                     }, onStaticCompletion: { [weak self] in
                         guard let self else { return }
 
                         self.loadStaticIPs()
-                        self.staticIpTableView.reloadData()
+                        DispatchQueue.main.async {
+                            self.staticIpTableView.reloadData()
+                        }
                         self.endRefreshControls(update: false)
                     }, onCustomConfigCompletion: {  [weak self] in
                         guard let self else { return }
-
-                        self.customConfigTableView.reloadData()
+                        DispatchQueue.main.async {
+                            self.customConfigTableView.reloadData()
+                        }
                         self.endRefreshControls(update: false)
                     },
                     onExitCompletion: { [weak self] in

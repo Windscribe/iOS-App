@@ -62,7 +62,7 @@ extension VPNManagerImpl {
     /// push an update.
     private func updateUserIpIfRequired() {
         // State changed from background or on demand mode.
-        guard let ipState = try? ipRepository.ipState.value(), vpnStateRepository.configurationState == .initial else {
+        guard let ipState = ipRepository.ipState.value, vpnStateRepository.configurationState == .initial else {
             return
         }
         if ipState == .updating {

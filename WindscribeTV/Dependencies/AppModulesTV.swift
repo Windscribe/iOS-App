@@ -136,7 +136,8 @@ class TVViewModels: Assembly {
                               userSessionRepository: r.resolve(UserSessionRepository.self)!,
                               wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                               sessionManager: r.resolve(SessionManager.self)!,
-                              customConfigRepository: r.resolve(CustomConfigRepository.self)!)
+                              customConfigRepository: r.resolve(CustomConfigRepository.self)!,
+                              alertManager: r.resolve(AlertManager.self)!)
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)

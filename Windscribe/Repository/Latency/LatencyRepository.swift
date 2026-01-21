@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol LatencyRepository {
-    var latency: BehaviorSubject<[PingDataModel]> { get }
+    var latency: CurrentValueSubject<[PingDataModel], Never> { get }
     func getPingData(ip: String) -> PingDataModel?
     func loadLatency() async throws
-    func loadStaticIpLatency() -> Single<[PingDataModel]>
-    func loadCustomConfigLatency() -> Completable
+    func loadStaticIpLatency() async
+    func loadCustomConfigLatency() async
     func pickBestLocation(pingData: [PingDataModel])
     func pickBestLocation()
     func refreshBestLocation()

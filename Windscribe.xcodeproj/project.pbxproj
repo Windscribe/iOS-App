@@ -505,8 +505,7 @@
 		59FC74622C51679000021CD1 /* UserDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384F2B917EF300AA725C /* UserDataRepository.swift */; };
 		59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D42B43EE710001CFA0 /* NotificationRepository.swift */; };
 		59FC74642C5167A300021CD1 /* NotificationRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D62B43EE9A0001CFA0 /* NotificationRepositoryImpl.swift */; };
-		59FC74652C5167B700021CD1 /* IPRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B822B39408E00F2F110 /* IPRepository.swift */; };
-		59FC74662C5167BB00021CD1 /* IPRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B842B3940AE00F2F110 /* IPRepositoryImpl.swift */; };
+		59FC74662C5167BB00021CD1 /* IPRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B842B3940AE00F2F110 /* IPRepository.swift */; };
 		59FC74682C5167D300021CD1 /* MobilePlanRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D12B43C5950001CFA0 /* MobilePlanRepositoryImpl.swift */; };
 		59FC74692C5167DF00021CD1 /* EmergencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */; };
 		59FC746A2C5167E200021CD1 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
@@ -753,8 +752,7 @@
 		C5592B782B37FA7D00F2F110 /* APIManagerImpl+Robert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B772B37FA7D00F2F110 /* APIManagerImpl+Robert.swift */; };
 		C5592B7A2B37FCBF00F2F110 /* APIManagerImpl+Others.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B792B37FCBF00F2F110 /* APIManagerImpl+Others.swift */; };
 		C5592B7E2B38838500F2F110 /* MyIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B7D2B38838500F2F110 /* MyIP.swift */; };
-		C5592B832B39408E00F2F110 /* IPRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B822B39408E00F2F110 /* IPRepository.swift */; };
-		C5592B852B3940AE00F2F110 /* IPRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B842B3940AE00F2F110 /* IPRepositoryImpl.swift */; };
+		C5592B852B3940AE00F2F110 /* IPRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B842B3940AE00F2F110 /* IPRepository.swift */; };
 		C5592B892B394BF100F2F110 /* LocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B882B394BF100F2F110 /* LocalDatabase.swift */; };
 		C5592B8B2B394C0300F2F110 /* LocalDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */; };
 		C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0912B3A68820011EF56 /* PreferencesTests.swift */; };
@@ -1860,8 +1858,7 @@
 		C5592B772B37FA7D00F2F110 /* APIManagerImpl+Robert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Robert.swift"; sourceTree = "<group>"; };
 		C5592B792B37FCBF00F2F110 /* APIManagerImpl+Others.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Others.swift"; sourceTree = "<group>"; };
 		C5592B7D2B38838500F2F110 /* MyIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyIP.swift; sourceTree = "<group>"; };
-		C5592B822B39408E00F2F110 /* IPRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPRepository.swift; sourceTree = "<group>"; };
-		C5592B842B3940AE00F2F110 /* IPRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPRepositoryImpl.swift; sourceTree = "<group>"; };
+		C5592B842B3940AE00F2F110 /* IPRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPRepository.swift; sourceTree = "<group>"; };
 		C5592B882B394BF100F2F110 /* LocalDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabase.swift; sourceTree = "<group>"; };
 		C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseImpl.swift; sourceTree = "<group>"; };
 		C55AF0912B3A68820011EF56 /* PreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesTests.swift; sourceTree = "<group>"; };
@@ -3840,8 +3837,7 @@
 		C5592B812B39406400F2F110 /* IP */ = {
 			isa = PBXGroup;
 			children = (
-				C5592B822B39408E00F2F110 /* IPRepository.swift */,
-				C5592B842B3940AE00F2F110 /* IPRepositoryImpl.swift */,
+				C5592B842B3940AE00F2F110 /* IPRepository.swift */,
 			);
 			path = IP;
 			sourceTree = "<group>";
@@ -6576,7 +6572,7 @@
 				C511EC1D2E43BCE1009D2C12 /* ShakeForDataScore.swift in Sources */,
 				59FC742C2C51565D00021CD1 /* NETunnelProviderManager+Ext.swift in Sources */,
 				1E7A7A8E2DF856EF00A6EAA6 /* Color+Theme.swift in Sources */,
-				59FC74662C5167BB00021CD1 /* IPRepositoryImpl.swift in Sources */,
+				59FC74662C5167BB00021CD1 /* IPRepository.swift in Sources */,
 				5986AB3B2C41C0B900167023 /* CoreModule.swift in Sources */,
 				59FC73E22C51504600021CD1 /* APIManager.swift in Sources */,
 				59FC745E2C51642100021CD1 /* PushNotificationManagerImpl.swift in Sources */,
@@ -6742,7 +6738,6 @@
 				59FC74712C516D9000021CD1 /* InAppPurchaseManager.swift in Sources */,
 				5986AB512C473FBC00167023 /* UIFont+Extension.swift in Sources */,
 				F40419372D822ECF0005EF97 /* AppReviewManaging.swift in Sources */,
-				59FC74652C5167B700021CD1 /* IPRepository.swift in Sources */,
 				59FC74502C515E5400021CD1 /* UIConstants+ImagesAsset.swift in Sources */,
 				F49E61D12E00A23B0087386F /* CustomSoundPlaybackManager.swift in Sources */,
 				5963A2F22C66AE770091138E /* MainViewModelImpl.swift in Sources */,
@@ -6861,7 +6856,7 @@
 				AF16C98D2225CDAB00997A2A /* ClosestCountry.swift in Sources */,
 				C50F20782B606B3000266B23 /* WireguardConfigRepository.swift in Sources */,
 				AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */,
-				C5592B852B3940AE00F2F110 /* IPRepositoryImpl.swift in Sources */,
+				C5592B852B3940AE00F2F110 /* IPRepository.swift in Sources */,
 				F48B331E2EC662AF00D0EB32 /* AppModulesViewModels.swift in Sources */,
 				F49C45CE2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift in Sources */,
 				F4433D092E8310790012EA34 /* KeychainManagerImpl.swift in Sources */,
@@ -7263,7 +7258,6 @@
 				F470F5532E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
 				1EDB2CA32F190C0D00A5966D /* MigrationRepository.swift in Sources */,
 				E90FD02B273977C100721874 /* SearchLocationsView.swift in Sources */,
-				C5592B832B39408E00F2F110 /* IPRepository.swift in Sources */,
 				1EA91DCE2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift in Sources */,
 				AF018E0D21B1921600B225FF /* Session.swift in Sources */,
 				AF04983021FA43690046D33B /* Section.swift in Sources */,

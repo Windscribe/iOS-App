@@ -223,7 +223,7 @@ class SessionManagerImpl: SessionManager {
         if sipCount != newSession.getSipCount() {
             logger.logI("SessionManager", "SIP changes detected. Request to retrieve static ip list")
             _ = try? await staticIPRepo.updateStaticServers()
-            _ = try? await self.latencyRepo.loadStaticIpLatency().value
+            await latencyRepo.loadStaticIpLatency()
         }
         if !newSession.isPremium && oldSession.isPremium {
             logger.logI("SessionManager", "User's pro plan expired.")

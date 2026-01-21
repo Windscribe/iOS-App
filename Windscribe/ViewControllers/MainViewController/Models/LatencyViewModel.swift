@@ -33,37 +33,19 @@ class LatencyViewModelImpl: LatencyViewModel {
                               onStaticCompletion: @escaping () -> Void,
                               onCustomConfigCompletion: @escaping () -> Void,
                               onExitCompletion: @escaping () -> Void) {
-        Task { @MainActor in
+        Task {
             _ = try? await updateServerList()
-            self.latencyRepo.loadStaticIpLatency()
-                .asCompletable()
-                .observe(on: MainScheduler.asyncInstance)
-                .subscribe(onCompleted: {
-                    onStaticCompletion()
-                    onExitCompletion()
-                }, onError: { _ in
-                    onExitCompletion()
-                })
-                .disposed(by: self.disposeBag)
 
-            do {
-                try await latencyRepo.loadLatency()
-                onAllServerCompletion()
-                onExitCompletion()
-            } catch {
-                onExitCompletion()
-            }
+            await latencyRepo.loadStaticIpLatency()
+            onStaticCompletion()
+            onExitCompletion()
 
-            self.latencyRepo.loadCustomConfigLatency()
-                .observe(on: MainScheduler.asyncInstance)
-                .subscribe(onCompleted: {
-                    onCustomConfigCompletion()
-                    onExitCompletion()
-                }, onError: { _ in
-                    onExitCompletion()
-                })
-                .disposed(by: self.disposeBag)
+            try await latencyRepo.loadLatency()
+            onAllServerCompletion()
+            onExitCompletion()
 
+            await latencyRepo.loadCustomConfigLatency()
+            onCustomConfigCompletion()
             onExitCompletion()
         }
     }

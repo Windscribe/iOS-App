@@ -64,7 +64,6 @@ class IPInfoViewModel: IPInfoViewModelType {
         self.hapticFeedbackManager = hapticFeedbackManager
 
         ipRepository.ipState
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .compactMap { state -> String? in
                 guard case .available(let ipAddress) = state else {
@@ -72,13 +71,9 @@ class IPInfoViewModel: IPInfoViewModelType {
                 }
                 return ipAddress
             }
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("IPInfoViewModel", "Unable to get ip State, error: \(error)")
-                }
-            }, receiveValue: { [weak self] ipAddress in
+            .sink { [weak self] ipAddress in
                 self?.ipAddressSubject.send(ipAddress)
-            })
+            }
             .store(in: &cancellables)
 
         serverRepository.favouriteListSubject.combineLatest(locationManager.selectedLocationUpdated)
