@@ -14,6 +14,16 @@ import WireGuardKit
 extension ConfigurationsManager {
     /// Builds the appropriate VPN configuration based on location, location type, protocol, and port.
     func buildConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> VPNConfiguration {
+        // Detect protocol change and clear failed nodes to give new protocol a fresh start
+        // This allows protocol failover to try the same nodes that failed with previous protocols
+        if currentConnectionProtocol != proto {
+            if !currentConnectionProtocol.isEmpty && !failedNodeHostnames.isEmpty {
+                logger.logI("ConfigurationsManager", "Protocol changed from \(currentConnectionProtocol) to \(proto) - clearing \(failedNodeHostnames.count) failed nodes for fresh start")
+                clearFailedNodes()
+            }
+            currentConnectionProtocol = proto
+        }
+
         guard let locationType = locationsManager.getLocationType(id: location) else {
             throw VPNConfigurationErrors.invalidLocationType
         }
@@ -396,14 +406,8 @@ extension ConfigurationsManager {
                 }
             }
 
-            // If all nodes exhausted after filtering, clear failed list and retry
-            if validNodes.isEmpty && !failedNodeHostnames.isEmpty {
-                logger.logI("ConfigurationsManager", "All nodes tried, clearing failed list and retrying from scratch")
-                clearFailedNodes()
-                validNodes = nodes.filter { $0.forceDisconnect == false }
-            }
-
-            // If still no valid nodes, throw error
+            // If all nodes exhausted after filtering, throw error to trigger protocol failover
+            // This ensures the connection fails properly and allows ProtocolManager to try the next protocol
             guard !validNodes.isEmpty else {
                 logger.logE("ConfigurationsManager", "No valid nodes available in location")
                 throw VPNConfigurationErrors.noValidNodeFound
