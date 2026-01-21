@@ -7,38 +7,36 @@
 //
 
 import UIKit
-import RxSwift
 import Combine
 import QuartzCore
 
 protocol ConnectButtonViewModelType {
-    var statusSubject: BehaviorSubject<ConnectionState?> { get }
+    var statusSubject: CurrentValueSubject<ConnectionState?, Never> { get }
     func refreshConnectingState()
 }
 
 class ConnectButtonViewModel: ConnectButtonViewModelType {
-    let statusSubject = BehaviorSubject<ConnectionState?>(value: nil)
+    let statusSubject = CurrentValueSubject<ConnectionState?, Never>(nil)
 
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     init(vpnStateRepository: VPNStateRepository) {
         vpnStateRepository.getStatus()
             .sink { [weak self] state in
-                self?.statusSubject.onNext(ConnectionState.state(from: state))
+                self?.statusSubject.send(ConnectionState.state(from: state))
             }
             .store(in: &cancellables)
     }
 
     func refreshConnectingState() {
-        statusSubject.onNext(.connecting)
+        statusSubject.send(.connecting)
     }
 }
 
 class ConnectButtonView: UIView {
-    let disposeBag = DisposeBag()
-    let connectTriggerSubject = PublishSubject<Void>()
+    let connectTriggerSubject = PassthroughSubject<Void, Never>()
 
+    private var cancellables = Set<AnyCancellable>()
     private var isButtonRotated = false
 
     var viewModel: ConnectButtonViewModelType! {
@@ -97,9 +95,10 @@ class ConnectButtonView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel.statusSubject.subscribe { [weak self] state in
-            guard let self = self, let state = state else { return }
-            DispatchQueue.main.async {
+        viewModel.statusSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self, let state = state else { return }
                 let animationTime: CGFloat = 0.25
                 UIView.animate(withDuration: animationTime) {
                     self.ringImageView.isHidden = state.connectButtonRingIsHidden
@@ -125,10 +124,13 @@ class ConnectButtonView: UIView {
                     }
                 }
             }
-        }.disposed(by: disposeBag)
-        connectButton.rx.tap.bind { [weak self] in
-            self?.connectTriggerSubject.onNext(())
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        connectButton.tap
+            .sink { [weak self] _ in
+                self?.connectTriggerSubject.send(())
+            }
+            .store(in: &cancellables)
     }
 
     private func addViews() {

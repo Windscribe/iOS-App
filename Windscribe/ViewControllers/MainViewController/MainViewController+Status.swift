@@ -12,9 +12,8 @@ import UIKit
 
 extension MainViewController {
     func updateConnectedState() {
-        if let state = try? vpnConnectionViewModel.connectedState.value() {
-            animateConnectedState(with: state, animated: false)
-        }
+        let state = vpnConnectionViewModel.connectedState.value
+        animateConnectedState(with: state, animated: false)
     }
 
     func animateConnectedState(with info: ConnectionStateInfo, animated: Bool = true) {
@@ -22,7 +21,7 @@ extension MainViewController {
             let duration = (animated &&  info.state != .automaticFailed) ? 0.25 : 0.0
             UIView.animate(withDuration: duration) {
                 if info.state == .disconnected {
-                    let isOnline = ((try? self.viewModel.appNetwork.value().status == .connected) != nil)
+                    let isOnline = self.viewModel.appNetwork.value.status == .connected
                     if !isOnline {
                         self.connectionStateInfoView.showNoInternetConnection()
                     }

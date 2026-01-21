@@ -9,14 +9,14 @@
 import CoreLocation
 import Foundation
 import NetworkExtension
-import RxSwift
 import UIKit
+import Combine
 
 extension MainViewController {
     func setNetworkSsid() {
-        Observable.combineLatest(viewModel.updateSSIDTrigger, viewModel.appNetwork)
-            .subscribe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] (_, network) in
+        Publishers.CombineLatest(viewModel.updateSSIDTrigger, viewModel.appNetwork)
+            .receive(on:DispatchQueue.main)
+            .sink { [weak self] (_, network) in
                 guard let self = self else { return }
                 guard !self.vpnConnectionViewModel.isConnecting() else { return }
                 guard !vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network) else { return }
@@ -30,8 +30,7 @@ extension MainViewController {
                         self.wifiInfoView.updateWifiName(name: TextsAsset.NetworkSecurity.unknownNetwork)
                     }
                 }
-            }, onError: { [weak self] _ in
-                self?.wifiInfoView.updateWifiName(name: TextsAsset.noNetworksAvailable)
-            }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 }

@@ -7,44 +7,43 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 import StoreKit
 
 protocol MainViewModel {
-    var serverList: BehaviorSubject<[ServerModel]> { get }
-    var portMapHeadings: BehaviorSubject<[String]?> { get }
-    var favouriteList: BehaviorSubject<[FavouriteGroupModel]?> { get }
-    var staticIPs: BehaviorSubject<[StaticIPModel]?> { get }
+    var serverList: CurrentValueSubject<[ServerModel], Never> { get }
+    var portMapHeadings: CurrentValueSubject<[String]?, Never> { get }
+    var favouriteList: CurrentValueSubject<[FavouriteGroupModel]?, Never> { get }
+    var staticIPs: CurrentValueSubject<[StaticIPModel]?, Never> { get }
     var customConfigs: CurrentValueSubject<[CustomConfigModel], Never> { get }
     var oldSession: SessionModel? { get }
-    var locationOrderBy: BehaviorSubject<String> { get }
-    var latencies: BehaviorSubject<[PingDataModel]> { get }
+    var locationOrderBy: CurrentValueSubject<String, Never> { get }
+    var latencies: CurrentValueSubject<[PingDataModel], Never> { get }
     var notices: CurrentValueSubject<[NoticeModel], Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var selectedProtocol: BehaviorSubject<String> { get }
-    var selectedPort: BehaviorSubject<String> { get }
-    var connectionMode: BehaviorSubject<String> { get }
-    var appNetwork: BehaviorSubject<AppNetwork> { get }
+    var selectedProtocol: CurrentValueSubject<String, Never> { get }
+    var selectedPort: CurrentValueSubject<String, Never> { get }
+    var connectionMode: CurrentValueSubject<String, Never> { get }
+    var appNetwork: CurrentValueSubject<AppNetwork, Never> { get }
     var wifiNetwork: CurrentValueSubject<WifiNetworkModel?, Never> { get }
     var sessionModel: CurrentValueSubject<SessionModel?, Never> { get }
-    var favouriteGroups: BehaviorSubject<[GroupModel]> { get }
+    var favouriteGroups: CurrentValueSubject<[GroupModel], Never> { get }
 
     var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }
     var showNotificationsTrigger: PassthroughSubject<Void, Never> { get }
     var becameActiveTrigger: PassthroughSubject<Void, Never> { get }
     var showConnectionModeTriggeer: PassthroughSubject<Void, Never> { get }
     var disconnectConnectionTrigger: PassthroughSubject<Void, Never> { get }
-    var updateSSIDTrigger: PublishSubject<Void> { get }
-    var showProtocolSwitchTrigger: PublishSubject<Void> { get }
-    var showAllProtocolsFailedTrigger: PublishSubject<Void> { get }
-    var showNoInternetBeforeFailoverTrigger: PublishSubject<Void> { get }
+    var updateSSIDTrigger: PassthroughSubject<Void, Never> { get }
+    var showProtocolSwitchTrigger: PassthroughSubject<Void, Never> { get }
+    var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
+    var showNoInternetBeforeFailoverTrigger: PassthroughSubject<Void, Never> { get }
 
     var didShowBannedProfilePopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }
     var didShowProPlanExpiredPopup: Bool { get set }
 
-    var promoPayload: BehaviorSubject<PushNotificationPayload?> { get }
+    var promoPayload: CurrentValueSubject<PushNotificationPayload?, Never> { get }
     func loadServerList()
     func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void)
     func loadPortMap()

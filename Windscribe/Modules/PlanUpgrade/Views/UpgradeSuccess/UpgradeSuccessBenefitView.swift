@@ -8,15 +8,14 @@
 
 import UIKit
 import SnapKit
-import RxSwift
-import RxCocoa
+import Combine
 
 class UpgradeSuccessBenefitView: UIView {
 
     private let listStackView = UIStackView()
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
-    init(featureList: BehaviorSubject<[String]>) {
+    init(featureList: CurrentValueSubject<[String], Never>) {
         super.init(frame: .zero)
 
         setupUI()
@@ -42,13 +41,13 @@ class UpgradeSuccessBenefitView: UIView {
         }
     }
 
-    private func bindFeatureList(_ features: BehaviorSubject<[String]>) {
+    private func bindFeatureList(_ features: CurrentValueSubject<[String], Never>) {
         features
-            .observe(on: MainScheduler.instance)
-            .bind { [weak self] featureList in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] featureList in
                 self?.updateFeatureList(featureList)
             }
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     private func updateFeatureList(_ featureTitles: [String]) {

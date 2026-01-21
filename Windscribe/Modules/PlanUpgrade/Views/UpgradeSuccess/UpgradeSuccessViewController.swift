@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
 import SnapKit
+import Combine
 
 class UpgradeSuccessViewController: WSUIViewController {
 
@@ -26,7 +26,7 @@ class UpgradeSuccessViewController: WSUIViewController {
 
     private let viewModel = UpgradeSuccessViewModel()
 
-    let successScreenDismissed = PublishSubject<Void>()
+    let successScreenDismissed = PassthroughSubject<Void, Never>()
 
     // MARK: Lifecycle
 
@@ -256,21 +256,21 @@ class UpgradeSuccessViewController: WSUIViewController {
     // MARK: Actions & Action Bindings
 
     @objc func closeButtonTapped() {
-        successScreenDismissed.onNext(())
+        successScreenDismissed.send(())
     }
 
     private func setupBindings() {
         shareOptionsView?.didSelectOption
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] url in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] url in
                 self?.openLink(url: url)
-            })
-            .disposed(by: disposeBag)
-
-        startButton.rx.tap
-            .bind { [weak self] in
-                self?.successScreenDismissed.onNext(())
             }
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        startButton.publisher(for: .touchUpInside)
+            .sink { [weak self] _ in
+                self?.successScreenDismissed.send(())
+            }
+            .store(in: &cancellables)
     }
 }

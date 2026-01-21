@@ -8,7 +8,6 @@
 
 import Combine
 import UIKit
-import RxSwift
 
 enum ListHeaderViewType {
     case staticIP, customConfig, favNodes, empty
@@ -29,15 +28,15 @@ enum ListHeaderViewType {
 
 protocol ListHeaderViewModelType {
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var type: BehaviorSubject<ListHeaderViewType> { get }
-    var refreshLanguage: PublishSubject<Void> { get }
+    var type: CurrentValueSubject<ListHeaderViewType, Never> { get }
+    var refreshLanguage: PassthroughSubject<Void, Never> { get }
     func updateType(with type: ListHeaderViewType)
 }
 
 class ListHeaderViewModel: ListHeaderViewModelType {
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    let type = BehaviorSubject<ListHeaderViewType>(value: .empty)
-    let refreshLanguage = PublishSubject<Void>()
+    let type = CurrentValueSubject<ListHeaderViewType, Never>(.empty)
+    let refreshLanguage = PassthroughSubject<Void, Never>()
     private var cancellables = Set<AnyCancellable>()
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
@@ -45,18 +44,17 @@ class ListHeaderViewModel: ListHeaderViewModelType {
         languageManager.activelanguage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.refreshLanguage.onNext(())
+                self?.refreshLanguage.send(())
             }
             .store(in: &cancellables)
     }
 
     func updateType(with type: ListHeaderViewType) {
-        self.type.onNext(type)
+        self.type.send(type)
     }
 }
 
 class ListHeaderView: UIView {
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     let infoLabel = UILabel()
@@ -78,10 +76,12 @@ class ListHeaderView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel.type.observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: {
+        viewModel.type
+            .receive(on: DispatchQueue.main)
+            .sink {
                 self.infoLabel.text = $0.description
-            }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.isDarkMode
             .receive(on: DispatchQueue.main)
@@ -90,13 +90,13 @@ class ListHeaderView: UIView {
             }
             .store(in: &cancellables)
 
-        viewModel.refreshLanguage.observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            if let type = try? viewModel.type.value() {
-                self.infoLabel.text = type.description
+        viewModel.refreshLanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.infoLabel.text = viewModel.type.value.description
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     private func updateLayourForTheme(isDarkMode: Bool) {

@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import RxSwift
 import Combine
 
 protocol ConnectionStateInfoViewModelType {
-    var statusSubject: BehaviorSubject<ConnectionState?> { get }
-    var isCircumventCensorshipEnabled: BehaviorSubject<Bool> { get }
-    var refreshProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
+    var statusSubject: CurrentValueSubject<ConnectionState?, Never> { get }
+    var isCircumventCensorshipEnabled: CurrentValueSubject<Bool, Never> { get }
+    var refreshProtocolSubject: CurrentValueSubject<ProtocolPort?, Never> { get }
     var isCustomConfigSelected: Bool { get }
     var isAntiCensorshipEnabled: Bool { get }
     var isConnecting: Bool { get }
@@ -21,11 +20,10 @@ protocol ConnectionStateInfoViewModelType {
 }
 
 class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
-    let statusSubject = BehaviorSubject<ConnectionState?>(value: nil)
-    let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: false)
-    let refreshProtocolSubject = BehaviorSubject<ProtocolPort?>(value: ProtocolPort(DefaultValues.protocol, DefaultValues.port))
+    let statusSubject = CurrentValueSubject<ConnectionState?, Never>(nil)
+    let isCircumventCensorshipEnabled = CurrentValueSubject<Bool, Never>(false)
+    let refreshProtocolSubject = CurrentValueSubject<ProtocolPort?, Never>(ProtocolPort(DefaultValues.protocol, DefaultValues.port))
 
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     let locationsManager: LocationsManager
@@ -41,22 +39,21 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
         self.protocolManager = protocolManager
         vpnStateRepository.getStatus()
             .sink { [weak self] state in
-                self?.statusSubject.onNext(ConnectionState.state(from: state))
+                self?.statusSubject.send(ConnectionState.state(from: state))
             }
             .store(in: &cancellables)
 
         preferences.getCircumventCensorshipEnabled()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
-                self?.isCircumventCensorshipEnabled.onNext(data)
+                self?.isCircumventCensorshipEnabled.send(data)
             }
             .store(in: &cancellables)
 
-        // This is after the passing of RxSwift to Combine
         protocolManager.currentProtocolSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
-                self?.refreshProtocolSubject.onNext(data)
+                self?.refreshProtocolSubject.send(data)
             }.store(in: &cancellables)
     }
 
@@ -82,7 +79,7 @@ protocol ConnectionStateInfoViewDelegate: AnyObject {
 }
 
 class ConnectionStateInfoView: UIView {
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     weak var delegate: ConnectionStateInfoViewDelegate?
 
@@ -115,32 +112,37 @@ class ConnectionStateInfoView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel.statusSubject.subscribe { [weak self] state in
-            guard let self = self, let state = state else { return }
-            DispatchQueue.main.async {
+        viewModel.statusSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self, let state = state else { return }
                 self.updateConnectionInfo(state)
             }
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        viewModel.isCircumventCensorshipEnabled.subscribe { [weak self] isVisible in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
+        viewModel.isCircumventCensorshipEnabled
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isVisible in
+                guard let self = self else { return }
                 self.circunventIcon.isHidden = !isVisible
             }
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        viewModel.refreshProtocolSubject.subscribe { [weak self] protoPort in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
+        viewModel.refreshProtocolSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] protoPort in
+                guard let self = self else { return }
                 self.refreshProtocol(from: nil, with: protoPort, isNetworkCellularWhileConnecting: false)
             }
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        actionButton.rx.tap.bind { [weak self] in
-            guard let self = self,
-                  viewModel.isConnected else { return }
-            self.delegate?.protocolPortTapped()
-        }.disposed(by: disposeBag)
+        actionButton.tap
+            .sink { [weak self] _ in
+                guard let self = self,
+                      viewModel.isConnected else { return }
+                self.delegate?.protocolPortTapped()
+            }
+            .store(in: &cancellables)
 
         actionIcon.isHidden = !viewModel.isConnected
     }

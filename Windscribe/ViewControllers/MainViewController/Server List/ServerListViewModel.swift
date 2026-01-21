@@ -7,13 +7,13 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol ServerListViewModelType {
-    var presentConnectingAlertTrigger: PublishSubject<Void> { get }
-    var showMaintenanceLocationTrigger: PublishSubject<Void> { get }
-    var showUpgradeTrigger: PublishSubject<Void> { get }
-    var reloadTrigger: PublishSubject<Void> { get }
+    var presentConnectingAlertTrigger: PassthroughSubject<Void, Never> { get }
+    var showMaintenanceLocationTrigger: PassthroughSubject<Void, Never> { get }
+    var showUpgradeTrigger: PassthroughSubject<Void, Never> { get }
+    var reloadTrigger: PassthroughSubject<Void, Never> { get }
 
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel)
@@ -21,10 +21,10 @@ protocol ServerListViewModelType {
 }
 
 class ServerListViewModel: ServerListViewModelType {
-    var presentConnectingAlertTrigger = PublishSubject<Void>()
-    var showMaintenanceLocationTrigger = PublishSubject<Void>()
-    var showUpgradeTrigger = PublishSubject<Void>()
-    var reloadTrigger = PublishSubject<Void>()
+    var presentConnectingAlertTrigger = PassthroughSubject<Void, Never>()
+    var showMaintenanceLocationTrigger = PassthroughSubject<Void, Never>()
+    var showUpgradeTrigger = PassthroughSubject<Void, Never>()
+    var reloadTrigger = PassthroughSubject<Void, Never>()
 
     private let logger: FileLogger
     private let vpnStateRepository: VPNStateRepository
@@ -32,8 +32,6 @@ class ServerListViewModel: ServerListViewModelType {
     private let userSessionRepository: UserSessionRepository
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
-
-    let disposeBag = DisposeBag()
 
     init(logger: FileLogger,
          vpnStateRepository: VPNStateRepository,
@@ -55,15 +53,15 @@ class ServerListViewModel: ServerListViewModelType {
         }
 
         if checkMaintenanceLocation(server: server, group: group) {
-            showMaintenanceLocationTrigger.onNext(())
+            showMaintenanceLocationTrigger.send(())
             return
         }
 
         if !userSessionRepository.canAccesstoProLocation() && group.premiumOnly {
-            showUpgradeTrigger.onNext(())
+            showUpgradeTrigger.send(())
             return
         } else if !group.canConnect() {
-            reloadTrigger.onNext(())
+            reloadTrigger.send(())
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
             guard let bestNode = group.bestNode else { return }
             logger.logD("ServerListViewModel", "Tapped on a node with groupID: \(group.id) \(bestNode.hostname) from the server list.")
@@ -73,7 +71,7 @@ class ServerListViewModel: ServerListViewModelType {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {
-            presentConnectingAlertTrigger.onNext(())
+            presentConnectingAlertTrigger.send(())
         }
     }
 
@@ -87,7 +85,7 @@ class ServerListViewModel: ServerListViewModelType {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {
-            self.presentConnectingAlertTrigger.onNext(())
+            self.presentConnectingAlertTrigger.send(())
         }
     }
 }

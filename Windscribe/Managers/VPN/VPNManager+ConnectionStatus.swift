@@ -9,9 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-#if canImport(WidgetKit)
-    import RxSwift
-#endif
 
 extension VPNManagerImpl {
 

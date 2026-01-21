@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 
 protocol LatencyViewModel {
     func loadAllServerLatency(onAllServerCompletion: @escaping () -> Void,
@@ -20,8 +19,6 @@ class LatencyViewModelImpl: LatencyViewModel {
     let latencyRepo: LatencyRepository
     let serverRepository: ServerRepository
     let staticIpRepository: StaticIpRepository
-
-    let disposeBag = DisposeBag()
 
     init(latencyRepo: LatencyRepository, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository) {
         self.latencyRepo = latencyRepo

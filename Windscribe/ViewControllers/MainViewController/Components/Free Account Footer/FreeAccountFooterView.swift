@@ -7,16 +7,15 @@
 //
 
 import UIKit
-import RxSwift
 import Swinject
 import Combine
 
 protocol FreeAccountFooterViewModelType {
-    var dataLeftSubject: BehaviorSubject<DataLeftModel?> { get }
+    var dataLeftSubject: CurrentValueSubject<DataLeftModel?, Never> { get }
 }
 
 class FreeAccountFooterViewModel: FreeAccountFooterViewModelType {
-    let dataLeftSubject = BehaviorSubject<DataLeftModel?>(value: nil)
+    let dataLeftSubject = CurrentValueSubject<DataLeftModel?, Never>(nil)
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -24,7 +23,7 @@ class FreeAccountFooterViewModel: FreeAccountFooterViewModelType {
         userSessionRepository.sessionModelSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] session in
-                self?.dataLeftSubject.onNext(session?.getDataLeftModel())
+                self?.dataLeftSubject.send(session?.getDataLeftModel())
             }
             .store(in: &cancellables)
     }
@@ -36,7 +35,7 @@ protocol FreeAccountFooterViewDelegate: AnyObject {
 }
 
 class FreeAccountFooterView: UIView {
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     weak var delegate: FreeAccountFooterViewDelegate?
 
@@ -64,17 +63,24 @@ class FreeAccountFooterView: UIView {
         super.init(frame: .zero)
         addViews()
         setLayout()
+        setupButtonAction()
     }
 
     private func bindViewModel() {
-        viewModel.dataLeftSubject.subscribe { [weak self] dataLeft in
-            self?.updateDataInfo(dataLeft)
-        }.disposed(by: disposeBag)
+        viewModel.dataLeftSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] dataLeft in
+                self?.updateDataInfo(dataLeft)
+            }
+            .store(in: &cancellables)
+    }
 
-        actionButton.rx.tap.bind { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.freeAccountFooterTapped()
-        }.disposed(by: disposeBag)
+    private func setupButtonAction() {
+        actionButton.tap
+            .sink { [weak self] _ in
+                self?.delegate?.freeAccountFooterTapped()
+            }
+            .store(in: &cancellables)
     }
 
     private func updateDataInfo(_ dataLeft: DataLeftModel?) {

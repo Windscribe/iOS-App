@@ -179,7 +179,7 @@ extension MainViewController {
     }
 
     @objc func reloadServerListOrder() {
-        guard let results = try? viewModel.serverList.value() else { return }
+        let results = viewModel.serverList.value
         if results.count == 0 { return }
         DispatchQueue.main.async {
             self.loadServerTable(servers: results)
@@ -189,18 +189,22 @@ extension MainViewController {
     }
 
     @objc func loadServerList() {
-        viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.loadServerTable(servers: (try? self?.viewModel.serverList.value()) ?? [])
+        viewModel.locationOrderBy
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.loadServerTable(servers: self?.viewModel.serverList.value ?? [])
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
+
         reloadFavouriteOrder()
-        viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] servers in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
+
+        viewModel.serverList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] servers in
+                guard let self = self else { return }
                 self.loadServerTable(servers: servers)
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func loadServerTable(servers: [ServerModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
@@ -244,7 +248,7 @@ extension MainViewController {
                 }
             }
 
-            let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
+            let isOnline: Bool = viewModel.appNetwork.value.status == .connected
             if isOnline {
                 enableVPNConnection()
             } else {

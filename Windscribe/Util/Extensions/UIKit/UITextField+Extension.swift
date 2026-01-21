@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 extension UITextField {
     func setBottomBorder(opacity: Float) {
@@ -140,5 +141,13 @@ class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
             return false
         }
         return true
+    }
+}
+
+extension UITextField {
+    var textEditedPublisher: AnyPublisher<String, Never> {
+        publisher(for: .editingChanged)
+            .compactMap { _ in self.text }
+            .eraseToAnyPublisher()
     }
 }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RxSwift
 import Combine
 
 struct BackgroundInfoModel {
@@ -20,13 +19,12 @@ struct BackgroundInfoModel {
 }
 
 protocol FlagsBackgroundViewModelType {
-    var backgroundInfoSubject: BehaviorSubject<BackgroundInfoModel?> { get }
+    var backgroundInfoSubject: CurrentValueSubject<BackgroundInfoModel?, Never> { get }
 }
 
 class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
-    let backgroundInfoSubject = BehaviorSubject<BackgroundInfoModel?>(value: nil)
+    let backgroundInfoSubject = CurrentValueSubject<BackgroundInfoModel?, Never>(nil)
 
-    let disposeBag = DisposeBag()
     let locationsManager: LocationsManager
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let backgroundFileManager: BackgroundFileManaging
@@ -82,8 +80,8 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
         } else if !isConnected {
             effect = lookAndFeelRepository.backgroundEffectDisconnect
         }
-        backgroundInfoSubject.onNext(getBackgroundInfoModel(for: effect,
-                                                            isConnected: isConnected))
+        backgroundInfoSubject.send(getBackgroundInfoModel(for: effect,
+                                                          isConnected: isConnected))
     }
 
     private func getBackgroundInfoModel(for effect: BackgroundEffectType,
@@ -134,7 +132,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
 }
 
 class FlagsBackgroundView: UIView {
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     var viewModel: FlagsBackgroundViewModelType! {
         didSet {
@@ -207,13 +205,14 @@ class FlagsBackgroundView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel.backgroundInfoSubject.subscribe(onNext: { [weak self] info in
-            guard let self = self, let info = info else { return }
-            DispatchQueue.main.async {
+        viewModel.backgroundInfoSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] info in
+                guard let self = self, let info = info else { return }
                 self.topMaskGradient.isConnected = info.isConnected
                 self.changebackground(for: info)
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     private func addViews() {

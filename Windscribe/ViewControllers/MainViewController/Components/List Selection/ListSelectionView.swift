@@ -7,14 +7,13 @@
 //
 
 import Foundation
-import RxSwift
 import UIKit
 import Combine
 
 private class ButtonImageView: UIView {
     let button = UIButton()
     let imageView = UIImageView()
-    var disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     convenience init(imageName: String, imageSize: CGFloat, tapAction: @escaping () -> Void) {
         self.init(imageName: imageName, imageWidth: imageSize, imageHeight: imageSize, tapAction: tapAction)
@@ -39,9 +38,11 @@ private class ButtonImageView: UIView {
             imageView.heightAnchor.constraint(equalToConstant: imageHeight)
         ])
 
-        button.rx.tap.bind {
-            tapAction()
-        }.disposed(by: disposeBag)
+        button.tap
+            .sink { _ in
+                tapAction()
+            }
+            .store(in: &cancellables)
     }
 
     func setImage(_ image: UIImage?) {
@@ -65,7 +66,6 @@ class ListSelectionView: UIView {
 
     var viewModel: ListSelectionViewModelType!
 
-    var disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     let viewHeight: CGFloat = 56
@@ -181,14 +181,20 @@ class ListSelectionView: UIView {
     }
 
     private func bindView() {
-        viewModel.isActive.subscribe { [weak self] isActive in
-            self?.stackContainerView.isHidden = !isActive
-            self?.isUserInteractionEnabled = isActive
-        }.disposed(by: disposeBag)
+        viewModel.isActive
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isActive in
+                self?.stackContainerView.isHidden = !isActive
+                self?.isUserInteractionEnabled = isActive
+            }
+            .store(in: &cancellables)
 
-        viewModel.selectedAction.subscribe { [weak self] in
-            self?.showPresentingListIcon(cardButtonType: $0)
-        }.disposed(by: disposeBag)
+        viewModel.selectedAction
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] cardButtonType in
+                self?.showPresentingListIcon(cardButtonType: cardButtonType)
+            }
+            .store(in: &cancellables)
 
         viewModel.isDarkMode
             .receive(on: DispatchQueue.main)

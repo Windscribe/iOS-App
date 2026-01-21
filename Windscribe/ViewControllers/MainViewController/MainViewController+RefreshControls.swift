@@ -6,7 +6,6 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import RxSwift
 import UIKit
 
 extension MainViewController {
@@ -16,7 +15,7 @@ extension MainViewController {
             return
         }
         if isRefreshing == false, isLoadingLatencyValues == false {
-            let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
+            let isOnline: Bool = viewModel.appNetwork.value.status == .connected
             if vpnConnectionViewModel.isDisconnected() || isOnline {
                 beginRefreshControls()
                 isRefreshing = true
@@ -27,7 +26,7 @@ extension MainViewController {
                     onAllServerCompletion: { [weak self] in
                         guard let self else { return }
 
-                        self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
+                        self.loadServerTable(servers: self.viewModel.serverList.value)
                         DispatchQueue.main.async {
                             self.favTableView.reloadData()
                         }

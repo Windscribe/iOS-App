@@ -8,7 +8,6 @@
 
 import Combine
 import RealmSwift
-import RxSwift
 import SafariServices
 import UIKit
 
@@ -19,7 +18,6 @@ class StaticIPListFooterView: WSView {
     lazy var label = UILabel()
     lazy var backgroundView = UIView()
     let activeLanguage: CurrentValueSubject<Languages, Never>
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     var viewModel: MainViewModel? {
         didSet {
@@ -47,12 +45,14 @@ class StaticIPListFooterView: WSView {
     }
 
     private func bindViews() {
-        viewModel?.staticIPs.subscribe { [weak self] _ in
+        viewModel?.staticIPs.sink { [weak self] _ in
             self?.updateDeviceName()
-        }.disposed(by: disposeBag)
-        actionButton.rx.tap.bind { [weak self] _ in
+        }
+        .store(in: &cancellables)
+        actionButton.tap.sink { [weak self] _ in
             self?.delegate?.addStaticIP()
-        }.disposed(by: disposeBag)
+        }
+        .store(in: &cancellables)
         activeLanguage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in

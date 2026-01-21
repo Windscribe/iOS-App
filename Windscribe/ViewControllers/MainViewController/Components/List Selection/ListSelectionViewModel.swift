@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import RxSwift
 
 enum CardHeaderButtonType {
     case all
@@ -24,9 +23,9 @@ protocol ListSelectionViewDelegate: AnyObject {
 
 protocol ListSelectionViewModelType {
     var delegate: ListSelectionViewDelegate? { get set }
-    var isActive: BehaviorSubject<Bool> { get }
+    var isActive: CurrentValueSubject<Bool, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var selectedAction: BehaviorSubject<CardHeaderButtonType> { get }
+    var selectedAction: CurrentValueSubject<CardHeaderButtonType, Never> { get }
 
     func setActive()
     func allSelected()
@@ -39,17 +38,16 @@ protocol ListSelectionViewModelType {
 
 class ListSelectionViewModel: ListSelectionViewModelType {
     weak var delegate: ListSelectionViewDelegate?
-    var isActive = BehaviorSubject<Bool>(value: true)
+    var isActive = CurrentValueSubject<Bool, Never>(true)
     var isDarkMode: CurrentValueSubject<Bool, Never>
-    var selectedAction = BehaviorSubject<CardHeaderButtonType>(value: .all)
-    let disposeBag = DisposeBag()
+    var selectedAction = CurrentValueSubject<CardHeaderButtonType, Never>(.all)
 
     init (lookAndFeelRepository: LookAndFeelRepositoryType) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
     }
 
     func setSelectedAction(selectedAction: CardHeaderButtonType) {
-        self.selectedAction.onNext(selectedAction)
+        self.selectedAction.send(selectedAction)
     }
 
     func allSelected() {
@@ -74,16 +72,16 @@ class ListSelectionViewModel: ListSelectionViewModelType {
     }
 
     func setActive() {
-        isActive.onNext(true)
+        isActive.send(true)
     }
 
     private func toggleActive() {
-        let isActive = (try? isActive.value()) ?? true
-        self.isActive.onNext(!isActive)
+        let isActive = isActive.value
+        self.isActive.send(!isActive)
     }
 
     private func newActionSelected(selectedAction: CardHeaderButtonType) {
         delegate?.cardHeaderWasSelected(with: selectedAction)
-        self.selectedAction.onNext(selectedAction)
+        self.selectedAction.send(selectedAction)
     }
 }

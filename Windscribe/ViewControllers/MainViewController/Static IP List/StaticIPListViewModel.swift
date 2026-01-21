@@ -11,7 +11,7 @@ import UIKit
 #if canImport(SafariServices)
     import SafariServices
 #endif
-import RxSwift
+import Combine
 
 enum StaticIPAlertType {
     case connecting
@@ -24,15 +24,15 @@ protocol StaticIPListFooterViewDelegate: AnyObject {
 }
 
 protocol StaticIPListViewModelType: StaticIPListFooterViewDelegate {
-    var presentLinkTrigger: PublishSubject<URL> { get }
-    var presentAlertTrigger: PublishSubject<StaticIPAlertType> { get }
+    var presentLinkTrigger: PassthroughSubject<URL, Never> { get }
+    var presentAlertTrigger: PassthroughSubject<StaticIPAlertType, Never> { get }
 
     func setSelectedStaticIP(staticIP: StaticIPModel)
 }
 
 class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
-    let presentLinkTrigger = PublishSubject<URL>()
-    let presentAlertTrigger = PublishSubject<StaticIPAlertType>()
+    let presentLinkTrigger = PassthroughSubject<URL, Never>()
+    let presentAlertTrigger = PassthroughSubject<StaticIPAlertType, Never>()
 
     private let logger: FileLogger
     private let vpnStateRepository: VPNStateRepository
@@ -56,12 +56,12 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
         if !connectivity.internetConnectionAvailable() { return }
 
         if !staticIP.isActive {
-            presentAlertTrigger.onNext(.underMaintananence)
+            presentAlertTrigger.send(.underMaintananence)
             return
         }
 
         if vpnStateRepository.configurationState == ConfigurationState.disabling {
-            presentAlertTrigger.onNext(.disconnecting)
+            presentAlertTrigger.send(.disconnecting)
             return
         }
 
@@ -72,7 +72,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {
-            presentAlertTrigger.onNext(.connecting)
+            presentAlertTrigger.send(.connecting)
         }
     }
 }
@@ -82,6 +82,6 @@ extension StaticIPListViewModel: StaticIPListFooterViewDelegate {
         logger.logD("StaticIPListViewModel", "User tapped Add Static IP button.")
         let urlString = LinkProvider.getWindscribeLink(path: Links.staticIPs)
         guard let url = URL(string: urlString) else { return }
-        presentLinkTrigger.onNext(url)
+        presentLinkTrigger.send(url)
     }
 }
