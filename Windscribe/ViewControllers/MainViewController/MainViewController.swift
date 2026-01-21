@@ -212,7 +212,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func checkForInternetConnection() {
         guard vpnConnectionViewModel.isConnected() else { return }
-        let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
+        let isOnline: Bool = viewModel.appNetwork.value.status == .connected
         if !isOnline {
             logger.logI("MainViewController", "No internet connection available.")
             internetConnectionLost = true
@@ -258,7 +258,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 logger.logD("MainViewController", "Forcing to connect to best location.")
                 enableVPNConnection()
             }
-            guard let displayingGroup = (try? self.viewModel.serverList.value())?
+            guard let displayingGroup = self.viewModel.serverList.value
                 .flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
 
@@ -283,7 +283,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func reloadServerList() {
-        let results = (try? viewModel.serverList.value()) ?? []
+        let results = viewModel.serverList.value
         if results.count == 0 { return }
 
         if viewModel.checkAccountWasDowngraded(for: results) {

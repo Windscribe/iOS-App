@@ -7,19 +7,17 @@
 //
 
 import UIKit
-import RxSwift
 import Combine
 
 protocol ServerInfoViewModelType {
-    var serverCountSubject: PublishSubject<Int> { get }
+    var serverCountSubject: PassthroughSubject<Int, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     func updateWithSearchCount(searchCount: Int)
 }
 
 class ServerInfoViewModel: ServerInfoViewModelType {
-    let serverCountSubject = PublishSubject<Int>()
+    let serverCountSubject = PassthroughSubject<Int, Never>()
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     private let languageManager: LanguageManager
     private let serverRepository: ServerRepository
@@ -41,7 +39,7 @@ class ServerInfoViewModel: ServerInfoViewModelType {
                     guard let self = self else { return }
                     // Count total groups across all servers
                     self.count = servers.reduce(0) { $0 + $1.groups.count }
-                    self.serverCountSubject.onNext(self.count)
+                    self.serverCountSubject.send(self.count)
             })
             .store(in: &cancellables)
 
@@ -49,25 +47,24 @@ class ServerInfoViewModel: ServerInfoViewModelType {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.serverCountSubject.onNext(self.count)
+                self.serverCountSubject.send(self.count)
             }
             .store(in: &cancellables)
     }
 
     func updateWithSearchCount(searchCount: Int) {
         if searchCount >= 0 {
-            self.serverCountSubject.onNext(searchCount)
+            self.serverCountSubject.send(searchCount)
         } else {
             let servers = serverRepository.currentServerModels
             // Count total groups across all servers
             let totalGroupCount = servers.reduce(0) { $0 + $1.groups.count }
-            self.serverCountSubject.onNext(totalGroupCount)
+            self.serverCountSubject.send(totalGroupCount)
         }
     }
 }
 
 class ServerInfoView: UIView {
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     var infoLabel = UILabel()
@@ -93,10 +90,12 @@ class ServerInfoView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel.serverCountSubject.observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: {
-                self.infoLabel.text = "\(TextsAsset.allServers) (\($0))"
-            }).disposed(by: disposeBag)
+        viewModel.serverCountSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] count in
+                self?.infoLabel.text = "\(TextsAsset.allServers) (\(count))"
+            }
+            .store(in: &cancellables)
 
         viewModel.isDarkMode
             .receive(on: DispatchQueue.main)

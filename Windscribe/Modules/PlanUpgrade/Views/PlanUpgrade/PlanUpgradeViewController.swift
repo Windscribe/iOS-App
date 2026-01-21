@@ -6,7 +6,6 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-import RxSwift
 import StoreKit
 import Swinject
 import UIKit
@@ -120,7 +119,7 @@ class PlanUpgradeViewController: WSUIViewController {
     }
 
     private func isPlanPromotional() -> Bool {
-        if let currentPlan = try? viewModel?.plans.value() {
+        if let currentPlan = viewModel?.plans.value {
             switch currentPlan {
             case .discounted:
                 return true
@@ -142,7 +141,7 @@ class PlanUpgradeViewController: WSUIViewController {
         showLoading()
 
         viewModel.plans
-            .bind(onNext: { [weak self] updatedPlans in
+            .sink { [weak self] updatedPlans in
                 guard let self, let viewModel = self.viewModel else { return }
 
                 DispatchQueue.main.async {
@@ -166,11 +165,11 @@ class PlanUpgradeViewController: WSUIViewController {
                         }
                     }
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.upgradeState
-            .bind(onNext: { [weak self] state in
+            .sink { [weak self] state in
                     guard let self, let viewModel = self.viewModel else { return }
 
                     DispatchQueue.main.async {
@@ -187,8 +186,8 @@ class PlanUpgradeViewController: WSUIViewController {
                                     rootViewController: upgradeSuccessViewController)
 
                                 upgradeSuccessViewController.successScreenDismissed
-                                    .observe(on: MainScheduler.instance)
-                                    .subscribe(onNext: { [weak self] in
+                                    .receive(on: DispatchQueue.main)
+                                    .sink { [weak self] in
                                         guard let self else { return }
 
                                         if ghostAccount {
@@ -199,8 +198,8 @@ class PlanUpgradeViewController: WSUIViewController {
                                         } else {
                                             self.navigationController?.presentingViewController?.dismiss(animated: true)
                                         }
-                                    })
-                                    .disposed(by: disposeBag)
+                                    }
+                                    .store(in: &cancellables)
                                 navigationController.modalPresentationStyle = .fullScreen
 
                                 present(navigationController, animated: true)
@@ -217,19 +216,19 @@ class PlanUpgradeViewController: WSUIViewController {
                             self.endLoading()
                         }
                     }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.upgradeRouteState
-            .bind(onNext: { [weak self] routeID in
+            .sink { [weak self] routeID in
                 guard let self = self, let routeID = routeID else { return }
 
                 self.viewModel?.routeTo(to: routeID, from: self)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         viewModel.showProgress
-            .bind(onNext: { [weak self] show in
+            .sink { [weak self] show in
                 guard let self = self else { return }
 
                 DispatchQueue.main.async {
@@ -239,8 +238,8 @@ class PlanUpgradeViewController: WSUIViewController {
                         self.endLoading()
                     }
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         planSelectionView.selectedPlan
             .compactMap { $0 }

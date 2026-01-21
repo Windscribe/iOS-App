@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 import StoreKit
 
@@ -34,31 +33,31 @@ class MainViewModelImpl: MainViewModel {
     private let customConfigRepository: CustomConfigRepository
     private let alertManager: AlertManager
 
-    let serverList = BehaviorSubject<[ServerModel]>(value: [])
-    var portMapHeadings = BehaviorSubject<[String]?>(value: nil)
-    var favouriteList = BehaviorSubject<[FavouriteGroupModel]?>(value: nil)
-    var staticIPs = BehaviorSubject<[StaticIPModel]?>(value: nil)
-    var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
-    let latencies = BehaviorSubject<[PingDataModel]>(value: [])
+    let serverList = CurrentValueSubject<[ServerModel], Never>([])
+    var portMapHeadings = CurrentValueSubject<[String]?, Never>(nil)
+    var favouriteList = CurrentValueSubject<[FavouriteGroupModel]?, Never>(nil)
+    var staticIPs = CurrentValueSubject<[StaticIPModel]?, Never>(nil)
+    var locationOrderBy = CurrentValueSubject<String, Never>(DefaultValues.orderLocationsBy)
+    let latencies = CurrentValueSubject<[PingDataModel], Never>([])
     var notices = CurrentValueSubject<[NoticeModel], Never>([])
     private var isFirstNotificationCheck = true  // Skip auto-show on first check (stale database data)
-    var selectedProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
-    var selectedPort = BehaviorSubject<String>(value: DefaultValues.port)
-    var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
-    var appNetwork = BehaviorSubject<AppNetwork>(value: AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
+    var selectedProtocol = CurrentValueSubject<String, Never>(DefaultValues.protocol)
+    var selectedPort = CurrentValueSubject<String, Never>(DefaultValues.port)
+    var connectionMode = CurrentValueSubject<String, Never>(DefaultValues.connectionMode)
+    var appNetwork = CurrentValueSubject<AppNetwork, Never>(AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
     var wifiNetwork = CurrentValueSubject<WifiNetworkModel?, Never>(nil)
     var sessionModel = CurrentValueSubject<SessionModel?, Never>(nil)
-    var favouriteGroups = BehaviorSubject<[GroupModel]>(value: [])
-    let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
+    var favouriteGroups = CurrentValueSubject<[GroupModel], Never>([])
+    let promoPayload = CurrentValueSubject<PushNotificationPayload?, Never>(nil)
 
     let customConfigs = CurrentValueSubject<[CustomConfigModel], Never>([])
     let showNetworkSecurityTrigger: PassthroughSubject<Void, Never>
     let showNotificationsTrigger: PassthroughSubject<Void, Never>
     let becameActiveTrigger: PassthroughSubject<Void, Never>
-    let updateSSIDTrigger = PublishSubject<Void>()
-    let showProtocolSwitchTrigger = PublishSubject<Void>()
-    let showAllProtocolsFailedTrigger = PublishSubject<Void>()
-    let showNoInternetBeforeFailoverTrigger = PublishSubject<Void>()
+    let updateSSIDTrigger = PassthroughSubject<Void, Never>()
+    let showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
+    let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
+    let showNoInternetBeforeFailoverTrigger = PassthroughSubject<Void, Never>()
     var showConnectionModeTriggeer = PassthroughSubject<Void, Never>()
     var disconnectConnectionTrigger = PassthroughSubject<Void, Never>()
 
@@ -70,7 +69,6 @@ class MainViewModelImpl: MainViewModel {
 
     let isDarkMode: CurrentValueSubject<Bool, Never>
 
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     init(vpnManager: VPNManager,
@@ -135,7 +133,7 @@ class MainViewModelImpl: MainViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] order in
                 guard let self = self else { return }
-                self.locationOrderBy.onNext(order ?? DefaultValues.orderLocationsBy)
+                self.locationOrderBy.send(order ?? DefaultValues.orderLocationsBy)
             }
             .store(in: &cancellables)
         loadLatencies()
@@ -144,21 +142,21 @@ class MainViewModelImpl: MainViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 guard let self = self else { return }
-                self.selectedProtocol.onNext(data ?? DefaultValues.protocol)
+                self.selectedProtocol.send(data ?? DefaultValues.protocol)
             }
             .store(in: &cancellables)
         preferences.getSelectedPort()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 guard let self = self else { return }
-                self.selectedPort.onNext(data ?? DefaultValues.port)
+                self.selectedPort.send(data ?? DefaultValues.port)
             }
             .store(in: &cancellables)
         preferences.getConnectionMode()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 guard let self = self else { return }
-                self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
+                self.connectionMode.send(data ?? DefaultValues.connectionMode)
             }
             .store(in: &cancellables)
 
@@ -166,25 +164,25 @@ class MainViewModelImpl: MainViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 guard let self = self else { return }
-                self.serverList.onNext(data)
+                self.serverList.send(data)
             }
             .store(in: &cancellables)
 
         protocolManager.showProtocolSwitchTrigger
             .sink { [weak self] _ in
-                self?.showProtocolSwitchTrigger.onNext(())
+                self?.showProtocolSwitchTrigger.send(())
             }
             .store(in: &cancellables)
 
         protocolManager.showAllProtocolsFailedTrigger
             .sink { [weak self] _ in
-                self?.showAllProtocolsFailedTrigger.onNext(())
+                self?.showAllProtocolsFailedTrigger.send(())
             }
             .store(in: &cancellables)
 
         protocolManager.showNoInternetBeforeFailoverTrigger
             .sink { [weak self] _ in
-                self?.showNoInternetBeforeFailoverTrigger.onNext(())
+                self?.showNoInternetBeforeFailoverTrigger.send(())
             }
             .store(in: &cancellables)
 
@@ -229,14 +227,14 @@ class MainViewModelImpl: MainViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] network in
                 guard let self = self else { return }
-                self.appNetwork.onNext(network)
+                self.appNetwork.send(network)
             }
             .store(in: &cancellables)
     }
 
     func sortFavouriteNodesUsingUserPreferences(favList: [FavouriteGroupModel]) -> [FavouriteGroupModel] {
         var favNodesOrdered = [FavouriteGroupModel]()
-        switch try? locationOrderBy.value() {
+        switch locationOrderBy.value {
         case Fields.Values.geography, Fields.Values.alphabet:
             favNodesOrdered = favList.sorted {
                 if $0.groupModel.city == $1.groupModel.city {
@@ -278,7 +276,7 @@ class MainViewModelImpl: MainViewModel {
                 serverSections = servers.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
             }
 
-            let orderBy = (try? self.locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
+            let orderBy = self.locationOrderBy.value
 
             switch orderBy {
             case Fields.Values.geography:
@@ -361,7 +359,7 @@ class MainViewModelImpl: MainViewModel {
     func loadPortMap() {
         Task { @MainActor in
             let headings = self.portMapRepo.currentPortMaps.map { $0.heading }
-            self.portMapHeadings.onNext(headings)
+            self.portMapHeadings.send(headings)
         }
     }
 
@@ -371,13 +369,13 @@ class MainViewModelImpl: MainViewModel {
     }
 
     private func loadTvFavourites() {
-        Publishers.CombineLatest(preferences.observeFavouriteIds(), serverList.toPublisher().replaceError(with: []))
+        Publishers.CombineLatest(preferences.observeFavouriteIds(), serverList)
             .map { ids, servers in
                 ids.compactMap { id in self.getFavouriteGroup(id: id, servers: servers) }
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] groups in
-                self?.favouriteGroups.onNext(groups)
+                self?.favouriteGroups.send(groups)
             }
             .store(in: &cancellables)
     }
@@ -394,7 +392,7 @@ class MainViewModelImpl: MainViewModel {
                         .first { "\($0.id)" == favNode.id }
                         .map { FavouriteGroupModel(favourite: favNode, groupModel: $0)}
                 }
-            favouriteList.onNext(favGroupModels)
+            favouriteList.send(favGroupModels)
         }
         .store(in: &cancellables)
     }
@@ -403,7 +401,7 @@ class MainViewModelImpl: MainViewModel {
         Task { @MainActor in
             do {
                 try await staticIpRepository.updateStaticServers()
-                staticIPs.onNext(staticIpRepository.staticIPs)
+                staticIPs.send(staticIpRepository.staticIPs)
             } catch {
                 logger.logE("MainViewModel", "Failed to load static IPs: \(error)")
             }
@@ -454,7 +452,7 @@ class MainViewModelImpl: MainViewModel {
         latencyRepo.latency
             .sink { [weak self] data in
                 guard let self = self else { return }
-                self.latencies.onNext(data)
+                self.latencies.send(data)
             }
             .store(in: &cancellables)
     }
@@ -526,7 +524,7 @@ class MainViewModelImpl: MainViewModel {
         pushNotificationsManager.notification
             .compactMap { $0 }
             .sink { [weak self] in
-                self?.promoPayload.onNext($0)
+                self?.promoPayload.send($0)
             }
             .store(in: &cancellables)
 
@@ -571,7 +569,7 @@ class MainViewModelImpl: MainViewModel {
     }
 
     func updateSSID() {
-        updateSSIDTrigger.onNext(())
+        updateSSIDTrigger.send(())
     }
 
     func getServerModel(from groupId: Int) -> ServerModel? {

@@ -7,16 +7,16 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class UpgradeSuccessViewModel {
-    let featureTitles = BehaviorSubject<[String]>(value: [
+    let featureTitles = CurrentValueSubject<[String], Never>([
         TextsAsset.UpgradeView.planBenefitSuccessShareDevices,
         TextsAsset.UpgradeView.planBenefitSuccessShareLocation,
         TextsAsset.UpgradeView.planBenefitSuccessShareBandwidth
     ])
 
-    let shareOptions = BehaviorSubject<[ShareOption]>(value: [
+    let shareOptions = CurrentValueSubject<[ShareOption], Never>([
         ShareOption(title: TextsAsset.UpgradeView.planBenefitJoinDiscord,
                     iconName: ImagesAsset.Subscriptions.discordIcon,
                     url: URL(string: Links.discord)),

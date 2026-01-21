@@ -7,22 +7,21 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 
 enum FavouritesIPAlertType { case connecting; case disconnecting }
 
 protocol FavouriteListViewModelType {
-    var presentAlertTrigger: PublishSubject<FavouritesIPAlertType> { get }
+    var presentAlertTrigger: PassthroughSubject<FavouritesIPAlertType, Never> { get }
     var showMaintenanceLocationTrigger: PassthroughSubject<Void, Never> { get }
-    var showUpgradeTrigger: PublishSubject<Void> { get }
+    var showUpgradeTrigger: PassthroughSubject<Void, Never> { get }
     func setSelectedFav(favourite: GroupModel)
 }
 
 class FavouriteListViewModel: FavouriteListViewModelType {
-    var presentAlertTrigger = PublishSubject<FavouritesIPAlertType>()
+    var presentAlertTrigger = PassthroughSubject<FavouritesIPAlertType, Never>()
     var showMaintenanceLocationTrigger = PassthroughSubject<Void, Never>()
-    var showUpgradeTrigger = PublishSubject<Void>()
+    var showUpgradeTrigger = PassthroughSubject<Void, Never>()
 
     var logger: FileLogger
     var vpnStateRepository: VPNStateRepository
@@ -48,7 +47,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
     func setSelectedFav(favourite: GroupModel) {
         if !connectivity.internetConnectionAvailable() { return }
         if vpnStateRepository.configurationState == ConfigurationState.disabling {
-            presentAlertTrigger.onNext(.disconnecting)
+            presentAlertTrigger.send(.disconnecting)
             return
         }
         if checkMaintenanceLocation(favourite: favourite) {
@@ -56,7 +55,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
             return
         }
         if !canAccesstoProLocation() && favourite.premiumOnly {
-            showUpgradeTrigger.onNext(())
+            showUpgradeTrigger.send(())
             return
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
             logger.logD("FavouriteListViewModel", "Tapped on Favourite \(favourite.city) from the server list.")
@@ -66,7 +65,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {
-            presentAlertTrigger.onNext(.connecting)
+            presentAlertTrigger.send(.connecting)
         }
     }
 

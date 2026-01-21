@@ -8,7 +8,6 @@
 
 import Foundation
 import MobileCoreServices
-import RxSwift
 import Combine
 import UIKit
 import UniformTypeIdentifiers
@@ -25,11 +24,11 @@ protocol AddCustomConfigDelegate: AnyObject {
 }
 
 protocol CustomConfigPickerViewModelType: CustomConfigListModelDelegate {
-    var displayAllertTrigger: PublishSubject<ConfigAlertType> { get }
-    var configureVPNTrigger: PublishSubject<Void> { get }
-    var disableVPNTrigger: PublishSubject<Void> { get }
-    var presentDocumentPickerTrigger: PublishSubject<UIDocumentPickerViewController> { get }
-    var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
+    var displayAllertTrigger: PassthroughSubject<ConfigAlertType, Never> { get }
+    var configureVPNTrigger: PassthroughSubject<Void, Never> { get }
+    var disableVPNTrigger: PassthroughSubject<Void, Never> { get }
+    var presentDocumentPickerTrigger: PassthroughSubject<UIDocumentPickerViewController, Never> { get }
+    var showEditCustomConfigTrigger: PassthroughSubject<CustomConfigModel, Never> { get }
 }
 
 class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
@@ -41,11 +40,11 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
 
-    var displayAllertTrigger = PublishSubject<ConfigAlertType>()
-    var configureVPNTrigger = PublishSubject<Void>()
-    var disableVPNTrigger = PublishSubject<Void>()
-    var presentDocumentPickerTrigger = PublishSubject<UIDocumentPickerViewController>()
-    var showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
+    var displayAllertTrigger = PassthroughSubject<ConfigAlertType, Never>()
+    var configureVPNTrigger = PassthroughSubject<Void, Never>()
+    var disableVPNTrigger = PassthroughSubject<Void, Never>()
+    var presentDocumentPickerTrigger = PassthroughSubject<UIDocumentPickerViewController, Never>()
+    var showEditCustomConfigTrigger = PassthroughSubject<CustomConfigModel, Never>()
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -117,7 +116,7 @@ extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
         let filePicker = UIDocumentPickerViewController(forOpeningContentTypes: documentTypes)
         filePicker.delegate = self
         filePicker.allowsMultipleSelection = true
-        presentDocumentPickerTrigger.onNext(filePicker)
+        presentDocumentPickerTrigger.send(filePicker)
     }
 }
 
@@ -125,7 +124,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     func setSelectedCustomConfig(customConfig: CustomConfigModel) {
         if !connectivity.internetConnectionAvailable() { return }
         if vpnStateRepository.configurationState == ConfigurationState.disabling {
-            displayAllertTrigger.onNext(.disconnecting)
+            displayAllertTrigger.send(.disconnecting)
             return
         }
         Task { @MainActor in
@@ -153,23 +152,23 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     }
 
     func showEditCustomConfig(customConfig: CustomConfigModel) {
-        showEditCustomConfigTrigger.onNext(customConfig)
+        showEditCustomConfigTrigger.send(customConfig)
     }
 
     private func continueSetSelected(with customConfig: CustomConfigModel, and isConnecting: Bool) async {
         logger.logD("CustomConfigPickerViewModel", "Tapped on Custom config from the list.")
 
         guard !isConnecting else {
-            displayAllertTrigger.onNext(.connecting)
+            displayAllertTrigger.send(.connecting)
             return
         }
 
         locationsManager.saveCustomConfig(withID: customConfig.id)
-        configureVPNTrigger.onNext(())
+        configureVPNTrigger.send(())
     }
 
     private func resetConnectionStatus() {
-        disableVPNTrigger.onNext(())
+        disableVPNTrigger.send(())
         setBestLocation()
     }
 
@@ -178,7 +177,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         if !locationID.isEmpty, locationID != "0", !self.vpnStateRepository.isConnecting() {
             self.logger.logD("CustomConfigPickerViewModel", "Changing selected location to Best location ID \(locationID) from the server list.")
             self.locationsManager.saveLastSelectedLocation(with: locationID)
-            self.configureVPNTrigger.onNext(())
+            self.configureVPNTrigger.send(())
         } else {
             self.locationsManager.saveBestLocation(with: "")
         }

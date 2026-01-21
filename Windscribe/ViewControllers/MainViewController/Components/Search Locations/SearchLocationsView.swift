@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import RxSwift
 import UIKit
 
 class SearchLocationsView: UIView {
@@ -24,7 +23,6 @@ class SearchLocationsView: UIView {
     let serverSectionOpacity: Float
     private var isDarkMode: Bool = DefaultValues.darkMode
 
-    var disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     @available(*, unavailable)
@@ -63,12 +61,15 @@ class SearchLocationsView: UIView {
             }
             .store(in: &cancellables)
 
-        viewModel.refreshLanguage.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            clearSearchButton.configuration = getClearConfig()
-            let isDarkMode = viewModel.isDarkMode.value
-            updateSearchTextfield(for: isDarkMode)
-        }).disposed(by: disposeBag)
+        viewModel.refreshLanguage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                clearSearchButton.configuration = getClearConfig()
+                let isDarkMode = viewModel.isDarkMode.value
+                updateSearchTextfield(for: isDarkMode)
+            }
+            .store(in: &cancellables)
     }
 
     private func addViews() {
@@ -152,38 +153,44 @@ class SearchLocationsView: UIView {
     }
 
     private func bindTextFieldDelegates() {
-        searchTextfield.rx.text
-            .subscribe(onNext: { text in
-                guard let text = text else { return }
-                self.viewModel.searchTextFieldDidChange(text: text)
-            })
-            .disposed(by: disposeBag)
-
-        searchTextfield.rx.controlEvent(.primaryActionTriggered)
-            .subscribe(onNext: { [unowned self] in
-                self.searchTextfield.resignFirstResponder()
-            })
-            .disposed(by: disposeBag)
-
-        clearSearchButton.rx.tap.bind { [weak self] in
-            self?.clearSearchField()
-        }.disposed(by: disposeBag)
-
-        exitSearchButton.rx.tap.bind { [weak self] in
-            self?.viewModel.toggleSearch()
-        }.disposed(by: disposeBag)
-
-        viewModel.isSearchActive.subscribe { [weak self] isActive in
-            guard let self = self else { return }
-            self.stackContainerView.isHidden = !isActive
-            self.isUserInteractionEnabled = isActive
-            if isActive {
-                self.searchTextfield.becomeFirstResponder()
-            } else {
-                self.searchTextfield.resignFirstResponder()
-                self.clearSearchField()
+        searchTextfield.textEditedPublisher
+            .sink { [weak self] text in
+                self?.viewModel.searchTextFieldDidChange(text: text)
             }
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
+
+        searchTextfield.publisher(for: .primaryActionTriggered)
+            .sink { [weak self] _ in
+                self?.searchTextfield.resignFirstResponder()
+            }
+            .store(in: &cancellables)
+
+        clearSearchButton.tap
+            .sink { [weak self] _ in
+                self?.clearSearchField()
+            }
+            .store(in: &cancellables)
+
+        exitSearchButton.tap
+            .sink { [weak self] _ in
+                self?.viewModel.toggleSearch()
+            }
+            .store(in: &cancellables)
+
+        viewModel.isSearchActive
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isActive in
+                guard let self = self else { return }
+                self.stackContainerView.isHidden = !isActive
+                self.isUserInteractionEnabled = isActive
+                if isActive {
+                    self.searchTextfield.becomeFirstResponder()
+                } else {
+                    self.searchTextfield.resignFirstResponder()
+                    self.clearSearchField()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     func setSearchSelected(isSelected: Bool) {

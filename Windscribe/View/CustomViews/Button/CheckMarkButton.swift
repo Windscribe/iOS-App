@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 import UIKit
 
 class CheckMarkButton: SwitchButton {

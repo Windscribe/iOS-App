@@ -8,7 +8,7 @@
 
 import UIKit
 import SnapKit
-import RxSwift
+import Combine
 
 class UpgradeSuccessShareView: UIView {
 
@@ -17,11 +17,11 @@ class UpgradeSuccessShareView: UIView {
     private let stackView = UIStackView()
     private let shareTitleLabel = UILabel()
 
-    private var shareOptions: BehaviorSubject<[ShareOption]>
-    let didSelectOption = PublishSubject<URL>()
-    private let disposeBag = DisposeBag()
+    private var shareOptions: CurrentValueSubject<[ShareOption], Never>
+    let didSelectOption = PassthroughSubject<URL, Never>()
+    private var cancellables = Set<AnyCancellable>()
 
-    init(shareOptions: BehaviorSubject<[ShareOption]>) {
+    init(shareOptions: CurrentValueSubject<[ShareOption], Never>) {
         self.shareOptions = shareOptions
         super.init(frame: .zero)
 
@@ -59,16 +59,16 @@ class UpgradeSuccessShareView: UIView {
 
     private func bindData() {
         shareOptions
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] options in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] options in
                 guard let self else { return }
                 self.stackView.arrangedSubviews
                     .filter { $0 !== self.shareTitleLabel }
                     .forEach { $0.removeFromSuperview() }
 
                 options.forEach { self.addShareOption($0) }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     private func addShareOption(_ option: ShareOption) {
@@ -127,13 +127,13 @@ class UpgradeSuccessShareView: UIView {
 
     @objc private func rowTapped(_ gesture: UITapGestureRecognizer) {
         guard let row = gesture.view as? UIStackView,
-              let index = stackView.arrangedSubviews.firstIndex(of: row),
-              let options = try? shareOptions.value() else { return }
+              let index = stackView.arrangedSubviews.firstIndex(of: row) else { return }
 
+        let options = shareOptions.value
         let selectedOption = options[index - 1]
 
         if let url = selectedOption.url {
-            didSelectOption.onNext(url)
+            didSelectOption.send(url)
         }
     }
 }

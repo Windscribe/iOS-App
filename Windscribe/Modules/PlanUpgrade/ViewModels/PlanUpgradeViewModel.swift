@@ -8,15 +8,14 @@
 
 import Combine
 import Foundation
-import RxSwift
 import StoreKit
 
 protocol PlanUpgradeViewModel {
-    var upgradeState: BehaviorSubject<PlanUpgradeState?> { get }
-    var plans: BehaviorSubject<PlanTypes?> { get }
-    var upgradeRouteState: BehaviorSubject<RouteID?> { get }
-    var restoreState: BehaviorSubject<PlanRestoreState?> { get }
-    var showProgress: BehaviorSubject<Bool> { get }
+    var upgradeState: CurrentValueSubject<PlanUpgradeState?, Never> { get }
+    var plans: CurrentValueSubject<PlanTypes?, Never> { get }
+    var upgradeRouteState: CurrentValueSubject<RouteID?, Never> { get }
+    var restoreState: CurrentValueSubject<PlanRestoreState?, Never> { get }
+    var showProgress: CurrentValueSubject<Bool, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
 
     func loadPlans(promo: String?, id: String?)
@@ -47,11 +46,11 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
 
     // MARK: Reactive Properties
 
-    let upgradeState: BehaviorSubject<PlanUpgradeState?> = BehaviorSubject(value: nil)
-    let showProgress: BehaviorSubject<Bool> = BehaviorSubject(value: false)
-    let plans: BehaviorSubject<PlanTypes?> = BehaviorSubject(value: nil)
-    let upgradeRouteState: BehaviorSubject<RouteID?> = BehaviorSubject(value: nil)
-    let restoreState: BehaviorSubject<PlanRestoreState?> = BehaviorSubject(value: nil)
+    let upgradeState = CurrentValueSubject<PlanUpgradeState?, Never>(nil)
+    let showProgress = CurrentValueSubject<Bool, Never>(false)
+    let plans = CurrentValueSubject<PlanTypes?, Never>(nil)
+    let upgradeRouteState = CurrentValueSubject<RouteID?, Never>(nil)
+    let restoreState = CurrentValueSubject<PlanRestoreState?, Never>(nil)
     let isDarkMode: CurrentValueSubject<Bool, Never>
 
     // MARK: Internal
@@ -60,7 +59,6 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private var pcpID: String?
     private var selectedPlan: WindscribeInAppProduct?
     private var mobilePlans: [MobilePlanModel]?
-    private let disposeBag = DisposeBag()
 
     init(alertManager: AlertManager,
          apiManager: APIManager,
@@ -108,7 +106,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
 
         logger.logD("DefaultUpgradePlanViewModel", "Loading billing plans. Promo: \(promoCode ?? "N/A"), PCPID: \(pcpID ?? "N/A")")
 
-        showProgress.onNext(true)
+        showProgress.send(true)
 
         Task { @MainActor in
             do {
@@ -121,20 +119,20 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
                         "Plan: \(plan.name) Ext: \(plan.extId) Duration: \(plan.duration) Discount: \(discount)")
                 }
                 self.mobilePlans = mobilePlans
-                showProgress.onNext(false)
+                showProgress.send(false)
                 if mobilePlans.count > 0 {
                     inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map { $0.extId })
                 }
             } catch {
                 logger.logE("DefaultUpgradePlanViewModel", "Failed to load mobile plans: \(error)")
-                showProgress.onNext(false)
+                showProgress.send(false)
             }
         }
     }
 
     func continuePayButtonTapped() {
         logger.logD("DefaultUpgradePlanViewModel", "User tapped to upgrade.")
-        upgradeState.onNext(.loading)
+        upgradeState.send(.loading)
         if let selectedPlan = selectedPlan {
             inAppPurchaseManager.purchase(windscribeInAppProduct: selectedPlan)
         }
@@ -142,7 +140,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
 
     func restoreButtonTapped() {
         logger.logD("DefaultUpgradePlanViewModel", "User tapped to restore purchases.")
-        upgradeState.onNext(.loading)
+        upgradeState.send(.loading)
         inAppPurchaseManager.restorePurchase()
     }
 
@@ -178,11 +176,11 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
                 try await sessionManager.updateSession()
                 let session = userSessionRepository.sessionModel
                 self.logger.logI("DefaultUpgradePlanViewModel", "Received updated session.")
-                self.upgradeState.onNext(.success(session?.isUserGhost ?? false))
+                self.upgradeState.send(.success(session?.isUserGhost ?? false))
             } catch {
                 await MainActor.run {
                     self.logger.logE("DefaultUpgradePlanViewModel", "Failure to update session. \(error.localizedDescription)")
-                    self.upgradeState.onNext(.success(false))
+                    self.upgradeState.send(.success(false))
                 }
             }
         }
@@ -222,15 +220,15 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
                 return
             }
 
-            showProgress.onNext(false)
+            showProgress.send(false)
 
             if let discountedWindscribePlan = mobilePlans?.first(where: { $0.discount >= 0}),
                 let discountedApplePlan = windscribeProducts.first(where: {$0.extId == discountedWindscribePlan.extId}) {
-                plans.onNext(.discounted(discountedApplePlan, discountedWindscribePlan))
+                plans.send(.discounted(discountedApplePlan, discountedWindscribePlan))
             } else if windscribeProducts.count > 0 && windscribeProducts.count == mobilePlans?.count {
-                plans.onNext(.standardPlans(windscribeProducts, mobilePlans ?? []))
+                plans.send(.standardPlans(windscribeProducts, mobilePlans ?? []))
             } else {
-                plans.onNext(.unableToLoad)
+                plans.send(.unableToLoad)
             }
         }
     }
@@ -255,9 +253,9 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
                     if let error = error as? Errors {
                         switch error {
                         case let .apiError(error):
-                            self.upgradeState.onNext(.error(error.errorMessage ?? ""))
+                            self.upgradeState.send(.error(error.errorMessage ?? ""))
                         default:
-                            self.upgradeState.onNext(.error(error.description))
+                            self.upgradeState.send(.error(error.description))
                         }
                     }
                 }
@@ -267,32 +265,32 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
 
     func failedToPurchase() {
         logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction.")
-        upgradeState.onNext(
+        upgradeState.send(
             .titledError(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle,
                          TextsAsset.UpgradeView.planBenefitTransactionFailedAlert))
     }
 
     func unableToMakePurchase() {
         logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction.")
-        upgradeState.onNext(.error(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle))
+        upgradeState.send(.error(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle))
     }
 
     func failedCanceledByUser() {
         logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction. Purchase canceled by user.")
         // Upgrade state will not send an error here so dismiss screen will not show alert
-        upgradeState.onNext(.none)
+        upgradeState.send(.none)
     }
 
     func failedDueToNetworkIssue() {
         logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction. Problem with internet connection.")
-        upgradeState.onNext(.error(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle))
+        upgradeState.send(.error(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle))
     }
 
     func setVerifiedTransaction(transaction: UncompletedTransactions?, error: String?) {
         DispatchQueue.main.async { [weak self] in
             if transaction == nil {
                 self?.logger.logE("PlanUpgradeViewModel.", error ?? "Failed to restore transaction.")
-                self?.upgradeState.onNext(.error(error ?? TextsAsset.UpgradeView.planBenefitTransactionFailedRestoreTitle))
+                self?.upgradeState.send(.error(error ?? TextsAsset.UpgradeView.planBenefitTransactionFailedRestoreTitle))
             } else {
                 self?.logger.logD("PlanUpgradeViewModel.", "Successfully verified item: \(transaction?.description ?? "")")
                 self?.upgrade()
@@ -302,18 +300,18 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
 
     func failedToLoadProducts() {
         logger.logE("DefaultUpgradePlanViewModel", "Failed to load products. Check your network and try again.")
-        showProgress.onNext(false)
-        upgradeState.onNext(.error(TextsAsset.UpgradeView.planBenefitNetworkProblemTitle))
+        showProgress.send(false)
+        upgradeState.send(.error(TextsAsset.UpgradeView.planBenefitNetworkProblemTitle))
     }
 
     func unableToRestorePurchase(error: any Error) {
         logger.logE("DefaultUpgradePlanViewModel", "Unable to restore purchase. \(error)")
         if let err = error as? URLError, err.code == URLError.Code.notConnectedToInternet {
-            upgradeState.onNext(.error(Errors.noNetwork.description))
+            upgradeState.send(.error(Errors.noNetwork.description))
         } else if error is URLError {
-            upgradeState.onNext(.error(Errors.unknownError.description))
+            upgradeState.send(.error(Errors.unknownError.description))
         } else {
-            upgradeState.onNext(.error(TextsAsset.PurchaseRestoredAlert.error))
+            upgradeState.send(.error(TextsAsset.PurchaseRestoredAlert.error))
         }
     }
 }

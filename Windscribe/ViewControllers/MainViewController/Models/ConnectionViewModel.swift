@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 import NetworkExtension
 #if canImport(WidgetKit)
@@ -15,23 +14,23 @@ import WidgetKit
 #endif
 
 protocol ConnectionViewModelType {
-    var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
-    var selectedProtoPort: BehaviorSubject<ProtocolPort?> { get }
+    var connectedState: CurrentValueSubject<ConnectionStateInfo, Never> { get }
+    var selectedProtoPort: CurrentValueSubject<ProtocolPort?, Never> { get }
     var selectedLocationUpdated: CurrentValueSubject<Void, Never> { get }
 
-    var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
+    var loadLatencyValuesSubject: PassthroughSubject<LoadLatencyInfo, Never> {get}
     var showFailedPinIpTrigger: PassthroughSubject<Void, Never> { get }
-    var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
-    var showPrivacyTrigger: PublishSubject<Void> { get }
-    var showAuthFailureTrigger: PublishSubject<Void> { get }
-    var showConnectionFailedTrigger: PublishSubject<Void> { get }
-    var showNoConnectionAlertTrigger: PublishSubject<Void> { get }
-    var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
-    var siriShortcutTrigger: PublishSubject<Void> { get }
-    var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
-    var reloadLocationsTrigger: PublishSubject<String> { get }
-    var reviewRequestTrigger: PublishSubject<Void> { get }
-    var showPreferredProtocolView: PublishSubject<String> { get }
+    var showUpgradeRequiredTrigger: PassthroughSubject<Void, Never> { get }
+    var showPrivacyTrigger: PassthroughSubject<Void, Never> { get }
+    var showAuthFailureTrigger: PassthroughSubject<Void, Never> { get }
+    var showConnectionFailedTrigger: PassthroughSubject<Void, Never> { get }
+    var showNoConnectionAlertTrigger: PassthroughSubject<Void, Never> { get }
+    var pushNotificationPermissionsTrigger: PassthroughSubject<Void, Never> { get }
+    var siriShortcutTrigger: PassthroughSubject<Void, Never> { get }
+    var showEditCustomConfigTrigger: PassthroughSubject<CustomConfigModel, Never> { get }
+    var reloadLocationsTrigger: PassthroughSubject<String, Never> { get }
+    var reviewRequestTrigger: PassthroughSubject<Void, Never> { get }
+    var showPreferredProtocolView: PassthroughSubject<String, Never> { get }
 
     var vpnManager: VPNManager { get }
     var appReviewManager: AppReviewManaging { get }
@@ -67,28 +66,27 @@ protocol ConnectionViewModelType {
 }
 
 class ConnectionViewModel: ConnectionViewModelType {
-    let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
-    let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
+    let connectedState = CurrentValueSubject<ConnectionStateInfo, Never>( ConnectionStateInfo.defaultValue())
+    let selectedProtoPort = CurrentValueSubject<ProtocolPort?, Never>(nil)
     let selectedLocationUpdated = CurrentValueSubject<Void, Never>(())
 
     let showFailedPinIpTrigger: PassthroughSubject<Void, Never>
 
-    var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
-    let showUpgradeRequiredTrigger = PublishSubject<Void>()
-    let showPrivacyTrigger = PublishSubject<Void>()
-    let showAuthFailureTrigger = PublishSubject<Void>()
-    let showConnectionFailedTrigger = PublishSubject<Void>()
-    let pushNotificationPermissionsTrigger = PublishSubject<Void>()
-    let siriShortcutTrigger = PublishSubject<Void>()
-    let showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
-    let showNoConnectionAlertTrigger = PublishSubject<Void>()
-    let reloadLocationsTrigger = PublishSubject<String>()
-    let reviewRequestTrigger = PublishSubject<Void>()
-    let showPreferredProtocolView = PublishSubject<String>()
+    var loadLatencyValuesSubject = PassthroughSubject<LoadLatencyInfo, Never>()
+    let showUpgradeRequiredTrigger = PassthroughSubject<Void, Never>()
+    let showPrivacyTrigger = PassthroughSubject<Void, Never>()
+    let showAuthFailureTrigger = PassthroughSubject<Void, Never>()
+    let showConnectionFailedTrigger = PassthroughSubject<Void, Never>()
+    let pushNotificationPermissionsTrigger = PassthroughSubject<Void, Never>()
+    let siriShortcutTrigger = PassthroughSubject<Void, Never>()
+    let showEditCustomConfigTrigger = PassthroughSubject<CustomConfigModel, Never>()
+    let showNoConnectionAlertTrigger = PassthroughSubject<Void, Never>()
+    let reloadLocationsTrigger = PassthroughSubject<String, Never>()
+    let reviewRequestTrigger = PassthroughSubject<Void, Never>()
+    let showPreferredProtocolView = PassthroughSubject<String, Never>()
 
     let combineVpnInfo = PassthroughSubject<VPNConnectionInfo?, Never>()
 
-    private let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     let vpnManager: VPNManager
@@ -163,11 +161,11 @@ class ConnectionViewModel: ConnectionViewModelType {
             .sink { [weak self] (info, nextProtocol) in
                 guard let self = self else { return }
                 if info == nil && nextProtocol == nil {
-                    self.selectedProtoPort.onNext(protocolManager.getProtocol())
+                    self.selectedProtoPort.send(protocolManager.getProtocol())
                 } else if let info = info, [.connected, .connecting].contains(info.status) {
-                    self.selectedProtoPort.onNext(ProtocolPort(info.selectedProtocol, info.selectedPort))
+                    self.selectedProtoPort.send(ProtocolPort(info.selectedProtocol, info.selectedPort))
                 } else if let nextProtocol = nextProtocol {
-                    self.selectedProtoPort.onNext(nextProtocol)
+                    self.selectedProtoPort.send(nextProtocol)
                 }
             }
             .store(in: &cancellables)
@@ -228,7 +226,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         appReviewManager.reviewRequestTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.reviewRequestTrigger.onNext(())
+                self?.reviewRequestTrigger.send(())
             }
             .store(in: &cancellables)
     }
@@ -240,23 +238,23 @@ extension ConnectionViewModel {
     }
 
     func isConnected() -> Bool {
-        (try? connectedState.value())?.state == .connected
+        connectedState.value.state == .connected
     }
 
     func isConnecting() -> Bool {
-        (try? connectedState.value())?.state == .connecting
+        connectedState.value.state == .connecting
     }
 
     func isDisconnected() -> Bool {
-        (try? connectedState.value())?.state == .disconnected
+        connectedState.value.state == .disconnected
     }
 
     func isDisconnecting() -> Bool {
-        (try? connectedState.value())?.state == .disconnecting
+        connectedState.value.state == .disconnecting
     }
 
     func isInvalid() -> Bool {
-        (try? connectedState.value())?.state == .invalid
+        connectedState.value.state == .invalid
     }
 
     func isCustomConfigSelected() -> Bool {
@@ -354,13 +352,14 @@ extension ConnectionViewModel {
             logger.logD("ConnectionViewModel", "Displaying local IP Address.")
             gettingIpAddress = true
             Task { [weak self] in
+                guard let self = self else { return }
                 do {
-                    try await self?.ipRepository.getIp()
+                    try await self.ipRepository.getIp()
                 } catch {
                     // Error already logged in repository
                 }
                 await MainActor.run {
-                    self?.gettingIpAddress = false
+                    self.gettingIpAddress = false
                 }
             }
         }
@@ -483,7 +482,7 @@ extension ConnectionViewModel {
     }
 
     @objc private func loadLatencyValues() {
-        loadLatencyValuesSubject.onNext(LoadLatencyInfo(force: false, connectToBestLocation: true))
+        loadLatencyValuesSubject.send(LoadLatencyInfo(force: false, connectToBestLocation: true))
     }
 
     private func checkShouldShowPreferredProtocol() {
@@ -498,7 +497,7 @@ extension ConnectionViewModel {
             return
         }
 
-        showPreferredProtocolView.onNext(nextProtocol.protocolName)
+        showPreferredProtocolView.send(nextProtocol.protocolName)
     }
 
     private func checkPreferencesForTriggers() {
@@ -506,11 +505,11 @@ extension ConnectionViewModel {
 
         if connectionCount == 2 {
             logger.logD("ConnectionViewModel", "Displaying push notifications permission popup to user.")
-            pushNotificationPermissionsTrigger.onNext(())
+            pushNotificationPermissionsTrigger.send(())
         }
         if connectionCount == 5 {
             logger.logD("ConnectionViewModel", "Displaying Siri shortcut popup.")
-            siriShortcutTrigger.onNext(())
+            siriShortcutTrigger.send(())
         }
 
         DispatchQueue.main.async { [weak self] in
@@ -531,13 +530,14 @@ extension ConnectionViewModel {
         logger.logD("ConnectionViewModel", "Displaying local IP Address.")
         gettingIpAddress = true
         Task { [weak self] in
+            guard let self = self else { return }
             do {
-                try await self?.ipRepository.getIp()
+                try await self.ipRepository.getIp()
             } catch {
                 // Error already logged in repository
             }
             await MainActor.run {
-                self?.gettingIpAddress = false
+                self.gettingIpAddress = false
             }
         }
     }
@@ -574,24 +574,24 @@ extension ConnectionViewModel {
                 .connectionTimeout:
             return false
         case .accountExpired:
-            showUpgradeRequiredTrigger.onNext(())
+            showUpgradeRequiredTrigger.send(())
         case .accountBanned:
             return true
         case .locationNotFound(let id):
-            reloadLocationsTrigger.onNext(id)
+            reloadLocationsTrigger.send(id)
         case .networkIsOffline:
-            showNoConnectionAlertTrigger.onNext(())
+            showNoConnectionAlertTrigger.send(())
         case .upgradeRequired:
-            showUpgradeRequiredTrigger.onNext(())
+            showUpgradeRequiredTrigger.send(())
         case .privacyNotAccepted:
-            showPrivacyTrigger.onNext(())
+            showPrivacyTrigger.send(())
         case .authFailure:
-            showAuthFailureTrigger.onNext(())
+            showAuthFailureTrigger.send(())
         case .connectivityTestFailed:
             guard locationsManager.getLocationType() == .custom else { return false }
-            showAuthFailureTrigger.onNext(())
+            showAuthFailureTrigger.send(())
         case let .customConfigMissingCredentials(customConfig):
-            showEditCustomConfigTrigger.onNext(customConfig)
+            showEditCustomConfigTrigger.send(customConfig)
         }
         return true
     }
@@ -607,15 +607,11 @@ extension ConnectionViewModel {
             displayLocalIPAddress()
         }
 
-        var canPlaySound = true
-        if let currentState = try? connectedState.value() {
-            canPlaySound = currentState.state != state
-        }
-        if canPlaySound {
+        if connectedState.value.state != state {
             playSound(for: state)
         }
 
-        connectedState.onNext(ConnectionStateInfo(state: state,
+        connectedState.send(ConnectionStateInfo(state: state,
                                                   isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
                                                   internetConnectionAvailable: false,
                                                   connectedWifi: nil))
@@ -633,10 +629,7 @@ extension ConnectionViewModel {
     }
 
     private func checkCanPlayDisconnectedSound() -> Bool {
-        guard let currentState = try? connectedState.value() else {
-            return false
-        }
-        return currentState.state == .connected
+        return connectedState.value.state == .connected
     }
 
     private func playSound(for state: ConnectionState) {

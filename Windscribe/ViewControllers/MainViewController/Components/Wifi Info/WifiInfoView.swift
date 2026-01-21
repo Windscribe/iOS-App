@@ -7,21 +7,19 @@
 //
 
 import UIKit
-import RxSwift
-import RxGesture
+import Combine
 
 protocol WifiInfoViewModelType {
     var trustedNetworkImage: String { get }
     var isBlur: Bool { get }
-    var unknownWifiTriggerSubject: PublishSubject<Void> { get }
+    var unknownWifiTriggerSubject: PassthroughSubject<Void, Never> { get }
 
     func nameLabelTapped(networkName: String?) -> Bool?
 }
 
 class WifiInfoViewModel: WifiInfoViewModelType {
     let preferences: Preferences
-    let unknownWifiTriggerSubject = PublishSubject<Void>()
-    let disposeBag = DisposeBag()
+    let unknownWifiTriggerSubject = PassthroughSubject<Void, Never>()
 
     var trustedNetworkImage: String {
         if let status = WifiManager.shared.getConnectedNetwork()?.status {
@@ -45,7 +43,7 @@ class WifiInfoViewModel: WifiInfoViewModelType {
 
     func nameLabelTapped(networkName: String?) -> Bool? {
         if networkName == TextsAsset.NetworkSecurity.unknownNetwork {
-            unknownWifiTriggerSubject.onNext(())
+            unknownWifiTriggerSubject.send(())
             return nil
         } else {
             preferences.saveBlurNetworkName(bool: !(preferences.getBlurNetworkName() ?? false))
@@ -55,9 +53,9 @@ class WifiInfoViewModel: WifiInfoViewModelType {
 }
 
 class WifiInfoView: UIView {
-    let disposeBag = DisposeBag()
-    let wifiTriggerSubject = PublishSubject<WifiNetworkModel>()
-    let unknownWifiTriggerSubject = PublishSubject<Void>()
+    private var cancellables = Set<AnyCancellable>()
+    let wifiTriggerSubject = PassthroughSubject<WifiNetworkModel, Never>()
+    let unknownWifiTriggerSubject = PassthroughSubject<Void, Never>()
 
     var viewModel: WifiInfoViewModelType! {
         didSet {
@@ -101,45 +99,50 @@ class WifiInfoView: UIView {
         var isDoubleTapInProgress = false
 
         // Double tap for blur toggle (known network only)
-        nameLabel.rx.anyGesture(.tap(configuration: { gestureRecognizer, _ in
-            gestureRecognizer.numberOfTapsRequired = 2
-        })).skip(1).subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            isDoubleTapInProgress = true
-            if nameLabel.text != TextsAsset.NetworkSecurity.unknownNetwork {
-                let preferences = (viewModel as? WifiInfoViewModel)?.preferences
-                preferences?.saveBlurNetworkName(bool: !(preferences?.getBlurNetworkName() ?? false))
-                nameLabel.isBlurring = preferences?.getBlurNetworkName() ?? false
+        nameLabel.gesturePublisher(.tap(numberOfTaps: 2))
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                isDoubleTapInProgress = true
+                if nameLabel.text != TextsAsset.NetworkSecurity.unknownNetwork {
+                    let preferences = (viewModel as? WifiInfoViewModel)?.preferences
+                    preferences?.saveBlurNetworkName(bool: !(preferences?.getBlurNetworkName() ?? false))
+                    nameLabel.isBlurring = preferences?.getBlurNetworkName() ?? false
+                }
+                // Reset flag after delay longer than debounce time
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    isDoubleTapInProgress = false
+                }
             }
-            // Reset flag after delay longer than debounce time
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                isDoubleTapInProgress = false
-            }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         // Single tap for location permission popup (unknown network) or network details (known network)
-        nameLabel.rx.anyGesture(.tap()).skip(1)
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
+        nameLabel.gesturePublisher(.tap())
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
                 guard let self = self else { return }
                 // Don't fire if double tap is in progress
                 guard !isDoubleTapInProgress else { return }
                 if nameLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
-                    viewModel.unknownWifiTriggerSubject.onNext(())
+                    viewModel.unknownWifiTriggerSubject.send(())
                 } else {
                     guard let network = self.network else { return }
-                    self.wifiTriggerSubject.onNext(network)
+                    self.wifiTriggerSubject.send(network)
                 }
-            }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
-        actionButton.rx.tap.bind { [weak self] _ in
-            guard let network = self?.network else { return }
-            self?.wifiTriggerSubject.onNext(network)
-        }.disposed(by: disposeBag)
+        actionButton.tap
+            .sink { [weak self] _ in
+                guard let network = self?.network else { return }
+                self?.wifiTriggerSubject.send(network)
+            }
+            .store(in: &cancellables)
 
-        viewModel.unknownWifiTriggerSubject.subscribe { [weak self] _ in
-            self?.unknownWifiTriggerSubject.onNext(())
-        }.disposed(by: disposeBag)
+        viewModel.unknownWifiTriggerSubject
+            .sink { [weak self] _ in
+                self?.unknownWifiTriggerSubject.send(())
+            }
+            .store(in: &cancellables)
     }
 
     func renderBlurSpacedLabel(isBlurred: Bool) {

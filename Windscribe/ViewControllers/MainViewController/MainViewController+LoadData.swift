@@ -8,52 +8,53 @@
 
 import Foundation
 import RealmSwift
-import RxSwift
 import UIKit
+import Combine
 
 extension MainViewController {
     func loadPortMap() {
         let appProtocols = TextsAsset.General.protocols.sorted()
-        viewModel.portMapHeadings.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] headings in
-            guard let self = self else { return }
-            // Now we're working with plain strings - no Realm threading issues
-            let portMapProvidedProtocols = (headings ?? []).sorted()
-            if appProtocols != portMapProvidedProtocols {
-                self.viewModel.loadServerList()
-                self.viewModel.loadPortMap()
+        viewModel.portMapHeadings
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] headings in
+                guard let self = self else { return }
+                // Now we're working with plain strings - no Realm threading issues
+                let portMapProvidedProtocols = (headings ?? []).sorted()
+                if appProtocols != portMapProvidedProtocols {
+                    self.viewModel.loadServerList()
+                    self.viewModel.loadPortMap()
+                }
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     @objc func reloadFavouriteOrder() {
-        viewModel.favouriteList.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] favList in
-            guard let self = self else { return }
-            if favList?.count == 0 {
-                favNodesListTableViewDataSource.updateFavoriteList(with: [])
-            }
-            if let favList = favList {
-                let orderedFavList = viewModel.sortFavouriteNodesUsingUserPreferences(favList: favList)
-                favNodesListTableViewDataSource.updateFavoriteList(with: orderedFavList)
-            }
+        viewModel.favouriteList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] favList in
+                guard let self = self else { return }
+                if favList?.count == 0 {
+                    favNodesListTableViewDataSource.updateFavoriteList(with: [])
+                }
+                if let favList = favList {
+                    let orderedFavList = viewModel.sortFavouriteNodesUsingUserPreferences(favList: favList)
+                    favNodesListTableViewDataSource.updateFavoriteList(with: orderedFavList)
+                }
 
-        }, onError: { [weak self] error in
-            self?.logger.logE("MainViewController", "Realm server list notification error \(error.localizedDescription)")
-
-        }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     func loadStaticIPs() {
-        viewModel.staticIPs.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
+        viewModel.staticIPs
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
                 let staticIPModels = self.viewModel.getStaticIp()
                 self.staticIPListTableViewDataSource.updateStaticIPList(with: staticIPModels)
                 self.loadStaticIPLatencyValues()
             }
-
-        }, onError: { [weak self] error in
-            self?.logger.logE("MainViewController", "Realm static ip list notification error \(error.localizedDescription)")
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     func loadCustomConfigs() {
@@ -88,24 +89,26 @@ extension MainViewController {
     }
 
     func loadLatencyValues(force: Bool = false, connectToBestLocation: Bool = false) {
-        viewModel.latencies.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            if self.vpnConnectionViewModel.isDisconnected() || force ||
-                self.isAnyRefreshControlIsRefreshing() {
-                Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
-                    guard let self = self else { return }
-                    if self.vpnConnectionViewModel.isDisconnected(),
-                       self.vpnConnectionViewModel.isBestLocationSelected(),
-                       connectToBestLocation {
+        viewModel.latencies
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                if self.vpnConnectionViewModel.isDisconnected() || force ||
+                    self.isAnyRefreshControlIsRefreshing() {
+                    Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+                        guard let self = self else { return }
+                        if self.vpnConnectionViewModel.isDisconnected(),
+                           self.vpnConnectionViewModel.isBestLocationSelected(),
+                           connectToBestLocation {
                             self.latencyLoadTimeOutWithSelectAndConnectBestLocation()
-                    } else {
-                        self.latencyLoadTimeOut()
+                        } else {
+                            self.latencyLoadTimeOut()
+                        }
                     }
+                } else {
+                    self.logger.logD("MainViewController", "Connected to VPN Stopping latency refresh.")
+                    self.endRefreshControls()
                 }
-            } else {
-                self.logger.logD("MainViewController", "Connected to VPN Stopping latency refresh.")
-                self.endRefreshControls()
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

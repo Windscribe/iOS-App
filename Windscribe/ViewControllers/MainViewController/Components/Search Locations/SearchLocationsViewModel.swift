@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import RxSwift
 
 protocol SearchCountryViewDelegate: AnyObject {
     func searchLocationUpdated(with text: String)
@@ -17,9 +16,9 @@ protocol SearchCountryViewDelegate: AnyObject {
 }
 
 protocol SearchLocationsViewModelType {
-    var isSearchActive: BehaviorSubject<Bool> { get }
+    var isSearchActive: CurrentValueSubject<Bool, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var refreshLanguage: PublishSubject<Void> { get }
+    var refreshLanguage: PassthroughSubject<Void, Never> { get }
 
     var delegate: SearchCountryViewDelegate? { get set }
 
@@ -31,8 +30,8 @@ protocol SearchLocationsViewModelType {
 }
 
 class SearchLocationsViewModel: SearchLocationsViewModelType {
-    let isSearchActive = BehaviorSubject<Bool>(value: false)
-    let refreshLanguage = PublishSubject<Void>()
+    let isSearchActive = CurrentValueSubject<Bool, Never>(false)
+    let refreshLanguage = PassthroughSubject<Void, Never>()
 
     let isDarkMode: CurrentValueSubject<Bool, Never>
     private var cancellables = Set<AnyCancellable>()
@@ -41,27 +40,27 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
-        languageManager.activelanguage.sink { [weak self] _ in self?.refreshLanguage.onNext(()) }
+        languageManager.activelanguage.sink { [weak self] _ in self?.refreshLanguage.send(()) }
             .store(in: &cancellables)
     }
 
     func toggleSearch() {
-        let isSearchActive = (try? isSearchActive.value()) ?? false
+        let isSearchActive = isSearchActive.value
         if isSearchActive {
             delegate?.searchLocationUpdated(with: "")
             delegate?.dismissSearchLocation()
         } else {
             delegate?.showSearchLocation()
         }
-        self.isSearchActive.onNext(!isSearchActive)
+        self.isSearchActive.send(!isSearchActive)
     }
 
     func isActive() -> Bool {
-        return (try? isSearchActive.value()) ?? false
+        return isSearchActive.value
     }
 
     func dismiss() {
-        if (try? isSearchActive.value()) ?? false {
+        if isSearchActive.value {
             toggleSearch()
         }
     }
