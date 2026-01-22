@@ -55,7 +55,7 @@ class ConfigurationsManager {
 
     /// Tracks current protocol to detect protocol changes during failover and clear failed nodes
     /// This allows different protocols to try the same nodes that failed with previous protocols
-    private var currentConnectionProtocol: String = ""
+    var currentConnectionProtocol: String = ""
 
     /// Wait for disconnect event after manager is disabled.
     let disconnectWaitTimeout = 5.0

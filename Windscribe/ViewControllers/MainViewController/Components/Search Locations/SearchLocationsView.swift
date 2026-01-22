@@ -18,9 +18,13 @@ class SearchLocationsView: UIView {
     var spacerView = UIView()
     var separatorView = UIView()
     var exitSearchButton = ImageButton()
+    lazy var clearExitButtonWidthConstraint: NSLayoutConstraint = {
+        clearSearchButton.widthAnchor.constraint(equalToConstant: 80)
+    }()
 
     var viewModel: SearchLocationsViewModelType
     let serverSectionOpacity: Float
+    let clearButtonFont = UIFont.text(size: 16)
     private var isDarkMode: Bool = DefaultValues.darkMode
 
     private var cancellables = Set<AnyCancellable>()
@@ -68,6 +72,11 @@ class SearchLocationsView: UIView {
                 clearSearchButton.configuration = getClearConfig()
                 let isDarkMode = viewModel.isDarkMode.value
                 updateSearchTextfield(for: isDarkMode)
+
+                let title = TextsAsset.clearSearch
+                let width = title.size(withAttributes: [.font: clearButtonFont]).width
+              clearExitButtonWidthConstraint.constant = width + 26
+              layoutIfNeeded()
             }
             .store(in: &cancellables)
     }
@@ -106,7 +115,7 @@ class SearchLocationsView: UIView {
         config.titleTextAttributesTransformer =
           UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = UIFont.text(size: 16)
+              outgoing.font = self.clearButtonFont
             return outgoing
           }
         return config
@@ -145,6 +154,9 @@ class SearchLocationsView: UIView {
             // searchIcon
             searchIcon.widthAnchor.constraint(equalToConstant: 20),
             searchIcon.heightAnchor.constraint(equalToConstant: 20),
+
+            // exitSearchButton
+            clearExitButtonWidthConstraint,
 
             // exitSearchButton
             exitSearchButton.widthAnchor.constraint(equalToConstant: 24),
