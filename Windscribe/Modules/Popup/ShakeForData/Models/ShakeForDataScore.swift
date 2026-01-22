@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxDataSources
 import UIKit
 
 struct ShakeForDataLeaderboardEntry: Identifiable {
@@ -39,6 +38,14 @@ class ShakeForDataScore: Decodable {
     func toLeaderboardEntry() -> ShakeForDataLeaderboardEntry {
         ShakeForDataLeaderboardEntry(score: score, user: user, you: you)
     }
+}
+
+public protocol SectionModelType {
+    associatedtype Item
+
+    var items: [Item] { get }
+
+    init(original: Self, items: [Item])
 }
 
 struct ShakeForDataScoreSection: SectionModelType {

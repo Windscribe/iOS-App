@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxBlocking
 import Swinject
 @testable import Windscribe
 import XCTest

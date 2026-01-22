@@ -70,59 +70,59 @@ class UpgradePopViewController: UIViewController {
         guard let viewModel = viewModel else { return }
         viewModel.loadPlans(promo: promoCode, id: pcpID)
         viewModel.plans
-            .sink { plans in
-                DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
-                    switch plans {
-                    case let .standardPlans(products, _):
-                        for product in products {
-                            let priceView: UpgradePricingView = UpgradePricingView.fromNib()
-                            priceView.setup(with: product.tvPlanLabel, and: product.price, isSelected: product.tvPlanLabel == products.first?.tvPlanLabel)
-                            self.pricingStackView.addArrangedSubview(priceView)
-                            priceView.delegate = self
-                            priceView.plan = product
-                        }
-                    case let .discounted(plan, appPlan):
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] plans in
+                guard let self = self else { return }
+                UIApplication.shared.registerForRemoteNotifications()
+                switch plans {
+                case let .standardPlans(products, _):
+                    for product in products {
                         let priceView: UpgradePricingView = UpgradePricingView.fromNib()
-                        priceView.setup(with: appPlan.name, and: plan.price)
+                        priceView.setup(with: product.tvPlanLabel, and: product.price, isSelected: product.tvPlanLabel == products.first?.tvPlanLabel)
                         self.pricingStackView.addArrangedSubview(priceView)
                         priceView.delegate = self
-                    default: return
+                        priceView.plan = product
                     }
-                    self.pricingStackView.addArrangedSubview(UIView())
-                    self.pricingLabel.isHidden = false
-                    self.endLoading()
+                case let .discounted(plan, appPlan):
+                    let priceView: UpgradePricingView = UpgradePricingView.fromNib()
+                    priceView.setup(with: appPlan.name, and: plan.price)
+                    self.pricingStackView.addArrangedSubview(priceView)
+                    priceView.delegate = self
+                default: return
                 }
+                self.pricingStackView.addArrangedSubview(UIView())
+                self.pricingLabel.isHidden = false
+                self.endLoading()
             }
             .store(in: &self.cancellables)
         viewModel.upgradeState
-            .sink { state in
-                DispatchQueue.main.async {
-                    switch state {
-                    case let .success(ghostAccount):
-                        self.endLoading()
-                        if ghostAccount == true {
-                            let vc = Assembler.resolve(SignUpViewController.self)
-                            if self.navigationController == nil {
-                                self.present(vc, animated: true)
-                            } else {
-                                self.navigationController?.pushViewController(vc, animated: true)
-                            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                switch state {
+                case let .success(ghostAccount):
+                    self.endLoading()
+                    if ghostAccount == true {
+                        let vc = Assembler.resolve(SignUpViewController.self)
+                        if self.navigationController == nil {
+                            self.present(vc, animated: true)
                         } else {
-                            if self.navigationController == nil {
-                                self.dismiss(animated: true)
-                            } else {
-                                self.navigationController?.popToRootViewController(animated: true)
-                            }
+                            self.navigationController?.pushViewController(vc, animated: true)
                         }
-                    case .loading:
-                        self.showLoading()
-                    case let .error(error):
-                        self.endLoading()
-                        self.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
-                    case .none:
-                        self.endLoading()
+                    } else {
+                        if self.navigationController == nil {
+                            self.dismiss(animated: true)
+                        } else {
+                            self.navigationController?.popToRootViewController(animated: true)
+                        }
                     }
+                case .loading:
+                    self.showLoading()
+                case let .error(error):
+                    self.endLoading()
+                    self.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+                case .none:
+                    self.endLoading()
                 }
             }
             .store(in: &cancellables)

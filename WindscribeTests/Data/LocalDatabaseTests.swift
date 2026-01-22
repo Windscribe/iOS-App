@@ -9,7 +9,6 @@
 import Foundation
 import Realm
 import RealmSwift
-import RxBlocking
 import Swinject
 @testable import Windscribe
 import XCTest

@@ -10,7 +10,6 @@ import Foundation
 import Network
 import NetworkExtension
 import os.log
-import RxSwift
 import Swinject
 import WireGuardKit
 #if canImport(WidgetKit)
@@ -44,7 +43,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private var runningHealthCheck = false
     private var internetAvailable = true
-    private let disposeBag = DisposeBag()
 
     private lazy var adapter: WireGuardAdapter = .init(with: self) { _, message in
         if message.contains("Retrying handshake") {
