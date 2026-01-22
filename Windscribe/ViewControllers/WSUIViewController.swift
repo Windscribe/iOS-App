@@ -6,7 +6,6 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import RxSwift
 import SafariServices
 import Swinject
 import UIKit
@@ -29,7 +28,6 @@ class WSUIViewController: UIViewController {
     lazy var apiManager = Assembler.resolve(APIManager.self)
     lazy var sessionManager = Assembler.resolve(SessionManager.self)
     let hapticFeedbackManager: HapticFeedbackManager = Assembler.resolve(HapticFeedbackManager.self)
-    let disposeBag = DisposeBag()
     var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {

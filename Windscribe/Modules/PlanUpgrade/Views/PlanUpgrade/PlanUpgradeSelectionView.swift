@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import SnapKit
 
 class PlanUpgradeSelectionView: UIView {
@@ -34,10 +34,10 @@ class PlanUpgradeSelectionView: UIView {
     private let yearlyDiscountLabel = UILabel()
     private let yearlyDiscountLabelContainer = UIView()
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     // Reactive property for plan selection
-    var selectedPlan: PublishSubject<String?> = PublishSubject()
+    var selectedPlan: PassthroughSubject<String?, Never> = PassthroughSubject()
     var monthlyPlanID: String?
     var yearlyPlanID: String?
 
@@ -59,30 +59,26 @@ class PlanUpgradeSelectionView: UIView {
     // MARK: Setup Bindings
 
     private func setupBindings() {
-        let tapGestureMonthly = UITapGestureRecognizer()
-        let tapGestureYearly = UITapGestureRecognizer()
+        let tapGestureMonthly = UITapGestureRecognizer(target: self, action: #selector(monthlyTapped))
+        let tapGestureYearly = UITapGestureRecognizer(target: self, action: #selector(yearlyTapped))
 
         monthlyContainer.addGestureRecognizer(tapGestureMonthly)
         yearlyContainer.addGestureRecognizer(tapGestureYearly)
+    }
 
-        tapGestureMonthly.rx.event
-            .bind { [weak self] _ in
-                self?.updateSelection(to: .monthly, planID: self?.monthlyPlanID)
-            }
-            .disposed(by: disposeBag)
+    @objc private func monthlyTapped() {
+        updateSelection(to: .monthly, planID: monthlyPlanID)
+    }
 
-        tapGestureYearly.rx.event
-            .bind { [weak self] _ in
-                self?.updateSelection(to: .yearly, planID: self?.yearlyPlanID)
-            }
-            .disposed(by: disposeBag)
+    @objc private func yearlyTapped() {
+        updateSelection(to: .yearly, planID: yearlyPlanID)
     }
 
     // MARK: Update - Populate Selection
 
     private func updateSelection(to plan: PlanUpgradeType, planID: String?) {
         if let defaultPlanID = planID {
-            selectedPlan.onNext(defaultPlanID)
+            selectedPlan.send(defaultPlanID)
         }
 
         let isMonthlySelected = plan == .monthly

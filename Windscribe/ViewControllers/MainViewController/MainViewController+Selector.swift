@@ -9,7 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-import RxSwift
 import UIKit
 
 extension MainViewController {
