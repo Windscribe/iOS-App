@@ -150,4 +150,9 @@ extension UITextField {
             .compactMap { _ in self.text }
             .eraseToAnyPublisher()
     }
+    var wasSelected: AnyPublisher<String, Never> {
+        publisher(for: .primaryActionTriggered)
+            .compactMap { _ in self.text }
+            .eraseToAnyPublisher()
+    }
 }

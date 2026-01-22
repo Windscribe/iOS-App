@@ -228,14 +228,17 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     // MARK: Ping Methods
     private func performPing(ip: String, host: String, pingType: Int32) async {
-        var result = await withCheckedContinuation { continuation in
-            self.pingManager.ping(ip, hostname: host, pingType: pingType) { _, _, time, success in
-                continuation.resume(returning: (time: time, success: success))
-            }
+        // Check if task is cancelled before starting
+        guard !Task.isCancelled else {
+            self.database.addPingData(pingData: PingData(ip: ip, latency: -1))
+            return
         }
-        try? await Task.sleep(nanoseconds: 1_000_000_000)
-        if Task.isCancelled {
-            result.success = false
+
+        let result = await pingManager.ping(ip, hostname: host, pingType: pingType)
+
+        guard !Task.isCancelled else {
+            self.database.addPingData(pingData: PingData(ip: ip, latency: -1))
+            return
         }
         self.database.addPingData(pingData: PingData(ip: ip, latency: result.success ? Int(result.time) : -1))
     }

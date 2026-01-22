@@ -258,17 +258,16 @@ class LoginViewController: PreferredFocusedViewController {
             }
             .store(in: &cancellables)
         viewModel.xpressCode
-            .sink { code in
-                DispatchQueue.main.async { [weak self] in
-                    if let code = code, code.count > 0 {
-                        self?.codeDisplayLabel.isHidden = false
-                        self?.generateCodeButton.isHidden = true
-                        self?.codeDisplayLabel.text = code
-                    } else {
-                        self?.codeDisplayLabel.isHidden = true
-                        self?.generateCodeButton.isHidden = false
-                        self?.codeDisplayLabel.text = code
-                    }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] code in
+                if let code = code, code.count > 0 {
+                    self?.codeDisplayLabel.isHidden = false
+                    self?.generateCodeButton.isHidden = true
+                    self?.codeDisplayLabel.text = code
+                } else {
+                    self?.codeDisplayLabel.isHidden = true
+                    self?.generateCodeButton.isHidden = false
+                    self?.codeDisplayLabel.text = code
                 }
             }
             .store(in: &cancellables)

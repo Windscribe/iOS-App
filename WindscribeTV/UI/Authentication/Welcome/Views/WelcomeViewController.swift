@@ -80,10 +80,9 @@ class WelcomeViewController: UIViewController {
             }
             .store(in: &cancellables)
         viewmodal.routeToSignup
+            .receive(on: DispatchQueue.main)
             .sink { [self] _ in
-                DispatchQueue.main.async {
-                    self.router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: self)
-                }
+                self.router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: self)
             }
             .store(in: &cancellables)
         viewmodal.routeToMainView

@@ -139,83 +139,79 @@ class PlanUpgradeViewController: WSUIViewController {
         viewModel.loadPlans(promo: promoCode, id: pcpID)
 
         showLoading()
-
+        
         viewModel.plans
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] updatedPlans in
                 guard let self, let viewModel = self.viewModel else { return }
-
-                DispatchQueue.main.async {
-                    if let plans = updatedPlans {
-                        switch plans {
-                        case .discounted(let applePlan, let appPlan):
-                            self.windscribePlans = [applePlan]
-                            self.isPromotion = self.isPlanPromotional()
-                            self.doLayout()
-                            self.renderPromoPlans(applePlan: applePlan, appPlan: appPlan)
-                        case .standardPlans(let applePlans, let appPlans):
-                            self.windscribePlans = applePlans
-                            self.isPromotion = self.isPlanPromotional()
-                            self.doLayout()
-                            self.renderStandardPlans(applePlans: applePlans, appPlans: appPlans)
-                        case .unableToLoad:
-                            self.endLoading()
-                            viewModel.showAlert(
-                                title: "",
-                                message: TextsAsset.UpgradeView.planBenefitUnableConnectAppStore)
-                        }
+                if let plans = updatedPlans {
+                    switch plans {
+                    case .discounted(let applePlan, let appPlan):
+                        self.windscribePlans = [applePlan]
+                        self.isPromotion = self.isPlanPromotional()
+                        self.doLayout()
+                        self.renderPromoPlans(applePlan: applePlan, appPlan: appPlan)
+                    case .standardPlans(let applePlans, let appPlans):
+                        self.windscribePlans = applePlans
+                        self.isPromotion = self.isPlanPromotional()
+                        self.doLayout()
+                        self.renderStandardPlans(applePlans: applePlans, appPlans: appPlans)
+                    case .unableToLoad:
+                        self.endLoading()
+                        viewModel.showAlert(
+                            title: "",
+                            message: TextsAsset.UpgradeView.planBenefitUnableConnectAppStore)
                     }
                 }
             }
             .store(in: &cancellables)
 
         viewModel.upgradeState
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                    guard let self, let viewModel = self.viewModel else { return }
-
-                    DispatchQueue.main.async {
-                        switch state {
-                        case let .success(ghostAccount):
-                            self.endLoading()
-
-                            // Registered Account should show positive response alert
-                            viewModel.showAlert(title: TextsAsset.UpgradeView.planBenefitSuccessfullPurchaseTitle,
-                                                message: TextsAsset.UpgradeView.planBenefitSuccessfullPurchase) { [weak self] in
+                guard let self, let viewModel = self.viewModel else { return }
+                switch state {
+                case let .success(ghostAccount):
+                    self.endLoading()
+                    
+                    // Registered Account should show positive response alert
+                    viewModel.showAlert(title: TextsAsset.UpgradeView.planBenefitSuccessfullPurchaseTitle,
+                                        message: TextsAsset.UpgradeView.planBenefitSuccessfullPurchase) { [weak self] in
+                        guard let self else { return }
+                        
+                        let navigationController = UINavigationController(
+                            rootViewController: upgradeSuccessViewController)
+                        
+                        upgradeSuccessViewController.successScreenDismissed
+                            .receive(on: DispatchQueue.main)
+                            .sink { [weak self] in
                                 guard let self else { return }
-
-                                let navigationController = UINavigationController(
-                                    rootViewController: upgradeSuccessViewController)
-
-                                upgradeSuccessViewController.successScreenDismissed
-                                    .receive(on: DispatchQueue.main)
-                                    .sink { [weak self] in
-                                        guard let self else { return }
-
-                                        if ghostAccount {
-                                            self.navigationController?.dismiss(animated: true) {
-                                                // Ghost Account should go sign up
-                                                viewModel.navigateToSignUp(from: self)
-                                            }
-                                        } else {
-                                            self.navigationController?.presentingViewController?.dismiss(animated: true)
-                                        }
+                                
+                                if ghostAccount {
+                                    self.navigationController?.dismiss(animated: true) {
+                                        // Ghost Account should go sign up
+                                        viewModel.navigateToSignUp(from: self)
                                     }
-                                    .store(in: &cancellables)
-                                navigationController.modalPresentationStyle = .fullScreen
-
-                                present(navigationController, animated: true)
+                                } else {
+                                    self.navigationController?.presentingViewController?.dismiss(animated: true)
+                                }
                             }
-                        case .loading:
-                            self.showLoading()
-                        case let .error(error):
-                            self.endLoading()
-                            viewModel.showAlert(title: "", message: error)
-                        case let .titledError(title, error):
-                            self.endLoading()
-                            viewModel.showAlert(title: title, message: error)
-                        case .none:
-                            self.endLoading()
-                        }
+                            .store(in: &cancellables)
+                        navigationController.modalPresentationStyle = .fullScreen
+                        
+                        present(navigationController, animated: true)
                     }
+                case .loading:
+                    self.showLoading()
+                case let .error(error):
+                    self.endLoading()
+                    viewModel.showAlert(title: "", message: error)
+                case let .titledError(title, error):
+                    self.endLoading()
+                    viewModel.showAlert(title: title, message: error)
+                case .none:
+                    self.endLoading()
+                }
             }
             .store(in: &cancellables)
 
@@ -228,15 +224,13 @@ class PlanUpgradeViewController: WSUIViewController {
             .store(in: &cancellables)
 
         viewModel.showProgress
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] show in
                 guard let self = self else { return }
-
-                DispatchQueue.main.async {
-                    if show {
-                        self.showLoading()
-                    } else {
-                        self.endLoading()
-                    }
+                if show {
+                    self.showLoading()
+                } else {
+                    self.endLoading()
                 }
             }
             .store(in: &cancellables)
