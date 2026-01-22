@@ -7,14 +7,13 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 
 protocol EnterEmailViewModel {
     var alertManager: AlertManager { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var currentEmail: String? { get }
-    func changeEmailAddress(email: String) -> Single<APIMessage>
+    func changeEmailAddress(email: String) -> AnyPublisher<APIMessage, Error>
 }
 
 class EnterEmailViewModelImpl: EnterEmailViewModel {
@@ -38,25 +37,22 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
 
     }
 
-    func changeEmailAddress(email: String) -> Single<APIMessage> {
-        return Single.create { single in
+    func changeEmailAddress(email: String) -> AnyPublisher<APIMessage, Error> {
+        return Future { [weak self] promise in
             let task = Task { [weak self] in
                 guard let self = self else {
-                    single(.failure(Errors.validationFailure))
+                    promise(.failure(Errors.validationFailure))
                     return
                 }
 
                 do {
                     let apiMessage = try await self.apiManager.addEmail(email: email)
-                    single(.success(apiMessage))
+                    promise(.success(apiMessage))
                 } catch {
-                    single(.failure(error))
+                    promise(.failure(error))
                 }
             }
-
-            return Disposables.create {
-                task.cancel()
-            }
         }
+        .eraseToAnyPublisher()
     }
 }

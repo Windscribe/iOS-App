@@ -7,8 +7,6 @@
 //
 
 import Combine
-import RealmSwift
-import RxSwift
 import SafariServices
 import UIKit
 
@@ -19,7 +17,6 @@ class CustomConfigListFooterView: WSView {
     lazy var backgroundView = UIView()
     let activeLanguage: CurrentValueSubject<Languages, Never>
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     init(activeLanguage: CurrentValueSubject<Languages, Never>, isDarkMode: CurrentValueSubject<Bool, Never>) {
@@ -41,9 +38,10 @@ class CustomConfigListFooterView: WSView {
     }
 
     private func bindViews() {
-        actionButton.rx.tap.bind { [weak self] _ in
+        actionButton.tap.sink { [weak self] _ in
             self?.delegate?.addCustomConfig()
-        }.disposed(by: disposeBag)
+        }
+        .store(in: &cancellables)
 
         activeLanguage
             .receive(on: DispatchQueue.main)

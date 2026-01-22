@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import UIKit
 
 protocol AccountPopupModelType {
-    var imageName: BehaviorSubject<String> { get }
-    var title: BehaviorSubject<String> { get }
-    var description: BehaviorSubject<String> { get }
-    var actionButtonTitle: BehaviorSubject<String> { get }
-    var cancelButtonTitle: BehaviorSubject<String> { get }
+    var imageName: CurrentValueSubject<String, Never> { get }
+    var title: CurrentValueSubject<String, Never> { get }
+    var description: CurrentValueSubject<String, Never> { get }
+    var actionButtonTitle: CurrentValueSubject<String, Never> { get }
+    var cancelButtonTitle: CurrentValueSubject<String, Never> { get }
     func action(viewController: UIViewController)
     func getNextResetDate() -> String
 }
@@ -23,11 +23,11 @@ protocol AccountPopupModelType {
 protocol BannedAccountPopupModelType: AccountPopupModelType {}
 class BannedAccountPopupModel: AccountPopupModel, BannedAccountPopupModelType {
     override func bindModel() {
-        imageName.onNext(ImagesAsset.Garry.angry)
-        title.onNext(TextsAsset.Banned.title)
-        description.onNext(TextsAsset.Banned.description)
-        actionButtonTitle.onNext(TextsAsset.Banned.action)
-        cancelButtonTitle.onNext("")
+        imageName.send(ImagesAsset.Garry.angry)
+        title.send(TextsAsset.Banned.title)
+        description.send(TextsAsset.Banned.description)
+        actionButtonTitle.send(TextsAsset.Banned.action)
+        cancelButtonTitle.send("")
     }
 
     override func action(viewController _: UIViewController) {}
@@ -36,22 +36,22 @@ class BannedAccountPopupModel: AccountPopupModel, BannedAccountPopupModelType {
 protocol OutOfDataAccountPopupModelType: AccountPopupModelType {}
 class OutOfDataAccountPopupModel: AccountPopupModel, OutOfDataAccountPopupModelType {
     override func bindModel() {
-        imageName.onNext(ImagesAsset.Garry.noData)
-        title.onNext(TextsAsset.OutOfData.title)
-        description.onNext("\(TextsAsset.OutOfData.description) \(getNextResetDate())")
-        actionButtonTitle.onNext(TextsAsset.OutOfData.action)
-        cancelButtonTitle.onNext(TextsAsset.OutOfData.cancel)
+        imageName.send(ImagesAsset.Garry.noData)
+        title.send(TextsAsset.OutOfData.title)
+        description.send("\(TextsAsset.OutOfData.description) \(getNextResetDate())")
+        actionButtonTitle.send(TextsAsset.OutOfData.action)
+        cancelButtonTitle.send(TextsAsset.OutOfData.cancel)
     }
 }
 
 protocol ProPlanExpiredAccountPopupModelType: AccountPopupModelType {}
 class ProPlanExpiredAccountPopupModel: AccountPopupModel, ProPlanExpiredAccountPopupModelType {
     override func bindModel() {
-        imageName.onNext(ImagesAsset.Garry.sad)
-        title.onNext(TextsAsset.ProPlanExpired.title)
-        description.onNext(TextsAsset.ProPlanExpired.description)
-        actionButtonTitle.onNext(TextsAsset.ProPlanExpired.action)
-        cancelButtonTitle.onNext(TextsAsset.ProPlanExpired.cancel)
+        imageName.send(ImagesAsset.Garry.sad)
+        title.send(TextsAsset.ProPlanExpired.title)
+        description.send(TextsAsset.ProPlanExpired.description)
+        actionButtonTitle.send(TextsAsset.ProPlanExpired.action)
+        cancelButtonTitle.send(TextsAsset.ProPlanExpired.cancel)
     }
 }
 
@@ -59,11 +59,11 @@ class AccountPopupModel: AccountPopupModelType {
     // MARK: - Dependencies
 
     let userSessionRepository: UserSessionRepository
-    let imageName = BehaviorSubject<String>(value: "")
-    let title = BehaviorSubject<String>(value: "")
-    let description = BehaviorSubject<String>(value: "")
-    let actionButtonTitle = BehaviorSubject<String>(value: "")
-    let cancelButtonTitle = BehaviorSubject<String>(value: "")
+    let imageName = CurrentValueSubject<String, Never>("")
+    let title = CurrentValueSubject<String, Never>("")
+    let description = CurrentValueSubject<String, Never>("")
+    let actionButtonTitle = CurrentValueSubject<String, Never>("")
+    let cancelButtonTitle = CurrentValueSubject<String, Never>("")
     var router: HomeRouter
 
     init(userSessionRepository: UserSessionRepository, router: HomeRouter) {

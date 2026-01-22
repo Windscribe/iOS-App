@@ -159,7 +159,7 @@ class SearchLocationsView: UIView {
             }
             .store(in: &cancellables)
 
-        searchTextfield.publisher(for: .primaryActionTriggered)
+        searchTextfield.wasSelected
             .sink { [weak self] _ in
                 self?.searchTextfield.resignFirstResponder()
             }

@@ -8,13 +8,12 @@
 
 import Combine
 import Foundation
-import RxSwift
 import UIKit
 
 protocol GeneralViewModelType {
-    var hapticFeedback: BehaviorSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> { get }
-    var languageUpdatedTrigger: PublishSubject<Void> { get }
+    var hapticFeedback: CurrentValueSubject<Bool, Never> { get }
+    var isDarkMode: CurrentValueSubject<Bool, Never> { get }
+    var languageUpdatedTrigger: PassthroughSubject<Void, Never> { get }
     var lookAndFeelRepository: LookAndFeelRepositoryType { get }
     func didSelectedLocationOrder(value: String)
     func updateHapticFeedback()
@@ -36,13 +35,12 @@ class GeneralViewModel: GeneralViewModelType {
 
     // MARK: - State
 
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
-    let hapticFeedback = BehaviorSubject<Bool>(value: DefaultValues.hapticFeedback)
+    let hapticFeedback = CurrentValueSubject<Bool, Never>(DefaultValues.hapticFeedback)
 
-    let locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
-    let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
-    let languageUpdatedTrigger = PublishSubject<Void>()
+    let locationOrderBy = CurrentValueSubject<String, Never>(DefaultValues.orderLocationsBy)
+    let isDarkMode = CurrentValueSubject<Bool, Never>(DefaultValues.darkMode)
+    let languageUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     // MARK: - Data
 
@@ -59,28 +57,28 @@ class GeneralViewModel: GeneralViewModelType {
 
     private func load() {
         preferences.getHapticFeedback().sink { [weak self] data in
-            self?.hapticFeedback.onNext(data ?? DefaultValues.hapticFeedback)
+            self?.hapticFeedback.send(data ?? DefaultValues.hapticFeedback)
         }.store(in: &cancellables)
 
         preferences.getOrderLocationsBy().sink { [weak self] data in
-            self?.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
+            self?.locationOrderBy.send(data ?? DefaultValues.orderLocationsBy)
         }.store(in: &cancellables)
 
         lookAndFeelRepository.isDarkModeSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
-                self?.isDarkMode.onNext(data)
+                self?.isDarkMode.send(data)
             }.store(in: &cancellables)
 
         languageManager.activelanguage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.languageUpdatedTrigger.onNext(())
+                self?.languageUpdatedTrigger.send(())
             }.store(in: &cancellables)
     }
 
     func updateHapticFeedback() {
-        try? preferences.saveHapticFeedback(haptic: !hapticFeedback.value())
+        preferences.saveHapticFeedback(haptic: !hapticFeedback.value)
     }
 
     func didSelectedLocationOrder(value: String) {
@@ -98,7 +96,7 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     func getCurrentApperance() -> String {
-        if let isDarkMode = try? isDarkMode.value(), !isDarkMode {
+        if !isDarkMode.value {
             return "Light"
         }
         return DefaultValues.appearance
@@ -115,7 +113,7 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     func getHapticFeedback() -> Bool {
-        return (try? hapticFeedback.value()) ?? DefaultValues.hapticFeedback
+        return hapticFeedback.value
     }
 
     func updateHapticFeedback(_ status: Bool) {

@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class GetMoreDataPopupViewController: BasePopUpViewController {
@@ -15,6 +15,7 @@ class GetMoreDataPopupViewController: BasePopUpViewController {
 
     var signUpButton = WSPillButton()
     var getProButton = WSPillButton()
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Overrides
 
@@ -39,13 +40,17 @@ class GetMoreDataPopupViewController: BasePopUpViewController {
     }
 
     private func bindViews() {
-        signUpButton.rx.primaryAction.bind { [self] in
-            logger.logD("GetMoreDataPopupViewController", "Signup button pressed")
-            signupRouter.routeTo(to: .signup(claimGhostAccount: false), from: self)
-        }.disposed(by: disposeBag)
-        getProButton.rx.primaryAction.bind { [self] in
-            logger.logD("GetMoreDataPopupViewController", "Get Pro button pressed")
-            router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
-        }.disposed(by: disposeBag)
+        signUpButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("GetMoreDataPopupViewController", "Signup button pressed")
+                signupRouter.routeTo(to: .signup(claimGhostAccount: false), from: self)
+            }
+            .store(in: &cancellables)
+        getProButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("GetMoreDataPopupViewController", "Get Pro button pressed")
+                router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
+            }
+            .store(in: &cancellables)
     }
 }

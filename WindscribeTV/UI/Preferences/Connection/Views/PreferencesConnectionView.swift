@@ -6,12 +6,12 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class PreferencesConnectionView: UIView {
     var viewModel: ConnectionsViewModelType!
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     lazy var connectionModeView: SettingsSection = .fromNib()
 
@@ -77,11 +77,13 @@ class PreferencesConnectionView: UIView {
     }
 
     private func bindViews() {
-        viewModel.languageUpdatedTrigger.observe(on: MainScheduler.asyncInstance)
-            .subscribe { [weak self] _ in
-            guard let self = self else { return }
-            self.updateText()
-        }.disposed(by: disposeBag)
+        viewModel.languageUpdatedTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.updateText()
+            }
+            .store(in: &cancellables)
     }
 }
 

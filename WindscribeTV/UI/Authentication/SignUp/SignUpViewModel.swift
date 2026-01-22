@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 
 enum SignUpErrorState {
@@ -19,14 +18,14 @@ enum SignupRoutes {
 }
 
 protocol SignUpViewModel {
-    var isPremiumUser: BehaviorSubject<Bool> { get }
-    var referralViewStatus: BehaviorSubject<Bool> { get }
-    var textfieldStatus: BehaviorSubject<Bool> { get }
-    var showLoadingView: BehaviorSubject<Bool> { get }
-    var routeTo: PublishSubject<SignupRoutes> { get }
+    var isPremiumUser: CurrentValueSubject<Bool, Never> { get }
+    var referralViewStatus: CurrentValueSubject<Bool, Never> { get }
+    var textfieldStatus: CurrentValueSubject<Bool, Never> { get }
+    var showLoadingView: CurrentValueSubject<Bool, Never> { get }
+    var routeTo: PassthroughSubject<SignupRoutes, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var showCaptchaViewModel: PublishSubject<CaptchaViewModel> { get }
-    var failedState: BehaviorSubject<SignUpErrorState> { get }
+    var showCaptchaViewModel: PassthroughSubject<CaptchaViewModel, Never> { get }
+    var failedState: CurrentValueSubject<SignUpErrorState, Never> { get }
 
     func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool, voucherCode: String?)
     func setupLaterButtonTapped()
@@ -36,13 +35,13 @@ protocol SignUpViewModel {
 
 class SignUpViewModelImpl: SignUpViewModel {
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    let showCaptchaViewModel = PublishSubject<CaptchaViewModel>()
-    let routeTo = PublishSubject<SignupRoutes>()
-    let isPremiumUser = BehaviorSubject(value: false)
-    let referralViewStatus = BehaviorSubject(value: false)
-    let textfieldStatus = BehaviorSubject(value: true)
-    let showLoadingView = BehaviorSubject(value: false)
-    let failedState = BehaviorSubject(value: SignUpErrorState.none)
+    let showCaptchaViewModel = PassthroughSubject<CaptchaViewModel, Never>()
+    let routeTo = PassthroughSubject<SignupRoutes, Never>()
+    let isPremiumUser = CurrentValueSubject<Bool, Never>(false)
+    let referralViewStatus = CurrentValueSubject<Bool, Never>(false)
+    let textfieldStatus = CurrentValueSubject<Bool, Never>(true)
+    let showLoadingView = CurrentValueSubject<Bool, Never>(false)
+    let failedState = CurrentValueSubject<SignUpErrorState, Never>(.none)
     var claimGhostAccount = false
     private var appCancellable = [AnyCancellable]()
 
@@ -57,7 +56,6 @@ class SignUpViewModelImpl: SignUpViewModel {
     let protocolManager: ProtocolManagerType
     let latencyRepository: LatencyRepository
     let logger: FileLogger
-    let disposeBag = DisposeBag()
 
     init(apiCallManager: APIManager,
          userSessionRepository: UserSessionRepository,
@@ -90,22 +88,22 @@ class SignUpViewModelImpl: SignUpViewModel {
     func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool, voucherCode: String?) {
         // Validate all inputs.
         if !isUsernameValid(username: userName) {
-            showLoadingView.onNext(false)
-            failedState.onNext(.username(TextsAsset.usernameValidationError))
+            showLoadingView.send(false)
+            failedState.send(.username(TextsAsset.usernameValidationError))
             return
         }
         if !isPasswordValid(password: password) {
-            showLoadingView.onNext(false)
-            failedState.onNext(.password(TextsAsset.passwordValidationError))
+            showLoadingView.send(false)
+            failedState.send(.password(TextsAsset.passwordValidationError))
             return
         }
         if email != "" && !isEmailValid(email: email) {
-            showLoadingView.onNext(false)
-            failedState.onNext(.email(TextsAsset.emailValidationError))
+            showLoadingView.send(false)
+            failedState.send(.email(TextsAsset.emailValidationError))
             return
         }
         if !ignoreEmailCheck && email?.isEmpty == true {
-            routeTo.onNext(.noEmail)
+            routeTo.send(.noEmail)
             return
         }
         // A ghost account without username is created.
@@ -117,8 +115,8 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?) {
-        failedState.onNext(.none)
-        showLoadingView.onNext(true)
+        failedState.send(.none)
+        showLoadingView.send(true)
         logger.logD("SignUpViewModelImpl", "Signing up for account.")
 
         Task { [weak self] in
@@ -145,31 +143,33 @@ class SignUpViewModelImpl: SignUpViewModel {
                         )
 
                         captchaVM.isLoading
-                            .distinctUntilChanged()
-                            .take(until: captchaVM.captchaDismiss)
-                            .bind(to: self.showLoadingView)
-                            .disposed(by: self.disposeBag)
+                            .removeDuplicates()
+                            .prefix(untilOutputFrom: captchaVM.captchaDismiss)
+                            .sink { [weak self] isLoading in
+                                self?.showLoadingView.send(isLoading)
+                            }
+                            .store(in: &self.appCancellable)
 
                         captchaVM.loginSuccess
-                            .observe(on: MainScheduler.instance)
-                            .bind { [weak self] session in
+                            .receive(on: DispatchQueue.main)
+                            .sink { [weak self] session in
                                 guard let self = self else { return }
                                 self.logger.logI("SignupViewModel", "Captcha login success. Preparing user data.")
-                                self.showLoadingView.onNext(true)
+                                self.showLoadingView.send(true)
                                 Task { @MainActor in
                                     await self.handleSignupSuccess(session: session)
                                 }
                             }
-                            .disposed(by: self.disposeBag)
+                            .store(in: &self.appCancellable)
 
                         captchaVM.loginError
-                            .observe(on: MainScheduler.instance)
-                            .bind { [weak self] error in
+                            .receive(on: DispatchQueue.main)
+                            .sink { [weak self] error in
                                 self?.handleSignupError(error)
                             }
-                            .disposed(by: self.disposeBag)
+                            .store(in: &self.appCancellable)
 
-                        self.showCaptchaViewModel.onNext(captchaVM)
+                        self.showCaptchaViewModel.send(captchaVM)
                     }
                     return
                 }
@@ -196,7 +196,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func signUpUser(username: String, password: String, email: String, referralUsername: String, voucherCode: String) {
-        showLoadingView.onNext(true)
+        showLoadingView.send(true)
         logger.logD("SignUpViewModelImpl", "Signing up for account.")
 
         Task { [weak self] in
@@ -236,16 +236,16 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func handleAuthTokenError(_ error: Error) {
         logger.logE("SignupViewModel", "Auth token handshake failed: \(error)")
-        showLoadingView.onNext(false)
+        showLoadingView.send(false)
 
         switch error {
         case let Errors.apiError(e):
-            failedState.onNext(.api(e.errorMessage ?? ""))
+            failedState.send(.api(e.errorMessage ?? ""))
         default:
             if let err = error as? Errors {
-                failedState.onNext(.network(err.description))
+                failedState.send(.network(err.description))
             } else {
-                failedState.onNext(.network(error.localizedDescription))
+                failedState.send(.network(error.localizedDescription))
             }
         }
     }
@@ -253,29 +253,29 @@ class SignUpViewModelImpl: SignUpViewModel {
     private func handleSignupError(_ error: Error) {
         logger.logE("SignUpViewModelImpl", "Failed to signup: \(error)")
 
-        showLoadingView.onNext(false)
+        showLoadingView.send(false)
         switch error {
         case Errors.userExists:
-            failedState.onNext(.username(TextsAsset.usernameIsTaken))
+            failedState.send(.username(TextsAsset.usernameIsTaken))
         case Errors.emailExists:
-            failedState.onNext(.email(TextsAsset.emailIsTaken))
+            failedState.send(.email(TextsAsset.emailIsTaken))
         case Errors.disposableEmail:
-            failedState.onNext(.email(TextsAsset.disposableEmail))
+            failedState.send(.email(TextsAsset.disposableEmail))
         case Errors.cannotChangeExistingEmail:
-            failedState.onNext(.email(TextsAsset.cannotChangeExistingEmail))
+            failedState.send(.email(TextsAsset.cannotChangeExistingEmail))
         case let Errors.apiError(e):
-            failedState.onNext(.api(e.errorMessage ?? ""))
+            failedState.send(.api(e.errorMessage ?? ""))
         default:
             if let error = error as? Errors {
-                failedState.onNext(.network(error.description))
+                failedState.send(.network(error.description))
             } else {
-                failedState.onNext(.network(error.localizedDescription))
+                failedState.send(.network(error.localizedDescription))
             }
         }
     }
 
     private func claimGhostAccount(username: String, password: String, email: String) {
-        showLoadingView.onNext(true)
+        showLoadingView.send(true)
         logger.logD("SignUpViewModelImpl", "Claiming account.")
 
         Task { [weak self] in
@@ -289,7 +289,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 )
 
                 await MainActor.run {
-                    let isPro = try? self.isPremiumUser.value()
+                    let isPro = self.isPremiumUser.value
                     if isPro == false {
                         self.getUpdatedUser(email: email)
                     } else {
@@ -315,16 +315,16 @@ class SignUpViewModelImpl: SignUpViewModel {
             do {
                 try await self.sessionManager.updateSession()
 
-                self.showLoadingView.onNext(false)
+                self.showLoadingView.send(false)
                 if email.isEmpty == false {
-                    self.routeTo.onNext(.confirmEmail)
+                    self.routeTo.send(.confirmEmail)
                 } else {
-                    self.routeTo.onNext(.main)
+                    self.routeTo.send(.main)
                 }
             } catch {
                 self.logger.logE("SignUpViewModelImpl", "Failed to get session. \(error)")
-                self.showLoadingView.onNext(false)
-                self.routeTo.onNext(.main)
+                self.showLoadingView.send(false)
+                self.routeTo.send(.main)
             }
         }
     }
@@ -345,8 +345,8 @@ class SignUpViewModelImpl: SignUpViewModel {
                         try? await self.latencyRepository.loadLatency()
                     }
                 }
-                self.showLoadingView.onNext(false)
-                self.routeTo.onNext(.main)
+                self.showLoadingView.send(false)
+                self.routeTo.send(.main)
             } receiveValue: { _ in }.store(in: &appCancellable)
     }
 
@@ -360,13 +360,13 @@ class SignUpViewModelImpl: SignUpViewModel {
                 if emergencyConnectRepository.isConnected() == true {
                     disconnectFromEmergencyConnect()
                 } else {
-                    showLoadingView.onNext(false)
-                    routeTo.onNext(.main)
+                    showLoadingView.send(false)
+                    routeTo.send(.main)
                 }
             } catch {
-                showLoadingView.onNext(false)
+                showLoadingView.send(false)
                 if ignoreError {
-                    routeTo.onNext(.main)
+                    routeTo.send(.main)
                 } else {
                     preferences.saveUserSessionAuth(sessionAuth: nil)
                     userSessionRepository.clearSession()
@@ -374,12 +374,12 @@ class SignUpViewModelImpl: SignUpViewModel {
 
                     switch error {
                     case let Errors.apiError(e):
-                        failedState.onNext(SignUpErrorState.api(e.errorMessage ?? ""))
+                        failedState.send(SignUpErrorState.api(e.errorMessage ?? ""))
                     default:
                         if let error = error as? Errors {
-                            failedState.onNext(SignUpErrorState.network(error.description))
+                            failedState.send(SignUpErrorState.network(error.description))
                         } else {
-                            failedState.onNext(SignUpErrorState.network(error.localizedDescription))
+                            failedState.send(SignUpErrorState.network(error.localizedDescription))
                         }
                     }
                 }
@@ -388,27 +388,26 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     func referralViewTapped() {
-        if let value = try? referralViewStatus.value() {
-            referralViewStatus.onNext(!value)
-        }
+        let value = referralViewStatus.value
+        referralViewStatus.send(!value)
     }
 
     func keyBoardWillShow() {
-        failedState.onNext(.none)
+        failedState.send(.none)
     }
 
     func setupLaterButtonTapped() {
-        routeTo.onNext(.setupLater)
+        routeTo.send(.setupLater)
     }
 
     private func registerNetworkEventListener() {
         connectivity.network.receive(on: DispatchQueue.main).sink { [weak self] appNetwork in
-            if let loginError = try? self?.failedState.value() {
+            if let loginError = self?.failedState.value {
                 switch loginError {
                 case SignUpErrorState.network:
                     // reset network error state if network re-connects.
                     if appNetwork.status == NetworkStatus.connected {
-                        self?.failedState.onNext(.none)
+                        self?.failedState.send(.none)
                     }
                 default: ()
                 }
@@ -419,7 +418,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func checkUserStatus() {
         let isPro = userSessionRepository.sessionModel?.isUserPro
-        isPremiumUser.onNext(isPro ?? false)
+        isPremiumUser.send(isPro ?? false)
     }
 
     private func isUsernameValid(username: String?) -> Bool {

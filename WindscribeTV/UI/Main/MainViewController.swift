@@ -8,7 +8,6 @@
 
 import Combine
 import NetworkExtension
-import RxSwift
 import Swinject
 import UIKit
 
@@ -52,7 +51,6 @@ class MainViewController: PreferredFocusedViewController {
     var favNodesListViewModel: FavouriteListViewModelType!
     var staticIPListViewModel: StaticIPListViewModelType!
     var router: HomeRouter!
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     var logger: FileLogger!
     var isFromServer: Bool = false
@@ -323,25 +321,40 @@ class MainViewController: PreferredFocusedViewController {
             }
             .store(in: &cancellables)
 
-        vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.animateConnectedState(with: $0)
-        }).disposed(by: disposeBag)
+        vpnConnectionViewModel.connectedState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                self?.animateConnectedState(with: state)
+            }
+            .store(in: &cancellables)
 
-        vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showPrivacyConfirmationPopup()
-        }).disposed(by: disposeBag)
+        vpnConnectionViewModel.showPrivacyTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.showPrivacyConfirmationPopup()
+            }
+            .store(in: &cancellables)
 
-        vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showOutOfDataPopup()
-        }).disposed(by: disposeBag)
+        vpnConnectionViewModel.showUpgradeRequiredTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.showOutOfDataPopup()
+            }
+            .store(in: &cancellables)
 
-        vpnConnectionViewModel.showAuthFailureTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showAuthFailurePopup()
-        }).disposed(by: disposeBag)
+        vpnConnectionViewModel.showAuthFailureTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.showAuthFailurePopup()
+            }
+            .store(in: &cancellables)
 
-        vpnConnectionViewModel.showNoConnectionAlertTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.displayInternetConnectionLostAlert()
-        }).disposed(by: disposeBag)
+        vpnConnectionViewModel.showNoConnectionAlertTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.displayInternetConnectionLostAlert()
+            }
+            .store(in: &cancellables)
 
         latencyViewModel.loadAllServerLatency(
             onAllServerCompletion: {
@@ -360,7 +373,7 @@ class MainViewController: PreferredFocusedViewController {
             .store(in: &cancellables)
 
         viewModel.wifiNetwork.combineLatest(
-            vpnConnectionViewModel.selectedProtoPort.asPublisher().replaceError(with: nil)
+            vpnConnectionViewModel.selectedProtoPort
         )
         .sink { (network, protocolPort) in
             self.refreshProtocol(from: network, with: protocolPort)
@@ -372,9 +385,12 @@ class MainViewController: PreferredFocusedViewController {
                 localisation()
             }.store(in: &cancellables)
 
-        viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
-            self.setFlagImages()
-        }).disposed(by: disposeBag)
+        viewModel.locationOrderBy
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.setFlagImages()
+            }
+            .store(in: &cancellables)
 
         Publishers.CombineLatest(
             viewModel.sessionModel,
@@ -406,7 +422,7 @@ class MainViewController: PreferredFocusedViewController {
                 logger.logD("MainViewController", "Forcing to connect to best location.")
                 enableVPNConnection()
             }
-            guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
+            guard let displayingGroup = self.viewModel.serverList.value.flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
             if let isUserPro = viewModel.sessionModel.value?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
@@ -418,16 +434,19 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func setFlagImages() {
-        self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] results in
-            self.viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: results) { serverSectionsOrdered in
-                if serverSectionsOrdered.count > 2 {
-                    self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode.lowercased() ?? "")-s")
-                    self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode.lowercased() ?? "")-s")
-                    self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode.lowercased() ?? "")-s")
-                }
+        self.viewModel.serverList
+            .receive(on: DispatchQueue.main)
+            .sink { [self] results in
+                self.viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: results) { serverSectionsOrdered in
+                    if serverSectionsOrdered.count > 2 {
+                        self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode.lowercased() ?? "")-s")
+                        self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode.lowercased() ?? "")-s")
+                        self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode.lowercased() ?? "")-s")
+                    }
 
+                }
             }
-        }).disposed(by: self.disposeBag)
+            .store(in: &self.cancellables)
 
     }
 
@@ -498,7 +517,7 @@ class MainViewController: PreferredFocusedViewController {
         disableConnectButton()
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
             logger.logI("MainViewController", "User tapped to connect.")
-            let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
+            let isOnline: Bool = viewModel.appNetwork.value.status == .connected
             if isOnline {
                 enableVPNConnection()
             } else {

@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 import UIKit
 
 enum PreferencesActionDisplay {
@@ -20,9 +19,9 @@ enum PreferencesActionDisplay {
 }
 
 protocol PreferencesMainViewModelOld {
-    var actionDisplay: BehaviorSubject<PreferencesActionDisplay> { get }
+    var actionDisplay: CurrentValueSubject<PreferencesActionDisplay, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var currentLanguage: BehaviorSubject<String?> { get }
+    var currentLanguage: CurrentValueSubject<String?, Never> { get }
     var alertManager: AlertManager { get }
     func getActionButtonDisplay()
     func logoutUser()
@@ -34,14 +33,13 @@ protocol PreferencesMainViewModelOld {
 }
 
 class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
-    let actionDisplay = BehaviorSubject<PreferencesActionDisplay>(value: .email)
+    let actionDisplay = CurrentValueSubject<PreferencesActionDisplay, Never>(.email)
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    var currentLanguage: BehaviorSubject<String?> = BehaviorSubject(value: nil)
+    var currentLanguage = CurrentValueSubject<String?, Never>(nil)
 
     let userSessionRepository: UserSessionRepository
     let sessionManager: SessionManager
     let logger: FileLogger
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     let alertManager: AlertManager
     let preferences: Preferences
@@ -70,7 +68,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
         languageManager.activelanguage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] updatedLanguage in
-                self?.currentLanguage.onNext(updatedLanguage.name)
+                self?.currentLanguage.send(updatedLanguage.name)
             }.store(in: &cancellables)
     }
 
@@ -78,28 +76,28 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
         if userSessionRepository.sessionModel?.isUserPro == true &&
             userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
             userSessionRepository.sessionModel?.isUserGhost == false {
-            actionDisplay.onNext(.email)
+            actionDisplay.send(.email)
             return
         } else if userSessionRepository.sessionModel?.isUserPro == false &&
                     userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
                     userSessionRepository.sessionModel?.isUserGhost == false {
-            actionDisplay.onNext(.emailGet10GB)
+            actionDisplay.send(.emailGet10GB)
             return
         } else if userSessionRepository.sessionModel?.isUserPro == false &&
                     userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
                     userSessionRepository.sessionModel?.isUserGhost == true {
-            actionDisplay.onNext(.setupAccountAndLogin)
+            actionDisplay.send(.setupAccountAndLogin)
             return
         } else if userSessionRepository.sessionModel?.isUserPro == true &&
                     userSessionRepository.sessionModel?.hasUserAddedEmail == false &&
                     userSessionRepository.sessionModel?.isUserGhost == true {
-            actionDisplay.onNext(.setupAccount)
+            actionDisplay.send(.setupAccount)
             return
         } else if userSessionRepository.sessionModel?.userNeedsToConfirmEmail == true {
-            actionDisplay.onNext(.confirmEmail)
+            actionDisplay.send(.confirmEmail)
             return
         } else {
-            actionDisplay.onNext(.hideAll)
+            actionDisplay.send(.hideAll)
             return
         }
     }

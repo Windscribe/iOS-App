@@ -7,7 +7,6 @@
 //
 
 import NetworkExtension
-import RxSwift
 import UIKit
 
 extension MainViewController {

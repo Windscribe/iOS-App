@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class NewsFeedViewController: PreferredFocusedViewController {
@@ -19,7 +19,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
     var button = WSPillButton()
 
     var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!, alertManager: AlertManager!
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var selectedActionLink: NewsFeedActionType?
 
     // MARK: Overrides
@@ -44,33 +44,37 @@ class NewsFeedViewController: PreferredFocusedViewController {
     }
 
     private func bindViews() {
-        viewModel.newsfeedData.bind { data in
-            self.newsBodyText.isHidden = true
-            self.buttonHiddingView.isHidden = true
-            if let firstItem = data.first {
-                self.newsBodyText.isHidden = false
-                data.forEach { feed in
-                    let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
-                    newsNameView.setup(with: feed.title, isSelected: firstItem.title == feed.title)
-                    newsNameView.delegate = self
-                    self.listStackView.addArrangedSubview(newsNameView)
+        viewModel.newsfeedData
+            .sink { data in
+                self.newsBodyText.isHidden = true
+                self.buttonHiddingView.isHidden = true
+                if let firstItem = data.first {
+                    self.newsBodyText.isHidden = false
+                    data.forEach { feed in
+                        let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
+                        newsNameView.setup(with: feed.title, isSelected: firstItem.title == feed.title)
+                        newsNameView.delegate = self
+                        self.listStackView.addArrangedSubview(newsNameView)
+                    }
+                    self.setupDetailsView(with: firstItem)
                 }
-                self.setupDetailsView(with: firstItem)
             }
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        viewModel.viewToLaunch.bind(onNext: { view in
-            switch view {
-            case let .safari(url):
-                self.logger.logD("NewsFeed", "Opening url in safari: \(url)")
-                self.alertManager.showSimpleAlert(viewController: self, title: "", message: "No browser found to open URL. Use iOS app instead.", buttonText: TextsAsset.okay)
+        viewModel.viewToLaunch
+            .sink { view in
+                switch view {
+                case let .safari(url):
+                    self.logger.logD("NewsFeed", "Opening url in safari: \(url)")
+                    self.alertManager.showSimpleAlert(viewController: self, title: "", message: "No browser found to open URL. Use iOS app instead.", buttonText: TextsAsset.okay)
 
-            case let .payment(promo, pcpid):
-                self.logger.logD("NewsFeed", "Launching payment plans with promo: \(promo)")
-                self.router.routeTo(to: .upgrade(promoCode: promo, pcpID: pcpid), from: self)
-            default: ()
+                case let .payment(promo, pcpid):
+                    self.logger.logD("NewsFeed", "Launching payment plans with promo: \(promo)")
+                    self.router.routeTo(to: .upgrade(promoCode: promo, pcpID: pcpid), from: self)
+                default: ()
+                }
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
 
@@ -128,7 +132,7 @@ extension NewsFeedViewController {
 
 extension NewsFeedViewController: OptionSelectionViewDelegate {
     func optionWasSelected(_ sender: OptionSelectionView) {
-        let sections = (try? viewModel.newsfeedData.value()) ?? []
+        let sections = viewModel.newsfeedData.value
         guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), sections.count >= index
         else { return }
         let details = sections[index-1]

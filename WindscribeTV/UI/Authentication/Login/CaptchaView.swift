@@ -8,8 +8,7 @@
 
 import UIKit
 import SnapKit
-import RxSwift
-import RxCocoa
+import Combine
 
 final class CaptchaView: UIView {
 
@@ -26,10 +25,10 @@ final class CaptchaView: UIView {
 
     // MARK: - Public Observables
 
-    let submitTap = PublishSubject<String>()
-    let cancelTap = PublishSubject<Void>()
-    let refreshTap = PublishSubject<Void>()
-    private let disposeBag = DisposeBag()
+    let submitTap = PassthroughSubject<String, Never>()
+    let cancelTap = PassthroughSubject<Void, Never>()
+    let refreshTap = PassthroughSubject<Void, Never>()
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
 
@@ -46,20 +45,22 @@ final class CaptchaView: UIView {
 
     func bind(to viewModel: CaptchaViewModel) {
         viewModel.captchaImage
-            .observe(on: MainScheduler.instance)
-            .bind(to: captchaImageView.rx.image)
-            .disposed(by: disposeBag)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                self?.captchaImageView.image = image
+            }
+            .store(in: &cancellables)
 
         viewModel.isLoading
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isLoading in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
                 if isLoading {
                     self?.loadingView.startAnimating()
                 } else {
                     self?.loadingView.stopAnimating()
                 }
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         verifyButton.addTarget(self, action: #selector(didTapVerify), for: .primaryActionTriggered)
         backButton.addTarget(self, action: #selector(didTapBack), for: .primaryActionTriggered)
@@ -69,15 +70,15 @@ final class CaptchaView: UIView {
     // MARK: - Actions
 
     @objc private func didTapVerify() {
-        submitTap.onNext(codeTextField.text ?? "")
+        submitTap.send(codeTextField.text ?? "")
     }
 
     @objc private func didTapBack() {
-        cancelTap.onNext(())
+        cancelTap.send(())
     }
 
     @objc private func didTapRefresh() {
-        refreshTap.onNext(())
+        refreshTap.send(())
     }
 
     // MARK: - UI Setup

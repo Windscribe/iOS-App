@@ -8,7 +8,6 @@
 
 import Combine
 import Foundation
-import RxSwift
 
 enum ManageAccountState: Equatable {
     case initial
@@ -21,9 +20,9 @@ protocol AccountViewModelType {
     var apiCallManager: APIManager { get }
     var alertManager: AlertManager { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var cancelAccountState: BehaviorSubject<ManageAccountState> { get }
-    var languageUpdatedTrigger: PublishSubject<Void> { get }
-    var sessionUpdatedTrigger: PublishSubject<Void> { get }
+    var cancelAccountState: CurrentValueSubject<ManageAccountState, Never> { get }
+    var languageUpdatedTrigger: PassthroughSubject<Void, Never> { get }
+    var sessionUpdatedTrigger: PassthroughSubject<Void, Never> { get }
 
     func titleForHeader(in section: Int) -> String
     func numberOfSections() -> Int
@@ -47,12 +46,11 @@ class AccountViewModel: AccountViewModelType {
     let userSessionRepository: UserSessionRepository
 
     var sections = [AccountSectionItem]()
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
-    let languageUpdatedTrigger = PublishSubject<Void>()
-    var sessionUpdatedTrigger = PublishSubject<Void>()
+    let cancelAccountState = CurrentValueSubject<ManageAccountState, Never>(.initial)
+    let languageUpdatedTrigger = PassthroughSubject<Void, Never>()
+    var sessionUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     init(apiCallManager: APIManager,
          alertManager: AlertManager,
@@ -76,7 +74,7 @@ class AccountViewModel: AccountViewModelType {
         languageManager.activelanguage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.languageUpdatedTrigger.onNext(())
+                self?.languageUpdatedTrigger.send(())
             }.store(in: &cancellables)
     }
 
@@ -140,24 +138,24 @@ class AccountViewModel: AccountViewModelType {
     }
 
     func cancelAccount(password: String) {
-        cancelAccountState.onNext(.loading)
+        cancelAccountState.send(.loading)
         Task { [weak self] in
             guard let self = self else { return }
 
             do {
                 _ = try await self.apiCallManager.cancelAccount(password: password)
                 await MainActor.run {
-                    self.cancelAccountState.onNext(.success)
+                    self.cancelAccountState.send(.success)
                 }
             } catch {
                 await MainActor.run {
                     switch error {
                     case Errors.validationFailure:
-                        self.cancelAccountState.onNext(.error("Password is incorrect."))
+                        self.cancelAccountState.send(.error("Password is incorrect."))
                     case let Errors.apiError(e):
-                        self.cancelAccountState.onNext(.error(e.errorMessage ?? ""))
+                        self.cancelAccountState.send(.error(e.errorMessage ?? ""))
                     default:
-                        self.cancelAccountState.onNext(.error("Unable to reach server. Check your internet connection."))
+                        self.cancelAccountState.send(.error("Unable to reach server. Check your internet connection."))
                     }
                     self.logger.logE("AccountViewModel", error.localizedDescription)
                 }
@@ -174,7 +172,7 @@ class AccountViewModel: AccountViewModelType {
                     let oldSession = self.userSessionRepository.oldSessionModel
                     let sessionSync = self.userSessionRepository.sessionModel
                     if oldSession != sessionSync {
-                        self.sessionUpdatedTrigger.onNext(())
+                        self.sessionUpdatedTrigger.send(())
                     }
                 }
             } catch {

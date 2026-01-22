@@ -6,11 +6,12 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class AccountPopupViewController: BasePopUpViewController {
     var accountPopupViewModel: AccountPopupModelType!
+    private var cancellables = Set<AnyCancellable>()
 
     var actionButton = WSPillButton()
     var cancelButton = WSPillButton()
@@ -39,31 +40,45 @@ class AccountPopupViewController: BasePopUpViewController {
     }
 
     private func bindViews() {
-        accountPopupViewModel.imageName.subscribe(onNext: { [self] in
-            imageView.image = UIImage(named: $0)
-        }).disposed(by: disposeBag)
-        accountPopupViewModel.title.subscribe(onNext: { [self] in
-            headerLabel?.text = $0
-        }).disposed(by: disposeBag)
-        accountPopupViewModel.description.subscribe(onNext: { [self] in
-            bodyLabel.text = $0
-        }).disposed(by: disposeBag)
+        accountPopupViewModel.imageName
+            .sink { [self] value in
+                imageView.image = UIImage(named: value)
+            }
+            .store(in: &cancellables)
+        accountPopupViewModel.title
+            .sink { [self] value in
+                headerLabel?.text = value
+            }
+            .store(in: &cancellables)
+        accountPopupViewModel.description
+            .sink { [self] value in
+                bodyLabel.text = value
+            }
+            .store(in: &cancellables)
 
-        accountPopupViewModel.actionButtonTitle.subscribe(onNext: { [self] in
-            actionButton.setTitle($0, for: .normal)
-            cancelButton.isHidden = $0.isEmpty
-        }).disposed(by: disposeBag)
-        accountPopupViewModel.cancelButtonTitle.subscribe(onNext: { [self] in
-            cancelButton.setTitle($0, for: .normal)
-            cancelButton.isHidden = $0.isEmpty
-        }).disposed(by: disposeBag)
+        accountPopupViewModel.actionButtonTitle
+            .sink { [self] value in
+                actionButton.setTitle(value, for: .normal)
+                cancelButton.isHidden = value.isEmpty
+            }
+            .store(in: &cancellables)
+        accountPopupViewModel.cancelButtonTitle
+            .sink { [self] value in
+                cancelButton.setTitle(value, for: .normal)
+                cancelButton.isHidden = value.isEmpty
+            }
+            .store(in: &cancellables)
 
-        actionButton.rx.primaryAction.bind { [self] in
-            accountPopupViewModel.action(viewController: self)
-        }.disposed(by: disposeBag)
-        cancelButton.rx.primaryAction.bind { [self] in
-            dismiss(animated: true)
-        }.disposed(by: disposeBag)
+        actionButton.wasSelected
+            .sink { [self] _ in
+                accountPopupViewModel.action(viewController: self)
+            }
+            .store(in: &cancellables)
+        cancelButton.wasSelected
+            .sink { [self] _ in
+                dismiss(animated: true)
+            }
+            .store(in: &cancellables)
     }
 }
 

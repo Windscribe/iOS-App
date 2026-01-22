@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 import Swinject
 import Combine
 
@@ -16,28 +15,28 @@ enum LoginErrorState: Equatable {
 }
 
 protocol LoginViewModel {
-    var showLoadingView: BehaviorSubject<Bool> { get }
-    var failedState: BehaviorSubject<LoginErrorState?> { get }
-    var show2faCodeField: BehaviorSubject<Bool> { get }
-    var routeToMainView: PublishSubject<Bool> { get }
+    var showLoadingView: CurrentValueSubject<Bool, Never> { get }
+    var failedState: CurrentValueSubject<LoginErrorState?, Never> { get }
+    var show2faCodeField: CurrentValueSubject<Bool, Never> { get }
+    var routeToMainView: PassthroughSubject<Bool, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var showCaptchaViewModel: PublishSubject<CaptchaViewModel> { get }
+    var showCaptchaViewModel: PassthroughSubject<CaptchaViewModel, Never> { get }
 
-    var xpressCode: BehaviorSubject<String?> { get }
+    var xpressCode: CurrentValueSubject<String?, Never> { get }
     func keyBoardWillShow()
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?)
     func generateCodeTapped()
 }
 
 class LoginViewModelImpl: LoginViewModel {
-    var xpressCode = BehaviorSubject<String?>(value: nil)
-    let showLoadingView = BehaviorSubject(value: false)
-    let stopEditing = BehaviorSubject(value: false)
-    let failedState = BehaviorSubject<LoginErrorState?>(value: nil)
-    let show2faCodeField = BehaviorSubject(value: false)
-    let routeToMainView = PublishSubject<Bool>()
+    var xpressCode = CurrentValueSubject<String?, Never>(nil)
+    let showLoadingView = CurrentValueSubject<Bool, Never>(false)
+    let stopEditing = CurrentValueSubject<Bool, Never>(false)
+    let failedState = CurrentValueSubject<LoginErrorState?, Never>(nil)
+    let show2faCodeField = CurrentValueSubject<Bool, Never>(false)
+    let routeToMainView = PassthroughSubject<Bool, Never>()
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    let showCaptchaViewModel = PublishSubject<CaptchaViewModel>()
+    let showCaptchaViewModel = PassthroughSubject<CaptchaViewModel, Never>()
 
     let apiCallManager: APIManager
     let userSessionRepository: UserSessionRepository
@@ -50,7 +49,6 @@ class LoginViewModelImpl: LoginViewModel {
     let protocolManager: ProtocolManagerType
     let latencyRepository: LatencyRepository
     let logger: FileLogger
-    let disposeBag = DisposeBag()
 
     private var appCancellable = [AnyCancellable]()
     private var timerCancellable: AnyCancellable?
@@ -82,15 +80,15 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?) {
-        failedState.onNext(.none)
+        failedState.send(.none)
 
         // Step 1: Validate early
         if username.contains("@") {
-            failedState.onNext(.username(TextsAsset.SignInError.usernameExpectedEmailProvided))
+            failedState.send(.username(TextsAsset.SignInError.usernameExpectedEmailProvided))
             return
         }
 
-        showLoadingView.onNext(true)
+        showLoadingView.send(true)
 
         Task { [weak self] in
             guard let self = self else { return }
@@ -116,31 +114,33 @@ class LoginViewModelImpl: LoginViewModel {
                         )
 
                         captchaVM.isLoading
-                            .distinctUntilChanged()
-                            .take(until: captchaVM.captchaDismiss)
-                            .bind(to: self.showLoadingView)
-                            .disposed(by: self.disposeBag)
+                            .removeDuplicates()
+                            .prefix(untilOutputFrom: captchaVM.captchaDismiss)
+                            .sink { [weak self] isLoading in
+                                self?.showLoadingView.send(isLoading)
+                            }
+                            .store(in: &self.appCancellable)
 
                         captchaVM.loginSuccess
-                            .observe(on: MainScheduler.instance)
-                            .bind { [weak self] session in
+                            .receive(on: DispatchQueue.main)
+                            .sink { [weak self] session in
                                 guard let self = self else { return }
                                 self.logger.logI("LoginViewModel", "Captcha login success. Preparing user data.")
-                                self.showLoadingView.onNext(true)
+                                self.showLoadingView.send(true)
                                 Task { @MainActor in
                                     await self.handleLoginSuccess(session: session)
                                 }
                             }
-                            .disposed(by: self.disposeBag)
+                            .store(in: &self.appCancellable)
 
                         captchaVM.loginError
-                            .observe(on: MainScheduler.instance)
-                            .bind { [weak self] error in
+                            .receive(on: DispatchQueue.main)
+                            .sink { [weak self] error in
                                 self?.handleLoginError(error)
                             }
-                            .disposed(by: self.disposeBag)
+                            .store(in: &self.appCancellable)
 
-                        self.showCaptchaViewModel.onNext(captchaVM)
+                        self.showCaptchaViewModel.send(captchaVM)
                     }
                     return
                 }
@@ -181,37 +181,37 @@ class LoginViewModelImpl: LoginViewModel {
 
     private func handleLoginError(_ error: Error) {
         logger.logE("LoginViewModel", "Login failed: \(error)")
-        showLoadingView.onNext(false)
+        showLoadingView.send(false)
 
         switch error {
         case Errors.invalid2FA:
-            failedState.onNext(.twoFa(TextsAsset.twoFactorInvalidError))
+            failedState.send(.twoFa(TextsAsset.twoFactorInvalidError))
         case Errors.twoFactorRequired:
-            failedState.onNext(.twoFa(TextsAsset.twoFactorRequiredError))
-            show2faCodeField.onNext(true)
+            failedState.send(.twoFa(TextsAsset.twoFactorRequiredError))
+            show2faCodeField.send(true)
         case let Errors.apiError(e):
-            failedState.onNext(.api(e.errorMessage ?? ""))
+            failedState.send(.api(e.errorMessage ?? ""))
         default:
             if let err = error as? Errors {
-                failedState.onNext(.network(err.description))
+                failedState.send(.network(err.description))
             } else {
-                failedState.onNext(.network(error.localizedDescription))
+                failedState.send(.network(error.localizedDescription))
             }
         }
     }
 
     private func handleAuthTokenError(_ error: Error) {
         logger.logE("LoginViewModel", "Auth token handshake failed: \(error)")
-        showLoadingView.onNext(false)
+        showLoadingView.send(false)
 
         switch error {
         case let Errors.apiError(e):
-            failedState.onNext(.api(e.errorMessage ?? ""))
+            failedState.send(.api(e.errorMessage ?? ""))
         default:
             if let err = error as? Errors {
-                failedState.onNext(.network(err.description))
+                failedState.send(.network(err.description))
             } else {
-                failedState.onNext(.network(error.localizedDescription))
+                failedState.send(.network(error.localizedDescription))
             }
         }
     }
@@ -223,13 +223,13 @@ class LoginViewModelImpl: LoginViewModel {
             do {
                 let xpressResponse = try await self.apiCallManager.getXpressLoginCode()
                 await MainActor.run {
-                    self.xpressCode.onNext(xpressResponse.xPressLoginCode)
+                    self.xpressCode.send(xpressResponse.xPressLoginCode)
                     self.startXPressLoginCodeVerifier(response: xpressResponse)
                 }
             } catch {
                 await MainActor.run {
                     self.logger.logE("LoginViewModel", "Unable to generate Login code: \(error)")
-                    self.failedState.onNext(.loginCode(TextsAsset.TVAsset.loginCodeError))
+                    self.failedState.send(.loginCode(TextsAsset.TVAsset.loginCodeError))
                 }
             }
         }
@@ -282,7 +282,7 @@ class LoginViewModelImpl: LoginViewModel {
                             self.logger.logE("LoginViewModel", "Lazy login failed: \(error.localizedDescription)")
                             self.timerCancellable?.cancel()
                             await MainActor.run {
-                                self.failedState.onNext(.network(error.localizedDescription))
+                                self.failedState.send(.network(error.localizedDescription))
                             }
                         }
                     } catch {
@@ -317,13 +317,13 @@ class LoginViewModelImpl: LoginViewModel {
         let secondsPassed = Int(now.timeIntervalSince(startTime))
         if secondsPassed > loginCodeResponse.ttl {
             logger.logE("LoginViewModel", "Failed to verify XPress login code in ttl. Giving up")
-            failedState.onNext(.network(""))
+            failedState.send(.network(""))
             timerCancellable?.cancel()
         }
     }
 
     func keyBoardWillShow() {
-        failedState.onNext(.none)
+        failedState.send(.none)
     }
 
     private func disconnectFromEmergencyConnect() {
@@ -342,8 +342,8 @@ class LoginViewModelImpl: LoginViewModel {
                         try? await self.latencyRepository.loadLatency()
                     }
                 }
-                self.showLoadingView.onNext(false)
-                self.routeToMainView.onNext(true)
+                self.showLoadingView.send(false)
+                self.routeToMainView.send(true)
             } receiveValue: { _ in }.store(in: &appCancellable)
     }
 
@@ -358,22 +358,22 @@ class LoginViewModelImpl: LoginViewModel {
                     logger.logD("LoginViewModel", "Disconnecting emergency connect.")
                     disconnectFromEmergencyConnect()
                 } else {
-                    showLoadingView.onNext(false)
-                    routeToMainView.onNext(true)
+                    showLoadingView.send(false)
+                    routeToMainView.send(true)
                 }
             } catch {
                 preferences.saveUserSessionAuth(sessionAuth: nil)
                 userSessionRepository.clearSession()
                 logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
-                showLoadingView.onNext(false)
+                showLoadingView.send(false)
                 switch error {
                 case let Errors.apiError(e):
-                    failedState.onNext(.api(e.errorMessage ?? ""))
+                    failedState.send(.api(e.errorMessage ?? ""))
                 default:
                     if let error = error as? Errors {
-                        failedState.onNext(.network(error.description))
+                        failedState.send(.network(error.description))
                     } else {
-                        failedState.onNext(.network(error.localizedDescription))
+                        failedState.send(.network(error.localizedDescription))
                     }
                 }
             }
@@ -382,12 +382,12 @@ class LoginViewModelImpl: LoginViewModel {
 
     private func registerNetworkEventListener() {
         connectivity.network.receive(on: DispatchQueue.main).sink { [weak self] appNetwork in
-            if let loginError = try? self?.failedState.value() {
+            if let loginError = self?.failedState.value {
                 switch loginError {
                 case LoginErrorState.network:
                     // reset network error state if network re-connects.
                     if appNetwork.status == NetworkStatus.connected {
-                        self?.failedState.onNext(.none)
+                        self?.failedState.send(.none)
                     }
                 default: ()
                 }

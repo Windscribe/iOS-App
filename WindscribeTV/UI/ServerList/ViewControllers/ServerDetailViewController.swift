@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Swinject
 import UIKit
 
@@ -17,7 +17,7 @@ class ServerDetailViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     private var focusServerDetailCellPath: IndexPath?
 
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     var flagBackgroundView: UIView!
     var gradient,
@@ -71,9 +71,11 @@ class ServerDetailViewController: UIViewController {
     }
 
     func bindData() {
-        viewModel?.favouriteList.bind(onNext: { favList in
-            self.favList = favList?.compactMap { $0.groupModel }
-        }).disposed(by: disposeBag)
+        viewModel?.favouriteList
+            .sink { favList in
+                self.favList = favList?.compactMap { $0.groupModel }
+            }
+            .store(in: &cancellables)
     }
 }
 

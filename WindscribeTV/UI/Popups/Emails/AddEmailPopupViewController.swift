@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class AddEmailPopupViewController: BasePopUpViewController {
@@ -17,6 +17,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
 
     var addEmailButton = WSPillButton()
     var emailTextField = WSTextFieldTv()
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Overrides
 
@@ -43,9 +44,11 @@ class AddEmailPopupViewController: BasePopUpViewController {
     // MARK: Setting up
 
     private func bindViews() {
-        addEmailButton.rx.primaryAction.bind { [self] in
-            continueButtonTapped()
-        }.disposed(by: disposeBag)
+        addEmailButton.wasSelected
+            .sink { [self] _ in
+                continueButtonTapped()
+            }
+            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -65,47 +68,53 @@ class AddEmailPopupViewController: BasePopUpViewController {
         logger.logD("AddEmailPopupViewController", "User tapped to submit email.")
         showLoading()
         addEmailButton.isEnabled = false
-        aeViewModel.changeEmailAddress(email: emailText).observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
-            DispatchQueue.main.async { [self] in
+        aeViewModel.changeEmailAddress(email: emailText)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                self.endLoading()
+                self.addEmailButton.isEnabled = true
+
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    if error.localizedDescription == Errors.emailExists.localizedDescription {
+                        self.aeViewModel.alertManager.showSimpleAlert(
+                            viewController: self,
+                            title: TextsAsset.error,
+                            message: TextsAsset.emailIsTaken,
+                            buttonText: TextsAsset.ok
+                        )
+                    } else if error.localizedDescription == Errors.disposableEmail.localizedDescription {
+                        self.aeViewModel.alertManager.showSimpleAlert(
+                            viewController: self,
+                            title: TextsAsset.error,
+                            message: TextsAsset.disposableEmail,
+                            buttonText: TextsAsset.ok
+                        )
+                    } else if error.localizedDescription == Errors.cannotChangeExistingEmail.localizedDescription {
+                        self.aeViewModel.alertManager.showSimpleAlert(
+                            viewController: self,
+                            title: TextsAsset.error,
+                            message: TextsAsset.cannotChangeExistingEmail,
+                            buttonText: TextsAsset.ok
+                        )
+                        self.navigationController?.popToRootViewController(animated: true)
+                    } else {
+                        self.aeViewModel.alertManager.showSimpleAlert(
+                            viewController: self,
+                            title: TextsAsset.error,
+                            message: TextsAsset.pleaseContactSupport,
+                            buttonText: TextsAsset.ok
+                        )
+                    }
+                }
+            } receiveValue: { [self] _ in
                 self.endLoading()
                 self.addEmailButton.isEnabled = true
                 self.router.routeTo(to: .confirmEmail(delegate: nil), from: self)
             }
-        }, onFailure: { [weak self] error in
-            DispatchQueue.main.async { [weak self] in
-                self?.endLoading()
-                self?.addEmailButton.isEnabled = true
-                if error.localizedDescription == Errors.emailExists.localizedDescription {
-                    self?.aeViewModel.alertManager.showSimpleAlert(
-                        viewController: self,
-                        title: TextsAsset.error,
-                        message: TextsAsset.emailIsTaken,
-                        buttonText: TextsAsset.ok
-                    )
-                } else if error.localizedDescription == Errors.disposableEmail.localizedDescription {
-                    self?.aeViewModel.alertManager.showSimpleAlert(
-                        viewController: self,
-                        title: TextsAsset.error,
-                        message: TextsAsset.disposableEmail,
-                        buttonText: TextsAsset.ok
-                    )
-                } else if error.localizedDescription == Errors.cannotChangeExistingEmail.localizedDescription {
-                    self?.aeViewModel.alertManager.showSimpleAlert(
-                        viewController: self,
-                        title: TextsAsset.error,
-                        message: TextsAsset.cannotChangeExistingEmail,
-                        buttonText: TextsAsset.ok
-                    )
-                    self?.navigationController?.popToRootViewController(animated: true)
-                } else {
-                    self?.aeViewModel.alertManager.showSimpleAlert(
-                        viewController: self,
-                        title: TextsAsset.error,
-                        message: TextsAsset.pleaseContactSupport,
-                        buttonText: TextsAsset.ok
-                    )
-                }
-            }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }

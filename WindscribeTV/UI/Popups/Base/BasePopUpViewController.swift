@@ -6,7 +6,6 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
 import UIKit
 
 class BasePopUpViewController: UIViewController {
@@ -15,7 +14,6 @@ class BasePopUpViewController: UIViewController {
     @IBOutlet var bodyLabel: UILabel!
     @IBOutlet var mainStackView: UIStackView!
 
-    let disposeBag = DisposeBag()
     var viewModel: BasePopupViewModelType?, logger: FileLogger!
 
     override func viewDidLoad() {

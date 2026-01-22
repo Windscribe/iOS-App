@@ -6,11 +6,11 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class PreferencesViewLogView: UIView {
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var viewModel: ViewLogViewModel!
 
     @IBOutlet var textView: UITextView!
@@ -31,11 +31,12 @@ class PreferencesViewLogView: UIView {
     }
 
     private func bindViews() {
-        viewModel.logContent.subscribe(onNext: { [weak self] content in
-            guard let self = self else { return }
-            self.textView.text = content
-            self.scrolltoBottom()
-        }, onError: { _ in })
-            .disposed(by: disposeBag)
+        viewModel.logContent
+            .sink { [weak self] content in
+                guard let self = self else { return }
+                self.textView.text = content
+                self.scrolltoBottom()
+            }
+            .store(in: &cancellables)
     }
 }

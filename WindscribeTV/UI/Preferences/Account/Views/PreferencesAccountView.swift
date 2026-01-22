@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 protocol PreferencesAccountViewDelegate: AnyObject {
@@ -18,7 +18,7 @@ class PreferencesAccountView: UIView {
 
     var viewModel: AccountViewModelType?
     weak var delegate: PreferencesAccountViewDelegate?
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     func setup() {
         guard let accountViewModel = viewModel else { return }
@@ -32,15 +32,17 @@ class PreferencesAccountView: UIView {
     }
 
     func bindViews() {
-        viewModel?.languageUpdatedTrigger.observe(on: MainScheduler.asyncInstance)
-            .subscribe { [weak self] _ in
-            guard let self = self else { return }
-            for arrangedSubview in self.contentStackView.arrangedSubviews {
-                if let sectionView = arrangedSubview as? AccountSectionView {
-                    sectionView.updateLocalisation()
+        viewModel?.languageUpdatedTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                for arrangedSubview in self.contentStackView.arrangedSubviews {
+                    if let sectionView = arrangedSubview as? AccountSectionView {
+                        sectionView.updateLocalisation()
+                    }
                 }
             }
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 }
 

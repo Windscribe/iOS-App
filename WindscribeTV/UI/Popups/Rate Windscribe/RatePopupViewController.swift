@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class RatePopupViewController: BasePopUpViewController {
@@ -17,6 +17,7 @@ class RatePopupViewController: BasePopUpViewController {
     var goAwayButton = WSPillButton()
 
     var ruViewModel: RateUsPopupModelType!
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Overrides
 
@@ -43,20 +44,26 @@ class RatePopupViewController: BasePopUpViewController {
     }
 
     private func bindViews() {
-        rateButton.rx.primaryAction.bind { [self] in
-            logger.logD("RatePopupViewController", "Rate us button pressed.")
-            ruViewModel.setRateUsActionCompleted()
-            guard let url = URL(string: "com.apple.TVAppStore://itunes.apple.com/app/windscribe-vpn/id1129435228?mt=8") else { return }
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        }.disposed(by: disposeBag)
-        laterButton.rx.primaryAction.bind { [self] in
-            logger.logD("RatePopupViewController", "Latter button pressed.")
-            self.dismiss(animated: true, completion: nil)
-        }.disposed(by: disposeBag)
-        goAwayButton.rx.primaryAction.bind { [self] in
-            logger.logD("RatePopupViewController", "Go away button pressed.")
-            ruViewModel.setRateUsActionCompleted()
-            self.dismiss(animated: true, completion: nil)
-        }.disposed(by: disposeBag)
+        rateButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("RatePopupViewController", "Rate us button pressed.")
+                ruViewModel.setRateUsActionCompleted()
+                guard let url = URL(string: "com.apple.TVAppStore://itunes.apple.com/app/windscribe-vpn/id1129435228?mt=8") else { return }
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+            .store(in: &cancellables)
+        laterButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("RatePopupViewController", "Latter button pressed.")
+                self.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &cancellables)
+        goAwayButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("RatePopupViewController", "Go away button pressed.")
+                ruViewModel.setRateUsActionCompleted()
+                self.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &cancellables)
     }
 }

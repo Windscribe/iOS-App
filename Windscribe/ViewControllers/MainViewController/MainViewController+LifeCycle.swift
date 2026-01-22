@@ -8,7 +8,6 @@
 
 import CoreLocation
 import Foundation
-import RxSwift
 import Swinject
 import UIKit
 

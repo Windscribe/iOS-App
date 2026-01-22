@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 
 protocol PrivacyViewModelType {
     func action()

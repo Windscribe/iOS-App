@@ -7,24 +7,23 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 
 protocol WelcomeViewModel {
-    var showLoadingView: BehaviorSubject<Bool> { get }
-    var routeToMainView: PublishSubject<Bool> { get }
-    var routeToSignup: PublishSubject<Bool> { get }
-    var emergencyConnectStatus: BehaviorSubject<Bool> { get }
-    var failedState: BehaviorSubject<String?> { get }
+    var showLoadingView: CurrentValueSubject<Bool, Never> { get }
+    var routeToMainView: PassthroughSubject<Bool, Never> { get }
+    var routeToSignup: PassthroughSubject<Bool, Never> { get }
+    var emergencyConnectStatus: CurrentValueSubject<Bool, Never> { get }
+    var failedState: CurrentValueSubject<String?, Never> { get }
     func continueButtonTapped()
 }
 
 class WelcomeViewModelImpl: WelcomeViewModel {
-    let showLoadingView = BehaviorSubject(value: false)
-    let routeToSignup = PublishSubject<Bool>()
-    let routeToMainView = PublishSubject<Bool>()
-    let failedState = BehaviorSubject<String?>(value: nil)
-    let emergencyConnectStatus =  BehaviorSubject<Bool>(value: false)
+    let showLoadingView = CurrentValueSubject<Bool, Never>(false)
+    let routeToSignup = PassthroughSubject<Bool, Never>()
+    let routeToMainView = PassthroughSubject<Bool, Never>()
+    let failedState = CurrentValueSubject<String?, Never>(nil)
+    let emergencyConnectStatus = CurrentValueSubject<Bool, Never>(false)
 
     let userSessionRepository: UserSessionRepository
     let sessionManager: SessionManager
@@ -34,7 +33,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let preferences: Preferences
     let vpnStateRepository: VPNStateRepository
     let logger: FileLogger
-    let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
     init(userSessionRepository: UserSessionRepository,
@@ -59,10 +57,10 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     func continueButtonTapped() {
         if keyChainDatabase.isGhostAccountCreated() {
             logger.logD("WelcomeViewModelImpl", "Ghost account already created from this device.")
-            routeToSignup.onNext(true)
+            routeToSignup.send(true)
             return
         }
-        showLoadingView.onNext(true)
+        showLoadingView.send(true)
 
         Task { @MainActor [weak self] in
             guard let self = self else { return }
@@ -84,8 +82,8 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                         self.logger.logE("WelcomeViewModelImpl", "Failed to get ghost registration token: \(String(describing: e.errorMessage))")
                     default: ()
                     }
-                    self.showLoadingView.onNext(false)
-                    self.routeToSignup.onNext(true)
+                    self.showLoadingView.send(false)
+                    self.routeToSignup.send(true)
                 }
             }
         }
@@ -97,21 +95,21 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 try await userDataRepository.prepareUserData()
 
                 logger.logD("WelcomeViewModelImpl", "User data is ready")
-                showLoadingView.onNext(false)
-                routeToMainView.onNext(true)
+                showLoadingView.send(false)
+                routeToMainView.send(true)
             } catch {
                 preferences.saveUserSessionAuth(sessionAuth: nil)
                 userSessionRepository.clearSession()
                 logger.logE("WelcomeViewModelImpl", "Failed to prepare user data: \(error)")
-                showLoadingView.onNext(false)
+                showLoadingView.send(false)
                 switch error {
                 case Errors.apiError(let e):
-                    failedState.onNext(e.errorMessage ?? "")
+                    failedState.send(e.errorMessage ?? "")
                 default:
                     if let error = error as? Errors {
-                        failedState.onNext(error.description)
+                        failedState.send(error.description)
                     } else {
-                        failedState.onNext(error.localizedDescription)
+                        failedState.send(error.localizedDescription)
                     }
                 }
             }
@@ -121,9 +119,9 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     private func listenForVPNStateChange() {
         vpnStateRepository.vpnInfo.sink { [weak self] vpnInfo in
             if vpnInfo != nil && vpnInfo?.status == .connected {
-                self?.emergencyConnectStatus.onNext(true)
+                self?.emergencyConnectStatus.send(true)
             } else {
-                self?.emergencyConnectStatus.onNext(false)
+                self?.emergencyConnectStatus.send(false)
             }
         }.store(in: &cancellables)
     }

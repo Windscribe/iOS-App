@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class ConfirmEmailPopupViewController: BasePopUpViewController {
@@ -15,6 +15,7 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
     var resendButton = WSPillButton()
     var changeButton = WSPillButton()
     var closeButton = WSPillButton()
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Overrides
 
@@ -40,18 +41,24 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
     }
 
     private func bindViews() {
-        resendButton.rx.primaryAction.bind { [self] in
-            logger.logD("ConfirmEmailPopupViewController", "User tapped Resend Email button.")
-            self.resendButtonTapped()
-        }.disposed(by: disposeBag)
-        changeButton.rx.primaryAction.bind { [self] in
-            logger.logD("ConfirmEmailPopupViewController", "User tapped Change Email button.")
-            self.router.routeTo(to: .addEmail, from: self)
-        }.disposed(by: disposeBag)
-        closeButton.rx.primaryAction.bind { [self] in
-            logger.logD("ConfirmEmailPopupViewController", "User tapped Close button.")
-            self.dismiss(animated: true, completion: nil)
-        }.disposed(by: disposeBag)
+        resendButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("ConfirmEmailPopupViewController", "User tapped Resend Email button.")
+                self.resendButtonTapped()
+            }
+            .store(in: &cancellables)
+        changeButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("ConfirmEmailPopupViewController", "User tapped Change Email button.")
+                self.router.routeTo(to: .addEmail, from: self)
+            }
+            .store(in: &cancellables)
+        closeButton.wasSelected
+            .sink { [self] _ in
+                logger.logD("ConfirmEmailPopupViewController", "User tapped Close button.")
+                self.dismiss(animated: true, completion: nil)
+            }
+            .store(in: &cancellables)
     }
 
     private func resendButtonTapped() {

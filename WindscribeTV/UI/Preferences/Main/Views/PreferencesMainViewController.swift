@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 enum PreferencesType {
@@ -57,7 +57,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     private var options: [PreferencesType] = [.general, .account, .connection, .privacy, .viewLog, .sendLog, .signOut]
     private var selectedRow: Int = 0
     private var optionViews = [PreferencesOptionView]()
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,37 +98,44 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     }
 
     private func bindViews() {
-        viewModel.currentLanguage.subscribe { [weak self] _ in
-            guard let self = self else { return }
-            self.titleLabel.text = TextsAsset.Preferences.title
-        }.disposed(by: disposeBag)
-
-        accountViewModel.cancelAccountState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] state in
-            guard let self = self else { return }
-            self.logger.logD("PreferencesMainViewController", "Cancel account state: \(state)")
-            switch state {
-            case .initial:
-                self.hideLoading()
-            case .loading:
-                self.showLoading()
-            case let .error(error):
-                self.hideLoading()
-                self.accountViewModel.alertManager.showSimpleAlert(
-                    viewController: self,
-                    title: TextsAsset.error,
-                    message: error,
-                    buttonText: TextsAsset.okay
-                )
-            case .success:
-                self.hideLoading()
-                self.accountViewModel.logoutUser()
+        viewModel.currentLanguage
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.titleLabel.text = TextsAsset.Preferences.title
             }
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-        accountViewModel.sessionUpdatedTrigger.subscribe { [weak self] _ in
-            guard let self = self else { return }
-            self.accountView.setup()
-        }.disposed(by: disposeBag)
+        accountViewModel.cancelAccountState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                self.logger.logD("PreferencesMainViewController", "Cancel account state: \(state)")
+                switch state {
+                case .initial:
+                    self.hideLoading()
+                case .loading:
+                    self.showLoading()
+                case let .error(error):
+                    self.hideLoading()
+                    self.accountViewModel.alertManager.showSimpleAlert(
+                        viewController: self,
+                        title: TextsAsset.error,
+                        message: error,
+                        buttonText: TextsAsset.okay
+                    )
+                case .success:
+                    self.hideLoading()
+                    self.accountViewModel.logoutUser()
+                }
+            }
+            .store(in: &cancellables)
+
+        accountViewModel.sessionUpdatedTrigger
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.accountView.setup()
+            }
+            .store(in: &cancellables)
     }
 
     private func createSettingViews() {
