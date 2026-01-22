@@ -11,7 +11,6 @@ import ExpyTableView
 import MobileCoreServices
 import NetworkExtension
 import RealmSwift
-import RxSwift
 import SafariServices
 import StoreKit
 import Swinject

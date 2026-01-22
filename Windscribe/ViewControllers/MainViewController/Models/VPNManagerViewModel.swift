@@ -7,20 +7,20 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol ConnectionStateViewModelType {
-    var selectedNodeSubject: PublishSubject<SelectedNode> {get}
-    var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
-    var showAutoModeScreenTrigger: PublishSubject<Void> {get}
-    var openNetworkHateUsDialogTrigger: PublishSubject<Void> {get}
-    var pushNotificationPermissionsTrigger: PublishSubject<Void> {get}
-    var siriShortcutTrigger: PublishSubject<Void> {get}
-    var requestLocationTrigger: PublishSubject<Void> {get}
-    var enableConnectTrigger: PublishSubject<Void> {get}
-    var ipAddressSubject: PublishSubject<String> {get}
-    var autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void> {get}
-    var connectedState: BehaviorSubject<ConnectionStateInfo> {get}
+    var selectedNodeSubject: PassthroughSubject<SelectedNode, Never> {get}
+    var loadLatencyValuesSubject: PassthroughSubject<LoadLatencyInfo, Never> {get}
+    var showAutoModeScreenTrigger: PassthroughSubject<Void, Never> {get}
+    var openNetworkHateUsDialogTrigger: PassthroughSubject<Void, Never> {get}
+    var pushNotificationPermissionsTrigger: PassthroughSubject<Void, Never> {get}
+    var siriShortcutTrigger: PassthroughSubject<Void, Never> {get}
+    var requestLocationTrigger: PassthroughSubject<Void, Never> {get}
+    var enableConnectTrigger: PassthroughSubject<Void, Never> {get}
+    var ipAddressSubject: PassthroughSubject<String, Never> {get}
+    var autoModeSelectorHiddenChecker: PassthroughSubject<(_ value: Bool) -> Void, Never> {get}
+    var connectedState: CurrentValueSubject<ConnectionStateInfo, Never> {get}
 
     func disconnect()
     func displayLocalIPAddress()
@@ -31,17 +31,17 @@ protocol ConnectionStateViewModelType {
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
-    let connectedState: BehaviorSubject<ConnectionStateInfo>
-    let selectedNodeSubject: PublishSubject<SelectedNode>
-    let loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo>
-    let showAutoModeScreenTrigger: PublishSubject<Void>
-    let openNetworkHateUsDialogTrigger: PublishSubject<Void>
-    let pushNotificationPermissionsTrigger: PublishSubject<Void>
-    let siriShortcutTrigger: PublishSubject<Void>
-    let requestLocationTrigger: PublishSubject<Void>
-    let enableConnectTrigger: PublishSubject<Void>
-    let ipAddressSubject: PublishSubject<String>
-    let autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void>
+    let connectedState: CurrentValueSubject<ConnectionStateInfo, Never>
+    let selectedNodeSubject: PassthroughSubject<SelectedNode, Never>
+    let loadLatencyValuesSubject: PassthroughSubject<LoadLatencyInfo, Never>
+    let showAutoModeScreenTrigger: PassthroughSubject<Void, Never>
+    let openNetworkHateUsDialogTrigger: PassthroughSubject<Void, Never>
+    let pushNotificationPermissionsTrigger: PassthroughSubject<Void, Never>
+    let siriShortcutTrigger: PassthroughSubject<Void, Never>
+    let requestLocationTrigger: PassthroughSubject<Void, Never>
+    let enableConnectTrigger: PassthroughSubject<Void, Never>
+    let ipAddressSubject: PassthroughSubject<String, Never>
+    let autoModeSelectorHiddenChecker: PassthroughSubject<(_ value: Bool) -> Void, Never>
 
     var connectionStateManager: ConnectionStateManagerType
 

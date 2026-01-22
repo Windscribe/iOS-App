@@ -243,19 +243,19 @@ class PlanUpgradeViewController: WSUIViewController {
 
         planSelectionView.selectedPlan
             .compactMap { $0 }
-            .distinctUntilChanged()
-            .bind(onNext: { [weak self] planExtID in
+            .removeDuplicates()
+            .sink { [weak self] planExtID in
                 self?.selectDesiredPlan(planExtID: planExtID)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     private func setupActionBindings() {
-        subscribeButton.rx.tap
-            .bind { [weak self] in
+        subscribeButton.publisher(for: .touchUpInside)
+            .sink { [weak self] _ in
                 self?.viewModel?.continuePayButtonTapped()
             }
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
     }
 
     // MARK: Actions & Action Bindings
