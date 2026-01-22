@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Swinject
 import UIKit
 
@@ -36,7 +36,7 @@ class LoginViewController: PreferredFocusedViewController {
     // MARK: - State properties
 
     var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private var credentials: (String?, String?) = (nil, nil)
 
@@ -221,102 +221,119 @@ class LoginViewController: PreferredFocusedViewController {
 
     func bindView() {
         viewModel.showLoadingView
-            .observe(on: MainScheduler.instance)
-            .bind { [weak self] show in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] show in
                 guard let self = self else { return }
                 self.loadingView.startAnimating()
                 self.usernameTextField.isEnabled = !show
                 self.passwordTextField?.isEnabled = !show
                 self.loadingView.isHidden = !show
             }
-            .disposed(by: disposeBag)
-        loginButton.rx.primaryAction.bind { [weak self] in
-            self?.loginButtonAction(nil)
-        }.disposed(by: disposeBag)
-        forgotButton.rx.primaryAction.bind { [self] in
-            router.routeTo(to: .forgotPassword, from: self)
-            self.logger.logD("LoginViewController", "Moving to forgot password screen.")
-        }.disposed(by: disposeBag)
-        backButton.rx.primaryAction.bind { [weak self] in
-            self?.backButtonAction(nil)
-        }.disposed(by: disposeBag)
-        viewModel.routeToMainView.bind { [self] _ in
-            self.logger.logD("LoginViewController", "Moving to home screen.")
-            router.routeTo(to: RouteID.home, from: self)
-        }.disposed(by: disposeBag)
-        generateCodeButton.rx.primaryAction.bind { [weak self] in
-            self?.viewModel.generateCodeTapped()
-        }.disposed(by: disposeBag)
-        viewModel.xpressCode.bind { code in
-            DispatchQueue.main.async { [weak self] in
-                if let code = code, code.count > 0 {
-                    self?.codeDisplayLabel.isHidden = false
-                    self?.generateCodeButton.isHidden = true
-                    self?.codeDisplayLabel.text = code
-                } else {
-                    self?.codeDisplayLabel.isHidden = true
-                    self?.generateCodeButton.isHidden = false
-                    self?.codeDisplayLabel.text = code
+            .store(in: &cancellables)
+        loginButton.wasSelected
+            .sink { [weak self] _ in
+                self?.loginButtonAction(nil)
+            }
+            .store(in: &cancellables)
+        forgotButton.wasSelected
+            .sink { [self] _ in
+                router.routeTo(to: .forgotPassword, from: self)
+                self.logger.logD("LoginViewController", "Moving to forgot password screen.")
+            }
+            .store(in: &cancellables)
+        backButton.wasSelected
+            .sink { [weak self] _ in
+                self?.backButtonAction(nil)
+            }
+            .store(in: &cancellables)
+        viewModel.routeToMainView
+            .sink { [self] _ in
+                self.logger.logD("LoginViewController", "Moving to home screen.")
+                router.routeTo(to: RouteID.home, from: self)
+            }
+            .store(in: &cancellables)
+        generateCodeButton.wasSelected
+            .sink { [weak self] _ in
+                self?.viewModel.generateCodeTapped()
+            }
+            .store(in: &cancellables)
+        viewModel.xpressCode
+            .sink { code in
+                DispatchQueue.main.async { [weak self] in
+                    if let code = code, code.count > 0 {
+                        self?.codeDisplayLabel.isHidden = false
+                        self?.generateCodeButton.isHidden = true
+                        self?.codeDisplayLabel.text = code
+                    } else {
+                        self?.codeDisplayLabel.isHidden = true
+                        self?.generateCodeButton.isHidden = false
+                        self?.codeDisplayLabel.text = code
+                    }
                 }
             }
-        }.disposed(by: disposeBag)
-        viewModel.failedState.distinctUntilChanged().bind { [weak self] state in
-            switch state {
-            case let .username(error), let .network(error), let .api(error), let .twoFa(error), let .loginCode(error):
-                self?.infoView?.isHidden = false
-                self?.infoLabel?.text = error
-            case .none:
-                self?.infoView?.isHidden = true
-                self?.infoLabel?.text = ""
+            .store(in: &cancellables)
+        viewModel.failedState
+            .removeDuplicates()
+            .sink { [weak self] state in
+                switch state {
+                case let .username(error), let .network(error), let .api(error), let .twoFa(error), let .loginCode(error):
+                    self?.infoView?.isHidden = false
+                    self?.infoLabel?.text = error
+                case .none:
+                    self?.infoView?.isHidden = true
+                    self?.infoLabel?.text = ""
+                }
             }
-        }.disposed(by: disposeBag)
-        viewModel.show2faCodeField.bind { [self] show in
-            if show {
-                is2FA = show
-                setup2FA()
-                setupCommonUI()
+            .store(in: &cancellables)
+        viewModel.show2faCodeField
+            .sink { [self] show in
+                if show {
+                    is2FA = show
+                    setup2FA()
+                    setupCommonUI()
+                }
             }
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
 
         viewModel.showCaptchaViewModel
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] captchaVM in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] captchaVM in
                 guard let self = self else { return }
 
                 let captchaPopupView = CaptchaView()
                 captchaPopupView.bind(to: captchaVM)
 
                 captchaPopupView.submitTap
-                  .observe(on: MainScheduler.instance)
-                  .subscribe(onNext: { code in
-                    captchaVM.submitCaptcha.onNext(code)
-                  })
-                  .disposed(by: disposeBag)
+                  .receive(on: DispatchQueue.main)
+                  .sink { code in
+                    captchaVM.submitCaptcha.send(code)
+                  }
+                  .store(in: &self.cancellables)
 
                 captchaPopupView.cancelTap
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] in
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] in
                         self?.dismissCaptchaPopup()
-                    })
-                    .disposed(by: disposeBag)
+                    }
+                    .store(in: &self.cancellables)
 
                 captchaPopupView.refreshTap
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: {
-                        captchaVM.refreshCaptcha.onNext(())
-                    })
-                    .disposed(by: disposeBag)
+                    .receive(on: DispatchQueue.main)
+                    .sink {
+                        captchaVM.refreshCaptcha.send(())
+                    }
+                    .store(in: &self.cancellables)
 
                 captchaVM.captchaDismiss
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] in
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] in
                         self?.dismissCaptchaPopup()
-                    })
-                    .disposed(by: self.disposeBag)
+                    }
+                    .store(in: &self.cancellables)
 
                 self.showCaptchaPopup(captchaPopupView: captchaPopupView)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     private func showCaptchaPopup(captchaPopupView: CaptchaView) {

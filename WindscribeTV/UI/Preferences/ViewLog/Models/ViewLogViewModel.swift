@@ -7,20 +7,19 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
 
 protocol ViewLogViewModel {
     var title: String { get }
-    var logContent: BehaviorSubject<String> { get }
-    var showProgress: BehaviorSubject<Bool> { get }
+    var logContent: CurrentValueSubject<String, Never> { get }
+    var showProgress: CurrentValueSubject<Bool, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
 }
 
 class ViewLogViewModelImpl: ViewLogViewModel {
     let title = TextsAsset.Debug.viewLog
-    let logContent = BehaviorSubject(value: "")
-    let showProgress = BehaviorSubject(value: false)
+    let logContent = CurrentValueSubject<String, Never>("")
+    let showProgress = CurrentValueSubject<Bool, Never>(false)
     let isDarkMode: CurrentValueSubject<Bool, Never>
     private let logger: FileLogger
 
@@ -31,17 +30,17 @@ class ViewLogViewModelImpl: ViewLogViewModel {
     }
 
     private func load() {
-        showProgress.onNext(true)
+        showProgress.send(true)
         Task {
             do {
                 let content = try await logger.getLogData()
                 await MainActor.run {
-                    self.showProgress.onNext(false)
-                    self.logContent.onNext(content)
+                    self.showProgress.send(false)
+                    self.logContent.send(content)
                 }
             } catch {
                 await MainActor.run {
-                    self.showProgress.onNext(false)
+                    self.showProgress.send(false)
                 }
             }
         }

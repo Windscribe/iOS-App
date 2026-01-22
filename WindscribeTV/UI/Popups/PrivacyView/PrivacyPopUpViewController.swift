@@ -6,13 +6,14 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class PrivacyPopUpViewController: BasePopUpViewController {
     var privacyViewModel: PrivacyViewModelType!
     var button = WSPillButton()
     var closeCompletion: (() -> Void)?
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Overrides
 
@@ -34,10 +35,12 @@ class PrivacyPopUpViewController: BasePopUpViewController {
     }
 
     private func bindViews() {
-        button.rx.primaryAction.bind { [self] in
-            logger.logD("PrivacyPopUpViewController", "User tapped to accept privacy conditions.")
-            self.privacyViewModel.action { self.closeCompletion?() }
-            self.navigationController?.popViewController(animated: true)
-        }.disposed(by: disposeBag)
+        button.wasSelected
+            .sink { [self] _ in
+                logger.logD("PrivacyPopUpViewController", "User tapped to accept privacy conditions.")
+                self.privacyViewModel.action { self.closeCompletion?() }
+                self.navigationController?.popViewController(animated: true)
+            }
+            .store(in: &cancellables)
     }
 }

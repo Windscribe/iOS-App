@@ -79,7 +79,7 @@ class StaticIPListFooterView: WSView {
     }
 
     func updateDeviceName() {
-        DispatchQueue.main.async { [self] in
+        DispatchQueue.main.async { [self] _ in
             self.deviceNameLabel.text = self.viewModel?.getStaticIp().first?.deviceName
         }
     }

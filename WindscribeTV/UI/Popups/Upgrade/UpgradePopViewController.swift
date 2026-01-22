@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Swinject
 import UIKit
 
@@ -20,7 +20,7 @@ class UpgradePopViewController: UIViewController {
     @IBOutlet var containerView: UIView!
     @IBOutlet var loadingView: UIView!
 
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var viewModel: UpgradeViewModel?
     var logger: FileLogger!
     var promoCode: String?
@@ -69,59 +69,63 @@ class UpgradePopViewController: UIViewController {
     private func bindViews() {
         guard let viewModel = viewModel else { return }
         viewModel.loadPlans(promo: promoCode, id: pcpID)
-        viewModel.plans.subscribe { plans in
-            DispatchQueue.main.async {
-                UIApplication.shared.registerForRemoteNotifications()
-                switch plans {
-                case let .standardPlans(products, _):
-                    for product in products {
+        viewModel.plans
+            .sink { plans in
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                    switch plans {
+                    case let .standardPlans(products, _):
+                        for product in products {
+                            let priceView: UpgradePricingView = UpgradePricingView.fromNib()
+                            priceView.setup(with: product.tvPlanLabel, and: product.price, isSelected: product.tvPlanLabel == products.first?.tvPlanLabel)
+                            self.pricingStackView.addArrangedSubview(priceView)
+                            priceView.delegate = self
+                            priceView.plan = product
+                        }
+                    case let .discounted(plan, appPlan):
                         let priceView: UpgradePricingView = UpgradePricingView.fromNib()
-                        priceView.setup(with: product.tvPlanLabel, and: product.price, isSelected: product.tvPlanLabel == products.first?.tvPlanLabel)
+                        priceView.setup(with: appPlan.name, and: plan.price)
                         self.pricingStackView.addArrangedSubview(priceView)
                         priceView.delegate = self
-                        priceView.plan = product
+                    default: return
                     }
-                case let .discounted(plan, appPlan):
-                    let priceView: UpgradePricingView = UpgradePricingView.fromNib()
-                    priceView.setup(with: appPlan.name, and: plan.price)
-                    self.pricingStackView.addArrangedSubview(priceView)
-                    priceView.delegate = self
-                default: return
-                }
-                self.pricingStackView.addArrangedSubview(UIView())
-                self.pricingLabel.isHidden = false
-                self.endLoading()
-            }
-        }.disposed(by: disposeBag)
-        viewModel.upgradeState.bind(onNext: { state in
-            DispatchQueue.main.async {
-                switch state {
-                case let .success(ghostAccount):
-                    self.endLoading()
-                    if ghostAccount == true {
-                        let vc = Assembler.resolve(SignUpViewController.self)
-                        if self.navigationController == nil {
-                            self.present(vc, animated: true)
-                        } else {
-                            self.navigationController?.pushViewController(vc, animated: true)
-                        }
-                    } else {
-                        if self.navigationController == nil {
-                            self.dismiss(animated: true)
-                        } else {
-                            self.navigationController?.popToRootViewController(animated: true)
-                        }
-                    }
-                case .loading:
-                    self.showLoading()
-                case let .error(error):
-                    self.endLoading()
-                    self.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
-                case .none:
+                    self.pricingStackView.addArrangedSubview(UIView())
+                    self.pricingLabel.isHidden = false
                     self.endLoading()
                 }
             }
-        }).disposed(by: disposeBag)
+            .store(in: &self.cancellables)
+        viewModel.upgradeState
+            .sink { state in
+                DispatchQueue.main.async {
+                    switch state {
+                    case let .success(ghostAccount):
+                        self.endLoading()
+                        if ghostAccount == true {
+                            let vc = Assembler.resolve(SignUpViewController.self)
+                            if self.navigationController == nil {
+                                self.present(vc, animated: true)
+                            } else {
+                                self.navigationController?.pushViewController(vc, animated: true)
+                            }
+                        } else {
+                            if self.navigationController == nil {
+                                self.dismiss(animated: true)
+                            } else {
+                                self.navigationController?.popToRootViewController(animated: true)
+                            }
+                        }
+                    case .loading:
+                        self.showLoading()
+                    case let .error(error):
+                        self.endLoading()
+                        self.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+                    case .none:
+                        self.endLoading()
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func endLoading() {

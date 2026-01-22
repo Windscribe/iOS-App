@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Swinject
 import UIKit
 
@@ -21,7 +21,7 @@ class WelcomeViewController: UIViewController {
     // MARK: - State properties
 
     var router: WelcomeRouter!, viewmodal: WelcomeViewModel!, logger: FileLogger!
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,27 +65,37 @@ class WelcomeViewController: UIViewController {
     }
 
     private func bindViews() {
-        viewmodal.showLoadingView.bind { [self] show in
-            if show {
-                showLoadingView()
-            } else {
-                hideLoadingView()
+        viewmodal.showLoadingView
+            .sink { [self] show in
+                if show {
+                    showLoadingView()
+                } else {
+                    hideLoadingView()
+                }
             }
-        }.disposed(by: disposeBag)
-        loginButton.rx.primaryAction.bind { [self] in
-            router.routeTo(to: RouteID.login, from: self)
-        }.disposed(by: disposeBag)
-        viewmodal.routeToSignup.bind { [self] _ in
-            DispatchQueue.main.async {
-                self.router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: self)
+            .store(in: &cancellables)
+        loginButton.wasSelected
+            .sink { [self] _ in
+                router.routeTo(to: RouteID.login, from: self)
             }
-        }.disposed(by: disposeBag)
-        viewmodal.routeToMainView.bind { [self] _ in
-            router.routeTo(to: RouteID.home, from: self)
-        }.disposed(by: disposeBag)
-        getStartedButton.rx.primaryAction.bind { [self] in
-            viewmodal.continueButtonTapped()
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
+        viewmodal.routeToSignup
+            .sink { [self] _ in
+                DispatchQueue.main.async {
+                    self.router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: self)
+                }
+            }
+            .store(in: &cancellables)
+        viewmodal.routeToMainView
+            .sink { [self] _ in
+                router.routeTo(to: RouteID.home, from: self)
+            }
+            .store(in: &cancellables)
+        getStartedButton.wasSelected
+            .sink { [self] _ in
+                viewmodal.continueButtonTapped()
+            }
+            .store(in: &cancellables)
     }
 
     func hideLoadingView() {

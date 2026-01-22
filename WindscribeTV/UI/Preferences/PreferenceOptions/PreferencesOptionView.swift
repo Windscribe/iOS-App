@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 protocol PreferencesOptionViewDelegate: OptionSelectionViewDelegate {
@@ -15,7 +15,7 @@ protocol PreferencesOptionViewDelegate: OptionSelectionViewDelegate {
 
 class PreferencesOptionView: OptionSelectionView {
     var optionType: PreferencesType?
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     var viewModel: PreferencesMainViewModelOld?
 
@@ -40,10 +40,12 @@ class PreferencesOptionView: OptionSelectionView {
     }
 
     private func bindViews() {
-        viewModel?.currentLanguage.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.updateTitle()
-        }).disposed(by: disposeBag)
+        viewModel?.currentLanguage
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.updateTitle()
+            }
+            .store(in: &cancellables)
     }
 
     @IBAction override func selectOption(_: Any) {

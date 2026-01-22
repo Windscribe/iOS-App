@@ -7,14 +7,11 @@
 //
 
 import Foundation
-
-import RxCocoa
-import RxSwift
 import Combine
 
 protocol NewsFeedModelType {
-    var newsfeedData: BehaviorSubject<[NewsFeedDataModel]> { get }
-    var viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> { get }
+    var newsfeedData: CurrentValueSubject<[NewsFeedDataModel], Never> { get }
+    var viewToLaunch: CurrentValueSubject<NewsFeedViewToLaunch, Never> { get }
     func didTapToExpand(id: Int)
     func didTapAction(action: NewsFeedActionType)
 }
@@ -24,10 +21,9 @@ class NewsFeedModel: NewsFeedModelType {
     let notificationRepository: NotificationRepository
     let logger: FileLogger
     let htmlParser: HTMLParsing
-    let disposeBag = DisposeBag()
-    let newsfeedData: BehaviorSubject<[NewsFeedDataModel]> = BehaviorSubject(value: [])
-    let readStatus: BehaviorSubject<[Int]> = BehaviorSubject(value: [])
-    let viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> = BehaviorSubject(value: .unknown)
+    let newsfeedData = CurrentValueSubject<[NewsFeedDataModel], Never>([])
+    let readStatus = CurrentValueSubject<[Int], Never>([])
+    let viewToLaunch = CurrentValueSubject<NewsFeedViewToLaunch, Never>(.unknown)
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -87,21 +83,21 @@ class NewsFeedModel: NewsFeedModelType {
             }
             .receive(on: DispatchQueue.main)
             .sink { newsfeedData in
-                self.newsfeedData.onNext(newsfeedData)
+                self.newsfeedData.send(newsfeedData)
             }
             .store(in: &cancellables)
     }
 
     private func isRead(id: Int) -> Bool {
-        return (try? readStatus.value().contains(id)) ?? false
+        return readStatus.value.contains(id)
     }
 
     private func loadReadStatus() {
-        readStatus.onNext(notificationRepository.readNotices.value)
+        readStatus.send(notificationRepository.readNotices.value)
         notificationRepository.readNotices
             .receive(on: DispatchQueue.main)
             .sink { readNotificationIds in
-                self.readStatus.onNext(readNotificationIds)
+                self.readStatus.send(readNotificationIds)
             }
             .store(in: &cancellables)
     }
@@ -121,7 +117,7 @@ class NewsFeedModel: NewsFeedModelType {
 
     func didTapToExpand(id: Int) {
         updateReadNotice(for: id)
-        let newsFeeds = (try? newsfeedData.value()) ?? []
+        let newsFeeds = newsfeedData.value
         let updatedFeeds = newsFeeds.map { feed -> NewsFeedDataModel in
             var updatedFeed = feed
             if updatedFeed.id == id {
@@ -129,14 +125,14 @@ class NewsFeedModel: NewsFeedModelType {
                 updatedFeed.animate = true
                 updatedFeed.readStatus = true
             } else {
-                let status = (try? self.readStatus.value().contains(feed.id)) ?? false
+                let status = self.readStatus.value.contains(feed.id)
                 updatedFeed.readStatus = status
                 updatedFeed.animate = false
                 updatedFeed.expanded = false
             }
             return updatedFeed
         }
-        newsfeedData.onNext(updatedFeeds)
+        newsfeedData.send(updatedFeeds)
     }
 
     func didTapAction(action: NewsFeedActionType) {
@@ -145,12 +141,12 @@ class NewsFeedModel: NewsFeedModelType {
         switch action {
         case .standard(let standardAction):
             if let url = URL(string: standardAction.link) {
-                viewToLaunch.onNext(.safari(url))
+                viewToLaunch.send(.safari(url))
             } else {
                 logger.logE("NewsFeedModel", "Unable to create url from: \(standardAction.link)")
             }
         case .promo(let pcpid, let promoCode, _):
-            viewToLaunch.onNext(.payment(promoCode ?? "", pcpid))
+            viewToLaunch.send(.payment(promoCode ?? "", pcpid))
         }
     }
 

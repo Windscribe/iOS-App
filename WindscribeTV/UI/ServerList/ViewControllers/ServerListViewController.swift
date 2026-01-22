@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Swinject
 import UIKit
 
@@ -40,7 +40,7 @@ enum SideMenuType: String {
 
 class ServerListViewController: PreferredFocusedViewController, SideMenuOptionViewDelegate {
     var viewModel: MainViewModel!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     @IBOutlet var sideMenu: UIStackView!
     @IBOutlet var sideMenuContainerView: UIView!
@@ -137,40 +137,49 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     }
 
     func bindData(isStreaming: Bool) {
-        self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] results in
-            guard let self else { return }
+        self.viewModel.serverList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] results in
+                guard let self else { return }
 
-            viewModel.sortServerListUsingUserPreferences(ignoreStreaming: false,
-                isForStreaming: isStreaming, servers: results) { [weak self] serverSectionsOrdered in
-                    guard let self else { return }
+                viewModel.sortServerListUsingUserPreferences(ignoreStreaming: false,
+                    isForStreaming: isStreaming, servers: results) { [weak self] serverSectionsOrdered in
+                        guard let self else { return }
 
-                    self.serverSectionsOrdered = serverSectionsOrdered
-                    self.addBestLocation()
-                    self.serverListCollectionView.reloadData()
+                        self.serverSectionsOrdered = serverSectionsOrdered
+                        self.addBestLocation()
+                        self.serverListCollectionView.reloadData()
+                }
             }
-        }).disposed(by: self.disposeBag)
+            .store(in: &cancellables)
 
-        viewModel.staticIPs.subscribe(onNext: { [weak self] _ in
-            guard let self else { return }
-            staticIPModels = self.viewModel.getStaticIp()
-            self.changeEmptyViewVisibility()
-        }).disposed(by: disposeBag)
-        viewModel.favouriteGroups.subscribe(onNext: { [weak self] favourites in
-            guard let self else { return }
-
-            favGroups.removeAll()
-            favGroups.append(contentsOf: favourites)
-            self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-            if favourites.count == 0 {
-                self.setNeedsFocusUpdate()
-            } else {
-                self.updateFocusIfNeeded()
-                self.view.layoutIfNeeded()
+        viewModel.staticIPs
+            .sink { [weak self] _ in
+                guard let self else { return }
+                staticIPModels = self.viewModel.getStaticIp()
+                self.changeEmptyViewVisibility()
             }
-            self.changeEmptyViewVisibility()
-        }, onError: { error in
-            self.logger.logE("ServerListViewController", "Realm server list notification error \(error.localizedDescription)")
-        }).disposed(by: disposeBag)
+            .store(in: &cancellables)
+        viewModel.favouriteGroups
+            .sink { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.logger.logE("ServerListViewController", "Realm server list notification error \(error.localizedDescription)")
+                }
+            } receiveValue: { [weak self] favourites in
+                guard let self else { return }
+
+                favGroups.removeAll()
+                favGroups.append(contentsOf: favourites)
+                self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+                if favourites.count == 0 {
+                    self.setNeedsFocusUpdate()
+                } else {
+                    self.updateFocusIfNeeded()
+                    self.view.layoutIfNeeded()
+                }
+                self.changeEmptyViewVisibility()
+            }
+            .store(in: &cancellables)
     }
 
     private func addBestLocation() {

@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import UIKit
 
 class PreferencesGeneralView: UIView {
@@ -17,7 +17,7 @@ class PreferencesGeneralView: UIView {
     @IBOutlet var contentStackView: UIStackView!
 
     var viewModel: GeneralViewModelType!
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     func setup() {
         languagesView.populate(with: TextsAsset.General.languages, title: GeneralViewType.language.title)
@@ -52,11 +52,13 @@ class PreferencesGeneralView: UIView {
     }
 
     private func bindViews() {
-        viewModel.languageUpdatedTrigger.observe(on: MainScheduler.asyncInstance)
-            .subscribe { [weak self] _ in
-            guard let self = self else { return }
-            self.updateText()
-        }.disposed(by: disposeBag)
+        viewModel.languageUpdatedTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.updateText()
+            }
+            .store(in: &cancellables)
     }
 }
 

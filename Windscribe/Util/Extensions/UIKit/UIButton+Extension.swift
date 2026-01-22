@@ -13,4 +13,7 @@ extension UIButton {
     var tap: UIControlPublisher {
         publisher(for: .touchUpInside)
     }
+    var wasSelected: UIControlPublisher {
+        publisher(for: .primaryActionTriggered)
+    }
 }

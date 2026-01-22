@@ -6,7 +6,6 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
 import Swinject
 import UIKit
 
@@ -16,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var customConfigRepository: CustomConfigRepository = Assembler.resolve(CustomConfigRepository.self)
 
-    let disposeBag = DisposeBag()
     private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
 
     private lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)

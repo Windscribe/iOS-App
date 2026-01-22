@@ -7,23 +7,22 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
 
 class CaptchaViewModel {
-    let submitCaptcha = PublishSubject<String>()
-    let cancel = PublishSubject<Void>()
-    let refreshCaptcha = PublishSubject<Void>()
+    let submitCaptcha = PassthroughSubject<String, Never>()
+    let cancel = PassthroughSubject<Void, Never>()
+    let refreshCaptcha = PassthroughSubject<Void, Never>()
 
-    let captchaImage = BehaviorSubject<UIImage?>(value: nil)
-    let isLoading = BehaviorSubject<Bool>(value: false)
-    let errorMessage = BehaviorSubject<String?>(value: nil)
+    let captchaImage = CurrentValueSubject<UIImage?, Never>(nil)
+    let isLoading = CurrentValueSubject<Bool, Never>(false)
+    let errorMessage = CurrentValueSubject<String?, Never>(nil)
 
-    let loginSuccess = PublishSubject<Session>()
-    let loginError = PublishSubject<Error>()
-    let captchaDismiss = PublishSubject<Void>()
+    let loginSuccess = PassthroughSubject<Session, Never>()
+    let loginError = PassthroughSubject<Error, Never>()
+    let captchaDismiss = PassthroughSubject<Void, Never>()
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private let asciiArtBase64: String
     private let username: String
@@ -58,36 +57,35 @@ class CaptchaViewModel {
 
     private func setupBindings() {
         if let image = UIImage.fromAsciiBase64(asciiArtBase64) {
-            captchaImage.onNext(image)
+            captchaImage.send(image)
         } else {
-            errorMessage.onNext("Unable to render captcha image.")
+            errorMessage.send("Unable to render captcha image.")
         }
 
         // Submit
         submitCaptcha
-          .do(onNext: { _ in })
-          .subscribe(onNext: { [weak self] code in
+          .sink { [weak self] code in
             self?.verifyCaptchaAndLogin(with: code)
-          })
-          .disposed(by: disposeBag)
+          }
+          .store(in: &cancellables)
 
         // Cancel
         cancel
-            .subscribe(onNext: { [weak self] in
+            .sink { [weak self] in
                 self?.logger.logD("CaptchaViewModel", "Captcha cancelled by user")
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         // Refresh
         refreshCaptcha
-            .subscribe(onNext: { [weak self] in
+            .sink { [weak self] in
                 self?.fetchNewCaptcha()
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     private func verifyCaptchaAndLogin(with solution: String) {
-        isLoading.onNext(true)
+        isLoading.send(true)
         logger.logD("CaptchaViewModel", "Verifying captcha with solution: \(solution)")
 
         Task { [weak self] in
@@ -106,22 +104,22 @@ class CaptchaViewModel {
 
                 await MainActor.run {
                     self.logger.logI("CaptchaViewModel", "Login successful after captcha.")
-                    self.captchaDismiss.onNext(())
-                    self.loginSuccess.onNext(session)
+                    self.captchaDismiss.send(())
+                    self.loginSuccess.send(session)
                 }
             } catch {
                 await MainActor.run {
                     self.logger.logE("CaptchaViewModel", "Captcha login failed: \(error)")
-                    self.isLoading.onNext(false)
-                    self.captchaDismiss.onNext(())
-                    self.loginError.onNext(error)
+                    self.isLoading.send(false)
+                    self.captchaDismiss.send(())
+                    self.loginError.send(error)
                 }
             }
         }
     }
 
     private func fetchNewCaptcha() {
-        isLoading.onNext(true)
+        isLoading.send(true)
         logger.logD("CaptchaViewModel", "Fetching new captcha...")
 
         Task { [weak self] in
@@ -142,20 +140,20 @@ class CaptchaViewModel {
                     // Update captcha image
                     if let asciiArt = response.data.captcha?.asciiArt,
                        let image = UIImage.fromAsciiBase64(asciiArt) {
-                        self.captchaImage.onNext(image)
+                        self.captchaImage.send(image)
                         self.logger.logD("CaptchaViewModel", "Captcha refreshed successfully")
                     } else {
-                        self.errorMessage.onNext("Unable to render new captcha image.")
+                        self.errorMessage.send("Unable to render new captcha image.")
                         self.logger.logE("CaptchaViewModel", "Failed to decode new captcha image")
                     }
 
-                    self.isLoading.onNext(false)
+                    self.isLoading.send(false)
                 }
             } catch {
                 await MainActor.run {
                     self.logger.logE("CaptchaViewModel", "Failed to refresh captcha: \(error)")
-                    self.errorMessage.onNext("Failed to refresh captcha. Please try again.")
-                    self.isLoading.onNext(false)
+                    self.errorMessage.send("Failed to refresh captcha. Please try again.")
+                    self.isLoading.send(false)
                 }
             }
         }

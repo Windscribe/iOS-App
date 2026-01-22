@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Swinject
 import UIKit
 
@@ -28,7 +28,7 @@ class SignUpViewController: PreferredFocusedViewController {
 
     var viewModel: SignUpViewModel!, router: SignupRouter!, logger: FileLogger!
     var claimGhostAccount = false
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,66 +96,76 @@ class SignUpViewController: PreferredFocusedViewController {
     }
 
     func bindView() {
-        viewModel.showLoadingView.bind { [self] show in
-            if show {
-                showLoading()
-            } else {
-                hideLoading()
+        viewModel.showLoadingView
+            .sink { [self] show in
+                if show {
+                    showLoading()
+                } else {
+                    hideLoading()
+                }
             }
-        }.disposed(by: disposeBag)
-        signUpButton.rx.primaryAction.bind { [self] in
-            viewModel.continueButtonTapped(userName: usernameTextField.text, password: passwordTextField.text, email: "", referrelUsername: "", ignoreEmailCheck: true, claimAccount: claimGhostAccount, voucherCode: "")
-        }.disposed(by: disposeBag)
-        viewModel.failedState.bind { [weak self] state in
-            self?.setFailureState(state: state)
-        }.disposed(by: disposeBag)
-        viewModel.routeTo.bind { [self] _ in
-            self.logger.logD("SignUpViewController", "Moving to home screen.")
-            router.routeTo(to: RouteID.home, from: self)
-        }.disposed(by: disposeBag)
-        forgotButton.rx.primaryAction.bind { [self] in
-            router.routeTo(to: RouteID.forgotPassword, from: self)
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
+        signUpButton.wasSelected
+            .sink { [self] _ in
+                viewModel.continueButtonTapped(userName: usernameTextField.text, password: passwordTextField.text, email: "", referrelUsername: "", ignoreEmailCheck: true, claimAccount: claimGhostAccount, voucherCode: "")
+            }
+            .store(in: &cancellables)
+        viewModel.failedState
+            .sink { [weak self] state in
+                self?.setFailureState(state: state)
+            }
+            .store(in: &cancellables)
+        viewModel.routeTo
+            .sink { [self] _ in
+                self.logger.logD("SignUpViewController", "Moving to home screen.")
+                router.routeTo(to: RouteID.home, from: self)
+            }
+            .store(in: &cancellables)
+        forgotButton.wasSelected
+            .sink { [self] _ in
+                router.routeTo(to: RouteID.forgotPassword, from: self)
+            }
+            .store(in: &cancellables)
 
         viewModel.showCaptchaViewModel
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] captchaVM in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] captchaVM in
                 guard let self = self else { return }
 
                 let captchaPopupView = CaptchaView()
                 captchaPopupView.bind(to: captchaVM)
 
                 captchaPopupView.submitTap
-                  .observe(on: MainScheduler.instance)
-                  .subscribe(onNext: { code in
-                    captchaVM.submitCaptcha.onNext(code)
-                  })
-                  .disposed(by: disposeBag)
+                  .receive(on: DispatchQueue.main)
+                  .sink { code in
+                    captchaVM.submitCaptcha.send(code)
+                  }
+                  .store(in: &self.cancellables)
 
                 captchaPopupView.cancelTap
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] in
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] in
                         self?.dismissCaptchaPopup()
-                    })
-                    .disposed(by: disposeBag)
+                    }
+                    .store(in: &self.cancellables)
 
                 captchaPopupView.refreshTap
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: {
-                        captchaVM.refreshCaptcha.onNext(())
-                    })
-                    .disposed(by: disposeBag)
+                    .receive(on: DispatchQueue.main)
+                    .sink {
+                        captchaVM.refreshCaptcha.send(())
+                    }
+                    .store(in: &self.cancellables)
 
                 captchaVM.captchaDismiss
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onNext: { [weak self] in
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] in
                         self?.dismissCaptchaPopup()
-                    })
-                    .disposed(by: self.disposeBag)
+                    }
+                    .store(in: &self.cancellables)
 
                 self.showCaptchaPopup(captchaPopupView: captchaPopupView)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     private func showCaptchaPopup(captchaPopupView: CaptchaView) {

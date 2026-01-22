@@ -8,15 +8,14 @@
 
 import Foundation
 import Network
-import RxSwift
 import Combine
 import UIKit
 
 protocol ConnectionsViewModelType {
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
-    var isCircumventCensorshipEnabled: BehaviorSubject<Bool> { get }
-    var shouldShowCustomDNSOption: BehaviorSubject<Bool> { get }
-    var languageUpdatedTrigger: PublishSubject<Void> { get }
+    var isCircumventCensorshipEnabled: CurrentValueSubject<Bool, Never> { get }
+    var shouldShowCustomDNSOption: CurrentValueSubject<Bool, Never> { get }
+    var languageUpdatedTrigger: PassthroughSubject<Void, Never> { get }
 
     func updateChangeFirewallStatus()
     func updateChangeKillSwitchStatus()
@@ -64,20 +63,19 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private let dnsSettingsManager: DNSSettingsManagerType
     private var cancellables = Set<AnyCancellable>()
 
-    private let disposeBag = DisposeBag()
-    private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
-    private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
-    private var firewall = BehaviorSubject<Bool>(value: DefaultValues.firewallMode)
-    private var killSwitch = BehaviorSubject<Bool>(value: DefaultValues.killSwitch)
-    private var allowLane = BehaviorSubject<Bool>(value: DefaultValues.allowLANMode)
-    private var autoSecure = BehaviorSubject<Bool>(value: DefaultValues.autoSecureNewNetworks)
+    private var currentProtocol = CurrentValueSubject<String, Never>(DefaultValues.protocol)
+    private var currentPort = CurrentValueSubject<String, Never>(DefaultValues.port)
+    private var firewall = CurrentValueSubject<Bool, Never>(DefaultValues.firewallMode)
+    private var killSwitch = CurrentValueSubject<Bool, Never>(DefaultValues.killSwitch)
+    private var allowLane = CurrentValueSubject<Bool, Never>(DefaultValues.allowLANMode)
+    private var autoSecure = CurrentValueSubject<Bool, Never>(DefaultValues.autoSecureNewNetworks)
     private var connectionMode = ConnectionModeType.defaultValue()
     private var connectedDNS = ConnectedDNSType.defaultValue()
 
-    let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
+    let isCircumventCensorshipEnabled = CurrentValueSubject<Bool, Never>(DefaultValues.circumventCensorship)
     let isDarkMode: CurrentValueSubject<Bool, Never>
-    let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
-    let languageUpdatedTrigger = PublishSubject<Void>()
+    let shouldShowCustomDNSOption = CurrentValueSubject<Bool, Never>(true)
+    let languageUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     init(preferences: Preferences,
          lookAndFeelRepository: LookAndFeelRepositoryType,
@@ -101,22 +99,22 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     private func loadData() {
         preferences.getSelectedProtocol().sink { [weak self] data in
-            self?.currentProtocol.onNext(data ?? DefaultValues.protocol)
+            self?.currentProtocol.send(data ?? DefaultValues.protocol)
         }.store(in: &cancellables)
         preferences.getSelectedPort().sink { [weak self] data in
-            self?.currentPort.onNext(data ?? DefaultValues.port)
+            self?.currentPort.send(data ?? DefaultValues.port)
         }.store(in: &cancellables)
         preferences.getFirewallMode().sink { [weak self] data in
-            self?.firewall.onNext(data ?? DefaultValues.firewallMode)
+            self?.firewall.send(data ?? DefaultValues.firewallMode)
         }.store(in: &cancellables)
         preferences.getKillSwitch().sink { [weak self] data in
-            self?.killSwitch.onNext(data ?? DefaultValues.killSwitch)
+            self?.killSwitch.send(data ?? DefaultValues.killSwitch)
         }.store(in: &cancellables)
         preferences.getAllowLAN().sink { [weak self] data in
-            self?.allowLane.onNext(data ?? DefaultValues.allowLANMode)
+            self?.allowLane.send(data ?? DefaultValues.allowLANMode)
         }.store(in: &cancellables)
         preferences.getAutoSecureNewNetworks().sink { [weak self] data in
-            self?.autoSecure.onNext(data ?? DefaultValues.autoSecureNewNetworks)
+            self?.autoSecure.send(data ?? DefaultValues.autoSecureNewNetworks)
         }.store(in: &cancellables)
         preferences.getConnectionMode().sink { [weak self] data in
             self?.connectionMode = ConnectionModeType(fieldValue: data ?? DefaultValues.connectionMode)
@@ -125,7 +123,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             self?.connectedDNS = ConnectedDNSType(fieldValue: data ?? DefaultValues.connectedDNS)
         }.store(in: &cancellables)
         preferences.getCircumventCensorshipEnabled().sink { [weak self] data in
-            self?.isCircumventCensorshipEnabled.onNext(data)
+            self?.isCircumventCensorshipEnabled.send(data)
         }.store(in: &cancellables)
 
         let connectionModePublisher = preferences.getConnectionMode()
@@ -136,28 +134,28 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             .sink { [weak self] (connectionMode, selectedProtocol, network) in
                 guard let self = self else { return }
                 if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {
-                    self.shouldShowCustomDNSOption.onNext(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
+                    self.shouldShowCustomDNSOption.send(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
                     return
                 }
                 if let connectionMode = connectionMode, let selectedProtocol = selectedProtocol {
                     if connectionMode == Fields.Values.manual {
-                        self.shouldShowCustomDNSOption.onNext(selectedProtocol != TextsAsset.iKEv2)
+                        self.shouldShowCustomDNSOption.send(selectedProtocol != TextsAsset.iKEv2)
                         return
                     }
                 }
-                self.shouldShowCustomDNSOption.onNext(true)
+                self.shouldShowCustomDNSOption.send(true)
             }
             .store(in: &cancellables)
 
         languageManager.activelanguage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.languageUpdatedTrigger.onNext(())
+                self?.languageUpdatedTrigger.send(())
             }.store(in: &cancellables)
     }
 
     func updateChangeFirewallStatus() {
-        try? preferences.saveFirewallMode(firewall: !firewall.value())
+        preferences.saveFirewallMode(firewall: !firewall.value)
     }
 
     func updateChangeKillSwitchStatus(status: Bool) {
@@ -165,7 +163,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func updateChangeKillSwitchStatus() {
-        guard let status = try? killSwitch.value() else { return }
+        let status = killSwitch.value
         updateChangeKillSwitchStatus(status: !status)
     }
 
@@ -174,28 +172,28 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func updateChangeAllowLanStatus() {
-        guard let status = try? allowLane.value() else { return }
+        let status = allowLane.value
         updateChangeAllowLanStatus(status: !status)
     }
 
     func updateAutoSecureNetworkStatus() {
-        try? preferences.saveAutoSecureNewNetworks(autoSecure: !autoSecure.value())
+        preferences.saveAutoSecureNewNetworks(autoSecure: !autoSecure.value)
     }
 
     func getFirewallStatus() -> Bool {
-        return (try? firewall.value()) ?? DefaultValues.firewallMode
+        return firewall.value
     }
 
     func getKillSwitchStatus() -> Bool {
-        return (try? killSwitch.value()) ?? DefaultValues.killSwitch
+        return killSwitch.value
     }
 
     func getAllowLanStatus() -> Bool {
-        return (try? allowLane.value()) ?? DefaultValues.allowLANMode
+        return allowLane.value
     }
 
     func getAutoSecureNetworkStatus() -> Bool {
-        return (try? autoSecure.value()) ?? DefaultValues.autoSecureNewNetworks
+        return autoSecure.value
     }
 
     func getCurrentConnectionMode() -> ConnectionModeType {
