@@ -162,6 +162,7 @@ class ServerListCell: SwipeTableViewCell {
             // nameInfoStackView
             nameInfoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             nameInfoStackView.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 16),
+            nameInfoStackView.rightAnchor.constraint(equalTo: iconsStackView.leftAnchor, constant: -8),
 
             // iconsStackView
             iconsStackView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
