@@ -141,6 +141,9 @@ class BaseNodeCell: ServerListCell {
 
         nickNameLabel.font = UIFont.text(size: 16)
         nickNameLabel.layer.opacity = 1
+        nickNameLabel.numberOfLines = 0
+        nickNameLabel.adjustsFontSizeToFitWidth = true
+        nickNameLabel.minimumScaleFactor = 0.6
         nameInfoStackView.addArrangedSubview(nickNameLabel)
 
         latencyLabel.font = UIFont.medium(size: 9)
@@ -220,7 +223,7 @@ class BaseNodeCell: ServerListCell {
         nickNameLabel.text = baseNodeCellViewModel?.nickName
 
         latencyView.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
-        disabledIcon.isHidden = !(baseNodeCellViewModel?.isDisabled ?? false)
+        disabledContainer.isHidden = !(baseNodeCellViewModel?.isDisabled ?? false)
 
         let isDark = viewModel?.isDarkMode ?? false
 
