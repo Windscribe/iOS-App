@@ -69,7 +69,7 @@ class NotificationRepositoryImpl: NotificationRepository {
         let notificationsArray = Array(result.notices)
 
         // Save to database - this will trigger the reactive publisher chain
-        await localDatabase.saveNotifications(notifications: notificationsArray)
+        localDatabase.saveNotifications(notifications: notificationsArray)
 
         return notificationsArray.map { $0.getModel() }
     }

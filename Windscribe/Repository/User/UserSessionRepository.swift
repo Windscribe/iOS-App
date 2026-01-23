@@ -48,9 +48,10 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         localDatabase.saveOldSession()
         localDatabase.saveSession(session: session)
         let model = session.getModel()
-        await MainActor.run {
-            [weak self] in
+
+        await MainActor.run { [weak self] in
                guard let self = self else { return }
+
                self.oldSessionModel = self.sessionModel
                self.sessionModel = model
                sessionModelSubject.send(model)

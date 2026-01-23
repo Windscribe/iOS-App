@@ -128,7 +128,7 @@ class LoginViewModelImpl: LoginViewModel {
                                 self.logger.logI("LoginViewModel", "Captcha login success. Preparing user data.")
                                 self.showLoadingView.send(true)
                                 Task { @MainActor in
-                                    await self.handleLoginSuccess(session: session)
+                                    self.handleLoginSuccess(session: session)
                                 }
                             }
                             .store(in: &self.appCancellable)
@@ -157,7 +157,7 @@ class LoginViewModelImpl: LoginViewModel {
                     captchaTrailY: []
                 )
 
-                await self.handleLoginSuccess(session: session)
+                self.handleLoginSuccess(session: session)
             } catch {
                 await MainActor.run {
                     self.handleAuthTokenError(error)
