@@ -44,6 +44,14 @@ extension PreferencesImpl {
         return getString(forKey: SharedKeys.allowedIp)
     }
 
+    func saveWireGuardHashedCIDR(_ cidr: [String]?) {
+        sharedDefault?.setValue(cidr, forKey: SharedKeys.hashedCIDR)
+    }
+
+    func getWireGuardHashedCIDR() -> [String]? {
+        return sharedDefault?.array(forKey: SharedKeys.hashedCIDR) as? [String]
+    }
+
     // WireGuard Server Configuration
     func saveWireGuardServerEndpoint(_ endpoint: String?) {
         setString(endpoint, forKey: SharedKeys.serverEndPoint)
@@ -82,6 +90,7 @@ extension PreferencesImpl {
         removeObjects(forKey: [
             SharedKeys.preSharedKey,
             SharedKeys.allowedIp,
+            SharedKeys.hashedCIDR,
             SharedKeys.dns,
             SharedKeys.address,
             SharedKeys.serverEndPoint,

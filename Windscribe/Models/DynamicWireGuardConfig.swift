@@ -12,12 +12,14 @@ class DynamicWireGuardConfig: Decodable {
     dynamic var id: String = "DynamicWireGuardConfig"
     dynamic var presharedKey: String?
     dynamic var allowedIPs: String?
+    dynamic var hashedCIDR: [String]?
 
     enum CodingKeys: String, CodingKey {
         case data
         case config
         case presharedKey = "PresharedKey"
         case allowedIPs = "AllowedIPs"
+        case hashedCIDR = "HashedCIDR"
     }
 
     required convenience init(from decoder: Decoder) throws {
@@ -27,5 +29,6 @@ class DynamicWireGuardConfig: Decodable {
         let config = try data.nestedContainer(keyedBy: CodingKeys.self, forKey: .config)
         presharedKey = try config.decodeIfPresent(String.self, forKey: .presharedKey)
         allowedIPs = try config.decodeIfPresent(String.self, forKey: .allowedIPs)
+        hashedCIDR = try config.decodeIfPresent([String].self, forKey: .hashedCIDR)
     }
 }

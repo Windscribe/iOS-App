@@ -15,6 +15,7 @@ enum SharedKeys {
     static let sharedKeychainGroup = "\(SharedKeys.getValueFromPlistFile(key: "CFAccountID")).\(SharedKeys.getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
     static let preSharedKey = "preSharedKey"
     static let allowedIp = "allowedIp"
+    static let hashedCIDR = "hashedCIDR"
     static let dns = "dns"
     static let address = "address"
     static let serverEndPoint = "serverEndPoint"

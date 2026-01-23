@@ -208,6 +208,8 @@ protocol Preferences {
     func getWireGuardPresharedKey() -> String?
     func saveWireGuardAllowedIPs(_ ips: String?)
     func getWireGuardAllowedIPs() -> String?
+    func saveWireGuardHashedCIDR(_ cidr: [String]?)
+    func getWireGuardHashedCIDR() -> [String]?
 
     // WireGuard Server Configuration
     func saveWireGuardServerEndpoint(_ endpoint: String?)

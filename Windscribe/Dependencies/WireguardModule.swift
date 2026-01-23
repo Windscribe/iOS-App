@@ -23,12 +23,16 @@ extension Container {
         register(WireguardAPIManager.self) { r in
             WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!, apiUtil: r.resolve(APIUtilService.self)!)
         }.inObjectScope(.container)
+        register(WireguardIPManager.self) { r in
+            WireguardIPManagerImpl(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.container)
         register(WireguardConfigRepository.self) { r in
             WireguardConfigRepositoryImpl(apiCallManager: r.resolve(WireguardAPIManager.self)!,
                                           fileDatabase: r.resolve(FileDatabase.self)!,
                                           wgCrendentials: r.resolve(WgCredentials.self)!,
                                           alertManager: nil,
-                                          logger: r.resolve(FileLogger.self)!)
+                                          logger: r.resolve(FileLogger.self)!,
+                                          ipManager: r.resolve(WireguardIPManager.self)!)
         }.inObjectScope(.container)
     }
 }
