@@ -108,7 +108,7 @@ class NewsFeedModel: NewsFeedModelType {
     }
 
     private func updateReadNotice(for noticeID: Int) {
-        var setReadNotificationIDs = Set(notificationRepository.readNotices.value)
+        let setReadNotificationIDs = Set(notificationRepository.readNotices.value)
         if setReadNotificationIDs.contains(noticeID) {
             return
         }

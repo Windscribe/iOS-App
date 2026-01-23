@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RealmSwift
 import SafariServices
 import UIKit
 
@@ -79,7 +78,7 @@ class StaticIPListFooterView: WSView {
     }
 
     func updateDeviceName() {
-        DispatchQueue.main.async { [self] _ in
+        DispatchQueue.main.async { [self] in
             self.deviceNameLabel.text = self.viewModel?.getStaticIp().first?.deviceName
         }
     }

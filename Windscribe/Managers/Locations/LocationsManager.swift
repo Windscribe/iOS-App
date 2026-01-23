@@ -118,7 +118,7 @@ class LocationsManagerImpl: LocationsManager {
         } else {
             let locationID = getId()
             if locationType == .custom {
-                guard let customConfig = customConfigRepository.getCustomConfig(fileId:  locationID) else {
+                guard let customConfig = customConfigRepository.getCustomConfig(fileId: locationID) else {
                     return getEmptyUIInfo()
                 }
                 return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation, isServer: false)

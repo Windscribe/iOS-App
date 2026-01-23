@@ -39,7 +39,7 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
 
     func changeEmailAddress(email: String) -> AnyPublisher<APIMessage, Error> {
         return Future { [weak self] promise in
-            let task = Task { [weak self] in
+            Task { [weak self] in
                 guard let self = self else {
                     promise(.failure(Errors.validationFailure))
                     return

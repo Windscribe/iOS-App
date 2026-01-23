@@ -139,7 +139,7 @@ class PlanUpgradeViewController: WSUIViewController {
         viewModel.loadPlans(promo: promoCode, id: pcpID)
 
         showLoading()
-        
+
         viewModel.plans
             .receive(on: DispatchQueue.main)
             .sink { [weak self] updatedPlans in
@@ -173,20 +173,20 @@ class PlanUpgradeViewController: WSUIViewController {
                 switch state {
                 case let .success(ghostAccount):
                     self.endLoading()
-                    
+
                     // Registered Account should show positive response alert
                     viewModel.showAlert(title: TextsAsset.UpgradeView.planBenefitSuccessfullPurchaseTitle,
                                         message: TextsAsset.UpgradeView.planBenefitSuccessfullPurchase) { [weak self] in
                         guard let self else { return }
-                        
+
                         let navigationController = UINavigationController(
                             rootViewController: upgradeSuccessViewController)
-                        
+
                         upgradeSuccessViewController.successScreenDismissed
                             .receive(on: DispatchQueue.main)
                             .sink { [weak self] in
                                 guard let self else { return }
-                                
+
                                 if ghostAccount {
                                     self.navigationController?.dismiss(animated: true) {
                                         // Ghost Account should go sign up
@@ -198,7 +198,7 @@ class PlanUpgradeViewController: WSUIViewController {
                             }
                             .store(in: &cancellables)
                         navigationController.modalPresentationStyle = .fullScreen
-                        
+
                         present(navigationController, animated: true)
                     }
                 case .loading:
