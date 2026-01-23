@@ -361,7 +361,6 @@
 		59DA7FC72C3DC4D000042E57 /* DynamicWireGuardConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6F27D90F0D0059D275 /* DynamicWireGuardConfig.swift */; };
 		59DA7FC82C3DC4EA00042E57 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
 		59DA7FC92C3DC4FD00042E57 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
-		59DA7FCA2C3DC50D00042E57 /* DynamicWireGuardConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5AD3727DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift */; };
 		59DA7FCC2C3DC55F00042E57 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
 		59DF45842C54209100EB6DC1 /* XPressLoginVerifyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DF45832C54209100EB6DC1 /* XPressLoginVerifyResponse.swift */; };
 		59DF45852C585FDB00EB6DC1 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF443D6C22C170FD004986DA /* ImageButton.swift */; };
@@ -713,7 +712,6 @@
 		C535D27927E2811D00C08345 /* DynamicWireGuardConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6F27D90F0D0059D275 /* DynamicWireGuardConfig.swift */; };
 		C535D27A27E2813100C08345 /* WgErrorCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0F2FD27E1959D00DB3E49 /* WgErrorCodes.swift */; };
 		C535D27C27E281CD00C08345 /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943750A27DEF6AD00F74F2D /* ErrorResponse.swift */; };
-		C535D28027E2C19E00C08345 /* DynamicWireGuardConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5AD3727DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift */; };
 		C535D28427E2CECA00C08345 /* WgCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6D27D8E9BE0059D275 /* WgCredentials.swift */; };
 		C535D28727E2E2BA00C08345 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
 		C535D28827E2E2D100C08345 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0021B09A6100B225FF /* AppConstants.swift */; };
@@ -932,7 +930,6 @@
 		E97ABD6228F91ABA00B38587 /* ProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD6128F91ABA00B38587 /* ProtocolManager.swift */; };
 		E9816B6E27D8E9BE0059D275 /* WgCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6D27D8E9BE0059D275 /* WgCredentials.swift */; };
 		E9816B7027D90F0D0059D275 /* DynamicWireGuardConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6F27D90F0D0059D275 /* DynamicWireGuardConfig.swift */; };
-		E9B5AD3827DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B5AD3727DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift */; };
 		E9C9143D2735770000C2ABCD /* MainViewController+Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9C9143C2735770000C2ABCD /* MainViewController+Connection.swift */; };
 		E9D3D36D274D0F5900283285 /* MainViewController+LifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D3D36C274D0F5900283285 /* MainViewController+LifeCycle.swift */; };
 		E9D3D36F274D1BA800283285 /* MainViewController+Selector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D3D36E274D1BA800283285 /* MainViewController+Selector.swift */; };
@@ -951,6 +948,9 @@
 		F40B8AEE2E54FB7300609902 /* ScreenTestNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AED2E54FB7300609902 /* ScreenTestNavigationRouter.swift */; };
 		F40B8AF02E54FB8500609902 /* ScreenTestRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AEF2E54FB8500609902 /* ScreenTestRouteID.swift */; };
 		F40B8AF32E55025700609902 /* ScreenTestItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AF12E55025700609902 /* ScreenTestItemType.swift */; };
+		F40F7E5E2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */; };
+		F40F7E5F2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */; };
+		F40F7E602F216BFD00400CC1 /* WireguardIPGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */; };
 		F410FABA2E6F5FEB007762A1 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */; };
 		F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
@@ -1952,7 +1952,6 @@
 		E9858628273E24A600868B2C /* Development.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Development.plist; sourceTree = "<group>"; };
 		E9858629273E24A600868B2C /* Staging.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Staging.plist; sourceTree = "<group>"; };
 		E9A1EA9828090B710091BDAA /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E9B5AD3727DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicWireGuardConnect.swift; sourceTree = "<group>"; };
 		E9C9143C2735770000C2ABCD /* MainViewController+Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+Connection.swift"; sourceTree = "<group>"; };
 		E9CB2B0F280868B900FDC0C7 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9CF71BE280D4CA60014119C /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1981,6 +1980,7 @@
 		F40B8AED2E54FB7300609902 /* ScreenTestNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestNavigationRouter.swift; sourceTree = "<group>"; };
 		F40B8AEF2E54FB8500609902 /* ScreenTestRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestRouteID.swift; sourceTree = "<group>"; };
 		F40B8AF12E55025700609902 /* ScreenTestItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestItemType.swift; sourceTree = "<group>"; };
+		F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardIPGenerator.swift; sourceTree = "<group>"; };
 		F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsManager.swift; sourceTree = "<group>"; };
 		F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -2579,6 +2579,7 @@
 				C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */,
 				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 				C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */,
+				F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -3417,7 +3418,6 @@
 				AF2C1868234F5429008657FA /* VPNConnection.swift */,
 				AFA0D7BF243CA9F2007C912E /* SuggestedPorts.swift */,
 				E9816B6F27D90F0D0059D275 /* DynamicWireGuardConfig.swift */,
-				E9B5AD3727DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift */,
 				C5FA3E832684BB90001D03A7 /* HelpItem.swift */,
 				C5FA3E8B268789EE001D03A7 /* Ticket.swift */,
 				C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */,
@@ -6443,7 +6443,6 @@
 				1EDAA9242CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */,
 				59FC74722C516D9700021CD1 /* InAppPurchaseManagerImpl.swift in Sources */,
 				59FC74162C51543B00021CD1 /* OpenVPNConnectionInfo.swift in Sources */,
-				59DA7FCA2C3DC50D00042E57 /* DynamicWireGuardConnect.swift in Sources */,
 				59FC74302C5156BB00021CD1 /* FileManager+Extension.swift in Sources */,
 				59FC73F62C51533E00021CD1 /* Server.swift in Sources */,
 				59FC747B2C518BE400021CD1 /* LoginViewModel.swift in Sources */,
@@ -6544,6 +6543,7 @@
 				F469F0EB2D7F8FFC004DC6AB /* View+Extension.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
 				59DA7FC22C3DAD3800042E57 /* WelcomeViewController.swift in Sources */,
+				F40F7E5E2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */,
 				1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */,
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
@@ -6958,7 +6958,6 @@
 				AF0AED3F22035E9700039CAF /* FavNodesListTableViewDataSource+Delegate.swift in Sources */,
 				AF36BF0422FB11FE00FCC6F4 /* RefreshControlBackView.swift in Sources */,
 				F47EC53C2DEA1BA300AF5089 /* DebugLogViewModel.swift in Sources */,
-				E9B5AD3827DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift in Sources */,
 				AF0420EC21C19FE0002132DE /* Server.swift in Sources */,
 				E90FD029273975F100721874 /* MainViewController+UIScrollViewDelegate.swift in Sources */,
 				1ED616622DCCEA23006CDC99 /* GeneralSettingsViewModel.swift in Sources */,
@@ -7123,6 +7122,7 @@
 				C5A930F12B44AA880001CFA0 /* PortMapRepositoryImpl.swift in Sources */,
 				F404193E2D822F1A0005EF97 /* HTMLParser.swift in Sources */,
 				AF04ED9F21DFD1AE005C6576 /* StaticIP.swift in Sources */,
+				F40F7E5F2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */,
 				F4888E422D94A11B005EF149 /* SignUpViewModel.swift in Sources */,
 				C5A930D52B43EE710001CFA0 /* NotificationRepository.swift in Sources */,
 				C56FCC022B2CF298008DE7D4 /* AccountRouter.swift in Sources */,
@@ -7420,7 +7420,6 @@
 				C535D28827E2E2D100C08345 /* AppConstants.swift in Sources */,
 				C535D27C27E281CD00C08345 /* ErrorResponse.swift in Sources */,
 				C5D0E40629BB8BE70091FB14 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
-				C535D28027E2C19E00C08345 /* DynamicWireGuardConnect.swift in Sources */,
 				C571C6772C135C3600786DA5 /* UserScope.swift in Sources */,
 				C535D2A127E5133300C08345 /* URLRequest+Extension.swift in Sources */,
 				C5DEF9F52C52EDCE00696D06 /* AdvanceKeys.swift in Sources */,
@@ -7438,6 +7437,7 @@
 				C5D0E40229BB8BE70091FB14 /* ringlogger.c in Sources */,
 				C5E18ED4286B3D7200DD3B07 /* APIError.swift in Sources */,
 				AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */,
+				F40F7E602F216BFD00400CC1 /* WireguardIPGenerator.swift in Sources */,
 				1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */,
 				AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */,
 				F469F0DF2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,

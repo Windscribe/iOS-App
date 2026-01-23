@@ -14,6 +14,9 @@ enum RepositoryError: Error, CustomStringConvertible, Equatable {
     case missingServerConfig
     case failedToTemplateOpenVPNConfig
     case failedToLoadConfiguration
+    case missingHashedCIDR
+    case ipGenerationFailed(String)
+
     var description: String {
         switch self {
         case .invalidConfigData:
@@ -26,6 +29,10 @@ enum RepositoryError: Error, CustomStringConvertible, Equatable {
             return "Error templating OpenVPN config."
         case .failedToLoadConfiguration:
             return "Failed to loadConfigration"
+        case .missingHashedCIDR:
+            return "Missing hashedCIDR from server response."
+        case .ipGenerationFailed(let message):
+            return "Failed to generate WireGuard IP: \(message)"
         }
     }
 }

@@ -20,18 +20,20 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private let fileDatabase: FileDatabase
     private let wgCrendentials: WgCredentials
     private let alertManager: AlertManager?
+    private let ipManager: WireguardIPManager
 
-    init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManager?, logger: FileLogger) {
+    init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManager?, logger: FileLogger, ipManager: WireguardIPManager) {
         self.apiCallManager = apiCallManager
         self.fileDatabase = fileDatabase
         self.wgCrendentials = wgCrendentials
         self.alertManager = alertManager
         self.logger = logger
+        self.ipManager = ipManager
     }
 
     func getCredentials() async throws {
         try await wgInit()
-        try await wgConnect()
+        try await generateLocalIP()
         try await retrieveTemplateWgConfig()
     }
 
@@ -65,25 +67,33 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
         }
     }
 
-    private func wgConnect() async throws {
+    private func generateLocalIP() async throws {
+        // Get CIDR from wgInit response
+        guard let hashedCIDR = wgCrendentials.getWgInitResponse()?.hashedCIDR,
+              let firstCIDR = hashedCIDR.first else {
+            logger.logE("WireguardConfigRepository", "Missing hashedCIDR from wgInit response")
+            throw RepositoryError.missingHashedCIDR
+        }
+
+        // Get public key
+        guard let publicKey = await wgCrendentials.getPublicKey() else {
+            logger.logE("WireguardConfigRepository", "Missing public key for IP generation")
+            throw RepositoryError.ipGenerationFailed("Public key not available")
+        }
+
+        // Generate IP using first CIDR
         do {
-            let deviceID = await UIDevice.current.identifierForVendor?.uuidString ?? ""
-            let publicKey = await self.wgCrendentials.getPublicKey() ?? ""
-            let hostName = self.wgCrendentials.serverHostName ?? ""
+            let generatedIP = try ipManager.generateIP(publicKeyBase64: publicKey, cidr: firstCIDR)
+            let dns = "10.255.255.1"
 
-            let config = try await self.apiCallManager.wgConfigConnect(clientPublicKey: publicKey, hostname: hostName, deviceId: deviceID)
-            self.wgCrendentials.saveConnectResponse(config: config)
+            logger.logI("WireguardConfigRepository", "Generated IP: \(generatedIP) from CIDR: \(firstCIDR)")
 
-        } catch let Errors.apiError(code) where code.errorCode == invalidPublicKey {
-            self.wgCrendentials.delete()
-            try await self.wgInit()
-            let retryKey = await self.wgCrendentials.getPublicKey() ?? ""
-            let config = try await self.apiCallManager.wgConfigConnect(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
-            self.wgCrendentials.saveConnectResponse(config: config)
-        } catch let Errors.apiError(code) where code.errorCode == unableToSelectWgIp {
-            let retryKey = await self.wgCrendentials.getPublicKey() ?? ""
-            let config = try await self.apiCallManager.wgConfigConnect(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
-            self.wgCrendentials.saveConnectResponse(config: config)
+            // Save generated IP and DNS
+            wgCrendentials.saveGeneratedIP(ip: generatedIP, dns: dns)
+        } catch {
+            logger.logE("WireguardConfigRepository", "Failed to generate IP: \(error.localizedDescription)")
+            throw RepositoryError.ipGenerationFailed(error.localizedDescription)
         }
     }
+
 }

@@ -84,10 +84,13 @@ class WgCredentials {
     func getWgInitResponse() -> DynamicWireGuardConfig? {
         presharedKey = preferences.getWireGuardPresharedKey()
         allowedIps = preferences.getWireGuardAllowedIPs()
-        if presharedKey != nil, allowedIps != nil {
+        let hashedCIDR = preferences.getWireGuardHashedCIDR()
+        // Require hashedCIDR for initialization to ensure existing users migrate to new IP generation
+        if presharedKey != nil, allowedIps != nil, hashedCIDR != nil {
             let config = DynamicWireGuardConfig()
             config.presharedKey = presharedKey
             config.allowedIPs = allowedIps
+            config.hashedCIDR = hashedCIDR
             return config
         }
         return nil
@@ -98,14 +101,15 @@ class WgCredentials {
         allowedIps = config.allowedIPs
         preferences.saveWireGuardPresharedKey(config.presharedKey)
         preferences.saveWireGuardAllowedIPs(config.allowedIPs)
+        preferences.saveWireGuardHashedCIDR(config.hashedCIDR)
     }
 
-    // wg Connect
-    func saveConnectResponse(config: DynamicWireGuardConnect) {
-        dns = config.dns
-        address = config.address
-        preferences.saveWireGuardAddress(config.address)
-        preferences.saveWireGuardDNS(config.dns)
+    // Save locally generated IP and DNS
+    func saveGeneratedIP(ip: String, dns: String) {
+        self.address = ip
+        self.dns = dns
+        preferences.saveWireGuardAddress(ip)
+        preferences.saveWireGuardDNS(dns)
     }
 
     func setNodeToConnect(serverEndPoint: String, serverHostName: String, serverPublicKey: String, port: String) {

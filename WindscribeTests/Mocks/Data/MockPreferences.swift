@@ -35,6 +35,7 @@ class MockPreferences: Preferences {
     var clearWireGuardConfigurationCalled = false
     var mockLastNodeIP: String?
     var mockIgnorePinIP: Bool?
+    var mockWireGuardHashedCIDR: [String]?
 
     // IP Address - Issue #911
     var mockCurrentIpAddress: String?
@@ -662,5 +663,13 @@ class MockPreferences: Preferences {
 
     func getCurrentIpAddressObservable() -> AnyPublisher<String?, Never> {
         return currentIpAddressSubject.eraseToAnyPublisher()
+    }
+
+    func saveWireGuardHashedCIDR(_ cidr: [String]?) {
+        mockWireGuardHashedCIDR = cidr
+    }
+
+    func getWireGuardHashedCIDR() -> [String]? {
+        return mockWireGuardHashedCIDR
     }
 }

@@ -11,7 +11,6 @@ import Foundation
 protocol WireguardAPIManager {
     func getSession() async throws -> Session
     func wgConfigInit(clientPublicKey: String, deleteOldestKey: Bool) async throws -> DynamicWireGuardConfig
-    func wgConfigConnect(clientPublicKey: String, hostname: String, deviceId: String) async throws -> DynamicWireGuardConnect
 }
 
 class WireguardAPIManagerImpl: WireguardAPIManager {
@@ -30,15 +29,6 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
         }
         return try await apiUtil.makeApiCall(modalType: DynamicWireGuardConfig.self) { [weak self] completion in
             self?.api.wgConfigsInit(sessionAuth, clientPublicKey: clientPublicKey, deleteOldestKey: deleteOldestKey, callback: completion)
-        }
-    }
-
-    func wgConfigConnect(clientPublicKey: String, hostname: String, deviceId: String) async throws -> DynamicWireGuardConnect {
-        guard let sessionAuth = preferences.userSessionAuth() else {
-            throw Errors.validationFailure
-        }
-        return try await apiUtil.makeApiCall(modalType: DynamicWireGuardConnect.self) { [weak self] completion in
-            self?.api.wgConfigsConnect(sessionAuth, clientPublicKey: clientPublicKey, hostname: hostname, deviceId: deviceId, wgTtl: "3600", callback: completion)
         }
     }
 

@@ -115,29 +115,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         wgCrendentials.load()
         logger.logI("PacketTunnelProvider", "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"), flushImmediately: true)
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
-            Task { [weak self] in
-                guard let self = self else { return }
-                do {
-                    let session = try await apiCallManager.getSession()
-                    if session.status == 1 {
-                        self.logger.logI("PacketTunnelProvider", "User status is Okay, attempt rebuilding credentials.", flushImmediately: true)
-                        self.runningHealthCheck = true
-                        self.requestNewInterfaceIp(completionHandler: completionHandler)
-                    } else {
-                        self.logger.logI("PacketTunnelProvider", "User status is \(session.status), do not reconnect.", flushImmediately: true)
-                        stopTunnel(completionHandler: completionHandler)
-                    }
-                } catch {
-                    let errorDescription: String
-                    if let wsError = error as? Errors {
-                        errorDescription = wsError.unlocalizedDescription
-                    } else {
-                        errorDescription = error.localizedDescription
-                    }
-                    self.logger.logE("PacketTunnelProvider", "Error getting user session: \(errorDescription)", flushImmediately: true)
-                    completionHandler(error)
-                }
-            }
+            completionHandler(NSError(domain: "com.windscribe", code: 50))
             return
         }
 
@@ -151,18 +129,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
         }
-        // Tunnel configuration provided with start of connection may have changed due user status change.
-        guard let firstAddress = tunnelConfiguration.interface.addresses.first else {
-            logger.logE("PacketTunnelProvider", "Tunnel configuration has no interface addresses", flushImmediately: true)
-            errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-            completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-            return
-        }
-        let lastIpAddress = firstAddress.stringRepresentation
-        if !preferences.isCustomConfigSelected() && lastIpAddress != wgCrendentials.address {
+        // Ensure tunnel configuration is up to date with latest credentials
+        if !preferences.isCustomConfigSelected() {
             do {
                 tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: wgCrendentials.asWgCredentialsString() ?? "")
-                logger.logI("PacketTunnelProvider", "created tunnel configuration from wgQuickConfig", flushImmediately: true)
+                logger.logI("PacketTunnelProvider", "Created tunnel configuration from wgQuickConfig", flushImmediately: true)
             } catch {
                 logger.logE("PacketTunnelProvider", "Failed to create tunnel configuration: \(error)", flushImmediately: true)
                 errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
@@ -279,14 +250,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
-    /// Request new interface ip from wg init + wg connect
-    /// Check if interface changed or peer changed (Account status change.)
-    private func setNewTunnelInterfaceIp(updatedConfig: TunnelConfiguration) {
-        logger.logI("PacketTunnelProvider", "Interface has address changed", flushImmediately: true)
-        reasserting = true
-        replacePeer(tunnelConfiguration: updatedConfig)
-    }
-
     /// Check user session for change.
     func getSession() {
         // Ensure LocalizationBridge is initialized before potential error handling
@@ -296,24 +259,17 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             guard let self = self else { return }
             do {
                 let data = try await apiCallManager.getSession()
-                if data.status == 1 {
-                    self.requestNewInterfaceIp()
-                } else {
-                    self.runningHealthCheck = false
-                    wgCrendentials.delete()
-                    preferences.saveForceDisconnect(value: true)
-                    self.logger.logI("PacketTunnelProvider", "User status is banned/expired", flushImmediately: true)
-                    self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
+                if data.status != 1 {
+                    disconnect()
                 }
+                self.runningHealthCheck = false
             } catch {
                 self.runningHealthCheck = false
                 if let wsError = error as? Errors {
                     self.logger.logE("PacketTunnelProvider", "Get Session failed with Windscribe error - \(wsError.unlocalizedDescription).", flushImmediately: true)
                     switch wsError {
                     case Errors.sessionIsInvalid:
-                        self.wgCrendentials.delete()
-                        self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
-                        self.logger.logE("PacketTunnelProvider", "Get Session failed with API because session is invalid - code 50.", flushImmediately: true)
+                      disconnect()
                     case let Errors.apiError(e):
                         self.logger.logE("PacketTunnelProvider", "Get Session failed with API error - \(e.errorMessage ?? "").", flushImmediately: true)
                     default:
@@ -323,78 +279,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
         }
     }
-
-    /// Request new interface address to check if it has changed.
-    private func requestNewInterfaceIp(completionHandler: ((Error?) -> Void)? = nil) {
-        // Ensure LocalizationBridge is initialized before any potential error handling
-        self.logger.logI("PacketTunnelProvider", "New Interface Ip requested", flushImmediately: true)
-        ensureLocalizationInitialized()
-        do {
-            var tunnelConfig: TunnelConfiguration? = nil
-            if let config = wgCrendentials.asWgCredentialsString(), wgCrendentials.initialized() {
-                tunnelConfig = try TunnelConfiguration(fromWgQuickConfig: config)
-            }
-            let lastIpAddress = tunnelConfig?.interface.addresses.first?.stringRepresentation ?? ""
-            let oldKey = wgCrendentials.presharedKey
-            Task {
-                do {
-                    try await wgConfigRepository.getCredentials()
-                    self.runningHealthCheck = false
-                    // Restart extesnion if connection to apply new configuration.
-                    if let completionHandler = completionHandler {
-                        completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                        return
-                    }
-                    if let newAddress = self.wgCrendentials.address, let key = self.wgCrendentials.presharedKey {
-                        if newAddress != lastIpAddress || oldKey != key {
-                            do {
-                                let updatedConfig = try TunnelConfiguration(fromWgQuickConfig: self.wgCrendentials.asWgCredentialsString()!)
-                                if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom {
-                                    let customDNSValue = self.preferences.getCustomDNSValue()
-                                    self.logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)", flushImmediately: true)
-                                    if let dnsSettings = dnsSettingsManager.makeDNSSettings(from: customDNSValue) {
-                                        updatedConfig.dnsSettings = dnsSettings
-                                    }
-                                }
-                                self.setNewTunnelInterfaceIp(updatedConfig: updatedConfig)
-                            } catch {
-                                self.logger.logE("PacketTunnelProvider", "Failed to get wg configuration: \(error.localizedDescription)", flushImmediately: true)
-                            }
-                        }
-                    }
-                } catch let error {
-                    self.runningHealthCheck = false
-                    let errorDesc: String
-                    if let wsError = error as? Errors {
-                        errorDesc = wsError.unlocalizedDescription
-                    } else {
-                        errorDesc = error.localizedDescription
-                    }
-                    self.logger.logE("PacketTunnelProvider", "Failed to build get wg configuration from api: \(errorDesc)", flushImmediately: true)
-                    if let completionHandler = completionHandler {
-                        completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                        return
-                    }
-                }
-            }
-        } catch let e {
-            self.logger.logE("PacketTunnelProvider", "Failed to get wg configuration. \(e.localizedDescription)", flushImmediately: true)
-            self.runningHealthCheck = false
-            if let completionHandler = completionHandler {
-                completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                return
-            }
-        }
-    }
-
-    // Generates and apply updated wg config. Only do if peer changes (Private key + preshaed key changed)
-    private func replacePeer(tunnelConfiguration: TunnelConfiguration) {
-        adapter.update(tunnelConfiguration: tunnelConfiguration) { error in
-            if let error = error {
-                self.logger.logE("PacketTunnelProvider", "Error updating tunnel configuration. \(error)", flushImmediately: true)
-            }
-            self.reasserting = false
-        }
+    
+    private func disconnect() {
+        self.wgCrendentials.delete()
+        self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
+        self.logger.logE("PacketTunnelProvider", "Get Session failed with API because session is invalid - code 50.", flushImmediately: true)
     }
 }
 
