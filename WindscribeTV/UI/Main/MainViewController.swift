@@ -503,6 +503,13 @@ class MainViewController: PreferredFocusedViewController {
         connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTV), for: .normal)
         connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTvFocused), for: .focused)
         if [.connecting].contains(info.state) { connectionButtonRing.rotate() } else { connectionButtonRing.stopRotating() }
+
+        // Update IP icon based on connection state
+        if info.state == .connected {
+            ipIcon.image = UIImage(named: ImagesAsset.TvAsset.secureIcon)
+        } else {
+            ipIcon.image = UIImage(named: ImagesAsset.TvAsset.insecureIcon)
+        }
     }
 
     func refreshProtocol(from network: WifiNetworkModel?, with protoPort: ProtocolPort?) {
