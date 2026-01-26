@@ -8113,7 +8113,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -8164,7 +8164,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -8269,7 +8269,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8306,7 +8306,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8338,7 +8338,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8367,7 +8367,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8401,7 +8401,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8439,7 +8439,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8505,7 +8505,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8537,7 +8537,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8696,7 +8696,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8764,7 +8764,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8796,7 +8796,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -8829,7 +8829,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8878,7 +8878,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.9.11;
+				MARKETING_VERSION = 3.9.12;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";

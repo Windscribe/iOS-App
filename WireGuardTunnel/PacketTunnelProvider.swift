@@ -279,7 +279,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
         }
     }
-    
+
     private func disconnect() {
         self.wgCrendentials.delete()
         self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
