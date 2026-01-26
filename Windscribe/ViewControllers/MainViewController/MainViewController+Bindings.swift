@@ -46,7 +46,7 @@ extension MainViewController {
         vpnConnectionViewModel.showUpgradeRequiredTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.showOutOfDataPopup()
+                self?.showUpgradeView()
             }
             .store(in: &cancellables)
 
