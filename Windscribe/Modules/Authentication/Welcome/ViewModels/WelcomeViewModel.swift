@@ -101,13 +101,12 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                     self.logger.logE("WelcomeViewModel", "Apple sign in error: \(error)")
                     self.handleError(error)
                 }
-            }, receiveValue: { [weak self] session in
+            }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
 
                 // Save SSO provider for password reset feature
                 self.preferences.saveSSOProvider(provider: "apple")
                 Task {
-                    await self.sessionManager.updateFrom(session: session)
                     self.logger.logI("WelcomeViewModel", "Apple sign in successful")
                     self.prepareUserData()
                 }
@@ -119,11 +118,15 @@ class WelcomeViewModelImpl: WelcomeViewModel {
         Task {
             do {
                 try await userDataRepository.prepareUserData()
-                showLoadingView = false
-                routeToMainView.send(true)
+                await MainActor.run {
+                    showLoadingView = false
+                    routeToMainView.send(true)
+                }
             } catch {
-                showLoadingView = false
-                handleError(error)
+                await MainActor.run {
+                    showLoadingView = false
+                    handleError(error)
+                }
             }
         }
     }

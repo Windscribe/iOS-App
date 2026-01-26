@@ -9,7 +9,7 @@ import AuthenticationServices
 import Combine
 
 protocol SSOManaging {
-    func getSession() -> AnyPublisher<Session, Errors>
+    func getSession() -> AnyPublisher<Void, Errors>
     func signOut()
 }
 
@@ -18,7 +18,7 @@ class SSOManager: NSObject, ObservableObject, SSOManaging {
     private let apiManager: APIManager
     private let userSessionRepository: UserSessionRepository
     private var cancellables = Set<AnyCancellable>()
-    private var ssoSession: PassthroughSubject<Session, Errors>?
+    private var ssoSession: PassthroughSubject<Void, Errors>?
 
     init(logger: FileLogger,
          apiManager: APIManager,
@@ -30,8 +30,8 @@ class SSOManager: NSObject, ObservableObject, SSOManaging {
 
     /// Requests apple OAuth sign in token
     /// Uses token to get updated user session.
-    func getSession() -> AnyPublisher<Session, Errors> {
-        let subject = PassthroughSubject<Session, Errors>()
+    func getSession() -> AnyPublisher<Void, Errors> {
+        let subject = PassthroughSubject<Void, Errors>()
         ssoSession = subject
 
         let request = ASAuthorizationAppleIDProvider().createRequest().then {
@@ -85,7 +85,7 @@ extension SSOManager: ASAuthorizationControllerDelegate {
 
                 await userSessionRepository.update(session: session)
                 await MainActor.run {
-                    self.ssoSession?.send(session)
+                    self.ssoSession?.send(())
                     self.ssoSession?.send(completion: .finished)
                 }
             } catch {
