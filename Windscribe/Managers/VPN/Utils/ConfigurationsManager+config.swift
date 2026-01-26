@@ -124,7 +124,8 @@ extension ConfigurationsManager {
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         case .staticIP:
-            let location = try getStaticIPLocation(id: location)
+            let locationID = locationsManager.getId(location: location)
+            let location = try getStaticIPLocation(id: locationID)
             guard let node = Array(location.nodes).randomElement() else {
                 throw VPNConfigurationErrors.noValidNodeFound
             }
@@ -170,7 +171,8 @@ extension ConfigurationsManager {
             }
             return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         case .staticIP:
-            let location = try getStaticIPLocation(id: location)
+            let locationID = locationsManager.getId(location: location)
+            let location = try getStaticIPLocation(id: locationID)
             let node = try getRandomNode(nodes: location.nodes)
             let ip = node.ip1
             let hostname = node.hostname

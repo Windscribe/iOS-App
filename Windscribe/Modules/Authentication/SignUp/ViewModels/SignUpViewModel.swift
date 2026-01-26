@@ -270,7 +270,6 @@ class SignUpViewModelImpl: SignUpViewModel {
 
                     Task {
                         await self.sessionManager.updateFrom(session: session)
-                        self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
                         self.prepareUserData()
                     }
                 } catch {

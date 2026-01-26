@@ -247,6 +247,7 @@ class LoginViewController: PreferredFocusedViewController {
             }
             .store(in: &cancellables)
         viewModel.routeToMainView
+            .receive(on: DispatchQueue.main)
             .sink { [self] _ in
                 self.logger.logD("LoginViewController", "Moving to home screen.")
                 router.routeTo(to: RouteID.home, from: self)
