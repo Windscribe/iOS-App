@@ -341,7 +341,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             let availableGroups = server.groups.filter { group in
                 guard !group.nodes.isEmpty else { return false }
                 if !(self.userSessionRepository.sessionModel?.isPremium ?? false)
-                    && server.premiumOnly {
+                    && group.premiumOnly {
                     return false
                 }
                 return true
@@ -367,7 +367,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                 let availableGroups = server.groups.filter { group in
                     guard !group.nodes.isEmpty else { return false }
                     if !(self.userSessionRepository.sessionModel?.isPremium ?? false)
-                        && server.premiumOnly {
+                        && group.premiumOnly {
                         return false
                     }
                     return true
