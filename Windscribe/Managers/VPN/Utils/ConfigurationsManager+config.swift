@@ -523,7 +523,8 @@ extension ConfigurationsManager {
                         promise(.success(()))
                     }
                 case .custom:
-                    guard let customConfig = self.customConfigRepository.getCustomConfig(fileId: locationID) else {
+                    let customID = self.locationsManager.getId(location: locationID)
+                    guard let customConfig = self.customConfigRepository.getCustomConfig(fileId: customID) else {
                         promise(.failure(VPNConfigurationErrors.customConfigSupportNotAvailable))
                         return
                     }
