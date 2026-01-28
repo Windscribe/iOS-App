@@ -105,6 +105,15 @@ extension PreferencesImpl {
         return observeKeyEmpty(SharedKeys.disconnectBackgroundCustomPath, type: String.self)
     }
 
+    // Custom App Icon
+    func saveCustomAppIcon(value: String) {
+        sharedDefault?.set(value, forKey: SharedKeys.customAppIcon)
+    }
+
+    func getCustomAppIcon() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.customAppIcon)
+    }
+
     // Custom Locations Names
     func saveCustomLocationsNames(value: [ExportedRegion]) {
         saveObject(object: value, forKey: SharedKeys.customLocationNames)

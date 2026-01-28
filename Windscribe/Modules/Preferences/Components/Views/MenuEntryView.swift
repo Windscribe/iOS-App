@@ -46,10 +46,10 @@ struct MenuEntryHeaderView: View {
             if !item.icon.isEmpty {
                 Image(item.icon)
                     .resizable()
-                    .renderingMode(.template)
+                    .renderingMode(item.useOriginalIconRendering ? .original : .template)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 16, height: 16)
-                    .foregroundColor(.from(.iconColor, isDarkMode))
+                    .foregroundColor(item.useOriginalIconRendering ? .clear : .from(.iconColor, isDarkMode))
             }
             if !item.title.isEmpty {
                 Text(item.title)

@@ -584,6 +584,12 @@ class MockPreferences: Preferences {
         return mockCustomLocations
     }
 
+    func saveCustomAppIcon(value: String) {}
+
+    func getCustomAppIcon() -> String? {
+        return nil
+    }
+
     func saveWireGuardAddress(_ address: String?) {}
 
     func getWireGuardAddress() -> String? {

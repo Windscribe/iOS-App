@@ -180,6 +180,17 @@ enum ImagesAsset {
         static let appearance = "appearance_ic_white"
         static let appBackground = "app_background_ic_white"
         static var soundNotification = "sound_notification"
+        static var windscribeDefaultIcon = "windscribe_default_icon"
+        static var iconClockPreview = "icon_clock_preview"
+        static var iconCalculatorPreview = "icon_calculator_preview"
+        static var icon80Preview = "icon_80_preview"
+        static var iconVaporPreview = "icon_vapor_preview"
+        static var iconGlitchPreview = "icon_glitch_preview"
+        static var iconNeonPreview = "icon_neon_preview"
+        static var icon64Preview = "icon_64_preview"
+        static var iconWindpassPreview = "icon_windpass_preview"
+        static var iconBsvpnPreview = "icon_bsvpn_preview"
+        static var iconDittbuckPreview = "icon_dittbuck_preview"
         static var customLocation = "location_order_ic_white"
     }
 

@@ -24,27 +24,61 @@ struct LookAndFeelSettingsView: View {
     }
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
-            ScrollView {
-                VStack {
-                    ForEach(viewModel.entries, id: \.self) { entry in
-                        MenuEntryView(item: entry,
-                                      isDarkMode: viewModel.isDarkMode,
-                                      action: { actionType in
-                            viewModel.entrySelected(entry, action: actionType)
-                        })
+        ZStack {
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                ScrollView {
+                    VStack {
+                        ForEach(viewModel.entries, id: \.self) { entry in
+                            MenuEntryView(item: entry,
+                                          isDarkMode: viewModel.isDarkMode,
+                                          action: { actionType in
+                                viewModel.entrySelected(entry, action: actionType)
+                            })
+                        }
+                        .padding(.top, 8)
                     }
-                    .padding(.top, 8)
                 }
+                .dynamicTypeSize(dynamicTypeRange)
             }
-            .dynamicTypeSize(dynamicTypeRange)
+            .navigationTitle(TextsAsset.LookFeel.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .alert(viewModel.alertType.title, isPresented: $viewModel.showAlert) {
+                Button(TextsAsset.ok, role: .cancel) { }
+            } message: {
+                Text(viewModel.alertType.message)
+            }
+            .onAppear {
+                viewModel.refreshIconSelection()
+            }
+
+            routeLink
         }
-        .navigationTitle(TextsAsset.LookFeel.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .alert(viewModel.alertType.title, isPresented: $viewModel.showAlert) {
-            Button(TextsAsset.ok, role: .cancel) { }
-        } message: {
-            Text(viewModel.alertType.message)
+    }
+
+    @ViewBuilder
+    private var routeLink: some View {
+        NavigationLink(
+            destination: routeDestination,
+            isActive: Binding(
+                get: { viewModel.router.activeRoute != nil },
+                set: { newValue in
+                    if !newValue {
+                        viewModel.router.pop()
+                    }
+                }
+            )
+        ) {
+            EmptyView()
+        }
+        .hidden()
+    }
+
+    @ViewBuilder
+    private var routeDestination: some View {
+        if let route = viewModel.router.activeRoute {
+            viewModel.router.createView(for: route)
+        } else {
+            EmptyView()
         }
     }
 }

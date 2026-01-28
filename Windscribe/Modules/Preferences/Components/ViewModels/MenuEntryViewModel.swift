@@ -191,4 +191,9 @@ protocol MenuEntryItemType: Hashable {
     var title: String { get }
     var icon: String { get }
     var action: MenuEntryActionType? { get }
+    var useOriginalIconRendering: Bool { get }
+}
+
+extension MenuEntryItemType {
+    var useOriginalIconRendering: Bool { false }
 }

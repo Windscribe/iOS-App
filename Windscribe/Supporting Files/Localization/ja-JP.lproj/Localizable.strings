@@ -596,3 +596,6 @@
 "Email is required to reset password." = "パスワードをリセットするにはメールアドレスが必要です。";
 
 "Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV アプリにログインするには、テレビ画面に表示されているコードを入力してください";
+
+"Choose a different app icon for even more privacy" = "さらにプライバシーを強化するため、別のアプリアイコンを選択してください";
+"App Icon" = "アプリアイコン";

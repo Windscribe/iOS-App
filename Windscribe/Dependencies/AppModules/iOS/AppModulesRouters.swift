@@ -29,6 +29,9 @@ class Routers: Assembly {
         container.register(ConnectionsNavigationRouter.self) { _ in
             ConnectionsNavigationRouter()
         }.inObjectScope(.transient)
+        container.register(LookAndFeelNavigationRouter.self) { _ in
+            LookAndFeelNavigationRouter()
+        }.inObjectScope(.transient)
         container.register(ShakeForDataNavigationRouter.self) { _ in
             ShakeForDataNavigationRouter()
         }.inObjectScope(.transient)
