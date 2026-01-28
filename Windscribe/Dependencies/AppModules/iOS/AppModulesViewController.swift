@@ -216,7 +216,19 @@ class ViewControllerModule: Assembly {
                     preferences: r.resolve(Preferences.self)!,
                     backgroundFileManager: r.resolve(BackgroundFileManaging.self)!,
                     soundFileManager: r.resolve(SoundFileManaging.self)!,
-                    serverRepository: r.resolve(ServerRepository.self)!
+                    serverRepository: r.resolve(ServerRepository.self)!,
+                    router: r.resolve(LookAndFeelNavigationRouter.self)!
+                )
+            )
+        }.inObjectScope(.transient)
+
+        container.register(DiscreetAppIconSelectionView.self) { r in
+            DiscreetAppIconSelectionView(
+                viewModel: DiscreetAppIconSelectionViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                    preferences: r.resolve(Preferences.self)!
                 )
             )
         }.inObjectScope(.transient)

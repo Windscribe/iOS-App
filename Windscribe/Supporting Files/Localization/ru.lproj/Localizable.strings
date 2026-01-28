@@ -610,3 +610,6 @@
 "Email is required to reset password." = "Для сброса пароля требуется электронная почта.";
 
 "Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Введите код, отображаемый на экране телевизора, чтобы войти в приложение Windscribe TV";
+
+"Choose a different app icon for even more privacy" = "Выберите другой значок приложения для большей конфиденциальности";
+"App Icon" = "Значок приложения";

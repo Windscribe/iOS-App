@@ -738,6 +738,10 @@ enum TextsAsset {
             "Sound Notifications".localized
         }
 
+        static var discreetAppIconTitle: String {
+            "App Icon".localized
+        }
+
         static var versionTitle: String {
             "Version".localized
         }
@@ -752,6 +756,10 @@ enum TextsAsset {
 
         static var soundNotificationDescription: String {
             "Choose sounds to play when connection events occur.".localized
+        }
+
+        static var discreetAppIconDescription: String {
+            "Choose a different app icon for even more privacy".localized
         }
 
         static var aspectRatioModeTitle: String {

@@ -338,4 +338,49 @@ class PreferencesTests: XCTestCase {
 
         waitForExpectations(timeout: 1.0, handler: nil)
     }
+
+    func testCustomAppIconPreferences() {
+        let preferences = mockContainer.resolve(Preferences.self)!
+        let testIconValue = "Mail"
+        let originalIcon = preferences.getCustomAppIcon()
+
+        // Test saving and retrieving custom app icon
+        preferences.saveCustomAppIcon(value: testIconValue)
+        let retrievedIcon = preferences.getCustomAppIcon()
+        XCTAssertEqual(retrievedIcon, testIconValue, "Custom app icon should be saved and retrieved correctly")
+
+        // Test with different icon value
+        let testIconValue2 = "Calendar"
+        preferences.saveCustomAppIcon(value: testIconValue2)
+        let retrievedIcon2 = preferences.getCustomAppIcon()
+        XCTAssertEqual(retrievedIcon2, testIconValue2, "Updated app icon should be retrieved correctly")
+
+        // Cleanup - restore original value or clear
+        if let originalIcon = originalIcon {
+            preferences.saveCustomAppIcon(value: originalIcon)
+        }
+    }
+
+    func testCustomAppIconDefaultValue() {
+        let preferences = mockContainer.resolve(Preferences.self)!
+
+        // When no icon is saved, it should return nil (meaning use default)
+        let icon = preferences.getCustomAppIcon()
+        XCTAssertNil(icon, "Custom app icon should be nil when not set, indicating default icon")
+    }
+
+    func testCustomAppIconAllValues() {
+        let preferences = mockContainer.resolve(Preferences.self)!
+        let iconValues = ["Default", "Mail", "Calendar", "Weather", "Notes", "Calculator"]
+
+        // Test each icon value
+        for iconValue in iconValues {
+            preferences.saveCustomAppIcon(value: iconValue)
+            let retrieved = preferences.getCustomAppIcon()
+            XCTAssertEqual(retrieved, iconValue, "Icon value '\(iconValue)' should be saved and retrieved correctly")
+        }
+
+        // Cleanup
+        preferences.saveCustomAppIcon(value: "Default")
+    }
 }

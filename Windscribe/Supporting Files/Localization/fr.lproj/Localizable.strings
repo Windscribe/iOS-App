@@ -591,3 +591,6 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Email is required to reset password." = "Une adresse e-mail est requise pour réinitialiser le mot de passe.";
 
 "Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Saisissez le code affiché sur l’écran de votre TV pour vous connecter à l’application Windscribe TV";
+
+"Choose a different app icon for even more privacy" = "Choisissez une icône d’application différente pour plus de confidentialité";
+"App Icon" = "Icône de l’application";

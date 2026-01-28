@@ -19,6 +19,7 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
                customConnectedFile: String,
                disconnected: SoundEffectType,
                customDisconnectedFile: String),
+         discreetAppIcon(currentSelection: DiscreetAppIconType),
          customLocation(documentInfo: DocumentFormatInfo?)
 
     var id: Int {
@@ -26,7 +27,8 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
         case .appearance: 1
         case .background: 2
         case .sound: 3
-        case .customLocation: 4
+        case .discreetAppIcon: 4
+        case .customLocation: 5
         }
     }
     var title: String {
@@ -34,15 +36,18 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
         case .appearance: TextsAsset.LookFeel.appearanceTitle
         case .background: TextsAsset.LookFeel.appBackgroundTitle
         case .sound: TextsAsset.LookFeel.soundNotificationTitle
+        case .discreetAppIcon: TextsAsset.LookFeel.discreetAppIconTitle
         case .customLocation: TextsAsset.LookFeel.renameLocationsTitle
         }
     }
     var icon: String {
         switch self {
-        case .appearance: ImagesAsset.LookFeel.appearance
-        case .background: ImagesAsset.LookFeel.appBackground
-        case .sound: ImagesAsset.LookFeel.soundNotification
-        case .customLocation: ImagesAsset.LookFeel.customLocation
+        case .appearance: return ImagesAsset.LookFeel.appearance
+        case .background: return ImagesAsset.LookFeel.appBackground
+        case .sound: return ImagesAsset.LookFeel.soundNotification
+        case .discreetAppIcon(let currentSelection):
+            return currentSelection.iconImageName
+        case .customLocation: return ImagesAsset.LookFeel.customLocation
         }
     }
     var message: String? {
@@ -50,6 +55,7 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
         case .appearance: TextsAsset.LookFeel.appearanceDescription
         case .background: TextsAsset.LookFeel.appBackgroundDescription
         case .sound: TextsAsset.LookFeel.soundNotificationDescription
+        case .discreetAppIcon: TextsAsset.LookFeel.discreetAppIconDescription
         case .customLocation: TextsAsset.LookFeel.renameLocationsDescription
         }
     }
@@ -59,7 +65,17 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
                              options: zip(TextsAsset.appearances, Fields.appearances).map { MenuOption(title: $0, fieldKey: $1) } ,
                              parentId: id)
         }
+        if case .discreetAppIcon = self {
+            return .button(title: nil, parentId: id)
+        }
         return nil
+    }
+
+    var useOriginalIconRendering: Bool {
+        if case .discreetAppIcon = self {
+            return true
+        }
+        return false
     }
     func makeSecondaryEntries() -> [LookAndFeelSecondaryEntryType] {
         switch self {

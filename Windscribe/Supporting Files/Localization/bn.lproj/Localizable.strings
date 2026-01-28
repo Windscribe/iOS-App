@@ -623,3 +623,6 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "Email is required to reset password." = "পাসওয়ার্ড রিসেট করার জন্য ইমেইল প্রয়োজন।";
 
 "Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV অ্যাপে লগ ইন করতে আপনার টিভি স্ক্রিনে দেখানো কোডটি লিখুন";
+
+"Choose a different app icon for even more privacy" = "আরও বেশি গোপনীয়তার জন্য একটি ভিন্ন অ্যাপ আইকন বেছে নিন";
+"App Icon" = "অ্যাপ আইকন";

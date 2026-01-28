@@ -948,9 +948,14 @@
 		F40B8AEE2E54FB7300609902 /* ScreenTestNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AED2E54FB7300609902 /* ScreenTestNavigationRouter.swift */; };
 		F40B8AF02E54FB8500609902 /* ScreenTestRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AEF2E54FB8500609902 /* ScreenTestRouteID.swift */; };
 		F40B8AF32E55025700609902 /* ScreenTestItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AF12E55025700609902 /* ScreenTestItemType.swift */; };
-		F40F7E5E2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */; };
-		F40F7E5F2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */; };
-		F40F7E602F216BFD00400CC1 /* WireguardIPGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */; };
+		F40F7E542F1AD4FD00400CC1 /* DiscreetAppIconType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E532F1AD4FD00400CC1 /* DiscreetAppIconType.swift */; };
+		F40F7E552F1AD4FD00400CC1 /* DiscreetAppIconType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E532F1AD4FD00400CC1 /* DiscreetAppIconType.swift */; };
+		F40F7E572F1AE9FB00400CC1 /* DiscreetAppIconSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E562F1AE9FB00400CC1 /* DiscreetAppIconSelectionView.swift */; };
+		F40F7E592F1AEA0500400CC1 /* DiscreetAppIconSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E582F1AEA0500400CC1 /* DiscreetAppIconSelectionViewModel.swift */; };
+		F40F7E5C2F1AEA6100400CC1 /* LookAndFeelNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5A2F1AEA6100400CC1 /* LookAndFeelNavigationRouter.swift */; };
+		F40F7E5E2F203C3000400CC1 /* WireguardIPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPManager.swift */; };
+		F40F7E612F293AD300400CC1 /* WireguardIPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPManager.swift */; };
+		F40F7E622F293AD300400CC1 /* WireguardIPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F7E5D2F203C3000400CC1 /* WireguardIPManager.swift */; };
 		F410FABA2E6F5FEB007762A1 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */; };
 		F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
@@ -1980,7 +1985,11 @@
 		F40B8AED2E54FB7300609902 /* ScreenTestNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestNavigationRouter.swift; sourceTree = "<group>"; };
 		F40B8AEF2E54FB8500609902 /* ScreenTestRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestRouteID.swift; sourceTree = "<group>"; };
 		F40B8AF12E55025700609902 /* ScreenTestItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestItemType.swift; sourceTree = "<group>"; };
-		F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardIPGenerator.swift; sourceTree = "<group>"; };
+		F40F7E532F1AD4FD00400CC1 /* DiscreetAppIconType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreetAppIconType.swift; sourceTree = "<group>"; };
+		F40F7E562F1AE9FB00400CC1 /* DiscreetAppIconSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreetAppIconSelectionView.swift; sourceTree = "<group>"; };
+		F40F7E582F1AEA0500400CC1 /* DiscreetAppIconSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscreetAppIconSelectionViewModel.swift; sourceTree = "<group>"; };
+		F40F7E5A2F1AEA6100400CC1 /* LookAndFeelNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelNavigationRouter.swift; sourceTree = "<group>"; };
+		F40F7E5D2F203C3000400CC1 /* WireguardIPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardIPManager.swift; sourceTree = "<group>"; };
 		F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsManager.swift; sourceTree = "<group>"; };
 		F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -2579,7 +2588,7 @@
 				C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */,
 				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 				C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */,
-				F40F7E5D2F203C3000400CC1 /* WireguardIPGenerator.swift */,
+				F40F7E5D2F203C3000400CC1 /* WireguardIPManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -2980,6 +2989,7 @@
 				1ED616752DD62509006CDC99 /* LookAndFeelEntryType.swift */,
 				F4693E4E2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift */,
 				F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */,
+				F40F7E532F1AD4FD00400CC1 /* DiscreetAppIconType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4211,6 +4221,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		F40F7E5B2F1AEA6100400CC1 /* LookAndFeel */ = {
+			isa = PBXGroup;
+			children = (
+				F40F7E5A2F1AEA6100400CC1 /* LookAndFeelNavigationRouter.swift */,
+			);
+			path = LookAndFeel;
+			sourceTree = "<group>";
+		};
 		F40FD26C2E00AE31004245DF /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -5347,6 +5365,7 @@
 			isa = PBXGroup;
 			children = (
 				F49C45C12DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift */,
+				F40F7E562F1AE9FB00400CC1 /* DiscreetAppIconSelectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5355,6 +5374,7 @@
 			isa = PBXGroup;
 			children = (
 				F49C45C32DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift */,
+				F40F7E582F1AEA0500400CC1 /* DiscreetAppIconSelectionViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5408,6 +5428,7 @@
 				1EB67FA92DE9E27800729052 /* Connection */,
 				F47EC53D2DEA276400AF5089 /* Help */,
 				F40B8AEC2E54FB5900609902 /* ScreenTest */,
+				F40F7E5B2F1AEA6100400CC1 /* LookAndFeel */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -6506,6 +6527,7 @@
 				F49E61D02E00A2030087386F /* CustomSoundEffectType.swift in Sources */,
 				59FC73CD2C514A7A00021CD1 /* AppModulesCommon.swift in Sources */,
 				1EA9D7132C87192A00566A93 /* PrivacyViewModel.swift in Sources */,
+				F40F7E552F1AD4FD00400CC1 /* DiscreetAppIconType.swift in Sources */,
 				1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */,
 				59FC74492C515DF500021CD1 /* ProtocolManager.swift in Sources */,
 				1E79CA5A2C63D1D4006D4DE7 /* LinkProvider.swift in Sources */,
@@ -6543,7 +6565,7 @@
 				F469F0EB2D7F8FFC004DC6AB /* View+Extension.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
 				59DA7FC22C3DAD3800042E57 /* WelcomeViewController.swift in Sources */,
-				F40F7E5E2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */,
+				F40F7E5E2F203C3000400CC1 /* WireguardIPManager.swift in Sources */,
 				1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */,
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
@@ -6762,6 +6784,7 @@
 				AF21995A2270B147009B42E5 /* QNNNslookup.m in Sources */,
 				C50AF6C42B60250300A3FBE0 /* EmergencyRepository.swift in Sources */,
 				F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */,
+				F40F7E542F1AD4FD00400CC1 /* DiscreetAppIconType.swift in Sources */,
 				F48705B82DE61AA4007435EB /* MenuLoadingOverlayView.swift in Sources */,
 				C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */,
 				E97ABD5928E60A9500B38587 /* WSButton.swift in Sources */,
@@ -6770,6 +6793,7 @@
 				AF97EFDB2280E70300378058 /* Realm+Extension.swift in Sources */,
 				C56FCBFA2B2CDD9E008DE7D4 /* BaseRouter.swift in Sources */,
 				1EB67FAD2DE9E29D00729052 /* ConnectionsRouteID.swift in Sources */,
+				F40F7E5C2F1AEA6100400CC1 /* LookAndFeelNavigationRouter.swift in Sources */,
 				C56FCBF42B2BA50A008DE7D4 /* HomeRouter.swift in Sources */,
 				AF16C98D2225CDAB00997A2A /* ClosestCountry.swift in Sources */,
 				C50F20782B606B3000266B23 /* WireguardConfigRepository.swift in Sources */,
@@ -7097,6 +7121,7 @@
 				E9D3D373274D29A500283285 /* MainViewController+LoadData.swift in Sources */,
 				AF4ECA9C23E3434400E09223 /* MainViewController+Theme.swift in Sources */,
 				1EAEF7532E2932FD00F3C51F /* ShakeForDataNavigationRouter.swift in Sources */,
+				F40F7E592F1AEA0500400CC1 /* DiscreetAppIconSelectionViewModel.swift in Sources */,
 				1EAEF7572E2933DE00F3C51F /* LocationPermissionManager.swift in Sources */,
 				C52DA5272B63901400E5C571 /* CustomConfigRepository.swift in Sources */,
 				AF16CA122226F53F00997A2A /* WSUIViewController.swift in Sources */,
@@ -7105,6 +7130,7 @@
 				F499353C2DA994BC00108558 /* SoundManager.swift in Sources */,
 				C5A930EF2B44AA730001CFA0 /* PortMapRepository.swift in Sources */,
 				C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */,
+				F40F7E612F293AD300400CC1 /* WireguardIPManager.swift in Sources */,
 				E9D3D36F274D1BA800283285 /* MainViewController+Selector.swift in Sources */,
 				1E5553C02D91CDBB00F16AF0 /* WifiInfoView.swift in Sources */,
 				F45BD5AB2EF5DC9300490072 /* PasswordResetSuccessView.swift in Sources */,
@@ -7122,7 +7148,6 @@
 				C5A930F12B44AA880001CFA0 /* PortMapRepositoryImpl.swift in Sources */,
 				F404193E2D822F1A0005EF97 /* HTMLParser.swift in Sources */,
 				AF04ED9F21DFD1AE005C6576 /* StaticIP.swift in Sources */,
-				F40F7E5F2F203C3000400CC1 /* WireguardIPGenerator.swift in Sources */,
 				F4888E422D94A11B005EF149 /* SignUpViewModel.swift in Sources */,
 				C5A930D52B43EE710001CFA0 /* NotificationRepository.swift in Sources */,
 				C56FCC022B2CF298008DE7D4 /* AccountRouter.swift in Sources */,
@@ -7157,6 +7182,7 @@
 				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
 				1EB67FAB2DE9E29200729052 /* ConnectionsNavigationRouter.swift in Sources */,
 				AF97EFDF2281F1DD00378058 /* Bundle+Extension.swift in Sources */,
+				F40F7E572F1AE9FB00400CC1 /* DiscreetAppIconSelectionView.swift in Sources */,
 				E9E5F347273C14F600226BED /* VPNManager+ConnectionStatus.swift in Sources */,
 				1EA80E1F2EBA604D0003322D /* BridgeApiFailedView.swift in Sources */,
 				AF21995E2270B147009B42E5 /* yudpsocket.c in Sources */,
@@ -7412,6 +7438,7 @@
 				F443EA572E0B1F5F00FFC75E /* UIConstants+ErrorTexts.swift in Sources */,
 				596E60082B8F77EF00D51E20 /* Language.swift in Sources */,
 				C50F20832B60B79600266B23 /* APIUtil.swift in Sources */,
+				F40F7E622F293AD300400CC1 /* WireguardIPManager.swift in Sources */,
 				C51EEDC92C1779A900B01F8F /* LanguageManager.swift in Sources */,
 				C52DA5102B63820F00E5C571 /* RepositoryErrors.swift in Sources */,
 				C535D28B27E2E36700C08345 /* Date+Extension.swift in Sources */,
@@ -7437,7 +7464,6 @@
 				C5D0E40229BB8BE70091FB14 /* ringlogger.c in Sources */,
 				C5E18ED4286B3D7200DD3B07 /* APIError.swift in Sources */,
 				AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */,
-				F40F7E602F216BFD00400CC1 /* WireguardIPGenerator.swift in Sources */,
 				1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */,
 				AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */,
 				F469F0DF2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
@@ -8086,7 +8112,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeDevelopment.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -8132,7 +8158,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Windscribe/Windscribe.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -8670,7 +8696,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

@@ -67,9 +67,11 @@ protocol LookAndFeelSettingsViewModel: PreferencesBaseViewModel {
     var showAlert: Bool { get set }
     var alertType: LookAndFeelImportAlertType { get set }
     var entries: [LookAndFeelEntryType] { get set }
+    var router: LookAndFeelNavigationRouter { get }
 
     func entrySelected(_ entry: LookAndFeelEntryType,
                        action: MenuEntryActionResponseType)
+    func refreshIconSelection()
 }
 
 final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, LookAndFeelSettingsViewModel {
@@ -77,6 +79,8 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
     @Published var alertType: LookAndFeelImportAlertType = .empty
     @Published var showAlert: Bool = false
     @Published var entries: [LookAndFeelEntryType] = []
+
+    let router: LookAndFeelNavigationRouter
 
     private let preferences: Preferences
     private let backgroundFileManager: BackgroundFileManaging
@@ -89,6 +93,7 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
     private var backgroundDisconnect: BackgroundEffectType = .flag
     private var soundEffectConnect: SoundEffectType = .none
     private var soundEffectDisconnect: SoundEffectType = .none
+    private var discreetAppIconSelection: DiscreetAppIconType = .og
     private var serverDocumentInfo: DocumentFormatInfo?
     private let lookAndFeelRepository: LookAndFeelRepositoryType
 
@@ -98,12 +103,14 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
          preferences: Preferences,
          backgroundFileManager: BackgroundFileManaging,
          soundFileManager: SoundFileManaging,
-         serverRepository: ServerRepository) {
+         serverRepository: ServerRepository,
+         router: LookAndFeelNavigationRouter) {
         self.preferences = preferences
         self.backgroundFileManager = backgroundFileManager
         self.soundFileManager = soundFileManager
         self.serverRepository = serverRepository
         self.lookAndFeelRepository = lookAndFeelRepository
+        self.router = router
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -124,6 +131,10 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
         aspectRatio = lookAndFeelRepository.backgroundCustomAspectRatio
         backgroundConnect = lookAndFeelRepository.backgroundEffectConnect
         backgroundDisconnect = lookAndFeelRepository.backgroundEffectDisconnect
+
+        if let customIconValue = preferences.getCustomAppIcon() {
+            discreetAppIconSelection = DiscreetAppIconType.fromRaw(value: customIconValue)
+        }
     }
 
     override func reloadItems() {
@@ -140,6 +151,7 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
                    customConnectedFile: getShortPath(from: preferences.getCustomSoundEffectPathConnect()),
                    disconnected: soundEffectDisconnect,
                    customDisconnectedFile: getShortPath(from: preferences.getCustomSoundEffectPathDisconnect())),
+            .discreetAppIcon(currentSelection: discreetAppIconSelection),
             .customLocation(documentInfo: serverDocumentInfo)
         ]
     }
@@ -147,6 +159,13 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
     private func getShortPath(from longPath: String?) -> String {
         guard let longPath else { return TextsAsset.General.custom }
         return URL(fileURLWithPath: longPath).lastPathComponent
+    }
+
+    func refreshIconSelection() {
+        if let customIconValue = preferences.getCustomAppIcon() {
+            discreetAppIconSelection = DiscreetAppIconType.fromRaw(value: customIconValue)
+        }
+        reloadItems()
     }
 
     func entrySelected(_ entry: LookAndFeelEntryType, action: MenuEntryActionResponseType) {
@@ -219,6 +238,10 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
                 } else if parentId == LookAndFeelSecondaryEntryIDs.fileContentDisconnect.id {
                     saveSoundURL(pickedSoundFile: selecteURL, for: .disconnect)
                 }
+            }
+        case .discreetAppIcon:
+            if case .button = action {
+                router.navigate(to: .discreetAppIconSelection)
             }
         case .customLocation:
             if case let .button(parentId) = action {

@@ -117,6 +117,9 @@ enum SharedKeys {
     // Custom Locations Names
     static let customLocationNames = "customLocationNames"
 
+    // Custom App Icon
+    static let customAppIcon = "customAppIcon"
+
     /// Cached plist dictionary to avoid repeated file I/O
     private static let plistDictionary: [String: Any] = {
         guard let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist"),

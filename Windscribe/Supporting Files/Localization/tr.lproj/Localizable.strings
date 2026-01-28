@@ -608,3 +608,6 @@
 "Email is required to reset password." = "Şifreyi sıfırlamak için e-posta gereklidir.";
 
 "Enter the code show on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV uygulamasına giriş yapmak için TV ekranınızda gösterilen kodu girin";
+
+"Choose a different app icon for even more privacy" = "Daha fazla gizlilik için farklı bir uygulama simgesi seçin";
+"App Icon" = "Uygulama Simgesi";
