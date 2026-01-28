@@ -96,10 +96,10 @@ class WelcomeViewModelImpl: WelcomeViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
-                self.showLoadingView = false
                 if case .failure(let error) = completion {
                     self.logger.logE("WelcomeViewModel", "Apple sign in error: \(error)")
                     self.handleError(error)
+                    self.showLoadingView = false
                 }
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
