@@ -91,6 +91,7 @@ class ConnectionStateInfoView: UIView {
     var portLabel = UILabel()
     var preferredIcon = UIImageView()
     var circunventIcon = UIImageView()
+    var noConnectionIcon = UIImageView()
     var actionIcon = UIImageView()
     var stackView = UIStackView()
     private var images: [UIImage] = []
@@ -155,6 +156,10 @@ class ConnectionStateInfoView: UIView {
         connectingImageView.isHidden = ![.connecting, .testing].contains(state)
         connectingImageView.tintColor = state.statusColor
 
+        if !connectingImageView.isHidden || !pillLabel.isHidden {
+            connectingImageView.isHidden = true
+        }
+
         if connectingImageView.isHidden && connectingImageView.isAnimating {
             connectingImageView.stopAnimating()
         } else if !connectingImageView.isHidden && !connectingImageView.isAnimating {
@@ -193,8 +198,13 @@ class ConnectionStateInfoView: UIView {
 
     func showNoInternetConnection() {
         pillLabel.isHidden = true
-        connectingImageView.image = UIImage(named: ImagesAsset.noInternet)
-        connectingImageView.isHidden = false
+        connectingImageView.isHidden = true
+        noConnectionIcon.isHidden = false
+    }
+
+    func hideNoInternetConnection() {
+        noConnectionIcon.isHidden = true
+        pillLabel.isHidden = false
     }
 
     func updateProtoPort(_ value: ProtocolPort) {
@@ -277,11 +287,14 @@ class ConnectionStateInfoView: UIView {
             UIImage(named: $0)?.withRenderingMode(.alwaysTemplate)
         }
 
+        noConnectionIcon.image = UIImage(named: ImagesAsset.noInternet)
+
         stackView.addArrangedSubviews([pillView, circunventIcon, protocolLabel, portLabel, preferredIcon, actionIcon])
         stackView.spacing = 8
 
         pillView.addSubview(pillLabel)
         pillView.addSubview(connectingImageView)
+        pillView.addSubview(noConnectionIcon)
 
         addSubview(stackView)
         addSubview(actionButton)
@@ -298,6 +311,7 @@ class ConnectionStateInfoView: UIView {
         preferredIcon.translatesAutoresizingMaskIntoConstraints = false
         circunventIcon.translatesAutoresizingMaskIntoConstraints = false
         actionIcon.translatesAutoresizingMaskIntoConstraints = false
+        noConnectionIcon.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // stackView
@@ -318,6 +332,12 @@ class ConnectionStateInfoView: UIView {
             connectingImageView.centerXAnchor.constraint(equalTo: pillView.centerXAnchor),
             connectingImageView.widthAnchor.constraint(equalToConstant: 19),
             connectingImageView.heightAnchor.constraint(equalToConstant: 5),
+
+            // noConnectionIcon
+            noConnectionIcon.centerYAnchor.constraint(equalTo: pillView.centerYAnchor),
+            noConnectionIcon.centerXAnchor.constraint(equalTo: pillView.centerXAnchor),
+            noConnectionIcon.widthAnchor.constraint(equalToConstant: 16),
+            noConnectionIcon.heightAnchor.constraint(equalToConstant: 12),
 
             // actionButton
             actionButton.centerYAnchor.constraint(equalTo: centerYAnchor),

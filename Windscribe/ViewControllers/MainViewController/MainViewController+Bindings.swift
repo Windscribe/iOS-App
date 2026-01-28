@@ -15,7 +15,6 @@ extension MainViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 guard let self = self else { return }
-                self.animateConnectedState(with: $0)
                 if [.connected, .disconnected].contains($0.state) {
                     self.viewModel.updateSSID()
                 }
@@ -144,6 +143,7 @@ extension MainViewController {
         viewModel.isDarkMode.receive(on: DispatchQueue.main).sink { [weak self] in
             self?.updateLayoutForTheme(isDarkMode: $0)
         }.store(in: &cancellables)
+
         viewModel.sessionModel
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionModel in
@@ -192,7 +192,6 @@ extension MainViewController {
                 guard let self = self else { return }
                 self.clearScrollHappened()
                 self.checkAndShowShareDialogIfNeed()
-                self.updateConnectedState()
             }.store(in: &cancellables)
 
         vpnConnectionViewModel.reloadLocationsTrigger
@@ -256,6 +255,14 @@ extension MainViewController {
                 guard let self = self else { return }
                 // Show no internet alert instead of protocol failover when no connectivity detected
                 self.displayInternetConnectionLostAlert()
+            }
+            .store(in: &cancellables)
+
+        viewModel.appNetwork
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] appNetwork in
+                guard let self = self else { return }
+                self.checkNetworkState(for: appNetwork)
             }
             .store(in: &cancellables)
 

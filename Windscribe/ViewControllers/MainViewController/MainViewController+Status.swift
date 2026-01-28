@@ -10,19 +10,15 @@ import NetworkExtension
 import UIKit
 
 extension MainViewController {
-    func updateConnectedState() {
-        let state = vpnConnectionViewModel.connectedState.value
-        animateConnectedState(with: state, animated: false)
-    }
-
-    func animateConnectedState(with info: ConnectionStateInfo, animated: Bool = true) {
+    func checkNetworkState(for appNetwork: AppNetwork) {
         DispatchQueue.main.async {
-            let duration = (animated &&  info.state != .automaticFailed) ? 0.25 : 0.0
-            UIView.animate(withDuration: duration) {
-                if info.state == .disconnected {
-                    let isOnline = self.viewModel.appNetwork.value.status == .connected
+            UIView.animate(withDuration: 0.25) {
+                if self.vpnConnectionViewModel.isDisconnected() {
+                    let isOnline = appNetwork.status == .connected
                     if !isOnline {
                         self.connectionStateInfoView.showNoInternetConnection()
+                    } else {
+                        self.connectionStateInfoView.hideNoInternetConnection()
                     }
                 }
             }
