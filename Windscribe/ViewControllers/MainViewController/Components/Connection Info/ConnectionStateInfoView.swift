@@ -128,11 +128,11 @@ class ConnectionStateInfoView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel.statusSubject
+        viewModel.statusSubject.combineLatest(viewModel.hasNetwork)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
+            .sink { [weak self] state, hasNetwork  in
                 guard let self = self, let state = state else { return }
-                self.updateConnectionInfo(state)
+                updateConnectionInfo(state, hasNetwork)
             }
             .store(in: &cancellables)
 
@@ -152,20 +152,6 @@ class ConnectionStateInfoView: UIView {
             }
             .store(in: &cancellables)
 
-        viewModel.hasNetwork
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] hasNetwork in
-                guard let self = self else { return }
-                if !hasNetwork {
-                    showNoInternetConnection()
-                } else {
-                    if let state = viewModel.statusSubject.value {
-                        updateConnectionInfo(state)
-                    }
-                }
-            }
-            .store(in: &cancellables)
-
         actionButton.tap
             .sink { [weak self] _ in
                 guard let self = self,
@@ -177,13 +163,13 @@ class ConnectionStateInfoView: UIView {
         actionIcon.isHidden = !viewModel.isConnected
     }
 
-    private func updateConnectionInfo(_ state: ConnectionState) {
+    private func updateConnectionInfo(_ state: ConnectionState, _ hasNetwork: Bool) {
         pillLabel.text = state.statusText
         pillLabel.textColor = state.statusColor
 
         connectingImageView.tintColor = state.statusColor
 
-        if !viewModel.hasNetwork.value {
+        if !hasNetwork && state != .connecting {
             showNoInternetConnection()
         } else {
             noConnectionIcon.isHidden = true
