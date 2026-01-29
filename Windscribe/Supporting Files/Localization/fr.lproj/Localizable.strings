@@ -480,7 +480,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Add Email (Get 10 GB/Month)" = "Ajouter un e-mail (Obtenez 10 Go/Mois)";
 "Free" = "Gratuit";
 "Upgrade to Pro" = "Passer à Pro";
-"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe marquera chaque nouveau réseau comme \"Sécurisé\" et s'activera automatiquement lorsque votre appareil s'y connectera.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe marquera chaque nouveau réseau comme « Sécurisé » et votre VPN restera connecté lorsque votre appareil s'y connectera.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Windscribe s'activera automatiquement si votre appareil se connecte à ce réseau.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Une erreur s'est produite. Veuillez vérifier que vous avez saisi un serveur DNS valide.";
 "Invalid DNS server" = "Serveur DNS invalide";

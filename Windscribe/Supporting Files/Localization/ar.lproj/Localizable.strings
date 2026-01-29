@@ -478,7 +478,7 @@
 "Add Email (Get 10 GB/Month)" = "أضف البريد الإلكتروني (احصل على 10 جيجابايت/شهر)";
 "Free" = "مجاني";
 "Upgrade to Pro" = "الترقية إلى Pro";
-"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "سيقوم Windscribe بتمييز كل شبكة جديدة كـ \"آمنة\" ويعمل تلقائيًا عند الاتصال بها.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "سيقوم برنامج Windscribe بتصنيف كل شبكة جديدة على أنها \"مؤمنة\" وسيظل اتصال VPN الخاص بك متصلاً عندما يتصل جهازك بها.";
 "Windscribe will turn ON automatically if your device connects to this network." = "سيعمل Windscribe تلقائيًا إذا اتصل جهازك بهذه الشبكة.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "حدث خطأ ما. يرجى التأكد من أنك أدخلت خادم DNS صالحًا.";
 "Invalid DNS server" = "خادم DNS غير صالح";
