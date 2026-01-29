@@ -439,7 +439,8 @@ class ViewModels: Assembly {
             ConnectionStateInfoViewModel(vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                          locationsManager: r.resolve(LocationsManager.self)!,
                                          preferences: r.resolve(Preferences.self)!,
-                                         protocolManager: r.resolve(ProtocolManagerType.self)!)
+                                         protocolManager: r.resolve(ProtocolManagerType.self)!,
+                                         connectivityManager: r.resolve(ConnectivityManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(IPInfoViewModelType.self) { r in

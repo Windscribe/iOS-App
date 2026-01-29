@@ -18,6 +18,7 @@ extension MainViewController {
                 if [.connected, .disconnected].contains($0.state) {
                     self.viewModel.updateSSID()
                 }
+                self.updateRefreshControls()
             }
             .store(in: &cancellables)
 
@@ -255,14 +256,6 @@ extension MainViewController {
                 guard let self = self else { return }
                 // Show no internet alert instead of protocol failover when no connectivity detected
                 self.displayInternetConnectionLostAlert()
-            }
-            .store(in: &cancellables)
-
-        viewModel.appNetwork
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] appNetwork in
-                guard let self = self else { return }
-                self.checkNetworkState(for: appNetwork)
             }
             .store(in: &cancellables)
 
