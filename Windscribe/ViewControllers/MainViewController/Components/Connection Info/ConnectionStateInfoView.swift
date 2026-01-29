@@ -11,6 +11,7 @@ import Combine
 
 protocol ConnectionStateInfoViewModelType {
     var statusSubject: CurrentValueSubject<ConnectionState?, Never> { get }
+    var hasNetwork: CurrentValueSubject<Bool, Never> { get }
     var isCircumventCensorshipEnabled: CurrentValueSubject<Bool, Never> { get }
     var refreshProtocolSubject: CurrentValueSubject<ProtocolPort?, Never> { get }
     var isCustomConfigSelected: Bool { get }
@@ -22,6 +23,7 @@ protocol ConnectionStateInfoViewModelType {
 class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     let statusSubject = CurrentValueSubject<ConnectionState?, Never>(nil)
     let isCircumventCensorshipEnabled = CurrentValueSubject<Bool, Never>(false)
+    let hasNetwork = CurrentValueSubject<Bool, Never>(false)
     let refreshProtocolSubject = CurrentValueSubject<ProtocolPort?, Never>(ProtocolPort(DefaultValues.protocol, DefaultValues.port))
 
     private var cancellables = Set<AnyCancellable>()
@@ -30,13 +32,18 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     let vpnStateRepository: VPNStateRepository
     let preferences: Preferences
     let protocolManager: ProtocolManagerType
+    let connectivityManager: ConnectivityManager
 
-    init(vpnStateRepository: VPNStateRepository, locationsManager: LocationsManager,
-         preferences: Preferences, protocolManager: ProtocolManagerType) {
+    init(vpnStateRepository: VPNStateRepository,
+         locationsManager: LocationsManager,
+         preferences: Preferences,
+         protocolManager: ProtocolManagerType,
+         connectivityManager: ConnectivityManager) {
         self.locationsManager = locationsManager
         self.preferences = preferences
         self.vpnStateRepository = vpnStateRepository
         self.protocolManager = protocolManager
+        self.connectivityManager = connectivityManager
         vpnStateRepository.getStatus()
             .sink { [weak self] state in
                 self?.statusSubject.send(ConnectionState.state(from: state))
@@ -55,6 +62,14 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
             .sink { [weak self] data in
                 self?.refreshProtocolSubject.send(data)
             }.store(in: &cancellables)
+
+        connectivityManager.network
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] appNetwork in
+                guard let self = self else { return }
+                hasNetwork.send(appNetwork.status == .connected)
+            }
+            .store(in: &cancellables)
     }
 
     var isCustomConfigSelected: Bool {
@@ -137,6 +152,20 @@ class ConnectionStateInfoView: UIView {
             }
             .store(in: &cancellables)
 
+        viewModel.hasNetwork
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] hasNetwork in
+                guard let self = self else { return }
+                if !hasNetwork {
+                    showNoInternetConnection()
+                } else {
+                    if let state = viewModel.statusSubject.value {
+                        updateConnectionInfo(state)
+                    }
+                }
+            }
+            .store(in: &cancellables)
+
         actionButton.tap
             .sink { [weak self] _ in
                 guard let self = self,
@@ -150,14 +179,16 @@ class ConnectionStateInfoView: UIView {
 
     private func updateConnectionInfo(_ state: ConnectionState) {
         pillLabel.text = state.statusText
-        pillLabel.isHidden = [.testing, .connecting, .automaticFailed].contains(state)
         pillLabel.textColor = state.statusColor
 
-        connectingImageView.isHidden = ![.connecting, .testing].contains(state)
         connectingImageView.tintColor = state.statusColor
 
-        if !connectingImageView.isHidden || !pillLabel.isHidden {
-            connectingImageView.isHidden = true
+        if !viewModel.hasNetwork.value {
+            showNoInternetConnection()
+        } else {
+            noConnectionIcon.isHidden = true
+            connectingImageView.isHidden = ![.connecting, .testing].contains(state)
+            pillLabel.isHidden = [.testing, .connecting, .automaticFailed].contains(state)
         }
 
         if connectingImageView.isHidden && connectingImageView.isAnimating {
@@ -196,15 +227,10 @@ class ConnectionStateInfoView: UIView {
         layoutIfNeeded()
     }
 
-    func showNoInternetConnection() {
+    private func showNoInternetConnection() {
         pillLabel.isHidden = true
         connectingImageView.isHidden = true
         noConnectionIcon.isHidden = false
-    }
-
-    func hideNoInternetConnection() {
-        noConnectionIcon.isHidden = true
-        pillLabel.isHidden = false
     }
 
     func updateProtoPort(_ value: ProtocolPort) {

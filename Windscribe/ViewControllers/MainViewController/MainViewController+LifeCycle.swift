@@ -55,7 +55,6 @@ extension MainViewController {
         navigationController?.isNavigationBarHidden = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         restartServerRefreshControl()
-        checkNetworkState(for: viewModel.appNetwork.value)
         flagBackgroundView.redraw()
     }
 

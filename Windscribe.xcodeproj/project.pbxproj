@@ -162,7 +162,6 @@
 		1EA80E232EBA60760003322D /* BridgeApiFailedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E222EBA60710003322D /* BridgeApiFailedViewModel.swift */; };
 		1EA91DCB2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DCA2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift */; };
 		1EA91DCE2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DCD2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift */; };
-		1EA91DDA2BEA7F2C00496DF8 /* MainViewController+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */; };
 		1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */; };
 		1EA9D6F92C7747C300566A93 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */; };
 		1EA9D6FB2C7747E000566A93 /* NewsFeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */; };
@@ -1498,7 +1497,6 @@
 		1EA876DA2BCEE40800F0DD25 /* PrivacyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewModel.swift; sourceTree = "<group>"; };
 		1EA91DCA2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigPickerViewModel.swift; sourceTree = "<group>"; };
 		1EA91DCD2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+CustomConfigPicker.swift"; sourceTree = "<group>"; };
-		1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainViewController+Status.swift"; sourceTree = "<group>"; };
 		1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionStateInfo.swift; sourceTree = "<group>"; };
 		1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
 		1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsFeedViewController.xib; sourceTree = "<group>"; };
@@ -3568,7 +3566,6 @@
 				AF0AED392203583F00039CAF /* CustomDataSources */,
 				AF018DEE21B0866600B225FF /* MainViewController.swift */,
 				1E5553CB2D96D9F500F16AF0 /* MainViewController+Bindings.swift */,
-				1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */,
 				AF36A1FE237DC3FE00BDDCDB /* MainViewController+Motion.swift */,
 				C5B6E865268208D40038B4D6 /* MainViewController+RefreshControls.swift */,
 				E9C9143C2735770000C2ABCD /* MainViewController+Connection.swift */,
@@ -7210,7 +7207,6 @@
 				AF4E91D521ED277A00A3F584 /* MobilePlan.swift in Sources */,
 				F404193A2D822F0F0005EF97 /* HTMLParsing.swift in Sources */,
 				AF21995B2270B147009B42E5 /* QNNTcpPing.m in Sources */,
-				1EA91DDA2BEA7F2C00496DF8 /* MainViewController+Status.swift in Sources */,
 				F49C45772DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				E9C9143D2735770000C2ABCD /* MainViewController+Connection.swift in Sources */,
 				F470F55F2E81C00F00F8400D /* PreferencesImpl+LookAndFeel.swift in Sources */,
