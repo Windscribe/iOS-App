@@ -572,7 +572,7 @@ enum TextsAsset {
             return "Something went wrong. Please make sure you have entered a valid DNS server.".localized
         }
         static var autoSecureNewDescription: String {
-            return "Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them.".localized
+            return "Windscribe will mark every new network as “Secured” and your VPN will remain connected when your device connects to them.".localized
         }
         static var autoSecureSettingsDescription: String {
             return "Windscribe will turn ON automatically if your device connects to this network.".localized

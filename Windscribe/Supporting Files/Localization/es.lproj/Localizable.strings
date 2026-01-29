@@ -480,7 +480,7 @@
 "Add Email (Get 10 GB/Month)" = "Agregar correo (Obtener 10 GB/Mes)";
 "Free" = "Gratis";
 "Upgrade to Pro" = "Actualizar a Pro";
-"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe marcará cada nueva red como \"Segura\" y se activará automáticamente cuando tu dispositivo se conecte.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe marcará cada nueva red como \"Segura\" y su VPN permanecerá conectada cuando su dispositivo se conecte a ella.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Windscribe se activará automáticamente si tu dispositivo se conecta a esta red.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Algo salió mal. Asegúrate de haber ingresado un servidor DNS válido.";
 "Invalid DNS server" = "Servidor DNS no válido";

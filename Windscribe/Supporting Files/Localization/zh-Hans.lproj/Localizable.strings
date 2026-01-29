@@ -480,7 +480,7 @@
 "Add Email (Get 10 GB/Month)" = "添加邮箱（获取每月 10GB）";
 "Free" = "免费";
 "Upgrade to Pro" = "升级为 Pro";
-"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe 会将每个新网络标记为“已保护”，并在设备连接时自动开启。";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe 会将每个新网络标记为“安全”，并且当您的设备连接到这些网络时，您的 VPN 将保持连接状态。";
 "Windscribe will turn ON automatically if your device connects to this network." = "当您的设备连接到该网络时，Windscribe 将自动开启。";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "发生错误。请确保您输入了有效的 DNS 服务器。";
 "Invalid DNS server" = "无效的 DNS 服务器";

@@ -480,7 +480,7 @@
 "Add Email (Get 10 GB/Month)" = "이메일 추가 (월 10GB 받기)";
 "Free" = "무료";
 "Upgrade to Pro" = "Pro로 업그레이드";
-"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe는 새로운 네트워크를 \"보안됨\"으로 표시하고, 기기가 연결될 때 자동으로 켜집니다.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe는 모든 새로운 네트워크를 \"보안됨\"으로 표시하며, 기기가 해당 네트워크에 연결되면 VPN 연결이 유지됩니다.";
 "Windscribe will turn ON automatically if your device connects to this network." = "기기가 이 네트워크에 연결되면 Windscribe가 자동으로 켜집니다.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "문제가 발생했습니다. 올바른 DNS 서버를 입력했는지 확인하세요.";
 "Invalid DNS server" = "잘못된 DNS 서버";
