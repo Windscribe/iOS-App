@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)executeRequestEx:(WSNetHttpRequest*)request requestId:(uint64_t)requestId finishedCallback:(void(^)(unsigned long long, unsigned int, WSNetRequestError*, NSString*))finishedCallback progressCallback:(void(^)(unsigned long long, unsigned long long, unsigned long long))progressCallback readyDataCallback:(void(^)(unsigned long long, NSString*))readyDataCallback;
 -(void)setProxySettings:(NSString*)address username:(NSString*)username password:(NSString*)password;
 -(WSNetCancelableCallback*)setWhitelistIpsCallback:(void(^)(NSOrderedSet<NSString*>*))whitelistIpsCallback;
--(WSNetCancelableCallback*)setWhitelistSocketsCallback:(void(^)(NSOrderedSet<NSNumber*>*))whitelistSocketsCallback;
 
 @end
 

@@ -53,9 +53,6 @@ extension Container {
     private func initializeWSNet(r: Container) {
         let preferences = r.resolve(Preferences.self)!
         let logger = r.resolve(FileLogger.self)
-        WSNet.setLogger({ message in
-            logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
-        }, debugLog: false)
         var language = "en"
         let preferredLanguages = Locale.preferredLanguages
         if let deviceLanguage = preferredLanguages.first {
@@ -83,8 +80,13 @@ extension Container {
             sessionTypeId: "4",
             isUseStagingDomains: isStaging,
             language: language,
-            persistentSettings: preferences.getServerSettings()
-        )
+            persistentSettings: preferences.getServerSettings(),
+            loggerFunction: { message in
+                logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
+            },
+            debugLog: false,
+            amneziawgVersion: APIParameterValues.amneziaWgVersion)
+
         WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])
         WSNet.instance().setConnectivityState(true)
         WSNet.instance().setIsConnectedToVpnState(false)
