@@ -75,6 +75,8 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
 
     func makeSecondaryEntries() -> [ConnectionSecondaryType] {
         switch self {
+        case .networkOptions:
+            return [.networkOptionsInfo]
         case let .connectionMode(currentOption, _, protocolSelected, protocolOptions, portSelected, portOptions):
             if currentOption == TextsAsset.General.manual {
                 return [.connectionModeInfo,
@@ -101,7 +103,8 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
 }
 
 enum ConnectionSecondaryEntryIDs: Int {
-    case connectionModeInfo = 100,
+    case networkOptionsInfo = 100,
+         connectionModeInfo,
          protocolMenu,
          portMenu,
          connectedDnsInfo,
@@ -113,7 +116,8 @@ enum ConnectionSecondaryEntryIDs: Int {
 }
 
 enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
-    case connectionModeInfo,
+    case networkOptionsInfo,
+         connectionModeInfo,
          protocolMenu(currentOption: String, options: [MenuOption]),
          portMenu(currentOption: String, options: [MenuOption]),
          connectedDnsInfo,
@@ -123,6 +127,8 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
 
     var id: Int {
         switch self {
+        case .networkOptionsInfo:
+            ConnectionSecondaryEntryIDs.networkOptionsInfo.id
         case .connectionModeInfo:
             ConnectionSecondaryEntryIDs.connectionModeInfo.id
         case .protocolMenu:
@@ -150,6 +156,8 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
     var message: String? { nil }
     var action: MenuEntryActionType? {
         switch self {
+        case .networkOptionsInfo:
+                .infoLink(message: TextsAsset.Connection.networkOptionsDescription, parentId: id)
         case .connectionModeInfo:
                 .infoLink(message: TextsAsset.Connection.connectionModeDescription, parentId: id)
         case let .protocolMenu(currentOption, options),
