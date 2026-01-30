@@ -455,14 +455,14 @@ class PreferencesImpl: Preferences {
     }
 
     func getCircumventCensorshipEnabled() -> AnyPublisher<Bool, Never> {
-        return observeKeyNonOptional(SharedKeys.circumventCensorship, type: Bool.self, defaultValue: isRestrictedCountry()) { $0 ?? self.isRestrictedCountry() }
+        return observeKeyNonOptional(SharedKeys.circumventCensorship, type: Bool.self, defaultValue: false) { $0 ?? false }
     }
 
     func isCircumventCensorshipEnabled() -> Bool {
         if let value = sharedDefault?.object(forKey: SharedKeys.circumventCensorship) as? Bool {
             return value
         }
-        return isRestrictedCountry()
+        return false
     }
 
     func isRestrictedCountry() -> Bool {

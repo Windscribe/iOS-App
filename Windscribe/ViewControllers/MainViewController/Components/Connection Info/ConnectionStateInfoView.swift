@@ -205,7 +205,8 @@ class ConnectionStateInfoView: UIView {
     }
 
     private func setCircumventCensorshipBadge(color: UIColor? = nil) {
-        circunventIcon.isHidden = !viewModel.isAntiCensorshipEnabled
+        let currentValue = viewModel.isCircumventCensorshipEnabled.value
+        circunventIcon.isHidden = !currentValue
         if let color = color {
             circunventIcon.tintColor = color
         }
@@ -281,10 +282,10 @@ class ConnectionStateInfoView: UIView {
         actionIcon.setImageColor(color: .white)
         actionIcon.contentMode = .scaleAspectFit
 
-        preferredIcon.isHidden = false
+        preferredIcon.isHidden = true
         preferredIcon.contentMode = .scaleAspectFit
 
-        circunventIcon.isHidden = false
+        circunventIcon.isHidden = true
         circunventIcon.image = UIImage(named: ImagesAsset.circumventCensorship)?.withRenderingMode(.alwaysTemplate)
         circunventIcon.setImageColor(color: .whiteWithOpacity(opacity: 0.4))
         circunventIcon.contentMode = .scaleAspectFit
@@ -292,6 +293,7 @@ class ConnectionStateInfoView: UIView {
         connectingImageView.tintColor = .white
         connectingImageView.animationDuration = 0.8
         connectingImageView.animationRepeatCount = 0
+        connectingImageView.isHidden = true
         connectingImageView.animationImages = [ImagesAsset.connectindDots1,
                                                ImagesAsset.connectindDots2,
                                                ImagesAsset.connectindDots3,
@@ -300,6 +302,7 @@ class ConnectionStateInfoView: UIView {
         }
 
         noConnectionIcon.image = UIImage(named: ImagesAsset.noInternet)
+        noConnectionIcon.isHidden = true
 
         stackView.addArrangedSubviews([pillView, circunventIcon, protocolLabel, portLabel, preferredIcon, actionIcon])
         stackView.spacing = 8

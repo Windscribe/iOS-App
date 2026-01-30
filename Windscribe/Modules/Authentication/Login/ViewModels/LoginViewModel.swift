@@ -194,12 +194,18 @@ class LoginViewModelImpl: LoginViewModel {
         // Cache current Wi-Fi state to use for reconnect logic
         WifiManager.shared.saveCurrentWifiNetworks()
 
+        // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
+        let sessionModel = session.getModel()
+
         Task {
+            // Create unmanaged Session from model (safe to use on any thread)
+            let sessionForStorage = Session(sessionModel: sessionModel)
+
             // Store authenticated session
-            await sessionManager.updateFrom(session: session)
+            await sessionManager.updateFrom(session: sessionForStorage)
 
             // Log the success with the username
-            logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
+            logger.logI("LoginViewModel", "Login successful, preparing user data for \(sessionModel.username)")
 
             // Continue with user-specific data preparation and transition to main app screen
             prepareUserData()
