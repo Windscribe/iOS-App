@@ -34,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)notifications;
 -(NSString*)checkUpdate;
 -(NSString*)authTokenLoginResult;
--(void)setUpdateIntervals:(int)sessionInDisconnectedStateMs sessionInConnectedStateMs:(int)sessionInConnectedStateMs locationsMs:(int)locationsMs staticIpsMs:(int)staticIpsMs serverConfigsAndCredentialsMs:(int)serverConfigsAndCredentialsMs portMapMs:(int)portMapMs notificationsMs:(int)notificationsMs checkUpdateMs:(int)checkUpdateMs;
+-(NSString*)amneziawgUnblockParams;
+-(void)setUpdateIntervals:(int)sessionInDisconnectedStateMs sessionInConnectedStateMs:(int)sessionInConnectedStateMs locationsMs:(int)locationsMs staticIpsMs:(int)staticIpsMs serverConfigsAndCredentialsMs:(int)serverConfigsAndCredentialsMs portMapMs:(int)portMapMs notificationsMs:(int)notificationsMs checkUpdateMs:(int)checkUpdateMs amneziawgUnblockParamsMs:(int)amneziawgUnblockParamsMs;
 
 @end
 

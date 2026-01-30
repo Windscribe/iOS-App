@@ -77,4 +77,5 @@ enum APIParameterValues {
     static let openVPNVersion = "2.4.6"
     static let portMapVersion = 5
     static let forceProtocols = ["wstunnel"]
+    static let amneziaWgVersion = "0.2.16"
 }
