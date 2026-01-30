@@ -20,7 +20,8 @@ class StaticIpRepositoryImpl: StaticIpRepository {
         self.localDatabase = localDatabase
         self.logger = logger
 
-        staticIPs = localDatabase.getStaticIPs()?.map { $0.getModel() } ?? []
+        staticIPs = (localDatabase.getStaticIPs()?.map { $0.getModel() } ?? [])
+            .sorted { $0.cityName.lowercased() < $1.cityName.lowercased() }
     }
 
     /// Fetches static IPs and updates the local database.
@@ -30,12 +31,14 @@ class StaticIpRepositoryImpl: StaticIpRepository {
             localDatabase.deleteStaticIps(ignore: Array(result.staticIPs).map { $0.staticIP })
             localDatabase.saveStaticIPs(staticIps: Array(result.staticIPs))
             staticIPs = result.staticIPs.map { $0.getModel() }
+                .sorted { $0.cityName.lowercased() < $1.cityName.lowercased() }
         } catch {
             logger.logE("StaticIpRepository", "Error getting static IPs: \(error)")
 
             // Fallback to cached data if available and not empty
             if let cachedIps = localDatabase.getStaticIPs(), !cachedIps.isEmpty {
                 staticIPs = cachedIps.map { $0.getModel() }
+                    .sorted { $0.cityName.lowercased() < $1.cityName.lowercased() }
             } else {
                 throw error
             }

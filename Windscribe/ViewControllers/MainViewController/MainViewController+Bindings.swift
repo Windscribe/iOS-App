@@ -339,7 +339,7 @@ extension MainViewController {
     func bindStaticIPListViewModel() {
         staticIPListViewModel.presentLinkTrigger
             .sink { [weak self] in
-                self?.openLink(url: $0)
+                self?.openLink(url: $0, asSheet: true)
             }
             .store(in: &cancellables)
         staticIPListViewModel.presentAlertTrigger

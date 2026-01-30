@@ -70,14 +70,17 @@ class WSUIViewController: UIViewController {
         }
     }
 
-    func openLink(url: String) {
+    func openLink(url: String, asSheet: Bool = false) {
         guard let urlValue = URL(string: url) else { return }
-        openLink(url: urlValue)
+        openLink(url: urlValue, asSheet: asSheet)
     }
 
-    func openLink(url: URL) {
+    func openLink(url: URL, asSheet: Bool = false) {
         let safariVC = SFSafariViewController(url: url)
         safariVC.preferredBarTintColor = UIColor.black
+        if asSheet {
+            safariVC.modalPresentationStyle = .pageSheet
+        }
         present(safariVC, animated: true, completion: nil)
         safariVC.delegate = self
     }
