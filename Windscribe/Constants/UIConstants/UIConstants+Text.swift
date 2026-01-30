@@ -562,6 +562,9 @@ enum TextsAsset {
         static var circumventCensorshipDescription: String {
             return "Connect to the VPN even in hostile environment".localized
         }
+        static var networkOptionsDescription: String {
+            return "The Network Options feature lets you control how the Windscribe app behaves on different networks.".localized
+        }
         static var connectedDNSValueFieldDescription: String {
             return "IP/DNS-over-HTTPS/TLS".localized
         }

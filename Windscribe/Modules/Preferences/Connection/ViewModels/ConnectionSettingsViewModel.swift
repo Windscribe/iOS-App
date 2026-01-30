@@ -163,7 +163,12 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
 
         switch entry {
         case .networkOptions:
-            networkOptionsSelected()
+            if case .button = action {
+                networkOptionsSelected()
+            }
+            if case .infoLink = action {
+                openLink(.networkOptions)
+            }
         case .connectionMode:
             if case .multiple(let currentOption, let parentId) = action {
                 if parentId == ConnectionSecondaryEntryIDs.protocolMenu.id {
