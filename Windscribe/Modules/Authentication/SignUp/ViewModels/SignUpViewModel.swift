@@ -268,8 +268,13 @@ class SignUpViewModelImpl: SignUpViewModel {
                         captchaTrailY: captchaTrailY
                     )
 
+                    // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
+                    let sessionModel = session.getModel()
+
                     Task {
-                        await self.sessionManager.updateFrom(session: session)
+                        // Create unmanaged Session from model (safe to use on any thread)
+                        let sessionForStorage = Session(sessionModel: sessionModel)
+                        await self.sessionManager.updateFrom(session: sessionForStorage)
                         self.prepareUserData()
                     }
                 } catch {

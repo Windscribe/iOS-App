@@ -167,14 +167,16 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     private func handleLoginSuccess(session: Session) {
-        // Extract username before accessing to avoid Realm threading issues
-        let username = session.username
+        // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
+        let sessionModel = session.getModel()
 
         preferences.saveLoginDate(date: Date())
         WifiManager.shared.saveCurrentWifiNetworks()
         Task {
-            await sessionManager.updateFrom(session: session)
-            logger.logI("LoginViewModel", "Login successful. Preparing user data for \(username)")
+            // Create unmanaged Session from model (safe to use on any thread)
+            let sessionForStorage = Session(sessionModel: sessionModel)
+            await sessionManager.updateFrom(session: sessionForStorage)
+            logger.logI("LoginViewModel", "Login successful. Preparing user data for \(sessionModel.username)")
             prepareUserData()
         }
     }
