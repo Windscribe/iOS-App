@@ -87,6 +87,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
 
     // Stops tunnel
     func disconnect() -> AnyPublisher<VPNConnectionState, Error> {
+        cleansEmergencyConfigs()
         return vpnManager.disconnectFromViewModel()
     }
 
