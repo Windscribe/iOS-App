@@ -259,12 +259,14 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         // Check if VPN is currently connected and mark the connected protocol
+        let isVPNConnected = vpnStateRepository.isConnected()
+
         if !isFromFailover, !shouldReconnect,
            let info = vpnStateRepository.vpnInfo.value, info.status == .connected {
             // vpnInfo is populated with connection details
             appendPort(proto: info.selectedProtocol, port: info.selectedPort)
             setPriority(proto: info.selectedProtocol, type: .connected)
-        } else if vpnStateRepository.isConnected() {
+        } else if !isFromFailover && isVPNConnected {
             // VPN is connected but vpnInfo not populated yet (e.g., app restart)
             // Mark the first protocol as connected
             protocolsToConnectList.first?.viewType = .connected
@@ -363,19 +365,22 @@ class ProtocolManager: ProtocolManagerType {
         logger.logI("ProtocolManager", "\(failedProtocol.protocolName) failed to connect.")
         setPriority(proto: failedProtocol.protocolName, type: .fail)
 
-        if securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true {
+        let preferredProtocolStatus = securedNetwork.getCurrentNetwork()?.preferredProtocolStatus
+        if preferredProtocolStatus == true {
             // If the Network has a preferred protocol do not show Protocol Switch View
             return
         }
 
+        let connectionMode = preferences.getConnectionModeSync()
         // Check Manual mode FIRST - always show warning regardless of preferred protocol
-        guard Fields.Values.manual != preferences.getConnectionModeSync() else {
+        guard Fields.Values.manual != connectionMode else {
             // The connection failed while user on Manual mode, show message to change to Auto mode
             showConnectionModeTriggeer.send(())
             return
         }
 
-        if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
+        let remainingProtocols = protocolsToConnectList.filter({ $0.viewType != .fail}).count
+        if remainingProtocols <= 0 {
             logger.logI("ProtocolManager", "No more protocol left to connect.")
             await reset()
             showAllProtocolsFailedTrigger.send(())
@@ -383,8 +388,9 @@ class ProtocolManager: ProtocolManagerType {
             logger.logI("ProtocolManager", "RefreshProtocols for onProtocolFail")
             await refreshProtocols(shouldReset: false, shouldReconnect: false, isFromFailover: true)
 
+            let hasInternet = connectivity.internetConnectionAvailable()
             // Check internet connectivity before starting failover countdown
-            if !connectivity.internetConnectionAvailable() {
+            if !hasInternet {
                 logger.logI("ProtocolManager", "No internet connection detected - showing no internet alert instead of protocol failover")
                 showNoInternetBeforeFailoverTrigger.send(())
             } else {
@@ -486,8 +492,9 @@ extension ProtocolManager {
     /// This is used in failure mode to automatically try the next protocol
     private func startCountdownTimer() {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            guard let proto = self.protocolsToConnectList.first(where: \.viewType.isNextup) else { return }
+            guard let self = self, let proto = self.protocolsToConnectList.first(where: \.viewType.isNextup) else {
+                return
+            }
 
             self.countdownSeconds = self.defaultCountdownTime
             self.setPriority(proto: proto.protocolPort.protocolName,
