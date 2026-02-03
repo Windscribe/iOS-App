@@ -136,6 +136,8 @@ extension VPNManagerImpl {
                             self.logger.logI("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
                             return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
                         }
+                    case .noValidNodeFound:
+                        self.logger.logI("VPNManager", "noValidNodeFound - should trigger protocol failover")
                     default: ()
                     }
                 }

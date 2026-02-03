@@ -58,11 +58,14 @@ class IPInfoView: UIView {
             let formattedIP = ipAddress.formatIpAddress().maxLength(length: 15)
             let displayIP = formattedIP.isEmpty ? "---.---.---.---" : formattedIP
 
+            // Only animate if IP actually changed
+            let ipChanged = displayIP != self.currentIPText
+
             // Store current IP for rolling animation
             self.currentIPText = displayIP
 
-            // Don't animate the first IP update
-            let shouldAnimate = !self.isFirstIPUpdate
+            // Animate only if: not first update AND IP actually changed
+            let shouldAnimate = !self.isFirstIPUpdate && ipChanged
             self.ipLabel.setText(displayIP, animated: shouldAnimate)
 
             if self.isFirstIPUpdate {
