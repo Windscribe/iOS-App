@@ -275,24 +275,16 @@ extension ConfigurationsManager {
         WSNet.instance().setIsConnectedToVpnState(true)
 
         var ipPinningFailed = false
-        var shouldCheckPinning = false
-        var hasPinnedNodeMismatch = false
 
         if !preferences.getIgnorePinIP() {
-            let favourite = serverRepository.getFavorite(from: forLocationId)
-            if let favourite = favourite {
-                shouldCheckPinning = favourite.pinnedNodeIp != nil
-                hasPinnedNodeMismatch = shouldCheckPinning && favourite.pinnedNodeIp != currentHost
-
-                if let pinnedIp = favourite.pinnedIp {
-                    logger.logI("ConfigurationsManager","Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
-                    do {
-                        _ = try await api.pinIp(ip: pinnedIp)
-                        logger.logI("ConfigurationsManager", "IP pinned successfully")
-                    } catch {
-                        logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
-                        ipPinningFailed = true
-                    }
+            if let pinnedIp = preferences.getLastSelectedPinnedIp() {
+                logger.logI("ConfigurationsManager","Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
+                do {
+                    _ = try await api.pinIp(ip: pinnedIp)
+                    logger.logI("ConfigurationsManager", "IP pinned successfully")
+                } catch {
+                    logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
+                    ipPinningFailed = true
                 }
             }
         } else {
@@ -302,7 +294,7 @@ extension ConfigurationsManager {
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
                 try await ipRepository.getIp()
-                if hasPinnedNodeMismatch || ipPinningFailed {
+                if serverRepository.hasPinnedNodeMismatch || ipPinningFailed {
                     showFailedPinIpTrigger.send()
                 }
                 return

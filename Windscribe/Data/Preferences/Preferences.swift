@@ -155,6 +155,8 @@ protocol Preferences {
     func clearSelectedLocations()
     func saveLastSelectedLocation(with locationID: String)
     func getLastSelectedLocation() -> String
+    func saveLastSelectedPinnedIp(with pinnedIP: String)
+    func getLastSelectedPinnedIp() -> String?
     func saveBestLocation(with locationID: String)
     func getBestLocation() -> String
     func isCustomConfigSelected() -> Bool

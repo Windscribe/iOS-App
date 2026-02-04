@@ -34,6 +34,10 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
         return resolver.getPreferences()
     }
 
+    var bridgeAPI: WSNetBridgeAPI {
+        return resolver.getBridgeApi()
+    }
+
     func perform() async throws -> some IntentResult & ProvidesDialog {
         logger.logI(tag, "Enable VPN action called.")
         do {
@@ -57,6 +61,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 activeManager.isOnDemandEnabled = true
                 try await activeManager.saveToPreferences()
                 try activeManager.connection.startVPNTunnel()
+                pinIP(proto: protocolType)
             }
             var iterations = 0
             while iterations <= 20 {
@@ -76,6 +81,38 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
             logger.logE("Connect", "Error connecting to VPN: \(error.localizedDescription)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseFailure)
+        }
+    }
+
+    private func pinIP(proto: String) {
+        let currentHost = preferences.getLastNodeIP() ?? ""
+
+        if proto == "WireGuard" {
+            logger.logI(tag,"Bridge API - WSNEt - set host for wireguard: \(currentHost)")
+            bridgeAPI.setCurrentHost(currentHost)
+        } else {
+            bridgeAPI.setCurrentHost("")
+        }
+
+        bridgeAPI.setIgnoreSslErrors(true)
+        bridgeAPI.setConnectedState(true)
+
+        WSNet.instance().setIsConnectedToVpnState(true)
+
+        if !preferences.getIgnorePinIP() {
+            let pinnedIp = preferences.getLastSelectedPinnedIp()
+            if let pinnedIp = pinnedIp {
+                logger.logI(tag,"Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
+
+                bridgeAPI.pinIp(pinnedIp) { statusCode,_ in
+                    if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
+                        logger.logE(tag,"Failed to pin IP: \(wsNetError)")
+                    } else {
+                        logger.logI(tag, "IP pinned successfully")
+                    }}
+            }
+        } else {
+            preferences.saveIgnorePinIP(status: false)
         }
     }
 }

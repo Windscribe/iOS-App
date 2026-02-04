@@ -16,6 +16,8 @@ protocol ServerRepository {
     var currentGroupModels: [GroupModel] { get }
     var favouriteListSubject: CurrentValueSubject<[FavouriteModel], Never> { get }
 
+    var hasPinnedNodeMismatch: Bool { get }
+
     func updatedServers() async throws
     func updateRegions(with regions: [ExportedRegion])
 
@@ -25,11 +27,14 @@ protocol ServerRepository {
     func removeFavorite(with groupId: String)
     func removeFavorite(with groupId: Int)
     func saveFavorite(for favourite: FavouriteModel)
+
+    func saveLastConnectedHost(for hostName: String, with locationId: String)
 }
 
 class ServerRepositoryImpl: ServerRepository {
     var serverListSubject = CurrentValueSubject<[ServerModel], Never>([])
     var favouriteListSubject = CurrentValueSubject<[FavouriteModel], Never>([])
+    var hasPinnedNodeMismatch = false
 
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
@@ -173,5 +178,23 @@ class ServerRepositoryImpl: ServerRepository {
 
     func saveFavorite(for favourite: FavouriteModel) {
         localDatabase.saveFavourite(favourite: favourite.getObject())
+    }
+
+    func saveLastConnectedHost(for hostName: String, with locationId: String) {
+        preferences.saveLastNodeIP(nodeIp: hostName)
+        hasPinnedNodeMismatch = false
+
+        if let favorite = getFavorite(from: locationId),
+           favorite.pinnedNodeIp != nil {
+            if favorite.pinnedNodeIp == hostName {
+                if let pinnedIp = favorite.pinnedIp {
+                    preferences.saveLastSelectedPinnedIp(with: pinnedIp)
+                    return
+                }
+            } else {
+                hasPinnedNodeMismatch = true
+            }
+        }
+        preferences.saveLastSelectedPinnedIp(with: "")
     }
 }
