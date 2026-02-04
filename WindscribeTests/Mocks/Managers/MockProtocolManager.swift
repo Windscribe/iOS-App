@@ -47,7 +47,6 @@ class MockProtocolManager: ProtocolManagerType {
     func onUserSelectProtocol(proto: ProtocolPort, connectionType: ConnectionType) {}
     func resetGoodProtocol() {}
     func onConnectStateChange(state: NEVPNStatus) {}
-    func scheduleTimer() {}
     func saveCurrentWifiNetworks() {}
     func cancelFailoverTimer() {}
 

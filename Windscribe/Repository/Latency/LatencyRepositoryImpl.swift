@@ -38,6 +38,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private var cancellables = Set<AnyCancellable>()
     private var startTimeStamp = Date()
     private var hasPassedInitialTimer = false
+    private var isLoadingLatency = false
 
     init(pingManager: LocalPingManager,
          database: LocalDatabase,
@@ -81,6 +82,15 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadLatency() async {
+        // Guard: if already loading, skip to prevent duplicate simultaneous pings
+        guard !isLoadingLatency else {
+            logger.logI("LatencyRepositoryImpl", "Latency update already in progress, skipping duplicate request.")
+            return
+        }
+
+        isLoadingLatency = true
+        defer { isLoadingLatency = false }
+
         // If the app launches and the VPN is connected the app does not know straight away
         // that it is connected, we wait 1 sec until eveything is loaded an then we can
         // load the latencies, otherwise it will get the latency of the connected location
