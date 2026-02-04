@@ -36,6 +36,7 @@ class MockPreferences: Preferences {
     var mockLastNodeIP: String?
     var mockIgnorePinIP: Bool?
     var mockWireGuardHashedCIDR: [String]?
+    var mockLastSelectedPinnedIp: String?
 
     // IP Address - Issue #911
     var mockCurrentIpAddress: String?
@@ -51,6 +52,7 @@ class MockPreferences: Preferences {
     var mockBackgroundEffectDisconnect: String?
     var mockBackgroundCustomConnectPath: String?
     var mockBackgroundCustomDisconnectPath: String?
+    var mockCustomAppIcon: String?
     private let darkModeSubject = CurrentValueSubject<Bool?, Never>(nil)
 
     func saveAdvanceParams(params: String) {
@@ -584,10 +586,12 @@ class MockPreferences: Preferences {
         return mockCustomLocations
     }
 
-    func saveCustomAppIcon(value: String) {}
+    func saveCustomAppIcon(value: String) {
+        mockCustomAppIcon = value
+    }
 
     func getCustomAppIcon() -> String? {
-        return nil
+        return mockCustomAppIcon
     }
 
     func saveWireGuardAddress(_ address: String?) {}
@@ -677,5 +681,13 @@ class MockPreferences: Preferences {
 
     func getWireGuardHashedCIDR() -> [String]? {
         return mockWireGuardHashedCIDR
+    }
+
+    func saveLastSelectedPinnedIp(with pinnedIP: String) {
+        mockLastSelectedPinnedIp = pinnedIP
+    }
+
+    func getLastSelectedPinnedIp() -> String? {
+        return mockLastSelectedPinnedIp
     }
 }

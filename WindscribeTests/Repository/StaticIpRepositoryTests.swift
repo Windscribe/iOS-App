@@ -75,8 +75,9 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // Then
         XCTAssertEqual(result.count, 2)
-        XCTAssertEqual(result.first?.staticIP, "192.168.1.100")
-        XCTAssertEqual(result.first?.name, "US East")
+        // Repository sorts by cityName, so "London" comes before "New York"
+        XCTAssertEqual(result.first?.staticIP, "10.10.2.200")
+        XCTAssertEqual(result.first?.name, "UK London")
         XCTAssertTrue(mockAPIManager.getStaticIpListCalled)
     }
 
@@ -143,7 +144,9 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // Then
         XCTAssertEqual(result.count, cachedStaticIPs.count)
-        XCTAssertEqual(result.first?.staticIP, cachedStaticIPs.first?.staticIP)
+        // Repository sorts by cityName, so check against sorted cached data
+        let sortedCached = cachedStaticIPs.sorted { $0.cityName.lowercased() < $1.cityName.lowercased() }
+        XCTAssertEqual(result.first?.staticIP, sortedCached.first?.staticIP)
     }
 
     func test_updateStaticServers_apiFailure_noCachedData_shouldThrowError() async {
@@ -267,7 +270,8 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // Then
         XCTAssertEqual(result.count, 2)
-        XCTAssertEqual(result.first?.staticIP, "192.168.1.100")
+        // Repository sorts by cityName, so "London" comes before "New York"
+        XCTAssertEqual(result.first?.staticIP, "10.10.2.200")
     }
 
     func test_fullFlow_updateStaticServers_thenLookup() async throws {
