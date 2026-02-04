@@ -142,6 +142,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     var customConfigRepository: CustomConfigRepository?
 
+    // Debounced table reload trigger
+    let reloadTableViewsTrigger = PassthroughSubject<Void, Never>()
+
     func gestureRecognizerShouldBegin(_: UIGestureRecognizer) -> Bool {
         return false
     }
@@ -187,6 +190,14 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             .compactMap { $0 }
             .sink { [weak self] in
                 self?.pushNotificationReceived(payload: $0)
+            }
+            .store(in: &cancellables)
+
+        // Debounced table reload: coalesces multiple rapid reload calls into single reload
+        reloadTableViewsTrigger
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.performTableReload()
             }
             .store(in: &cancellables)
 

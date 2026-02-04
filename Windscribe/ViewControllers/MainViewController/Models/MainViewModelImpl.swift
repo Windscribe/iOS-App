@@ -124,7 +124,6 @@ class MainViewModelImpl: MainViewModel {
         loadServerList()
         loadFavourite()
         loadTvFavourites()
-        loadStaticIps()
         loadCustomConfigs()
         observeNetworkStatus()
         observeWifiNetwork()
@@ -413,7 +412,7 @@ class MainViewModelImpl: MainViewModel {
             .sink { [weak self] data in
                 guard let self = self else { return }
                 self.customConfigs.send(data)
-                self.updateCustomConfigLatency()
+                // Latency for custom configs will be loaded on manual refresh or when tab is opened
             }
             .store(in: &cancellables)
     }
@@ -552,6 +551,9 @@ class MainViewModelImpl: MainViewModel {
     func loadServerList() {
         Task {
             try? await serverRepository.updatedServers()
+            // Load static IPs after server list completes to avoid parallel API calls
+            try? await staticIpRepository.updateStaticServers()
+            staticIPs.send(staticIpRepository.staticIPs)
         }
     }
 

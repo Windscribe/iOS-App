@@ -36,7 +36,6 @@ protocol ProtocolManagerType {
     func onUserSelectProtocol(proto: ProtocolPort, connectionType: ConnectionType)
     func resetGoodProtocol()
     func onConnectStateChange(state: NEVPNStatus)
-    func scheduleTimer()
     func saveCurrentWifiNetworks()
     func cancelFailoverTimer()
 }
@@ -70,8 +69,6 @@ class ProtocolManager: ProtocolManagerType {
     }
     /// App selected this protocol automatcally or user selected it
     private var userSelected: ProtocolPort?
-    /// Timer to reset good protocol
-    private var scheduledTimer: Timer!
     /// Last successful protocol
     var goodProtocol: ProtocolPort?
     var resetGoodProtocolTime: Date?
@@ -352,7 +349,6 @@ class ProtocolManager: ProtocolManagerType {
                 logger.logI("ProtocolManager", "Resetting good Protocol after 12 hours.")
                 Task { @MainActor in
                     await reset()
-                    scheduledTimer.invalidate()
                 }
             }
         }
@@ -399,10 +395,6 @@ class ProtocolManager: ProtocolManagerType {
             }
         }
         currentProtocolSubject.send(getFirstProtocol())
-    }
-
-    func scheduleTimer() {
-        scheduledTimer = Timer.scheduledTimer(timeInterval: 3600, target: self, selector: #selector(resetGoodProtocol), userInfo: nil, repeats: true)
     }
 
     func saveCurrentWifiNetworks() {

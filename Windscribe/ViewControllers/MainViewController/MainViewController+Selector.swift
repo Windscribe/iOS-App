@@ -161,12 +161,14 @@ extension MainViewController {
     }
 
     @objc func reloadTableViews() {
-        DispatchQueue.main.async { [weak self] in
-            self?.serverListTableView.reloadData()
-            self?.favTableView.reloadData()
-            self?.staticIpTableView.reloadData()
-            self?.customConfigTableView.reloadData()
-        }
+        reloadTableViewsTrigger.send()
+    }
+
+    func performTableReload() {
+        serverListTableView.reloadData()
+        favTableView.reloadData()
+        staticIpTableView.reloadData()
+        customConfigTableView.reloadData()
     }
 
     @objc func disableVPNConnection() {

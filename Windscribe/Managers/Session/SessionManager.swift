@@ -164,6 +164,7 @@ class SessionManagerImpl: SessionManager {
     func listenForSessionChanges() {
         userSessionRepository.sessionModelSubject
             .compactMap { $0 }
+            .dropFirst() // Skip initial session load - only react to actual session changes
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else { return }
