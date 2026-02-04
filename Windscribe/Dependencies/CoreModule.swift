@@ -84,8 +84,7 @@ extension Container {
             loggerFunction: { message in
                 logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
             },
-            debugLog: false,
-            amneziawgVersion: APIParameterValues.amneziaWgVersion)
+            debugLog: false)
 
         WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])
         WSNet.instance().setConnectivityState(true)
