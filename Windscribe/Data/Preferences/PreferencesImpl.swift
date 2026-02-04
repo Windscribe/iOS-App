@@ -542,6 +542,15 @@ class PreferencesImpl: Preferences {
         return sharedDefault?.string(forKey: SharedKeys.savedLastLocation) ?? "0"
     }
 
+    func saveLastSelectedPinnedIp(with pinnedIP: String) {
+        sharedDefault?.set(pinnedIP, forKey: SharedKeys.savedLastPinnedIP)
+    }
+
+    func getLastSelectedPinnedIp() -> String? {
+        let value = sharedDefault?.string(forKey: SharedKeys.savedLastPinnedIP)
+        return value?.isEmpty == true ? nil : value
+    }
+
     func saveBestLocation(with locationID: String) {
         sharedDefault?.set(locationID, forKey: SharedKeys.savedBestLocation)
     }

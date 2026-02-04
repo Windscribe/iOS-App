@@ -96,6 +96,7 @@ enum SharedKeys {
     static let tvFavourites = "tvfavourites"
 
     // Locations
+    static let savedLastPinnedIP = "savedLastPinnedIP"
     static let savedLastLocation = "savedLastLocation"
     static let savedBestLocation = "savedBestLocation"
 
