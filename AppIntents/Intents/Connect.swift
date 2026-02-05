@@ -94,25 +94,29 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
             bridgeAPI.setCurrentHost("")
         }
 
-        bridgeAPI.setIgnoreSslErrors(true)
-        bridgeAPI.setConnectedState(true)
+        Task {
+            try await Task.sleep(nanoseconds: 500_000_000)
 
-        WSNet.instance().setIsConnectedToVpnState(true)
+            //
+            bridgeAPI.setIgnoreSslErrors(true)
+            bridgeAPI.setConnectedState(true)
 
-        if !preferences.getIgnorePinIP() {
-            let pinnedIp = preferences.getLastSelectedPinnedIp()
-            if let pinnedIp = pinnedIp {
-                logger.logI(tag,"Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
+            if !preferences.getIgnorePinIP() {
+                let pinnedIp = preferences.getLastSelectedPinnedIp()
+                if let pinnedIp = pinnedIp {
+                    logger.logI(tag,"Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
 
-                bridgeAPI.pinIp(pinnedIp) { statusCode,_ in
-                    if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
-                        logger.logE(tag,"Failed to pin IP: \(wsNetError)")
-                    } else {
-                        logger.logI(tag, "IP pinned successfully")
-                    }}
+                    bridgeAPI.pinIp(pinnedIp) { statusCode,_ in
+                        if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
+                            logger.logE(tag,"Failed to pin IP: \(wsNetError)")
+                        } else {
+                            logger.logI(tag, "IP pinned successfully")
+                        }}
+                }
+            } else {
+                preferences.saveIgnorePinIP(status: false)
             }
-        } else {
-            preferences.saveIgnorePinIP(status: false)
+
         }
     }
 }

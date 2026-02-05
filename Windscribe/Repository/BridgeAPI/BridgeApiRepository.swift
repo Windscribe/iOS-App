@@ -61,6 +61,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                     self.logger.logI("BridgeApiRepository", "wsnet setIsConnectedToVpnState to false")
                     WSNet.instance().setIsConnectedToVpnState(false)
                 }
+
                 guard initialListenning else { return }
                 guard Date().timeIntervalSince(startTimeStamp) < 1 else {
                     initialListenning = false
