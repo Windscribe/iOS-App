@@ -76,5 +76,9 @@ protocol LocalDatabase {
     func saveOldSession()
     func getOldSession() -> OldSession?
     func getCustomConfigs() -> [CustomConfig]
+
+    func saveUnblockWgParams(params: [UnblockWgParamsObj])
+    func getUnblockWgParams() -> [UnblockWgParamsObj]
+
     func clean()
 }

@@ -85,7 +85,7 @@ extension Container {
                 logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
             },
             debugLog: false,
-            amneziawgVersion: "2.0.0")
+            amneziawgVersion: APIParameterValues.unlockWGVersion)
 
         WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])
         WSNet.instance().setConnectivityState(true)

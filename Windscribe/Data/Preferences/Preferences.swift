@@ -238,4 +238,8 @@ protocol Preferences {
     // SSO Provider Tracking
     func saveSSOProvider(provider: String?)
     func getSSOProvider() -> String?
+
+    // Unblock WG Params
+    func saveUnblockWgParams(param: UnblockWgParams)
+    func getUnblockWgParams() -> UnblockWgParams?
 }

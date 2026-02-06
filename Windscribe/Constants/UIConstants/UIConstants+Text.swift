@@ -546,6 +546,7 @@ enum TextsAsset {
         static var autoSecureNew: String { "Auto-Secure New Networks".localized }
         static var protocolType: String { "Protocol".localized }
         static var port: String { "Port".localized }
+        static var configuration: String { "Configuration".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized

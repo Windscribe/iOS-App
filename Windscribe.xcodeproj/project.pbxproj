@@ -100,6 +100,8 @@
 		1E60E0262CAD69DC00623CD5 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Extension.swift */; };
 		1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF72CAB061800623CD5 /* Disconnect.swift */; };
 		1E60E0282CAD6F5A00623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
+		1E62CEF42F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */; };
+		1E62CEF52F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */; };
 		1E66109F2E0C203B00CCEFD6 /* DescriptionWithLearnMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */; };
 		1E6610A22E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */; };
 		1E6610A32E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */; };
@@ -684,6 +686,15 @@
 		C51EEDD02C18897600B01F8F /* LatencyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */; };
 		C51F7B74276D0AAB0074A025 /* RobertFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F7B73276D0AAB0074A025 /* RobertFilters.swift */; };
 		C524AA5E26B231AC00FCB1B6 /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */; };
+		C52B60422F2CF644009B6279 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C52B60412F2CF644009B6279 /* WireGuardKit */; };
+		C52B60442F2CFA3A009B6279 /* amz-wg-windscribe.patch in Resources */ = {isa = PBXBuildFile; fileRef = C52B60432F2CFA3A009B6279 /* amz-wg-windscribe.patch */; };
+		C52B60462F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		C52B60472F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		C52B60482F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		C52B60492F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		C52B604A2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		C52B604B2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		C52B604C2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
 		C52DA5102B63820F00E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
 		C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
@@ -744,8 +755,6 @@
 		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
 		C56616152C4D9207008AA993 /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */; };
-		C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */; };
-		C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AF42C4DFF300069DB6E /* WireGuardKit */; };
 		C56FCBCE2B2A41BB008DE7D4 /* Routers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBCD2B2A41BB008DE7D4 /* Routers.swift */; };
 		C56FCBD22B2A42B9008DE7D4 /* RouteIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBD12B2A42B9008DE7D4 /* RouteIDs.swift */; };
 		C56FCBDD2B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
@@ -800,8 +809,6 @@
 		C585F3E52C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* PreferencesImpl+Favourites.swift */; };
 		C585F3E62C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* PreferencesImpl+Favourites.swift */; };
 		C590D76927F2A55D007515B3 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
-		C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706A2C63210B00DA4DB1 /* WireGuardKit */; };
-		C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706C2C63212700DA4DB1 /* WireGuardKit */; };
 		C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59BBFC8273F30D60078BB72 /* WebSession.swift */; };
 		C59C073D2940462200D6C3C1 /* PreferencesImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535D29827E4E85700C08345 /* PreferencesImpl.swift */; };
 		C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */; };
@@ -853,6 +860,8 @@
 		C5A930FB2B45A5F40001CFA0 /* FileLoggerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F82B45A57B0001CFA0 /* FileLoggerImpl.swift */; };
 		C5AB0C792C63E511005D2541 /* Proxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C782C63E511005D2541 /* Proxy.xcframework */; };
 		C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B6E865268208D40038B4D6 /* MainViewController+RefreshControls.swift */; };
+		C5B8573E2F2CEA5F00BD1C28 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5B8573D2F2CEA5F00BD1C28 /* WireGuardKit */; };
+		C5B857402F2CEC5200BD1C28 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5B8573F2F2CEC5200BD1C28 /* WireGuardKit */; };
 		C5B8DF022C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
 		C5B8DF032C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
 		C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
@@ -902,8 +911,6 @@
 		C5DEF9F72C52EDCF00696D06 /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
 		C5E18ED4286B3D7200DD3B07 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
 		C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1FC237DC02200BDDCDB /* APIMessage.swift */; };
-		C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4A72C36CAC0009B67DC /* WireGuardKit */; };
-		C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */; };
 		C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E832684BB90001D03A7 /* HelpItem.swift */; };
 		C5FA3E8C268789EE001D03A7 /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E8B268789EE001D03A7 /* Ticket.swift */; };
 		E90FD02527394FA800721874 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
@@ -1451,6 +1458,7 @@
 		1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutProvider.swift; sourceTree = "<group>"; };
 		1E60E0162CAD664300623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
 		1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolvertype.swift; sourceTree = "<group>"; };
+		1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnblockWgParamsRepository.swift; sourceTree = "<group>"; };
 		1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionWithLearnMore.swift; sourceTree = "<group>"; };
 		1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+WillDisappear.swift"; sourceTree = "<group>"; };
 		1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
@@ -1822,6 +1830,8 @@
 		C51EEDD32C1C90CA00B01F8F /* WindscribeDevelopment.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WindscribeDevelopment.entitlements; sourceTree = "<group>"; };
 		C51F7B73276D0AAB0074A025 /* RobertFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertFilters.swift; sourceTree = "<group>"; };
 		C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
+		C52B60432F2CFA3A009B6279 /* amz-wg-windscribe.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = "amz-wg-windscribe.patch"; sourceTree = "<group>"; };
+		C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnblockWgResponse.swift; sourceTree = "<group>"; };
 		C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryErrors.swift; sourceTree = "<group>"; };
 		C52DA5262B63901400E5C571 /* CustomConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigRepository.swift; sourceTree = "<group>"; };
 		C52DA5282B63902B00E5C571 /* CustomConfigRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigRepositoryImpl.swift; sourceTree = "<group>"; };
@@ -2228,6 +2238,7 @@
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
 				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
+				C52B60422F2CF644009B6279 /* WireGuardKit in Frameworks */,
 				C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2238,8 +2249,8 @@
 			files = (
 				AF27852C22E6431700430C32 /* CoreTelephony.framework in Frameworks */,
 				F485CBC62D4D76BA0063EA3A /* SnapKit in Frameworks */,
+				C5B8573E2F2CEA5F00BD1C28 /* WireGuardKit in Frameworks */,
 				1E0A6DC62D7894520075B8F5 /* SwipeCellKit in Frameworks */,
-				C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */,
 				1E5553A42D81FABF00F16AF0 /* RealmSwift in Frameworks */,
 				1E0A6E042D79ECDE0075B8F5 /* Swinject in Frameworks */,
 				1E0A6DC32D7894280075B8F5 /* ExpyTableView in Frameworks */,
@@ -2250,12 +2261,9 @@
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
 				AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */,
-				C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */,
 				AF45E645226E216800C1C108 /* NetworkExtension.framework in Frameworks */,
 				AF87DB522214A8BC001A3F24 /* libresolv.tbd in Frameworks */,
 				AF16CA1622272EAB00997A2A /* StoreKit.framework in Frameworks */,
-				C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */,
-				C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2310,6 +2318,7 @@
 				C5A1A7662F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */,
 				1E0A6E0C2D79ECF60075B8F5 /* Swinject in Frameworks */,
 				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
+				C5B857402F2CEC5200BD1C28 /* WireGuardKit in Frameworks */,
 				C56123852C5F26000090EB5A /* libresolv.9.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2627,6 +2636,14 @@
 				1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */,
 			);
 			path = AppIntents;
+			sourceTree = "<group>";
+		};
+		1E62CEF22F30C307003F9A21 /* UnblockWg */ = {
+			isa = PBXGroup;
+			children = (
+				1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */,
+			);
+			path = UnblockWg;
 			sourceTree = "<group>";
 		};
 		1E6610A02E0EBFE300CCEFD6 /* SwiftUI */ = {
@@ -3291,6 +3308,7 @@
 		AF018DE021B0866600B225FF = {
 			isa = PBXGroup;
 			children = (
+				C52B60432F2CFA3A009B6279 /* amz-wg-windscribe.patch */,
 				AF018DEB21B0866600B225FF /* Windscribe */,
 				592EDBFA2C3C688400351D44 /* WindscribeTV */,
 				AF018E1721B1AA2D00B225FF /* WindscribeTests */,
@@ -3452,6 +3470,7 @@
 				C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */,
 				C5B8DF012C9FD3450072333E /* VPNErrors.swift */,
 				595329FD2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift */,
+				C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4088,6 +4107,7 @@
 		C5D983BC2B34C1B10069FF3A /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1E62CEF22F30C307003F9A21 /* UnblockWg */,
 				1EDB2CA02F190BFD00A5966D /* Migration */,
 				1ED836D92F15179A00CE6D12 /* Robert Filters */,
 				1EA80E172EAFE50F0003322D /* BridgeAPI */,
@@ -5899,10 +5919,10 @@
 			);
 			name = WindscribeTV;
 			packageProductDependencies = (
-				C598706C2C63212700DA4DB1 /* WireGuardKit */,
 				1E0A6DAB2D7882630075B8F5 /* RealmSwift */,
 				1E0A6E132D79ED160075B8F5 /* Swinject */,
 				F4A36AAB2E132A9600CCFFAA /* SnapKit */,
+				C52B60412F2CF644009B6279 /* WireGuardKit */,
 			);
 			productName = WindscribeTV;
 			productReference = 592EDBF92C3C688400351D44 /* WindscribeTV.app */;
@@ -5932,16 +5952,13 @@
 			name = Windscribe;
 			packageProductDependencies = (
 				AF9E08A325E6B1BF00A0E372 /* Resolver */,
-				C5E3C4A72C36CAC0009B67DC /* WireGuardKit */,
-				C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */,
-				C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */,
-				C56D5AF42C4DFF300069DB6E /* WireGuardKit */,
 				F485CBC52D4D76BA0063EA3A /* SnapKit */,
 				1E0A6DBF2D788B4F0075B8F5 /* IQKeyboardManagerSwift */,
 				1E0A6DC22D7894280075B8F5 /* ExpyTableView */,
 				1E0A6DC52D7894520075B8F5 /* SwipeCellKit */,
 				1E0A6E032D79ECDE0075B8F5 /* Swinject */,
 				1E5553A32D81FABF00F16AF0 /* RealmSwift */,
+				C5B8573D2F2CEA5F00BD1C28 /* WireGuardKit */,
 			);
 			productName = Windscribe;
 			productReference = AF018DE921B0866600B225FF /* Windscribe.app */;
@@ -6022,9 +6039,9 @@
 			);
 			name = WireGuardTunnel;
 			packageProductDependencies = (
-				C598706A2C63210B00DA4DB1 /* WireGuardKit */,
 				1E0A6DA72D7882580075B8F5 /* RealmSwift */,
 				1E0A6E0B2D79ECF60075B8F5 /* Swinject */,
+				C5B8573F2F2CEC5200BD1C28 /* WireGuardKit */,
 			);
 			productName = WireGuardTunnel;
 			productReference = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */;
@@ -6136,9 +6153,13 @@
 					};
 					AF619D8B24AA3CCF00BB331C = {
 						CreatedOnToolsVersion = 11.5;
+						LastSwiftMigration = 2620;
 					};
 					AFDF9347255EB93C002B1FBA = {
 						CreatedOnToolsVersion = 12.1;
+					};
+					C5A344572C4DF32B001EBB5C = {
+						LastSwiftMigration = 2620;
 					};
 				};
 			};
@@ -6175,13 +6196,13 @@
 			packageReferences = (
 				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */,
 				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
-				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
 				F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				1E0A6DBE2D7889170075B8F5 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				1E0A6DC12D7894280075B8F5 /* XCRemoteSwiftPackageReference "ExpyTableView" */,
 				1E0A6DC42D7894520075B8F5 /* XCRemoteSwiftPackageReference "SwipeCellKit" */,
 				1E0A6DF42D79EB900075B8F5 /* XCRemoteSwiftPackageReference "Swinject" */,
+				C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -6293,6 +6314,7 @@
 				F4E48D822DB9C2B0005CB047 /* ws_button_popcanoff.m4a in Resources */,
 				F4E48D832DB9C2B0005CB047 /* ws_button_multifarton.m4a in Resources */,
 				F4E48D842DB9C2B0005CB047 /* ws_button_ghostwindoff.m4a in Resources */,
+				C52B60442F2CFA3A009B6279 /* amz-wg-windscribe.patch in Resources */,
 				F4E48D852DB9C2B0005CB047 /* ws_button_fartoff.m4a in Resources */,
 				F4E48D862DB9C2B0005CB047 /* ws_button_windscribeoff.m4a in Resources */,
 				F4E48D872DB9C2B0005CB047 /* ws_button_subpingoff.m4a in Resources */,
@@ -6550,6 +6572,7 @@
 				59FC74322C515A3700021CD1 /* LocalDatabase.swift in Sources */,
 				F485CBBE2D4D52D40063EA3A /* Then.swift in Sources */,
 				59FC745C2C5161DD00021CD1 /* UIImageView+Extension.swift in Sources */,
+				C52B60462F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				59DF45842C54209100EB6DC1 /* XPressLoginVerifyResponse.swift in Sources */,
 				1E743FEF2F1E6EA100F0E24B /* AlertManager.swift in Sources */,
 				59FC73DA2C514B9000021CD1 /* WgErrorCodes.swift in Sources */,
@@ -6677,6 +6700,7 @@
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
 				1EF7CF142EAB8DB1001AE14E /* LocalPingManager.swift in Sources */,
 				F44A0E692E0F2A52008297CA /* CaptchaViewModel.swift in Sources */,
+				1E62CEF42F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */,
 				59FC742A2C5155DF00021CD1 /* String+ArrayConversion.swift in Sources */,
 				1EB7A3D62E6B1A2D0028EA11 /* PreferencesBaseViewModel.swift in Sources */,
 				1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */,
@@ -6805,6 +6829,7 @@
 				F40F7E5C2F1AEA6100400CC1 /* LookAndFeelNavigationRouter.swift in Sources */,
 				C56FCBF42B2BA50A008DE7D4 /* HomeRouter.swift in Sources */,
 				AF16C98D2225CDAB00997A2A /* ClosestCountry.swift in Sources */,
+				1E62CEF52F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */,
 				C50F20782B606B3000266B23 /* WireguardConfigRepository.swift in Sources */,
 				AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */,
 				C5592B852B3940AE00F2F110 /* IPRepository.swift in Sources */,
@@ -6863,6 +6888,7 @@
 				AF018DEF21B0866600B225FF /* MainViewController.swift in Sources */,
 				E9219FF32885BD4D0026E544 /* WSFillLayoutView.swift in Sources */,
 				1EB67FA32DE8C28200729052 /* NetworkSettingsView.swift in Sources */,
+				C52B60472F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				F47EC5262DE8D74700AF5089 /* HelpInfoCardView.swift in Sources */,
 				1E66109F2E0C203B00CCEFD6 /* DescriptionWithLearnMore.swift in Sources */,
 				F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */,
@@ -7309,6 +7335,7 @@
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
 				F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */,
+				C52B60482F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				F45E4FA22F105C8900C9F0DB /* FavouriteListViewModelTests.swift in Sources */,
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
@@ -7366,6 +7393,7 @@
 				F470F5622E81C00F00F8400D /* PreferencesImpl+LookAndFeel.swift in Sources */,
 				C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */,
 				E9425B9A27437024008B8786 /* APIParameters.swift in Sources */,
+				C52B60492F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				AFBD019622946B3400FED749 /* String+Extension.swift in Sources */,
 				F4433D0C2E8312470012EA34 /* KeychainManager.swift in Sources */,
 				C5DEF9F32C52ED9A00696D06 /* String+ArrayConversion.swift in Sources */,
@@ -7420,6 +7448,7 @@
 				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C59FF1A52CBB8DC70072EF70 /* String+Extension.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
+				C52B604A2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				F485CBBD2D4D52D40063EA3A /* Then.swift in Sources */,
 				C59FF1A82CBB8E0D0072EF70 /* WSNetErrors.swift in Sources */,
 				C59FF1A22CBB8B090072EF70 /* IntentCommon.swift in Sources */,
@@ -7490,6 +7519,7 @@
 				C5D0E40A29BB8BE70091FB14 /* String+ArrayConversion.swift in Sources */,
 				1E7A19572C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C5D0E3ED29BB85280091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,
+				C52B604B2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				F470F54F2E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
 				C5D0E40C29BB8BE70091FB14 /* Keychain.swift in Sources */,
 				5993396F2B4CD28300EC615D /* DefaultValues.swift in Sources */,
@@ -7525,6 +7555,7 @@
 				F45F19122D7A1D540028D0C2 /* UIConstants+ImagesAsset.swift in Sources */,
 				F485CBBC2D4D52D40063EA3A /* Then.swift in Sources */,
 				1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */,
+				C52B604C2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
 				F4433D032E830A340012EA34 /* KeychainManager.swift in Sources */,
@@ -8496,6 +8527,7 @@
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
 				APP_ID_IOS = 1518799460;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUGGING_SYMBOLS = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -8504,6 +8536,8 @@
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Development;
 		};
@@ -8512,11 +8546,13 @@
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
 				APP_ID_IOS = 1518799460;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Staging;
 		};
@@ -8590,6 +8626,7 @@
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
 				APP_ID_IOS = 1518799460;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUGGING_SYMBOLS = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -8600,6 +8637,8 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Development;
 		};
@@ -8608,6 +8647,7 @@
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
 				APP_ID_IOS = 1518799460;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
@@ -8615,6 +8655,7 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Staging;
 		};
@@ -8623,6 +8664,7 @@
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
 				APP_ID_IOS = 1518799460;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
@@ -8630,6 +8672,7 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Production;
 		};
@@ -8886,11 +8929,13 @@
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
 				APP_ID_IOS = 1518799460;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Production;
 		};
@@ -9088,11 +9133,11 @@
 				kind = branch;
 			};
 		};
-		C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */ = {
+		C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
+			repositoryURL = "https://github.com/Windscribe/amneziawg-apple.git";
 			requirement = {
-				branch = 2025;
+				branch = "windscribe-ios";
 				kind = branch;
 			};
 		};
@@ -9207,35 +9252,24 @@
 			package = AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */;
 			productName = Resolver;
 		};
+		C52B60412F2CF644009B6279 /* WireGuardKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */;
+			productName = WireGuardKit;
+		};
 		C56615F52C4D84BC008AA993 /* OpenVPNAdapter */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */;
 			productName = OpenVPNAdapter;
 		};
-		C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */ = {
+		C5B8573D2F2CEA5F00BD1C28 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */;
 			productName = WireGuardKit;
 		};
-		C56D5AF42C4DFF300069DB6E /* WireGuardKit */ = {
+		C5B8573F2F2CEC5200BD1C28 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = WireGuardKit;
-		};
-		C598706A2C63210B00DA4DB1 /* WireGuardKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
-			productName = WireGuardKit;
-		};
-		C598706C2C63212700DA4DB1 /* WireGuardKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
-			productName = WireGuardKit;
-		};
-		C5E3C4A72C36CAC0009B67DC /* WireGuardKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = WireGuardKit;
-		};
-		C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */ = {
-			isa = XCSwiftPackageProductDependency;
+			package = C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */;
 			productName = WireGuardKit;
 		};
 		F485CBC52D4D76BA0063EA3A /* SnapKit */ = {

@@ -279,6 +279,14 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
+    func saveUnblockWgParams(params: [UnblockWgParamsObj] ) {
+        return updateRealmObjects(objects: params)
+    }
+
+    func getUnblockWgParams() -> [UnblockWgParamsObj] {
+        return getRealmObjectList(type: UnblockWgParamsObj.self) ?? []
+    }
+
     func toggleRobertRule(id: String) {
         guard let object = getRobertFilters() else { return }
         let o = object.filters.first {

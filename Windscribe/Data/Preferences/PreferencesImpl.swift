@@ -598,6 +598,20 @@ class PreferencesImpl: Preferences {
     func getIgnorePinIP() -> Bool {
         return sharedDefault?.bool(forKey: SharedKeys.ignorePinIP) ?? false
     }
+
+    // Unblock WG Params
+    func saveUnblockWgParams(param: UnblockWgParams) {
+        if let encoded = try? JSONEncoder().encode(param) {
+            sharedDefault?.set(encoded, forKey: SharedKeys.unblockWgParams)
+        }
+    }
+
+    func getUnblockWgParams() -> UnblockWgParams? {
+        guard let data = sharedDefault?.data(forKey: SharedKeys.unblockWgParams) else {
+            return nil
+        }
+        return try? JSONDecoder().decode(UnblockWgParams.self, from: data)
+    }
 }
 
 // MARK: Utility Methods

@@ -165,7 +165,8 @@ class Repository: Assembly {
                                   bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
                                   credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                   staticIpRepository: r.resolve(StaticIpRepository.self)!,
-                                  customConfigRepository: r.resolve(CustomConfigRepository.self)!)
+                                  customConfigRepository: r.resolve(CustomConfigRepository.self)!,
+                                  unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LookAndFeelRepositoryType.self) { r in
@@ -181,6 +182,16 @@ class Repository: Assembly {
         container.register(MigrationRepository.self) { r in
             MigrationRepositoryImpl(localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.userScope)
+
+        container.register(UnblockWgParamsRepository.self) { r in
+            UnblockWgParamsRepositoryImpl(
+                apiManager: r.resolve(APIManager.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                preferences: r.resolve(Preferences.self)!
+            )
+        }.inObjectScope(.userScope)
+
     }
 }
 
@@ -240,7 +251,8 @@ class Managers: Assembly {
                                locationsManager: r.resolve(LocationsManager.self)!,
                                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                vpnManager: r.resolve(VPNManager.self)!,
-                               ssoManager: r.resolve(SSOManaging.self)!)
+                               ssoManager: r.resolve(SSOManaging.self)!,
+                               unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(HapticFeedbackManager.self) { r in
             HapticFeedbackManagerImpl(
@@ -321,7 +333,8 @@ class Managers: Assembly {
                              ipRepository: r.resolve(IPRepository.self)!,
                              configManager: r.resolve(ConfigurationsManager.self)!,
                              connectivityManager: r.resolve(ProtocolManagerType.self)!,
-                             locationsManager: r.resolve(LocationsManager.self)!)
+                             locationsManager: r.resolve(LocationsManager.self)!,
+                             unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(SSOManaging.self) { r in

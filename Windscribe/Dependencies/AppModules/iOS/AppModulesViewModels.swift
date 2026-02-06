@@ -142,7 +142,8 @@ class ViewModels: Assembly {
                 router: r.resolve(ConnectionsNavigationRouter.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!,
-                portMapRepository: r.resolve(PortMapRepository.self)!
+                portMapRepository: r.resolve(PortMapRepository.self)!,
+                unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!
             )
         }.inObjectScope(.transient)
 

@@ -14,7 +14,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
          alwaysOn(isSelected: Bool),
          connectedDns(currentOption: String, customValue: String, options: [MenuOption]),
          allowLan(isSelected: Bool),
-         circunventCensorship(isSelected: Bool)
+         circunventCensorship(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption])
 
     var id: Int {
         switch self {
@@ -63,7 +63,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case let .alwaysOn(isSelected): .toggle(isSelected: isSelected, parentId: id)
         case let .connectedDns(currentOption, _, options): .multiple(currentOption: currentOption, options: options, parentId: id)
         case let .allowLan(isSelected): .toggle(isSelected: isSelected, parentId: id)
-        case let .circunventCensorship(isSelected): .toggle(isSelected: isSelected, parentId: id)
+        case let .circunventCensorship(isSelected, _, _): .toggle(isSelected: isSelected, parentId: id)
         }
     }
     var secondaryEntries: [MenuSecondaryEntryItem] {
@@ -94,8 +94,8 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
             }
         case .allowLan:
             return [.allowLanInfo]
-        case .circunventCensorship:
-            return [.circunventCensorshipInfo]
+        case let .circunventCensorship(_, paramSelected, paramOptions):
+            return [.circunventCensorshipInfo, .wgUnlockMenu(currentOption: paramSelected, options: paramOptions)]
         default:
             return []
         }
@@ -110,7 +110,8 @@ enum ConnectionSecondaryEntryIDs: Int {
          connectedDnsInfo,
          connectedDnsCustom,
          allowLanInfo,
-         circunventCensorshipInfo
+         circunventCensorshipInfo,
+         wgUnlockMenu
 
     var id: Int { rawValue }
 }
@@ -123,7 +124,8 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
          connectedDnsInfo,
          connectedDnsCustom(value: String),
          allowLanInfo,
-         circunventCensorshipInfo
+         circunventCensorshipInfo,
+         wgUnlockMenu(currentOption: String, options: [MenuOption])
 
     var id: Int {
         switch self {
@@ -143,12 +145,15 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
             ConnectionSecondaryEntryIDs.allowLanInfo.id
         case .circunventCensorshipInfo:
             ConnectionSecondaryEntryIDs.circunventCensorshipInfo.id
+        case .wgUnlockMenu:
+            ConnectionSecondaryEntryIDs.wgUnlockMenu.id
         }
     }
     var title: String {
         switch self {
         case .protocolMenu: TextsAsset.Connection.protocolType
         case .portMenu: TextsAsset.Connection.port
+        case .wgUnlockMenu: TextsAsset.Connection.configuration
         default: ""
         }
     }
@@ -171,6 +176,8 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
                 .infoLink(message: TextsAsset.Connection.allowLanDescription, parentId: id)
         case .circunventCensorshipInfo:
                 .infoLink(message: TextsAsset.Connection.circumventCensorshipDescription, parentId: id)
+        case let .wgUnlockMenu(currentOption, options):
+                .multiple(currentOption: currentOption, options: options, parentId: id)
         }
     }
 }
