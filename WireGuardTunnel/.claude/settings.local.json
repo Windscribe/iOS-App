@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/gindersingh/ai/iosapp/Windscribe/Models/**)",
+      "Read(//Users/gindersingh/ai/iosapp/Windscribe/ViewControllers/MainViewController/Models/**)",
+      "Read(//Users/gindersingh/ai/iosapp/Windscribe/**)",
+      "Read(//Users/gindersingh/ai/iosapp/**)",
+      "Bash(find:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

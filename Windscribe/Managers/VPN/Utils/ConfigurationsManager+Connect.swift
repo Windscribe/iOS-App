@@ -138,9 +138,11 @@ extension ConfigurationsManager {
                         progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
                         Task {
                             do {
-                                try await self.getConnectError(manager: nextManager)
+                                nextManager.connection.stopVPNTunnel()
                                 try await self.disableProfile(nextManager)
+                                try await self.getConnectError(manager: nextManager)
                             } catch {
+                                try? await self.waitForDisconnection(manager: nextManager)
                                 progressPublisher.send(completion: .failure(error))
                             }
                         }
