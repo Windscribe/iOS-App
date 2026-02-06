@@ -104,11 +104,18 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func getLocationUIInfo() -> LocationUIInfo {
-        guard let locationType = getLocationType() else {
+        var groupId = getLastSelectedLocation()
+        let bestLocationId = getBestLocation()
+
+        // If no location selected but best location exists, use best location
+        if (groupId.isEmpty || groupId == "0") && !bestLocationId.isEmpty && bestLocationId != "0" {
+            groupId = bestLocationId
+        }
+
+        guard let locationType = getLocationType(id: groupId) else {
             return getEmptyUIInfo()
         }
-        let groupId = getLastSelectedLocation()
-        let bestLocationId = getBestLocation()
+
         if locationType == .server {
             guard let location = try? getLocation(from: groupId) else {
                 return getEmptyUIInfo()
@@ -150,7 +157,12 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func saveLastSelectedLocation(with locationID: String) {
-        guard locationID != getLastSelectedLocation() else { return }
+        let currentLocation = getLastSelectedLocation()
+        guard locationID != currentLocation else {
+            // Even if location hasn't changed, trigger update for UI reactivity
+            selectedLocationUpdated.send(true)
+            return
+        }
         preferences.saveLastSelectedLocation(with: locationID)
         selectedLocationUpdated.send(true)
     }
@@ -167,9 +179,11 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func saveBestLocation(with locationID: String) {
+        let currentBestLocation = getBestLocation()
         preferences.saveBestLocation(with: locationID)
-        self.logger.logI("LocationsManager", "Saved BestLocation ID: \(locationID)")
+        self.logger.logI("LocationsManager", "Saved BestLocation ID: \(locationID) (previous: \(currentBestLocation))")
         checkLocationValidity()
+        // Always send update even if location is same, to ensure UI reactivity
         bestLocationUpdated.send(locationID)
     }
 

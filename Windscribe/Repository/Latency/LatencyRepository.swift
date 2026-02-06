@@ -13,6 +13,7 @@ protocol LatencyRepository {
     var latency: CurrentValueSubject<[PingDataModel], Never> { get }
     func getPingData(ip: String) -> PingDataModel?
     func loadLatency() async throws
+    func loadQuickLatency() async throws
     func loadStaticIpLatency() async
     func loadCustomConfigLatency() async
     func pickBestLocation(pingData: [PingDataModel])

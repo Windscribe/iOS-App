@@ -41,27 +41,42 @@ class UserDataRepositoryImpl: UserDataRepository {
         logger.logI("UserDataRepository", "Getting server list.")
         try await serverRepository.updatedServers()
 
+        // Pick initial best location based on timezone
         latencyRepository.pickBestLocation()
-        logger.logD("UserDataRepository", "Getting iKEv2 credentials.")
-        try await credentialsRepository.getUpdatedIKEv2Crendentials()
 
-        logger.logI("UserDataRepository", "Getting OpenVPN Server config.")
-        try await credentialsRepository.getUpdatedServerConfig()
-
-        logger.logI("UserDataRepository", "Getting OpenVPN crendentials.")
-        try await credentialsRepository.getUpdatedOpenVPNCrendentials()
-
-        logger.logI("UserDataRepository", "Getting PortMap.")
-        _ = try await portMapRepository.getUpdatedPortMap()
-
-        logger.logI("UserDataRepository", "Getting Static IPs.")
-        try await staticIpRepository.updateStaticServers()
-
-        logger.logI("UserDataRepository", "Getting Notifications.")
-        _ = try await notificationsRepository.getUpdatedNotifications()
-
+        // Quick ping 10 nearby servers to correct best location with real latency data
         if !self.emergencyRepository.isConnected() {
-            try? await self.latencyRepository.loadLatency()
+            logger.logI("UserDataRepository", "Quick ping 10 nearby servers for best location correction.")
+            try? await latencyRepository.loadQuickLatency()
+        }
+
+        // Load all remaining data in parallel - all independent calls
+        logger.logI("UserDataRepository", "Loading credentials, PortMap, Static IPs, and Notifications in parallel.")
+        async let ikev2 = credentialsRepository.getUpdatedIKEv2Crendentials()
+        async let serverConfig = credentialsRepository.getUpdatedServerConfig()
+        async let openVPN = credentialsRepository.getUpdatedOpenVPNCrendentials()
+        async let portMap = portMapRepository.getUpdatedPortMap()
+        async let staticIP = staticIpRepository.updateStaticServers()
+        async let notifications = notificationsRepository.getUpdatedNotifications()
+
+        // Wait for all 6 calls to complete (all started in parallel above)
+        _ = try await (ikev2, serverConfig, openVPN, portMap, staticIP, notifications)
+
+        logger.logI("UserDataRepository", "All data loaded successfully.")
+
+        // Load latency in background - don't block navigation
+        if !self.emergencyRepository.isConnected() {
+            Task.detached { [weak self] in
+                guard let self = self else { return }
+                self.logger.logI("UserDataRepository", "Loading latency in background.")
+                try? await self.latencyRepository.loadLatency()
+                self.logger.logI("UserDataRepository", "Latency loading complete.")
+
+                // Notify UI to reload table with new ping times
+                await MainActor.run {
+                    NotificationCenter.default.post(name: Notifications.reloadTableViews, object: nil)
+                }
+            }
         }
     }
 }
