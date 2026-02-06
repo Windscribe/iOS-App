@@ -52,6 +52,9 @@ class MockLocalDatabase: LocalDatabase {
     var saveNetworkCalled = false
     var lastSavedNetwork: Windscribe.WifiNetwork?
 
+    // PingData tracking
+    var mockPingData: [Windscribe.PingData] = []
+
     func migrate() {}
 
     func getMobilePlans() -> [Windscribe.MobilePlan]? {
@@ -160,10 +163,15 @@ class MockLocalDatabase: LocalDatabase {
         mockWifiNetworks.removeAll { $0.SSID == wifiNetwork.SSID }
     }
 
-    func addPingData(pingData: Windscribe.PingData) {}
+    func addPingData(pingData: Windscribe.PingData) {
+        // Remove existing ping data for the same IP if it exists
+        mockPingData.removeAll { $0.ip == pingData.ip }
+        // Add new ping data
+        mockPingData.append(pingData)
+    }
 
     func getAllPingData() -> [Windscribe.PingData] {
-        return []
+        return mockPingData
     }
 
     func saveCustomConfig(customConfig: Windscribe.CustomConfig) {
@@ -225,6 +233,7 @@ class MockLocalDatabase: LocalDatabase {
         saveNetworkCalled = false
         lastSavedNetwork = nil
         mockWifiNetworks = []
+        mockPingData = []
     }
 
     func saveNetwork(wifiNetwork: Windscribe.WifiNetwork) {

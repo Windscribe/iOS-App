@@ -960,6 +960,10 @@
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
 		F41AC7A02EA950E400673A11 /* UserSessionRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */; };
 		F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AC7A22EA95CC200673A11 /* MockWgCredentials.swift */; };
+		F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F425B09F2F33C5450046D5E1 /* MockLocalPingManager.swift */; };
+		F425B0A22F33C56F0046D5E1 /* MockServerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F425B0A12F33C56F0046D5E1 /* MockServerRepository.swift */; };
+		F425B0A42F33C5990046D5E1 /* MockStaticIpRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F425B0A32F33C5990046D5E1 /* MockStaticIpRepository.swift */; };
+		F425B0A62F33C80C0046D5E1 /* LatencyRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F425B0A52F33C80C0046D5E1 /* LatencyRepositoryTests.swift */; };
 		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
 		F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
 		F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
@@ -1993,6 +1997,10 @@
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionRepositoryTests.swift; sourceTree = "<group>"; };
 		F41AC7A22EA95CC200673A11 /* MockWgCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWgCredentials.swift; sourceTree = "<group>"; };
+		F425B09F2F33C5450046D5E1 /* MockLocalPingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalPingManager.swift; sourceTree = "<group>"; };
+		F425B0A12F33C56F0046D5E1 /* MockServerRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServerRepository.swift; sourceTree = "<group>"; };
+		F425B0A32F33C5990046D5E1 /* MockStaticIpRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockStaticIpRepository.swift; sourceTree = "<group>"; };
+		F425B0A52F33C80C0046D5E1 /* LatencyRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepositoryTests.swift; sourceTree = "<group>"; };
 		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
 		F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 		F43184B92E1C59DE007C96E3 /* LocationPermissionInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionInfoView.swift; sourceTree = "<group>"; };
@@ -3136,6 +3144,7 @@
 		1EFFD03F2E99382D005603FB /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				F425B09F2F33C5450046D5E1 /* MockLocalPingManager.swift */,
 				1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */,
 				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
 				F40419412D8231DA0005EF97 /* MockHTMLParser.swift */,
@@ -3154,6 +3163,8 @@
 		1EFFD0402E99383D005603FB /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				F425B0A32F33C5990046D5E1 /* MockStaticIpRepository.swift */,
+				F425B0A12F33C56F0046D5E1 /* MockServerRepository.swift */,
 				1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */,
 				1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */,
 				1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */,
@@ -4573,6 +4584,7 @@
 				F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */,
 				F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */,
 				F4B4C1FC2EA6B5000024D824 /* MobilePlanRepositoryTests.swift */,
+				F425B0A52F33C80C0046D5E1 /* LatencyRepositoryTests.swift */,
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
 				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
 				F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */,
@@ -7274,6 +7286,7 @@
 				F41AC7A02EA950E400673A11 /* UserSessionRepositoryTests.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
+				F425B0A42F33C5990046D5E1 /* MockStaticIpRepository.swift in Sources */,
 				F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */,
 				F4B4C1F62EA16A6C0024D824 /* StaticIpRepositoryTests.swift in Sources */,
 				F4A20BD22EE88F850003D880 /* MockConnectivityManager.swift in Sources */,
@@ -7284,8 +7297,10 @@
 				F4B4C1FD2EA6B5000024D824 /* MobilePlanRepositoryTests.swift in Sources */,
 				F4B4C1FB2EA6AED20024D824 /* SampleDataMobilePlan.swift in Sources */,
 				1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */,
+				F425B0A62F33C80C0046D5E1 /* LatencyRepositoryTests.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,
+				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
 				F49935412DA9973100108558 /* MockSoundManager.swift in Sources */,
@@ -7306,6 +7321,7 @@
 				F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */,
 				F465A6372D5D37EF00579B5F /* AppReviewManagerTests.swift in Sources */,
 				F4B4C1EB2EA022600024D824 /* SampleDataNotifications.swift in Sources */,
+				F425B0A22F33C56F0046D5E1 /* MockServerRepository.swift in Sources */,
 				F437917B2E95A17600ED6141 /* SampleDataPreferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

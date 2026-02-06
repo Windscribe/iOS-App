@@ -19,6 +19,9 @@ class MockLocationsManager: LocationsManager {
     var getLocationCalled = false
     var saveLastSelectedLocationCalled = false
     var lastSavedLocationID: String?
+    var saveBestLocationCalled = false
+    var lastSavedBestLocationID: String?
+    var mockBestLocation: String = "0"
 
     var selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
     var bestLocationUpdated = CurrentValueSubject<String, Never>("")
@@ -52,9 +55,14 @@ class MockLocationsManager: LocationsManager {
     func saveStaticIP(withID staticID: Int?) {}
     func saveCustomConfig(withID staticID: String?) {}
     func clearLastSelectedLocation() {}
-    func saveBestLocation(with locationID: String) {}
+    func saveBestLocation(with locationID: String) {
+        saveBestLocationCalled = true
+        lastSavedBestLocationID = locationID
+        mockBestLocation = locationID
+        bestLocationUpdated.send(locationID)
+    }
     func selectBestLocation(with locationID: String) {}
-    func getBestLocation() -> String { return "" }
+    func getBestLocation() -> String { return mockBestLocation }
     func getLastSelectedLocation() -> String { return "" }
     func getLocationType() -> LocationType? { return nil }
     func getLocationType(id: String) -> LocationType? { return nil }
@@ -72,5 +80,8 @@ class MockLocationsManager: LocationsManager {
         getLocationCalled = false
         saveLastSelectedLocationCalled = false
         lastSavedLocationID = nil
+        saveBestLocationCalled = false
+        lastSavedBestLocationID = nil
+        mockBestLocation = "0"
     }
 }
