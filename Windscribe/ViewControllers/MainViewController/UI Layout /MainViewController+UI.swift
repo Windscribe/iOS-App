@@ -14,7 +14,7 @@ extension MainViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if scrollView != nil {
-            scrollView.contentSize = CGSize(width: view.frame.width * 4, height: 0)
+            scrollView.contentSize = CGSize(width: size.width * 4, height: 0)
             view.setNeedsLayout()
             cardHeaderWasSelected(with: .all)
         }
