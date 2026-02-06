@@ -155,6 +155,7 @@
 		1EA4FA712D3E89A60021C656 /* VPNConfigurationErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */; };
 		1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		1EA4FA732D3E8D920021C656 /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
+		1EA7FB812F34F6A600387839 /* IBMPlexSans-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E925521EF8EC500A3F584 /* IBMPlexSans-SemiBold.otf */; };
 		1EA80E192EAFE5440003322D /* BridgeApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */; };
 		1EA80E1A2EAFE5440003322D /* BridgeApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */; };
 		1EA80E1C2EB0E86E0003322D /* FavNodeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E1B2EB0E8650003322D /* FavNodeTableViewCell.swift */; };
@@ -6333,6 +6334,7 @@
 				593607FC2B02A4710052913C /* IBMPlexSans-Regular.otf in Resources */,
 				1E5553B12D89BF7F00F16AF0 /* Flags.xcassets in Resources */,
 				AFDF9352255EB940002B1FBA /* Assets.xcassets in Resources */,
+				1EA7FB812F34F6A600387839 /* IBMPlexSans-SemiBold.otf in Resources */,
 				593607FA2B02A18E0052913C /* IBMPlexSans-Italic.otf in Resources */,
 				AFDF935D2562B7CA002B1FBA /* Assets.xcassets in Resources */,
 				F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */,

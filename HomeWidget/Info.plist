@@ -2,17 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFAPP_BUNDLE_ID</key>
-    <string>$(APP_BUNDLE_ID)</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>IBMPlexSans-BoldItalic.otf</string>
-		<string>IBMPlexSans-Bold.otf</string>
-		<string>IBMPlexSans-Light.otf</string>
-		<string>IBMPlexSans-Regular.otf</string>
-		<string>IBMPlexSans-Text.otf</string>
-		<string>EurostileExt-Bla.otf</string>
-	</array>
+	<key>CFAPP_BUNDLE_ID</key>
+	<string>$(APP_BUNDLE_ID)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -36,5 +27,15 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>IBMPlexSans-BoldItalic.otf</string>
+		<string>IBMPlexSans-Bold.otf</string>
+        <string>IBMPlexSans-SemiBold.otf</string>
+		<string>IBMPlexSans-Light.otf</string>
+		<string>IBMPlexSans-Regular.otf</string>
+		<string>IBMPlexSans-Text.otf</string>
+		<string>EurostileExt-Bla.otf</string>
+	</array>
 </dict>
 </plist>

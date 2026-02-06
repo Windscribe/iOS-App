@@ -136,76 +136,181 @@ struct HomeWidgetEntryView: View {
     }
 
     var connectedBlue = Color(red: 0 / 255.0, green: 106 / 255.0, blue: 255 / 255.0)
-    var seaGreen = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
     var midnight = Color(red: 2 / 255.0, green: 13 / 255.0, blue: 28 / 255.0)
 
     var body: some View {
         ZStack {
-            HStack {
+            if isWidgetSmall {
                 VStack {
-                    Image("main-logo-24").padding(.bottom, 3)
+                    HStack (alignment: .top, content: {
+                        Image("widgetLogo")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                        Spacer()
+                        ConnectButton(isConnected: isConnected, isWidgetSmall: isWidgetSmall)
+                    })
                     HStack {
-                        VStack(alignment: .leading, spacing: 3, content: {
-                            ZStack {
-                                if entry.status == .disconnected || entry.status == .connected {
-                                    Capsule().fill(isConnected ? midnight.opacity(0.25) : Color.white.opacity(0.25)).frame(width: 36, height: 20)
-                                }
-                                Text(entry.statusDescription).foregroundColor(isConnected ? seaGreen : Color.white)
-                                    .font(.custom("IBMPlexSans-Bold", size: 10))
-                            }
+                        VStack (alignment: .leading, spacing: 6, content: {
+                            ConnectionInfoBubble(isConnected: isConnected,
+                                                 description: entry.statusDescription)
                             Text(entry.name).foregroundColor(Color.white)
-                                .font(.custom("IBMPlexSans-Bold", size: isWidgetSmall ? 16 : 21))
-                            Text(entry.nickname).foregroundColor(Color.white.opacity(0.7))
-                                .font(.custom("IBMPlexSans-Regular", size: isWidgetSmall ? 12 : 16))
+                                .font(.bold(.callout))
+                            Text(entry.nickname).foregroundColor(Color.white)
+                                .font(.regular(.caption1))
                         })
                         Spacer()
-                        if !isWidgetSmall {
-                            VStack {
-                                if isConnected {
-                                    if #available(iOSApplicationExtension 17.0, *) {
-                                        Button(intent: Disconnect()) {
-                                            ConnectButtonImage()
-                                        }.buttonStyle(PlainButtonStyle())
-                                    } else {
-                                        ConnectButtonImage()
-                                    }
-                                } else {
-                                    if #available(iOSApplicationExtension 17.0, *) {
-                                        Button(intent: Connect()) {
-                                            DisconnectButtonImage()
-                                        }.buttonStyle(PlainButtonStyle())
-                                    } else {
-                                        DisconnectButtonImage()
-                                    }
-                                }
-                            }
+                    }
+                }
+                Spacer()
+            } else {
+                HStack {
+                    VStack (alignment: .leading, content: {
+                        Image("widgetLogo")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .padding(.bottom, 10)
+                        ConnectionInfoBubble(isConnected: isConnected,
+                                             description: entry.statusDescription)
+                        Text(entry.name).foregroundColor(Color.white)
+                            .font(.bold(.title3))
+                        Text(entry.nickname).foregroundColor(Color.white)
+                            .font(.regular(.callout))
+                        Spacer()
+                    })
+                    HStack {
+                        Spacer()
+                        VStack {
+                            Spacer()
+                            ConnectButton(isConnected: isConnected, isWidgetSmall: isWidgetSmall)
+                            Spacer()
                         }
                     }
                 }
-            }.padding([.trailing, .leading], 16)
-                .widgetBackground(
-                    ZStack {
-                        Image(entry.countryCode).opacity(0.3).scaledToFill()
-                        isConnected ? LinearGradient(gradient: Gradient(colors: [connectedBlue, connectedBlue.opacity(0.1)]), startPoint: .top, endPoint: .bottom) : LinearGradient(gradient: Gradient(colors: [.black, Color.black.opacity(0.1)]), startPoint: .top, endPoint: .bottom)
-                    }
-                )
+            }
+        }
+        .widgetBackground(
+            ZStack {
+                Image(entry.countryCode)
+                    .resizable()
+                    .scaledToFit()
+                    .mask(
+                        ElipseGradientView()
+                    )
+                    .opacity(0.2)
+                    .padding(.horizontal, isWidgetSmall ? 0 : 33)
+                    .padding(.vertical, isWidgetSmall ? 40 : 0)
+                if isConnected {
+                    ConnectedGradient()
+                } else {
+                    DisconnectedGradient()
+                }
+            }.background(Color.nightBlue)
+        )
+    }
+}
+
+struct ConnectButton: View {
+    var isConnected: Bool
+    let isWidgetSmall: Bool
+    var body: some View {
+        if isConnected {
+            if #available(iOSApplicationExtension 17.0, *) {
+                Button(intent: Disconnect()) {
+                    ConnectButtonImage(isWidgetSmall: isWidgetSmall)
+                }.buttonStyle(PlainButtonStyle())
+            } else {
+                ConnectButtonImage(isWidgetSmall: isWidgetSmall)
+            }
+        } else {
+            if #available(iOSApplicationExtension 17.0, *) {
+                Button(intent: Connect()) {
+                    DisconnectButtonImage(isWidgetSmall: isWidgetSmall)
+                }.buttonStyle(PlainButtonStyle())
+            } else {
+                DisconnectButtonImage(isWidgetSmall: isWidgetSmall)
+            }
         }
     }
 }
 
 struct ConnectButtonImage: View {
+    let isWidgetSmall: Bool
+    var insideSize: CGFloat { isWidgetSmall ? 48 : 64.0 }
+    var outsideSize: CGFloat { isWidgetSmall ? 58 : 75.0 }
     var body: some View {
         ZStack {
-            Image(ImagesAsset.connectButton).resizable().frame(width: 64, height: 64)
-            Image(ImagesAsset.connectButtonRing).resizable().frame(width: 75, height: 75)
+            Image(ImagesAsset.connectButton).resizable().frame(width: insideSize, height: insideSize)
+            Image(ImagesAsset.connectButtonRing).resizable().frame(width: outsideSize, height: outsideSize)
         }
     }
 }
 
 struct DisconnectButtonImage: View {
+    let isWidgetSmall: Bool
+    var size: CGFloat { isWidgetSmall ? 48 : 64.0 }
     var body: some View {
-        Image(ImagesAsset.disconnectedButton).resizable().frame(width: 64, height: 64)
+        Image(ImagesAsset.disconnectedButton).resizable().frame(width: size, height: size)
             .padding(5)
+    }
+}
+
+struct ElipseGradientView: View {
+    var body: some View {
+        EllipticalGradient(
+            stops: [
+                Gradient.Stop(color: .white, location: 0.00),
+                Gradient.Stop(color: .white.opacity(0), location: 1.00),
+            ],
+            center: UnitPoint(x: 0.5, y: 0.5)
+        )
+    }
+}
+
+struct DisconnectedGradient: View {
+    var body: some View {
+        LinearGradient(
+            stops: [
+                Gradient.Stop(color: .white.opacity(0), location: 0.00),
+                Gradient.Stop(color: .white, location: 1.00),
+            ],
+            startPoint: UnitPoint(x: 0.5, y: 0.5),
+            endPoint: UnitPoint(x: 0.5, y: 0)
+        ).opacity(0.15)
+    }
+}
+
+struct ConnectedGradient: View {
+    var body: some View {
+        LinearGradient(
+        stops: [
+        Gradient.Stop(color: Color(red: 0, green: 0.42, blue: 1).opacity(0), location: 0.00),
+        Gradient.Stop(color: Color(red: 0, green: 0.42, blue: 1), location: 1.00),
+        ],
+        startPoint: UnitPoint(x: 0.5, y: 0.5),
+        endPoint: UnitPoint(x: 0.5, y: 0)
+        )
+    }
+}
+
+struct ConnectionInfoBubble: View {
+    let isConnected: Bool
+    let description: String
+    var body: some View {
+        HStack {
+            Text(description)
+                .font(.semiBold(.caption2))
+                .foregroundColor(isConnected ? .seaGreen : .white)
+        }
+        .padding(.horizontal, 8)
+        .padding(.top, 2)
+        .padding(.bottom, 3)
+        .background(isConnected ? .seaGreen.opacity(0.1) : Color.white.opacity(0.1))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .inset(by: 0.5)
+                .stroke(isConnected ? .seaGreen.opacity(0.1) : Color.white.opacity(0.1), lineWidth: 1)
+        )
     }
 }
 
