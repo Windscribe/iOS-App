@@ -105,6 +105,64 @@ class LatencyRepositoryImpl: LatencyRepository {
         refreshBestLocation()
     }
 
+    func loadQuickLatency() async throws {
+        logger.logI("LatencyRepositoryImpl", "Quick latency: pinging 10 nearby servers.")
+
+        guard !vpnStateRepository.isConnected() else {
+            logger.logI("LatencyRepositoryImpl", "Quick latency skipped - VPN is connected.")
+            return
+        }
+
+        let nearbyServers = getNearbyServerPingAndHosts(limit: 10)
+        guard !nearbyServers.isEmpty else {
+            logger.logI("LatencyRepositoryImpl", "No nearby servers found for quick latency.")
+            return
+        }
+
+        do {
+            try await createLatencyTask(from: nearbyServers)
+            refreshBestLocation()
+            logger.logI("LatencyRepositoryImpl", "Quick latency complete. Best location updated with \(nearbyServers.count) servers.")
+        } catch {
+            logger.logE("LatencyRepositoryImpl", "Quick latency failed: \(error)")
+            throw error
+        }
+    }
+
+    private func getNearbyServerPingAndHosts(limit: Int) -> [(String, String)] {
+        let servers = serverRepository.currentServerModels
+        let userTimeZone = TimeZone.current
+        let isPremium = userSessionRepository.sessionModel?.isPremium ?? false
+
+        var nearbyGroups: [(group: GroupModel, timeDiff: TimeInterval)] = []
+
+        for server in servers {
+            guard let serverTimeZone = TimeZone(identifier: server.timezone) else { continue }
+            let timeDifference = TimeInterval(abs(serverTimeZone.secondsFromGMT() - userTimeZone.secondsFromGMT()))
+
+            // Collect servers within 2 hours timezone difference
+            if timeDifference <= 7200 {
+                let availableGroups = server.groups.filter { group in
+                    guard !group.nodes.isEmpty else { return false }
+                    if !isPremium && group.premiumOnly { return false }
+                    return true
+                }
+
+                for group in availableGroups {
+                    nearbyGroups.append((group: group, timeDiff: timeDifference))
+                }
+            }
+        }
+
+        // Sort by timezone difference and take top 10
+        let selectedGroups = nearbyGroups
+            .sorted { $0.timeDiff < $1.timeDiff }
+            .prefix(limit)
+            .map { ($0.group.pingIp, $0.group.pingHost) }
+
+        return Array(selectedGroups)
+    }
+
     private func loadAllServerLatency() async {
         logger.logI("LatencyRepositoryImpl", "Attempting to update latency data.")
         let pingServers = getServerPingAndHosts()

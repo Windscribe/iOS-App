@@ -261,8 +261,12 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
             let locationId = "\(bestLocation.groupId)"
             logger.logD("MainViewController", "Configuring best location.")
-            if selectBestLocation || noSelectedNodeToConnect() {
+            if selectBestLocation || noSelectedNodeToConnect() || userJustLoggedIn {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
+                if userJustLoggedIn {
+                    logger.logD("MainViewController", "Selecting best location after user login.")
+                    userJustLoggedIn = false
+                }
             }
             if connectToBestLocation {
                 logger.logD("MainViewController", "Forcing to connect to best location.")

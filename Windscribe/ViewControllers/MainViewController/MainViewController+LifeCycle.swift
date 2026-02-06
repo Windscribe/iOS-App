@@ -33,6 +33,13 @@ extension MainViewController {
         loadLatencyWhenReady()
         overrideUserInterfaceStyle = .dark
         bindViewModels()
+
+        // Ensure best location is selected immediately on first login
+        if userJustLoggedIn {
+            logger.logD("MainViewController", "User just logged in - configuring best location immediately.")
+            configureBestLocation()
+        }
+
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 
         locationPermissionManager.shouldShowPermissionUI
