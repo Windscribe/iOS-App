@@ -116,8 +116,8 @@ done
 # trying both.
 
 checkouts_dir="$project_data_dir"/SourcePackages/checkouts
-if [ -e "$checkouts_dir"/wireguard-apple ]; then
-    checkouts_dir="$checkouts_dir"/wireguard-apple
+if [ -e "$checkouts_dir"/amneziawg-apple ]; then
+    checkouts_dir="$checkouts_dir"/amneziawg-apple
 fi
 
 wireguard_go_dir="$checkouts_dir"/Sources/WireGuardKitGo

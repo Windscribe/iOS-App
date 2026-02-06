@@ -43,6 +43,7 @@ class SessionManagerImpl: SessionManager {
     private let userSessionRepository: UserSessionRepository
     private let locationsManager: LocationsManager
     private let vpnStateRepository: VPNStateRepository
+    private let unblockWgParamsRepository: UnblockWgParamsRepository
 
     private let vpnManager: VPNManager
     private let ssoManager: SSOManaging
@@ -62,7 +63,8 @@ class SessionManagerImpl: SessionManager {
           locationsManager: LocationsManager,
           vpnStateRepository: VPNStateRepository,
           vpnManager: VPNManager,
-          ssoManager: SSOManaging) {
+          ssoManager: SSOManaging,
+          unblockWgParamsRepository: UnblockWgParamsRepository) {
         self.wgCredentials = wgCredentials
         self.logger = logger
         self.apiManager = apiManager
@@ -77,6 +79,7 @@ class SessionManagerImpl: SessionManager {
         self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
         self.ssoManager = ssoManager
+        self.unblockWgParamsRepository = unblockWgParamsRepository
 
         keepSessionUpdated()
     }
@@ -154,6 +157,9 @@ class SessionManagerImpl: SessionManager {
         }
         Task {
             await updateFrom(session: session)
+            if unblockWgParamsRepository.needsRefresh() {
+                unblockWgParamsRepository.refreshParams()
+            }
         }
     }
 

@@ -1,0 +1,2904 @@
+From 07760230f113f0e49ee9a67d8abeade1dc0812c6 Mon Sep 17 00:00:00 2001
+From: Ginder Singh <ginder@windscribe.com>
+Date: Fri, 30 Jan 2026 09:37:44 -0500
+Subject: [PATCH] Windscribe patch
+
+---
+ Package.swift                                 |   5 +-
+ .../TunnelConfiguration+WgQuickConfig.swift   |  31 +
+ Sources/WireGuardApp/Config/Version.xcconfig  |  10 +-
+ Sources/WireGuardApp/Localizable.xcstrings    | 376 +------
+ .../TunnelConfiguration+UapiConfig.swift      |  34 +-
+ .../WireGuardApp/Tunnel/TunnelsManager.swift  | 943 +++++++-----------
+ Sources/WireGuardApp/UI/TunnelViewModel.swift |  49 +
+ Sources/WireGuardApp/UI/iOS/Info.plist        |   8 +-
+ .../TunnelDetailTableViewController.swift     |   2 +-
+ .../TunnelEditTableViewController.swift       |   8 +-
+ Sources/WireGuardApp/UI/macOS/Info.plist      |  43 +-
+ .../UI/macOS/LoginItemHelper/Info.plist       |  15 +-
+ .../TunnelDetailTableViewController.swift     |   2 +-
+ Sources/WireGuardKit/DNSResolver.swift        |   2 +-
+ .../HandshakeFreshnessEvaluator.swift         |  21 +-
+ .../WireGuardKit/InterfaceConfiguration.swift |  10 +-
+ .../PacketTunnelSettingsGenerator.swift       |  18 +-
+ .../WireGuardKit/TunnelConfiguration.swift    |   2 +
+ Sources/WireGuardKit/WireGuardAdapter.swift   | 113 +--
+ Sources/WireGuardKitGo/Makefile               |  12 +-
+ Sources/WireGuardNetworkExtension/Info.plist  |  11 +-
+ .../PacketTunnelProvider.swift                |  66 +-
+ WireGuard.xcodeproj/project.pbxproj           |   8 +
+ 23 files changed, 580 insertions(+), 1209 deletions(-)
+
+diff --git a/Package.swift b/Package.swift
+index 8728518..bbba9bb 100644
+--- a/Package.swift
++++ b/Package.swift
+@@ -1,4 +1,4 @@
+-// swift-tools-version:5.5
++// swift-tools-version:5.10
+ // The swift-tools-version declares the minimum version of Swift required to build this package.
+ 
+ import PackageDescription
+@@ -7,7 +7,8 @@ let package = Package(
+     name: "WireGuardKit",
+     platforms: [
+         .macOS(.v12),
+-        .iOS(.v15)
++        .iOS(.v15),
++        .tvOS(.v17)
+     ],
+     products: [
+         .library(name: "WireGuardKit", targets: ["WireGuardKit"])
+diff --git a/Sources/Shared/Model/TunnelConfiguration+WgQuickConfig.swift b/Sources/Shared/Model/TunnelConfiguration+WgQuickConfig.swift
+index 3cf2c56..64787dc 100644
+--- a/Sources/Shared/Model/TunnelConfiguration+WgQuickConfig.swift
++++ b/Sources/Shared/Model/TunnelConfiguration+WgQuickConfig.swift
+@@ -94,6 +94,10 @@ extension TunnelConfiguration {
+                         "i3",
+                         "i4",
+                         "i5",
++                        "j1",
++                        "j2",
++                        "j3",
++                        "itime",
+                     ]
+                     let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
+                     if parserState == .inInterfaceSection {
+@@ -201,6 +205,18 @@ extension TunnelConfiguration {
+         if let specialJunk5 = interface.specialJunk5 {
+             output.append("I5 = \(specialJunk5)\n")
+         }
++        if let controlledJunk1 = interface.controlledJunk1 {
++            output.append("J1 = \(controlledJunk1)\n")
++        }
++        if let controlledJunk2 = interface.controlledJunk2 {
++            output.append("J2 = \(controlledJunk2)\n")
++        }
++        if let controlledJunk3 = interface.controlledJunk3 {
++            output.append("J3 = \(controlledJunk3)\n")
++        }
++        if let specialHandshakeTimeout = interface.specialHandshakeTimeout {
++            output.append("Itime = \(specialHandshakeTimeout)\n")
++        }
+         if !interface.addresses.isEmpty {
+             let addressString = interface.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
+             output.append("Address = \(addressString)\n")
+@@ -348,6 +364,21 @@ extension TunnelConfiguration {
+         if let specialJunk5String = attributes["i5"] {
+             interface.specialJunk5 = specialJunk5String
+         }
++        if let controlledJunk1String = attributes["j1"] {
++            interface.controlledJunk1 = controlledJunk1String
++        }
++        if let controlledJunk2String = attributes["j2"] {
++            interface.controlledJunk2 = controlledJunk2String
++        }
++        if let controlledJunk3String = attributes["j3"] {
++            interface.controlledJunk3 = controlledJunk3String
++        }
++        if let specialHandshakeTimeoutString = attributes["itime"] {
++            guard let specialHandshakeTimeout = Int(specialHandshakeTimeoutString) else {
++                throw ParseError.interfaceHasInvalidCustomParam(specialHandshakeTimeoutString)
++            }
++            interface.specialHandshakeTimeout = specialHandshakeTimeout
++        }
+         return interface
+     }
+ 
+diff --git a/Sources/WireGuardApp/Config/Version.xcconfig b/Sources/WireGuardApp/Config/Version.xcconfig
+index a700e2b..9438d1a 100644
+--- a/Sources/WireGuardApp/Config/Version.xcconfig
++++ b/Sources/WireGuardApp/Config/Version.xcconfig
+@@ -1,8 +1,2 @@
+-VERSION_NAME = 2.0.0
+-VERSION_ID_IOS = 11
+-VERSION_ID_MACOS = 11
+-
+-MARKETING_VERSION = $(VERSION_NAME)
+-CURRENT_PROJECT_VERSION[sdk=iphoneos*] = $(VERSION_ID_IOS)
+-CURRENT_PROJECT_VERSION[sdk=iphonesimulator*] = $(VERSION_ID_IOS)
+-CURRENT_PROJECT_VERSION[sdk=macosx*] = $(VERSION_ID_MACOS)
++VERSION_NAME = 1.0.1
++VERSION_ID = 6
+diff --git a/Sources/WireGuardApp/Localizable.xcstrings b/Sources/WireGuardApp/Localizable.xcstrings
+index 079779c..7eb5128 100644
+--- a/Sources/WireGuardApp/Localizable.xcstrings
++++ b/Sources/WireGuardApp/Localizable.xcstrings
+@@ -2745,7 +2745,7 @@
+       }
+     },
+     "alertInvalidInterfaceMessageInitPacketMagicHeaderInvalid" : {
+-      "extractionState" : "manual",
++      "extractionState" : "migrated",
+       "localizations" : {
+         "en" : {
+           "stringUnit" : {
+@@ -3426,7 +3426,7 @@
+       }
+     },
+     "alertInvalidInterfaceMessageResponsePacketMagicHeaderInvalid" : {
+-      "extractionState" : "manual",
++      "extractionState" : "migrated",
+       "localizations" : {
+         "en" : {
+           "stringUnit" : {
+@@ -3443,7 +3443,7 @@
+       }
+     },
+     "alertInvalidInterfaceMessageTransportPacketMagicHeaderInvalid" : {
+-      "extractionState" : "manual",
++      "extractionState" : "migrated",
+       "localizations" : {
+         "en" : {
+           "stringUnit" : {
+@@ -3460,7 +3460,7 @@
+       }
+     },
+     "alertInvalidInterfaceMessageUnderloadPacketMagicHeaderInvalid" : {
+-      "extractionState" : "manual",
++      "extractionState" : "migrated",
+       "localizations" : {
+         "en" : {
+           "stringUnit" : {
+@@ -8684,244 +8684,6 @@
+         }
+       }
+     },
+-    "alertTunnelHandshakeTimeoutMessage (%d)" : {
+-      "extractionState" : "manual",
+-      "localizations" : {
+-        "ca" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "L'intent de connexió ha caducat després de %d segons."
+-          }
+-        },
+-        "de" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Der Verbindungsversuch ist nach %d Sekunden abgelaufen."
+-          }
+-        },
+-        "en" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Connection attempt timed out after %d seconds."
+-          }
+-        },
+-        "es" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "El intento de conexión agotó el tiempo de espera después de %d segundos."
+-          }
+-        },
+-        "fa" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "تلاش برای اتصال پس از %d ثانیه منقضی شد."
+-          }
+-        },
+-        "fi" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Yhteyden muodostaminen aikakatkaistiin %d sekunnin jälkeen."
+-          }
+-        },
+-        "fr" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "La tentative de connexion a expiré après %d secondes."
+-          }
+-        },
+-        "id" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Percobaan koneksi habis waktu setelah %d detik."
+-          }
+-        },
+-        "it" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Il tentativo di connessione è scaduto dopo %d secondi."
+-          }
+-        },
+-        "ja" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "接続の試行が%d秒後にタイムアウトしました。"
+-          }
+-        },
+-        "ko" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "연결 시도가 %d초 후 시간 초과되었습니다."
+-          }
+-        },
+-        "pa" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "%d ਸਕਿੰਟ ਬਾਅਦ ਕਨੈਕਸ਼ਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਦਾ ਸਮਾਂ ਖਤਮ ਹੋ ਗਿਆ।"
+-          }
+-        },
+-        "pl" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Próba połączenia przekroczyła limit czasu po %d sekundach."
+-          }
+-        },
+-        "ro" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Încercarea de conectare a expirat după %d secunde."
+-          }
+-        },
+-        "ru" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Попытка подключения завершилась по тайм-ауту через %d секунд."
+-          }
+-        },
+-        "sl" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Poskus povezave je potekel po %d sekundah."
+-          }
+-        },
+-        "tr" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Bağlantı denemesi %d saniye sonra zaman aşımına uğradı."
+-          }
+-        },
+-        "zh-Hans" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "连接尝试在 %d 秒后超时。"
+-          }
+-        },
+-        "zh-Hant" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "連線嘗試在 %d 秒後逾時。"
+-          }
+-        }
+-      }
+-    },
+-    "alertTunnelHandshakeTimeoutTitle" : {
+-      "extractionState" : "manual",
+-      "localizations" : {
+-        "ca" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "No s'ha pogut establir la connexió"
+-          }
+-        },
+-        "de" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Verbindung konnte nicht hergestellt werden"
+-          }
+-        },
+-        "en" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Unable to establish connection"
+-          }
+-        },
+-        "es" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "No se pudo establecer la conexión"
+-          }
+-        },
+-        "fa" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "امکان برقراری اتصال وجود ندارد"
+-          }
+-        },
+-        "fi" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Yhteyttä ei voitu muodostaa"
+-          }
+-        },
+-        "fr" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Impossible d’établir la connexion"
+-          }
+-        },
+-        "id" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Tidak dapat membuat koneksi"
+-          }
+-        },
+-        "it" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Impossibile stabilire la connessione"
+-          }
+-        },
+-        "ja" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "接続を確立できません"
+-          }
+-        },
+-        "ko" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "연결을 설정할 수 없습니다"
+-          }
+-        },
+-        "pa" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "ਕਨੈਕਸ਼ਨ ਸਥਾਪਿਤ ਨਹੀਂ ਹੋ ਸਕਿਆ"
+-          }
+-        },
+-        "pl" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Nie można nawiązać połączenia"
+-          }
+-        },
+-        "ro" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Nu se poate stabili conexiunea"
+-          }
+-        },
+-        "ru" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Не удалось установить соединение"
+-          }
+-        },
+-        "sl" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Povezave ni mogoče vzpostaviti"
+-          }
+-        },
+-        "tr" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Bağlantı kurulamadı"
+-          }
+-        },
+-        "zh-Hans" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "无法建立连接"
+-          }
+-        },
+-        "zh-Hant" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "無法建立連線"
+-          }
+-        }
+-      }
+-    },
+     "alertTunnelNameEmptyMessage" : {
+       "extractionState" : "migrated",
+       "localizations" : {
+@@ -33352,127 +33114,41 @@
+             "value" : "等待中"
+           }
+         }
++        }
+       }
+     },
+     "tunnelStatusWaitingForHandshakeHint" : {
+       "extractionState" : "manual",
+       "localizations" : {
+-        "ca" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Esperant el handshake…"
+-          }
+-        },
+-        "de" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Warte auf Handshake…"
+-          }
+-        },
+         "en" : {
+           "stringUnit" : {
+-            "state" : "translated",
++            "state" : "needsReview",
+             "value" : "Waiting for handshake…"
+           }
+-        },
+-        "es" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Esperando el handshake…"
+-          }
+-        },
+-        "fa" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "در انتظار هندشیک…"
+-          }
+-        },
+-        "fi" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Odotetaan kättelyä…"
+-          }
+-        },
+-        "fr" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "En attente de handshake…"
+-          }
+-        },
+-        "id" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Menunggu handshake…"
+-          }
+-        },
+-        "it" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "In attesa di handshake…"
+-          }
+-        },
+-        "ja" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "ハンドシェイクを待機中…"
+-          }
+-        },
+-        "ko" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "핸드셰이크를 기다리는 중…"
+-          }
+-        },
+-        "pa" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "ਹੈਂਡਸ਼ੇਕ ਦੀ ਉਡੀਕ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ…"
+-          }
+-        },
+-        "pl" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Oczekiwanie na handshake…"
+-          }
+-        },
+-        "ro" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Se așteaptă handshake…"
+-          }
+-        },
+-        "ru" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Ожидание рукопожатия…"
+-          }
+-        },
+-        "sl" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "Čakanje na rokovanje…"
+-          }
+-        },
+-        "tr" : {
+-          "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "El sıkışma bekleniyor…"
+-          }
+-        },
+-        "zh-Hans" : {
++        }
++      }
++    },
++    "alertTunnelHandshakeTimeoutTitle" : {
++      "extractionState" : "manual",
++      "localizations" : {
++        "en" : {
+           "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "等待握手…"
++            "state" : "needsReview",
++            "value" : "Handshake timed out"
+           }
+-        },
+-        "zh-Hant" : {
++        }
++      }
++    },
++    "alertTunnelHandshakeTimeoutMessage (%d)" : {
++      "extractionState" : "manual",
++      "localizations" : {
++        "en" : {
+           "stringUnit" : {
+-            "state" : "translated",
+-            "value" : "等待握手…"
++            "state" : "needsReview",
++            "value" : "No handshake was received within %d seconds."
+           }
+         }
+       }
+-    }
+-  },
++    },
+   "version" : "1.0"
+-}
+\ No newline at end of file
++}
+diff --git a/Sources/WireGuardApp/Tunnel/TunnelConfiguration+UapiConfig.swift b/Sources/WireGuardApp/Tunnel/TunnelConfiguration+UapiConfig.swift
+index 751fa7f..3b7c3ec 100644
+--- a/Sources/WireGuardApp/Tunnel/TunnelConfiguration+UapiConfig.swift
++++ b/Sources/WireGuardApp/Tunnel/TunnelConfiguration+UapiConfig.swift
+@@ -41,22 +41,6 @@ extension TunnelConfiguration {
+                 }
+             }
+ 
+-            let interfaceSectionKeys: Set<String> = ["private_key", "listen_port", "fwmark"]
+-            let peerSectionKeys: Set<String> = ["public_key", "preshared_key", "allowed_ip", "endpoint", "persistent_keepalive_interval", "last_handshake_time_sec", "last_handshake_time_nsec", "rx_bytes", "tx_bytes", "protocol_version"]
+-
+-            if parserState == .inInterfaceSection {
+-                // Ignore unrecognized keys from runtime config (forward compatibility).
+-                if !interfaceSectionKeys.contains(key) {
+-                    continue
+-                }
+-            }
+-            if parserState == .inPeerSection {
+-                // Ignore unrecognized keys from runtime config (forward compatibility).
+-                if !peerSectionKeys.contains(key) {
+-                    continue
+-                }
+-            }
+-
+             if let presentValue = attributes[key] {
+                 if key == "allowed_ip" {
+                     attributes[key] = presentValue + "," + value
+@@ -66,6 +50,20 @@ extension TunnelConfiguration {
+             } else {
+                 attributes[key] = value
+             }
++
++            let interfaceSectionKeys: Set<String> = ["private_key", "listen_port", "fwmark"]
++            let peerSectionKeys: Set<String> = ["public_key", "preshared_key", "allowed_ip", "endpoint", "persistent_keepalive_interval", "last_handshake_time_sec", "last_handshake_time_nsec", "rx_bytes", "tx_bytes", "protocol_version"]
++
++            if parserState == .inInterfaceSection {
++                guard interfaceSectionKeys.contains(key) else {
++                    throw ParseError.interfaceHasUnrecognizedKey(key)
++                }
++            }
++            if parserState == .inPeerSection {
++                guard peerSectionKeys.contains(key) else {
++                    throw ParseError.peerHasUnrecognizedKey(key)
++                }
++            }
+         }
+ 
+         let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
+@@ -94,6 +92,10 @@ extension TunnelConfiguration {
+         interfaceConfiguration?.specialJunk3 = base?.interface.specialJunk3
+         interfaceConfiguration?.specialJunk4 = base?.interface.specialJunk4
+         interfaceConfiguration?.specialJunk5 = base?.interface.specialJunk5
++        interfaceConfiguration?.controlledJunk1 = base?.interface.controlledJunk1
++        interfaceConfiguration?.controlledJunk2 = base?.interface.controlledJunk2
++        interfaceConfiguration?.controlledJunk3 = base?.interface.controlledJunk3
++        interfaceConfiguration?.specialHandshakeTimeout = base?.interface.specialHandshakeTimeout
+ 
+         if let interfaceConfiguration = interfaceConfiguration {
+             self.init(name: base?.name, interface: interfaceConfiguration, peers: peerConfigurations)
+diff --git a/Sources/WireGuardApp/Tunnel/TunnelsManager.swift b/Sources/WireGuardApp/Tunnel/TunnelsManager.swift
+index 853b981..23efa43 100644
+--- a/Sources/WireGuardApp/Tunnel/TunnelsManager.swift
++++ b/Sources/WireGuardApp/Tunnel/TunnelsManager.swift
+@@ -6,27 +6,27 @@ import NetworkExtension
+ import os.log
+ 
+ #if os(iOS)
+-    import UIKit
++import UIKit
+ #endif
+ 
+ #if os(iOS)
+-    @objc enum TunnelHandshakeState: Int {
+-        case idle
+-        case waiting
+-        case confirmed
+-        case failed
+-    }
++@objc enum TunnelHandshakeState: Int {
++    case idle
++    case waiting
++    case confirmed
++    case failed
++}
+ 
+-    enum TunnelHandshakeError: Error {
+-        case timedOut(TimeInterval)
++enum TunnelHandshakeError: Error {
++    case timedOut(TimeInterval)
+ 
+-        var timeoutInterval: TimeInterval {
+-            switch self {
+-            case .timedOut(let interval):
+-                return interval
+-            }
++    var timeoutInterval: TimeInterval {
++        switch self {
++        case .timedOut(let interval):
++            return interval
+         }
+     }
++}
+ #endif
+ 
+ protocol TunnelsManagerListDelegate: AnyObject {
+@@ -37,11 +37,10 @@ protocol TunnelsManagerListDelegate: AnyObject {
+ }
+ 
+ protocol TunnelsManagerActivationDelegate: AnyObject {
+-    func tunnelActivationAttemptFailed(
+-        tunnel: TunnelContainer, error: TunnelsManagerActivationAttemptError)  // startTunnel wasn't called or failed
+-    func tunnelActivationAttemptSucceeded(tunnel: TunnelContainer)  // startTunnel succeeded
+-    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationError)  // status didn't change to connected
+-    func tunnelActivationSucceeded(tunnel: TunnelContainer)  // status changed to connected
++    func tunnelActivationAttemptFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationAttemptError) // startTunnel wasn't called or failed
++    func tunnelActivationAttemptSucceeded(tunnel: TunnelContainer) // startTunnel succeeded
++    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationError) // status didn't change to connected
++    func tunnelActivationSucceeded(tunnel: TunnelContainer) // status changed to connected
+ }
+ 
+ class TunnelsManager {
+@@ -53,76 +52,59 @@ class TunnelsManager {
+     private var configurationsObservationToken: NotificationToken?
+ 
+     init(tunnelProviders: [NETunnelProviderManager]) {
+-        tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted {
+-            TunnelsManager.tunnelNameIsLessThan($0.name, $1.name)
+-        }
++        tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
+         startObservingTunnelStatuses()
+         startObservingTunnelConfigurations()
+     }
+ 
+-    static func create(
+-        completionHandler: @escaping (Result<TunnelsManager, TunnelsManagerError>) -> Void
+-    ) {
++    static func create(completionHandler: @escaping (Result<TunnelsManager, TunnelsManagerError>) -> Void) {
+         #if targetEnvironment(simulator)
+-            completionHandler(
+-                .success(TunnelsManager(tunnelProviders: MockTunnels.createMockTunnels())))
++        completionHandler(.success(TunnelsManager(tunnelProviders: MockTunnels.createMockTunnels())))
+         #else
+-            NETunnelProviderManager.loadAllFromPreferences { managers, error in
+-                if let error = error {
+-                    wg_log(.error, message: "Failed to load tunnel provider managers: \(error)")
+-                    completionHandler(
+-                        .failure(
+-                            TunnelsManagerError.systemErrorOnListingTunnels(systemError: error)))
+-                    return
+-                }
++        NETunnelProviderManager.loadAllFromPreferences { managers, error in
++            if let error = error {
++                wg_log(.error, message: "Failed to load tunnel provider managers: \(error)")
++                completionHandler(.failure(TunnelsManagerError.systemErrorOnListingTunnels(systemError: error)))
++                return
++            }
+ 
+-                var tunnelManagers = managers ?? []
+-                var refs: Set<Data> = []
+-                var tunnelNames: Set<String> = []
+-                for (index, tunnelManager) in tunnelManagers.enumerated().reversed() {
+-                    if let tunnelName = tunnelManager.localizedDescription {
+-                        tunnelNames.insert(tunnelName)
+-                    }
+-                    guard
+-                        let proto = tunnelManager.protocolConfiguration as? NETunnelProviderProtocol
+-                    else { continue }
+-                    if proto.migrateConfigurationIfNeeded(
+-                        called: tunnelManager.localizedDescription ?? "unknown")
+-                    {
+-                        tunnelManager.saveToPreferences { _ in }
+-                    }
+-                    #if os(iOS)
+-                        let passwordRef =
+-                            proto.verifyConfigurationReference() ? proto.passwordReference : nil
+-                    #elseif os(macOS)
+-                        let passwordRef: Data?
+-                        if proto.providerConfiguration?["UID"] as? uid_t == getuid() {
+-                            passwordRef =
+-                                proto.verifyConfigurationReference() ? proto.passwordReference : nil
+-                        } else {
+-                            passwordRef = proto.passwordReference  // To handle multiple users in macOS, we skip verifying
+-                        }
+-                    #else
+-                        #error("Unimplemented")
+-                    #endif
+-                    if let ref = passwordRef {
+-                        refs.insert(ref)
+-                    } else {
+-                        wg_log(
+-                            .info,
+-                            message:
+-                                "Removing orphaned tunnel with non-verifying keychain entry: \(tunnelManager.localizedDescription ?? "<unknown>")"
+-                        )
+-                        tunnelManager.removeFromPreferences { _ in }
+-                        tunnelManagers.remove(at: index)
+-                    }
++            var tunnelManagers = managers ?? []
++            var refs: Set<Data> = []
++            var tunnelNames: Set<String> = []
++            for (index, tunnelManager) in tunnelManagers.enumerated().reversed() {
++                if let tunnelName = tunnelManager.localizedDescription {
++                    tunnelNames.insert(tunnelName)
++                }
++                guard let proto = tunnelManager.protocolConfiguration as? NETunnelProviderProtocol else { continue }
++                if proto.migrateConfigurationIfNeeded(called: tunnelManager.localizedDescription ?? "unknown") {
++                    tunnelManager.saveToPreferences { _ in }
+                 }
+-                Keychain.deleteReferences(except: refs)
+                 #if os(iOS)
+-                    RecentTunnelsTracker.cleanupTunnels(except: tunnelNames)
++                let passwordRef = proto.verifyConfigurationReference() ? proto.passwordReference : nil
++                #elseif os(macOS)
++                let passwordRef: Data?
++                if proto.providerConfiguration?["UID"] as? uid_t == getuid() {
++                    passwordRef = proto.verifyConfigurationReference() ? proto.passwordReference : nil
++                } else {
++                    passwordRef = proto.passwordReference // To handle multiple users in macOS, we skip verifying
++                }
++                #else
++                #error("Unimplemented")
+                 #endif
+-                completionHandler(.success(TunnelsManager(tunnelProviders: tunnelManagers)))
++                if let ref = passwordRef {
++                    refs.insert(ref)
++                } else {
++                    wg_log(.info, message: "Removing orphaned tunnel with non-verifying keychain entry: \(tunnelManager.localizedDescription ?? "<unknown>")")
++                    tunnelManager.removeFromPreferences { _ in }
++                    tunnelManagers.remove(at: index)
++                }
+             }
++            Keychain.deleteReferences(except: refs)
++            #if os(iOS)
++            RecentTunnelsTracker.cleanupTunnels(except: tunnelNames)
++            #endif
++            completionHandler(.success(TunnelsManager(tunnelProviders: tunnelManagers)))
++        }
+         #endif
+     }
+ 
+@@ -140,19 +122,13 @@ class TunnelsManager {
+                 }
+             }
+             for loadedTunnelProvider in loadedTunnelProviders {
+-                if let matchingTunnel = self.tunnels.first(where: {
+-                    loadedTunnelProvider.isEquivalentTo($0)
+-                }) {
++                if let matchingTunnel = self.tunnels.first(where: { loadedTunnelProvider.isEquivalentTo($0) }) {
+                     matchingTunnel.tunnelProvider = loadedTunnelProvider
+                     matchingTunnel.refreshStatus()
+                 } else {
+                     // Tunnel was added outside the app
+-                    if let proto = loadedTunnelProvider.protocolConfiguration
+-                        as? NETunnelProviderProtocol
+-                    {
+-                        if proto.migrateConfigurationIfNeeded(
+-                            called: loadedTunnelProvider.localizedDescription ?? "unknown")
+-                        {
++                    if let proto = loadedTunnelProvider.protocolConfiguration as? NETunnelProviderProtocol {
++                        if proto.migrateConfigurationIfNeeded(called: loadedTunnelProvider.localizedDescription ?? "unknown") {
+                             loadedTunnelProvider.saveToPreferences { _ in }
+                         }
+                     }
+@@ -165,10 +141,7 @@ class TunnelsManager {
+         }
+     }
+ 
+-    func add(
+-        tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption = .off,
+-        completionHandler: @escaping (Result<TunnelContainer, TunnelsManagerError>) -> Void
+-    ) {
++    func add(tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption = .off, completionHandler: @escaping (Result<TunnelContainer, TunnelsManagerError>) -> Void) {
+         let tunnelName = tunnelConfiguration.name ?? ""
+         if tunnelName.isEmpty {
+             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
+@@ -191,26 +164,24 @@ class TunnelsManager {
+         tunnelProviderManager.saveToPreferences { [weak self] error in
+             if let error = error {
+                 wg_log(.error, message: "Add: Saving configuration failed: \(error)")
+-                (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?
+-                    .destroyConfigurationReference()
+-                completionHandler(
+-                    .failure(TunnelsManagerError.systemErrorOnAddTunnel(systemError: error)))
++                (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
++                completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel(systemError: error)))
+                 return
+             }
+ 
+             guard let self = self else { return }
+ 
+             #if os(iOS)
+-                // HACK: In iOS, adding a tunnel causes deactivation of any currently active tunnel.
+-                // This is an ugly hack to reactivate the tunnel that has been deactivated like that.
+-                if let activeTunnel = activeTunnel {
+-                    if activeTunnel.status == .inactive || activeTunnel.status == .deactivating {
+-                        self.startActivation(of: activeTunnel)
+-                    }
+-                    if activeTunnel.status == .active || activeTunnel.status == .activating {
+-                        activeTunnel.status = .restarting
+-                    }
++            // HACK: In iOS, adding a tunnel causes deactivation of any currently active tunnel.
++            // This is an ugly hack to reactivate the tunnel that has been deactivated like that.
++            if let activeTunnel = activeTunnel {
++                if activeTunnel.status == .inactive || activeTunnel.status == .deactivating {
++                    self.startActivation(of: activeTunnel)
+                 }
++                if activeTunnel.status == .active || activeTunnel.status == .activating {
++                    activeTunnel.status = .restarting
++                }
++            }
+             #endif
+ 
+             let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
+@@ -221,19 +192,13 @@ class TunnelsManager {
+         }
+     }
+ 
+-    func addMultiple(
+-        tunnelConfigurations: [TunnelConfiguration],
+-        completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void
+-    ) {
++    func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void) {
+         // Temporarily pause observation of changes to VPN configurations to prevent the feedback
+         // loop that causes `reload()` to be called on each newly added tunnel, which significantly
+         // impacts performance.
+         configurationsObservationToken = nil
+ 
+-        self.addMultiple(
+-            tunnelConfigurations: ArraySlice(tunnelConfigurations), numberSuccessful: 0,
+-            lastError: nil
+-        ) { [weak self] numSucceeded, error in
++        self.addMultiple(tunnelConfigurations: ArraySlice(tunnelConfigurations), numberSuccessful: 0, lastError: nil) { [weak self] numSucceeded, error in
+             completionHandler(numSucceeded, error)
+ 
+             // Restart observation of changes to VPN configrations.
+@@ -244,11 +209,7 @@ class TunnelsManager {
+         }
+     }
+ 
+-    private func addMultiple(
+-        tunnelConfigurations: ArraySlice<TunnelConfiguration>, numberSuccessful: UInt,
+-        lastError: TunnelsManagerError?,
+-        completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void
+-    ) {
++    private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, numberSuccessful: UInt, lastError: TunnelsManagerError?, completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void) {
+         guard let head = tunnelConfigurations.first else {
+             completionHandler(numberSuccessful, lastError)
+             return
+@@ -264,19 +225,15 @@ class TunnelsManager {
+                 case .success:
+                     numberSuccessfulCount = numberSuccessful + 1
+                 }
+-                self?.addMultiple(
+-                    tunnelConfigurations: tail, numberSuccessful: numberSuccessfulCount,
+-                    lastError: lastError, completionHandler: completionHandler)
++                self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessfulCount, lastError: lastError, completionHandler: completionHandler)
+             }
+         }
+     }
+ 
+-    func modify(
+-        tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
+-        onDemandOption: ActivateOnDemandOption,
+-        shouldEnsureOnDemandEnabled: Bool = false,
+-        completionHandler: @escaping (TunnelsManagerError?) -> Void
+-    ) {
++    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
++                onDemandOption: ActivateOnDemandOption,
++                shouldEnsureOnDemandEnabled: Bool = false,
++                completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+         let tunnelName = tunnelConfiguration.name ?? ""
+         if tunnelName.isEmpty {
+             completionHandler(TunnelsManagerError.tunnelNameEmpty)
+@@ -285,16 +242,12 @@ class TunnelsManager {
+ 
+         let tunnelProviderManager = tunnel.tunnelProvider
+ 
+-        let isIntroducingOnDemandRules =
+-            (tunnelProviderManager.onDemandRules ?? []).isEmpty && onDemandOption != .off
+-        if isIntroducingOnDemandRules && tunnel.status != .inactive
+-            && tunnel.status != .deactivating
+-        {
++        let isIntroducingOnDemandRules = (tunnelProviderManager.onDemandRules ?? []).isEmpty && onDemandOption != .off
++        if isIntroducingOnDemandRules && tunnel.status != .inactive && tunnel.status != .deactivating {
+             tunnel.onDeactivated = { [weak self] in
+-                self?.modify(
+-                    tunnel: tunnel, tunnelConfiguration: tunnelConfiguration,
+-                    onDemandOption: onDemandOption, shouldEnsureOnDemandEnabled: true,
+-                    completionHandler: completionHandler)
++                self?.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration,
++                             onDemandOption: onDemandOption, shouldEnsureOnDemandEnabled: true,
++                             completionHandler: completionHandler)
+             }
+             self.startDeactivation(of: tunnel)
+             return
+@@ -319,8 +272,7 @@ class TunnelsManager {
+         }
+         tunnelProviderManager.isEnabled = true
+ 
+-        let isActivatingOnDemand =
+-            !tunnelProviderManager.isOnDemandEnabled && shouldEnsureOnDemandEnabled
++        let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && shouldEnsureOnDemandEnabled
+         onDemandOption.apply(on: tunnelProviderManager)
+         if shouldEnsureOnDemandEnabled {
+             tunnelProviderManager.isOnDemandEnabled = true
+@@ -340,15 +292,13 @@ class TunnelsManager {
+                 let newIndex = self.tunnels.firstIndex(of: tunnel)!
+                 self.tunnelsListDelegate?.tunnelMoved(from: oldIndex, to: newIndex)
+                 #if os(iOS)
+-                    RecentTunnelsTracker.handleTunnelRenamed(oldName: oldName, newName: tunnelName)
++                RecentTunnelsTracker.handleTunnelRenamed(oldName: oldName, newName: tunnelName)
+                 #endif
+             }
+             self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
+ 
+             if isTunnelConfigurationChanged {
+-                if tunnel.status == .active || tunnel.status == .activating
+-                    || tunnel.status == .reasserting
+-                {
++                if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
+                     // Turn off the tunnel, and then turn it back on, so the changes are made effective
+                     tunnel.status = .restarting
+                     (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
+@@ -361,12 +311,8 @@ class TunnelsManager {
+                 tunnelProviderManager.loadFromPreferences { error in
+                     tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
+                     if let error = error {
+-                        wg_log(
+-                            .error,
+-                            message:
+-                                "Modify: Re-loading after saving configuration failed: \(error)")
+-                        completionHandler(
+-                            TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
++                        wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error)")
++                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
+                     } else {
+                         completionHandler(nil)
+                     }
+@@ -377,20 +323,16 @@ class TunnelsManager {
+         }
+     }
+ 
+-    func remove(
+-        tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void
+-    ) {
++    func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+         let tunnelProviderManager = tunnel.tunnelProvider
+         #if os(macOS)
+-            if tunnel.isTunnelAvailableToUser {
+-                (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?
+-                    .destroyConfigurationReference()
+-            }
++        if tunnel.isTunnelAvailableToUser {
++            (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
++        }
+         #elseif os(iOS)
+-            (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?
+-                .destroyConfigurationReference()
++        (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
+         #else
+-            #error("Unimplemented")
++        #error("Unimplemented")
+         #endif
+         tunnelProviderManager.removeFromPreferences { [weak self] error in
+             if let error = error {
+@@ -405,14 +347,12 @@ class TunnelsManager {
+             completionHandler(nil)
+ 
+             #if os(iOS)
+-                RecentTunnelsTracker.handleTunnelRemoved(tunnelName: tunnel.name)
++            RecentTunnelsTracker.handleTunnelRemoved(tunnelName: tunnel.name)
+             #endif
+         }
+     }
+ 
+-    func removeMultiple(
+-        tunnels: [TunnelContainer], completionHandler: @escaping (TunnelsManagerError?) -> Void
+-    ) {
++    func removeMultiple(tunnels: [TunnelContainer], completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+         // Temporarily pause observation of changes to VPN configurations to prevent the feedback
+         // loop that causes `reload()` to be called for each removed tunnel, which significantly
+         // impacts performance.
+@@ -429,10 +369,7 @@ class TunnelsManager {
+         }
+     }
+ 
+-    private func removeMultiple(
+-        tunnels: ArraySlice<TunnelContainer>,
+-        completionHandler: @escaping (TunnelsManagerError?) -> Void
+-    ) {
++    private func removeMultiple(tunnels: ArraySlice<TunnelContainer>, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+         guard let head = tunnels.first else {
+             completionHandler(nil)
+             return
+@@ -449,13 +386,9 @@ class TunnelsManager {
+         }
+     }
+ 
+-    func setOnDemandEnabled(
+-        _ isOnDemandEnabled: Bool, on tunnel: TunnelContainer,
+-        completionHandler: @escaping (TunnelsManagerError?) -> Void
+-    ) {
++    func setOnDemandEnabled(_ isOnDemandEnabled: Bool, on tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+         let tunnelProviderManager = tunnel.tunnelProvider
+-        let isCurrentlyEnabled =
+-            (tunnelProviderManager.isOnDemandEnabled && tunnelProviderManager.isEnabled)
++        let isCurrentlyEnabled = (tunnelProviderManager.isOnDemandEnabled && tunnelProviderManager.isEnabled)
+         guard isCurrentlyEnabled != isOnDemandEnabled else {
+             completionHandler(nil)
+             return
+@@ -476,13 +409,8 @@ class TunnelsManager {
+                     // isActivateOnDemandEnabled will get changed in reload(), but no harm in setting it here too
+                     tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
+                     if let error = error {
+-                        wg_log(
+-                            .error,
+-                            message:
+-                                "Modify On-Demand: Re-loading after saving configuration failed: \(error)"
+-                        )
+-                        completionHandler(
+-                            TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
++                        wg_log(.error, message: "Modify On-Demand: Re-loading after saving configuration failed: \(error)")
++                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
+                         return
+                     }
+                     completionHandler(nil)
+@@ -525,10 +453,9 @@ class TunnelsManager {
+     }
+ 
+     func startActivation(of tunnel: TunnelContainer) {
+-        guard tunnels.contains(tunnel) else { return }  // Ensure it's not deleted
++        guard tunnels.contains(tunnel) else { return } // Ensure it's not deleted
+         guard tunnel.status == .inactive else {
+-            activationDelegate?.tunnelActivationAttemptFailed(
+-                tunnel: tunnel, error: .tunnelIsNotInactive)
++            activationDelegate?.tunnelActivationAttemptFailed(tunnel: tunnel, error: .tunnelIsNotInactive)
+             return
+         }
+ 
+@@ -537,22 +464,14 @@ class TunnelsManager {
+         }
+ 
+         if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive }) {
+-            wg_log(
+-                .info,
+-                message:
+-                    "Tunnel '\(tunnel.name)' waiting for deactivation of '\(tunnelInOperation.name)'"
+-            )
++            wg_log(.info, message: "Tunnel '\(tunnel.name)' waiting for deactivation of '\(tunnelInOperation.name)'")
+             tunnel.status = .waiting
+             activateWaitingTunnelOnDeactivation(of: tunnelInOperation)
+             if tunnelInOperation.status != .deactivating {
+                 if tunnelInOperation.isActivateOnDemandEnabled {
+                     setOnDemandEnabled(false, on: tunnelInOperation) { [weak self] error in
+                         guard error == nil else {
+-                            wg_log(
+-                                .error,
+-                                message:
+-                                    "Unable to activate tunnel '\(tunnel.name)' because on-demand could not be disabled on active tunnel '\(tunnel.name)'"
+-                            )
++                            wg_log(.error, message: "Unable to activate tunnel '\(tunnel.name)' because on-demand could not be disabled on active tunnel '\(tunnel.name)'")
+                             return
+                         }
+                         self?.startDeactivation(of: tunnelInOperation)
+@@ -565,13 +484,13 @@ class TunnelsManager {
+         }
+ 
+         #if targetEnvironment(simulator)
+-            tunnel.status = .active
++        tunnel.status = .active
+         #else
+-            tunnel.startActivation(activationDelegate: activationDelegate)
++        tunnel.startActivation(activationDelegate: activationDelegate)
+         #endif
+ 
+         #if os(iOS)
+-            RecentTunnelsTracker.handleTunnelActivated(tunnelName: tunnel.name)
++        RecentTunnelsTracker.handleTunnelActivated(tunnelName: tunnel.name)
+         #endif
+     }
+ 
+@@ -579,9 +498,9 @@ class TunnelsManager {
+         tunnel.isAttemptingActivation = false
+         guard tunnel.status != .inactive && tunnel.status != .deactivating else { return }
+         #if targetEnvironment(simulator)
+-            tunnel.status = .inactive
++        tunnel.status = .inactive
+         #else
+-            tunnel.startDeactivation()
++        tunnel.startDeactivation()
+         #endif
+     }
+ 
+@@ -602,76 +521,58 @@ class TunnelsManager {
+     }
+ 
+     private func startObservingTunnelStatuses() {
+-        statusObservationToken = NotificationCenter.default.observe(
+-            name: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main
+-        ) { [weak self] statusChangeNotification in
++        statusObservationToken = NotificationCenter.default.observe(name: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
+             guard let self = self,
+                 let session = statusChangeNotification.object as? NETunnelProviderSession,
+                 let tunnelProvider = session.manager as? NETunnelProviderManager,
+-                let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider })
+-            else { return }
++                let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
+ 
+-            wg_log(
+-                .debug,
+-                message:
+-                    "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'"
+-            )
++            wg_log(.debug, message: "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'")
+ 
+             if session.status == .connected {
+                 #if os(iOS)
+-                    if tunnel.handshakeState == .confirmed {
+-                        if tunnel.isAttemptingActivation {
++                if tunnel.handshakeState == .confirmed {
++                    if tunnel.isAttemptingActivation {
++                        tunnel.isAttemptingActivation = false
++                        self.activationDelegate?.tunnelActivationSucceeded(tunnel: tunnel)
++                    }
++                } else {
++                    let awaitingDelegate = tunnel.isAttemptingActivation
++                    let connectedAt = Date()
++                    tunnel.beginAwaitingFreshHandshakeIfNeeded(connectedAt: connectedAt) { [weak self, weak tunnel] result in
++                        guard let self = self, let tunnel = tunnel else { return }
++                        if awaitingDelegate {
+                             tunnel.isAttemptingActivation = false
+-                            self.activationDelegate?.tunnelActivationSucceeded(tunnel: tunnel)
+                         }
+-                    } else {
+-                        let awaitingDelegate = tunnel.isAttemptingActivation
+-                        let connectedAt = Date()
+-                        tunnel.beginAwaitingFreshHandshakeIfNeeded(connectedAt: connectedAt) {
+-                            [weak self, weak tunnel] result in
+-                            guard let self = self, let tunnel = tunnel else { return }
++                        switch result {
++                        case .success:
+                             if awaitingDelegate {
+-                                tunnel.isAttemptingActivation = false
++                                self.activationDelegate?.tunnelActivationSucceeded(tunnel: tunnel)
+                             }
+-                            switch result {
+-                            case .success:
+-                                if awaitingDelegate {
+-                                    self.activationDelegate?.tunnelActivationSucceeded(
+-                                        tunnel: tunnel)
+-                                }
+-                            case .failure(let error):
+-                                if awaitingDelegate {
+-                                    self.activationDelegate?.tunnelActivationFailed(
+-                                        tunnel: tunnel,
+-                                        error: .handshakeTimedOut(timeout: error.timeoutInterval))
+-                                }
+-                                self.startDeactivation(of: tunnel)
++                        case .failure(let error):
++                            if awaitingDelegate {
++                                self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .handshakeTimedOut(timeout: error.timeoutInterval))
+                             }
++                            self.startDeactivation(of: tunnel)
+                         }
+                     }
++                }
+                 #else
+-                    if tunnel.isAttemptingActivation {
+-                        tunnel.isAttemptingActivation = false
+-                        self.activationDelegate?.tunnelActivationSucceeded(tunnel: tunnel)
+-                    }
++                if tunnel.isAttemptingActivation {
++                    tunnel.isAttemptingActivation = false
++                    self.activationDelegate?.tunnelActivationSucceeded(tunnel: tunnel)
++                }
+                 #endif
+             } else if session.status == .disconnected {
+                 #if os(iOS)
+-                    tunnel.cancelHandshakeMonitoring()
++                tunnel.cancelHandshakeMonitoring()
+                 #endif
+                 if tunnel.isAttemptingActivation {
+                     tunnel.isAttemptingActivation = false
+                     if let (title, message) = lastErrorTextFromNetworkExtension(for: tunnel) {
+-                        self.activationDelegate?.tunnelActivationFailed(
+-                            tunnel: tunnel,
+-                            error: .activationFailedWithExtensionError(
+-                                title: title, message: message,
+-                                wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
++                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailedWithExtensionError(title: title, message: message, wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
+                     } else {
+-                        self.activationDelegate?.tunnelActivationFailed(
+-                            tunnel: tunnel,
+-                            error: .activationFailed(
+-                                wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
++                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailed(wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
+                     }
+                 }
+             }
+@@ -691,9 +592,7 @@ class TunnelsManager {
+     }
+ 
+     func startObservingTunnelConfigurations() {
+-        configurationsObservationToken = NotificationCenter.default.observe(
+-            name: .NEVPNConfigurationChange, object: nil, queue: OperationQueue.main
+-        ) { [weak self] _ in
++        configurationsObservationToken = NotificationCenter.default.observe(name: .NEVPNConfigurationChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
+             DispatchQueue.main.async { [weak self] in
+                 // We schedule reload() in a subsequent runloop to ensure that the completion handler of loadAllFromPreferences
+                 // (reload() calls loadAllFromPreferences) is called after the completion handler of the saveToPreferences or
+@@ -705,24 +604,15 @@ class TunnelsManager {
+     }
+ 
+     static func tunnelNameIsLessThan(_ lhs: String, _ rhs: String) -> Bool {
+-        return lhs.compare(
+-            rhs, options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive, .numeric])
+-            == .orderedAscending
++        return lhs.compare(rhs, options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive, .numeric]) == .orderedAscending
+     }
+ }
+ 
+-private func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (
+-    title: String, message: String
+-)? {
++private func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (title: String, message: String)? {
+     guard let lastErrorFileURL = FileManager.networkExtensionLastErrorFileURL else { return nil }
+     guard let lastErrorData = try? Data(contentsOf: lastErrorFileURL) else { return nil }
+-    guard
+-        let lastErrorStrings = String(data: lastErrorData, encoding: .utf8)?.splitToArray(
+-            separator: "\n")
+-    else { return nil }
+-    guard lastErrorStrings.count == 2 && tunnel.activationAttemptId == lastErrorStrings[0] else {
+-        return nil
+-    }
++    guard let lastErrorStrings = String(data: lastErrorData, encoding: .utf8)?.splitToArray(separator: "\n") else { return nil }
++    guard lastErrorStrings.count == 2 && tunnel.activationAttemptId == lastErrorStrings[0] else { return nil }
+ 
+     if let extensionError = PacketTunnelProviderError(rawValue: lastErrorStrings[1]) {
+         return extensionError.alertText
+@@ -733,16 +623,16 @@ private func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (
+ 
+ class TunnelContainer: NSObject {
+     #if os(iOS)
+-        private enum HandshakeConstants {
+-            static let pollInterval: TimeInterval = 1.0
+-            static let acceptanceSkew: TimeInterval = 1.0
+-            static let defaultTimeout: TimeInterval = 12.0
+-        }
++    private enum HandshakeConstants {
++        static let pollInterval: TimeInterval = 1.0
++        static let acceptanceSkew: TimeInterval = 1.0
++        static let defaultTimeout: TimeInterval = 12.0
++    }
+     #endif
+     @objc dynamic var name: String
+     @objc dynamic var status: TunnelStatus
+     #if os(iOS)
+-        @objc dynamic var handshakeState: TunnelHandshakeState = .idle
++    @objc dynamic var handshakeState: TunnelHandshakeState = .idle
+     #endif
+ 
+     @objc dynamic var isActivateOnDemandEnabled: Bool
+@@ -752,14 +642,9 @@ class TunnelContainer: NSObject {
+         didSet {
+             if isAttemptingActivation {
+                 self.activationTimer?.invalidate()
+-                let activationTimer = Timer(timeInterval: 5 /* seconds */, repeats: true) {
+-                    [weak self] _ in
++                let activationTimer = Timer(timeInterval: 5 /* seconds */, repeats: true) { [weak self] _ in
+                     guard let self = self else { return }
+-                    wg_log(
+-                        .debug,
+-                        message:
+-                            "Status update notification timeout for tunnel '\(self.name)'. Tunnel status is now '\(self.tunnelProvider.connection.status)'."
+-                    )
++                    wg_log(.debug, message: "Status update notification timeout for tunnel '\(self.name)'. Tunnel status is now '\(self.tunnelProvider.connection.status)'.")
+                     switch self.tunnelProvider.connection.status {
+                     case .connected, .disconnected, .invalid:
+                         self.activationTimer?.invalidate()
+@@ -779,15 +664,15 @@ class TunnelContainer: NSObject {
+     var deactivationTimer: Timer?
+     var onDeactivated: (() -> Void)?
+     #if os(iOS)
+-        private var handshakePollTimer: Timer?
+-        private var handshakeTimeoutTimer: Timer?
+-        private var handshakeTimeoutDeadline: Date?
+-        private var handshakeCutoffDate: Date?
+-        private var pendingTimeoutInterval: TimeInterval?
+-        private var handshakeCompletion: ((Result<Date, TunnelHandshakeError>) -> Void)?
+-        private var handshakePollInFlight = false
+-        private var appDidEnterBackgroundObserver: NSObjectProtocol?
+-        private var appWillEnterForegroundObserver: NSObjectProtocol?
++    private var handshakePollTimer: Timer?
++    private var handshakeTimeoutTimer: Timer?
++    private var handshakeTimeoutDeadline: Date?
++    private var handshakeCutoffDate: Date?
++    private var pendingTimeoutInterval: TimeInterval?
++    private var handshakeCompletion: ((Result<Date, TunnelHandshakeError>) -> Void)?
++    private var handshakePollInFlight = false
++    private var appDidEnterBackgroundObserver: NSObjectProtocol?
++    private var appWillEnterForegroundObserver: NSObjectProtocol?
+     #endif
+ 
+     fileprivate var tunnelProvider: NETunnelProviderManager {
+@@ -806,10 +691,9 @@ class TunnelContainer: NSObject {
+     }
+ 
+     #if os(macOS)
+-        var isTunnelAvailableToUser: Bool {
+-            return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?
+-                .providerConfiguration?["UID"] as? uid_t == getuid()
+-        }
++    var isTunnelAvailableToUser: Bool {
++        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.providerConfiguration?["UID"] as? uid_t == getuid()
++    }
+     #endif
+ 
+     init(tunnel: NETunnelProviderManager) {
+@@ -822,118 +706,71 @@ class TunnelContainer: NSObject {
+         super.init()
+     }
+ 
+-    func getRuntimeTunnelConfiguration(
+-        completionHandler: @escaping ((TunnelConfiguration?) -> Void)
+-    ) {
+-        guard status != .inactive,
+-            let session = tunnelProvider.connection as? NETunnelProviderSession
+-        else {
++    func getRuntimeTunnelConfiguration(completionHandler: @escaping ((TunnelConfiguration?) -> Void)) {
++        guard status != .inactive, let session = tunnelProvider.connection as? NETunnelProviderSession else {
+             completionHandler(tunnelConfiguration)
+             return
+         }
+-        guard
+-            nil
+-                != (try? session.sendProviderMessage(
+-                    Data([UInt8(0)]),
+-                    responseHandler: {
+-                        guard self.status != .inactive, let data = $0,
+-                            let base = self.tunnelConfiguration,
+-                            let settings = String(data: data, encoding: .utf8)
+-                        else {
+-                            completionHandler(self.tunnelConfiguration)
+-                            return
+-                        }
+-                        do {
+-                            let runtime = try TunnelConfiguration(
+-                                fromUapiConfig: settings, basedOn: base)
+-                            completionHandler(runtime)
+-                        } catch {
+-                            var keys = Set<String>()
+-                            for line in settings.split(separator: "\n") {
+-                                if let equalsIndex = line.firstIndex(of: "=") {
+-                                    keys.insert(String(line[..<equalsIndex]))
+-                                }
+-                            }
+-                            let keyList = keys.sorted().joined(separator: ", ")
+-                            wg_log(
+-                                .error,
+-                                message: "Runtime config parse failed: \(error). Keys: [\(keyList)]"
+-                            )
+-                            completionHandler(self.tunnelConfiguration)
+-                        }
+-                    }))
+-        else {
++        guard nil != (try? session.sendProviderMessage(Data([ UInt8(0) ]), responseHandler: {
++            guard self.status != .inactive, let data = $0, let base = self.tunnelConfiguration, let settings = String(data: data, encoding: .utf8) else {
++                completionHandler(self.tunnelConfiguration)
++                return
++            }
++            completionHandler((try? TunnelConfiguration(fromUapiConfig: settings, basedOn: base)) ?? self.tunnelConfiguration)
++        })) else {
+             completionHandler(tunnelConfiguration)
+             return
+         }
+     }
+ 
+     func refreshStatus() {
+-        if (status == .restarting)
+-            || (status == .waiting && tunnelProvider.connection.status == .disconnected)
+-        {
++        if (status == .restarting) || (status == .waiting && tunnelProvider.connection.status == .disconnected) {
+             return
+         }
+         let systemStatus = tunnelProvider.connection.status
+         #if os(iOS)
+-            if systemStatus == .connected {
+-                status =
+-                    (handshakeState == .waiting) ? .activating : TunnelStatus(from: systemStatus)
+-            } else {
+-                if handshakeState != .idle {
+-                    cancelHandshakeMonitoring()
+-                }
+-                status = TunnelStatus(from: systemStatus)
++        if systemStatus == .connected {
++            status = (handshakeState == .waiting) ? .activating : TunnelStatus(from: systemStatus)
++        } else {
++            if handshakeState != .idle {
++                cancelHandshakeMonitoring()
+             }
+-        #else
+             status = TunnelStatus(from: systemStatus)
++        }
++        #else
++        status = TunnelStatus(from: systemStatus)
+         #endif
+     }
+ 
+-    fileprivate func startActivation(
+-        recursionCount: UInt = 0, lastError: Error? = nil,
+-        activationDelegate: TunnelsManagerActivationDelegate?
+-    ) {
++    fileprivate func startActivation(recursionCount: UInt = 0, lastError: Error? = nil, activationDelegate: TunnelsManagerActivationDelegate?) {
+         if recursionCount >= 8 {
+-            wg_log(
+-                .error,
+-                message: "startActivation: Failed after 8 attempts. Giving up with \(lastError!)")
+-            activationDelegate?.tunnelActivationAttemptFailed(
+-                tunnel: self, error: .failedBecauseOfTooManyErrors(lastSystemError: lastError!))
++            wg_log(.error, message: "startActivation: Failed after 8 attempts. Giving up with \(lastError!)")
++            activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedBecauseOfTooManyErrors(lastSystemError: lastError!))
+             return
+         }
+ 
+         wg_log(.debug, message: "startActivation: Entering (tunnel: \(name))")
+ 
+-        status = .activating  // Ensure that no other tunnel can attempt activation until this tunnel is done trying
++        status = .activating // Ensure that no other tunnel can attempt activation until this tunnel is done trying
+ 
+         #if os(iOS)
+-            cancelHandshakeMonitoring()
++        cancelHandshakeMonitoring()
+         #endif
+ 
+         guard tunnelProvider.isEnabled else {
+             // In case the tunnel had gotten disabled, re-enable and save it,
+             // then call this function again.
+-            wg_log(
+-                .debug, staticMessage: "startActivation: Tunnel is disabled. Re-enabling and saving"
+-            )
++            wg_log(.debug, staticMessage: "startActivation: Tunnel is disabled. Re-enabling and saving")
+             tunnelProvider.isEnabled = true
+             tunnelProvider.saveToPreferences { [weak self] error in
+                 guard let self = self else { return }
+                 if error != nil {
+                     wg_log(.error, message: "Error saving tunnel after re-enabling: \(error!)")
+-                    activationDelegate?.tunnelActivationAttemptFailed(
+-                        tunnel: self, error: .failedWhileSaving(systemError: error!))
++                    activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileSaving(systemError: error!))
+                     return
+                 }
+-                wg_log(
+-                    .debug,
+-                    staticMessage:
+-                        "startActivation: Tunnel saved after re-enabling, invoking startActivation")
+-                self.startActivation(
+-                    recursionCount: recursionCount + 1,
+-                    lastError: NEVPNError(NEVPNError.configurationUnknown),
+-                    activationDelegate: activationDelegate)
++                wg_log(.debug, staticMessage: "startActivation: Tunnel saved after re-enabling, invoking startActivation")
++                self.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), activationDelegate: activationDelegate)
+             }
+             return
+         }
+@@ -944,9 +781,7 @@ class TunnelContainer: NSObject {
+             isAttemptingActivation = true
+             let activationAttemptId = UUID().uuidString
+             self.activationAttemptId = activationAttemptId
+-            try (tunnelProvider.connection as? NETunnelProviderSession)?.startTunnel(options: [
+-                "activationAttemptId": activationAttemptId
+-            ])
++            try (tunnelProvider.connection as? NETunnelProviderSession)?.startTunnel(options: ["activationAttemptId": activationAttemptId])
+             wg_log(.debug, staticMessage: "startActivation: Success")
+             activationDelegate?.tunnelActivationAttemptSucceeded(tunnel: self)
+         } catch let error {
+@@ -954,38 +789,26 @@ class TunnelContainer: NSObject {
+             guard let systemError = error as? NEVPNError else {
+                 wg_log(.error, message: "Failed to activate tunnel: Error: \(error)")
+                 status = .inactive
+-                activationDelegate?.tunnelActivationAttemptFailed(
+-                    tunnel: self, error: .failedWhileStarting(systemError: error))
++                activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileStarting(systemError: error))
+                 return
+             }
+-            guard
+-                systemError.code == NEVPNError.configurationInvalid
+-                    || systemError.code == NEVPNError.configurationStale
+-            else {
++            guard systemError.code == NEVPNError.configurationInvalid || systemError.code == NEVPNError.configurationStale else {
+                 wg_log(.error, message: "Failed to activate tunnel: VPN Error: \(error)")
+                 status = .inactive
+-                activationDelegate?.tunnelActivationAttemptFailed(
+-                    tunnel: self, error: .failedWhileStarting(systemError: systemError))
++                activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileStarting(systemError: systemError))
+                 return
+             }
+-            wg_log(
+-                .debug,
+-                staticMessage: "startActivation: Will reload tunnel and then try to start it.")
++            wg_log(.debug, staticMessage: "startActivation: Will reload tunnel and then try to start it.")
+             tunnelProvider.loadFromPreferences { [weak self] error in
+                 guard let self = self else { return }
+                 if error != nil {
+                     wg_log(.error, message: "startActivation: Error reloading tunnel: \(error!)")
+                     self.status = .inactive
+-                    activationDelegate?.tunnelActivationAttemptFailed(
+-                        tunnel: self, error: .failedWhileLoading(systemError: systemError))
++                    activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileLoading(systemError: systemError))
+                     return
+                 }
+-                wg_log(
+-                    .debug,
+-                    staticMessage: "startActivation: Tunnel reloaded, invoking startActivation")
+-                self.startActivation(
+-                    recursionCount: recursionCount + 1, lastError: systemError,
+-                    activationDelegate: activationDelegate)
++                wg_log(.debug, staticMessage: "startActivation: Tunnel reloaded, invoking startActivation")
++                self.startActivation(recursionCount: recursionCount + 1, lastError: systemError, activationDelegate: activationDelegate)
+             }
+         }
+     }
+@@ -993,14 +816,14 @@ class TunnelContainer: NSObject {
+     fileprivate func startDeactivation() {
+         wg_log(.debug, message: "startDeactivation: Tunnel: \(name)")
+         #if os(iOS)
+-            cancelHandshakeMonitoring()
++        cancelHandshakeMonitoring()
+         #endif
+         (tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
+     }
+ 
+     deinit {
+         #if os(iOS)
+-            cancelHandshakeMonitoring()
++        cancelHandshakeMonitoring()
+         #endif
+     }
+ }
+@@ -1009,247 +832,207 @@ extension NETunnelProviderManager {
+     private static var cachedConfigKey: UInt8 = 0
+ 
+     var tunnelConfiguration: TunnelConfiguration? {
+-        if let cached = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey)
+-            as? TunnelConfiguration
+-        {
++        if let cached = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey) as? TunnelConfiguration {
+             return cached
+         }
+-        let config = (protocolConfiguration as? NETunnelProviderProtocol)?.asTunnelConfiguration(
+-            called: localizedDescription)
++        let config = (protocolConfiguration as? NETunnelProviderProtocol)?.asTunnelConfiguration(called: localizedDescription)
+         if config != nil {
+-            objc_setAssociatedObject(
+-                self, &NETunnelProviderManager.cachedConfigKey, config,
+-                objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
++            objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, config, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+         }
+         return config
+     }
+ 
+     func setTunnelConfiguration(_ tunnelConfiguration: TunnelConfiguration) {
+-        protocolConfiguration = NETunnelProviderProtocol(
+-            tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
++        protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
+         localizedDescription = tunnelConfiguration.name
+-        objc_setAssociatedObject(
+-            self, &NETunnelProviderManager.cachedConfigKey, tunnelConfiguration,
+-            objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
++        objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, tunnelConfiguration, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+     }
+ 
+     func isEquivalentTo(_ tunnel: TunnelContainer) -> Bool {
+-        return localizedDescription == tunnel.name
+-            && tunnelConfiguration == tunnel.tunnelConfiguration
++        return localizedDescription == tunnel.name && tunnelConfiguration == tunnel.tunnelConfiguration
+     }
+ }
+ 
+ #if os(iOS)
+-    extension TunnelContainer {
+-        func beginAwaitingFreshHandshakeIfNeeded(
+-            connectedAt: Date = Date(),
+-            completion: @escaping (Result<Date, TunnelHandshakeError>) -> Void
+-        ) {
+-            #if targetEnvironment(simulator)
+-                completion(.success(connectedAt))
+-                return
+-            #endif
+-
+-            switch handshakeState {
+-            case .confirmed:
+-                completion(.success(connectedAt))
+-                return
+-            case .waiting:
+-                handshakeCompletion = completion
+-                return
+-            default:
+-                break
+-            }
++extension TunnelContainer {
++    func beginAwaitingFreshHandshakeIfNeeded(connectedAt: Date = Date(), completion: @escaping (Result<Date, TunnelHandshakeError>) -> Void) {
++        #if targetEnvironment(simulator)
++        completion(.success(connectedAt))
++        return
++        #endif
+ 
++        switch handshakeState {
++        case .confirmed:
++            completion(.success(connectedAt))
++            return
++        case .waiting:
+             handshakeCompletion = completion
+-            handshakeState = .waiting
+-            handshakeCutoffDate = connectedAt.addingTimeInterval(-HandshakeConstants.acceptanceSkew)
+-            wg_log(
+-                .debug,
+-                message:
+-                    "Handshake wait started: connectedAt=\(connectedAt) cutoff=\(handshakeCutoffDate ?? connectedAt) timeout=\(handshakeTimeoutInterval())"
+-            )
+-            scheduleHandshakeTimeout()
+-            registerForAppLifecycleNotifications()
+-            pollHandshakeFreshness()
++            return
++        default:
++            break
+         }
+ 
+-        func cancelHandshakeMonitoring(resetState: Bool = true) {
+-            cleanupHandshakeTimers()
+-            unregisterAppLifecycleNotifications()
+-            handshakeCompletion = nil
+-            handshakeCutoffDate = nil
+-            pendingTimeoutInterval = nil
+-            handshakePollInFlight = false
+-            if resetState {
+-                handshakeState = .idle
+-            }
++        handshakeCompletion = completion
++        handshakeState = .waiting
++        handshakeCutoffDate = connectedAt.addingTimeInterval(-HandshakeConstants.acceptanceSkew)
++        scheduleHandshakeTimeout()
++        registerForAppLifecycleNotifications()
++        pollHandshakeFreshness()
++    }
++
++    func cancelHandshakeMonitoring(resetState: Bool = true) {
++        cleanupHandshakeTimers()
++        unregisterAppLifecycleNotifications()
++        handshakeCompletion = nil
++        handshakeCutoffDate = nil
++        pendingTimeoutInterval = nil
++        handshakePollInFlight = false
++        if resetState {
++            handshakeState = .idle
+         }
++    }
+ 
+-        private func handshakeTimeoutInterval() -> TimeInterval {
+-            return HandshakeConstants.defaultTimeout
++    private func handshakeTimeoutInterval() -> TimeInterval {
++        if let override = tunnelConfiguration?.interface.specialHandshakeTimeout, override > 0 {
++            return TimeInterval(override)
+         }
++        return HandshakeConstants.defaultTimeout
++    }
+ 
+-        private func pollHandshakeFreshness() {
+-            guard handshakeState == .waiting else { return }
+-            guard !handshakePollInFlight else { return }
+-            handshakePollInFlight = true
++    private func pollHandshakeFreshness() {
++        guard handshakeState == .waiting else { return }
++        guard !handshakePollInFlight else { return }
++        handshakePollInFlight = true
+ 
+-            getRuntimeTunnelConfiguration { [weak self] runtimeConfiguration in
+-                DispatchQueue.main.async {
+-                    guard let self = self else { return }
+-                    self.handshakePollInFlight = false
+-                    guard self.handshakeState == .waiting else { return }
+-                    guard let runtimeConfiguration = runtimeConfiguration,
+-                        let cutoffDate = self.handshakeCutoffDate
+-                    else {
+-                        wg_log(.debug, message: "Handshake poll: runtime config unavailable")
+-                        self.scheduleNextHandshakePoll()
+-                        return
+-                    }
++        getRuntimeTunnelConfiguration { [weak self] runtimeConfiguration in
++            DispatchQueue.main.async {
++                guard let self = self else { return }
++                self.handshakePollInFlight = false
++                guard self.handshakeState == .waiting else { return }
++                guard let runtimeConfiguration = runtimeConfiguration,
++                      let cutoffDate = self.handshakeCutoffDate else {
++                    self.scheduleNextHandshakePoll()
++                    return
++                }
+ 
+-                    let peerSummaries = runtimeConfiguration.peers.map { peer in
+-                        let hs = peer.lastHandshakeTime.map { String(describing: $0) } ?? "nil"
+-                        let rx = peer.rxBytes.map { String($0) } ?? "nil"
+-                        let tx = peer.txBytes.map { String($0) } ?? "nil"
+-                        return "hs=\(hs) rx=\(rx) tx=\(tx)"
+-                    }
+-                    let isFresh = HandshakeFreshnessEvaluator.containsFreshHandshake(
+-                        peers: runtimeConfiguration.peers, cutoffDate: cutoffDate)
+-                    wg_log(
+-                        .debug,
+-                        message:
+-                            "Handshake poll: cutoff=\(cutoffDate) peers=[\(peerSummaries.joined(separator: "; "))] fresh=\(isFresh)"
+-                    )
+-
+-                    if isFresh {
+-                        self.finishHandshakeWaiting(result: .success(Date()))
+-                    } else {
+-                        self.scheduleNextHandshakePoll()
+-                    }
++                if HandshakeFreshnessEvaluator.containsFreshHandshake(peers: runtimeConfiguration.peers, cutoffDate: cutoffDate) {
++                    self.finishHandshakeWaiting(result: .success(Date()))
++                } else {
++                    self.scheduleNextHandshakePoll()
+                 }
+             }
+         }
++    }
+ 
+-        private func scheduleNextHandshakePoll() {
+-            guard handshakeState == .waiting else { return }
+-            handshakePollTimer?.invalidate()
+-            handshakePollTimer = Timer(
+-                timeInterval: HandshakeConstants.pollInterval, repeats: false
+-            ) { [weak self] _ in
+-                self?.pollHandshakeFreshness()
+-            }
+-            if let timer = handshakePollTimer {
+-                RunLoop.main.add(timer, forMode: .common)
+-            }
++    private func scheduleNextHandshakePoll() {
++        guard handshakeState == .waiting else { return }
++        handshakePollTimer?.invalidate()
++        handshakePollTimer = Timer(timeInterval: HandshakeConstants.pollInterval, repeats: false) { [weak self] _ in
++            self?.pollHandshakeFreshness()
+         }
+-
+-        private func scheduleHandshakeTimeout(after interval: TimeInterval? = nil) {
+-            let timeout = interval ?? handshakeTimeoutInterval()
+-            handshakeTimeoutTimer?.invalidate()
+-            pendingTimeoutInterval = nil
+-            handshakeTimeoutDeadline = Date().addingTimeInterval(timeout)
+-            handshakeTimeoutTimer = Timer(timeInterval: timeout, repeats: false) { [weak self] _ in
+-                guard let self = self else { return }
+-                self.finishHandshakeWaiting(result: .failure(.timedOut(timeout)))
+-            }
+-            if let timer = handshakeTimeoutTimer {
+-                RunLoop.main.add(timer, forMode: .common)
+-            }
++        if let timer = handshakePollTimer {
++            RunLoop.main.add(timer, forMode: .common)
+         }
++    }
+ 
+-        private func finishHandshakeWaiting(result: Result<Date, TunnelHandshakeError>) {
+-            cleanupHandshakeTimers()
+-            unregisterAppLifecycleNotifications()
+-            handshakeCutoffDate = nil
+-            switch result {
+-            case .success:
+-                handshakeState = .confirmed
+-                status = .active
+-                wg_log(.debug, message: "Handshake wait succeeded")
+-            case .failure(let error):
+-                handshakeState = .failed
+-                wg_log(.debug, message: "Handshake wait failed: \(error)")
+-            }
+-            let completion = handshakeCompletion
+-            handshakeCompletion = nil
+-            completion?(result)
++    private func scheduleHandshakeTimeout(after interval: TimeInterval? = nil) {
++        let timeout = interval ?? handshakeTimeoutInterval()
++        handshakeTimeoutTimer?.invalidate()
++        pendingTimeoutInterval = nil
++        handshakeTimeoutDeadline = Date().addingTimeInterval(timeout)
++        handshakeTimeoutTimer = Timer(timeInterval: timeout, repeats: false) { [weak self] _ in
++            guard let self = self else { return }
++            self.finishHandshakeWaiting(result: .failure(.timedOut(timeout)))
+         }
++        if let timer = handshakeTimeoutTimer {
++            RunLoop.main.add(timer, forMode: .common)
++        }
++    }
+ 
+-        private func cleanupHandshakeTimers() {
+-            handshakePollTimer?.invalidate()
+-            handshakeTimeoutTimer?.invalidate()
+-            handshakePollTimer = nil
+-            handshakeTimeoutTimer = nil
+-            handshakeTimeoutDeadline = nil
+-            pendingTimeoutInterval = nil
+-            handshakePollInFlight = false
++    private func finishHandshakeWaiting(result: Result<Date, TunnelHandshakeError>) {
++        cleanupHandshakeTimers()
++        unregisterAppLifecycleNotifications()
++        handshakeCutoffDate = nil
++        switch result {
++        case .success:
++            handshakeState = .confirmed
++            status = .active
++        case .failure:
++            handshakeState = .failed
+         }
++        let completion = handshakeCompletion
++        handshakeCompletion = nil
++        completion?(result)
++    }
+ 
+-        private func registerForAppLifecycleNotifications() {
+-            guard appDidEnterBackgroundObserver == nil, appWillEnterForegroundObserver == nil else {
+-                return
+-            }
+-            let center = NotificationCenter.default
+-            appDidEnterBackgroundObserver = center.addObserver(
+-                forName: UIApplication.didEnterBackgroundNotification,
+-                object: nil,
+-                queue: .main
+-            ) { [weak self] _ in
+-                self?.applicationDidEnterBackground()
+-            }
+-            appWillEnterForegroundObserver = center.addObserver(
+-                forName: UIApplication.willEnterForegroundNotification,
+-                object: nil,
+-                queue: .main
+-            ) { [weak self] _ in
+-                self?.applicationWillEnterForeground()
+-            }
++    private func cleanupHandshakeTimers() {
++        handshakePollTimer?.invalidate()
++        handshakeTimeoutTimer?.invalidate()
++        handshakePollTimer = nil
++        handshakeTimeoutTimer = nil
++        handshakeTimeoutDeadline = nil
++        pendingTimeoutInterval = nil
++        handshakePollInFlight = false
++    }
++
++    private func registerForAppLifecycleNotifications() {
++        guard appDidEnterBackgroundObserver == nil, appWillEnterForegroundObserver == nil else { return }
++        let center = NotificationCenter.default
++        appDidEnterBackgroundObserver = center.addObserver(forName: UIApplication.didEnterBackgroundNotification,
++                                                          object: nil,
++                                                          queue: .main) { [weak self] _ in
++            self?.applicationDidEnterBackground()
+         }
++        appWillEnterForegroundObserver = center.addObserver(forName: UIApplication.willEnterForegroundNotification,
++                                                            object: nil,
++                                                            queue: .main) { [weak self] _ in
++            self?.applicationWillEnterForeground()
++        }
++    }
+ 
+-        private func unregisterAppLifecycleNotifications() {
+-            let center = NotificationCenter.default
+-            if let observer = appDidEnterBackgroundObserver {
+-                center.removeObserver(observer)
+-            }
+-            if let observer = appWillEnterForegroundObserver {
+-                center.removeObserver(observer)
+-            }
+-            appDidEnterBackgroundObserver = nil
+-            appWillEnterForegroundObserver = nil
++    private func unregisterAppLifecycleNotifications() {
++        let center = NotificationCenter.default
++        if let observer = appDidEnterBackgroundObserver {
++            center.removeObserver(observer)
+         }
++        if let observer = appWillEnterForegroundObserver {
++            center.removeObserver(observer)
++        }
++        appDidEnterBackgroundObserver = nil
++        appWillEnterForegroundObserver = nil
++    }
+ 
+-        private func applicationDidEnterBackground() {
+-            guard handshakeState == .waiting else { return }
+-            if let deadline = handshakeTimeoutDeadline {
+-                pendingTimeoutInterval = max(0, deadline.timeIntervalSinceNow)
+-            }
+-            handshakePollTimer?.invalidate()
+-            handshakePollTimer = nil
+-            handshakeTimeoutTimer?.invalidate()
+-            handshakeTimeoutTimer = nil
++    private func applicationDidEnterBackground() {
++        guard handshakeState == .waiting else { return }
++        if let deadline = handshakeTimeoutDeadline {
++            pendingTimeoutInterval = max(0, deadline.timeIntervalSinceNow)
+         }
++        handshakePollTimer?.invalidate()
++        handshakePollTimer = nil
++        handshakeTimeoutTimer?.invalidate()
++        handshakeTimeoutTimer = nil
++    }
+ 
+-        private func applicationWillEnterForeground() {
+-            guard handshakeState == .waiting else { return }
+-            if let remaining = pendingTimeoutInterval {
+-                pendingTimeoutInterval = nil
+-                if remaining <= 0 {
+-                    finishHandshakeWaiting(result: .failure(.timedOut(handshakeTimeoutInterval())))
+-                    return
+-                }
+-                scheduleHandshakeTimeout(after: remaining)
+-            } else if let deadline = handshakeTimeoutDeadline {
+-                let remaining = max(0, deadline.timeIntervalSinceNow)
+-                if remaining <= 0 {
+-                    finishHandshakeWaiting(result: .failure(.timedOut(handshakeTimeoutInterval())))
+-                    return
+-                }
+-                scheduleHandshakeTimeout(after: remaining)
+-            } else {
+-                scheduleHandshakeTimeout()
++    private func applicationWillEnterForeground() {
++        guard handshakeState == .waiting else { return }
++        if let remaining = pendingTimeoutInterval {
++            pendingTimeoutInterval = nil
++            if remaining <= 0 {
++                finishHandshakeWaiting(result: .failure(.timedOut(handshakeTimeoutInterval())))
++                return
++            }
++            scheduleHandshakeTimeout(after: remaining)
++        } else if let deadline = handshakeTimeoutDeadline {
++            let remaining = max(0, deadline.timeIntervalSinceNow)
++            if remaining <= 0 {
++                finishHandshakeWaiting(result: .failure(.timedOut(handshakeTimeoutInterval())))
++                return
+             }
+-            pollHandshakeFreshness()
++            scheduleHandshakeTimeout(after: remaining)
++        } else {
++            scheduleHandshakeTimeout()
+         }
++        pollHandshakeFreshness()
+     }
++}
+ #endif
+diff --git a/Sources/WireGuardApp/UI/TunnelViewModel.swift b/Sources/WireGuardApp/UI/TunnelViewModel.swift
+index b59cbe9..edd1a77 100644
+--- a/Sources/WireGuardApp/UI/TunnelViewModel.swift
++++ b/Sources/WireGuardApp/UI/TunnelViewModel.swift
+@@ -31,6 +31,10 @@ class TunnelViewModel {
+         case specialJunk3
+         case specialJunk4
+         case specialJunk5
++        case controlledJunk1
++        case controlledJunk2
++        case controlledJunk3
++        case specialHandshakeTimeout
+ 
+         var localizedUIString: String {
+             switch self {
+@@ -60,6 +64,10 @@ class TunnelViewModel {
+             case .specialJunk3: return tr("I3")
+             case .specialJunk4: return tr("I4")
+             case .specialJunk5: return tr("I5")
++            case .controlledJunk1: return tr("J1")
++            case .controlledJunk2: return tr("J2")
++            case .controlledJunk3: return tr("J3")
++            case .specialHandshakeTimeout: return tr("Itime")
+             }
+         }
+     }
+@@ -244,6 +252,24 @@ class TunnelViewModel {
+                 scratchpad[.specialJunk5] = String(specialJunk5)
+             }
+ 
++            if let controlledJunk1 = config.controlledJunk1 {
++                scratchpad[.controlledJunk1] = String(controlledJunk1)
++            }
++
++            if let controlledJunk2 = config.controlledJunk2 {
++                scratchpad[.controlledJunk2] = String(controlledJunk2)
++            }
++
++            if let controlledJunk3 = config.controlledJunk3 {
++                scratchpad[.controlledJunk3] = String(controlledJunk3)
++            }
++
++            if let specialHandshakeTimeout = config.specialHandshakeTimeout {
++                scratchpad[.specialHandshakeTimeout] = String(specialHandshakeTimeout)
++            }
++
++
++
+             return scratchpad
+         }
+ 
+@@ -407,6 +433,29 @@ class TunnelViewModel {
+                 config.specialJunk5 = specialJunk5String
+             }
+ 
++            if let controlledJunk1String = scratchpad[.controlledJunk1], !controlledJunk1String.isEmpty {
++                config.controlledJunk1 = controlledJunk1String
++            }
++
++            if let controlledJunk2String = scratchpad[.controlledJunk2], !controlledJunk2String.isEmpty {
++                config.controlledJunk2 = controlledJunk2String
++            }
++
++            if let controlledJunk3String = scratchpad[.controlledJunk3], !controlledJunk3String.isEmpty {
++                config.controlledJunk3 = controlledJunk3String
++            }
++
++            if let specialHandshakeTimeoutString = scratchpad[.specialHandshakeTimeout], !specialHandshakeTimeoutString.isEmpty {
++                if let specialHandshakeTimeout = Int(specialHandshakeTimeoutString) {
++                    config.specialHandshakeTimeout = specialHandshakeTimeout
++                } else {
++                    fieldsWithError.insert(.specialHandshakeTimeout)
++                    errorMessages.append(tr("alertInvalidInterfaceMessageSpecialHandshakeTimeoutInvalid"))
++                }
++            }
++
++
++
+             guard errorMessages.isEmpty else { return .error(errorMessages.first!) }
+ 
+             validatedConfiguration = config
+diff --git a/Sources/WireGuardApp/UI/iOS/Info.plist b/Sources/WireGuardApp/UI/iOS/Info.plist
+index a4dd74c..e7e9c83 100644
+--- a/Sources/WireGuardApp/UI/iOS/Info.plist
++++ b/Sources/WireGuardApp/UI/iOS/Info.plist
+@@ -24,7 +24,7 @@
+ 			<key>CFBundleTypeRole</key>
+ 			<string>Viewer</string>
+ 			<key>LSHandlerRank</key>
+-			<string>Owner</string>
++			<string>Default</string>
+ 			<key>LSItemContentTypes</key>
+ 			<array>
+ 				<string>com.wireguard.config.quick</string>
+@@ -68,9 +68,9 @@
+ 	<key>CFBundlePackageType</key>
+ 	<string>APPL</string>
+ 	<key>CFBundleShortVersionString</key>
+-	<string>$(MARKETING_VERSION)</string>
++	<string>2.0.0</string>
+ 	<key>CFBundleVersion</key>
+-	<string>$(CURRENT_PROJECT_VERSION)</string>
++	<string>$(VERSION_ID)</string>
+ 	<key>ITSAppUsesNonExemptEncryption</key>
+ 	<false />
+ 	<key>LSRequiresIPhoneOS</key>
+@@ -103,7 +103,7 @@
+ 		<dict>
+ 			<key>UTTypeConformsTo</key>
+ 			<array>
+-				<string>public.plain-text</string>
++				<string>public.text</string>
+ 			</array>
+ 			<key>UTTypeDescription</key>
+ 			<string>WireGuard wg-quick configuration file</string>
+diff --git a/Sources/WireGuardApp/UI/iOS/ViewController/TunnelDetailTableViewController.swift b/Sources/WireGuardApp/UI/iOS/ViewController/TunnelDetailTableViewController.swift
+index 24ec75f..4cee692 100644
+--- a/Sources/WireGuardApp/UI/iOS/ViewController/TunnelDetailTableViewController.swift
++++ b/Sources/WireGuardApp/UI/iOS/ViewController/TunnelDetailTableViewController.swift
+@@ -19,7 +19,7 @@ class TunnelDetailTableViewController: UITableViewController {
+         .junkPacketCount, .junkPacketMinSize, .junkPacketMaxSize,
+         .initPacketJunkSize, .responsePacketJunkSize, .cookieReplyPacketJunkSize, .transportPacketJunkSize,
+         .initPacketMagicHeader, .responsePacketMagicHeader, .underloadPacketMagicHeader, .transportPacketMagicHeader,
+-        .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5
++        .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5, .controlledJunk1, .controlledJunk2, .controlledJunk3, .specialHandshakeTimeout
+     ]
+ 
+     static let peerFields: [TunnelViewModel.PeerField] = [
+diff --git a/Sources/WireGuardApp/UI/iOS/ViewController/TunnelEditTableViewController.swift b/Sources/WireGuardApp/UI/iOS/ViewController/TunnelEditTableViewController.swift
+index 78f61ee..1986258 100644
+--- a/Sources/WireGuardApp/UI/iOS/ViewController/TunnelEditTableViewController.swift
++++ b/Sources/WireGuardApp/UI/iOS/ViewController/TunnelEditTableViewController.swift
+@@ -38,7 +38,7 @@ class TunnelEditTableViewController: UITableViewController {
+         [.junkPacketCount, .junkPacketMinSize, .junkPacketMaxSize,
+          .initPacketJunkSize, .responsePacketJunkSize, .cookieReplyPacketJunkSize, .transportPacketJunkSize,
+          .initPacketMagicHeader, .responsePacketMagicHeader, .underloadPacketMagicHeader, .transportPacketMagicHeader,
+-         .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5]
++         .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5, .controlledJunk1, .controlledJunk2, .controlledJunk3, .specialHandshakeTimeout]
+     ]
+ 
+     let peerFields: [TunnelViewModel.PeerField] = [
+@@ -258,11 +258,13 @@ extension TunnelEditTableViewController {
+         case .status, .toggleStatus:
+             fatalError("Unexpected interface field")
+         case .junkPacketCount, .junkPacketMinSize, .junkPacketMaxSize,
+-                .initPacketJunkSize, .responsePacketJunkSize, .cookieReplyPacketJunkSize, .transportPacketJunkSize:
++                .initPacketJunkSize, .responsePacketJunkSize, .cookieReplyPacketJunkSize, .transportPacketJunkSize,
++                .specialHandshakeTimeout:
+             cell.keyboardType = .numberPad
+         case .initPacketMagicHeader, .responsePacketMagicHeader, .underloadPacketMagicHeader, .transportPacketMagicHeader:
+             cell.keyboardType = .numbersAndPunctuation
+-        case .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5:
++        case .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5,
++                .controlledJunk1, .controlledJunk2, .controlledJunk3:
+             cell.keyboardType = .default
+         }
+ 
+diff --git a/Sources/WireGuardApp/UI/macOS/Info.plist b/Sources/WireGuardApp/UI/macOS/Info.plist
+index 52a0926..bf231d4 100644
+--- a/Sources/WireGuardApp/UI/macOS/Info.plist
++++ b/Sources/WireGuardApp/UI/macOS/Info.plist
+@@ -5,25 +5,6 @@
+ <dict>
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+-	<key>CFBundleDocumentTypes</key>
+-	<array>
+-		<dict>
+-			<key>CFBundleTypeExtensions</key>
+-			<array>
+-				<string>conf</string>
+-			</array>
+-			<key>CFBundleTypeName</key>
+-			<string>WireGuard wg-quick configuration file</string>
+-			<key>CFBundleTypeRole</key>
+-			<string>Viewer</string>
+-			<key>LSHandlerRank</key>
+-			<string>Default</string>
+-			<key>LSItemContentTypes</key>
+-			<array>
+-				<string>com.wireguard.config.quick</string>
+-			</array>
+-		</dict>
+-	</array>
+ 	<key>CFBundleExecutable</key>
+ 	<string>$(EXECUTABLE_NAME)</string>
+ 	<key>CFBundleIconFile</key>
+@@ -37,9 +18,9 @@
+ 	<key>CFBundlePackageType</key>
+ 	<string>APPL</string>
+ 	<key>CFBundleShortVersionString</key>
+-	<string>$(MARKETING_VERSION)</string>
++	<string>2.0.0</string>
+ 	<key>CFBundleVersion</key>
+-	<string>$(CURRENT_PROJECT_VERSION)</string>
++	<string>1</string>
+ 	<key>ITSAppUsesNonExemptEncryption</key>
+ 	<false />
+ 	<key>LSApplicationCategoryType</key>
+@@ -56,26 +37,6 @@
+ Copyright © 2024 Amnezia. All Rights Reserved.</string>
+ 	<key>NSPrincipalClass</key>
+ 	<string>AmneziaWG.Application</string>
+-	<key>UTExportedTypeDeclarations</key>
+-	<array>
+-		<dict>
+-			<key>UTTypeConformsTo</key>
+-			<array>
+-				<string>public.plain-text</string>
+-			</array>
+-			<key>UTTypeDescription</key>
+-			<string>WireGuard wg-quick configuration file</string>
+-			<key>UTTypeIdentifier</key>
+-			<string>com.wireguard.config.quick</string>
+-			<key>UTTypeTagSpecification</key>
+-			<dict>
+-				<key>public.filename-extension</key>
+-				<string>conf</string>
+-				<key>public.mime-type</key>
+-				<string>text/plain</string>
+-			</dict>
+-		</dict>
+-	</array>
+ 	<key>com.wireguard.macos.app_group_id</key>
+ 	<string>$(DEVELOPMENT_TEAM).group.$(APP_ID_MACOS)</string>
+ </dict>
+diff --git a/Sources/WireGuardApp/UI/macOS/LoginItemHelper/Info.plist b/Sources/WireGuardApp/UI/macOS/LoginItemHelper/Info.plist
+index e1eb594..185de16 100644
+--- a/Sources/WireGuardApp/UI/macOS/LoginItemHelper/Info.plist
++++ b/Sources/WireGuardApp/UI/macOS/LoginItemHelper/Info.plist
+@@ -1,16 +1,15 @@
+-<?xml version="1.0" encoding="UTF-8" ?>
+-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+-    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
++<?xml version="1.0" encoding="UTF-8"?>
++<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ <plist version="1.0">
+ <dict>
+ 	<key>ITSAppUsesNonExemptEncryption</key>
+-	<false />
++	<false/>
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+ 	<key>CFBundleExecutable</key>
+ 	<string>$(EXECUTABLE_NAME)</string>
+ 	<key>CFBundleIconFile</key>
+-	<string />
++	<string></string>
+ 	<key>CFBundleIdentifier</key>
+ 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+ 	<key>CFBundleInfoDictionaryVersion</key>
+@@ -20,9 +19,9 @@
+ 	<key>CFBundlePackageType</key>
+ 	<string>APPL</string>
+ 	<key>CFBundleShortVersionString</key>
+-	<string>$(MARKETING_VERSION)</string>
++	<string>$(VERSION_NAME)</string>
+ 	<key>CFBundleVersion</key>
+-	<string>$(CURRENT_PROJECT_VERSION)</string>
++	<string>$(VERSION_ID)</string>
+ 	<key>LSMinimumSystemVersion</key>
+ 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+ 	<key>NSHumanReadableCopyright</key>
+@@ -30,7 +29,7 @@
+ 	<key>NSPrincipalClass</key>
+ 	<string>NSApplication</string>
+ 	<key>LSBackgroundOnly</key>
+-	<true />
++	<true/>
+ 	<key>com.wireguard.macos.app_id</key>
+ 	<string>$(APP_ID_MACOS)</string>
+ 	<key>com.wireguard.macos.app_group_id</key>
+diff --git a/Sources/WireGuardApp/UI/macOS/ViewController/TunnelDetailTableViewController.swift b/Sources/WireGuardApp/UI/macOS/ViewController/TunnelDetailTableViewController.swift
+index 94f4595..7823ab3 100644
+--- a/Sources/WireGuardApp/UI/macOS/ViewController/TunnelDetailTableViewController.swift
++++ b/Sources/WireGuardApp/UI/macOS/ViewController/TunnelDetailTableViewController.swift
+@@ -39,7 +39,7 @@ class TunnelDetailTableViewController: NSViewController {
+         .junkPacketCount, .junkPacketMinSize, .junkPacketMaxSize,
+         .initPacketJunkSize, .responsePacketJunkSize, .cookieReplyPacketJunkSize, .transportPacketJunkSize,
+         .initPacketMagicHeader, .responsePacketMagicHeader, .underloadPacketMagicHeader, .transportPacketMagicHeader,
+-        .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5
++        .specialJunk1, .specialJunk2, .specialJunk3, .specialJunk4, .specialJunk5, .controlledJunk1, .controlledJunk2, .controlledJunk3, .specialHandshakeTimeout
+     ]
+ 
+     static let peerFields: [TunnelViewModel.PeerField] = [
+diff --git a/Sources/WireGuardKit/DNSResolver.swift b/Sources/WireGuardKit/DNSResolver.swift
+index cf4fde6..a50243f 100644
+--- a/Sources/WireGuardKit/DNSResolver.swift
++++ b/Sources/WireGuardKit/DNSResolver.swift
+@@ -92,7 +92,7 @@ extension DNSResolver {
+ 
+ extension Endpoint {
+     func withReresolvedIP() throws -> Endpoint {
+-        #if os(iOS)
++        #if os(iOS) || os(tvOS)
+         let hostname: String
+         switch host {
+         case .name(let name, _):
+diff --git a/Sources/WireGuardKit/HandshakeFreshnessEvaluator.swift b/Sources/WireGuardKit/HandshakeFreshnessEvaluator.swift
+index 723f8c9..79fe380 100644
+--- a/Sources/WireGuardKit/HandshakeFreshnessEvaluator.swift
++++ b/Sources/WireGuardKit/HandshakeFreshnessEvaluator.swift
+@@ -6,25 +6,20 @@ import Foundation
+ /// Helpers for determining whether any peer in a runtime configuration has produced a
+ /// "fresh" WireGuard handshake.
+ ///
+-/// A handshake is considered fresh when at least one peer reports a `lastHandshakeTime`,
+-/// or when traffic is flowing (rx/tx bytes > 0).
++/// A handshake is considered fresh when at least one peer reports a `lastHandshakeTime`
++/// that is greater than or equal to the provided `cutoffDate`. Callers are expected to
++/// pass a cutoff that has already been adjusted for their desired tolerance (for example,
++/// the moment the connection reported `.connected` minus a small grace window).
+ enum HandshakeFreshnessEvaluator {
+-    /// Returns `true` when any peer has observed handshake data or traffic.
++    /// Returns `true` when any of the provided peers exposes a `lastHandshakeTime`
++    /// newer than the supplied cutoff.
+     /// - Parameters:
+     ///   - peers: The peer configurations returned from the WireGuard runtime.
+     ///   - cutoffDate: The minimum acceptable handshake timestamp.
+     static func containsFreshHandshake(peers: [PeerConfiguration], cutoffDate: Date) -> Bool {
+-        _ = cutoffDate
+-        let rxBytesThreshold: UInt64 = 4096
+         return peers.contains { peer in
+-            if peer.lastHandshakeTime != nil {
+-                return true
+-            }
+-            // Fallback: if traffic is flowing, consider the tunnel alive even if handshake time is unavailable.
+-            if let rxBytes = peer.rxBytes, rxBytes >= rxBytesThreshold {
+-                return true
+-            }
+-            return false
++            guard let handshake = peer.lastHandshakeTime else { return false }
++            return handshake >= cutoffDate
+         }
+     }
+ }
+diff --git a/Sources/WireGuardKit/InterfaceConfiguration.swift b/Sources/WireGuardKit/InterfaceConfiguration.swift
+index 7a142b9..b52626f 100644
+--- a/Sources/WireGuardKit/InterfaceConfiguration.swift
++++ b/Sources/WireGuardKit/InterfaceConfiguration.swift
+@@ -27,6 +27,10 @@ public struct InterfaceConfiguration {
+     public var specialJunk3: String?
+     public var specialJunk4: String?
+     public var specialJunk5: String?
++    public var controlledJunk1: String?
++    public var controlledJunk2: String?
++    public var controlledJunk3: String?
++    public var specialHandshakeTimeout: Int?
+ 
+     public init(privateKey: PrivateKey) {
+         self.privateKey = privateKey
+@@ -59,6 +63,10 @@ extension InterfaceConfiguration: Equatable {
+             lhs.specialJunk2 == rhs.specialJunk2 &&
+             lhs.specialJunk3 == rhs.specialJunk3 &&
+             lhs.specialJunk4 == rhs.specialJunk4 &&
+-            lhs.specialJunk5 == rhs.specialJunk5
++            lhs.specialJunk5 == rhs.specialJunk5 &&
++            lhs.controlledJunk1 == rhs.controlledJunk1 &&
++            lhs.controlledJunk2 == rhs.controlledJunk2 &&
++            lhs.controlledJunk3 == rhs.controlledJunk3 &&
++            lhs.specialHandshakeTimeout == rhs.specialHandshakeTimeout
+     }
+ }
+diff --git a/Sources/WireGuardKit/PacketTunnelSettingsGenerator.swift b/Sources/WireGuardKit/PacketTunnelSettingsGenerator.swift
+index 5d3fd61..9f93b06 100644
+--- a/Sources/WireGuardKit/PacketTunnelSettingsGenerator.swift
++++ b/Sources/WireGuardKit/PacketTunnelSettingsGenerator.swift
+@@ -96,6 +96,18 @@ class PacketTunnelSettingsGenerator {
+         if let specialJunk5 = tunnelConfiguration.interface.specialJunk5 {
+             wgSettings.append("i5=\(specialJunk5)\n")
+         }
++        if let controlledJunk1 = tunnelConfiguration.interface.controlledJunk1 {
++            wgSettings.append("j1=\(controlledJunk1)\n")
++        }
++        if let controlledJunk2 = tunnelConfiguration.interface.controlledJunk2 {
++            wgSettings.append("j2=\(controlledJunk2)\n")
++        }
++        if let controlledJunk3 = tunnelConfiguration.interface.controlledJunk3 {
++            wgSettings.append("j3=\(controlledJunk3)\n")
++        }
++        if let specialHandshakeTimeout = tunnelConfiguration.interface.specialHandshakeTimeout {
++            wgSettings.append("itime=\(specialHandshakeTimeout)\n")
++        }
+         if !tunnelConfiguration.peers.isEmpty {
+             wgSettings.append("replace_peers=true\n")
+         }
+@@ -132,7 +144,9 @@ class PacketTunnelSettingsGenerator {
+          */
+         let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "127.0.0.1")
+ 
+-        if !tunnelConfiguration.interface.dnsSearch.isEmpty || !tunnelConfiguration.interface.dns.isEmpty {
++        if let dnsSettings = tunnelConfiguration.dnsSettings {
++                networkSettings.dnsSettings = dnsSettings
++        } else if !tunnelConfiguration.interface.dnsSearch.isEmpty || !tunnelConfiguration.interface.dns.isEmpty {
+             let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
+             let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
+             dnsSettings.searchDomains = tunnelConfiguration.interface.dnsSearch
+@@ -151,7 +165,7 @@ class PacketTunnelSettingsGenerator {
+          * add a nob, maybe, or iOS will do probing for us.
+          */
+         if mtu == 0 {
+-            #if os(iOS)
++            #if os(iOS) || os(tvOS)
+             networkSettings.mtu = NSNumber(value: 1280)
+             #elseif os(macOS)
+             networkSettings.tunnelOverheadBytes = 80
+diff --git a/Sources/WireGuardKit/TunnelConfiguration.swift b/Sources/WireGuardKit/TunnelConfiguration.swift
+index c0cb720..bb5b503 100644
+--- a/Sources/WireGuardKit/TunnelConfiguration.swift
++++ b/Sources/WireGuardKit/TunnelConfiguration.swift
+@@ -2,11 +2,13 @@
+ // Copyright © 2018-2023 WireGuard LLC. All Rights Reserved.
+ 
+ import Foundation
++import NetworkExtension
+ 
+ public final class TunnelConfiguration {
+     public var name: String?
+     public var interface: InterfaceConfiguration
+     public var peers: [PeerConfiguration]
++    public var dnsSettings: NEDNSSettings?
+ 
+     public init(name: String?, interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
+         self.interface = interface
+diff --git a/Sources/WireGuardKit/WireGuardAdapter.swift b/Sources/WireGuardKit/WireGuardAdapter.swift
+index 2e68d3b..7af9614 100644
+--- a/Sources/WireGuardKit/WireGuardAdapter.swift
++++ b/Sources/WireGuardKit/WireGuardAdapter.swift
+@@ -44,13 +44,6 @@ public class WireGuardAdapter {
+     /// Network routes monitor.
+     private var networkMonitor: NWPathMonitor?
+ 
+-    /// Timestamp of last applied `NEPacketTunnelNetworkSettings` update.
+-    /// Used to suppress transient `.unsatisfied` events immediately after installing routes (common on Wi‑Fi with kill-switch routes).
+-    private var lastNetworkSettingsUpdateAt: Date?
+-
+-    /// Tracks whether the tunnel has ever had a successful handshake during the lifetime of this adapter instance.
+-    private var everHadHandshake = false
+-
+     /// Packet tunnel provider.
+     private weak var packetTunnelProvider: NEPacketTunnelProvider?
+ 
+@@ -164,7 +157,6 @@ public class WireGuardAdapter {
+     public func getRuntimeConfiguration(completionHandler: @escaping (String?) -> Void) {
+         workQueue.async {
+             guard case .started(let handle, _) = self.state else {
+-                self.logHandler(.verbose, "getRuntimeConfiguration: adapter not started (state=\(self.state))")
+                 completionHandler(nil)
+                 return
+             }
+@@ -196,12 +188,8 @@ public class WireGuardAdapter {
+             networkMonitor.start(queue: self.workQueue)
+ 
+             do {
+-                self.logHandler(.verbose, "Adapter start requested")
+                 let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
+-                let networkSettings = settingsGenerator.generateNetworkSettings()
+-                self.logResolvedEndpoints(settingsGenerator.resolvedEndpoints, context: "start")
+-                self.logNetworkSettingsSummary(networkSettings, context: "start")
+-                try self.setNetworkSettings(networkSettings)
++                try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+ 
+                 let (wgConfig, resolutionResults) = settingsGenerator.uapiConfiguration()
+                 self.logEndpointResolutionResults(resolutionResults)
+@@ -225,7 +213,6 @@ public class WireGuardAdapter {
+     /// - Parameter completionHandler: completion handler.
+     public func stop(completionHandler: @escaping (WireGuardAdapterError?) -> Void) {
+         workQueue.async {
+-            self.logHandler(.verbose, "Adapter stop requested (state=\(self.state))")
+             switch self.state {
+             case .started(let handle, _):
+                 wgTurnOff(handle)
+@@ -268,10 +255,7 @@ public class WireGuardAdapter {
+ 
+             do {
+                 let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
+-                let networkSettings = settingsGenerator.generateNetworkSettings()
+-                self.logResolvedEndpoints(settingsGenerator.resolvedEndpoints, context: "update")
+-                self.logNetworkSettingsSummary(networkSettings, context: "update")
+-                try self.setNetworkSettings(networkSettings)
++                try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+ 
+                 switch self.state {
+                 case .started(let handle, _):
+@@ -328,7 +312,6 @@ public class WireGuardAdapter {
+     /// - Throws: an error of type `WireGuardAdapterError`.
+     /// - Returns: `PacketTunnelSettingsGenerator`.
+     private func setNetworkSettings(_ networkSettings: NEPacketTunnelNetworkSettings) throws {
+-        self.logHandler(.verbose, "setNetworkSettings: applying")
+         var systemError: Error?
+         let condition = NSCondition()
+ 
+@@ -352,8 +335,6 @@ public class WireGuardAdapter {
+         } else {
+             self.logHandler(.error, "setTunnelNetworkSettings timed out after 5 seconds; proceeding anyway")
+         }
+-
+-        self.lastNetworkSettingsUpdateAt = Date()
+     }
+ 
+     /// Resolve peers of the given tunnel configuration.
+@@ -392,12 +373,10 @@ public class WireGuardAdapter {
+             throw WireGuardAdapterError.cannotLocateTunnelFileDescriptor
+         }
+ 
+-        self.logHandler(.verbose, "Starting WireGuard backend (config bytes: \(wgConfig.utf8.count), fd: \(tunnelFileDescriptor))")
+         let handle = wgTurnOn(wgConfig, tunnelFileDescriptor)
+         if handle < 0 {
+             throw WireGuardAdapterError.startWireGuardBackend(handle)
+         }
+-        self.logHandler(.verbose, "WireGuard backend started with handle \(handle)")
+         #if os(iOS)
+         wgDisableSomeRoamingForBrokenMobileSemantics(handle)
+         #endif
+@@ -432,36 +411,18 @@ public class WireGuardAdapter {
+         }
+     }
+ 
+-    private func logNetworkSettingsSummary(_ networkSettings: NEPacketTunnelNetworkSettings, context: String) {
+-        let ipv4Included = networkSettings.ipv4Settings?.includedRoutes?.count ?? 0
+-        let ipv4Excluded = networkSettings.ipv4Settings?.excludedRoutes?.count ?? 0
+-        let ipv6Included = networkSettings.ipv6Settings?.includedRoutes?.count ?? 0
+-        let ipv6Excluded = networkSettings.ipv6Settings?.excludedRoutes?.count ?? 0
+-        let mtu = networkSettings.mtu?.stringValue ?? "nil"
+-        let dnsServers = networkSettings.dnsSettings?.servers.joined(separator: ", ") ?? "nil"
+-        self.logHandler(.verbose, "Network settings (\(context)): remote=\(networkSettings.tunnelRemoteAddress) mtu=\(mtu) dns=\(dnsServers) ipv4 inc/exc=\(ipv4Included)/\(ipv4Excluded) ipv6 inc/exc=\(ipv6Included)/\(ipv6Excluded)")
+-    }
+-
+-    private func logResolvedEndpoints(_ endpoints: [Endpoint?], context: String) {
+-        let endpointStrings = endpoints.map { $0?.stringRepresentation ?? "nil" }
+-        self.logHandler(.verbose, "Resolved endpoints (\(context)): \(endpointStrings)")
+-    }
+-
+     /// Helper method used by network path monitor.
+     /// - Parameter path: new network path
+     private func didReceivePathUpdate(path: Network.NWPath) {
+         self.logHandler(.verbose, "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
+-        let lastUpdate = self.lastNetworkSettingsUpdateAt.map { String(describing: $0) } ?? "nil"
+-        self.logHandler(.verbose, "Path update state: state=\(self.state) everHadHandshake=\(self.everHadHandshake) lastNetworkSettingsUpdateAt=\(lastUpdate)")
+ 
+         #if os(macOS)
+         if case .started(let handle, _) = self.state {
+             wgBumpSockets(handle)
+         }
+-        #elseif os(iOS)
++        #elseif os(iOS) || os(tvOS)
+         switch self.state {
+         case .started(let handle, let settingsGenerator):
+-            self.updateEverHadHandshake(handle: handle)
+             if path.status.isSatisfiable {
+                 let (wgConfig, resolutionResults) = settingsGenerator.endpointUapiConfiguration()
+                 self.logEndpointResolutionResults(resolutionResults)
+@@ -470,19 +431,10 @@ public class WireGuardAdapter {
+                 wgDisableSomeRoamingForBrokenMobileSemantics(handle)
+                 wgBumpSockets(handle)
+             } else {
+-                if self.shouldPauseBackendOnUnsatisfiedPath() {
+-                    self.logHandler(.verbose, "Connectivity offline, pausing backend.")
++                self.logHandler(.verbose, "Connectivity offline, pausing backend.")
+ 
+-                    self.state = .temporaryShutdown(settingsGenerator)
+-                    wgTurnOff(handle)
+-                } else {
+-                    let remaining = self.remainingUnsatisfiedGraceSeconds()
+-                    if remaining > 0 {
+-                        self.logHandler(.verbose, "Connectivity unsatisfied right after applying routes, not pausing backend for ~\(Int(ceil(remaining)))s.")
+-                    } else {
+-                        self.logHandler(.verbose, "Connectivity unsatisfied right after applying routes, not pausing backend.")
+-                    }
+-                }
++                self.state = .temporaryShutdown(settingsGenerator)
++                wgTurnOff(handle)
+             }
+ 
+         case .temporaryShutdown(let settingsGenerator):
+@@ -491,9 +443,7 @@ public class WireGuardAdapter {
+             self.logHandler(.verbose, "Connectivity online, resuming backend.")
+ 
+             do {
+-                let networkSettings = settingsGenerator.generateNetworkSettings()
+-                self.logNetworkSettingsSummary(networkSettings, context: "resume")
+-                try self.setNetworkSettings(networkSettings)
++                try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+ 
+                 let (wgConfig, resolutionResults) = settingsGenerator.uapiConfiguration()
+                 self.logEndpointResolutionResults(resolutionResults)
+@@ -514,55 +464,6 @@ public class WireGuardAdapter {
+         #error("Unsupported")
+         #endif
+     }
+-
+-    // MARK: - iOS offline detection helpers
+-
+-    private var unsatisfiedGracePeriodAfterNetworkSettings: TimeInterval {
+-        // Long enough to cover the route-flip window on Wi‑Fi (en0 → utun*) while the first handshake completes,
+-        // short enough to still pause reasonably quickly on genuine offline transitions.
+-        12
+-    }
+-
+-    private func shouldPauseBackendOnUnsatisfiedPath() -> Bool {
+-        // `.unsatisfied` is commonly reported right after installing kill-switch routes (Wi‑Fi is especially prone).
+-        // Suppress pausing for a short grace period after the last network settings update.
+-        if let lastUpdateAt = self.lastNetworkSettingsUpdateAt,
+-           Date().timeIntervalSince(lastUpdateAt) < self.unsatisfiedGracePeriodAfterNetworkSettings {
+-            return false
+-        }
+-
+-        // If we have never completed a handshake, treat `.unsatisfied` as transient during bootstrap.
+-        if !self.everHadHandshake {
+-            return false
+-        }
+-
+-        // Outside the grace period, treat `.unsatisfied` as a real offline transition.
+-        // (We still keep `everHadHandshake` for future heuristics and for logging/debugging.)
+-        return true
+-    }
+-
+-    private func remainingUnsatisfiedGraceSeconds() -> TimeInterval {
+-        guard let lastUpdateAt = self.lastNetworkSettingsUpdateAt else { return 0 }
+-        let elapsed = Date().timeIntervalSince(lastUpdateAt)
+-        return max(0, self.unsatisfiedGracePeriodAfterNetworkSettings - elapsed)
+-    }
+-
+-    private func updateEverHadHandshake(handle: Int32) {
+-        guard !self.everHadHandshake else { return }
+-        guard let settings = wgGetConfig(handle) else { return }
+-        let config = String(cString: settings)
+-        free(settings)
+-
+-        for line in config.split(separator: "\n", omittingEmptySubsequences: true) {
+-            guard line.hasPrefix("last_handshake_time_sec=") else { continue }
+-            let valueString = String(line.dropFirst("last_handshake_time_sec=".count))
+-            if let value = Int64(valueString), value > 0 {
+-                self.everHadHandshake = true
+-                self.logHandler(.verbose, "Observed first handshake at last_handshake_time_sec=\(value)")
+-                break
+-            }
+-        }
+-    }
+ }
+ 
+ /// A enum describing WireGuard log levels defined in `api-apple.go`.
+diff --git a/Sources/WireGuardKitGo/Makefile b/Sources/WireGuardKitGo/Makefile
+index 16cb2d5..6bd6ed6 100644
+--- a/Sources/WireGuardKitGo/Makefile
++++ b/Sources/WireGuardKitGo/Makefile
+@@ -3,7 +3,7 @@
+ # Copyright (C) 2018-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+ 
+ # These are generally passed to us by xcode, but we set working defaults for standalone compilation too.
+-ARCHS ?= x86_64 arm64
++ARCHS ?= arm64
+ PLATFORM_NAME ?= macosx
+ SDKROOT ?= $(shell xcrun --sdk $(PLATFORM_NAME) --show-sdk-path)
+ CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
+@@ -20,6 +20,9 @@ GOARCH_arm64 := arm64
+ GOARCH_x86_64 := amd64
+ GOOS_macosx := darwin
+ GOOS_iphoneos := ios
++GOOS_appletvos := ios
++GOOS_iphonesimulator := ios
++GOOS_appletvsimulator := ios
+ 
+ build: $(DESTDIR)/libwg-go.a
+ version-header: $(DESTDIR)/wireguard-go-version.h
+@@ -29,8 +32,10 @@ export GOROOT := $(BUILDDIR)/goroot
+ $(GOROOT)/.prepared:
+ 	[ -n "$(REAL_GOROOT)" ]
+ 	mkdir -p "$(GOROOT)"
++	mkdir -p "$(BUILDDIR)/tmp"
+ 	rsync -a --delete --exclude=pkg/obj/go-build "$(REAL_GOROOT)/" "$(GOROOT)/"
+-	cat goruntime-*.diff | patch -p1 -f -N -r- -d "$(GOROOT)"
++	chmod -R u+w "$(GOROOT)"
++	cat goruntime-*.diff | TMPDIR="$(BUILDDIR)/tmp" patch -p1 -f -N -r- -d "$(GOROOT)"
+ 	touch "$@"
+ 
+ define libwg-go-a
+@@ -40,7 +45,7 @@ $(BUILDDIR)/libwg-go-$(1).a: export CGO_LDFLAGS := $(CFLAGS_PREFIX) $(ARCH)
+ $(BUILDDIR)/libwg-go-$(1).a: export GOOS := $(GOOS_$(PLATFORM_NAME))
+ $(BUILDDIR)/libwg-go-$(1).a: export GOARCH := $(GOARCH_$(1))
+ $(BUILDDIR)/libwg-go-$(1).a: $(GOROOT)/.prepared go.mod
+-	go build -ldflags=-w -trimpath -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive
++	go build -ldflags=-w -trimpath -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive -tags=ios
+ 	rm -f "$(BUILDDIR)/libwg-go-$(1).h"
+ endef
+ $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
+@@ -53,6 +58,7 @@ $(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
+ 	$(LIPO) -create -output "$@" $^
+ 
+ clean:
++	chmod -R u+w "$(BUILDDIR)" 2>/dev/null || true
+ 	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/wireguard-go-version.h"
+ 
+ install: build
+diff --git a/Sources/WireGuardNetworkExtension/Info.plist b/Sources/WireGuardNetworkExtension/Info.plist
+index 8bb75d3..7e0801e 100644
+--- a/Sources/WireGuardNetworkExtension/Info.plist
++++ b/Sources/WireGuardNetworkExtension/Info.plist
+@@ -1,10 +1,9 @@
+-<?xml version="1.0" encoding="UTF-8" ?>
+-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+-    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
++<?xml version="1.0" encoding="UTF-8"?>
++<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ <plist version="1.0">
+ <dict>
+ 	<key>ITSAppUsesNonExemptEncryption</key>
+-	<false />
++	<false/>
+ 	<key>CFBundleDevelopmentRegion</key>
+ 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+ 	<key>CFBundleDisplayName</key>
+@@ -20,9 +19,9 @@
+ 	<key>CFBundlePackageType</key>
+ 	<string>XPC!</string>
+ 	<key>CFBundleShortVersionString</key>
+-	<string>$(MARKETING_VERSION)</string>
++	<string>$(VERSION_NAME)</string>
+ 	<key>CFBundleVersion</key>
+-	<string>$(CURRENT_PROJECT_VERSION)</string>
++	<string>$(VERSION_ID)</string>
+ 	<key>NSExtension</key>
+ 	<dict>
+ 		<key>NSExtensionPointIdentifier</key>
+diff --git a/Sources/WireGuardNetworkExtension/PacketTunnelProvider.swift b/Sources/WireGuardNetworkExtension/PacketTunnelProvider.swift
+index 6a0216b..913b7e6 100644
+--- a/Sources/WireGuardNetworkExtension/PacketTunnelProvider.swift
++++ b/Sources/WireGuardNetworkExtension/PacketTunnelProvider.swift
+@@ -13,63 +13,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
+         }
+     }()
+ 
+-
+-    private func logAppGroupInfo() {
+-        let appGroupId = FileManager.appGroupId ?? "nil"
+-        let logPath = FileManager.logFileURL?.path ?? "nil"
+-        let errorPath = FileManager.networkExtensionLastErrorFileURL?.path ?? "nil"
+-        wg_log(.info, message: "App group id: \(appGroupId)")
+-        wg_log(.info, message: "Log file path: \(logPath)")
+-        wg_log(.info, message: "Last error file path: \(errorPath)")
+-    }
+-
+-    private func logTunnelConfigurationSummary(_ tunnelConfiguration: TunnelConfiguration) {
+-        let interface = tunnelConfiguration.interface
+-        let addressStrings = interface.addresses.map { $0.stringRepresentation }
+-        let dnsStrings = interface.dns.map { $0.stringRepresentation }
+-        let mtuString = interface.mtu.map { String($0) } ?? "auto"
+-        let peerSummaries = tunnelConfiguration.peers.enumerated().map { index, peer in
+-            let endpoint = peer.endpoint?.stringRepresentation ?? "nil"
+-            let keepalive = peer.persistentKeepAlive.map { String($0) } ?? "0"
+-            return "peer[\(index)]: endpoint=\(endpoint) allowedIPs=\(peer.allowedIPs.count) excludeIPs=\(peer.excludeIPs.count) keepalive=\(keepalive)"
+-        }
+-        let peersSummary = peerSummaries.isEmpty ? "none" : peerSummaries.joined(separator: "; ")
+-        wg_log(.info, message: "Config summary: addresses=\(addressStrings) dns=\(dnsStrings) mtu=\(mtuString) peers=\(peersSummary)")
+-    }
+-
+-    private func logRuntimeConfigSummary(_ settings: String) {
+-        var peerCount = 0
+-        var handshakeValues = [String]()
+-        var rxValues = [String]()
+-        var txValues = [String]()
+-        let handshakePrefix = "last_handshake_time_sec="
+-        let rxPrefix = "rx_bytes="
+-        let txPrefix = "tx_bytes="
+-        for line in settings.split(separator: "\n") {
+-            if line.hasPrefix("public_key=") {
+-                peerCount += 1
+-            } else if line.hasPrefix(handshakePrefix) {
+-                handshakeValues.append(String(line.dropFirst(handshakePrefix.count)))
+-            } else if line.hasPrefix(rxPrefix) {
+-                rxValues.append(String(line.dropFirst(rxPrefix.count)))
+-            } else if line.hasPrefix(txPrefix) {
+-                txValues.append(String(line.dropFirst(txPrefix.count)))
+-            }
+-        }
+-        wg_log(.debug, message: "Runtime config summary: peers=\(peerCount) last_handshake_time_sec=\(handshakeValues) rx_bytes=\(rxValues) tx_bytes=\(txValues)")
+-    }
+-
+-
+     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+         let activationAttemptId = options?["activationAttemptId"] as? String
+         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
+ 
+         Logger.configureGlobal(tagged: "NET", withFilePath: FileManager.logFileURL?.path)
+ 
+-        let optionKeys = options?.keys.sorted().joined(separator: ", ") ?? "none"
+-        wg_log(.info, message: "Start options keys: \(optionKeys)")
+-        logAppGroupInfo()
+-
+         wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
+ 
+         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
+@@ -79,8 +28,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
+             return
+         }
+ 
+-        logTunnelConfigurationSummary(tunnelConfiguration)
+-
+         // Start the tunnel
+         adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
+             guard let adapterError = adapterError else {
+@@ -122,9 +69,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
+         }
+     }
+ 
+-    override func
+-    stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
+-        wg_log(.info, message: "Stopping tunnel, reason=\(reason.rawValue) (\(reason))")
++    override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
++        wg_log(.info, staticMessage: "Stopping tunnel")
+ 
+         adapter.stop { error in
+             ErrorNotifier.removeLastErrorFile()
+@@ -146,21 +92,15 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
+     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)? = nil) {
+         guard let completionHandler = completionHandler else { return }
+ 
+-        wg_log(.debug, message: "handleAppMessage: received \(messageData.count) bytes")
+         if messageData.count == 1 && messageData[0] == 0 {
+-            wg_log(.debug, message: "handleAppMessage: runtime configuration requested")
+-            adapter.getRuntimeConfiguration { [weak self] settings in
++            adapter.getRuntimeConfiguration { settings in
+                 var data: Data?
+                 if let settings = settings {
+-                    self?.logRuntimeConfigSummary(settings)
+                     data = settings.data(using: .utf8)!
+-                } else {
+-                    wg_log(.debug, message: "handleAppMessage: runtime configuration unavailable")
+                 }
+                 completionHandler(data)
+             }
+         } else {
+-            wg_log(.debug, message: "handleAppMessage: unsupported message payload")
+             completionHandler(nil)
+         }
+     }
+diff --git a/WireGuard.xcodeproj/project.pbxproj b/WireGuard.xcodeproj/project.pbxproj
+index 1628f1d..bc9600c 100644
+--- a/WireGuard.xcodeproj/project.pbxproj
++++ b/WireGuard.xcodeproj/project.pbxproj
+@@ -1590,6 +1590,7 @@
+ 				CODE_SIGN_ENTITLEMENTS = Sources/WireGuardApp/UI/macOS/WireGuard.entitlements;
+ 				CODE_SIGN_IDENTITY = "Mac Developer";
+ 				COMBINE_HIDPI_IMAGES = YES;
++				CURRENT_PROJECT_VERSION = 4;
+ 				ENABLE_HARDENED_RUNTIME = YES;
+ 				INFOPLIST_FILE = Sources/WireGuardApp/UI/macOS/Info.plist;
+ 				INFOPLIST_KEY_CFBundleDisplayName = AmneziaWG;
+@@ -1598,6 +1599,7 @@
+ 					"@executable_path/../Frameworks",
+ 				);
+ 				MACOSX_DEPLOYMENT_TARGET = 12.0;
++				MARKETING_VERSION = 2.0.0;
+ 				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.awg;
+ 				SDKROOT = macosx;
+ 				SWIFT_EMIT_LOC_STRINGS = YES;
+@@ -1612,6 +1614,7 @@
+ 				CODE_SIGN_ENTITLEMENTS = Sources/WireGuardApp/UI/macOS/WireGuard.entitlements;
+ 				CODE_SIGN_IDENTITY = "Mac Developer";
+ 				COMBINE_HIDPI_IMAGES = YES;
++				CURRENT_PROJECT_VERSION = 4;
+ 				ENABLE_HARDENED_RUNTIME = YES;
+ 				INFOPLIST_FILE = Sources/WireGuardApp/UI/macOS/Info.plist;
+ 				INFOPLIST_KEY_CFBundleDisplayName = AmneziaWG;
+@@ -1620,6 +1623,7 @@
+ 					"@executable_path/../Frameworks",
+ 				);
+ 				MACOSX_DEPLOYMENT_TARGET = 12.0;
++				MARKETING_VERSION = 2.0.0;
+ 				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.awg;
+ 				SDKROOT = macosx;
+ 				SWIFT_EMIT_LOC_STRINGS = YES;
+@@ -1851,11 +1855,13 @@
+ 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+ 				CODE_SIGN_ENTITLEMENTS = Sources/WireGuardApp/UI/iOS/WireGuard.entitlements;
+ 				CODE_SIGN_IDENTITY = "iPhone Developer";
++				CURRENT_PROJECT_VERSION = 4;
+ 				INFOPLIST_FILE = Sources/WireGuardApp/UI/iOS/Info.plist;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+ 				);
++				MARKETING_VERSION = 2.0.0;
+ 				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.awg;
+ 				SWIFT_EMIT_LOC_STRINGS = YES;
+ 				SWIFT_VERSION = 5.0;
+@@ -1868,11 +1874,13 @@
+ 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+ 				CODE_SIGN_ENTITLEMENTS = Sources/WireGuardApp/UI/iOS/WireGuard.entitlements;
+ 				CODE_SIGN_IDENTITY = "iPhone Developer";
++				CURRENT_PROJECT_VERSION = 4;
+ 				INFOPLIST_FILE = Sources/WireGuardApp/UI/iOS/Info.plist;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+ 				);
++				MARKETING_VERSION = 2.0.0;
+ 				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.awg;
+ 				SWIFT_EMIT_LOC_STRINGS = YES;
+ 				SWIFT_VERSION = 5.0;
+-- 
+2.42.0
+

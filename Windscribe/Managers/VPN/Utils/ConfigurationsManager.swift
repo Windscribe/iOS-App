@@ -35,6 +35,7 @@ class ConfigurationsManager {
     let credentialsRepository: CredentialsRepository
     let staticIpRepository: StaticIpRepository
     let customConfigRepository: CustomConfigRepository
+    let unblockWgParamsRepository: UnblockWgParamsRepository
     var api: APIManager {
         return Assembler.resolve(APIManager.self)
     }
@@ -95,7 +96,8 @@ class ConfigurationsManager {
          bridgeApiRepository: BridgeApiRepository,
          credentialsRepository: CredentialsRepository,
          staticIpRepository: StaticIpRepository,
-         customConfigRepository: CustomConfigRepository) {
+         customConfigRepository: CustomConfigRepository,
+         unblockWgParamsRepository: UnblockWgParamsRepository) {
         self.logger = logger
         self.customConfigRepository = customConfigRepository
         self.keychainDb = keychainDb
@@ -112,6 +114,7 @@ class ConfigurationsManager {
         self.bridgeApiRepository = bridgeApiRepository
         self.credentialsRepository = credentialsRepository
         self.staticIpRepository = staticIpRepository
+        self.unblockWgParamsRepository = unblockWgParamsRepository
         loadTunnelManagers()
         load()
     }

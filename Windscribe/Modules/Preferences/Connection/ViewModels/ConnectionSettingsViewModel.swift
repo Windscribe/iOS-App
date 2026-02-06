@@ -33,11 +33,14 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     private var connectionMode = DefaultValues.connectionMode
     private var connectedDNS = DefaultValues.connectedDNS
 
+    private var selectedUnblockWgParam = ""
+
     // MARK: - Dependencies
     private let preferences: Preferences
     private let protocolManager: ProtocolManagerType
     private let dnsSettingsManager: DNSSettingsManagerType
     private let portMapRepository: PortMapRepository
+    private let unblockWgParamsRepository: UnblockWgParamsRepository
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
@@ -46,12 +49,14 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
          router: ConnectionsNavigationRouter,
          protocolManager: ProtocolManagerType,
          dnsSettingsManager: DNSSettingsManagerType,
-         portMapRepository: PortMapRepository) {
+         portMapRepository: PortMapRepository,
+         unblockWgParamsRepository: UnblockWgParamsRepository) {
         self.preferences = preferences
         self.router = router
         self.protocolManager = protocolManager
         self.dnsSettingsManager = dnsSettingsManager
         self.portMapRepository = portMapRepository
+        self.unblockWgParamsRepository = unblockWgParamsRepository
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -123,6 +128,15 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                 self.reloadItems()
             }
             .store(in: &cancellables)
+
+        unblockWgParamsRepository.selectedParamTitleSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] title in
+                guard let self = self else { return }
+                selectedUnblockWgParam = title ?? ""
+                self.reloadItems()
+            }
+            .store(in: &cancellables)
     }
 
     override func reloadItems() {
@@ -152,9 +166,12 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                                          customValue: customDNSValue,
                                          options: connectedDNSOptions))
         }
+        let paramOptions = unblockWgParamsRepository.unlockParams.map { MenuOption(title: $0.title, fieldKey: $0.title) }
         entries.append(contentsOf: [.alwaysOn(isSelected: killSwitchSelected),
                                     .allowLan(isSelected: allowLanSelected),
-                                    .circunventCensorship(isSelected: circumventCensorshipSelected)
+                                    .circunventCensorship(isSelected: circumventCensorshipSelected
+                                                          ,paramSelected: selectedUnblockWgParam,
+                                                          paramOptions: paramOptions)
         ])
     }
 
@@ -210,6 +227,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             }
             if case .infoLink = action {
                 openLink(.circumventCensorship)
+            }
+            if case .multiple(let currentOption, _) = action {
+                unblockWgParamsRepository.selectParamTitle(with: currentOption)
             }
         }
     }

@@ -32,6 +32,7 @@ class LivecycleManager: LivecycleManagerType {
     private let configManager: ConfigurationsManager
     private let connectivityManager: ProtocolManagerType
     private let locationsManager: LocationsManager
+    private let unblockWgParamsRepository: UnblockWgParamsRepository
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -53,7 +54,8 @@ class LivecycleManager: LivecycleManagerType {
          ipRepository: IPRepository,
          configManager: ConfigurationsManager,
          connectivityManager: ProtocolManagerType,
-         locationsManager: LocationsManager) {
+         locationsManager: LocationsManager,
+         unblockWgParamsRepository: UnblockWgParamsRepository) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences
@@ -66,6 +68,7 @@ class LivecycleManager: LivecycleManagerType {
         self.configManager = configManager
         self.connectivityManager = connectivityManager
         self.locationsManager = locationsManager
+        self.unblockWgParamsRepository = unblockWgParamsRepository
     }
 
     /// Fresh app launch.
@@ -73,6 +76,7 @@ class LivecycleManager: LivecycleManagerType {
         Task {
             await notificationRepo.loadNotifications()
         }
+        unblockWgParamsRepository.refreshParams()
     }
 
     private func checkForKillSwitch() {
@@ -92,6 +96,7 @@ class LivecycleManager: LivecycleManagerType {
     /// App foreground.
     func appEnteredForeground() {
         checkForKillSwitch()
+        unblockWgParamsRepository.tryRefresh()
         logger.logI("LivecycleManager", "App internet moved to foreground.")
         becameActiveTrigger.send(())
         sessionManager.keepSessionUpdated()

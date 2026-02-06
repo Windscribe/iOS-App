@@ -77,4 +77,5 @@ protocol APIManager {
     func recordShakeForDataScore(score: Int, userID: String) async throws -> APIMessage
     func rotateIp() async throws -> Bool
     func pinIp(ip: String) async throws -> Bool
+    func wgUnlockParams() async throws -> UnblockWgResponse
 }

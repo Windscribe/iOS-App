@@ -123,9 +123,15 @@ extension TunnelConfiguration {
         }
     }
 
-    func asWgQuickConfig() -> String {
+    func asWgQuickConfig(with optionalParams: String = "") -> String {
         var output = "[Interface]\n"
         output.append("PrivateKey = \(interface.privateKey.base64Key)\n")
+
+        // Adding Unblock WG params
+        if !optionalParams.isEmpty {
+            output.append(optionalParams)
+        }
+
         if let listenPort = interface.listenPort {
             output.append("ListenPort = \(listenPort)\n")
         }
@@ -158,9 +164,6 @@ extension TunnelConfiguration {
             }
             if let persistentKeepAlive = peer.persistentKeepAlive {
                 output.append("PersistentKeepalive = \(persistentKeepAlive)\n")
-            }
-            if let udpstuffing = peer.udpstuffing {
-                output.append("udp_stuffing = \(udpstuffing)\n")
             }
         }
 
@@ -248,9 +251,6 @@ extension TunnelConfiguration {
                 throw ParseError.peerHasInvalidPersistentKeepAlive(persistentKeepAliveString)
             }
             peer.persistentKeepAlive = persistentKeepAlive
-        }
-        if let udpstuffing = attributes["udp_stuffing"] {
-            peer.udpstuffing = Bool(udpstuffing)
         }
         return peer
     }

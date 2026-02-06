@@ -121,6 +121,9 @@ enum SharedKeys {
     // Custom App Icon
     static let customAppIcon = "customAppIcon"
 
+    // Unblock WG Params
+    static let unblockWgParams = "unblockWgParams"
+
     /// Cached plist dictionary to avoid repeated file I/O
     private static let plistDictionary: [String: Any] = {
         guard let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist"),

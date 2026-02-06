@@ -104,7 +104,8 @@ extension ConfigurationsManager {
             throw VPNConfigurationErrors.configNotFound
         }
         let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: stringData, called: path)
-        return WireguardVPNConfiguration(content: tunnelConfiguration)
+        let wgUnlockParams = unblockWgParamsRepository.getSelectedParamConfig()
+        return WireguardVPNConfiguration(content: tunnelConfiguration, wgUnlockParams: wgUnlockParams)
     }
 
     /// Builds WireGuard configuration for a location based on its type.

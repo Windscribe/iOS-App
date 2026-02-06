@@ -81,4 +81,13 @@ extension APIManagerImpl {
             self.bridgeApi.pinIp(ip, callback: completion)
         }
     }
+
+    func wgUnlockParams() async throws -> UnblockWgResponse {
+            guard let sessionAuth = userSessionRepository?.sessionAuth else {
+                throw Errors.validationFailure
+            }
+            return try await apiUtil.makeApiCall(modalType: UnblockWgResponse.self) { completion in
+                self.api.amneziawgUnblockParams(sessionAuth, callback: completion)
+            }
+    }
 }

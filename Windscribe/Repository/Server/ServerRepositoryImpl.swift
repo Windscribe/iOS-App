@@ -88,6 +88,10 @@ class ServerRepositoryImpl: ServerRepository {
         do {
             let serverList = try await self.apiManager.getServerList(languageCode: countryCode, revision: session.locHash, isPro: session.isPremium, alcList: session.alc)
 
+            preferences.saveCountryOverrride(value: serverList.info?.countryOverride)
+            if serverList.info?.countryOverride != nil {
+                preferences.saveCircumventCensorshipStatus(status: true)
+            }
             let servers = Array(serverList.servers)
             for server in servers {
                 for group in server.groups {
