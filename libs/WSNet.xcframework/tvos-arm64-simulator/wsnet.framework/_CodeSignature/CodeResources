@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/WSNet.h</key>
 		<data>
-		uPF5oUW9Fb/sPcnupZhBYO44LXs=
+		WRIJPV/O2xdy+MM5LC2mzNUqLpw=
 		</data>
 		<key>Headers/WSNetAdvancedParameters.h</key>
 		<data>
@@ -14,7 +14,7 @@
 		</data>
 		<key>Headers/WSNetApiResourcesManager.h</key>
 		<data>
-		Fd++MuHWPqje9kJWUUf6bbmIcOQ=
+		En3RZ9ecVHqxxgxgWC4NJ5fW5vY=
 		</data>
 		<key>Headers/WSNetBridgeAPI.h</key>
 		<data>
@@ -62,7 +62,7 @@
 		</data>
 		<key>Headers/WSNetServerAPI.h</key>
 		<data>
-		Hhyo0ZwGPm5MCVNTZ9WfA0yvp8c=
+		faXdk90Wlob05a7vsgjjgkdk1Ho=
 		</data>
 		<key>Headers/WSNetUtils.h</key>
 		<data>
@@ -70,7 +70,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		I9ClqjKEVGp5Gs3LqfaQjZj6USw=
+		/MI1P8LXoTbvY67H8BZghxvl2iY=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -79,7 +79,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GcVb4gy04Dj2ven7vupFD2BRXQAm6qcDP4sHfp49pT4=
+			NUR0j9cBLwZdY3No78Djq4vECDGM4cql/O5v0BqYUBw=
 			</data>
 		</dict>
 		<key>Headers/WSNetAdvancedParameters.h</key>
@@ -93,7 +93,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			66TLrmOG4EW6IioaTArULfZLSTqdjBrQRYEzn890os4=
+			9nkg10fqVxsmwX1tW2G9L2b6HyhG+vA1jfXH1iBE8Gw=
 			</data>
 		</dict>
 		<key>Headers/WSNetBridgeAPI.h</key>
@@ -177,7 +177,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			rbZrrCa6crcdLssPHf7zOYaUrS5x4llr54xpfo5SbL8=
+			0MaVfzxgK7GdYlr39G+aw/MEEoe5A01YxGAx36cfudE=
 			</data>
 		</dict>
 		<key>Headers/WSNetUtils.h</key>
