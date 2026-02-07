@@ -384,6 +384,8 @@ class ProtocolManager: ProtocolManagerType {
             logger.logI("ProtocolManager", "RefreshProtocols for onProtocolFail")
             await refreshProtocols(shouldReset: false, shouldReconnect: false, isFromFailover: true)
 
+            //If allow lan on + IKEv2 Connectivity takes bit to go from requiresVPN > connected.
+            try? await connectivity.awaitNetwork(maxTime: 1.0)
             let hasInternet = connectivity.internetConnectionAvailable()
             // Check internet connectivity before starting failover countdown
             if !hasInternet {
