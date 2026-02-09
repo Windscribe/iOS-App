@@ -57,6 +57,7 @@ final class EnterCredentialsViewModelImpl: EnterCredentialsViewModel {
         self.title = config.name
         self.username = config.username.base64Decoded()
         self.password = config.password.base64Decoded()
+        self.saveCredentials = config.saveCredentials
     }
 
     private func bind() {
@@ -87,6 +88,10 @@ final class EnterCredentialsViewModelImpl: EnterCredentialsViewModel {
         if !title.isEmpty {
             updatedConfig.name = title
         }
+
+        // Save the saveCredentials flag
+        updatedConfig.saveCredentials = saveCredentials
+        logger.logD("EnterCredentialsViewModel", "Saving config with saveCredentials=\(saveCredentials)")
 
         customConfigRepository.saveCustomConfig(customConfig: updatedConfig)
 

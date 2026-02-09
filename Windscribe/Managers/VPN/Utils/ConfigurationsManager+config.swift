@@ -86,6 +86,16 @@ extension ConfigurationsManager {
         }
         let username = config.username.base64Decoded() == "" ? config.username : config.username.base64Decoded()
         let password = config.password.base64Decoded() == "" ? config.password : config.password.base64Decoded()
+
+        // Clear credentials from database if saveCredentials is false
+        if !config.saveCredentials && (!config.username.isEmpty || !config.password.isEmpty) {
+            logger.logI("ConfigurationsManager", "Clearing credentials for custom config \(config.id) after building config (saveCredentials=false)")
+            var updatedConfig = config
+            updatedConfig.username = ""
+            updatedConfig.password = ""
+            customConfigRepository.saveCustomConfig(customConfig: updatedConfig)
+        }
+
         return OpenVPNConfiguration(proto: config.protocolType, ip: config.serverAddress, username: username, password: password, path: configFilePath, data: configData)
     }
 

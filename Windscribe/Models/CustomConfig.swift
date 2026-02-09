@@ -19,6 +19,7 @@ struct CustomConfigModel: Equatable {
     var username: String
     var password: String
     let authRequired: Bool
+    var saveCredentials: Bool
 
     init(from: CustomConfig) {
         self.id = from.id
@@ -29,6 +30,7 @@ struct CustomConfigModel: Equatable {
         self.username = from.username
         self.password = from.password
         self.authRequired = from.authRequired
+        self.saveCredentials = from.saveCredentials
     }
 
     func getRealmObject() -> CustomConfig {
@@ -39,7 +41,8 @@ struct CustomConfigModel: Equatable {
               port: port,
               username: username,
               password: password,
-              authRequired: authRequired)
+              authRequired: authRequired,
+              saveCredentials: saveCredentials)
     }
 }
 
@@ -52,6 +55,7 @@ struct CustomConfigModel: Equatable {
     dynamic var username: String = ""
     dynamic var password: String = ""
     dynamic var authRequired: Bool = false
+    dynamic var saveCredentials: Bool = true
 
     convenience init(id: String,
                      name: String,
@@ -60,7 +64,8 @@ struct CustomConfigModel: Equatable {
                      port: String,
                      username: String = "",
                      password: String = "",
-                     authRequired: Bool = false) {
+                     authRequired: Bool = false,
+                     saveCredentials: Bool = true) {
         self.init()
         self.id = id
         self.name = name
@@ -70,6 +75,7 @@ struct CustomConfigModel: Equatable {
         self.username = username
         self.password = password
         self.authRequired = authRequired
+        self.saveCredentials = saveCredentials
     }
 
     override static func primaryKey() -> String? {

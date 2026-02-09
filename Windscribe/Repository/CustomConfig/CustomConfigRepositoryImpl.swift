@@ -46,7 +46,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         try await fileDatabase.saveFile(data: data, path: path)
 
         // Create config model
-        let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true)
+        let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true, saveCredentials: true)
 
         // Realm operations must be on main thread
         localDatabase.saveCustomConfig(customConfig: customConfig)
@@ -92,7 +92,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     try await fileDatabase.saveFile(data: data, path: path)
 
                     // Realm operation on main thread
-                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort)
+                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, saveCredentials: true)
                     localDatabase.saveCustomConfig(customConfig: customConfig)
                 } catch {
                     logger.logE("CustomConfigRepositoryImpl", "Failed to save WG config file: \(error)")
@@ -186,7 +186,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     try await fileDatabase.saveFile(data: data, path: path)
 
                     // Realm operation on main thread
-                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, authRequired: configAuthRequired)
+                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, authRequired: configAuthRequired, saveCredentials: true)
                     localDatabase.saveCustomConfig(customConfig: customConfig)
                 } catch {
                     logger.logE("CustomConfigRepositoryImpl", "Failed to save OpenVPN config file: \(error)")

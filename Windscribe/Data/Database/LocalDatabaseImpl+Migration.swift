@@ -14,7 +14,7 @@ extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 60,
+            schemaVersion: 61,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -286,6 +286,10 @@ extension LocalDatabaseImpl {
                     // These were migrated to Favourite in version 55
                     migration.deleteData(forType: FavNode.className())
                     migration.deleteData(forType: LastConnectedNode.className())
+                } else if oldSchemaVersion < 61 {
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, newObject in
+                        newObject!["saveCredentials"] = true
+                    }
                 }
             }, deleteRealmIfMigrationNeeded: false
         )
