@@ -832,14 +832,6 @@
 		C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
 		C59FF1AA2CBB9C4F0072EF70 /* ClaimVoucherCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 595329FD2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift */; };
 		C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Extension.swift */; };
-		C5A1A7652F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; };
-		C5A1A7662F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; };
-		C5A1A7682F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; };
-		C5A1A7692F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; };
-		C5A1A76A2F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; };
-		C5A1A76B2F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; };
-		C5A1A76E2F3529CD000B9FE7 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; };
-		C5A1A76F2F3529CD000B9FE7 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C5A3444F2C4DF049001EBB5C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */; };
 		C5A930C92B42165F0001CFA0 /* APIManagerImpl+Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930C82B42165F0001CFA0 /* APIManagerImpl+Account.swift */; };
@@ -911,6 +903,14 @@
 		C5DEF9F72C52EDCF00696D06 /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
 		C5E18ED4286B3D7200DD3B07 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
 		C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1FC237DC02200BDDCDB /* APIMessage.swift */; };
+		C5E4C8002F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		C5E4C8012F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		C5E4C8022F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		C5E4C8032F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		C5E4C8042F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		C5E4C8052F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		C5E4C8072F3A6C19000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		C5E4C8082F3A6C19000FC3EE /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E832684BB90001D03A7 /* HelpItem.swift */; };
 		C5FA3E8C268789EE001D03A7 /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E8B268789EE001D03A7 /* Ticket.swift */; };
 		E90FD02527394FA800721874 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
@@ -1366,7 +1366,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				1E5553A52D81FABF00F16AF0 /* RealmSwift in Embed Frameworks */,
-				C5A1A76F2F3529CD000B9FE7 /* WSNet.xcframework in Embed Frameworks */,
+				C5E4C8082F3A6C19000FC3EE /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1899,7 +1899,6 @@
 		C59CA15E2CD400D9007517DA /* ConfigurationsManager+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Connect.swift"; sourceTree = "<group>"; };
 		C59FF19E2CB998610072EF70 /* IntentCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentCommon.swift; sourceTree = "<group>"; };
 		C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Extension.swift"; sourceTree = "<group>"; };
-		C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
 		C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Session.swift"; sourceTree = "<group>"; };
 		C5A930C82B42165F0001CFA0 /* APIManagerImpl+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Account.swift"; sourceTree = "<group>"; };
 		C5A930CA2B42169A0001CFA0 /* APIManagerImpl+Billing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Billing.swift"; sourceTree = "<group>"; };
@@ -1938,6 +1937,7 @@
 		C5D983BF2B34C23C0069FF3A /* UserSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionRepository.swift; sourceTree = "<group>"; };
 		C5D983C12B34DA3F0069FF3A /* APIUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtil.swift; sourceTree = "<group>"; };
 		C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtilTests.swift; sourceTree = "<group>"; };
+		C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
 		C5FA3E832684BB90001D03A7 /* HelpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpItem.swift; sourceTree = "<group>"; };
 		C5FA3E8B268789EE001D03A7 /* Ticket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		E90AEEA728091D4D004F7B72 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2234,7 +2234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4A36AAC2E132A9600CCFFAA /* SnapKit in Frameworks */,
-				C5A1A7652F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */,
+				C5E4C8042F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
 				1E0A6DAC2D7882630075B8F5 /* RealmSwift in Frameworks */,
 				1E0A6E142D79ED160075B8F5 /* Swinject in Frameworks */,
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
@@ -2249,6 +2249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF27852C22E6431700430C32 /* CoreTelephony.framework in Frameworks */,
+				C5E4C8072F3A6C19000FC3EE /* WSNet.xcframework in Frameworks */,
 				F485CBC62D4D76BA0063EA3A /* SnapKit in Frameworks */,
 				C5B8573E2F2CEA5F00BD1C28 /* WireGuardKit in Frameworks */,
 				1E0A6DC62D7894520075B8F5 /* SwipeCellKit in Frameworks */,
@@ -2257,7 +2258,6 @@
 				1E0A6DC32D7894280075B8F5 /* ExpyTableView in Frameworks */,
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
 				1E0A6DC02D788B4F0075B8F5 /* IQKeyboardManagerSwift in Frameworks */,
-				C5A1A76E2F3529CD000B9FE7 /* WSNet.xcframework in Frameworks */,
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
@@ -2273,7 +2273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E0A6DA42D78823A0075B8F5 /* RealmSwift in Frameworks */,
-				C5A1A7692F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */,
+				C5E4C8002F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
 				1E0A6E082D79ECEB0075B8F5 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2291,7 +2291,7 @@
 				597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */,
 				C5AB0C792C63E511005D2541 /* Proxy.xcframework in Frameworks */,
 				C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */,
-				C5A1A76B2F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */,
+				C5E4C8012F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2302,7 +2302,7 @@
 				C56123832C5F25E10090EB5A /* libresolv.9.tbd in Frameworks */,
 				1E0A6DF62D79EB900075B8F5 /* Swinject in Frameworks */,
 				AF20AE3222DF767300375489 /* NetworkExtension.framework in Frameworks */,
-				C5A1A7682F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */,
+				C5E4C8032F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
 				C56123842C5F25EC0090EB5A /* libresolv.tbd in Frameworks */,
 				1ED33DE12D7B3D5300B980D3 /* RealmSwift in Frameworks */,
 				1E0A6E002D79ECD20075B8F5 /* Swinject in Frameworks */,
@@ -2315,8 +2315,8 @@
 			files = (
 				1E0A6DA82D7882580075B8F5 /* RealmSwift in Frameworks */,
 				C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */,
-				C5A1A7662F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */,
 				1E0A6E0C2D79ECF60075B8F5 /* Swinject in Frameworks */,
+				C5E4C8022F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
 				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
 				C5B857402F2CEC5200BD1C28 /* WireGuardKit in Frameworks */,
 				C56123852C5F26000090EB5A /* libresolv.9.tbd in Frameworks */,
@@ -2331,7 +2331,7 @@
 				AFDF934C255EB93C002B1FBA /* SwiftUI.framework in Frameworks */,
 				AF2A4A652562D9C2003682E7 /* NetworkExtension.framework in Frameworks */,
 				C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */,
-				C5A1A76A2F3527E0000B9FE7 /* WSNet.xcframework in Frameworks */,
+				C5E4C8052F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
 				1E0A6E102D79ED0B0075B8F5 /* Swinject in Frameworks */,
 				1E0A6DFA2D79EC9C0075B8F5 /* Swinject in Frameworks */,
 				AFDF934A255EB93C002B1FBA /* WidgetKit.framework in Frameworks */,
@@ -3839,7 +3839,7 @@
 		C56615F72C4D883E008AA993 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				C5A1A7642F3527E0000B9FE7 /* WSNet.xcframework */,
+				C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */,
 				C5AB0C782C63E511005D2541 /* Proxy.xcframework */,
 			);
 			path = libs;

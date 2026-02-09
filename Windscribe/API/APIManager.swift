@@ -32,8 +32,8 @@ protocol APIManager {
                 captchaSolution: String,
                 captchaTrailX: [CGFloat],
                 captchaTrailY: [CGFloat]) async throws -> Session
-    func authTokenLogin(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
-    func authTokenSignup(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
+    func authTokenLogin(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
+    func authTokenSignup(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
     func regToken() async throws -> Token
     func signUpUsingToken(token: String) async throws -> Session
     func ssoSession(token: String) async throws -> SSOSession

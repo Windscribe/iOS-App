@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setAuthHash:(NSString*)authHash;
 -(BOOL)isExist;
 -(BOOL)loginWithAuthHash;
--(void)authTokenLogin:(BOOL)useAsciiCaptcha;
+-(void)authTokenLogin:(NSString*)username useAsciiCaptcha:(BOOL)useAsciiCaptcha;
 -(void)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY;
 -(void)logout;
 -(void)fetchSession;

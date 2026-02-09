@@ -123,7 +123,7 @@ class LoginViewModelImpl: LoginViewModel {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let tokenResponse = try await apiCallManager.authTokenLogin(useAsciiCaptcha: false)
+                let tokenResponse = try await apiCallManager.authTokenLogin(username: username, useAsciiCaptcha: false)
                 await MainActor.run {
                     self.logger.logI("LoginViewModel", "Token received: \(tokenResponse.data.token)")
                     self.secureToken = tokenResponse.data.token

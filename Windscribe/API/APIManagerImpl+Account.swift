@@ -64,24 +64,24 @@ extension APIManagerImpl {
             )
         }
     }
-    func authTokenLogin(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
+    func authTokenLogin(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
         return try await apiUtil.makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
 
-            return self.api.authTokenLogin(useAsciiCaptcha, callback: completion)
+            return self.api.authTokenLogin(username, useAsciiCaptcha: useAsciiCaptcha, callback: completion)
 
         }
     }
 
-    func authTokenSignup(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
+    func authTokenSignup(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
         return try await apiUtil.makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
 
-            return self.api.authTokenSignup(useAsciiCaptcha, callback: completion)
+            return self.api.authTokenSignup(username, useAsciiCaptcha: useAsciiCaptcha, callback: completion)
         }
     }
 

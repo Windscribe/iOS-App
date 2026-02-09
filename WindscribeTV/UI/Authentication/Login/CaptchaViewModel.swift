@@ -128,9 +128,9 @@ class CaptchaViewModel {
             do {
                 let response: AuthTokenResponse
                 if self.isSignup {
-                    response = try await self.apiCallManager.authTokenSignup(useAsciiCaptcha: true)
+                    response = try await self.apiCallManager.authTokenSignup(username: username, useAsciiCaptcha: true)
                 } else {
-                    response = try await self.apiCallManager.authTokenLogin(useAsciiCaptcha: true)
+                    response = try await self.apiCallManager.authTokenLogin(username: username, useAsciiCaptcha: true)
                 }
 
                 await MainActor.run {
