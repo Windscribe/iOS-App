@@ -186,15 +186,22 @@ extension WelcomeView {
             Button(action: {
                 viewModel.continueWithAppleTapped()
             }, label: {
-                HStack(alignment: .center, spacing: 10) {
-                    Image(viewModel.signupAppleImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
+                ZStack {
+                    if viewModel.showLoadingView {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                    } else {
+                        HStack(alignment: .center, spacing: 10) {
+                            Image(viewModel.signupAppleImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
 
-                    Text(TextsAsset.Welcome.continueWithApple)
-                        .font(.medium(.body))
-                        .foregroundColor(.black)
+                            Text(TextsAsset.Welcome.continueWithApple)
+                                .font(.medium(.body))
+                                .foregroundColor(.black)
+                        }
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
@@ -204,6 +211,7 @@ extension WelcomeView {
                     Capsule().stroke(Color.white.opacity(0.3), lineWidth: 0.5)
                 )
             })
+            .disabled(viewModel.showLoadingView)
 
             // Login Button
             NavigationLink(
@@ -224,7 +232,10 @@ extension WelcomeView {
                             Capsule().stroke(Color.white.opacity(0.3), lineWidth: 0.5)
                         )
                 })
+                .disabled(viewModel.showLoadingView)
+                .opacity(viewModel.showLoadingView ? 0.5 : 1.0)
             }
+            .disabled(viewModel.showLoadingView)
 
             // Emergency & Sign-Up/Login Section
             HStack {
@@ -242,6 +253,8 @@ extension WelcomeView {
                             .foregroundColor(Color.welcomeButtonTextColor)
                     }
                 })
+                .disabled(viewModel.showLoadingView)
+                .opacity(viewModel.showLoadingView ? 0.5 : 1.0)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 // SignUp Button
@@ -249,19 +262,12 @@ extension WelcomeView {
                     Button(action: {
                         router.shouldNavigateToSignup = true
                     }, label: {
-                        ZStack {
-                            Text(viewModel.signupText)
-                                .font(.semiBold(.callout))
-                                .foregroundColor(Color.welcomeButtonTextColor)
-                                .opacity(viewModel.showLoadingView ? 0 : 1)
-
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .padding()
-                                .opacity(viewModel.showLoadingView ? 1 : 0)
-                        }
+                        Text(viewModel.signupText)
+                            .font(.semiBold(.callout))
+                            .foregroundColor(Color.welcomeButtonTextColor)
                     })
                     .disabled(viewModel.showLoadingView)
+                    .opacity(viewModel.showLoadingView ? 0.5 : 1.0)
 
                     // Navigation trigger (invisible)
                     NavigationLink(
@@ -271,6 +277,7 @@ extension WelcomeView {
                         EmptyView()
                     }
                     .hidden()
+                    .disabled(viewModel.showLoadingView)
                 }
             }
             .padding(.top, 16)

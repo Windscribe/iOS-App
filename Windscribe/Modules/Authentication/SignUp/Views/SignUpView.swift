@@ -190,6 +190,7 @@ struct SignUpView: View {
         .dynamicTypeSize(dynamicTypeRange)
         .navigationTitle(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.Welcome.signup)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(viewModel.showLoadingView && !viewModel.showCaptchaPopup)
         .toolbar {
             signupToolbar()
         }
@@ -210,6 +211,15 @@ struct SignUpView: View {
         }
         .overlay(
             ZStack {
+                // Loading overlay
+                if viewModel.showLoadingView && !viewModel.showCaptchaPopup {
+                    Color.from(.dark, viewModel.isDarkMode)
+                        .opacity(0.3)
+                        .ignoresSafeArea()
+                        .allowsHitTesting(true)
+                        .zIndex(0)
+                }
+
                 if viewModel.showCaptchaPopup, let data = viewModel.captchaData {
                     Color.from(.dark, viewModel.isDarkMode)
                         .opacity(0.65)
@@ -238,6 +248,8 @@ struct SignUpView: View {
             }
             .animation(.easeInOut(duration: 0.3), value: viewModel.showCaptchaPopup)
         )
+        .disabled(viewModel.showLoadingView && !viewModel.showCaptchaPopup)
+        .interactiveDismissDisabled(viewModel.showLoadingView && !viewModel.showCaptchaPopup)
     }
 }
 
