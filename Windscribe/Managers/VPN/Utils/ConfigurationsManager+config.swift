@@ -103,9 +103,8 @@ extension ConfigurationsManager {
         guard let stringData = String(data: configData, encoding: String.Encoding.utf8) else {
             throw VPNConfigurationErrors.configNotFound
         }
-        let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: stringData, called: path)
-        let wgUnlockParams = unblockWgParamsRepository.getSelectedParamConfig()
-        return WireguardVPNConfiguration(content: tunnelConfiguration, wgUnlockParams: wgUnlockParams)
+        let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: stringData, called: TextsAsset.wireGuard)
+        return WireguardVPNConfiguration(content: tunnelConfiguration)
     }
 
     /// Builds WireGuard configuration for a location based on its type.
@@ -372,7 +371,7 @@ extension ConfigurationsManager {
                     logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedNode)")
                     return pinnedNode
                 } else {
-                    updateFailedNode()
+                    logger.logI("ConfigurationsManager", "Ignoring pinned IP preference, will select random node")
                 }
             }
 

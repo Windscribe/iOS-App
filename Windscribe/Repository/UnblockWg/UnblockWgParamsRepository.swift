@@ -15,7 +15,6 @@ protocol UnblockWgParamsRepository {
     func tryRefresh()
     func refreshParams()
     func selectParamTitle(with paramTitle: String)
-    func getSelectedParamConfig() -> String
 }
 
 class UnblockWgParamsRepositoryImpl: UnblockWgParamsRepository {
@@ -92,10 +91,6 @@ class UnblockWgParamsRepositoryImpl: UnblockWgParamsRepository {
         if let first = unlockParams.first(where: { $0.title == paramTitle }) {
             selectParam(with: first)
         }
-    }
-
-    func getSelectedParamConfig() -> String {
-        preferences.getUnblockWgParams()?.getConfigText() ?? ""
     }
 
     private func selectParam(with param: UnblockWgParams) {

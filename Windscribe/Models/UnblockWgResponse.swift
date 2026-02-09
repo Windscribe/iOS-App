@@ -90,55 +90,56 @@ struct UnblockWgParams: Codable {
         .init(from: self)
     }
 
-    func getConfigText() -> String {
-        var output = ""
-
-        if  let jc = jc {
-            output.append("\(CodingKeys.jc.stringValue) = \(jc)\n")
+    func getConfigText() -> [String] {
+        var output = [String]()
+        if  let jc = jc, jc != 0 {
+            output.append("jc = \(jc)")
         }
-        if  let jMin = jMin {
-            output.append("\(CodingKeys.jMin.stringValue) = \(jMin)\n")
+        if  let jMin = jMin, jMin != 0 {
+            output.append("jmin = \(jMin)")
         }
-        if  let jMax = jMax {
-            output.append("\(CodingKeys.jMax.stringValue) = \(jMax)\n")
+        if  let jMax = jMax, jMax != 0 {
+            output.append("jmax = \(jMax)")
         }
-        if  let s1 = s1 {
-            output.append("\(CodingKeys.s1.stringValue) = \(s1)\n")
+        if  let s1 = s1, s1 != 0 {
+            output.append("s1 = \(s1)")
         }
-        if  let s2 = s2 {
-            output.append("\(CodingKeys.s2.stringValue) = \(s2)\n")
+        if  let s2 = s2, s2 != 0 {
+            output.append("s2 = \(s2)")
         }
-        if  let s3 = s3 {
-            output.append("\(CodingKeys.s3.stringValue) = \(s3)\n")
+        if  let s3 = s3, s3 != 0 {
+            output.append("s3 = \(s3)")
         }
-        if  let s4 = s4 {
-            output.append("\(CodingKeys.s4.stringValue) = \(s4)\n")
+        if  let s4 = s4, s4 != 0 {
+            output.append("s4 = \(s4)")
         }
-        if  let h1 = h1 {
-            output.append("\(CodingKeys.h1.stringValue) = \(h1)\n")
+        if  let h1 = h1, !h1.isEmpty {
+            output.append("h1 = \(h1)")
         }
-        if  let h2 = h2 {
-            output.append("\(CodingKeys.h2.stringValue) = \(h2)\n")
+        if  let h2 = h2, !h2.isEmpty {
+            output.append("h2 = \(h2)")
         }
-        if  let h3 = h3 {
-            output.append("\(CodingKeys.h3.stringValue) = \(h3)\n")
+        if  let h3 = h3, !h3.isEmpty {
+            output.append("h3 = \(h3)")
         }
-        if  let h4 = h4 {
-            output.append("\(CodingKeys.h4.stringValue) = \(h4)\n")
+        if  let h4 = h4, !h4.isEmpty {
+            output.append("h4 = \(h4)")
         }
         if  let i1 = i1, !i1.isEmpty {
-            output.append("\(CodingKeys.i1.stringValue) = \(i1)\n")
+            output.append("i1 = \(i1)")
         }
         if  let i2 = i2, !i2.isEmpty {
-            output.append("\(CodingKeys.i2.stringValue) = \(i2)\n")
+            output.append("i2 = \(i2)")
         }
         if  let i3 = i3, !i3.isEmpty {
-            output.append("\(CodingKeys.i3.stringValue) = \(i3)\n")
+            output.append("i3 = \(i3)")
         }
         if  let i4 = i4, !i4.isEmpty {
-            output.append("\(CodingKeys.i4.stringValue) = \(i4)\n")
+            output.append("i4 = \(i4)")
         }
-
+        if  let i5 = i5, !i5.isEmpty {
+            output.append("i5 = \(i5)")
+        }
         return output
     }
 }

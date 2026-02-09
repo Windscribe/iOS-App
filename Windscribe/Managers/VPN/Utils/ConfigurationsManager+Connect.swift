@@ -115,9 +115,7 @@ extension ConfigurationsManager {
                         }
                         Task {
                             do {
-                                try await self.testConnectivityWithRetries(nextManager: nextManager,
-                                                                           forLocationId: locationID,
-                                                                           proto: proto) {
+                                try await self.pinIPAndTestConnectivity(proto: proto) {
                                     return isCancelled
                                 }
                                 if isCancelled {
@@ -254,64 +252,75 @@ extension ConfigurationsManager {
         }
     }
 
-    /// Test VPN connection for network connectivity.
-    private func testConnectivityWithRetries(nextManager: NEVPNManager,
-                                             forLocationId: String,
-                                             proto: String,
-                                             checkIsTaskCancelled: () -> Bool) async throws {
-
-        let currentHost = preferences.getLastNodeIP() ?? ""
-
-        if proto == "WireGuard" {
-            logger.logI("ConfigurationsManager","Bridge API - WSNEt - set host for wireguard: \(currentHost)")
-            bridgeAPI.setCurrentHost(currentHost)
+    /// Pin IP if needed and test VPN connection for network connectivity.
+    private func pinIPAndTestConnectivity(proto: String, checkIsTaskCancelled: () -> Bool) async throws {
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+        // Pin IP if needed (capture error but don't throw)
+        let ipPinningError = await performIPPinningIfNeeded(proto: proto)
+        // Test connectivity
+        let connectivitySuccess = await testConnectivity(checkIsTaskCancelled: checkIsTaskCancelled)
+        if connectivitySuccess {
+            if ipPinningError != nil {
+                showFailedPinIpTrigger.send()
+            }
+            return
         } else {
-            bridgeAPI.setCurrentHost("")
+            throw VPNConfigurationErrors.connectivityTestFailed
         }
+    }
 
-        bridgeAPI.setIgnoreSslErrors(true)
-        bridgeAPI.setConnectedState(true)
-
-        try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
-        self.logger.logI("ConfigurationsManager", "wsnet setIsConnectedToVpnState to true")
-        WSNet.instance().setIsConnectedToVpnState(true)
-
-        var ipPinningFailed = false
-
-        if !preferences.getIgnorePinIP() {
+    /// Pin IP . Returns error if pinning fails, nil otherwise.
+    private func performIPPinningIfNeeded(proto: String) async -> Error? {
+        if !preferences.getIgnorePinIP() && !preferences.isCustomConfigSelected() {
+            let currentHost = preferences.getLastNodeIP() ?? ""
+            if proto == "WireGuard" {
+                logger.logI("ConfigurationsManager","Bridge API - WSNEt - set host for wireguard: \(currentHost)")
+                bridgeAPI.setCurrentHost(currentHost)
+            } else {
+                bridgeAPI.setCurrentHost("")
+            }
+            bridgeAPI.setIgnoreSslErrors(true)
+            bridgeAPI.setConnectedState(true)
+            self.logger.logI("ConfigurationsManager", "wsnet setIsConnectedToVpnState to true")
+            WSNet.instance().setIsConnectedToVpnState(true)
             if let pinnedIp = preferences.getLastSelectedPinnedIp() {
-                logger.logI("ConfigurationsManager","Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
+                logger.logI("ConfigurationsManager","Bridge API - WSNEt - Pinning IP: \(pinnedIp)")
                 do {
                     _ = try await api.pinIp(ip: pinnedIp)
                     logger.logI("ConfigurationsManager", "IP pinned successfully")
+                    return nil
                 } catch {
                     logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
-                    ipPinningFailed = true
+                    return error
                 }
             }
         } else {
             preferences.saveIgnorePinIP(status: false)
         }
+        return nil
+    }
 
+    /// Test connectivity with retries. Returns true if successful, false otherwise.
+    private func testConnectivity(checkIsTaskCancelled: () -> Bool) async -> Bool {
+        WSNet.instance().setIsConnectedToVpnState(true)
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
                 try await ipRepository.getIp()
-                if serverRepository.hasPinnedNodeMismatch || ipPinningFailed {
-                    showFailedPinIpTrigger.send()
-                }
-                return
+                logger.logI("ConfigurationsManager", "Connectivity test successful")
+                return true
             } catch {
                 if checkIsTaskCancelled() {
-                    throw VPNConfigurationErrors.connectivityTestFailed
+                    logger.logE("VPNConfiguration", "Connectivity test cancelled")
+                    return false
                 }
                 if attempt == maxConnectivityTestAttempts {
                     self.logger.logE("VPNConfiguration", "Connectivity error: \(error)")
-                    throw VPNConfigurationErrors.connectivityTestFailed
+                    return false
                 }
-                try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
+                try? await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
             }
         }
-        throw VPNConfigurationErrors.connectivityTestFailed
+        return false
     }
 
     /// Initiates an asynchronous VPN disconnection process for any active VPN managers.
