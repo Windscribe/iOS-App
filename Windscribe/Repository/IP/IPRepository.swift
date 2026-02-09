@@ -68,6 +68,7 @@ class IPRepositoryImpl: IPRepository {
     /// Observes Preferences changes for IP updates
     private func load() {
         preferences.getCurrentIpAddressObservable()
+            .dropFirst() // Skip initial emission since we already set initial state in init()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] ipAddress in
                 guard let self = self else { return }
