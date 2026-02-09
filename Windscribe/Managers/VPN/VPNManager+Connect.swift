@@ -62,8 +62,9 @@ extension VPNManagerImpl {
                 return self.configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).eraseToAnyPublisher()
             }.flatMap { _ in
                 let status = self.connectivity.getNetwork().status
+                let isVPN = self.connectivity.getNetwork().isVPN
                 self.logger.logI("VPNConfiguration", "Checkin status of the connections: \(status)")
-                if [NetworkStatus.disconnected].contains(status) {
+                if [NetworkStatus.disconnected].contains(status) && !isVPN {
                     self.logger.logI("VPNConfiguration", "Failed connecting as network is offline")
                     return Fail<VPNConnectionState, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
                 }

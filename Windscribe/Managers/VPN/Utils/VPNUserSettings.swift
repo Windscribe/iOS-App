@@ -114,9 +114,8 @@ struct OpenVPNConfiguration: VPNConfiguration {
 
 struct WireguardVPNConfiguration: VPNConfiguration {
     let content: TunnelConfiguration
-    let wgUnlockParams: String
     var description: String {
-        return "Wireguard: [content: \(content.asWgQuickConfig(with: wgUnlockParams))"
+        return "Wireguard: [content: \(content.asWgQuickConfig())"
     }
 
     func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws {

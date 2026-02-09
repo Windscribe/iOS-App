@@ -138,7 +138,6 @@ class WgCredentials {
     }
 
     func asWgCredentialsString() -> String? {
-        let udpStuffing = preferences.isCircumventCensorshipEnabled()
         if let privateKey = getPrivateKey(),
            let address = address,
            let dns = dns,
@@ -148,17 +147,24 @@ class WgCredentials {
            let serverEndPoint = serverEndPoint,
            let port = port
         {
-            let lines = ["[Interface]",
-                         "PrivateKey = \(privateKey)",
-                         "Address = \(address)",
-                         "Dns = \(dns)",
-                         "",
-                         "[Peer]",
-                         "PublicKey = \(serverPublicKey)",
-                         "AllowedIPs = \(allowedIps)",
-                         "Endpoint = \(serverEndPoint):\(port)",
-                         "udp_stuffing = \(udpStuffing)",
-                         "PresharedKey = \(presharedKey)"]
+            var lines: [String] = [
+                "[Interface]",
+                "PrivateKey = \(privateKey)",
+                "Address = \(address)",
+                "Dns = \(dns)"
+            ]
+            if preferences.isCircumventCensorshipEnabled() {
+                let unblockParams = preferences.getUnblockWgParams()?.getConfigText() ?? []
+                lines.append(contentsOf: unblockParams)
+            }
+            lines.append(contentsOf: [
+                "",
+                "[Peer]",
+                "PublicKey = \(serverPublicKey)",
+                "AllowedIPs = \(allowedIps)",
+                "Endpoint = \(serverEndPoint):\(port)",
+                "PresharedKey = \(presharedKey)"
+            ])
             return lines.joined(separator: "\n")
         } else {
             return nil

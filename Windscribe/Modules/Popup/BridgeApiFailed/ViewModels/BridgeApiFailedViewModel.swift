@@ -94,7 +94,6 @@ final class BridgeApiFailedViewModelImpl: BridgeApiFailedViewModel {
     func handleDismissAction() {
         if popupType == .pinIp {
             preferences.saveIgnorePinIP(status: true)
-            NotificationCenter.default.post(Notification(name: Notifications.configureVPN))
         }
         shouldDismiss = true
     }

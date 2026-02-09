@@ -249,7 +249,7 @@ extension MainViewController {
                 }
             }
 
-            let isOnline: Bool = viewModel.appNetwork.value.status == .connected
+            let isOnline: Bool = viewModel.appNetwork.value.isVPN || viewModel.appNetwork.value.status == .connected
             if isOnline {
                 enableVPNConnection()
             } else {

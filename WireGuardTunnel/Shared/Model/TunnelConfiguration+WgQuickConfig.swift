@@ -5,6 +5,7 @@ import Foundation
 import WireGuardKit
 
 extension TunnelConfiguration {
+
     enum ParserState {
         case inInterfaceSection
         case inPeerSection
@@ -22,6 +23,7 @@ extension TunnelConfiguration {
         case interfaceHasInvalidDNS(String)
         case interfaceHasInvalidMTU(String)
         case interfaceHasUnrecognizedKey(String)
+        case interfaceHasInvalidCustomParam(String)
         case peerHasNoPublicKey
         case peerHasInvalidPublicKey(String)
         case peerHasInvalidPreSharedKey(String)
@@ -71,8 +73,30 @@ extension TunnelConfiguration {
                     } else {
                         attributes[key] = value
                     }
-                    let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
-                    let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive", "udp_stuffing"]
+                    let interfaceSectionKeys: Set<String> = [
+                        "privatekey",
+                        "listenport",
+                        "address",
+                        "dns",
+                        "mtu",
+                        "jc",
+                        "jmin",
+                        "jmax",
+                        "s1",
+                        "s2",
+                        "s3",
+                        "s4",
+                        "h1",
+                        "h2",
+                        "h3",
+                        "h4",
+                        "i1",
+                        "i2",
+                        "i3",
+                        "i4",
+                        "i5",
+                    ]
+                    let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
                     if parserState == .inInterfaceSection {
                         guard interfaceSectionKeys.contains(key) else {
                             throw ParseError.interfaceHasUnrecognizedKey(keyWithCase)
@@ -82,7 +106,7 @@ extension TunnelConfiguration {
                             throw ParseError.peerHasUnrecognizedKey(keyWithCase)
                         }
                     }
-                } else if lowercasedLine != "[interface]", lowercasedLine != "[peer]" {
+                } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
                     throw ParseError.invalidLine(line)
                 }
             }
@@ -123,17 +147,60 @@ extension TunnelConfiguration {
         }
     }
 
-    func asWgQuickConfig(with optionalParams: String = "") -> String {
+    func asWgQuickConfig() -> String {
         var output = "[Interface]\n"
         output.append("PrivateKey = \(interface.privateKey.base64Key)\n")
-
-        // Adding Unblock WG params
-        if !optionalParams.isEmpty {
-            output.append(optionalParams)
-        }
-
         if let listenPort = interface.listenPort {
             output.append("ListenPort = \(listenPort)\n")
+        }
+
+        if let junkPacketCount = interface.junkPacketCount {
+            output.append("Jc = \(junkPacketCount)\n")
+        }
+        if let junkPacketMinSize = interface.junkPacketMinSize {
+            output.append("Jmin = \(junkPacketMinSize)\n")
+        }
+        if let junkPacketMaxSize = interface.junkPacketMaxSize {
+            output.append("Jmax = \(junkPacketMaxSize)\n")
+        }
+        if let initPacketJunkSize = interface.initPacketJunkSize {
+            output.append("S1 = \(initPacketJunkSize)\n")
+        }
+        if let responsePacketJunkSize = interface.responsePacketJunkSize {
+            output.append("S2 = \(responsePacketJunkSize)\n")
+        }
+        if let cookieReplyPacketJunkSize = interface.cookieReplyPacketJunkSize {
+            output.append("S3 = \(cookieReplyPacketJunkSize)\n")
+        }
+        if let transportPacketJunkSize = interface.transportPacketJunkSize {
+            output.append("S4 = \(transportPacketJunkSize)\n")
+        }
+        if let initPacketMagicHeader = interface.initPacketMagicHeader {
+            output.append("H1 = \(initPacketMagicHeader)\n")
+        }
+        if let responsePacketMagicHeader = interface.responsePacketMagicHeader {
+            output.append("H2 = \(responsePacketMagicHeader)\n")
+        }
+        if let underloadPacketMagicHeader = interface.underloadPacketMagicHeader {
+            output.append("H3 = \(underloadPacketMagicHeader)\n")
+        }
+        if let transportPacketMagicHeader = interface.transportPacketMagicHeader {
+            output.append("H4 = \(transportPacketMagicHeader)\n")
+        }
+        if let specialJunk1 = interface.specialJunk1 {
+            output.append("I1 = \(specialJunk1)\n")
+        }
+        if let specialJunk2 = interface.specialJunk2 {
+            output.append("I2 = \(specialJunk2)\n")
+        }
+        if let specialJunk3 = interface.specialJunk3 {
+            output.append("I3 = \(specialJunk3)\n")
+        }
+        if let specialJunk4 = interface.specialJunk4 {
+            output.append("I4 = \(specialJunk4)\n")
+        }
+        if let specialJunk5 = interface.specialJunk5 {
+            output.append("I5 = \(specialJunk5)\n")
         }
         if !interface.addresses.isEmpty {
             let addressString = interface.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
@@ -212,6 +279,75 @@ extension TunnelConfiguration {
                 throw ParseError.interfaceHasInvalidMTU(mtuString)
             }
             interface.mtu = mtu
+        }
+        if let junkPacketCountString = attributes["jc"] {
+            guard let junkPacketCount = UInt16(junkPacketCountString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(junkPacketCountString)
+            }
+            interface.junkPacketCount = junkPacketCount
+        }
+        if let junkPacketMinSizeString = attributes["jmin"] {
+            guard let junkPacketMinSize = UInt16(junkPacketMinSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(junkPacketMinSizeString)
+            }
+            interface.junkPacketMinSize = junkPacketMinSize
+        }
+        if let junkPacketMaxSizeString = attributes["jmax"] {
+            guard let junkPacketMaxSize = UInt16(junkPacketMaxSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(junkPacketMaxSizeString)
+            }
+            interface.junkPacketMaxSize = junkPacketMaxSize
+        }
+        if let initPacketJunkSizeString = attributes["s1"] {
+            guard let initPacketJunkSize = UInt16(initPacketJunkSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(initPacketJunkSizeString)
+            }
+            interface.initPacketJunkSize = initPacketJunkSize
+        }
+        if let responsePacketJunkSizeString = attributes["s2"] {
+            guard let responsePacketJunkSize = UInt16(responsePacketJunkSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(responsePacketJunkSizeString)
+            }
+            interface.responsePacketJunkSize = responsePacketJunkSize
+        }
+        if let cookieReplyPacketJunkSizeString = attributes["s3"] {
+            guard let cookieReplyPacketJunkSize = UInt16(cookieReplyPacketJunkSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(cookieReplyPacketJunkSizeString)
+            }
+            interface.cookieReplyPacketJunkSize = cookieReplyPacketJunkSize
+        }
+        if let transportPacketJunkSizeString = attributes["s4"] {
+            guard let transportPacketJunkSize = UInt16(transportPacketJunkSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(transportPacketJunkSizeString)
+            }
+            interface.transportPacketJunkSize = transportPacketJunkSize
+        }
+        if let initPacketMagicHeaderString = attributes["h1"] {
+            interface.initPacketMagicHeader = initPacketMagicHeaderString
+        }
+        if let responsePacketMagicHeaderString = attributes["h2"] {
+            interface.responsePacketMagicHeader = responsePacketMagicHeaderString
+        }
+        if let underloadPacketMagicHeaderString = attributes["h3"] {
+            interface.underloadPacketMagicHeader = underloadPacketMagicHeaderString
+        }
+        if let transportPacketMagicHeaderString = attributes["h4"] {
+            interface.transportPacketMagicHeader = transportPacketMagicHeaderString
+        }
+        if let specialJunk1String = attributes["i1"] {
+            interface.specialJunk1 = specialJunk1String
+        }
+        if let specialJunk2String = attributes["i2"] {
+            interface.specialJunk2 = specialJunk2String
+        }
+        if let specialJunk3String = attributes["i3"] {
+            interface.specialJunk3 = specialJunk3String
+        }
+        if let specialJunk4String = attributes["i4"] {
+            interface.specialJunk4 = specialJunk4String
+        }
+        if let specialJunk5String = attributes["i5"] {
+            interface.specialJunk5 = specialJunk5String
         }
         return interface
     }
