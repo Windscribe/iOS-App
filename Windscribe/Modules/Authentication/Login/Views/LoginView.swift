@@ -128,6 +128,7 @@ struct LoginView: View {
             }
             .navigationTitle(TextsAsset.Welcome.login)
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(viewModel.showLoadingView && !viewModel.showCaptchaPopup)
             .toolbar { loginToolbar() }
             .sheet(item: $safariURL) { url in
                 SafariView(url: url, isDarkMode: viewModel.isDarkMode)
@@ -140,6 +141,15 @@ struct LoginView: View {
             )
             .overlay(
                 ZStack {
+                    // Loading overlay
+                    if viewModel.showLoadingView && !viewModel.showCaptchaPopup {
+                        Color.from(.dark, viewModel.isDarkMode)
+                            .opacity(0.3)
+                            .ignoresSafeArea()
+                            .allowsHitTesting(true)
+                            .zIndex(0)
+                    }
+
                     if viewModel.showCaptchaPopup, let data = viewModel.captchaData {
                         Color.from(.dark, viewModel.isDarkMode)
                             .opacity(0.65)
@@ -168,6 +178,8 @@ struct LoginView: View {
                 }
                 .animation(.easeInOut(duration: 0.3), value: viewModel.showCaptchaPopup)
             )
+            .disabled(viewModel.showLoadingView && !viewModel.showCaptchaPopup)
+            .interactiveDismissDisabled(viewModel.showLoadingView && !viewModel.showCaptchaPopup)
         }
         .dynamicTypeSize(dynamicTypeRange)
     }
