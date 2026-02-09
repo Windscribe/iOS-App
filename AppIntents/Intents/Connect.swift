@@ -61,7 +61,6 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 activeManager.isOnDemandEnabled = true
                 try await activeManager.saveToPreferences()
                 try activeManager.connection.startVPNTunnel()
-                pinIP(proto: protocolType)
             }
             var iterations = 0
             while iterations <= 20 {
@@ -69,6 +68,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 if activeManager.connection.status == .connected {
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
                     logger.logI(tag, "Connected to VPN.")
+                    pinIP(proto: protocolType)
                     return .result(dialog: .responseSuccess)
                 }
                 iterations += 1
@@ -85,19 +85,17 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
     }
 
     private func pinIP(proto: String) {
-        let currentHost = preferences.getLastNodeIP() ?? ""
-
-        if proto == "WireGuard" {
-            logger.logI(tag,"Bridge API - WSNEt - set host for wireguard: \(currentHost)")
-            bridgeAPI.setCurrentHost(currentHost)
-        } else {
-            bridgeAPI.setCurrentHost("")
-        }
-
         Task {
-            try await Task.sleep(nanoseconds: 500_000_000)
+            let currentHost = preferences.getLastNodeIP() ?? ""
+            let isWireguard = proto == "WireGuard"
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            if isWireguard {
+                logger.logI(tag,"Bridge API - WSNEt - set host for wireguard: \(currentHost)")
+                bridgeAPI.setCurrentHost(currentHost)
+            } else {
+                bridgeAPI.setCurrentHost("")
+            }
 
-            //
             bridgeAPI.setIgnoreSslErrors(true)
             bridgeAPI.setConnectedState(true)
 
@@ -105,7 +103,6 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 let pinnedIp = preferences.getLastSelectedPinnedIp()
                 if let pinnedIp = pinnedIp {
                     logger.logI(tag,"Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
-
                     bridgeAPI.pinIp(pinnedIp) { statusCode,_ in
                         if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
                             logger.logE(tag,"Failed to pin IP: \(wsNetError)")
@@ -116,7 +113,6 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
             } else {
                 preferences.saveIgnorePinIP(status: false)
             }
-
         }
     }
 }
