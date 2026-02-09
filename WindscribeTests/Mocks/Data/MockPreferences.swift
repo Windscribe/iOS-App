@@ -39,7 +39,11 @@ class MockPreferences: Preferences {
     var mockLastSelectedPinnedIp: String?
 
     // IP Address - Issue #911
-    var mockCurrentIpAddress: String?
+    var mockCurrentIpAddress: String? {
+        didSet {
+            currentIpAddressSubject.send(mockCurrentIpAddress)
+        }
+    }
     private let currentIpAddressSubject = CurrentValueSubject<String?, Never>(nil)
 
     // UserSessionRepository tracking

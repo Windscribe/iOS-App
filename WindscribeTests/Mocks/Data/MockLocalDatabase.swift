@@ -55,6 +55,9 @@ class MockLocalDatabase: LocalDatabase {
     // PingData tracking
     var mockPingData: [Windscribe.PingData] = []
 
+    // MyIP tracking (for migration tests)
+    var mockMyIP: Windscribe.MyIP?
+
     func migrate() {}
 
     func getMobilePlans() -> [Windscribe.MobilePlan]? {
@@ -148,7 +151,7 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getIp() -> Windscribe.MyIP? {
-        return nil
+        return mockMyIP
     }
 
     func saveIp(myip: Windscribe.MyIP) {

@@ -974,6 +974,7 @@
 		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
 		F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
 		F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
+		F42D7FBA2F3513E700F71B20 /* IPRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D7FB92F3513E700F71B20 /* IPRepositoryTests.swift */; };
 		F43184BA2E1C59DE007C96E3 /* LocationPermissionInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184B92E1C59DE007C96E3 /* LocationPermissionInfoView.swift */; };
 		F43184BD2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184BC2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift */; };
 		F43184BF2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */; };
@@ -2012,6 +2013,7 @@
 		F425B0A52F33C80C0046D5E1 /* LatencyRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepositoryTests.swift; sourceTree = "<group>"; };
 		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
 		F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
+		F42D7FB92F3513E700F71B20 /* IPRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPRepositoryTests.swift; sourceTree = "<group>"; };
 		F43184B92E1C59DE007C96E3 /* LocationPermissionInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionInfoView.swift; sourceTree = "<group>"; };
 		F43184BC2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionInfoViewModel.swift; sourceTree = "<group>"; };
 		F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponsivePopupLayoutProvider.swift; sourceTree = "<group>"; };
@@ -4606,6 +4608,7 @@
 				F425B0A52F33C80C0046D5E1 /* LatencyRepositoryTests.swift */,
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
 				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
+				F42D7FB92F3513E700F71B20 /* IPRepositoryTests.swift */,
 				F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */,
 				F4A20BCF2EE88F620003D880 /* WifiNetworkRepositoryTests.swift */,
 			);
@@ -7327,6 +7330,7 @@
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
+				F42D7FBA2F3513E700F71B20 /* IPRepositoryTests.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
 				F49935412DA9973100108558 /* MockSoundManager.swift in Sources */,
