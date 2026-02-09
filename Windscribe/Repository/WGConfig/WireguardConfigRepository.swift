@@ -21,6 +21,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private let wgCrendentials: WgCredentials
     private let alertManager: AlertManager?
     private let ipManager: WireguardIPManager
+    private var firstConnection = true
 
     init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManager?, logger: FileLogger, ipManager: WireguardIPManager) {
         self.apiCallManager = apiCallManager
@@ -46,8 +47,10 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     }
 
     private func wgInit() async throws {
-        guard !self.wgCrendentials.initialized() else { return }
-
+        guard !self.wgCrendentials.initialized() || (self.wgCrendentials.initialized() && firstConnection) else {
+            return
+        }
+        firstConnection = false
         let userPublicKey = await self.wgCrendentials.getPublicKey() ?? ""
 
         do {
