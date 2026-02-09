@@ -94,7 +94,7 @@ class LoginViewModelImpl: LoginViewModel {
             guard let self = self else { return }
 
             do {
-                let response = try await self.apiCallManager.authTokenLogin(useAsciiCaptcha: true)
+                let response = try await self.apiCallManager.authTokenLogin(username: username, useAsciiCaptcha: true)
 
                 if let captcha = response.data.captcha,
                    let asciiArt = captcha.asciiArt {

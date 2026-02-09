@@ -54,8 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)verifyTvLoginCode:(NSString*)authHash xpressCode:(NSString*)xpressCode callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)cancelAccount:(NSString*)authHash password:(NSString*)password callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)sso:(NSString*)provider token:(NSString*)token callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)authTokenLogin:(BOOL)useAsciiCaptcha callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)authTokenSignup:(BOOL)useAsciiCaptcha callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)authTokenLogin:(NSString*)username useAsciiCaptcha:(BOOL)useAsciiCaptcha callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)authTokenSignup:(NSString*)username useAsciiCaptcha:(BOOL)useAsciiCaptcha callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)passwordRecovery:(NSString*)email callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)amneziawgUnblockParams:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 

@@ -145,11 +145,11 @@ class MockAPIManager: APIManager {
         fatalError("Not implemented")
     }
 
-    func authTokenLogin(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
+    func authTokenLogin(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
         fatalError("Not implemented")
     }
 
-    func authTokenSignup(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
+    func authTokenSignup(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
         fatalError("Not implemented")
     }
 

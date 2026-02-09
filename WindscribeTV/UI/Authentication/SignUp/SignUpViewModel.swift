@@ -123,7 +123,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             guard let self = self else { return }
 
             do {
-                let response = try await self.apiCallManager.authTokenSignup(useAsciiCaptcha: true)
+                let response = try await self.apiCallManager.authTokenSignup(username: username, useAsciiCaptcha: true)
 
                 if let captcha = response.data.captcha,
                    let asciiArt = captcha.asciiArt {

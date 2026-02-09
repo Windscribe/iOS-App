@@ -175,7 +175,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             guard let self = self else { return }
 
             do {
-                let tokenResponse = try await self.apiCallManager.authTokenSignup(useAsciiCaptcha: false)
+                let tokenResponse = try await self.apiCallManager.authTokenSignup(username: username, useAsciiCaptcha: false)
 
                 await MainActor.run {
                     self.logger.logD("SignUpViewModel", "Token received: \(tokenResponse.data.token)")
