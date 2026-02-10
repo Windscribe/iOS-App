@@ -150,9 +150,10 @@ struct HomeWidgetEntryView: View {
                         ConnectButton(isConnected: isConnected, isWidgetSmall: isWidgetSmall)
                     })
                     HStack {
-                        VStack (alignment: .leading, spacing: 6, content: {
+                        VStack (alignment: .leading, spacing: 2, content: {
                             ConnectionInfoBubble(isConnected: isConnected,
                                                  description: entry.statusDescription)
+                            .padding(.bottom, 4)
                             Text(entry.name).foregroundColor(Color.white)
                                 .font(.bold(.callout))
                             Text(entry.nickname).foregroundColor(Color.white)
