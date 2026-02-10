@@ -94,8 +94,12 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
             }
         case .allowLan:
             return [.allowLanInfo]
-        case let .circunventCensorship(_, paramSelected, paramOptions):
-            return [.circunventCensorshipInfo, .wgUnlockMenu(currentOption: paramSelected, options: paramOptions)]
+        case let .circunventCensorship(isSelected, paramSelected, paramOptions):
+            if isSelected {
+                return [.circunventCensorshipInfo, .wgUnlockMenu(currentOption: paramSelected, options: paramOptions)]
+            } else {
+                return [.circunventCensorshipInfo]
+            }
         default:
             return []
         }
