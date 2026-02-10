@@ -93,11 +93,18 @@ struct AuthenticationCaptchaPopupView: View {
             let topOffsetScaled = topOffset * (displayedHeight / referenceHeight)
 
             VStack(spacing: 24) {
-                Text(TextsAsset.Authentication.captchaDescription)
-                    .font(.medium(.headline))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.from(.titleColor, isDarkMode))
-                    .padding(.top, 8)
+                VStack(spacing: 8) {
+                    Text("Complete CAPTCHA")
+                        .font(.medium(.headline))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
+
+                    Text("Slide the left image into the hole on the right")
+                        .font(.regular(.subheadline))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
+                }
+                .padding(.top, 8)
 
                 ZStack(alignment: .topLeading) {
                     Image(uiImage: background)
@@ -131,26 +138,13 @@ struct AuthenticationCaptchaPopupView: View {
                 .frame(width: maxWidth, height: displayedHeight)
                 .padding(.bottom, 8)
 
-                HStack {
-                    Text(TextsAsset.Authentication.captchaSliderDescription)
-                        .font(.regular(.caption1))
-                        .foregroundColor(.from(.infoColor, isDarkMode))
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                }
-                .padding(4)
-                .background(Color.from(.popUpBackgroundColor, isDarkMode))
-                .cornerRadius(100)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 100)
-                        .inset(by: -0.5)
-                        .stroke(Color.from(.iconColor, isDarkMode).opacity(0.05), lineWidth: 1)
-                )
-                .frame(width: maxWidth, alignment: .center)
-
                 Button(TextsAsset.cancel, action: onCancel)
-                    .font(.regular(.callout))
-                    .foregroundColor(.from(.infoColor, isDarkMode))
+                    .font(.medium(.body))
+                    .foregroundColor(isDarkMode ? .white : .white)
+                    .padding(.vertical, 12)
+                    .frame(width: maxWidth)
+                    .background(Color.from(.dismissButtonBackgroundColor, isDarkMode))
+                    .clipShape(Capsule())
                     .padding(.bottom, 8)
             }
             .padding()
