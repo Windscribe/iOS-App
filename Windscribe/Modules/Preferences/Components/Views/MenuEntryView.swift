@@ -55,7 +55,7 @@ struct MenuEntryHeaderView: View {
                 Text(item.title)
                     .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                Spacer()
             }
 
             if let mainAction = item.action {
@@ -261,6 +261,8 @@ struct MenuMultipleActionView: View {
                     Text(currentOption)
                         .foregroundColor(.from(.infoColor, isDarkMode))
                         .font(.regular(.callout))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
                     if let imageName = actionType.imageName {
                         Image(imageName)
                             .resizable()
