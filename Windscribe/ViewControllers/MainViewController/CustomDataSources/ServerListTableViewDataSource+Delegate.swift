@@ -251,7 +251,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             if let expanded = tableView.expandedSections[section], calculatedSection < serverSections.count {
                 serverSections[calculatedSection].collapsed = !expanded
             }
-            if section < serverSections.count {
+            if section <= serverSections.count {
                 cell.serverCellViewModel?.update(serverModel: serverSections[calculatedSection].server,
                                                  locationLoad: locationLoad,
                                                  isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
