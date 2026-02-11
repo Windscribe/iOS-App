@@ -137,6 +137,10 @@ protocol Preferences {
     func observeFavouriteIds() -> AnyPublisher<[String], Never>
     func addFavouriteId(_ id: String)
     func removeFavouriteId(_ id: String)
+    func saveDisconnectReason(reason: DisconnectReason)
+    func getDisconnectReason() -> DisconnectReason
+    func saveUserStatus(value: Bool)
+    func getUserStatus() -> Bool
     func clearFavourites()
 
     func getLoginDate() -> Date?

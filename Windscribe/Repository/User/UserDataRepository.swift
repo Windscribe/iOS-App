@@ -52,46 +52,17 @@ class UserDataRepositoryImpl: UserDataRepository {
 
         // Load all remaining data in parallel - all independent calls
         logger.logI("UserDataRepository", "Loading credentials, PortMap, Static IPs, and Notifications in parallel.")
-
-        // Non-critical calls that may fail for expired/free accounts - wrap in Task to catch errors
-        let ikev2Task = Task {
-            do {
-                try await credentialsRepository.getUpdatedIKEv2Crendentials()
-            } catch {
-                logger.logE("UserDataRepository", "IKEv2 credentials failed (non-critical, may fail for expired/free accounts): \(error)")
-            }
-        }
-
-        let openVPNTask = Task {
-            do {
-                try await credentialsRepository.getUpdatedOpenVPNCrendentials()
-            } catch {
-                logger.logE("UserDataRepository", "OpenVPN credentials failed (non-critical, may fail for expired/free accounts): \(error)")
-            }
-        }
-
-        let staticIPTask = Task {
-            do {
-                try await staticIpRepository.updateStaticServers()
-            } catch {
-                logger.logE("UserDataRepository", "Static IPs failed (non-critical, may fail for free accounts): \(error)")
-            }
-        }
-
-        // Critical calls that should always succeed
+        async let ikev2 = try? await credentialsRepository.getUpdatedIKEv2Crendentials()
+        async let openVPN = try? await credentialsRepository.getUpdatedOpenVPNCrendentials()
         async let serverConfig = credentialsRepository.getUpdatedServerConfig()
         async let portMap = portMapRepository.getUpdatedPortMap()
         async let notifications = notificationsRepository.getUpdatedNotifications()
 
-        // Wait for critical calls (all started in parallel above)
-        _ = try await (serverConfig, portMap, notifications)
+        // Wait for critical calls to complete (ignore errors from ikev2 and openVPN)
+        _ = await (ikev2, openVPN)
+        _ = try await (serverConfig, portMap, staticIP, notifications)
 
-        // Wait for non-critical tasks (errors already caught)
-        await ikev2Task.value
-        await openVPNTask.value
-        await staticIPTask.value
-
-        logger.logI("UserDataRepository", "Data loading complete.")
+        logger.logI("UserDataRepository", "All data loaded successfully.")
 
         // Load latency in background - don't block navigation
         if !self.emergencyRepository.isConnected() {

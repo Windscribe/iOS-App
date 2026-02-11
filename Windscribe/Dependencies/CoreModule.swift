@@ -35,6 +35,9 @@ extension Container {
         register(WSNetBridgeAPI.self) { _ in
             WSNet.instance().bridgeAPI()
         }.inObjectScope(.container)
+        register(APIUtilService.self) { _ in
+            APIUtilServiceImpl()
+        }.inObjectScope(.container)
 
         register(DNSSettingsManagerType.self) { _ in
             DNSSettingsManager()

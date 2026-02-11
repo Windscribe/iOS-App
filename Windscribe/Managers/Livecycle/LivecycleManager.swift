@@ -21,7 +21,7 @@ protocol LivecycleManagerType {
 
 class LivecycleManager: LivecycleManagerType {
     private let logger: FileLogger
-    private let sessionManager: SessionManager
+    private var sessionManager: SessionManager
     private let preferences: Preferences
     private let vpnManager: VPNManager
     private let vpnStateRepository: VPNStateRepository
@@ -74,9 +74,12 @@ class LivecycleManager: LivecycleManagerType {
     /// Fresh app launch.
     func onAppStart() {
         Task {
-            await notificationRepo.loadNotifications()
+            await disconnectToUpdateSession()
+            if preferences.userSessionAuth() != nil && connectivity.internetConnectionAvailable() {
+                await notificationRepo.loadNotifications()
+                unblockWgParamsRepository.refreshParams()
+            }
         }
-        unblockWgParamsRepository.refreshParams()
     }
 
     private func checkForKillSwitch() {
@@ -93,24 +96,42 @@ class LivecycleManager: LivecycleManagerType {
         }
     }
 
+    private func disconnectToUpdateSession() async {
+        if preferences.getDisconnectReason() != .unknown {
+            logger.logI("LivecycleManager", "Disconencting due to disconnect reason. \(preferences.getDisconnectReason())")
+            await configManager.reloadManagers()
+            await vpnManager.resetProfiles()
+            preferences.saveDisconnectReason(reason: DisconnectReason.unknown)
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            // Find better way update force update session as exisiting updates could lock.
+            sessionManager.sessionFetchInProgress = false
+        }
+        sessionManager.keepSessionUpdated()
+    }
+
     /// App foreground.
     func appEnteredForeground() {
-        checkForKillSwitch()
-        unblockWgParamsRepository.tryRefresh()
         logger.logI("LivecycleManager", "App internet moved to foreground.")
-        becameActiveTrigger.send(())
-        sessionManager.keepSessionUpdated()
-        guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
-            preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
-            return
-        }
-        if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 && preferences.getSessionAuthHash() != nil {
-            preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
-            Task {
-                await notificationRepo.loadNotifications()
+        checkForKillSwitch()
+        Task {
+            await disconnectToUpdateSession()
+            becameActiveTrigger.send(())
+            if connectivity.internetConnectionAvailable() {
+                logger.logI("LivecycleManager", "Internet availble updating session. \(connectivity.getNetwork())")
+                unblockWgParamsRepository.tryRefresh()
+                guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
+                    preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
+                    return
+                }
+                if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 && preferences.getSessionAuthHash() != nil {
+                    preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
+                    Task {
+                        await notificationRepo.loadNotifications()
+                    }
+                }
+                credentialsRepo.updateServerConfig()
             }
         }
-        credentialsRepo.updateServerConfig()
         handleShortcutLaunch()
     }
 

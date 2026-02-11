@@ -651,6 +651,15 @@
 		C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
 		C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
 		C50B2CE82CD282B200EED01A /* VPNConfigurationErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */; };
+		C50BB0EA2F3CD5C200D6283B /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
+		C50BB0EC2F3CD62800D6283B /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
+		C50BB0ED2F3CD64600D6283B /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
+		C50BB0EE2F3CD65900D6283B /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
+		C50BB0F22F3CDC4B00D6283B /* TunnelCredentialsManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50BB0F12F3CDC4B00D6283B /* TunnelCredentialsManaging.swift */; };
+		C50BB0F42F3CDC4B00D6283B /* TunnelCredentialsManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50BB0F12F3CDC4B00D6283B /* TunnelCredentialsManaging.swift */; };
+		C50BB0FC2F3CDEA400D6283B /* ControlPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50BB0F92F3CDEA400D6283B /* ControlPlane.swift */; };
+		C50BB0FE2F3CDEA400D6283B /* ControlPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50BB0F92F3CDEA400D6283B /* ControlPlane.swift */; };
+		C50BB1012F3CE09300D6283B /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
 		C50F20782B606B3000266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */; };
 		C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207A2B606E2200266B23 /* WireguardModule.swift */; };
 		C50F207E2B60B40500266B23 /* WireguardAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */; };
@@ -832,6 +841,13 @@
 		C59FF1AA2CBB9C4F0072EF70 /* ClaimVoucherCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 595329FD2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift */; };
 		C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Extension.swift */; };
 		C5A3444F2C4DF049001EBB5C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C5A6F0792F3D178B00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
+		C5A6F07A2F3D178B00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
+		C5A6F07B2F3D183E00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
+		C5A6F07C2F3D183E00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
+		C5A6F07D2F3D183E00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
+		C5A6F07E2F3D183E00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
+		C5A6F07F2F3D183E00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
 		C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */; };
 		C5A930C92B42165F0001CFA0 /* APIManagerImpl+Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930C82B42165F0001CFA0 /* APIManagerImpl+Account.swift */; };
 		C5A930CB2B42169A0001CFA0 /* APIManagerImpl+Billing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930CA2B42169A0001CFA0 /* APIManagerImpl+Billing.swift */; };
@@ -1818,6 +1834,8 @@
 		C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+config.swift"; sourceTree = "<group>"; };
 		C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConfigurationErrors.swift; sourceTree = "<group>"; };
+		C50BB0F12F3CDC4B00D6283B /* TunnelCredentialsManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelCredentialsManaging.swift; sourceTree = "<group>"; };
+		C50BB0F92F3CDEA400D6283B /* ControlPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPlane.swift; sourceTree = "<group>"; };
 		C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepository.swift; sourceTree = "<group>"; };
 		C50F207A2B606E2200266B23 /* WireguardModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardModule.swift; sourceTree = "<group>"; };
 		C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardAPIManager.swift; sourceTree = "<group>"; };
@@ -1898,6 +1916,7 @@
 		C59CA15E2CD400D9007517DA /* ConfigurationsManager+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Connect.swift"; sourceTree = "<group>"; };
 		C59FF19E2CB998610072EF70 /* IntentCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentCommon.swift; sourceTree = "<group>"; };
 		C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Extension.swift"; sourceTree = "<group>"; };
+		C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisconnectReason.swift; sourceTree = "<group>"; };
 		C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Session.swift"; sourceTree = "<group>"; };
 		C5A930C82B42165F0001CFA0 /* APIManagerImpl+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Account.swift"; sourceTree = "<group>"; };
 		C5A930CA2B42169A0001CFA0 /* APIManagerImpl+Billing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Billing.swift"; sourceTree = "<group>"; };
@@ -3727,6 +3746,9 @@
 		AFF507D9229D97FD00C094A0 /* VPN */ = {
 			isa = PBXGroup;
 			children = (
+				C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */,
+				C50BB0F92F3CDEA400D6283B /* ControlPlane.swift */,
+				C50BB0F12F3CDC4B00D6283B /* TunnelCredentialsManaging.swift */,
 				1E593DA82CC9377D0051FF5E /* Utils */,
 				AFF507D7229D86BA00C094A0 /* VPNManager.swift */,
 				E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */,
@@ -6773,6 +6795,7 @@
 				1EF7BB3D2C74AFFE0032A4DF /* RatePopupViewController.swift in Sources */,
 				1EF7BB502C7618410032A4DF /* EnterEmailViewModel.swift in Sources */,
 				1E0D9D7B2C6107E6008AFF2D /* GeneralViewType.swift in Sources */,
+				C5A6F0792F3D178B00AB34EF /* DisconnectReason.swift in Sources */,
 				59FC74152C51543700021CD1 /* ErrorResponse.swift in Sources */,
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
 				F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */,
@@ -7103,6 +7126,7 @@
 				F4F51A692D9B176300407DE7 /* SignupWarningView.swift in Sources */,
 				AFA8041E22089ED200F8E379 /* APIEmailSent.swift in Sources */,
 				F4B8E1FA2DCE8CD9004D9BF6 /* ShareSheetView.swift in Sources */,
+				C5A6F07A2F3D178B00AB34EF /* DisconnectReason.swift in Sources */,
 				C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */,
 				F49C45B82DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift in Sources */,
 				AF4E926821EFC6EC00A3F584 /* Color+Extension.swift in Sources */,
@@ -7337,6 +7361,7 @@
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
 				F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */,
 				F45E4FA22F105C8900C9F0DB /* FavouriteListViewModelTests.swift in Sources */,
+				C5A6F07B2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,
@@ -7357,6 +7382,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C50BB0FE2F3CDEA400D6283B /* ControlPlane.swift in Sources */,
+				C50BB0F42F3CDC4B00D6283B /* TunnelCredentialsManaging.swift in Sources */,
 				C59C073D2940462200D6C3C1 /* PreferencesImpl.swift in Sources */,
 				C56FCBDF2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C5B8DF032C9FD3450072333E /* VPNErrors.swift in Sources */,
@@ -7364,11 +7391,15 @@
 				1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				C561237A2C5F25750090EB5A /* Resolver.swift in Sources */,
 				5993396D2B4CD28200EC615D /* DefaultValues.swift in Sources */,
+				C50BB0ED2F3CD64600D6283B /* UIConstants+ErrorTexts.swift in Sources */,
+				C50BB1012F3CE09300D6283B /* Session.swift in Sources */,
 				1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */,
+				C50BB0EC2F3CD62800D6283B /* APIError.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,
 				F49C457A2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				AFD16F1222775EA300E9FAD3 /* Notifications.swift in Sources */,
+				C50BB0EA2F3CD5C200D6283B /* APIUtil.swift in Sources */,
 				C59C074029406EB800D6C3C1 /* ProxyInfo.swift in Sources */,
 				F470F5522E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
 				C52DA52A2B63912A00E5C571 /* FileDatabase.swift in Sources */,
@@ -7379,11 +7410,13 @@
 				C585F3E22C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
 				C571C6752C135C3600786DA5 /* UserScope.swift in Sources */,
 				596E60062B8F77EC00D51E20 /* Language.swift in Sources */,
+				C5A6F07C2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				F4433D0E2E8312500012EA34 /* KeychainManagerImpl.swift in Sources */,
 				C50F20D02B62110400266B23 /* Bundle+Extension.swift in Sources */,
 				AF0B9EEC226E0C4500DCD026 /* PacketTunnelProvider.swift in Sources */,
 				1E3F77662DB13D29008308A8 /* ExportedLocations.swift in Sources */,
 				C52DA5122B63821100E5C571 /* RepositoryErrors.swift in Sources */,
+				C50BB0EE2F3CD65900D6283B /* WSNetErrors.swift in Sources */,
 				C50F20B62B61734400266B23 /* FileLoggerImpl.swift in Sources */,
 				F49C457D2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */,
@@ -7435,6 +7468,7 @@
 				1E7A7A922E007DAF00A6EAA6 /* SiriOldIntents.intentdefinition in Sources */,
 				C56FCBE02B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C52DA52F2B63913300E5C571 /* FileDatabaseImpl.swift in Sources */,
+				C5A6F07D2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				C50F20CA2B61777C00266B23 /* CoreModule.swift in Sources */,
 				C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */,
 				F49C45822DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
@@ -7471,11 +7505,14 @@
 				F49C45792DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */,
 				C585F3E42C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
+				C5A6F07E2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */,
 				C50F20C92B61777B00266B23 /* CoreModule.swift in Sources */,
 				C535D29327E2EF3700C08345 /* FilePaths.swift in Sources */,
 				F49C45812DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				C52DA5302B63913500E5C571 /* FileDatabaseImpl.swift in Sources */,
+				C50BB0FC2F3CDEA400D6283B /* ControlPlane.swift in Sources */,
+				C50BB0F22F3CDC4B00D6283B /* TunnelCredentialsManaging.swift in Sources */,
 				F443EA572E0B1F5F00FFC75E /* UIConstants+ErrorTexts.swift in Sources */,
 				596E60082B8F77EF00D51E20 /* Language.swift in Sources */,
 				C50F20832B60B79600266B23 /* APIUtil.swift in Sources */,
@@ -7585,6 +7622,7 @@
 				C50F20D32B62110800266B23 /* Bundle+Extension.swift in Sources */,
 				C5BC5F012E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */,
 				C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */,
+				C5A6F07F2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
 				F470F55C2E81B00400F8400D /* UserDefaults+Extension.swift in Sources */,
