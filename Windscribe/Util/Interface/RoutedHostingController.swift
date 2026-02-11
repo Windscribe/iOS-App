@@ -20,7 +20,8 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
         super.init(rootView: rootView)
 
         // Set background immediately to prevent white flash during push animation
-        view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        let backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        view.backgroundColor = backgroundColor
     }
 
     @MainActor required dynamic init?(coder aDecoder: NSCoder) {
@@ -31,6 +32,7 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
         super.viewWillAppear(animated)
 
         view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        navigationController?.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
 
         lookAndFeelRepository.isDarkModeSubject
             .receive(on: DispatchQueue.main)
@@ -40,7 +42,9 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
                 }
 
                 let titleColor = UIColor(.from(.titleColor, isDarkMode))
-                self.view.backgroundColor = UIColor(.from(.screenBackgroundColor, isDarkMode))
+                let backgroundColor = UIColor(.from(.screenBackgroundColor, isDarkMode))
+                self.view.backgroundColor = backgroundColor
+                self.navigationController?.view.backgroundColor = backgroundColor
 
                 let appearance = UINavigationBarAppearance().then {
                     $0.configureWithOpaqueBackground()
@@ -90,6 +94,9 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
         super.viewDidLoad()
 
         navigationController?.interactivePopGestureRecognizer?.delegate = self
+
+        // Ensure navigation controller background matches dark mode
+        navigationController?.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
     }
 
     override func viewWillDisappear(_ animated: Bool) {
