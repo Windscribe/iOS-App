@@ -529,9 +529,6 @@
 "What’s the matter?" = "무슨 일이에요?";
 "Tell us what’s wrong" = "무슨 문제가 있는지 알려주세요";
 
-"Complete Puzzle \n to continue" = "퍼즐을 완료하세요 \n 계속하려면";
-"Drag left puzzle piece into place" = "퍼즐 조각을 제자리에 맞추세요";
-
 "Invalid session auth or api parameters provided." = "잘못된 세션 인증 또는 API 매개변수가 제공되었습니다.";
 "Invalid session auth." = "세션 인증이 잘못되었습니다.";
 "Failed to process the upgrade using the receipt." = "영수증을 사용한 업그레이드 처리에 실패했습니다.";
@@ -596,3 +593,6 @@
 "App Icon" = "앱 아이콘";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "네트워크 옵션 기능을 통해 Windscribe 앱이 다양한 네트워크에서 어떻게 동작하는지 제어할 수 있습니다.";
+
+"Complete CAPTCHA" = "CAPTCHA 완료";
+"Slide the left image into the hole on the right" = "왼쪽 이미지를 오른쪽 구멍으로 밀어 넣으세요";

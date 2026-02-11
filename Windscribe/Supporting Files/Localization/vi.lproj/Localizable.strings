@@ -540,9 +540,6 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "What’s the matter?" = "Chuyện gì vậy?";
 "Tell us what’s wrong" = "Hãy cho chúng tôi biết vấn đề là gì";
 
-"Complete Puzzle \n to continue" = "Hoàn thành câu đố \n để tiếp tục";
-"Drag left puzzle piece into place" = "Trượt mảnh ghép vào đúng chỗ";
-
 "Invalid session auth or api parameters provided." = "Thông tin xác thực phiên hoặc tham số API không hợp lệ.";
 "Invalid session auth." = "Thông tin xác thực phiên không hợp lệ.";
 "Failed to process the upgrade using the receipt." = "Không thể xử lý nâng cấp bằng biên lai.";
@@ -608,3 +605,6 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "App Icon" = "Biểu tượng ứng dụng";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "Tính năng Tùy chọn mạng cho phép bạn kiểm soát cách ứng dụng Windscribe hoạt động trên các mạng khác nhau.";
+
+"Complete CAPTCHA" = "Hoàn tất CAPTCHA";
+"Slide the left image into the hole on the right" = "Kéo hình ảnh bên trái vào lỗ bên phải";

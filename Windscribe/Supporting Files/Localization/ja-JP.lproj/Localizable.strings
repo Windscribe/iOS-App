@@ -533,9 +533,6 @@
 "What’s the matter?" = "どうしましたか？";
 "Tell us what’s wrong" = "何が問題か教えてください";
 
-"Complete Puzzle \n to continue" = "パズルを完成させて \n 続行してください";
-"Drag left puzzle piece into place" = "パズルのピースを所定の位置にスライド";
-
 "Invalid session auth or api parameters provided." = "無効なセッション認証またはAPIパラメータが指定されました。";
 "Invalid session auth." = "セッション認証が無効です。";
 "Failed to process the upgrade using the receipt." = "領収書を使用したアップグレードの処理に失敗しました。";
@@ -601,3 +598,6 @@
 "App Icon" = "アプリアイコン";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "ネットワークオプション機能を使用すると、Windscribe アプリが異なるネットワークでどのように動作するかを制御できます。";
+
+"Complete CAPTCHA" = "CAPTCHAを完了";
+"Slide the left image into the hole on the right" = "左の画像を右側の穴にスライドしてください";

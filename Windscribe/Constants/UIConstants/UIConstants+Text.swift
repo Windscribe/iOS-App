@@ -2325,11 +2325,11 @@ enum TextsAsset {
         }
 
         static var captchaDescription: String {
-            return "Complete Puzzle \n to continue".localized
+            return "Complete CAPTCHA".localized
         }
 
         static var captchaSliderDescription: String {
-            return "Drag left puzzle piece into place".localized
+            return "Slide the left image into the hole on the right".localized
         }
 
         static var tokenRetrievalFailed: String {

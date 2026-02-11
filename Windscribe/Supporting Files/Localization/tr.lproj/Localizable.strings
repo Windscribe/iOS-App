@@ -545,9 +545,6 @@
 "What’s the matter?" = "Sorun nedir?";
 "Tell us what’s wrong" = "Sorunun ne olduğunu bize söyleyin";
 
-"Complete Puzzle \n to continue" = "Devam etmek için \n bulmacayı tamamlayın";
-"Drag left puzzle piece into place" = "Bulmaca parçasını yerine kaydırın";
-
 "Invalid session auth or api parameters provided." = "Geçersiz oturum doğrulama veya API parametreleri sağlandı.";
 "Invalid session auth." = "Geçersiz oturum doğrulaması.";
 "Failed to process the upgrade using the receipt." = "Makbuzla yükseltme işlemi gerçekleştirilemedi.";
@@ -614,3 +611,6 @@
 "App Icon" = "Uygulama Simgesi";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "Ağ Seçenekleri özelliği, Windscribe uygulamasının farklı ağlarda nasıl davrandığını kontrol etmenizi sağlar.";
+
+"Complete CAPTCHA" = "CAPTCHA'yı Tamamla";
+"Slide the left image into the hole on the right" = "Soldaki görüntüyü sağdaki boşluğa kaydırın";

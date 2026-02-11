@@ -529,9 +529,6 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "What’s the matter?" = "Quel est le problème ?";
 "Tell us what’s wrong" = "Dites-nous ce qui ne va pas";
 
-"Complete Puzzle \n to continue" = "Terminez le puzzle \n pour continuer";
-"Drag left puzzle piece into place" = "Faites glisser la pièce du puzzle à sa place";
-
 "Invalid session auth or api parameters provided." = "Authentification de session ou paramètres d'API non valides.";
 "Invalid session auth." = "Authentification de session non valide.";
 "Failed to process the upgrade using the receipt." = "Impossible de traiter la mise à niveau avec le reçu.";
@@ -596,3 +593,6 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "App Icon" = "Icône de l’application";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "La fonctionnalité Options réseau vous permet de contrôler le comportement de l’application Windscribe sur différents réseaux.";
+
+"Complete CAPTCHA" = "Terminer le CAPTCHA";
+"Slide the left image into the hole on the right" = "Faites glisser l’image de gauche dans le trou à droite";

@@ -561,9 +561,6 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "What’s the matter?" = "বিষয়টি কী?";
 "Tell us what’s wrong" = "আমাদের বলুন কী সমস্যা হচ্ছে";
 
-"Complete Puzzle \n to continue" = "চালিয়ে যেতে \n ধাঁধা সম্পূর্ণ করুন";
-"Drag left puzzle piece into place" = "ধাঁধার অংশটি সঠিক জায়গায় সরান";
-
 "Invalid session auth or api parameters provided." = "অবৈধ সেশন প্রমাণীকরণ বা API প্যারামিটার প্রদান করা হয়েছে।";
 "Invalid session auth." = "অবৈধ সেশন প্রমাণীকরণ।";
 "Failed to process the upgrade using the receipt." = "রসিদ ব্যবহার করে আপগ্রেড প্রক্রিয়া ব্যর্থ হয়েছে।";
@@ -628,3 +625,6 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "App Icon" = "অ্যাপ আইকন";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "নেটওয়ার্ক অপশন ফিচারটি আপনাকে বিভিন্ন নেটওয়ার্কে Windscribe অ্যাপের আচরণ নিয়ন্ত্রণ করতে দেয়।";
+
+"Complete CAPTCHA" = "CAPTCHA সম্পন্ন করুন";
+"Slide the left image into the hole on the right" = "বাম দিকের ছবিটি ডান দিকের গর্তে সরান";

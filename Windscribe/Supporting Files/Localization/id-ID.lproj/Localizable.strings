@@ -529,9 +529,6 @@
 "What’s the matter?" = "Ada apa?";
 "Tell us what’s wrong" = "Beri tahu kami apa yang salah";
 
-"Complete Puzzle \n to continue" = "Selesaikan teka-teki \n untuk melanjutkan";
-"Drag left puzzle piece into place" = "Geser potongan teka-teki ke tempatnya";
-
 "Invalid session auth or api parameters provided." = "Autentikasi sesi atau parameter API tidak valid.";
 "Invalid session auth." = "Autentikasi sesi tidak valid.";
 "Failed to process the upgrade using the receipt." = "Gagal memproses peningkatan menggunakan struk.";
@@ -596,3 +593,6 @@
 "App Icon" = "Ikon Aplikasi";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "Fitur Opsi Jaringan memungkinkan Anda mengontrol bagaimana aplikasi Windscribe berperilaku di jaringan yang berbeda.";
+
+"Complete CAPTCHA" = "Selesaikan CAPTCHA";
+"Slide the left image into the hole on the right" = "Geser gambar di kiri ke dalam lubang di kanan";
