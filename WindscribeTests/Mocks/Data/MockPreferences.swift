@@ -453,6 +453,10 @@ class MockPreferences: Preferences {
         return Just(nil).eraseToAnyPublisher()
     }
 
+    func getForceDisconnectSync() -> Bool {
+        return false
+    }
+
     func observeFavouriteIds() -> AnyPublisher<[String], Never> {
         return favouriteIdsSubject.eraseToAnyPublisher()
     }

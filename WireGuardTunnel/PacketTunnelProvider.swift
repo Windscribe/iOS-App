@@ -9,14 +9,14 @@
 import Foundation
 import Network
 import NetworkExtension
-import os.log
+import os
 import Swinject
 import WireGuardKit
 #if canImport(WidgetKit)
     import WidgetKit
 #endif
 
-class PacketTunnelProvider: NEPacketTunnelProvider {
+class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     // MARK: dependencies
 
     private lazy var container: Container = {
@@ -26,9 +26,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private lazy var wgCrendentials: WgCredentials = container.resolve(WgCredentials.self)!
 
-    private lazy var wgConfigRepository: WireguardConfigRepository = container.resolve(WireguardConfigRepository.self)!
+    private lazy var apiUtil: APIUtilService = container.resolve(APIUtilService.self)!
 
-    private lazy var apiCallManager: WireguardAPIManager = container.resolve(WireguardAPIManager.self)!
+    private lazy var api: WSNetServerAPI = container.resolve(WSNetServerAPI.self)!
 
     private lazy var preferences: Preferences = container.resolve(Preferences.self)!
 
@@ -37,19 +37,19 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         return logger
     }()
 
+    private let consoleLogger = Logger(subsystem: "Windscribe-tunnel", category: "com.windscribe.vpn")
     private lazy var dnsSettingsManager: DNSSettingsManagerType = container.resolve(DNSSettingsManagerType.self)!
 
     // MARK: Properties
 
-    private var runningHealthCheck = false
     private var internetAvailable = true
+    private var controlPlane: ControlPlane?
 
     private lazy var adapter: WireGuardAdapter = .init(with: self) { _, message in
         if message.contains("Retrying handshake") {
-            self.onStaleConnection()
+            self.controlPlane?.checkTunnelHealth()
         }
     }
-
 
     override init() {
         super.init()
@@ -61,47 +61,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if LocalizationBridge.needsSetup {
             let localizationService = LocalizationServiceImpl(logger: logger)
             LocalizationBridge.setup(localizationService)
-        }
-    }
-
-    private func stopTunnel(completionHandler: @escaping (Error?) -> Void) {
-        let error = NSError(domain: "com.windscribe", code: 50)
-        NETunnelProviderManager.loadAllFromPreferences { tunnels, loadError in
-            var wgTunnel: NETunnelProviderManager?
-
-            if let loadError = loadError {
-                self.logger.logE("PacketTunnelProvider", "Error loading tunnel preferences: \(loadError.localizedDescription)", flushImmediately: true)
-                completionHandler(loadError)
-                return
-            }
-
-            if let tunnels = tunnels {
-                // Filter out any nil objects to prevent crashes
-                let validTunnels = tunnels.compactMap { $0 }
-                self.logger.logI("PacketTunnelProvider", "Loaded \(validTunnels.count) valid tunnels out of \(tunnels.count) total")
-
-                for tunnel in validTunnels {
-                    if tunnel.protocolConfiguration?.username == "WireGuard" {
-                        wgTunnel = tunnel
-                        break
-                    }
-                }
-            } else {
-                self.logger.logI("PacketTunnelProvider", "No tunnels loaded from preferences")
-            }
-
-            if let wgTunnel = wgTunnel {
-                wgTunnel.isOnDemandEnabled = false
-                wgTunnel.saveToPreferences() { saveError in
-                    if let saveError = saveError {
-                        self.logger.logE("PacketTunnelProvider", "Error saving tunnel preferences: \(saveError.localizedDescription)", flushImmediately: true)
-                    }
-                    completionHandler(error)
-                }
-            } else {
-                self.logger.logI("PacketTunnelProvider", "No WireGuard tunnel found", flushImmediately: true)
-                completionHandler(error)
-            }
         }
     }
 
@@ -152,6 +111,18 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             guard let adapterError = adapterError else {
                 let interfaceName = self.adapter.interfaceName ?? "unknown"
                 self.logger.logI("PacketTunnelProvider", "Tunnel interface is \(interfaceName)", flushImmediately: true)
+
+                // Initialize control plane when tunnel is ready
+                self.controlPlane = ControlPlane(
+                    apiUtil: self.apiUtil,
+                    api: self.api,
+                    preferences: self.preferences,
+                    credentialsManager: self,
+                    tunnelProvider: self,
+                    consoleLogger: self.consoleLogger
+                )
+
+
                 #if os(iOS)
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
                 #endif
@@ -231,7 +202,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             logger.logI("PacketTunnelProvider", "Device wake up.", flushImmediately: true)
             UserDefaults.standard.set(currentTime, forKey: "lastWakeTime")
             preferences.saveWireguardWakeupTime(value: currentTime)
-            onStaleConnection()
+            controlPlane?.checkTunnelHealth()
         }
     }
 
@@ -239,51 +210,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         completionHandler()
     }
 
-    /// Called when handshake fails. Checks user status and authentication.
-    func onStaleConnection() {
-        if !runningHealthCheck && !preferences.isCustomConfigSelected() {
-            logger.logI("PacketTunnelProvider", "Running health connection health check.", flushImmediately: true)
-            DispatchQueue.global().async {
-                self.runningHealthCheck = true
-                self.getSession()
-            }
-        }
-    }
+    // MARK: - TunnelCredentialsManaging
 
-    /// Check user session for change.
-    func getSession() {
-        // Ensure LocalizationBridge is initialized before potential error handling
-        ensureLocalizationInitialized()
-        logger.logI("PacketTunnelProvider", "Requesting user session update.", flushImmediately: true)
-        Task { [weak self] in
-            guard let self = self else { return }
-            do {
-                let data = try await apiCallManager.getSession()
-                if data.status != 1 {
-                    disconnect()
-                }
-                self.runningHealthCheck = false
-            } catch {
-                self.runningHealthCheck = false
-                if let wsError = error as? Errors {
-                    self.logger.logE("PacketTunnelProvider", "Get Session failed with Windscribe error - \(wsError.unlocalizedDescription).", flushImmediately: true)
-                    switch wsError {
-                    case Errors.sessionIsInvalid:
-                      disconnect()
-                    case let Errors.apiError(e):
-                        self.logger.logE("PacketTunnelProvider", "Get Session failed with API error - \(e.errorMessage ?? "").", flushImmediately: true)
-                    default:
-                        self.runningHealthCheck = false
-                    }
-                }
-            }
-        }
-    }
-
-    private func disconnect() {
-        self.wgCrendentials.delete()
-        self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
-        self.logger.logE("PacketTunnelProvider", "Get Session failed with API because session is invalid - code 50.", flushImmediately: true)
+    func deleteCredentials(error: NSError) {
+        wgCrendentials.delete()
+        logger.logI("PacketTunnelProvider", "Deleted WireGuard credentials.", flushImmediately: true)
+        cancelTunnelWithError(error)
     }
 }
 

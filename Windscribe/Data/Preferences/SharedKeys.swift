@@ -82,6 +82,8 @@ enum SharedKeys {
     static let nickNameKey = "nick-name"
     static let serverCredentialsTypeKey = "server-credentials"
     static let forceDisconnect = "force-disconnect"
+    static let disconnectReason = "disconnect-reason"
+    static let userStatus = "user-status"
     static let widgetConnectionRequested = "widget-connection-requested"
 
     // IP Address - Issue #911

@@ -22,6 +22,7 @@ protocol SessionManager {
     func login(auth: String) async throws
     func updateFrom(session: Session) async
     func keepSessionUpdated()
+    var sessionFetchInProgress: Bool { get set }
 }
 
 class SessionManagerImpl: SessionManager {
@@ -255,6 +256,7 @@ class SessionManagerImpl: SessionManager {
             try? await serverRepo.updatedServers()
             _ = try? await portmapRepo.getUpdatedPortMap()
         }
+        preferences.saveUserStatus(value: userSessionRepository.sessionModel?.isUserPro ?? false)
     }
 
     func logoutUser() {

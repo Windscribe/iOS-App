@@ -9,11 +9,12 @@
 import NetworkExtension
 import OpenVPNAdapter
 import Swinject
+import os
 #if canImport(WidgetKit)
     import WidgetKit
 #endif
 
-class PacketTunnelProvider: NEPacketTunnelProvider {
+class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     // MARK: Dependencies
 
     private lazy var container: Container = {
@@ -28,6 +29,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private lazy var dnsSettingsManager: DNSSettingsManagerType = container.resolve(DNSSettingsManagerType.self)!
 
+    private lazy var apiUtil: APIUtilService = container.resolve(APIUtilService.self)!
+
+    private lazy var api: WSNetServerAPI = container.resolve(WSNetServerAPI.self)!
+
+    private let consoleLogger = Logger(subsystem: "Windscribe-tunnel", category: "com.windscribe.vpn")
+
     // MARK: Properties
 
     private var startHandler: ((Error?) -> Void)?
@@ -36,6 +43,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private var configuration: OpenVPNConfiguration!
     private var UDPSession: NWUDPSession!
     private var TCPConnection: NWTCPConnection!
+    private var controlPlane: ControlPlane?
     private lazy var vpnAdapter: OpenVPNAdapter = {
         let adapter = OpenVPNAdapter()
         adapter.delegate = self
@@ -43,12 +51,25 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }()
 
     override func startTunnel(options _: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+        // Check if tunnel was force disconnected (e.g., due to session invalidation)
+        // This mirrors WireGuard's credential check but uses a flag since OpenVPN
+        // credentials are embedded in tunnel config and can't be deleted
+        if preferences.getDisconnectReason() != DisconnectReason.unknown {
+            consoleLogger.debug("Tunnel start blocked - force disconnect flag is set")
+            logger.logI("PacketTunnelProvider", "Blocked tunnel start - force disconnect active", flushImmediately: true)
+            let error = NSError(domain: "com.windscribe", code: 50, userInfo: [
+                NSLocalizedDescriptionKey: "Session is invalid"
+            ])
+            completionHandler(error)
+        }
+
         guard
             let protocolConfiguration = protocolConfiguration as? NETunnelProviderProtocol,
             let providerConfiguration = protocolConfiguration.providerConfiguration
         else {
             fatalError()
         }
+        consoleLogger.debug("Starting tunnel.")
         logger.logI("PacketTunnelProvider", "Started OpenVPNAdapter.", flushImmediately: true)
         let properties: OpenVPNConfigurationEvaluation!
         guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else { return }
@@ -105,11 +126,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()
         }
-        if reason == .authenticationCanceled {
-            preferences.saveForceDisconnect(value: true)
-        }
+
         logger.logI("PacketTunnelProvider", "Reason for disconnect \(reason.rawValue)", flushImmediately: true)
         vpnAdapter.disconnect()
+        completionHandler()
     }
 
     /// Initialises and starts proxy if required
@@ -172,7 +192,28 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         completionHandler()
     }
 
-    override func wake() {}
+    override func wake() {
+        consoleLogger.debug("Device wake up.")
+        controlPlane?.checkTunnelHealth()
+    }
+
+    // MARK: - TunnelCredentialsManaging
+
+    func deleteCredentials(error: NSError) {
+        // OpenVPN credentials are passed per-connection, not stored persistently
+        // Log the action for visibility
+        consoleLogger.debug("Credentials invalidated for OpenVPN tunnel.")
+        logger.logI("PacketTunnelProvider", "OpenVPN credentials invalidated.", flushImmediately: true)
+        if vpnReachability.isTracking {
+            vpnReachability.stopTracking()
+        }
+        if let startHandler = startHandler {
+            startHandler(error)
+            self.startHandler = nil
+        } else {
+            cancelTunnelWithError(error)
+        }
+    }
 }
 
 extension PacketTunnelProvider: OpenVPNAdapterDelegate {
@@ -201,6 +242,12 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             guard let startHandler = startHandler else { return }
             startHandler(nil)
             self.startHandler = nil
+                // Initialize control plane when tunnel is ready
+                if controlPlane == nil {
+                    controlPlane = ControlPlane(apiUtil: apiUtil,api: api,preferences: preferences,credentialsManager:self, tunnelProvider: self, consoleLogger: self.consoleLogger)
+                }
+                consoleLogger.debug("Tunnel connected, checking tunnel health.")
+                controlPlane?.checkTunnelHealth()
         case .disconnected:
             guard let stopHandler = stopHandler else { return }
             if vpnReachability.isTracking {
@@ -210,6 +257,8 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             self.stopHandler = nil
         case .reconnecting:
             reasserting = true
+            consoleLogger.debug("Reconnecting, checking tunnel health.")
+            controlPlane?.checkTunnelHealth()
         default:
             break
         }
