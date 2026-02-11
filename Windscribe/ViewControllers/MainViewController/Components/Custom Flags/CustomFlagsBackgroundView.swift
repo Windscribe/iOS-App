@@ -68,7 +68,18 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
             .sink { [weak self] state in
                 guard let self = self else { return }
                 self.isConnected = state == .connected
-                self.updateBackgroundImage(isConnected: self.isConnected)
+                // Only update visual styling (color), NOT fetch new location data
+                if let currentInfo = self.backgroundInfoSubject.value {
+                    let updatedInfo = BackgroundInfoModel(
+                        image: currentInfo.image,
+                        isConnected: self.isConnected,
+                        animates: false,
+                        color: self.isConnected ? .connectedBlue : .nightBlue,
+                        aspectRatioType: currentInfo.aspectRatioType,
+                        effect: currentInfo.effect
+                    )
+                    self.backgroundInfoSubject.send(updatedInfo)
+                }
             }
             .store(in: &cancellables)
     }
