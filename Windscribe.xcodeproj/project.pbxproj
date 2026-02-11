@@ -689,7 +689,6 @@
 		C52B60442F2CFA3A009B6279 /* amz-wg-windscribe.patch in Resources */ = {isa = PBXBuildFile; fileRef = C52B60432F2CFA3A009B6279 /* amz-wg-windscribe.patch */; };
 		C52B60462F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		C52B60472F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
-		C52B60482F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		C52B60492F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		C52B604A2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		C52B604B2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
@@ -7337,7 +7336,6 @@
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
 				F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */,
-				C52B60482F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
 				F45E4FA22F105C8900C9F0DB /* FavouriteListViewModelTests.swift in Sources */,
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,

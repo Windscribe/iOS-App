@@ -22,6 +22,11 @@ struct UnblockWgResponse: Decodable {
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
         params = try data.decodeIfPresent([UnblockWgParams].self, forKey: .params) ?? []
     }
+
+    // Memberwise initializer for testing
+    init(params: [UnblockWgParams]) {
+        self.params = params
+    }
 }
 
 struct UnblockWgParams: Codable {

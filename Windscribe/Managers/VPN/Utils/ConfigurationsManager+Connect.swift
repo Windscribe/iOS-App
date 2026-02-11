@@ -305,7 +305,7 @@ extension ConfigurationsManager {
         WSNet.instance().setIsConnectedToVpnState(true)
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
-                try await ipRepository.getIp()
+                try await ipRepository.getIp(usePingTest: true)
                 logger.logI("ConfigurationsManager", "Connectivity test successful")
                 return true
             } catch {

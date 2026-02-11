@@ -18,7 +18,7 @@ enum IPState: Equatable {
 protocol IPRepository {
     var ipState: CurrentValueSubject<IPState?, Never> { get }
     var currentIp: CurrentValueSubject<String?, Never> { get }
-    func getIp() async throws
+    func getIp(usePingTest: Bool) async throws
 }
 
 class IPRepositoryImpl: IPRepository {
@@ -84,20 +84,21 @@ class IPRepositoryImpl: IPRepository {
     }
 
     /// Fetches the current IP from the API and updates Preferences
-    func getIp() async throws {
+    /// - Parameter usePingTest: If true, uses pingTest endpoint for connectivity check. If false (default), uses /myip endpoint.
+    func getIp(usePingTest: Bool = false) async throws {
         let lastState = ipState.value
 
         // Only show .updating if we don't have a valid IP already
         // This keeps the cached IP visible while fetching fresh data
         if case .available(_)? = lastState {
             // Keep showing cached IP while updating in background
-            logger.logI("IPRepositoryImpl", "Fetching fresh IP while keeping cached IP visible")
+            logger.logI("IPRepositoryImpl", "Fetching fresh IP while keeping cached IP visible (usePingTest: \(usePingTest))")
         } else {
             updateState(.updating)
         }
 
         do {
-            let ipAddress = try await apiManager.getIp()
+            let ipAddress = try await apiManager.getIp(usePingTest: usePingTest)
             if !wasObserved {
                 await MainActor.run {
                     load()
@@ -105,7 +106,7 @@ class IPRepositoryImpl: IPRepository {
                 }
             }
 
-            logger.logI("IPRepositoryImpl", "IP was refreshed with: \(ipAddress)")
+            logger.logI("IPRepositoryImpl", "IP was refreshed with: \(ipAddress) (usePingTest: \(usePingTest))")
             currentIp.send(ipAddress)
             preferences.saveCurrentIpAddress(ip: ipAddress)
         } catch {

@@ -9,12 +9,9 @@
 import Foundation
 import RealmSwift
 
-/// DEPRECATED - Issue #911: This model is deprecated and will be removed in a future version (v3.10.0+).
-/// IP addresses are now stored as String in Preferences instead of Realm.
-/// This class is kept temporarily for migration support from older app versions.
-/// - Old approach: Stored IP in Realm using /myip API (can be blocked in restrictive regions)
-/// - New approach: Store IP as String in Preferences using pingTest() API (more reliable)
-@available(*, deprecated, message: "Use Preferences.getCurrentIpAddress() instead. Will be removed in v3.10.0+")
+/// Model for /myip API response.
+/// Used to deserialize the API response and extract the user's IP address.
+/// The IP is then stored as a String in Preferences (not as a Realm object).
 @objcMembers class MyIP: Object, Decodable {
     dynamic var id: String = "MyIp"
     dynamic var userIp: String = ""

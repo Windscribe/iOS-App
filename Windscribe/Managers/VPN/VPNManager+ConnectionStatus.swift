@@ -67,13 +67,10 @@ extension VPNManagerImpl {
         }
         switch ipState {
         case .available(_):
-            // - The /myip API endpoint that provided isOurIp flag can be blocked in restrictive
-            //   regions where censorship is active (China, Iran, etc.)
-            // - We now use wsNetServerAPI.pingTest(5000) which is more reliable but only
-            //   returns the IP string without metadata
+            // Refresh IP after VPN connection from on-demand mode to display current IP
             logger.logI("VPNManager", "Refreshing IP after VPN connection from on-demand mode.")
             Task { @MainActor in
-                try? await ipRepository.getIp()
+                try? await ipRepository.getIp(usePingTest: false)
             }
         default: ()
         }

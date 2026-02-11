@@ -121,7 +121,7 @@ class LivecycleManager: LivecycleManagerType {
                 var lastError: Error?
                 for attempt in 1...3 {
                     do {
-                        try await ipRepository.getIp()
+                        try await ipRepository.getIp(usePingTest: true)
                         testTask = nil
                         self.logger.logI("LivecycleManager", "Internet connectivity validated for \(connectivity.getNetwork())!")
                         return
