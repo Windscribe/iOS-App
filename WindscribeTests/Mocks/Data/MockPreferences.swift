@@ -37,6 +37,7 @@ class MockPreferences: Preferences {
     var mockIgnorePinIP: Bool?
     var mockWireGuardHashedCIDR: [String]?
     var mockLastSelectedPinnedIp: String?
+    var mockUnblockWgParams: Windscribe.UnblockWgParams?
 
     // IP Address - Issue #911
     var mockCurrentIpAddress: String? {
@@ -668,7 +669,7 @@ class MockPreferences: Preferences {
 
     func saveCurrentIpAddress(ip: String?) {
         mockCurrentIpAddress = ip
-        currentIpAddressSubject.send(ip)
+        // Note: currentIpAddressSubject.send() happens in mockCurrentIpAddress's didSet
     }
 
     func getCurrentIpAddress() -> String? {
@@ -693,5 +694,13 @@ class MockPreferences: Preferences {
 
     func getLastSelectedPinnedIp() -> String? {
         return mockLastSelectedPinnedIp
+    }
+
+    func saveUnblockWgParams(param: Windscribe.UnblockWgParams) {
+        mockUnblockWgParams = param
+    }
+
+    func getUnblockWgParams() -> Windscribe.UnblockWgParams? {
+        return mockUnblockWgParams
     }
 }

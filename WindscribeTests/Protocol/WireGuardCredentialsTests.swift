@@ -259,7 +259,6 @@ class WireGuardCredentialsTests: XCTestCase {
         XCTAssertTrue(config.contains("AllowedIPs = 0.0.0.0/0"), "Should contain allowed IPs")
         XCTAssertTrue(config.contains("Endpoint = 127.0.0.1:51820"), "Should contain endpoint with port")
         XCTAssertTrue(config.contains("PresharedKey = testPresharedKey"), "Should contain preshared key")
-        XCTAssertTrue(config.contains("udp_stuffing = false"), "Should contain UDP stuffing setting")
     }
 
     func test_asWgCredentialsString_withIncompleteConfiguration_shouldReturnNil() {

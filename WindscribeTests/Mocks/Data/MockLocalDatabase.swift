@@ -58,6 +58,10 @@ class MockLocalDatabase: LocalDatabase {
     // MyIP tracking (for migration tests)
     var mockMyIP: Windscribe.MyIP?
 
+    // UnblockWgParams tracking
+    var mockUnblockWgParams: [Windscribe.UnblockWgParamsObj] = []
+    var saveUnblockWgParamsCalled = false
+
     func migrate() {}
 
     func getMobilePlans() -> [Windscribe.MobilePlan]? {
@@ -237,6 +241,8 @@ class MockLocalDatabase: LocalDatabase {
         lastSavedNetwork = nil
         mockWifiNetworks = []
         mockPingData = []
+        mockUnblockWgParams = []
+        saveUnblockWgParamsCalled = false
     }
 
     func saveNetwork(wifiNetwork: Windscribe.WifiNetwork) {
@@ -281,5 +287,14 @@ class MockLocalDatabase: LocalDatabase {
 
     func getCustomConfigs() -> [Windscribe.CustomConfig] {
         []
+    }
+
+    func saveUnblockWgParams(params: [Windscribe.UnblockWgParamsObj]) {
+        saveUnblockWgParamsCalled = true
+        mockUnblockWgParams = params
+    }
+
+    func getUnblockWgParams() -> [Windscribe.UnblockWgParamsObj] {
+        return mockUnblockWgParams
     }
 }

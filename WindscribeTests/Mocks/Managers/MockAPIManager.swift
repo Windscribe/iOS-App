@@ -47,6 +47,10 @@ class MockAPIManager: APIManager {
 
     var mockServerList: ServerList?
 
+    // UnblockWg tracking
+    var wgUnlockParamsCalled = false
+    var mockUnblockWgResponse: Windscribe.UnblockWgResponse?
+
     func reset() {
         shouldThrowError = false
         customError = Errors.notDefined
@@ -69,6 +73,11 @@ class MockAPIManager: APIManager {
         pinIpCalled = false
         lastPinnedIp = nil
         mockServerList = nil
+        getIpCalled = false
+        getIpUsedPingTest = nil
+        mockIpAddress = nil
+        wgUnlockParamsCalled = false
+        mockUnblockWgResponse = nil
     }
 
     // MARK: - ShakeForData Methods (Implemented)
@@ -319,12 +328,20 @@ class MockAPIManager: APIManager {
         return noticeList
     }
 
-    func getIp() async throws -> String {
+    var getIpCalled = false
+    var getIpUsedPingTest: Bool?
+    var mockIpAddress: String?
+
+    func getIp(usePingTest: Bool = false) async throws -> String {
+        getIpCalled = true
+        getIpUsedPingTest = usePingTest
+
         if shouldThrowError {
             throw customError
         }
-        // Return a mock IP address for testing
-        return "192.168.1.100"
+
+        // Return mock IP if provided, otherwise default
+        return mockIpAddress ?? "192.168.1.100"
     }
 
     func sendDebugLog(username: String, log: String) async throws -> APIMessage {
@@ -356,5 +373,20 @@ class MockAPIManager: APIManager {
         }
 
         return true
+    }
+
+    func wgUnlockParams() async throws -> Windscribe.UnblockWgResponse {
+        wgUnlockParamsCalled = true
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let response = mockUnblockWgResponse else {
+            // Return default empty response
+            return Windscribe.UnblockWgResponse(params: [])
+        }
+
+        return response
     }
 }
