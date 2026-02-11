@@ -529,9 +529,6 @@
 "What’s the matter?" = "¿Qué pasa?";
 "Tell us what’s wrong" = "Cuéntanos qué está mal";
 
-"Complete Puzzle \n to continue" = "Completa el rompecabezas \n para continuar";
-"Drag left puzzle piece into place" = "Desliza la pieza del rompecabezas en su lugar";
-
 "Invalid session auth or api parameters provided." = "Se proporcionaron credenciales de sesión o parámetros de API no válidos.";
 "Invalid session auth." = "Autenticación de sesión no válida.";
 "Failed to process the upgrade using the receipt." = "No se pudo procesar la mejora con el recibo.";
@@ -597,3 +594,6 @@
 "App Icon" = "Icono de la aplicación";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "La función Opciones de red te permite controlar cómo se comporta la app de Windscribe en diferentes redes.";
+
+"Complete CAPTCHA" = "Completa el CAPTCHA";
+"Slide the left image into the hole on the right" = "Desliza la imagen de la izquierda hasta el hueco de la derecha";

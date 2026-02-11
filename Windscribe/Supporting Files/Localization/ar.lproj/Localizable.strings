@@ -527,9 +527,6 @@
 "What’s the matter?" = "ما الأمر؟";
 "Tell us what’s wrong" = "أخبرنا ما المشكلة";
 
-"Complete Puzzle \n to continue" = "أكمل اللغز \n للمتابعة";
-"Drag left puzzle piece into place" = "حرّك قطعة اللغز إلى مكانها الصحيح";
-
 "Invalid session auth or api parameters provided." = "تم تقديم مصادقة جلسة أو معلمات API غير صالحة.";
 "Invalid session auth." = "مصادقة الجلسة غير صالحة.";
 "Failed to process the upgrade using the receipt." = "فشل في معالجة الترقية باستخدام الإيصال.";
@@ -594,3 +591,6 @@
 "App Icon" = "أيقونة التطبيق";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "تتيح لك ميزة خيارات الشبكة التحكم في كيفية تصرف تطبيق Windscribe على الشبكات المختلفة.";
+
+"Complete CAPTCHA" = "أكمل اختبار CAPTCHA";
+"Slide the left image into the hole on the right" = "اسحب الصورة الموجودة على اليسار إلى الفتحة الموجودة على اليمين";

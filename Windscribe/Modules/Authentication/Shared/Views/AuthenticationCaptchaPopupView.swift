@@ -94,12 +94,12 @@ struct AuthenticationCaptchaPopupView: View {
 
             VStack(spacing: 24) {
                 VStack(spacing: 8) {
-                    Text("Complete CAPTCHA")
+                    Text(TextsAsset.Authentication.captchaDescription)
                         .font(.medium(.headline))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.from(.titleColor, isDarkMode))
 
-                    Text("Slide the left image into the hole on the right")
+                    Text(TextsAsset.Authentication.captchaSliderDescription)
                         .font(.regular(.subheadline))
                         .multilineTextAlignment(.center)
                         .foregroundColor(.from(.infoColor, isDarkMode))

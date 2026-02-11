@@ -531,9 +531,6 @@
 "What’s the matter?" = "В чём дело?";
 "Tell us what’s wrong" = "Расскажите, что не так";
 
-"Complete Puzzle \n to continue" = "Завершите головоломку \n чтобы продолжить";
-"Drag left puzzle piece into place" = "Перетащите часть головоломки на место";
-
 "Invalid session auth or api parameters provided." = "Предоставлены неверные параметры аутентификации сессии или API.";
 "Invalid session auth." = "Неверная аутентификация сессии.";
 "Failed to process the upgrade using the receipt." = "Не удалось обработать обновление по чеку.";
@@ -615,3 +612,6 @@
 "App Icon" = "Значок приложения";
 
 "The Network Options feature lets you control how the Windscribe app behaves on different networks." = "Функция «Параметры сети» позволяет управлять поведением приложения Windscribe в разных сетях.";
+
+"Complete CAPTCHA" = "Завершите CAPTCHA";
+"Slide the left image into the hole on the right" = "Перетащите изображение слева в отверстие справа";
