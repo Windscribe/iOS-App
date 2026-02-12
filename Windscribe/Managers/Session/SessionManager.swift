@@ -18,11 +18,14 @@ protocol SessionManager {
     func listenForSessionChanges()
     func logoutUser()
     func updateSession() async throws
+    func updateSession(force: Bool) async throws
     func updateSession(_ appleID: String) async throws
+    func updateSession(_ appleID: String, force: Bool) async throws
     func login(auth: String) async throws
     func updateFrom(session: Session) async
     func keepSessionUpdated()
     var sessionFetchInProgress: Bool { get set }
+    var updateSessionTask: Task<Void, Error>? { get set }
 }
 
 class SessionManagerImpl: SessionManager {
@@ -50,6 +53,7 @@ class SessionManagerImpl: SessionManager {
     private let ssoManager: SSOManaging
 
     private var cancellables = Set<AnyCancellable>()
+    var updateSessionTask: Task<Void, Error>?
 
     init (wgCredentials: WgCredentials,
           logger: FileLogger,
@@ -103,6 +107,12 @@ class SessionManagerImpl: SessionManager {
     }
 
     func keepSessionUpdated() {
+        // Don't create new task if update already in progress
+        guard !sessionFetchInProgress else {
+            logger.logD("SessionManager", "Session update already in progress, skipping keepSessionUpdated.")
+            return
+        }
+
         Task { @MainActor in
             guard preferences.getSessionAuthHash() != nil else { return }
 
@@ -128,26 +138,60 @@ class SessionManagerImpl: SessionManager {
     }
 
     func updateSession() async throws {
-        try await updateSessionUsing(token: nil)
+        try await updateSessionUsing(token: nil, force: false)
+    }
+
+    func updateSession(force: Bool) async throws {
+        try await updateSessionUsing(token: nil, force: force)
+        if force {
+            try? await serverRepo.updatedServers()
+            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
+            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
+        }
     }
 
     func updateSession(_ appleID: String) async throws {
-        try await updateSessionUsing(token: appleID)
+        try await updateSessionUsing(token: appleID, force: false)
+    }
+
+    func updateSession(_ appleID: String, force: Bool) async throws {
+        try await updateSessionUsing(token: appleID, force: force)
     }
 
     @MainActor
-    private func updateSessionUsing(token: String?, retryCount: Int = 0) async throws {
-        // Check if update is already in progress
-        guard !sessionFetchInProgress else { return }
-
-        sessionFetchInProgress = true
-        let session = try await apiManager.getSession(token)
-        logger.logI("SessionManager", "Session updated for \(session.username)")
-
-        Task {
-            await updateFrom(session: session)
+    private func updateSessionUsing(token: String?, force: Bool = false) async throws {
+        // If force update, cancel any pending task
+        if force {
+            logger.logI("SessionManager", "Force update requested - canceling pending tasks")
+            updateSessionTask?.cancel()
+            updateSessionTask = nil
+            sessionFetchInProgress = false
         }
-        sessionFetchInProgress = false
+
+        // If update already in progress and not forced, ignore this call
+        if sessionFetchInProgress && !force {
+            logger.logD("SessionManager", "Session update already in progress, ignoring duplicate call. Timer will handle next update.")
+            return
+        }
+
+        // Create new task
+        let task = Task<Void, Error> { @MainActor in
+            self.sessionFetchInProgress = true
+
+            defer {
+                self.sessionFetchInProgress = false
+                self.updateSessionTask = nil
+            }
+
+            let session = try await self.apiManager.getSession(token)
+            self.logger.logI("SessionManager", "Session updated for \(session.username)")
+
+            await self.updateFrom(session: session)
+        }
+
+        updateSessionTask = task
+
+        try await task.value
     }
 
     func login(auth: String) async throws {

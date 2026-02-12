@@ -103,10 +103,16 @@ class LivecycleManager: LivecycleManagerType {
             await vpnManager.resetProfiles()
             preferences.saveDisconnectReason(reason: DisconnectReason.unknown)
             try? await Task.sleep(nanoseconds: 500_000_000)
-            // Find better way update force update session as exisiting updates could lock.
-            sessionManager.sessionFetchInProgress = false
+            // Force update session after VPN recovery - cancels any pending updates
+            do {
+                try await sessionManager.updateSession(force: true)
+                logger.logI("LivecycleManager", "Force session update completed after VPN recovery.")
+            } catch {
+                logger.logE("LivecycleManager", "Force session update failed: \(error)")
+            }
+        } else {
+            sessionManager.keepSessionUpdated()
         }
-        sessionManager.keepSessionUpdated()
     }
 
     /// App foreground.
@@ -131,8 +137,10 @@ class LivecycleManager: LivecycleManagerType {
                 }
                 credentialsRepo.updateServerConfig()
             }
+            await MainActor.run {
+                handleShortcutLaunch()
+            }
         }
-        handleShortcutLaunch()
     }
 
     private func testConnectivity() -> Task<Void, Error> {

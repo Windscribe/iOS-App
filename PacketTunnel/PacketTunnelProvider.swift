@@ -207,12 +207,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()
         }
-        if let startHandler = startHandler {
-            startHandler(error)
-            self.startHandler = nil
-        } else {
-            cancelTunnelWithError(error)
-        }
+        cancelTunnelWithError(error)
     }
 }
 

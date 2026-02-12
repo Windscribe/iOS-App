@@ -57,10 +57,11 @@ class UserDataRepositoryImpl: UserDataRepository {
         async let serverConfig = credentialsRepository.getUpdatedServerConfig()
         async let portMap = portMapRepository.getUpdatedPortMap()
         async let notifications = notificationsRepository.getUpdatedNotifications()
+        async let staticIP = try? staticIpRepository.updateStaticServers()
 
         // Wait for critical calls to complete (ignore errors from ikev2 and openVPN)
-        _ = await (ikev2, openVPN)
-        _ = try await (serverConfig, portMap, staticIP, notifications)
+        _ = await (ikev2, openVPN, staticIP)
+        _ = try await (serverConfig, portMap, notifications)
 
         logger.logI("UserDataRepository", "All data loaded successfully.")
 
