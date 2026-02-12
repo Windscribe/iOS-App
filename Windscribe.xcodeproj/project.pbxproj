@@ -922,7 +922,6 @@
 		C5E4C8012F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
 		C5E4C8022F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
 		C5E4C8032F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
-		C5E4C8042F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
 		C5E4C8052F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
 		C5E4C8072F3A6C19000FC3EE /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
 		C5E4C8082F3A6C19000FC3EE /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -1093,6 +1092,8 @@
 		F469F0E02D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469F0DA2D7BA7F1004DC6AB /* KeychainConstants.swift */; };
 		F469F0EA2D7F8FFC004DC6AB /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469F0E92D7F8FFC004DC6AB /* View+Extension.swift */; };
 		F469F0EB2D7F8FFC004DC6AB /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469F0E92D7F8FFC004DC6AB /* View+Extension.swift */; };
+		F46AD1652F3E4443002A2DF4 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; };
+		F46AD1662F3E4443002A2DF4 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */; };
 		F46C28692D4C0A020073207E /* PlanUpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */; };
 		F46C286C2D4C0AB30073207E /* PlanUpgradeDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C286B2D4C0AB30073207E /* PlanUpgradeDataModels.swift */; };
@@ -1393,6 +1394,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C5D9F9502D8491EC00249C90 /* RealmSwift in Embed Frameworks */,
+				F46AD1662F3E4443002A2DF4 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2252,7 +2254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4A36AAC2E132A9600CCFFAA /* SnapKit in Frameworks */,
-				C5E4C8042F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
+				F46AD1652F3E4443002A2DF4 /* WSNet.xcframework in Frameworks */,
 				1E0A6DAC2D7882630075B8F5 /* RealmSwift in Frameworks */,
 				1E0A6E142D79ED160075B8F5 /* Swinject in Frameworks */,
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
