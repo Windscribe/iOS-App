@@ -44,6 +44,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     private var internetAvailable = true
     private var controlPlane: ControlPlane?
+    private var isCancelling = false
 
     private lazy var adapter: WireGuardAdapter = .init(with: self) { _, message in
         if message.contains("Retrying handshake") {
@@ -213,6 +214,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     // MARK: - TunnelCredentialsManaging
 
     func deleteCredentials(error: NSError) {
+        guard !isCancelling else {
+            logger.logI("PacketTunnelProvider", "Already cancelling tunnel, ignoring duplicate call.", flushImmediately: true)
+            return
+        }
+        isCancelling = true
         wgCrendentials.delete()
         logger.logI("PacketTunnelProvider", "Deleted WireGuard credentials.", flushImmediately: true)
         cancelTunnelWithError(error)

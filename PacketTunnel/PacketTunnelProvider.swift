@@ -44,6 +44,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     private var UDPSession: NWUDPSession!
     private var TCPConnection: NWTCPConnection!
     private var controlPlane: ControlPlane?
+    private var isCancelling = false
     private lazy var vpnAdapter: OpenVPNAdapter = {
         let adapter = OpenVPNAdapter()
         adapter.delegate = self
@@ -200,6 +201,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     // MARK: - TunnelCredentialsManaging
 
     func deleteCredentials(error: NSError) {
+        guard !isCancelling else {
+            logger.logI("PacketTunnelProvider", "Already cancelling tunnel, ignoring duplicate call.", flushImmediately: true)
+            return
+        }
+        isCancelling = true
         // OpenVPN credentials are passed per-connection, not stored persistently
         // Log the action for visibility
         consoleLogger.debug("Credentials invalidated for OpenVPN tunnel.")
@@ -271,6 +277,11 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             startHandler(error)
             self.startHandler = nil
         } else {
+            guard !isCancelling else {
+                logger.logI("PacketTunnelProvider", "Already cancelling tunnel, ignoring error handler call.", flushImmediately: true)
+                return
+            }
+            isCancelling = true
             cancelTunnelWithError(error)
         }
     }
