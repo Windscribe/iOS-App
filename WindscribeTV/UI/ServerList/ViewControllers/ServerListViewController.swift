@@ -154,6 +154,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             .store(in: &cancellables)
 
         viewModel.staticIPs
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
                 staticIPModels = self.viewModel.getStaticIp()
@@ -161,6 +162,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
             .store(in: &cancellables)
         viewModel.favouriteGroups
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure(let error) = completion {
                     self?.logger.logE("ServerListViewController", "Realm server list notification error \(error.localizedDescription)")
