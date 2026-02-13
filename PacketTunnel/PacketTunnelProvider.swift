@@ -55,14 +55,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         // Check if tunnel was force disconnected (e.g., due to session invalidation)
         // This mirrors WireGuard's credential check but uses a flag since OpenVPN
         // credentials are embedded in tunnel config and can't be deleted
-        if preferences.getDisconnectReason() != DisconnectReason.unknown {
-            consoleLogger.debug("Tunnel start blocked - force disconnect flag is set")
-            logger.logI("PacketTunnelProvider", "Blocked tunnel start - force disconnect active", flushImmediately: true)
-            let error = NSError(domain: "com.windscribe", code: 50, userInfo: [
-                NSLocalizedDescriptionKey: "Session is invalid"
-            ])
-            completionHandler(error)
-        }
 
         guard
             let protocolConfiguration = protocolConfiguration as? NETunnelProviderProtocol,
@@ -190,25 +182,35 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     }
 
     override func sleep(completionHandler: @escaping () -> Void) {
+        logger.logI("PacketTunnelProvider", "Device going to sleep.", flushImmediately: true)
         completionHandler()
     }
 
     override func wake() {
-        consoleLogger.debug("Device wake up.")
-        controlPlane?.checkTunnelHealth()
+        let currentTime = Date().timeIntervalSince1970
+        let lastWakeTime = preferences.getWireguardWakeupTime()
+        logger.logI("PacketTunnelProvider", "Device wakeup.", flushImmediately: true)
+        if lastWakeTime == 0 || currentTime - lastWakeTime >= 600 {
+            UserDefaults.standard.set(currentTime, forKey: "lastWakeTime")
+            preferences.saveWireguardWakeupTime(value: currentTime)
+            if preferences.getDisconnectReason() == DisconnectReason.unknown {
+                controlPlane?.checkTunnelHealth()
+            }
+        }
     }
 
     // MARK: - TunnelCredentialsManaging
 
+    @MainActor
     func deleteCredentials(error: NSError) {
         guard !isCancelling else {
             logger.logI("PacketTunnelProvider", "Already cancelling tunnel, ignoring duplicate call.", flushImmediately: true)
             return
         }
+        controlPlane = nil
         isCancelling = true
         // OpenVPN credentials are passed per-connection, not stored persistently
         // Log the action for visibility
-        consoleLogger.debug("Credentials invalidated for OpenVPN tunnel.")
         logger.logI("PacketTunnelProvider", "OpenVPN credentials invalidated.", flushImmediately: true)
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()
@@ -245,10 +247,22 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             self.startHandler = nil
                 // Initialize control plane when tunnel is ready
                 if controlPlane == nil {
-                    controlPlane = ControlPlane(apiUtil: apiUtil,api: api,preferences: preferences,credentialsManager:self, tunnelProvider: self, consoleLogger: self.consoleLogger)
+                    controlPlane = ControlPlane(
+                        apiUtil: apiUtil,
+                        api: api,
+                        preferences: preferences,
+                        consoleLogger: self.consoleLogger,
+                        onTunnelShouldStop: { @MainActor [weak self] reason, error in
+                            guard let self = self else { return }
+                            self.logger.logI("PacketTunnelProvider", "Control plane requested tunnel stop for reason: \(reason.rawValue)", flushImmediately: true)
+                            self.deleteCredentials(error: error)
+                        }
+                    )
                 }
-                consoleLogger.debug("Tunnel connected, checking tunnel health.")
-                controlPlane?.checkTunnelHealth()
+                if preferences.getDisconnectReason() == DisconnectReason.unknown {
+                    consoleLogger.debug("Tunnel connected, checking tunnel health.")
+                    controlPlane?.checkTunnelHealth()
+                }
         case .disconnected:
             guard let stopHandler = stopHandler else { return }
             if vpnReachability.isTracking {
@@ -258,8 +272,10 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             self.stopHandler = nil
         case .reconnecting:
             reasserting = true
-            consoleLogger.debug("Reconnecting, checking tunnel health.")
-            controlPlane?.checkTunnelHealth()
+            if preferences.getDisconnectReason() == DisconnectReason.unknown {
+                logger.logI("PacketTunnelProvider", "Reconnecting, checking tunnel health.", flushImmediately: true)
+                controlPlane?.checkTunnelHealth()
+            }
         default:
             break
         }
@@ -277,12 +293,15 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             startHandler(error)
             self.startHandler = nil
         } else {
-            guard !isCancelling else {
-                logger.logI("PacketTunnelProvider", "Already cancelling tunnel, ignoring error handler call.", flushImmediately: true)
-                return
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                guard !self.isCancelling else {
+                    self.logger.logI("PacketTunnelProvider", "Already cancelling tunnel, ignoring error handler call.", flushImmediately: true)
+                    return
+                }
+                self.isCancelling = true
+                self.cancelTunnelWithError(error)
             }
-            isCancelling = true
-            cancelTunnelWithError(error)
         }
     }
 }

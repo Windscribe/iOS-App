@@ -18,32 +18,44 @@ class ControlPlane {
     private let apiUtil: APIUtilService
     private let api: WSNetServerAPI
     private let preferences: Preferences
+    private let onTunnelShouldStop: @MainActor (DisconnectReason, NSError) -> Void
 
     private var runningHealthCheck = false
-    private weak var credentialsManager: TunnelCredentialsManaging?
-    private weak var tunnelProvider: NEPacketTunnelProvider?
+    private var lastHealthCheckTime: TimeInterval = 0
 
     init(
         apiUtil: APIUtilService,
         api: WSNetServerAPI,
         preferences: Preferences,
-        credentialsManager: TunnelCredentialsManaging?,
-        tunnelProvider: NEPacketTunnelProvider,
-        consoleLogger: Logger
+        consoleLogger: Logger,
+        onTunnelShouldStop: @escaping @MainActor (DisconnectReason, NSError) -> Void
     ) {
         self.apiUtil = apiUtil
         self.api = api
         self.preferences = preferences
-        self.credentialsManager = credentialsManager
-        self.tunnelProvider = tunnelProvider
         self.consoleLogger = consoleLogger
+        self.onTunnelShouldStop = onTunnelShouldStop
     }
 
     /// Called from packet tunnel provider when tunnel health is not good (handshake fails, wake up, etc.)
     func checkTunnelHealth() {
         // Skip health check for custom configs
         guard !preferences.isCustomConfigSelected() else { return }
-        guard !runningHealthCheck else { return }
+        guard !runningHealthCheck else {
+            consoleLogger.debug("Health check already running, skipping.")
+            return
+        }
+
+        // Throttle health checks to once every 10 seconds
+        let currentTime = Date().timeIntervalSince1970
+        if lastHealthCheckTime > 0 && currentTime - lastHealthCheckTime < 10 {
+            consoleLogger.debug("Health check throttled (last check was \(Int(currentTime - self.lastHealthCheckTime))s ago), skipping.")
+            return
+        }
+
+        // Set flag BEFORE dispatching to prevent race condition
+        runningHealthCheck = true
+        lastHealthCheckTime = currentTime
 
         DispatchQueue.global().async { [weak self] in
             self?.performHealthCheck()
@@ -52,7 +64,6 @@ class ControlPlane {
 
     /// Performs the actual health check by fetching session
     private func performHealthCheck() {
-        runningHealthCheck = true
         consoleLogger.debug("Requesting user session update.")
 
         Task { [weak self] in
@@ -104,7 +115,9 @@ class ControlPlane {
         let error = NSError(domain: "com.windscribe", code: 50, userInfo: [
             NSLocalizedDescriptionKey: reason
         ])
-        credentialsManager?.deleteCredentials(error: error)
+
+        // Call the callback on main thread to handle tunnel cancellation
+        await onTunnelShouldStop(reason, error)
     }
 
     func getSession() async throws -> Session {

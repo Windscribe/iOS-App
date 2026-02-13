@@ -9,6 +9,7 @@
 import Foundation
 
 /// Protocol for tunnel providers to manage their credentials
+/// Methods must be called on the main thread as they interact with NetworkExtension APIs
 public protocol TunnelCredentialsManaging: AnyObject {
-    func deleteCredentials(error: NSError)
+    @MainActor func deleteCredentials(error: NSError)
 }
