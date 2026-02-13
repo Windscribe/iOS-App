@@ -48,7 +48,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     private lazy var adapter: WireGuardAdapter = .init(with: self) { _, message in
         if message.contains("Retrying handshake") {
-            self.controlPlane?.checkTunnelHealth()
+            if self.preferences.getDisconnectReason() == DisconnectReason.unknown {
+                self.controlPlane?.checkTunnelHealth()
+            }
         }
     }
 
@@ -118,9 +120,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                     apiUtil: self.apiUtil,
                     api: self.api,
                     preferences: self.preferences,
-                    credentialsManager: self,
-                    tunnelProvider: self,
-                    consoleLogger: self.consoleLogger
+                    consoleLogger: self.consoleLogger,
+                    onTunnelShouldStop: { @MainActor [weak self] reason, error in
+                        guard let self = self else { return }
+                        self.logger.logI("PacketTunnelProvider", "Control plane requested tunnel stop for reason: \(reason.rawValue)", flushImmediately: true)
+                        self.deleteCredentials(error: error)
+                    }
                 )
 
 
@@ -155,8 +160,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                 completionHandler(PacketTunnelProviderError.couldNotStartBackend)
 
             case .invalidState:
-                // Must never happen
-                fatalError()
+                completionHandler(PacketTunnelProviderError.couldNotStartBackend)
             }
         }
     }
@@ -203,21 +207,26 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
             logger.logI("PacketTunnelProvider", "Device wake up.", flushImmediately: true)
             UserDefaults.standard.set(currentTime, forKey: "lastWakeTime")
             preferences.saveWireguardWakeupTime(value: currentTime)
-            controlPlane?.checkTunnelHealth()
+            if preferences.getDisconnectReason() == DisconnectReason.unknown {
+                controlPlane?.checkTunnelHealth()
+            }
         }
     }
 
     override func sleep(completionHandler: @escaping () -> Void) {
+        logger.logI("PacketTunnelProvider", "Device going to sleep.", flushImmediately: true)
         completionHandler()
     }
 
     // MARK: - TunnelCredentialsManaging
 
+    @MainActor
     func deleteCredentials(error: NSError) {
         guard !isCancelling else {
             logger.logI("PacketTunnelProvider", "Already cancelling tunnel, ignoring duplicate call.", flushImmediately: true)
             return
         }
+        controlPlane = nil
         isCancelling = true
         wgCrendentials.delete()
         logger.logI("PacketTunnelProvider", "Deleted WireGuard credentials.", flushImmediately: true)
