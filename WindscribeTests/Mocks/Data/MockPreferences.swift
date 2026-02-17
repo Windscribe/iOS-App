@@ -38,6 +38,8 @@ class MockPreferences: Preferences {
     var mockWireGuardHashedCIDR: [String]?
     var mockLastSelectedPinnedIp: String?
     var mockUnblockWgParams: Windscribe.UnblockWgParams?
+    var disconnectReason: Windscribe.DisconnectReason?
+    var userStatus: Bool?
 
     // IP Address - Issue #911
     var mockCurrentIpAddress: String? {
@@ -706,5 +708,21 @@ class MockPreferences: Preferences {
 
     func getUnblockWgParams() -> Windscribe.UnblockWgParams? {
         return mockUnblockWgParams
+    }
+
+    func saveDisconnectReason(reason: Windscribe.DisconnectReason) {
+        disconnectReason = reason
+    }
+
+    func getDisconnectReason() -> Windscribe.DisconnectReason {
+        disconnectReason ?? .unknown
+    }
+
+    func saveUserStatus(value: Bool) {
+        userStatus = value
+    }
+
+    func getUserStatus() -> Bool {
+        userStatus ?? false
     }
 }
