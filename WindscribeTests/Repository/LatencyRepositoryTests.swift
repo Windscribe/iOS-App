@@ -511,6 +511,10 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     private func createMockServerModelsWithRegions() -> [ServerModel] {
+        var countryCode = "US"
+        if #available(iOS 16, tvOS 17, *) {
+            countryCode = Locale.current.region?.identifier ?? countryCode
+        }
         let node = NodeModel(
             ip1: "1.2.3.4",
             ip2: "1.2.3.5",
@@ -523,7 +527,7 @@ class LatencyRepositoryTests: XCTestCase {
 
         let group = GroupModel(
             id: 1,
-            countryCode: "US",
+            countryCode: countryCode,
             city: "New York",
             nick: "Big Apple",
             premiumOnly: false,
@@ -543,7 +547,7 @@ class LatencyRepositoryTests: XCTestCase {
         let server = ServerModel(
             id: 1,
             name: "US East",
-            countryCode: "US",
+            countryCode: countryCode,
             status: true,
             premiumOnly: false,
             dnsHostname: "us.windscribe.com",
@@ -558,11 +562,16 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     private func createMockStaticIPs() -> [StaticIPModel] {
+        var countryCode = "US"
+        if #available(iOS 16, tvOS 17, *) {
+            countryCode = Locale.current.region?.identifier ?? countryCode
+        }
+
         let staticIP = StaticIP()
         staticIP.id = 1
         staticIP.staticIP = "10.10.10.10"
-        staticIP.name = "US Static"
-        staticIP.countryCode = "US"
+        staticIP.name = "\(countryCode) Static"
+        staticIP.countryCode = countryCode
         staticIP.cityName = "New York"
         staticIP.deviceName = "My Device"
         staticIP.connectIP = "static-us.windscribe.com"

@@ -11,6 +11,10 @@ import Foundation
 
 class MockSessionManager: SessionManager {
 
+    var sessionFetchInProgress: Bool = false
+
+    var updateSessionTask: Task<Void, any Error>?
+
     var session: Session?
 
     // Track method calls
@@ -63,12 +67,20 @@ class MockSessionManager: SessionManager {
         keepSessionUpdatedCalled = true
     }
 
-    func updateSession() async throws {
+    func updateSession(force: Bool) async throws {
         updateSessionCalled = true
     }
 
+    func updateSession(_ appleID: String, force: Bool) async throws {
+        try await updateSession(force: force)
+    }
+
+    func updateSession() async throws {
+        try await updateSession(force: false)
+    }
+
     func updateSession(_ appleID: String) async throws {
-        try await updateSession()
+        try await updateSession(force: false)
     }
 
     func login(auth: String) async throws {
