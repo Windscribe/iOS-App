@@ -228,9 +228,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         }
         controlPlane = nil
         isCancelling = true
-        wgCrendentials.delete()
         logger.logI("PacketTunnelProvider", "Deleted WireGuard credentials.", flushImmediately: true)
-        cancelTunnelWithError(error)
     }
 }
 

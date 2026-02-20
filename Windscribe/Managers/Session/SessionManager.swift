@@ -145,8 +145,6 @@ class SessionManagerImpl: SessionManager {
         try await updateSessionUsing(token: nil, force: force)
         if force {
             try? await serverRepo.updatedServers()
-            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
-            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
         }
     }
 
