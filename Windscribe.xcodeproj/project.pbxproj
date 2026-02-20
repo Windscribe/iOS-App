@@ -7700,7 +7700,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		592EDC082C3C688500351D44 /* Development */ = {
+		592EDC082C3C688500351D44 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -7793,7 +7793,7 @@
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 17.5;
 			};
-			name = Development;
+			name = Debug;
 		};
 		592EDC092C3C688500351D44 /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -7976,7 +7976,7 @@
 			};
 			name = Production;
 		};
-		AF018DF921B0866800B225FF /* Development */ = {
+		AF018DF921B0866800B225FF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
@@ -8049,7 +8049,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TVOS_DEPLOYMENT_TARGET = 17.5;
 			};
-			name = Development;
+			name = Debug;
 		};
 		AF018DFA21B0866800B225FF /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8121,7 +8121,7 @@
 			};
 			name = Staging;
 		};
-		AF018DFC21B0866800B225FF /* Development */ = {
+		AF018DFC21B0866800B225FF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
@@ -8159,13 +8159,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEVELOPMENT;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "Windscribe/Supporting Files/Windscribe-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Development;
+			name = Debug;
 		};
 		AF018DFD21B0866800B225FF /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8218,7 +8218,7 @@
 			};
 			name = Staging;
 		};
-		AF018E1E21B1AA2D00B225FF /* Development */ = {
+		AF018E1E21B1AA2D00B225FF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -8248,7 +8248,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Windscribe.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Windscribe";
 			};
-			name = Development;
+			name = Debug;
 		};
 		AF018E1F21B1AA2D00B225FF /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8281,7 +8281,7 @@
 			};
 			name = Staging;
 		};
-		AF0B9EF2226E0C4500DCD026 /* Development */ = {
+		AF0B9EF2226E0C4500DCD026 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PacketTunnel/PacketTunnel.entitlements;
@@ -8320,7 +8320,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
 			};
-			name = Development;
+			name = Debug;
 		};
 		AF0B9EF3226E0C4500DCD026 /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8358,7 +8358,7 @@
 			};
 			name = Staging;
 		};
-		AF20AE2D22DE4DB000375489 /* Development */ = {
+		AF20AE2D22DE4DB000375489 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = SiriIntents/SiriIntents.entitlements;
@@ -8385,7 +8385,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Development;
+			name = Debug;
 		};
 		AF20AE2E22DE4DB000375489 /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8416,7 +8416,7 @@
 			};
 			name = Staging;
 		};
-		AF619C4B24AA348900BB331C /* Development */ = {
+		AF619C4B24AA348900BB331C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = WireGuardTunnel/WireGuardTunnel.entitlements;
@@ -8453,7 +8453,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2,3";
 				TVOS_DEPLOYMENT_TARGET = 17.5;
 			};
-			name = Development;
+			name = Debug;
 		};
 		AF619C4C24AA348900BB331C /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8493,7 +8493,7 @@
 			};
 			name = Staging;
 		};
-		AF619D8D24AA3CCF00BB331C /* Development */ = {
+		AF619D8D24AA3CCF00BB331C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
@@ -8507,7 +8507,7 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Development;
+			name = Debug;
 		};
 		AF619D8E24AA3CCF00BB331C /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8522,7 +8522,7 @@
 			};
 			name = Staging;
 		};
-		AFDF935A255EB941002B1FBA /* Development */ = {
+		AFDF935A255EB941002B1FBA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -8553,7 +8553,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Development;
+			name = Debug;
 		};
 		AFDF935B255EB941002B1FBA /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8587,7 +8587,7 @@
 			};
 			name = Staging;
 		};
-		C5A344592C4DF32B001EBB5C /* Development */ = {
+		C5A344592C4DF32B001EBB5C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */;
 			buildSettings = {
@@ -8603,7 +8603,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 			};
-			name = Development;
+			name = Debug;
 		};
 		C5A3445A2C4DF32B001EBB5C /* Staging */ = {
 			isa = XCBuildConfiguration;
@@ -8934,7 +8934,7 @@
 		592EDC072C3C688500351D44 /* Build configuration list for PBXNativeTarget "WindscribeTV" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				592EDC082C3C688500351D44 /* Development */,
+				592EDC082C3C688500351D44 /* Debug */,
 				592EDC092C3C688500351D44 /* Staging */,
 				592EDC0A2C3C688500351D44 /* Production */,
 			);
@@ -8944,7 +8944,7 @@
 		AF018DE421B0866600B225FF /* Build configuration list for PBXProject "Windscribe" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AF018DF921B0866800B225FF /* Development */,
+				AF018DF921B0866800B225FF /* Debug */,
 				AF018DFA21B0866800B225FF /* Staging */,
 				E9858619273E176A00868B2C /* Production */,
 			);
@@ -8954,7 +8954,7 @@
 		AF018DFB21B0866800B225FF /* Build configuration list for PBXNativeTarget "Windscribe" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AF018DFC21B0866800B225FF /* Development */,
+				AF018DFC21B0866800B225FF /* Debug */,
 				AF018DFD21B0866800B225FF /* Staging */,
 				E985861A273E176A00868B2C /* Production */,
 			);
@@ -8964,7 +8964,7 @@
 		AF018E1D21B1AA2D00B225FF /* Build configuration list for PBXNativeTarget "WindscribeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AF018E1E21B1AA2D00B225FF /* Development */,
+				AF018E1E21B1AA2D00B225FF /* Debug */,
 				AF018E1F21B1AA2D00B225FF /* Staging */,
 				E985861B273E176A00868B2C /* Production */,
 			);
@@ -8974,7 +8974,7 @@
 		AF0B9EF4226E0C4500DCD026 /* Build configuration list for PBXNativeTarget "PacketTunnel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AF0B9EF2226E0C4500DCD026 /* Development */,
+				AF0B9EF2226E0C4500DCD026 /* Debug */,
 				AF0B9EF3226E0C4500DCD026 /* Staging */,
 				E985861C273E176A00868B2C /* Production */,
 			);
@@ -8984,7 +8984,7 @@
 		AF20AE2C22DE4DB000375489 /* Build configuration list for PBXNativeTarget "SiriIntents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AF20AE2D22DE4DB000375489 /* Development */,
+				AF20AE2D22DE4DB000375489 /* Debug */,
 				AF20AE2E22DE4DB000375489 /* Staging */,
 				E985861D273E176A00868B2C /* Production */,
 			);
@@ -8994,7 +8994,7 @@
 		AF619C4D24AA348900BB331C /* Build configuration list for PBXNativeTarget "WireGuardTunnel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AF619C4B24AA348900BB331C /* Development */,
+				AF619C4B24AA348900BB331C /* Debug */,
 				AF619C4C24AA348900BB331C /* Staging */,
 				E985861E273E176A00868B2C /* Production */,
 			);
@@ -9004,7 +9004,7 @@
 		AF619D8C24AA3CCF00BB331C /* Build configuration list for PBXLegacyTarget "WireGuardGoBridgeiOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AF619D8D24AA3CCF00BB331C /* Development */,
+				AF619D8D24AA3CCF00BB331C /* Debug */,
 				AF619D8E24AA3CCF00BB331C /* Staging */,
 				E985861F273E176A00868B2C /* Production */,
 			);
@@ -9014,7 +9014,7 @@
 		AFDF9359255EB941002B1FBA /* Build configuration list for PBXNativeTarget "HomeWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AFDF935A255EB941002B1FBA /* Development */,
+				AFDF935A255EB941002B1FBA /* Debug */,
 				AFDF935B255EB941002B1FBA /* Staging */,
 				E9858620273E176A00868B2C /* Production */,
 			);
@@ -9024,7 +9024,7 @@
 		C5A344582C4DF32B001EBB5C /* Build configuration list for PBXLegacyTarget "WireGuardGoBridgeappletvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C5A344592C4DF32B001EBB5C /* Development */,
+				C5A344592C4DF32B001EBB5C /* Debug */,
 				C5A3445A2C4DF32B001EBB5C /* Staging */,
 				C5A3445B2C4DF32B001EBB5C /* Production */,
 			);

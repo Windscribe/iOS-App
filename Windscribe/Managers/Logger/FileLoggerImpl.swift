@@ -138,7 +138,7 @@ class FileLoggerImpl: FileLogger {
     }
 
     func logD(_ tag: String, _ message: String, flushImmediately: Bool) {
-        #if DEVELOPMENT
+        #if DEBUG
         addToBatch(.debug, tag: tag, message: message, flushImmediately: flushImmediately)
         #endif
     }
@@ -186,7 +186,7 @@ class FileLoggerImpl: FileLogger {
     private func addLogBufferModelToBatch(_ logEntry: LogBufferModel, flushImmediately: Bool) {
         batchQueue.async { [weak self] in
             guard let self = self else { return }
-#if DEVELOPMENT
+#if DEBUG
             // Print inside async block to avoid concurrent access to DateFormatter
             print(logEntry.toOrderedJSONString())
 #endif
