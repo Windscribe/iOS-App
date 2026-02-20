@@ -73,6 +73,9 @@ struct NetworkSecurityView: View {
         .navigationTitle(TextsAsset.NetworkSecurity.title)
         .navigationBarTitleDisplayMode(.inline)
         .overlay(routeLink)
+        .sheet(item: $viewModel.safariURL) { url in
+            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
+        }
     }
 
     @ViewBuilder

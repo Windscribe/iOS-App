@@ -34,12 +34,7 @@ enum NetworkOptionsEntryType: MenuEntryHeaderType, Hashable {
         default: ""
         }
     }
-    var message: String? {
-        switch self {
-        case .autoSecure: TextsAsset.Connection.autoSecureNewDescription
-        default: nil
-        }
-    }
+    var message: String? { nil }
     var action: MenuEntryActionType? {
         switch self {
         case let .autoSecure(isSelected):
@@ -58,6 +53,8 @@ enum NetworkOptionsEntryType: MenuEntryHeaderType, Hashable {
 
     func makeSecondaryEntries() -> [NetworkOptionsSecondaryType] {
         switch self {
+        case .autoSecure:
+            return [.autoSecureInfo]
         case let .networkList(_, otherNetworks):
             return otherNetworks.enumerated().map { .network(info: $1, index: $0) }
         default:
@@ -67,15 +64,19 @@ enum NetworkOptionsEntryType: MenuEntryHeaderType, Hashable {
 }
 
 enum NetworkOptionsSecondaryType: MenuEntryItemType, Hashable {
-    case network(info: NetworkEntryInfo, index: Int)
+    case autoSecureInfo,
+         network(info: NetworkEntryInfo, index: Int)
     var id: Int {
         switch self {
+        case .autoSecureInfo:
+            return 10
         case let .network(_ , index):
-            return index * 10
+            return index * 20
         }
     }
     var title: String {
         switch self {
+        case .autoSecureInfo: ""
         case .network(let info, _): info.name
         }
     }
@@ -84,6 +85,8 @@ enum NetworkOptionsSecondaryType: MenuEntryItemType, Hashable {
 
     var action: MenuEntryActionType? {
         switch self {
+        case .autoSecureInfo:
+                .infoLink(message: TextsAsset.Connection.autoSecureNewDescription, parentId: id)
         case let .network(info, _):
                 .button(title: info.isSecured ? TextsAsset.NetworkSecurity.trusted : TextsAsset.NetworkSecurity.untrusted,
                         parentId: id)

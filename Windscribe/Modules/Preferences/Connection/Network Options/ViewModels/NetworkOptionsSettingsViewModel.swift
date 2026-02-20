@@ -26,6 +26,7 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
     @Published var currentNetworkEntry: NetworkOptionsEntryType?
     @Published var networkListEntry: NetworkOptionsEntryType?
     @Published var router: ConnectionsNavigationRouter
+    @Published var safariURL: URL?
 
     private var networks: [WifiNetworkModel] = []
     private var currentNetwork: AppNetwork?
@@ -134,6 +135,8 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
         case .autoSecure:
             if case .toggle(let isSelected, _) = action {
                 preferences.saveAutoSecureNewNetworks(autoSecure: isSelected)
+            } else if case .infoLink(let parentId) = action {
+                openLink(.networkOptions)
             }
         case let .network(info):
             navigateToNetwork(named: info.name)
@@ -149,6 +152,10 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
                 }
             }
         }
+    }
+
+    private func openLink(_ linkType: FeatureExplainer) {
+        safariURL = URL(string: linkType.getUrl())
     }
 
     private func navigateToNetwork(named: String) {
