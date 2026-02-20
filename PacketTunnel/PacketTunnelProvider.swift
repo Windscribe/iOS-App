@@ -209,13 +209,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         }
         controlPlane = nil
         isCancelling = true
-        // OpenVPN credentials are passed per-connection, not stored persistently
-        // Log the action for visibility
-        logger.logI("PacketTunnelProvider", "OpenVPN credentials invalidated.", flushImmediately: true)
-        if vpnReachability.isTracking {
-            vpnReachability.stopTracking()
-        }
-        cancelTunnelWithError(error)
     }
 }
 
