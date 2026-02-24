@@ -12,7 +12,6 @@ import Combine
 @testable import Windscribe
 
 class MockLocalDatabase: LocalDatabase {
-
     let sessionSubject = CurrentValueSubject<Windscribe.Session?, Never>(nil)
     let oldSessionSubject = CurrentValueSubject<Windscribe.OldSession?, Never>(nil)
     let notificationsSubject = CurrentValueSubject<[Windscribe.Notice], Never>([])

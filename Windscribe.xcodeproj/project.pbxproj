@@ -241,6 +241,11 @@
 		1EDB2CA22F190C0D00A5966D /* MigrationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */; };
 		1EDB2CA32F190C0D00A5966D /* MigrationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */; };
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
+		1EE62A842F3CB2E6008CC7AA /* VPNStateRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE62A832F3CB2D9008CC7AA /* VPNStateRepositoryTests.swift */; };
+		1EE62A862F3CBBC6008CC7AA /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		1EE62A872F3CBC14008CC7AA /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		1EE62A882F3CBC14008CC7AA /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
+		1EE62A892F3CBC2D008CC7AA /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
 		1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */; };
@@ -698,10 +703,6 @@
 		C52B60442F2CFA3A009B6279 /* amz-wg-windscribe.patch in Resources */ = {isa = PBXBuildFile; fileRef = C52B60432F2CFA3A009B6279 /* amz-wg-windscribe.patch */; };
 		C52B60462F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		C52B60472F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
-		C52B60492F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
-		C52B604A2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
-		C52B604B2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
-		C52B604C2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
 		C52DA5102B63820F00E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
 		C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
@@ -1584,6 +1585,7 @@
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
 		1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationRepository.swift; sourceTree = "<group>"; };
+		1EE62A832F3CB2D9008CC7AA /* VPNStateRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNStateRepositoryTests.swift; sourceTree = "<group>"; };
 		1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepository.swift; sourceTree = "<group>"; };
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
 		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
@@ -4620,6 +4622,7 @@
 		F437917D2E95A1E500ED6141 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1EE62A832F3CB2D9008CC7AA /* VPNStateRepositoryTests.swift */,
 				1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */,
 				1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */,
 				F4B4C1F52EA16A6C0024D824 /* StaticIpRepositoryTests.swift */,
@@ -7371,6 +7374,7 @@
 				F4B4C1ED2EA023AE0024D824 /* NotificationRepositoryTests.swift in Sources */,
 				F4B4C1E72E9982AA0024D824 /* SampleDataPorts.swift in Sources */,
 				1EF7CEFE2EA65136001AE14E /* MockVPNStateRepository.swift in Sources */,
+				1EE62A842F3CB2E6008CC7AA /* VPNStateRepositoryTests.swift in Sources */,
 				F43791822E95A21900ED6141 /* MockSessionManager.swift in Sources */,
 				F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */,
 				F465A6372D5D37EF00579B5F /* AppReviewManagerTests.swift in Sources */,
@@ -7428,7 +7432,7 @@
 				F470F5622E81C00F00F8400D /* PreferencesImpl+LookAndFeel.swift in Sources */,
 				C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */,
 				E9425B9A27437024008B8786 /* APIParameters.swift in Sources */,
-				C52B60492F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
+				1EE62A892F3CBC2D008CC7AA /* UnblockWgResponse.swift in Sources */,
 				AFBD019622946B3400FED749 /* String+Extension.swift in Sources */,
 				F4433D0C2E8312470012EA34 /* KeychainManager.swift in Sources */,
 				C5DEF9F32C52ED9A00696D06 /* String+ArrayConversion.swift in Sources */,
@@ -7484,7 +7488,7 @@
 				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C59FF1A52CBB8DC70072EF70 /* String+Extension.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
-				C52B604A2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
+				1EE62A872F3CBC14008CC7AA /* UnblockWgResponse.swift in Sources */,
 				F485CBBD2D4D52D40063EA3A /* Then.swift in Sources */,
 				C59FF1A82CBB8E0D0072EF70 /* WSNetErrors.swift in Sources */,
 				C59FF1A22CBB8B090072EF70 /* IntentCommon.swift in Sources */,
@@ -7558,7 +7562,7 @@
 				C5D0E40A29BB8BE70091FB14 /* String+ArrayConversion.swift in Sources */,
 				1E7A19572C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C5D0E3ED29BB85280091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,
-				C52B604B2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
+				1EE62A862F3CBBC6008CC7AA /* UnblockWgResponse.swift in Sources */,
 				F470F54F2E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
 				C5D0E40C29BB8BE70091FB14 /* Keychain.swift in Sources */,
 				5993396F2B4CD28300EC615D /* DefaultValues.swift in Sources */,
@@ -7594,7 +7598,7 @@
 				F45F19122D7A1D540028D0C2 /* UIConstants+ImagesAsset.swift in Sources */,
 				F485CBBC2D4D52D40063EA3A /* Then.swift in Sources */,
 				1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */,
-				C52B604C2F2D0A97009B6279 /* UnblockWgResponse.swift in Sources */,
+				1EE62A882F3CBC14008CC7AA /* UnblockWgResponse.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
 				F4433D032E830A340012EA34 /* KeychainManager.swift in Sources */,

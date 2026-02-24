@@ -111,14 +111,6 @@ class VPNStateRepositoryImpl: VPNStateRepository {
         vpnInfo.value?.status == .disconnected
     }
 
-    func isDisconnecting() -> Bool {
-        vpnInfo.value?.status == .disconnecting
-    }
-
-    func isInvalid() -> Bool {
-        vpnInfo.value?.status == .invalid
-    }
-
     func connectionStatus() -> NEVPNStatus {
         return vpnInfo.value?.status ?? NEVPNStatus.disconnected
     }
