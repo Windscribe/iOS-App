@@ -45,7 +45,7 @@ protocol MainViewModel {
 
     var promoPayload: CurrentValueSubject<PushNotificationPayload?, Never> { get }
     func loadServerList()
-    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void)
+    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel]) -> [ServerSection]
     func loadPortMap()
     func loadStaticIPLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
     func loadCustomConfigLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)

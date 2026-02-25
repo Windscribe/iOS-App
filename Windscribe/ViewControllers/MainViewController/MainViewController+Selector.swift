@@ -193,7 +193,10 @@ extension MainViewController {
         viewModel.locationOrderBy
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.loadServerTable(servers: self?.viewModel.serverList.value ?? [])
+                guard let self = self else { return }
+                self.expandedSections = self.serverListTableView.expandedSections
+                self.serverListTableView.collapseExpandedSections()
+                self.loadServerTable(servers: self.viewModel.serverList.value)
             }
             .store(in: &cancellables)
 
@@ -209,16 +212,12 @@ extension MainViewController {
     }
 
     func loadServerTable(servers: [ServerModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
-        viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: servers) { [weak self] serverSectionsOrdered in
-            guard let self = self else { return }
+        let serverSectionsOrdered = viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: servers)
+        self.serverListTableViewDataSource.updateServerList(with: serverSectionsOrdered, shouldColapse: shouldColapse)
 
-            self.serverListTableViewDataSource.updateServerList(with: serverSectionsOrdered)
-            self.serverListTableViewDataSource.updateShouldColapse(with: shouldColapse)
-
-            reloadFinishedCompletion?()
-            DispatchQueue.main.async { [weak self] in
-                self?.reloadServerList()
-            }
+        reloadFinishedCompletion?()
+        DispatchQueue.main.async { [weak self] in
+            self?.reloadServerList()
         }
     }
 
