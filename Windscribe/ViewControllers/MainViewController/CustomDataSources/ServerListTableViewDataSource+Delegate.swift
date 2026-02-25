@@ -27,7 +27,7 @@ protocol ServerListTableViewDataSource: WExpyTableViewDataSource,
 
     var serverSections: [ServerSection] { get }
 
-    func updateServerList(with serverSections: [ServerSection])
+    func updateServerList(with serverSections: [ServerSection], shouldColapse: Bool)
     func updateShouldColapse(with value: Bool)
     func setBestLocationVisibility(to visible: Bool)
 }
@@ -144,19 +144,28 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         delegate?.reloadServerListTableView()
     }
 
-    func updateServerList(with serverSections: [ServerSection]) {
-        self.serverSections = serverSections.map {
-            if shouldColapse, let server = $0.server {
-                return ServerSection(server: server, collapsed: true)
+    func updateServerList(with serverSections: [ServerSection], shouldColapse: Bool) {
+        self.shouldColapse = shouldColapse
+        self.serverSections = serverSections.map { serverSection in
+            if let server = serverSection.server {
+                if shouldColapse {
+                    return ServerSection(server: server, collapsed: true)
+                } else {
+                    if let oldSection = serverSections.first(where: { $0.server?.id == server.id }) {
+                        if !oldSection.collapsed {
+                            print("ahah \(oldSection.server?.name)")
+                        }
+                        return ServerSection(server: server, collapsed: oldSection.collapsed)
+                    }
+                }
             }
-            return $0
+            return serverSection
         }
         delegate?.reloadServerListTableView()
     }
 
     func updateShouldColapse(with value: Bool) {
-        shouldColapse = value
-        updateServerList(with: serverSections)
+        updateServerList(with: serverSections, shouldColapse: value)
     }
 
     func numberOfSections(in _: UITableView) -> Int {
@@ -239,6 +248,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             return bestLocationCell
         } else {
             let calculatedSection = getCalculatedSection(from: section)
+            let serverSection = serverSections[calculatedSection]
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)! as? ServerSectionCell
             ?? ServerSectionCell(
@@ -256,7 +266,10 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
                                                  locationLoad: locationLoad,
                                                  isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
                                                  isDarkMode: lookAndFeelRepository.isDarkMode)
-                cell.setCollapsed(collapsed: serverSections[calculatedSection].collapsed)
+                cell.setCollapsed(collapsed: serverSection.collapsed)
+                if !serverSection.collapsed {
+                    print("ahah \(serverSection.server?.name ?? "")")
+                }
                 cell.refreshUI()
             }
             return cell

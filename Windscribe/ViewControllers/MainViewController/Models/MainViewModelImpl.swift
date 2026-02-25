@@ -258,38 +258,33 @@ class MainViewModelImpl: MainViewModel {
         return latencyRepo.getPingData(ip: ip ?? "")?.latency ?? -1
     }
 
-    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-
-            var serverSections = [ServerSection]()
-            var serverSectionsOrdered = [ServerSection]()
-            if servers.count == 0 {
-                completion(serverSectionsOrdered)
-                return
-            }
-
-            if ignoreStreaming {
-                serverSections = servers.map { ServerSection(server: $0, collapsed: true) }
-            } else {
-                serverSections = servers.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
-            }
-
-            let orderBy = self.locationOrderBy.value
-
-            switch orderBy {
-            case Fields.Values.geography:
-                serverSectionsOrdered = self.sortServersByGeography(serverSections)
-            case Fields.Values.alphabet:
-                serverSectionsOrdered = self.sortServersByAlphabet(serverSections)
-            case Fields.Values.latency:
-                serverSectionsOrdered = self.sortServersByLatency(serverSections)
-            default:
-                serverSectionsOrdered = serverSections
-            }
-            serverSectionsOrdered = self.sortServerNodes(serverList: serverSectionsOrdered, orderBy: orderBy)
-            completion(serverSectionsOrdered)
+    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel]) -> [ServerSection]{
+        var serverSections = [ServerSection]()
+        var serverSectionsOrdered = [ServerSection]()
+        if servers.count == 0 {
+            return []
         }
+
+        if ignoreStreaming {
+            serverSections = servers.map { ServerSection(server: $0, collapsed: true) }
+        } else {
+            serverSections = servers.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
+        }
+
+        let orderBy = locationOrderBy.value
+
+        switch orderBy {
+        case Fields.Values.geography:
+            serverSectionsOrdered = sortServersByGeography(serverSections)
+        case Fields.Values.alphabet:
+            serverSectionsOrdered = sortServersByAlphabet(serverSections)
+        case Fields.Values.latency:
+            serverSectionsOrdered = sortServersByLatency(serverSections)
+        default:
+            serverSectionsOrdered = serverSections
+        }
+        serverSectionsOrdered = sortServerNodes(serverList: serverSectionsOrdered, orderBy: orderBy)
+        return serverSectionsOrdered
     }
 
     private func sortServersByGeography(_ serverSections: [ServerSection]) -> [ServerSection] {
