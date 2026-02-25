@@ -71,6 +71,18 @@ struct PortMapModel: Equatable {
         ports = Array(from.ports)
         legacyPorts = Array(from.legacyPorts)
     }
+
+    init(connectionProtocol: String,
+         heading: String,
+         use: String,
+         ports: [String],
+         legacyPorts: [String]) {
+        self.connectionProtocol = connectionProtocol
+        self.heading = heading
+        self.use = use
+        self.ports = ports
+        self.legacyPorts = legacyPorts
+    }
 }
 
 struct PortMapList: Decodable {

@@ -18,6 +18,7 @@
 		1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */; };
 		1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */; };
 		1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E022C472E93FDD600AF8AA7 /* TestLocalDatabase.swift */; };
+		1E0492AA2F44A1850016B11F /* CustomConfigRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0492A92F44A1850016B11F /* CustomConfigRepositoryTests.swift */; };
 		1E0A6DA42D78823A0075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA32D78823A0075B8F5 /* RealmSwift */; };
 		1E0A6DA82D7882580075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA72D7882580075B8F5 /* RealmSwift */; };
 		1E0A6DAC2D7882630075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DAB2D7882630075B8F5 /* RealmSwift */; };
@@ -1427,6 +1428,7 @@
 		1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePopupViewModel.swift; sourceTree = "<group>"; };
 		1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTypes.swift; sourceTree = "<group>"; };
 		1E022C472E93FDD600AF8AA7 /* TestLocalDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLocalDatabase.swift; sourceTree = "<group>"; };
+		1E0492A92F44A1850016B11F /* CustomConfigRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigRepositoryTests.swift; sourceTree = "<group>"; };
 		1E0D9D5F2C6103A3008AFF2D /* SettingOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingOption.swift; sourceTree = "<group>"; };
 		1E0D9D602C6103A3008AFF2D /* SettingOption.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingOption.xib; sourceTree = "<group>"; };
 		1E0D9D612C6103A3008AFF2D /* SettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
@@ -4632,6 +4634,7 @@
 				F42D7FB92F3513E700F71B20 /* IPRepositoryTests.swift */,
 				F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */,
 				F4A20BCF2EE88F620003D880 /* WifiNetworkRepositoryTests.swift */,
+				1E0492A92F44A1850016B11F /* CustomConfigRepositoryTests.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -7354,6 +7357,7 @@
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
 				F42D7FBA2F3513E700F71B20 /* IPRepositoryTests.swift in Sources */,
+				1E0492AA2F44A1850016B11F /* CustomConfigRepositoryTests.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
 				F49935412DA9973100108558 /* MockSoundManager.swift in Sources */,

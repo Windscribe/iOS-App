@@ -18,6 +18,7 @@ class MockLocalDatabase: LocalDatabase {
     let notificationsSubject = CurrentValueSubject<[Windscribe.Notice], Never>([])
     let networksSubject = CurrentValueSubject<[Windscribe.WifiNetwork], Never>([])
     let readNoticesSubject = CurrentValueSubject<[Windscribe.ReadNotice], Never>([])
+    let customConfigsSubject = CurrentValueSubject<[Windscribe.CustomConfig], Never>([])
 
     var mockServers: [Server]? = []
     let mockFavoritesSubject = CurrentValueSubject<[String: Favourite], Never>([:])
@@ -182,10 +183,34 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func saveCustomConfig(customConfig: Windscribe.CustomConfig) {
-        // Mock implementation - no-op
+        var savedList = customConfigsSubject.value
+        savedList.append(customConfig)
+        customConfigsSubject.send(savedList)
     }
 
-    func removeCustomConfig(fileId: String) {}
+    func removeCustomConfig(fileId: String) {
+        var savedList = customConfigsSubject.value
+        savedList = savedList.filter { $0.id != fileId }
+        customConfigsSubject.send(savedList)
+    }
+
+    func updateCustomConfigName(customConfigId: String, name: String) {
+        var savedList = customConfigsSubject.value
+        if var customConfig = savedList.first(where: { $0.id != customConfigId }) {
+            customConfig.name = name
+            savedList = savedList.filter { $0.id != customConfigId }
+            savedList.append(customConfig)
+            customConfigsSubject.send(savedList)
+        }
+    }
+
+    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never> {
+        customConfigsSubject.eraseToAnyPublisher()
+    }
+
+    func getCustomConfigs() -> [Windscribe.CustomConfig] {
+        customConfigsSubject.value
+    }
 
     func getPorts(protocolType: String) -> [String]? {
         return []
@@ -204,8 +229,6 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func toggleRobertRule(id: String) {}
-
-    func updateCustomConfigName(customConfigId: String, name: String) {}
 
     func updateCustomConfigCredentials(customConfigId: String, username: String, password: String) {}
 
@@ -278,15 +301,6 @@ class MockLocalDatabase: LocalDatabase {
         favourites.removeValue(forKey: groupId)
         mockFavoritesSubject.send(favourites)
         return
-    }
-
-    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never> {
-        Just<[CustomConfig]>([])
-                .eraseToAnyPublisher()
-    }
-
-    func getCustomConfigs() -> [Windscribe.CustomConfig] {
-        []
     }
 
     func saveUnblockWgParams(params: [Windscribe.UnblockWgParamsObj]) {
