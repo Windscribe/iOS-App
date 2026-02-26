@@ -44,6 +44,26 @@ struct CustomConfigModel: Equatable {
               authRequired: authRequired,
               saveCredentials: saveCredentials)
     }
+
+    init(id: String,
+         name: String,
+         serverAddress: String,
+         protocolType: String,
+         port: String,
+         username: String = "",
+         password: String = "",
+         authRequired: Bool = false,
+         saveCredentials: Bool = true) {
+        self.id = id
+        self.name = name
+        self.serverAddress = serverAddress
+        self.protocolType = protocolType
+        self.port = port
+        self.username = username
+        self.password = password
+        self.authRequired = authRequired
+        self.saveCredentials = saveCredentials
+    }
 }
 
 @objcMembers class CustomConfig: Object {

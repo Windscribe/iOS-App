@@ -10,7 +10,7 @@ import Combine
 import Foundation
 
 class EmergencyRepositoryImpl: EmergencyRepository {
-    private let wsnetEmergencyConnect: WSNetEmergencyConnect
+    private let wsnetEmergencyConnect: WSNetEmergencyConnectType
     private let vpnManager: VPNManager
     private let vpnStateRepository: VPNStateRepository
     private let fileDatabase: FileDatabase
@@ -20,7 +20,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let customConfigRepository: CustomConfigRepository
     private let configuationName = "emergency-connect"
 
-    init(wsnetEmergencyConnect: WSNetEmergencyConnect,
+    init(wsnetEmergencyConnect: WSNetEmergencyConnectType,
          vpnManager: VPNManager,
          vpnStateRepository: VPNStateRepository,
          fileDatabase: FileDatabase,
@@ -40,13 +40,9 @@ class EmergencyRepositoryImpl: EmergencyRepository {
 
     /// Loads Emergency connect configurations from WSNet.
     func getConfig() async -> [OpenVPNConnectionInfo] {
-        let endpoints = await withCheckedContinuation { continuation in
-            wsnetEmergencyConnect.getIpEndpoints { endpoints in
-                continuation.resume(returning: endpoints)
-            }
-        }
-        let configs: [OpenVPNConnectionInfo] = endpoints.compactMap { endpoint in
-            guard let config = self.wsnetEmergencyConnect.ovpnConfig().utf8Encoded else {
+        let endpoints = await wsnetEmergencyConnect.getIpEndpoints()
+        let configs = endpoints.compactMap { endpoint -> OpenVPNConnectionInfo? in
+            guard let config = self.wsnetEmergencyConnect.getOvpnConfig().utf8Encoded else {
                 return nil
             }
             let ip = endpoint.ip()
@@ -56,8 +52,8 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             } else {
                 tcp
             }
-            let username = self.wsnetEmergencyConnect.username()
-            let password = self.wsnetEmergencyConnect.password()
+            let username = self.wsnetEmergencyConnect.getUsername()
+            let password = self.wsnetEmergencyConnect.getPassword()
             return OpenVPNConnectionInfo(serverConfig: config, ip: ip, port: port, protocolName: proto, username: username, password: password)
         }
         return configs
@@ -141,7 +137,8 @@ class EmergencyRepositoryImpl: EmergencyRepository {
 
     /// Builds OpenVPN Configuration from OpenVPNConnectionInfo
     private func buildConfiguration(configInfo: OpenVPNConnectionInfo) async throws -> Data {
-        guard let stringData = String(data: configInfo.serverConfig, encoding: String.Encoding.utf8) else { throw RepositoryError.missingServerConfig }
+        guard let stringData = String(data: configInfo.serverConfig, encoding: String.Encoding.utf8),
+              !stringData.isEmpty else { throw RepositoryError.missingServerConfig }
         var lines = stringData.components(separatedBy: "\n")
         let protoLine = "proto \(configInfo.protocolName.lowercased())"
         let remoteLine = "remote \(configInfo.ip) \(configInfo.port)"

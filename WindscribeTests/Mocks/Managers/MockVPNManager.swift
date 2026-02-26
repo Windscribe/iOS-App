@@ -18,6 +18,14 @@ class MockVPNManager: VPNManager {
     var mockStatus: NEVPNStatus = .disconnected
     var showFailedPinIpTrigger = PassthroughSubject<Void, Never>()
 
+    // Connection tracking
+    var connectFromViewModelCallCount = 0
+    var lastConnectLocationId: String?
+    var lastConnectProto: ProtocolPort?
+    var lastConnectConnectionType: ConnectionType?
+    var mockConnectionStates: [VPNConnectionState] = [.vpn(.connecting), .vpn(.connected)]
+    var mockConnectionError: Error?
+
     func configureForConnectionState() {
     }
 
@@ -34,11 +42,46 @@ class MockVPNManager: VPNManager {
     }
 
     func disconnectFromViewModel() -> AnyPublisher<Windscribe.VPNConnectionState, any Error> {
-        PassthroughSubject<VPNConnectionState, Error>().eraseToAnyPublisher()
+        let subject = PassthroughSubject<VPNConnectionState, Error>()
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+
+            if let error = self.mockConnectionError {
+                subject.send(completion: .failure(error))
+            } else {
+                subject.send(.vpn(.disconnected))
+                subject.send(completion: .finished)
+            }
+        }
+
+        return subject.eraseToAnyPublisher()
     }
 
     func connectFromViewModel(locationId: String, proto: Windscribe.ProtocolPort, connectionType: Windscribe.ConnectionType) -> AnyPublisher<Windscribe.VPNConnectionState, any Error> {
-        PassthroughSubject<VPNConnectionState, Error>().eraseToAnyPublisher()
+        connectFromViewModelCallCount += 1
+        lastConnectLocationId = locationId
+        lastConnectProto = proto
+        lastConnectConnectionType = connectionType
+
+        let subject = PassthroughSubject<VPNConnectionState, Error>()
+
+        // Emit states asynchronously to simulate real connection flow
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+
+            if let error = self.mockConnectionError {
+                subject.send(completion: .failure(error))
+            } else {
+                // Emit each state in sequence
+                for state in self.mockConnectionStates {
+                    subject.send(state)
+                }
+                subject.send(completion: .finished)
+            }
+        }
+
+        return subject.eraseToAnyPublisher()
     }
 
     func simpleDisableConnection() {
