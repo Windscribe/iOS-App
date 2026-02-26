@@ -77,4 +77,12 @@ struct RobertFilterModel: Equatable, Hashable {
         status = from.status
         enabled = from.enabled
     }
+
+    init(id: String, title: String, filterDescription: String, status: Int, enabled: Bool) {
+        self.id = id
+        self.title = title
+        self.filterDescription = filterDescription
+        self.status = status
+        self.enabled = enabled
+    }
 }

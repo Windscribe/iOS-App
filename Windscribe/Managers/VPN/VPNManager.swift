@@ -55,7 +55,7 @@ class VPNManagerImpl: VPNManager {
     let alertManager: AlertManager
     let locationsManager: LocationsManager
     let vpnStateRepository: VPNStateRepository
-    let bridgeAPI: WSNetBridgeAPI
+    let bridgeAPI: WSNetBridgeAPIType
     let userSessionRepository: UserSessionRepository
     let wifiNetworkRepository: WifiNetworkRepository
 
@@ -80,7 +80,7 @@ class VPNManagerImpl: VPNManager {
          locationsManager: LocationsManager,
          vpnStateRepository: VPNStateRepository,
          wifiNetworkRepository: WifiNetworkRepository,
-         bridgeAPI: WSNetBridgeAPI,
+         bridgeAPI: WSNetBridgeAPIType,
          userSessionRepository: UserSessionRepository) {
         self.logger = logger
         self.serverRepository = serverRepository

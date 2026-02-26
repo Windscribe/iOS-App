@@ -63,6 +63,71 @@ class PortMapRepositoryTests: XCTestCase {
 
     // MARK: - Success Tests
 
+    func test_initialization_withCachedPortMaps_shouldLoadFromDatabase() {
+        // Given
+        let cachedPortMaps = createMockPortMaps()
+        mockLocalDatabase.portMapsToReturn = cachedPortMaps
+
+        // When
+        let newRepository = PortMapRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: mockLocalDatabase,
+            logger: mockLogger
+        )
+
+        // Then
+        XCTAssertEqual(newRepository.currentPortMaps.count, cachedPortMaps.count)
+        XCTAssertEqual(newRepository.currentPortMaps.first?.connectionProtocol, "tcp")
+    }
+
+    func test_initialization_withNoCachedPortMaps_shouldHaveEmptyPortMaps() {
+        // Given
+        mockLocalDatabase.portMapsToReturn = nil
+
+        // When
+        let newRepository = PortMapRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: mockLocalDatabase,
+            logger: mockLogger
+        )
+
+        // Then
+        XCTAssertTrue(newRepository.currentPortMaps.isEmpty)
+    }
+
+    func test_initialization_withCachedSuggestedPorts_shouldLoadFromDatabase() {
+        // Given
+        let suggestedPorts = createMockSuggestedPorts()
+        mockLocalDatabase.suggestedPortsToReturn = [suggestedPorts]
+
+        // When
+        let newRepository = PortMapRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: mockLocalDatabase,
+            logger: mockLogger
+        )
+
+        // Then
+        XCTAssertNotNil(newRepository.suggestedPorts)
+        XCTAssertEqual(newRepository.suggestedPorts?.protocolType, suggestedPorts.protocolType)
+        XCTAssertEqual(newRepository.suggestedPorts?.port, suggestedPorts.port)
+    }
+
+    func test_initialization_withNoCachedSuggestedPorts_shouldBeNil() {
+        // Given
+        mockLocalDatabase.suggestedPortsToReturn = nil
+
+        // When
+        let newRepository = PortMapRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: mockLocalDatabase,
+            logger: mockLogger
+        )
+
+        // Then
+        XCTAssertNil(newRepository.suggestedPorts)
+    }
+
     func test_getUpdatedPortMap_success_shouldReturnPortMaps() async throws {
         // Given
         let expectedPortMaps = createMockPortMaps()
@@ -89,9 +154,51 @@ class PortMapRepositoryTests: XCTestCase {
 
         let udpPorts = repository.getPorts(protocolType: "UDP") ?? []
 
-        // Then["53", "1194"]
+        // Then
         XCTAssertEqual(udpPorts.count, 2)
         XCTAssertEqual(udpPorts.first, "53")
+        XCTAssertEqual(udpPorts.last, "1194")
+    }
+
+    func test_getPorts_withNonExistentProtocol_shouldReturnNil() async throws {
+        // Given
+        let expectedPortMaps = createMockPortMaps()
+        let portMapList = createMockPortMapList(portMaps: expectedPortMaps, suggested: nil)
+        mockAPIManager.portMapListToReturn = portMapList
+        _ = try await repository.getUpdatedPortMap()
+
+        // When
+        let result = repository.getPorts(protocolType: "INVALID")
+
+        // Then
+        XCTAssertNil(result, "Should return nil for non-existent protocol")
+    }
+
+    func test_getPorts_withEmptyPortMaps_shouldReturnNil() {
+        // Given - repository with no port maps
+
+        // When
+        let result = repository.getPorts(protocolType: "TCP")
+
+        // Then
+        XCTAssertNil(result, "Should return nil when no port maps available")
+    }
+
+    func test_getPorts_withTCPProtocol_shouldReturnCorrectPorts() async throws {
+        // Given
+        let expectedPortMaps = createMockPortMaps()
+        let portMapList = createMockPortMapList(portMaps: expectedPortMaps, suggested: nil)
+        mockAPIManager.portMapListToReturn = portMapList
+        _ = try await repository.getUpdatedPortMap()
+
+        // When
+        let tcpPorts = repository.getPorts(protocolType: "TCP") ?? []
+
+        // Then
+        XCTAssertEqual(tcpPorts.count, 3)
+        XCTAssertTrue(tcpPorts.contains("443"))
+        XCTAssertTrue(tcpPorts.contains("80"))
+        XCTAssertTrue(tcpPorts.contains("8080"))
     }
 
     func test_getUpdatedPortMap_success_shouldSaveToLocalDatabase() async throws {
@@ -121,6 +228,24 @@ class PortMapRepositoryTests: XCTestCase {
 
         // Then
         XCTAssertTrue(mockLocalDatabase.saveSuggestedPortsCalled, "Should save suggested ports when present")
+        XCTAssertNotNil(repository.suggestedPorts, "Should update suggestedPorts property")
+        XCTAssertEqual(repository.suggestedPorts?.protocolType, suggestedPorts.protocolType)
+    }
+
+    func test_getUpdatedPortMap_success_shouldUpdateCurrentPortMaps() async throws {
+        // Given
+        XCTAssertTrue(repository.currentPortMaps.isEmpty, "Should start empty")
+
+        let expectedPortMaps = createMockPortMaps()
+        let portMapList = createMockPortMapList(portMaps: expectedPortMaps, suggested: nil)
+        mockAPIManager.portMapListToReturn = portMapList
+
+        // When
+        _ = try await repository.getUpdatedPortMap()
+
+        // Then
+        XCTAssertFalse(repository.currentPortMaps.isEmpty, "Should update currentPortMaps")
+        XCTAssertEqual(repository.currentPortMaps.count, expectedPortMaps.count)
     }
 
     func test_getUpdatedPortMap_withoutSuggestedPorts_shouldNotSaveSuggestedPorts() async throws {

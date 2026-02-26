@@ -24,4 +24,9 @@ class APIMessage: Decodable {
         message = try data.decodeIfPresent(String.self, forKey: .message) ?? ""
         success = try data.decodeIfPresent(Int.self, forKey: .success) == 1 ? true : false
     }
+
+    init(message: String, success: Bool) {
+        self.message = message
+        self.success = success
+    }
 }

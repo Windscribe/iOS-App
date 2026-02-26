@@ -377,7 +377,7 @@ extension ConnectionViewModel {
 
     private func enableConnection(connectionType: ConnectionType) {
         Task { @MainActor in
-            guard !WifiManager.shared.isConnectedWifiTrusted() else {
+            guard !wifiManager.isConnectedWifiTrusted() else {
                 logger.logI("ConnectionViewModel", "User joining untrusted network")
 
                 let currentNetwork = wifiNetworkRepository.getCurrentNetwork()
@@ -437,7 +437,7 @@ extension ConnectionViewModel {
     }
 
     func disableConnection() {
-        guard !WifiManager.shared.isConnectedWifiTrusted() else {
+        guard !wifiManager.isConnectedWifiTrusted() else {
             logger.logI("ConnectionViewModel", "User leaving untrusted network")
             vpnStateRepository.setUntrustedOneTimeOnlySSID("")
             vpnManager.simpleDisableConnection()

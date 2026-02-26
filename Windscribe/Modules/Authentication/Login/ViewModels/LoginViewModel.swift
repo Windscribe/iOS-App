@@ -60,6 +60,7 @@ class LoginViewModelImpl: LoginViewModel {
     private let protocolManager: ProtocolManagerType
     private let latencyRepository: LatencyRepository
     private let connectivity: ConnectivityManager
+    private let wifiManager: WifiManager
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
 
@@ -81,6 +82,7 @@ class LoginViewModelImpl: LoginViewModel {
          protocolManager: ProtocolManagerType,
          latencyRepository: LatencyRepository,
          connectivity: ConnectivityManager,
+         wifiManager: WifiManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
 
@@ -94,6 +96,7 @@ class LoginViewModelImpl: LoginViewModel {
         self.protocolManager = protocolManager
         self.latencyRepository = latencyRepository
         self.connectivity = connectivity
+        self.wifiManager = wifiManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
 
@@ -192,7 +195,7 @@ class LoginViewModelImpl: LoginViewModel {
         preferences.saveLoginDate(date: Date())
 
         // Cache current Wi-Fi state to use for reconnect logic
-        WifiManager.shared.saveCurrentWifiNetworks()
+        wifiManager.saveCurrentWifiNetworks()
 
         // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
         let sessionModel = session.getModel()
@@ -304,7 +307,7 @@ class LoginViewModelImpl: LoginViewModel {
                         do {
                             try await sessionManager.login(auth: auth)
                             if let session = userSessionRepository.sessionModel {
-                                WifiManager.shared.saveCurrentWifiNetworks()
+                                wifiManager.saveCurrentWifiNetworks()
 
                                 self.preferences.saveLoginDate(date: Date())
                                 self.timerCancellable?.cancel()

@@ -50,6 +50,7 @@ class ProtocolManager: ProtocolManagerType {
     private let locationManager: LocationsManager
     private let vpnStateRepository: VPNStateRepository
     private let portMapRepository: PortMapRepository
+    private let wifiManager: WifiManager
 
     private let defaultCountdownTime = 10
     private var countdownTimer: DispatchSourceTimer?
@@ -95,7 +96,8 @@ class ProtocolManager: ProtocolManagerType {
          customConfigRepository: CustomConfigRepository,
          locationManager: LocationsManager,
          portMapRepository: PortMapRepository,
-         vpnStateRepository: VPNStateRepository) {
+         vpnStateRepository: VPNStateRepository,
+         wifiManager: WifiManager) {
         self.logger = logger
         self.connectivity = connectivity
         self.preferences = preferences
@@ -104,6 +106,7 @@ class ProtocolManager: ProtocolManagerType {
         self.locationManager = locationManager
         self.vpnStateRepository = vpnStateRepository
         self.portMapRepository = portMapRepository
+        self.wifiManager = wifiManager
 
         logger.logI("ProtocolManager", "Starting connection manager.")
         bindData()
@@ -227,7 +230,7 @@ class ProtocolManager: ProtocolManagerType {
             setPriority(proto: manualProtocol, type: .normal)
         }
 
-        WifiManager.shared.saveCurrentWifiNetworks()
+        wifiManager.saveCurrentWifiNetworks()
         if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
             let preferredProto = currentNetwork.preferredProtocol
             let preferredPort = currentNetwork.preferredPort
@@ -400,7 +403,7 @@ class ProtocolManager: ProtocolManagerType {
     }
 
     func saveCurrentWifiNetworks() {
-        WifiManager.shared.saveCurrentWifiNetworks()
+        wifiManager.saveCurrentWifiNetworks()
     }
 
     // MARK: - Helper

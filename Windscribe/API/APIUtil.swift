@@ -18,7 +18,7 @@ protocol APIUtilService {
     func mapToSuccess<T: Decodable>(json: String, modeType: T.Type) -> T?
     func mapToAPIError(error: String?) -> Errors
 
-    func makeBridgeApiCall(apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) async throws -> Bool
+    func checkBridgeResult(statusCode: Int32, message: String) throws -> Bool
 }
 
 // MARK: - API Utility Service Implementation
@@ -85,34 +85,10 @@ final class APIUtilServiceImpl: APIUtilService {
         }
     }
 
-    func makeBridgeApiCall(apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) async throws -> Bool {
-        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Bool, Error>) in
-            var hasResumed = false
-            var cancelableCallback: WSNetCancelableCallback?
-
-            // Start timeout task
-            let timeoutTask = Task {
-                try await Task.sleep(nanoseconds: 5_000_000_000)
-                if !hasResumed {
-                    hasResumed = true
-                    cancelableCallback?.cancel()
-                    let wsnetError = WSNetErrors.bridgeAPIError.error ?? Errors.noResponse
-                    continuation.resume(throwing: wsnetError)
-                }
-            }
-
-            // Start API call
-            cancelableCallback = apiCall { statusCode, _ in
-                if !hasResumed {
-                    hasResumed = true
-                    timeoutTask.cancel()
-                    if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
-                        continuation.resume(throwing: wsNetError)
-                    } else {
-                        continuation.resume(returning: true)
-                    }
-                }
-            }
+    func checkBridgeResult(statusCode: Int32, message: String) throws -> Bool {
+        if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
+            throw wsNetError
         }
+        return true
     }
 }

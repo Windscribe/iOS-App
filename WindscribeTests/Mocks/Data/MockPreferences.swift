@@ -20,12 +20,12 @@ class MockPreferences: Preferences {
 
     // Additional mock storage variables
     var mockLanguage: String?
-    var mockSelectedProtocol: String?
     var mockSelectedPort: String?
     var mockFirewallMode: Bool?
     var mockKillSwitch: Bool?
     var mockDarkMode: Bool?
-    var mockConnectionMode: String?
+    var mockSelectedProtocol = CurrentValueSubject<String?,Never>(TextsAsset.wireGuard)
+    var mockConnectionMode = CurrentValueSubject<String?,Never>(Fields.Values.manual)
     var mockFavouriteIds: [String] = []
     var mockCustomLocations: [ExportedRegion] = []
     private let favouriteIdsSubject = CurrentValueSubject<[String], Never>([])
@@ -39,6 +39,16 @@ class MockPreferences: Preferences {
     var mockUnblockWgParams: Windscribe.UnblockWgParams?
     var disconnectReason: Windscribe.DisconnectReason?
     var userStatus: Bool?
+
+    // WireGuard configuration storage
+    var mockWireGuardAddress: String?
+    var mockWireGuardDNS: String?
+    var mockWireGuardPresharedKey: String?
+    var mockWireGuardAllowedIPs: String?
+    var mockWireGuardServerEndpoint: String?
+    var mockWireGuardServerHostname: String?
+    var mockWireGuardServerPublicKey: String?
+    var mockWireGuardServerPort: String?
 
     // IP Address - Issue #911
     var mockCurrentIpAddress: String? {
@@ -160,11 +170,11 @@ class MockPreferences: Preferences {
     }
 
     func saveSelectedProtocol(selectedProtocol: String) {
-        mockSelectedProtocol = selectedProtocol
+        mockSelectedProtocol.send(selectedProtocol)
     }
 
     func getSelectedProtocol() -> AnyPublisher<String?, Never> {
-        return Just(mockSelectedProtocol).eraseToAnyPublisher()
+        return mockSelectedProtocol.eraseToAnyPublisher()
     }
 
     func saveSelectedPort(port: String) {
@@ -328,10 +338,12 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func saveSessionAuthHash(sessionAuth: String) {}
+    func saveSessionAuthHash(sessionAuth: String) {
+        sessionAuthToReturn = sessionAuth
+    }
 
     func getSessionAuthHash() -> String? {
-        return nil
+        return sessionAuthToReturn
     }
 
     func saveCountryOverrride(value: String?) {}
@@ -397,7 +409,7 @@ class MockPreferences: Preferences {
     func saveAutoSecureNewNetworks(autoSecure: Bool) {}
 
     func getConnectionMode() -> AnyPublisher<String?, Never> {
-        return Just(nil).eraseToAnyPublisher()
+        return mockConnectionMode.eraseToAnyPublisher()
     }
 
     func getConnectedDNSObservable() -> AnyPublisher<String?, Never> {
@@ -419,7 +431,7 @@ class MockPreferences: Preferences {
     }
 
     func getConnectionModeSync() -> String {
-        return ""
+        return mockConnectionMode.value ?? Fields.Values.manual
     }
 
     func getSelectedProtocolSync() -> String {
@@ -604,60 +616,85 @@ class MockPreferences: Preferences {
         return mockCustomAppIcon
     }
 
-    func saveWireGuardAddress(_ address: String?) {}
+    func saveWireGuardAddress(_ address: String?) {
+        mockWireGuardAddress = address
+    }
 
     func getWireGuardAddress() -> String? {
-        return nil
+        return mockWireGuardAddress
     }
 
-    func saveWireGuardDNS(_ dns: String?) {}
+    func saveWireGuardDNS(_ dns: String?) {
+        mockWireGuardDNS = dns
+    }
 
     func getWireGuardDNS() -> String? {
-        return nil
+        return mockWireGuardDNS
     }
 
-    func saveWireGuardPresharedKey(_ key: String?) {}
+    func saveWireGuardPresharedKey(_ key: String?) {
+        mockWireGuardPresharedKey = key
+    }
 
     func getWireGuardPresharedKey() -> String? {
-        return nil
+        return mockWireGuardPresharedKey
     }
 
-    func saveWireGuardAllowedIPs(_ ips: String?) {}
+    func saveWireGuardAllowedIPs(_ ips: String?) {
+        mockWireGuardAllowedIPs = ips
+    }
 
     func getWireGuardAllowedIPs() -> String? {
-        return nil
+        return mockWireGuardAllowedIPs
     }
 
-    func saveWireGuardServerEndpoint(_ endpoint: String?) {}
+    func saveWireGuardServerEndpoint(_ endpoint: String?) {
+        mockWireGuardServerEndpoint = endpoint
+    }
 
     func getWireGuardServerEndpoint() -> String? {
-        return nil
+        return mockWireGuardServerEndpoint
     }
 
-    func saveWireGuardServerHostname(_ hostname: String?) {}
+    func saveWireGuardServerHostname(_ hostname: String?) {
+        mockWireGuardServerHostname = hostname
+    }
 
     func getWireGuardServerHostname() -> String? {
-        return nil
+        return mockWireGuardServerHostname
     }
 
-    func saveWireGuardServerPublicKey(_ key: String?) {}
+    func saveWireGuardServerPublicKey(_ publicKey: String?) {
+        mockWireGuardServerPublicKey = publicKey
+    }
 
     func getWireGuardServerPublicKey() -> String? {
-        return nil
+        return mockWireGuardServerPublicKey
     }
 
-    func saveWireGuardServerPort(_ port: String?) {}
+    func saveWireGuardServerPort(_ port: String?) {
+        mockWireGuardServerPort = port
+    }
 
     func getWireGuardServerPort() -> String? {
-        return nil
+        return mockWireGuardServerPort
     }
 
     func clearWireGuardConfiguration() {
         clearWireGuardConfigurationCalled = true
+        mockWireGuardAddress = nil
+        mockWireGuardDNS = nil
+        mockWireGuardPresharedKey = nil
+        mockWireGuardAllowedIPs = nil
+        mockWireGuardServerEndpoint = nil
+        mockWireGuardServerHostname = nil
+        mockWireGuardServerPublicKey = nil
+        mockWireGuardServerPort = nil
+        mockWireGuardHashedCIDR = nil
     }
 
     func getSelectedProtocolSync() -> String? {
-        return mockSelectedProtocol
+        return mockSelectedProtocol.value
     }
 
     func getSelectedPortSync() -> String? {

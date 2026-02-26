@@ -19,7 +19,7 @@ class ConnectivityManagerImpl: ConnectivityManager {
     }
 
     private let logger: FileLogger
-    private let bridgeAPI: WSNetBridgeAPI
+    private let bridgeAPI: WSNetBridgeAPIType
 
     /// Observe this subject to get network change events.
     let network = CurrentValueSubject<AppNetwork, Never>(AppNetwork(.disconnected))
@@ -29,7 +29,7 @@ class ConnectivityManagerImpl: ConnectivityManager {
     private var lastValidNetworkName: String?
 
     init(logger: FileLogger,
-         bridgeAPI: WSNetBridgeAPI) {
+         bridgeAPI: WSNetBridgeAPIType) {
         self.logger = logger
         self.bridgeAPI = bridgeAPI
         registerNetworkPathMonitor()

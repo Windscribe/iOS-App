@@ -15,6 +15,7 @@ class MockLocationsManager: LocationsManager {
     // MARK: Protocol Properties
     var mockLocation: (ServerModel, GroupModel)?
     var mockLocationError: Error?
+    var mockLocationUIInfo: LocationUIInfo = LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
 
     var getLocationCalled = false
     var saveLastSelectedLocationCalled = false
@@ -50,7 +51,7 @@ class MockLocationsManager: LocationsManager {
     func getBestLocationModel(from groupId: String) -> BestLocationModel? { return nil }
     func getBestLocationModel() -> BestLocationModel? { return nil }
     func getLocationUIInfo() -> LocationUIInfo {
-        return LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
+        return mockLocationUIInfo
     }
     func saveStaticIP(withID staticID: Int?) {}
     func saveCustomConfig(withID staticID: String?) {}
@@ -77,6 +78,7 @@ class MockLocationsManager: LocationsManager {
     func reset() {
         mockLocation = nil
         mockLocationError = nil
+        mockLocationUIInfo = LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
         getLocationCalled = false
         saveLastSelectedLocationCalled = false
         lastSavedLocationID = nil

@@ -21,7 +21,6 @@ extension MainViewController {
         addAutoLayoutConstraints()
         showSplashView()
         checkPrivacyConfirmation()
-        WifiManager.shared.saveCurrentWifiNetworks()
         loadPortMap()
         loadServerList()
         loadStaticIPs()

@@ -13,6 +13,7 @@ class IPInfoView: UIView {
     private var cancellables = Set<AnyCancellable>()
     var actionFailedSubject = PassthroughSubject<BridgeApiPopupType, Never>()
     var animateFavoriteSubject = PassthroughSubject<Void, Never>()
+    private let wifiManager: WifiManager
 
     var viewModel: IPInfoViewModelType! {
         didSet {
@@ -21,7 +22,7 @@ class IPInfoView: UIView {
     }
 
     var trustedNetworkImage: String {
-        if let status = WifiManager.shared.getConnectedNetwork()?.status {
+        if let status = wifiManager.getConnectedNetwork()?.status {
             if status == true {
                 return ImagesAsset.wifiUnsecure
             } else {
@@ -47,7 +48,8 @@ class IPInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init() {
+    init(wifiManager: WifiManager) {
+        self.wifiManager = wifiManager
         super.init(frame: .zero)
         addViews()
         setLayout()

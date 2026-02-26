@@ -57,6 +57,7 @@ class MainViewController: PreferredFocusedViewController {
     lazy var sessionManager = Assembler.resolve(SessionManager.self)
     lazy var userSessionRepository = Assembler.resolve(UserSessionRepository.self)
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
+    private lazy var wifiManager: WifiManager = Assembler.resolve(WifiManager.self)
 
     override func viewDidLoad() {
         super.viewDidLoad()

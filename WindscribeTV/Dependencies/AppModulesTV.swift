@@ -33,7 +33,8 @@ class TVViewModels: Assembly {
                                protocolManager: r.resolve(ProtocolManagerType.self)!,
                                latencyRepository: r.resolve(LatencyRepository.self)!,
                                logger: r.resolve(FileLogger.self)!,
-                               lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+                               lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                               wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.transient)
         container.register(WelcomeViewModel.self) { r in
             WelcomeViewModelImpl(userSessionRepository: r.resolve(UserSessionRepository.self)!,
@@ -108,7 +109,7 @@ class TVViewModels: Assembly {
                                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                                 preferences: r.resolve(Preferences.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
-                                wifiManager: WifiManager.shared,
+                                wifiManager: r.resolve(WifiManager.self)!,
                                 wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                 ipRepository: r.resolve(IPRepository.self)!,
@@ -137,7 +138,8 @@ class TVViewModels: Assembly {
                               wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                               sessionManager: r.resolve(SessionManager.self)!,
                               customConfigRepository: r.resolve(CustomConfigRepository.self)!,
-                              alertManager: r.resolve(AlertManager.self)!)
+                              alertManager: r.resolve(AlertManager.self)!,
+                              wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)

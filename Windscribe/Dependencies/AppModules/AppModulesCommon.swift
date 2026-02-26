@@ -37,11 +37,11 @@ class Network: Assembly {
         }.inObjectScope(.userScope)
         container.register(ConnectivityManager.self) { r in
             ConnectivityManagerImpl(logger: r.resolve(FileLogger.self)!,
-                                    bridgeAPI: r.resolve(WSNetBridgeAPI.self)!)
+                                    bridgeAPI: r.resolve(WSNetBridgeAPIType.self)!)
         }.inObjectScope(.userScope)
         container.register(APIManager.self) { r in
             APIManagerImpl(api: r.resolve(WSNetServerAPI.self)!,
-                           bridgeApi: r.resolve(WSNetBridgeAPI.self)!,
+                           bridgeApi: r.resolve(WSNetBridgeAPIType.self)!,
                            logger: r.resolve(FileLogger.self)!,
                            apiUtil: r.resolve(APIUtilService.self)!)
         }.initCompleted { r, apiManager in
@@ -65,7 +65,7 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
 
         container.register(BridgeApiRepository.self) { r in
-            BridgeApiRepositoryImpl(bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
+            BridgeApiRepositoryImpl(bridgeAPI: r.resolve(WSNetBridgeAPIType.self)!,
                                     locationManager: r.resolve(LocationsManager.self)!,
                                     userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                     vpnStateRepository: r.resolve(VPNStateRepository.self)!,
@@ -75,7 +75,7 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
 
         container.register(UserDataRepository.self) { r in
-            UserDataRepositoryImpl(serverRepository: r.resolve(ServerRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, portMapRepository: r.resolve(PortMapRepository.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, notificationsRepository: r.resolve(NotificationRepository.self)!, logger: r.resolve(FileLogger.self)!)
+            UserDataRepositoryImpl(serverRepository: r.resolve(ServerRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, portMapRepository: r.resolve(PortMapRepository.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, notificationsRepository: r.resolve(NotificationRepository.self)!, emergencyRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(IPRepository.self) { r in
             IPRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, logger: logger)
@@ -95,12 +95,15 @@ class Repository: Assembly {
         container.register(ServerRepository.self) { r in
             ServerRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, userSessionRepository: r.resolve(UserSessionRepository.self)!, preferences: r.resolve(Preferences.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, logger: logger)
         }.inObjectScope(.userScope)
+        container.register(WifiManager.self) { _ in
+            WifiManagerImpl()
+        }.inObjectScope(.container)
         container.register(CredentialsRepository.self) { r in
             CredentialsRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
                                       localDatabase: r.resolve(LocalDatabase.self)!,
                                       fileDatabase: r.resolve(FileDatabase.self)!,
                                       vpnStateRepository: r.resolve(VPNStateRepository.self)!,
-                                      wifiManager: WifiManager.shared,
+                                      wifiManager: r.resolve(WifiManager.self)!,
                                       preferences: r.resolve(Preferences.self)!,
                                       logger: logger)
         }.inObjectScope(.userScope)
@@ -161,7 +164,7 @@ class Repository: Assembly {
                                   ipRepository: r.resolve(IPRepository.self)!,
                                   userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                   serverRepository: r.resolve(ServerRepository.self)!,
-                                  bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
+                                  bridgeAPI: r.resolve(WSNetBridgeAPIType.self)!,
                                   bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
                                   credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                   staticIpRepository: r.resolve(StaticIpRepository.self)!,
@@ -286,7 +289,7 @@ class Managers: Assembly {
                            locationsManager: r.resolve(LocationsManager.self)!,
                            vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                            wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
-                           bridgeAPI: r.resolve(WSNetBridgeAPI.self)!,
+                           bridgeAPI: r.resolve(WSNetBridgeAPIType.self)!,
                            userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManager.self) { r in
@@ -318,7 +321,8 @@ class Managers: Assembly {
                             customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                             locationManager: r.resolve(LocationsManager.self)!,
                             portMapRepository: r.resolve(PortMapRepository.self)!,
-                            vpnStateRepository: r.resolve(VPNStateRepository.self)!)
+                            vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                            wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LivecycleManagerType.self) { r in
@@ -334,7 +338,8 @@ class Managers: Assembly {
                              configManager: r.resolve(ConfigurationsManager.self)!,
                              connectivityManager: r.resolve(ProtocolManagerType.self)!,
                              locationsManager: r.resolve(LocationsManager.self)!,
-                             unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!)
+                             unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!,
+                             wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.userScope)
 
         container.register(SSOManaging.self) { r in

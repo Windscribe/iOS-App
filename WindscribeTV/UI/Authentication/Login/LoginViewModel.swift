@@ -49,6 +49,7 @@ class LoginViewModelImpl: LoginViewModel {
     let protocolManager: ProtocolManagerType
     let latencyRepository: LatencyRepository
     let logger: FileLogger
+    let wifiManager: WifiManager
 
     private var appCancellable = [AnyCancellable]()
     private var timerCancellable: AnyCancellable?
@@ -63,7 +64,9 @@ class LoginViewModelImpl: LoginViewModel {
          vpnManager: VPNManager,
          protocolManager: ProtocolManagerType,
          latencyRepository: LatencyRepository,
-         logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+         logger: FileLogger,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         wifiManager: WifiManager) {
         self.apiCallManager = apiCallManager
         self.userSessionRepository = userSessionRepository
         self.sessionManager = sessionManager
@@ -75,6 +78,7 @@ class LoginViewModelImpl: LoginViewModel {
         self.protocolManager = protocolManager
         self.latencyRepository = latencyRepository
         self.logger = logger
+        self.wifiManager = wifiManager
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         registerNetworkEventListener()
     }
@@ -171,7 +175,7 @@ class LoginViewModelImpl: LoginViewModel {
         let sessionModel = session.getModel()
 
         preferences.saveLoginDate(date: Date())
-        WifiManager.shared.saveCurrentWifiNetworks()
+        wifiManager.saveCurrentWifiNetworks()
         Task {
             // Create unmanaged Session from model (safe to use on any thread)
             let sessionForStorage = Session(sessionModel: sessionModel)
@@ -272,7 +276,7 @@ class LoginViewModelImpl: LoginViewModel {
                                 }
                             }
 
-                            WifiManager.shared.saveCurrentWifiNetworks()
+                            wifiManager.saveCurrentWifiNetworks()
                             self.preferences.saveLoginDate(date: Date())
                             self.timerCancellable?.cancel()
                             self.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")

@@ -41,6 +41,7 @@ class ViewControllerModule: Assembly {
                     protocolManager: r.resolve(ProtocolManagerType.self)!,
                     latencyRepository: r.resolve(LatencyRepository.self)!,
                     connectivity: r.resolve(ConnectivityManager.self)!,
+                    wifiManager: r.resolve(WifiManager.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     logger: r.resolve(FileLogger.self)!
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
@@ -444,14 +445,14 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(ConnectButtonViewModelType.self)
         }.inObjectScope(.transient)
 
-        container.register(ConnectionStateInfoView.self) { _ in
-            ConnectionStateInfoView()
+        container.register(ConnectionStateInfoView.self) { r in
+            ConnectionStateInfoView(wifiManager: r.resolve(WifiManager.self)!)
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ConnectionStateInfoViewModelType.self)
         }.inObjectScope(.transient)
 
-        container.register(IPInfoView.self) { _ in
-            IPInfoView()
+        container.register(IPInfoView.self) { r in
+            IPInfoView(wifiManager: r.resolve(WifiManager.self)!)
         }.initCompleted { r, c in
             c.viewModel = r.resolve(IPInfoViewModelType.self)
         }.inObjectScope(.transient)

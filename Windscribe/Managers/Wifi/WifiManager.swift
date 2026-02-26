@@ -13,8 +13,21 @@ import Combine
 import Swinject
 import SystemConfiguration.CaptiveNetwork
 
-class WifiManager {
-    static let shared = WifiManager()
+// MARK: - WifiManager Protocol
+
+protocol WifiManager {
+    var selectedPreferredProtocol: String? { get }
+    var selectedPreferredPort: String? { get }
+    var selectedPreferredProtocolStatus: Bool? { get }
+
+    func getConnectedNetwork() -> WifiNetworkModel?
+    func isConnectedWifiTrusted() -> Bool
+    func saveCurrentWifiNetworks()
+}
+
+// MARK: - WifiManagerImpl
+
+class WifiManagerImpl: WifiManager {
     lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
 
     lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)

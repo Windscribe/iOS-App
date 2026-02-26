@@ -9,9 +9,13 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
+import Swinject
 import UIKit
 
 extension MainViewController {
+    private var wifiManager: WifiManager {
+        Assembler.resolve(WifiManager.self)
+    }
     @objc func checkForUnreadNotifications() {
         viewModel.checkForUnreadNotifications(completion: { showNotifications, readNoticeDifferentCount in
             DispatchQueue.main.async {
@@ -281,7 +285,7 @@ extension MainViewController {
         if vpnConnectionViewModel.isDisconnected() {
             vpnConnectionViewModel.displayLocalIPAddress()
         }
-        WifiManager.shared.saveCurrentWifiNetworks()
+        wifiManager.saveCurrentWifiNetworks()
         viewModel.updateSSID()
     }
 
