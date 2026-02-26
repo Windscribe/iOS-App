@@ -31,8 +31,8 @@ class ContainerResolver: ContainerResolvertype {
         return container.resolve(WSNetServerAPI.self)!
     }
 
-    func getBridgeApi() -> WSNetBridgeAPI {
-        return container.resolve(WSNetBridgeAPI.self)!
+    func getBridgeApi() -> WSNetBridgeAPIType {
+        return container.resolve(WSNetBridgeAPIType.self)!
     }
 
     func getLocalizationService() -> LocalizationService {

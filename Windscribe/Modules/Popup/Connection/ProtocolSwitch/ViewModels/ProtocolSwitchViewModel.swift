@@ -37,6 +37,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     private let vpnManager: VPNManager
     private let wifiNetworkRepository: WifiNetworkRepository
     private let logger: FileLogger
+    private let wifiManager: WifiManager
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -51,7 +52,8 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         vpnStateRepository: VPNStateRepository,
         vpnManager: VPNManager,
         wifiNetworkRepository: WifiNetworkRepository,
-        logger: FileLogger
+        logger: FileLogger,
+        wifiManager: WifiManager
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.protocolManager = protocolManager
@@ -59,6 +61,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         self.vpnManager = vpnManager
         self.wifiNetworkRepository = wifiNetworkRepository
         self.logger = logger
+        self.wifiManager = wifiManager
 
         isDarkMode = lookAndFeelRepository.isDarkMode
 
@@ -251,7 +254,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
     /// Disables VPN connection with trusted network logic
     private func disableVPNConnection() {
-        guard !WifiManager.shared.isConnectedWifiTrusted() else {
+        guard !wifiManager.isConnectedWifiTrusted() else {
             logger.logI("ProtocolSwitchViewModel", "User leaving untrusted network")
             vpnStateRepository.setUntrustedOneTimeOnlySSID("")
             vpnManager.simpleDisableConnection()

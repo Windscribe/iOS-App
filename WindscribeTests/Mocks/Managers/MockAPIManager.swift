@@ -51,6 +51,21 @@ class MockAPIManager: APIManager {
     var wgUnlockParamsCalled = false
     var mockUnblockWgResponse: Windscribe.UnblockWgResponse?
 
+    // Robert tracking
+    var getRobertFiltersCalled = false
+    var updateRobertSettingsCalled = false
+    var syncRobertFiltersCalled = false
+    var mockRobertFilters: RobertFilters?
+    var lastRobertFilterId: String?
+    var lastRobertFilterStatus: Int32?
+    var shouldThrowSyncError = false
+    var customSyncError: Error = Errors.notDefined
+
+    // Credentials tracking
+    var mockOpenVPNCredentials: OpenVPNServerCredentials?
+    var mockIKEv2Credentials: IKEv2ServerCredentials?
+    var mockOpenVPNServerConfig: String?
+
     func reset() {
         shouldThrowError = false
         customError = Errors.notDefined
@@ -78,6 +93,17 @@ class MockAPIManager: APIManager {
         mockIpAddress = nil
         wgUnlockParamsCalled = false
         mockUnblockWgResponse = nil
+        getRobertFiltersCalled = false
+        updateRobertSettingsCalled = false
+        syncRobertFiltersCalled = false
+        mockRobertFilters = nil
+        lastRobertFilterId = nil
+        lastRobertFilterStatus = nil
+        shouldThrowSyncError = false
+        customSyncError = Errors.notDefined
+        mockOpenVPNCredentials = nil
+        mockIKEv2Credentials = nil
+        mockOpenVPNServerConfig = nil
     }
 
     // MARK: - ShakeForData Methods (Implemented)
@@ -239,15 +265,39 @@ class MockAPIManager: APIManager {
     }
 
     func getOpenVPNServerConfig(openVPNVersion: String) async throws -> String {
-        fatalError("Not implemented")
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let config = mockOpenVPNServerConfig else {
+            throw NSError(domain: "MockAPIManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "No OpenVPN server config configured"])
+        }
+
+        return config
     }
 
     func getIKEv2ServerCredentials() async throws -> IKEv2ServerCredentials {
-        fatalError("Not implemented")
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let credentials = mockIKEv2Credentials else {
+            throw NSError(domain: "MockAPIManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "No IKEv2 credentials configured"])
+        }
+
+        return credentials
     }
 
     func getOpenVPNServerCredentials() async throws -> OpenVPNServerCredentials {
-        fatalError("Not implemented")
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let credentials = mockOpenVPNCredentials else {
+            throw NSError(domain: "MockAPIManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "No OpenVPN credentials configured"])
+        }
+
+        return credentials
     }
 
     func getPortMap(version: Int, forceProtocols: [String]) async throws -> PortMapList {
@@ -293,15 +343,47 @@ class MockAPIManager: APIManager {
     // MARK: - Robert Methods
 
     func getRobertFilters() async throws -> RobertFilters {
-        fatalError("Not implemented")
+        getRobertFiltersCalled = true
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let filters = mockRobertFilters else {
+            throw Errors.notDefined
+        }
+
+        return filters
     }
 
     func updateRobertSettings(id: String, status: Int32) async throws -> APIMessage {
-        fatalError("Not implemented")
+        updateRobertSettingsCalled = true
+        lastRobertFilterId = id
+        lastRobertFilterStatus = status
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let message = mockAPIMessage else {
+            return APIMessage(message: "", success: true)
+        }
+
+        return message
     }
 
     func syncRobertFilters() async throws -> APIMessage {
-        fatalError("Not implemented")
+        syncRobertFiltersCalled = true
+
+        if shouldThrowSyncError {
+            throw customSyncError
+        }
+
+        guard let message = mockAPIMessage else {
+            return APIMessage(message: "", success: true)
+        }
+
+        return message
     }
 
     // MARK: - Other Methods

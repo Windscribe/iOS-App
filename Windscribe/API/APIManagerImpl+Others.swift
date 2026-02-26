@@ -78,15 +78,13 @@ extension APIManagerImpl {
     }
 
     func rotateIp() async throws -> Bool {
-        try await apiUtil.makeBridgeApiCall { completion in
-            self.bridgeApi.rotateIp(completion)
-        }
+        let result = try await bridgeApi.rotateIp()
+        return try apiUtil.checkBridgeResult(statusCode: result.0, message: result.1)
     }
 
     func pinIp(ip: String) async throws -> Bool {
-        try await apiUtil.makeBridgeApiCall { completion in
-            self.bridgeApi.pinIp(ip, callback: completion)
-        }
+        let result = try await bridgeApi.pinIp(ip: ip)
+        return try apiUtil.checkBridgeResult(statusCode: result.0, message: result.1)
     }
 
     func wgUnlockParams() async throws -> UnblockWgResponse {

@@ -32,7 +32,7 @@ extension Container {
         register(WSNetServerAPI.self) { _ in
             WSNet.instance().serverAPI()
         }.inObjectScope(.container)
-        register(WSNetBridgeAPI.self) { _ in
+        register(WSNetBridgeAPIType.self) { _ in
             WSNet.instance().bridgeAPI()
         }.inObjectScope(.container)
         register(APIUtilService.self) { _ in

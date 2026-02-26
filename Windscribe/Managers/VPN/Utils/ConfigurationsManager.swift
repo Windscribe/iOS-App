@@ -30,7 +30,7 @@ class ConfigurationsManager {
     let ipRepository: IPRepository
     let userSessionRepository: UserSessionRepository
     let serverRepository: ServerRepository
-    let bridgeAPI: WSNetBridgeAPI
+    let bridgeAPI: WSNetBridgeAPIType
     let bridgeApiRepository: BridgeApiRepository
     let credentialsRepository: CredentialsRepository
     let staticIpRepository: StaticIpRepository
@@ -92,7 +92,7 @@ class ConfigurationsManager {
          ipRepository: IPRepository,
          userSessionRepository: UserSessionRepository,
          serverRepository: ServerRepository,
-         bridgeAPI: WSNetBridgeAPI,
+         bridgeAPI: WSNetBridgeAPIType,
          bridgeApiRepository: BridgeApiRepository,
          credentialsRepository: CredentialsRepository,
          staticIpRepository: StaticIpRepository,

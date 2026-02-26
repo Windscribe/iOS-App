@@ -34,7 +34,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
         return resolver.getPreferences()
     }
 
-    var bridgeAPI: WSNetBridgeAPI {
+    var bridgeAPI: WSNetBridgeAPIType {
         return resolver.getBridgeApi()
     }
 
@@ -103,12 +103,18 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 let pinnedIp = preferences.getLastSelectedPinnedIp()
                 if let pinnedIp = pinnedIp {
                     logger.logI(tag,"Bridge API - WSNEt -Pinning IP: \(pinnedIp)")
-                    bridgeAPI.pinIp(pinnedIp) { statusCode,_ in
-                        if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
+                    do {
+                        let result = try await bridgeAPI.pinIp(ip: pinnedIp)
+                        if let wsNetError = WSNetErrors(rawValue: result.0)?.error {
                             logger.logE(tag,"Failed to pin IP: \(wsNetError)")
                         } else {
                             logger.logI(tag, "IP pinned successfully")
-                        }}
+                        }
+                    } catch {
+                        if let wsNetError = error as? Errors {
+                            logger.logE(tag,"Failed to pin IP: \(wsNetError)")
+                        }
+                    }
                 }
             } else {
                 preferences.saveIgnorePinIP(status: false)

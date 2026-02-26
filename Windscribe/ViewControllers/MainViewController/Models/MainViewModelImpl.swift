@@ -32,6 +32,7 @@ class MainViewModelImpl: MainViewModel {
     private let wifiNetworkRepository: WifiNetworkRepository
     private let customConfigRepository: CustomConfigRepository
     private let alertManager: AlertManager
+    private let wifiManager: WifiManager
 
     let serverList = CurrentValueSubject<[ServerModel], Never>([])
     var portMapHeadings = CurrentValueSubject<[String]?, Never>(nil)
@@ -91,7 +92,8 @@ class MainViewModelImpl: MainViewModel {
          wifiNetworkRepository: WifiNetworkRepository,
          sessionManager: SessionManager,
          customConfigRepository: CustomConfigRepository,
-         alertManager: AlertManager) {
+         alertManager: AlertManager,
+         wifiManager: WifiManager) {
 
         self.vpnManager = vpnManager
         self.logger = logger
@@ -114,12 +116,17 @@ class MainViewModelImpl: MainViewModel {
         self.wifiNetworkRepository = wifiNetworkRepository
         self.customConfigRepository = customConfigRepository
         self.alertManager = alertManager
+        self.wifiManager = wifiManager
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
         becameActiveTrigger = livecycleManager.becameActiveTrigger
 
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
+
+        // Save current WiFi networks on initialization
+        wifiManager.saveCurrentWifiNetworks()
+
         loadNotifications()
         loadServerList()
         loadFavourite()

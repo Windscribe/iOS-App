@@ -19,10 +19,11 @@ protocol WifiInfoViewModelType {
 
 class WifiInfoViewModel: WifiInfoViewModelType {
     let preferences: Preferences
+    let wifiManager: WifiManager
     let unknownWifiTriggerSubject = PassthroughSubject<Void, Never>()
 
     var trustedNetworkImage: String {
-        if let status = WifiManager.shared.getConnectedNetwork()?.status {
+        if let status = wifiManager.getConnectedNetwork()?.status {
             if status == true {
                 return ImagesAsset.wifiUnsecure
             } else {
@@ -37,8 +38,9 @@ class WifiInfoViewModel: WifiInfoViewModelType {
         return preferences.getBlurNetworkName() ?? false
     }
 
-    init(preferences: Preferences) {
+    init(preferences: Preferences, wifiManager: WifiManager) {
         self.preferences = preferences
+        self.wifiManager = wifiManager
     }
 
     func nameLabelTapped(networkName: String?) -> Bool? {

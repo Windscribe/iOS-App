@@ -54,6 +54,11 @@ struct ServerCredentialsModel: ServerCredentialType {
         username = from.username
         password = from.password
     }
+
+    init(username: String, password: String) {
+        self.username = username
+        self.password = password
+    }
 }
 
 @objcMembers class ServerCredentials: Object, ServerCredentialType, Decodable {

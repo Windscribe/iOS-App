@@ -10,9 +10,8 @@ import Foundation
 @testable import Windscribe
 
 final class MockFileDatabase: FileDatabase {
-    // In-memory storage for testing (thread-safe with lock)
+    // In-memory storage for testing (actor provides thread-safety)
     private var _fileStorage: [String: Data] = [:]
-    private let lock = NSLock()
 
     // Test configuration flags
     var shouldThrowOnRead = false
@@ -22,13 +21,32 @@ final class MockFileDatabase: FileDatabase {
     var customSaveError: Error?
     var customRemoveError: Error?
 
+    // Call tracking properties
+    var readFileCalled = false
+    var saveFileCalled = false
+    var removeFileCalled = false
+    var lastReadFilePath: String?
+    var lastSavedFilePath: String?
+    var lastSavedFileData: Data?
+    var lastRemovedFilePath: String?
+
+    // Mock data for testing
+    var mockFileContent: Data?
+
+    init() {}
+
     func readFile(path: String) async throws -> Data {
+        readFileCalled = true
+        lastReadFilePath = path
+
         if shouldThrowOnRead {
             throw customReadError ?? FileDatabaseError.writeError("Mock read error")
         }
 
-        lock.lock()
-        defer { lock.unlock() }
+        // If mockFileContent is set, return it (for test scenarios)
+        if let mockData = mockFileContent {
+            return mockData
+        }
 
         guard let data = _fileStorage[path] else {
             throw FileDatabaseError.fileNotFound(path)
@@ -38,29 +56,30 @@ final class MockFileDatabase: FileDatabase {
     }
 
     func saveFile(data: Data, path: String) async throws {
+        saveFileCalled = true
+        lastSavedFilePath = path
+        lastSavedFileData = data
+
         if shouldThrowOnSave {
             throw customSaveError ?? FileDatabaseError.writeError("Mock save error")
         }
 
-        lock.lock()
-        defer { lock.unlock() }
         _fileStorage[path] = data
     }
 
     func removeFile(path: String) async throws {
+        removeFileCalled = true
+        lastRemovedFilePath = path
+
         if shouldThrowOnRemove {
             throw customRemoveError ?? FileDatabaseError.deleteError("Mock remove error")
         }
 
-        lock.lock()
-        defer { lock.unlock() }
         _fileStorage.removeValue(forKey: path)
     }
 
     // Test helper methods
     func reset() {
-        lock.lock()
-        defer { lock.unlock() }
         _fileStorage.removeAll()
         shouldThrowOnRead = false
         shouldThrowOnSave = false
@@ -68,23 +87,27 @@ final class MockFileDatabase: FileDatabase {
         customReadError = nil
         customSaveError = nil
         customRemoveError = nil
+
+        // Reset tracking properties
+        readFileCalled = false
+        saveFileCalled = false
+        removeFileCalled = false
+        lastReadFilePath = nil
+        lastSavedFilePath = nil
+        lastSavedFileData = nil
+        lastRemovedFilePath = nil
+        mockFileContent = nil
     }
 
     func fileExists(path: String) -> Bool {
-        lock.lock()
-        defer { lock.unlock() }
         return _fileStorage[path] != nil
     }
 
     func getAllFiles() -> [String: Data] {
-        lock.lock()
-        defer { lock.unlock() }
         return _fileStorage
     }
 
     func getFileCount() -> Int {
-        lock.lock()
-        defer { lock.unlock() }
         return _fileStorage.count
     }
 }

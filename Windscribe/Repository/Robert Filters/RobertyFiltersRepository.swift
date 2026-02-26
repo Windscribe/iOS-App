@@ -84,6 +84,9 @@ class RobertyFiltersRepositoryImpl: RobertyFiltersRepository {
                     }
                     self.logger.logE("RobertyFiltersRepository", newError)
                     throw RobertFilterErrors.failedSync(message: newError)
+                } else {
+                    // Rethrow non-Errors type errors (e.g., RobertFilterErrors)
+                    throw error
                 }
             }
         } catch {
@@ -97,6 +100,9 @@ class RobertyFiltersRepositoryImpl: RobertyFiltersRepository {
                 }
                 self.logger.logE("RobertyFiltersRepository", newError)
                 throw RobertFilterErrors.failedSync(message: newError)
+            } else {
+                // Rethrow non-Errors type errors (e.g., RobertFilterErrors from inner catch)
+                throw error
             }
         }
     }

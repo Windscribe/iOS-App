@@ -19,7 +19,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
     private var startTimeStamp = Date()
     private var initialListenning = true
 
-    private let bridgeAPI: WSNetBridgeAPI
+    private let bridgeAPI: WSNetBridgeAPIType
     private let locationManager: LocationsManager
     private let userSessionRepository: UserSessionRepository
     private let vpnStateRepository: VPNStateRepository
@@ -32,7 +32,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
         bridgeIsAvailable.value
     }
 
-    init(bridgeAPI: WSNetBridgeAPI,
+    init(bridgeAPI: WSNetBridgeAPIType,
          locationManager: LocationsManager,
          userSessionRepository: UserSessionRepository,
          vpnStateRepository: VPNStateRepository,

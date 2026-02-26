@@ -21,19 +21,17 @@ class UserDataRepositoryImpl: UserDataRepository {
     private let latencyRepository: LatencyRepository
     private let staticIpRepository: StaticIpRepository
     private let notificationsRepository: NotificationRepository
-    private var emergencyRepository: EmergencyRepository {
-        return Assembler.resolve(EmergencyRepository.self)
-    }
-
+    private let emergencyRepository: EmergencyRepository
     private let logger: FileLogger
 
-    init(serverRepository: ServerRepository, credentialsRepository: CredentialsRepository, portMapRepository: PortMapRepository, latencyRepository: LatencyRepository, staticIpRepository: StaticIpRepository, notificationsRepository: NotificationRepository, logger: FileLogger) {
+    init(serverRepository: ServerRepository, credentialsRepository: CredentialsRepository, portMapRepository: PortMapRepository, latencyRepository: LatencyRepository, staticIpRepository: StaticIpRepository, notificationsRepository: NotificationRepository, emergencyRepository: EmergencyRepository, logger: FileLogger) {
         self.serverRepository = serverRepository
         self.credentialsRepository = credentialsRepository
         self.portMapRepository = portMapRepository
         self.latencyRepository = latencyRepository
         self.staticIpRepository = staticIpRepository
         self.notificationsRepository = notificationsRepository
+        self.emergencyRepository = emergencyRepository
         self.logger = logger
     }
 

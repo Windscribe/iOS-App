@@ -33,17 +33,20 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     let preferences: Preferences
     let protocolManager: ProtocolManagerType
     let connectivityManager: ConnectivityManager
+    let wifiManager: WifiManager
 
     init(vpnStateRepository: VPNStateRepository,
          locationsManager: LocationsManager,
          preferences: Preferences,
          protocolManager: ProtocolManagerType,
-         connectivityManager: ConnectivityManager) {
+         connectivityManager: ConnectivityManager,
+         wifiManager: WifiManager) {
         self.locationsManager = locationsManager
         self.preferences = preferences
         self.vpnStateRepository = vpnStateRepository
         self.protocolManager = protocolManager
         self.connectivityManager = connectivityManager
+        self.wifiManager = wifiManager
         vpnStateRepository.getStatus()
             .sink { [weak self] state in
                 self?.statusSubject.send(ConnectionState.state(from: state))
@@ -110,6 +113,7 @@ class ConnectionStateInfoView: UIView {
     var actionIcon = UIImageView()
     var stackView = UIStackView()
     private var images: [UIImage] = []
+    private let wifiManager: WifiManager
 
     var viewModel: ConnectionStateInfoViewModelType! {
         didSet {
@@ -121,7 +125,8 @@ class ConnectionStateInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init() {
+    init(wifiManager: WifiManager) {
+        self.wifiManager = wifiManager
         super.init(frame: .zero)
         addViews()
         setLayout()
@@ -244,7 +249,7 @@ class ConnectionStateInfoView: UIView {
             }
             return
         }
-        if WifiManager.shared.selectedPreferredProtocolStatus ?? false, WifiManager.shared.selectedPreferredProtocol == protoPort.protocolName, WifiManager.shared.selectedPreferredPort == protoPort.portName {
+        if wifiManager.selectedPreferredProtocolStatus ?? false, wifiManager.selectedPreferredProtocol == protoPort.protocolName, wifiManager.selectedPreferredPort == protoPort.portName {
             preferredIcon.isHidden = false
         } else {
             preferredIcon.isHidden = true
@@ -269,13 +274,13 @@ class ConnectionStateInfoView: UIView {
         protocolLabel.adjustsFontSizeToFitWidth = true
         protocolLabel.font = UIFont.bold(size: 12)
         protocolLabel.textColor = UIColor.white
-        protocolLabel.text = WifiManager.shared.getConnectedNetwork()?.protocolType ?? TextsAsset.wireGuard
+        protocolLabel.text = wifiManager.getConnectedNetwork()?.protocolType ?? TextsAsset.wireGuard
 
         portLabel.textAlignment = .center
         portLabel.adjustsFontSizeToFitWidth = true
         portLabel.font = UIFont.regular(size: 12)
         portLabel.textColor = UIColor.white
-        portLabel.text = WifiManager.shared.getConnectedNetwork()?.port ?? "443"
+        portLabel.text = wifiManager.getConnectedNetwork()?.port ?? "443"
 
         actionIcon.image = UIImage(named: ImagesAsset.serverWhiteRightArrow)
         actionIcon.layer.opacity = 0.4

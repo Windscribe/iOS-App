@@ -27,6 +27,7 @@ class ViewModels: Assembly {
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 latencyRepository: r.resolve(LatencyRepository.self)!,
                 connectivity: r.resolve(ConnectivityManager.self)!,
+                wifiManager: r.resolve(WifiManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
@@ -280,7 +281,8 @@ class ViewModels: Assembly {
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
-                logger: r.resolve(FileLogger.self)!
+                logger: r.resolve(FileLogger.self)!,
+                wifiManager: r.resolve(WifiManager.self)!
             )
         }.inObjectScope(.transient)
 
@@ -348,14 +350,15 @@ class ViewModels: Assembly {
                               wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                               sessionManager: r.resolve(SessionManager.self)!,
                               customConfigRepository: r.resolve(CustomConfigRepository.self)!,
-                              alertManager: r.resolve(AlertManager.self)!)
+                              alertManager: r.resolve(AlertManager.self)!,
+                              wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                      languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
         container.register(LocationPermissionManaging.self) { r in
-            LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(ConnectivityManager.self)!, wifiManager: WifiManager.shared)
+            LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(ConnectivityManager.self)!, wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.container)
 
         container.register(ConnectionViewModelType.self) { r in
@@ -367,7 +370,7 @@ class ViewModels: Assembly {
                                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                                 preferences: r.resolve(Preferences.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
-                                wifiManager: WifiManager.shared,
+                                wifiManager: r.resolve(WifiManager.self)!,
                                 wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                 ipRepository: r.resolve(IPRepository.self)!,
@@ -441,7 +444,8 @@ class ViewModels: Assembly {
                                          locationsManager: r.resolve(LocationsManager.self)!,
                                          preferences: r.resolve(Preferences.self)!,
                                          protocolManager: r.resolve(ProtocolManagerType.self)!,
-                                         connectivityManager: r.resolve(ConnectivityManager.self)!)
+                                         connectivityManager: r.resolve(ConnectivityManager.self)!,
+                                         wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(IPInfoViewModelType.self) { r in
@@ -457,7 +461,8 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(WifiInfoViewModelType.self) { r in
-            WifiInfoViewModel(preferences: r.resolve(Preferences.self)!)
+            WifiInfoViewModel(preferences: r.resolve(Preferences.self)!,
+                              wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(ServerInfoViewModelType.self) { r in

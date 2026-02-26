@@ -263,6 +263,47 @@ struct SessionModel: Equatable {
         planType = isUserPro ? "1" : "0"
     }
 
+    init(sessionAuthHash: String,
+         username: String,
+         userId: String,
+         isUserPro: Bool,
+         isPremium: Bool,
+         email: String,
+         emailStatus: Bool,
+         billing: Int?,
+         alc: [String],
+         rebill: Int,
+         billingPlanId: Int,
+         trafficUsed: Double,
+         trafficMax: Double,
+         status: Int,
+         expiryDate: String,
+         lastReset: String?,
+         regDate: String,
+         deviceId: String,
+         sipCount: Int,
+         loc: String,
+         locHash: String,
+         revisionHash: String) {
+        self.sessionAuthHash = sessionAuthHash
+        self.username = username
+        self.userId = userId
+        self.trafficUsed = trafficUsed
+        self.trafficMax = trafficMax
+        self.status = status
+        self.email = email
+        self.emailStatus = emailStatus
+        self.billingPlanId = billingPlanId
+        self.isPremium = isPremium
+        self.premiumExpiryDate = expiryDate
+        self.regDate = Int(regDate.split(separator: "-").first ?? "0") ?? 0
+        self.lastReset = lastReset ?? ""
+        self.locRev = 0
+        self.locHash = locHash
+        self.alc = alc
+        self.sipCount = [SipCountModel(countNumber: sipCount)]
+    }
+
     func getIsPremium() -> Int {
         return isPremium ? 1 : 0
     }

@@ -12,7 +12,6 @@ protocol WSNetEmergencyConnectType {
     func getOvpnConfig() -> String
 }
 
-
 extension WSNetEmergencyConnect: WSNetEmergencyConnectType {
     func getIpEndpoints() async -> [WSNetEmergencyConnectEndpoint] {
         await withCheckedContinuation { continuation in

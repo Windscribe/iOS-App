@@ -15,6 +15,7 @@ import NetworkExtension
 class MockVPNStateRepository: VPNStateRepository {
     // Mock vars
     var mockStatus: NEVPNStatus = .disconnected
+    private let statusSubject = CurrentValueSubject<NEVPNStatus, Never>(.disconnected)
 
     // VPNStateRepository protocol properties
     var configurationState: ConfigurationState = .initial
@@ -61,6 +62,15 @@ class MockVPNStateRepository: VPNStateRepository {
     }
 
     func getStatus() -> AnyPublisher<NEVPNStatus, Never> {
-        PassthroughSubject<NEVPNStatus, Never>().eraseToAnyPublisher()
+        statusSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - Test Helper Methods
+
+    func simulateStatusChange(_ status: NEVPNStatus) {
+        mockStatus = status
+        lastConnectionStatus = status
+        statusSubject.send(status)
+        connectionStateUpdatedTrigger.send()
     }
 }

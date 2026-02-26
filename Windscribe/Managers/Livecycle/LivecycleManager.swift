@@ -33,6 +33,7 @@ class LivecycleManager: LivecycleManagerType {
     private let connectivityManager: ProtocolManagerType
     private let locationsManager: LocationsManager
     private let unblockWgParamsRepository: UnblockWgParamsRepository
+    private let wifiManager: WifiManager
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -55,7 +56,8 @@ class LivecycleManager: LivecycleManagerType {
          configManager: ConfigurationsManager,
          connectivityManager: ProtocolManagerType,
          locationsManager: LocationsManager,
-         unblockWgParamsRepository: UnblockWgParamsRepository) {
+         unblockWgParamsRepository: UnblockWgParamsRepository,
+         wifiManager: WifiManager) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences
@@ -69,6 +71,7 @@ class LivecycleManager: LivecycleManagerType {
         self.connectivityManager = connectivityManager
         self.locationsManager = locationsManager
         self.unblockWgParamsRepository = unblockWgParamsRepository
+        self.wifiManager = wifiManager
     }
 
     /// Fresh app launch.
@@ -86,7 +89,7 @@ class LivecycleManager: LivecycleManagerType {
         vpnManager.configureForConnectionState()
         let info = vpnStateRepository.vpnInfo.value
         if connectivity.internetConnectionAvailable() {
-            if info?.killSwitch == true && vpnStateRepository.isDisconnected() && !WifiManager.shared.isConnectedWifiTrusted() {
+            if info?.killSwitch == true && vpnStateRepository.isDisconnected() && !wifiManager.isConnectedWifiTrusted() {
                 logger.logI("LivecycleManager", "VPN disocnnected, Turning off kill switch.")
                 vpnManager.simpleDisableConnection()
             } else if vpnStateRepository.isConnected() && testTask == nil {
