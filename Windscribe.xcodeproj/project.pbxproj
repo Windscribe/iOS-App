@@ -18,6 +18,11 @@
 		1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */; };
 		1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */; };
 		1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E022C472E93FDD600AF8AA7 /* TestLocalDatabase.swift */; };
+		1E0492932F3F52120016B11F /* MockProtocolManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0492922F3F52120016B11F /* MockProtocolManagerType.swift */; };
+		1E0492952F3F53C70016B11F /* MockCustomConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0492942F3F53C70016B11F /* MockCustomConfigRepository.swift */; };
+		1E04929A2F3F5C910016B11F /* MockWSNetEmergencyConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0492982F3F59420016B11F /* MockWSNetEmergencyConnect.swift */; };
+		1E04929D2F3F5CC80016B11F /* WSNetEmergencyConnectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E04929C2F3F5CC20016B11F /* WSNetEmergencyConnectType.swift */; };
+		1E04929E2F3F5CC80016B11F /* WSNetEmergencyConnectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E04929C2F3F5CC20016B11F /* WSNetEmergencyConnectType.swift */; };
 		1E0492AA2F44A1850016B11F /* CustomConfigRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0492A92F44A1850016B11F /* CustomConfigRepositoryTests.swift */; };
 		1E0A6DA42D78823A0075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA32D78823A0075B8F5 /* RealmSwift */; };
 		1E0A6DA82D7882580075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA72D7882580075B8F5 /* RealmSwift */; };
@@ -242,6 +247,7 @@
 		1EDB2CA22F190C0D00A5966D /* MigrationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */; };
 		1EDB2CA32F190C0D00A5966D /* MigrationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */; };
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
+		1EE62A8C2F3CEB8A008CC7AA /* EmergencyRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE62A8B2F3CEB87008CC7AA /* EmergencyRepositoryTests.swift */; };
 		1EE62A842F3CB2E6008CC7AA /* VPNStateRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE62A832F3CB2D9008CC7AA /* VPNStateRepositoryTests.swift */; };
 		1EE62A862F3CBBC6008CC7AA /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
 		1EE62A872F3CBC14008CC7AA /* UnblockWgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52B60452F2D0A97009B6279 /* UnblockWgResponse.swift */; };
@@ -1429,6 +1435,10 @@
 		1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePopupViewModel.swift; sourceTree = "<group>"; };
 		1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTypes.swift; sourceTree = "<group>"; };
 		1E022C472E93FDD600AF8AA7 /* TestLocalDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLocalDatabase.swift; sourceTree = "<group>"; };
+		1E0492922F3F52120016B11F /* MockProtocolManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProtocolManagerType.swift; sourceTree = "<group>"; };
+		1E0492942F3F53C70016B11F /* MockCustomConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCustomConfigRepository.swift; sourceTree = "<group>"; };
+		1E0492982F3F59420016B11F /* MockWSNetEmergencyConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWSNetEmergencyConnect.swift; sourceTree = "<group>"; };
+		1E04929C2F3F5CC20016B11F /* WSNetEmergencyConnectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetEmergencyConnectType.swift; sourceTree = "<group>"; };
 		1E0492A92F44A1850016B11F /* CustomConfigRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigRepositoryTests.swift; sourceTree = "<group>"; };
 		1E0D9D5F2C6103A3008AFF2D /* SettingOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingOption.swift; sourceTree = "<group>"; };
 		1E0D9D602C6103A3008AFF2D /* SettingOption.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingOption.xib; sourceTree = "<group>"; };
@@ -1587,6 +1597,7 @@
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
 		1EDB2CA12F190C0700A5966D /* MigrationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationRepository.swift; sourceTree = "<group>"; };
+		1EE62A8B2F3CEB87008CC7AA /* EmergencyRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepositoryTests.swift; sourceTree = "<group>"; };
 		1EE62A832F3CB2D9008CC7AA /* VPNStateRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNStateRepositoryTests.swift; sourceTree = "<group>"; };
 		1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepository.swift; sourceTree = "<group>"; };
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
@@ -2413,6 +2424,14 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
+		1E04929B2F3F5CA40016B11F /* WSNet Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				1E04929C2F3F5CC20016B11F /* WSNetEmergencyConnectType.swift */,
+			);
+			path = "WSNet Protocol";
+			sourceTree = "<group>";
+		};
 		1E0D9D632C6103A3008AFF2D /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -3184,6 +3203,7 @@
 		1EFFD03F2E99382D005603FB /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				1E0492922F3F52120016B11F /* MockProtocolManagerType.swift */,
 				F425B09F2F33C5450046D5E1 /* MockLocalPingManager.swift */,
 				1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */,
 				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
@@ -4116,6 +4136,7 @@
 		C5D983B72B34A1850069FF3A /* API */ = {
 			isa = PBXGroup;
 			children = (
+				1E04929B2F3F5CA40016B11F /* WSNet Protocol */,
 				C5D983BA2B34A1D90069FF3A /* APIManager.swift */,
 				C5D983B82B34A1C40069FF3A /* APIManagerImpl.swift */,
 				C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */,
@@ -4624,6 +4645,7 @@
 		F437917D2E95A1E500ED6141 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1EE62A8B2F3CEB87008CC7AA /* EmergencyRepositoryTests.swift */,
 				1EE62A832F3CB2D9008CC7AA /* VPNStateRepositoryTests.swift */,
 				1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */,
 				1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */,
@@ -4637,6 +4659,7 @@
 				F42D7FB92F3513E700F71B20 /* IPRepositoryTests.swift */,
 				F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */,
 				F4A20BCF2EE88F620003D880 /* WifiNetworkRepositoryTests.swift */,
+				1E0492942F3F53C70016B11F /* MockCustomConfigRepository.swift */,
 				1E0492A92F44A1850016B11F /* CustomConfigRepositoryTests.swift */,
 			);
 			path = Repository;
@@ -5760,6 +5783,7 @@
 		F4EF7A092D5D31A200E4EB9F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
+				1E0492982F3F59420016B11F /* MockWSNetEmergencyConnect.swift */,
 				F41AC7A12EA95CAF00673A11 /* Models */,
 				1EFFD0412E99384F005603FB /* Data */,
 				1EFFD0402E99383D005603FB /* Repositories */,
@@ -6753,6 +6777,7 @@
 				592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */,
 				C59CA1602CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */,
 				1EF7BB352C6D0DAE0032A4DF /* UpgradePlanDetailView.swift in Sources */,
+				1E04929E2F3F5CC80016B11F /* WSNetEmergencyConnectType.swift in Sources */,
 				1E7918C42CDE2FD100C20723 /* LivecycleManager.swift in Sources */,
 				C5658EA72C71AACD00E8215A /* HomeRouter.swift in Sources */,
 				1ED23F872DC3C9C600C7BEE5 /* BackgroundFileManager.swift in Sources */,
@@ -6871,6 +6896,7 @@
 				AFFA716421C99B2F00349195 /* Date+Extension.swift in Sources */,
 				AF16CA1822272EBE00997A2A /* InAppPurchaseManagerImpl.swift in Sources */,
 				F499352C2DA71F0800108558 /* GhostAccountView.swift in Sources */,
+				1E04929D2F3F5CC80016B11F /* WSNetEmergencyConnectType.swift in Sources */,
 				F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */,
 				C59C074429424CF300D6C3C1 /* Proxy.swift in Sources */,
 				AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */,
@@ -7341,6 +7367,7 @@
 				F43791792E95A17000ED6141 /* SampleDataLeaderboard.swift in Sources */,
 				1EFFD0432E99389B005603FB /* MockUserSessionRepository.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
+				1EE62A8C2F3CEB8A008CC7AA /* EmergencyRepositoryTests.swift in Sources */,
 				F41AC7A02EA950E400673A11 /* UserSessionRepositoryTests.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
@@ -7364,13 +7391,16 @@
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
 				F49935412DA9973100108558 /* MockSoundManager.swift in Sources */,
+				1E0492952F3F53C70016B11F /* MockCustomConfigRepository.swift in Sources */,
 				F4B4C1E32E99812D0024D824 /* PortMapRepositoryTests.swift in Sources */,
 				F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */,
+				1E0492932F3F52120016B11F /* MockProtocolManagerType.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
 				F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */,
 				F45E4FA22F105C8900C9F0DB /* FavouriteListViewModelTests.swift in Sources */,
 				C5A6F07B2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
+				1E04929A2F3F5C910016B11F /* MockWSNetEmergencyConnect.swift in Sources */,
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,

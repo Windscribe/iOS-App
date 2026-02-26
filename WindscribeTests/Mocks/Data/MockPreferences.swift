@@ -12,7 +12,6 @@ import Combine
 @testable import Windscribe
 
 class MockPreferences: Preferences {
-
     var mockConnectionCount = 0
     var mockAdvanceParams: String?
     var mockLastReviewDate: Date?
