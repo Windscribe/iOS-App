@@ -72,6 +72,7 @@ class ControlPlane {
 
             do {
                 let session = try await getSession()
+                let sessionModel = session.getModel()
                 consoleLogger.debug("User session update successful. Status: \(session.status, privacy: .public)")
 
                 if session.status != 1 {
@@ -80,7 +81,8 @@ class ControlPlane {
                     return
                 }
 
-                if session.isPremium != preferences.getUserStatus() {
+                // checking if user is still from or unlimited
+                if sessionModel.isUserPro != preferences.getUserStatus() {
                     await stopTunnel(reason: .userStatusChanged)
                     return
                 }
