@@ -11,4 +11,5 @@ import Foundation
 enum AppConstants {
     static let appName = "Windscribe"
     static let service = "WindscribeServerCreds"
+    static let emergencyConfig = "emergency-connect"
 }
