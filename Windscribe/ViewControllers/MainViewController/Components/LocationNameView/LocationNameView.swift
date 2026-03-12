@@ -61,6 +61,8 @@ class LocationNameView: UIView {
 
     private var cancellables = Set<AnyCancellable>()
     private let spacerView = UIView()
+    private let horizontalSpacing: CGFloat = 8
+    private let verticalSpacing: CGFloat = 0
 
     private let mainNameLabel: UILabel = {
         let label = UILabel()
@@ -143,25 +145,25 @@ class LocationNameView: UIView {
     private func update(mainName: String?, nickName: String?) {
         mainNameLabel.text = mainName
         nickNameLabel.text = nickName
+        nickNameLabel.font = UIFont.regular(size: 26)
 
         layoutIfNeeded()
 
         let mainNameWidth = mainNameLabel.intrinsicContentSize.width
         let nickNameWidth = nickNameLabel.intrinsicContentSize.width
-        let spacing = stackView.spacing
         let availableWidth = bounds.width
 
-        if mainNameWidth + nickNameWidth + spacing > availableWidth && availableWidth > 0 {
+        if mainNameWidth + nickNameWidth + horizontalSpacing > availableWidth && availableWidth > 0 {
             stackView.axis = .vertical
             stackView.alignment = .leading
-            stackView.spacing = 0
+            stackView.spacing = verticalSpacing
             heightConstraint.constant = 88
             nickNameLabel.font = UIFont.regular(size: 21)
             spacerView.isHidden = false
         } else {
             stackView.axis = .horizontal
             stackView.alignment = .bottom
-            stackView.spacing = 8
+            stackView.spacing = horizontalSpacing
             heightConstraint.constant = 68
             nickNameLabel.font = UIFont.regular(size: 26)
             spacerView.isHidden = true

@@ -128,6 +128,10 @@ class LocationsManagerImpl: LocationsManager {
                 guard let customConfig = customConfigRepository.getCustomConfig(fileId: locationID) else {
                     return getEmptyUIInfo()
                 }
+                // Never show emergency connect configs in the UI
+                if customConfig.name == AppConstants.emergencyConfig {
+                    return getEmptyUIInfo()
+                }
                 return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation, isServer: false)
             } else if locationType == .staticIP {
                 guard let staticIP = staticIpRepository.getStaticIp(id: locationID) else {
