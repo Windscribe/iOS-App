@@ -222,11 +222,14 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func checkForInternetConnection() {
         guard vpnConnectionViewModel.isConnected() else { return }
-        let isOnline: Bool = viewModel.appNetwork.value.status == .connected
-        if !isOnline {
-            logger.logI("MainViewController", "No internet connection available.")
-            internetConnectionLost = true
-            vpnConnectionViewModel.disableConnection()
+        Task {
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            let isOnline: Bool = viewModel.appNetwork.value.status == .connected
+            if !isOnline {
+                logger.logI("MainViewController", "No internet connection available.")
+                internetConnectionLost = true
+                vpnConnectionViewModel.disableConnection()
+            }
         }
     }
 

@@ -27,6 +27,7 @@ protocol WifiNetworkRepository {
     func updateNetworkPreferredPort(network: WifiNetworkModel, port: String)
     func updateNetworkPreferredProtocolWithStatus(network: WifiNetworkModel, protocol: String, port: String, status: Bool)
     func touchNetwork(network: WifiNetworkModel)
+    func findNetwork(with nameSSID: String) -> WifiNetworkModel?
 }
 
 /// Manages Auto secure networks  data
@@ -185,5 +186,11 @@ class WifiNetworkRepositoryImpl: WifiNetworkRepository {
             }
         }
         localDatabase.saveNetwork(wifiNetwork: WifiNetwork(from: updatedNetwork))
+    }
+
+    func findNetwork(with nameSSID: String) -> WifiNetworkModel? {
+        networks.value.first(where: {
+            $0.SSID == nameSSID
+        })
     }
 }
