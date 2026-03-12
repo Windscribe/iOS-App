@@ -192,21 +192,20 @@ class ConnectionViewModel: ConnectionViewModelType {
             self.selectedLocationUpdated.send(())
         }.store(in: &cancellables)
 
-        connectivity.network
-            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
-            .sink { [weak self] network in
-                guard let self = self else { return }
-                guard network.networkType != .none else {
-                    return
-                }
-                guard network.name?.uppercased() != TextsAsset.NetworkSecurity.unknownNetwork.uppercased() else {
-                    return
-                }
-                if self.currentNetwork != nil, self.currentNetwork?.name != network.name {
-                    self.refreshConnectionFromNetworkChange()
-                }
-                self.currentNetwork = network
-            }.store(in: &cancellables)
+        connectivity.network.removeDuplicates()
+        .sink { [weak self] network in
+            guard let self = self else { return }
+            guard network.networkType != .none else {
+                return
+            }
+            guard network.name?.uppercased() != TextsAsset.NetworkSecurity.unknownNetwork.uppercased() else {
+                return
+            }
+            if self.currentNetwork != nil, self.currentNetwork?.name != network.name {
+                self.refreshConnectionFromNetworkChange()
+            }
+            self.currentNetwork = network
+        }.store(in: &cancellables)
 
         wifiNetworkRepository.networks
             .receive(on: DispatchQueue.main)
@@ -325,7 +324,8 @@ extension ConnectionViewModel {
             let network = wifiNetworkRepository.networks.value.filter {$0.SSID == connectivity.getNetwork().name}.first
             if .connected == info.status {
                 wifiManager.saveCurrentWifiNetworks()
-                if network?.preferredProtocol == info.selectedProtocol  && network?.preferredPort == info.selectedPort {
+                var needsReconnect = false
+                if !needsReconnect, network?.preferredProtocol == info.selectedProtocol  && network?.preferredPort == info.selectedPort {
                     return
                 }
                 connectionTaskPublisher?.cancel()
