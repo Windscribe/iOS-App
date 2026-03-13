@@ -226,6 +226,10 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         }
         if indexPath.row == 0 { return }
         let calculatedSection = getCalculatedSection(from: indexPath.section)
+
+        // Bounds check to prevent crash when serverSections is updated
+        guard calculatedSection >= 0 && calculatedSection < serverSections.count else { return }
+
         guard let server = serverSections[calculatedSection].server else { return }
         let group = server.groups[indexPath.row - 1]
         delegate?.setSelectedServerAndGroup(server: server, group: group)
@@ -248,6 +252,13 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             return bestLocationCell
         } else {
             let calculatedSection = getCalculatedSection(from: section)
+
+            // Bounds check to prevent crash when serverSections is updated during scrolling
+            guard calculatedSection >= 0 && calculatedSection < serverSections.count else {
+                // Return empty cell if section index is out of bounds
+                return UITableViewCell()
+            }
+
             let serverSection = serverSections[calculatedSection]
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)! as? ServerSectionCell
@@ -258,20 +269,19 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
                 cell.serverCellViewModel = ServerSectionCellModel()
             }
 
-            if let expanded = tableView.expandedSections[section], calculatedSection < serverSections.count {
+            if let expanded = tableView.expandedSections[section] {
                 serverSections[calculatedSection].collapsed = !expanded
             }
-            if section <= serverSections.count {
-                cell.serverCellViewModel?.update(serverModel: serverSections[calculatedSection].server,
-                                                 locationLoad: locationLoad,
-                                                 isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
-                                                 isDarkMode: lookAndFeelRepository.isDarkMode)
-                cell.setCollapsed(collapsed: serverSection.collapsed)
-                if !serverSection.collapsed {
-                    print("ahah \(serverSection.server?.name ?? "")")
-                }
-                cell.refreshUI()
+
+            cell.serverCellViewModel?.update(serverModel: serverSections[calculatedSection].server,
+                                             locationLoad: locationLoad,
+                                             isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
+                                             isDarkMode: lookAndFeelRepository.isDarkMode)
+            cell.setCollapsed(collapsed: serverSection.collapsed)
+            if !serverSection.collapsed {
+                print("ahah \(serverSection.server?.name ?? "")")
             }
+            cell.refreshUI()
             return cell
         }
     }
@@ -281,8 +291,11 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     }
 
     func changeForSection(tableView: UITableView, state: ExpyState, section: Int) {
-        guard section < serverSections.count else { return }
         let calculatedSection = getCalculatedSection(from: section)
+
+        // Bounds check to prevent crash when serverSections is updated
+        guard calculatedSection >= 0 && calculatedSection < serverSections.count else { return }
+
         guard let cell = tableView.cellForRow(at: IndexPath(item: 0, section: section)) as? ServerSectionCell else { return }
         switch state {
         case .willExpand:

@@ -42,7 +42,16 @@ class ConfigurationsManager {
 
     weak var delegate: ConfigurationsManagerDelegate?
 
-    var managers: [NEVPNManager] = []
+    private var _managers: [NEVPNManager] = []
+    private let managersLock = NSLock()
+    var managers: [NEVPNManager] {
+        get {
+            managersLock.withLock { _managers }
+        }
+        set {
+            managersLock.withLock { _managers = newValue }
+        }
+    }
     var showFailedPinIpTrigger = PassthroughSubject<Void, Never>()
     var reloadManagersTrigger = CurrentValueSubject<Void, Never>(())
     var cancellables = Set<AnyCancellable>()
