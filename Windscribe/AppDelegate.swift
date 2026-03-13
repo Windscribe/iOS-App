@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var alertManager: AlertManager = Assembler.resolve(AlertManager.self)
 
     var window: UIWindow?
+    private var splashView: LoadingSplashView?
 
     var shortcutType = ShortcutType.none
     private var cancellables = Set<AnyCancellable>()
@@ -284,6 +285,21 @@ extension AppDelegate {
     func setApplicationWindow() {
         bindThemeChange()
 
+        // Create window and splash synchronously so there's no gap after the launch screen
+        let window = UIWindow(frame: UIScreen.main.bounds).then {
+            $0.backgroundColor = UIColor(.from(.actionBackgroundColor, lookAndFeelRepository.isDarkMode))
+        }
+        window.rootViewController = UIViewController()
+        window.makeKeyAndVisible()
+        self.window = window
+
+        // Only show splash for logged-in users where MainViewController has heavy setup to mask
+        if preferences.userSessionAuth() != nil {
+            let splash = LoadingSplashView(frame: window.bounds)
+            window.addSubview(splash)
+            self.splashView = splash
+        }
+
         DispatchQueue.global(qos: .userInitiated).async {
             _ = try? Realm() // Ensure Realm is ready before proceeding so it will not block I/O
 
@@ -306,9 +322,7 @@ extension AppDelegate {
     /// - Parameters:
     ///   - contentView: The main  view that will be presented
     private func presentMainView<T: View>(with view: T) {
-        let window = UIWindow(frame: UIScreen.main.bounds).then {
-            $0.backgroundColor = UIColor(.from(.actionBackgroundColor, lookAndFeelRepository.isDarkMode))
-        }
+        guard let window = self.window else { return }
 
         let rootViewController: UIViewController
 
@@ -330,8 +344,24 @@ extension AppDelegate {
         }
 
         window.rootViewController = rootViewController
-        window.makeKeyAndVisible()
-        self.window = window
+
+        // Keep splash on top since changing rootViewController can reorder subviews
+        if let splash = self.splashView {
+            window.bringSubviewToFront(splash)
+        }
+
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
+            self?.hideSplashView()
+        }
+    }
+
+    private func hideSplashView() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.splashView?.layer.opacity = 0
+        }, completion: { _ in
+            self.splashView?.removeFromSuperview()
+            self.splashView = nil
+        })
     }
 
     private func setUpWelcomeView() -> any View {

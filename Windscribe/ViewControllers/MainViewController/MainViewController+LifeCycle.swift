@@ -19,7 +19,6 @@ extension MainViewController {
         addCardHeaderView()
         addSearchViews()
         addAutoLayoutConstraints()
-        showSplashView()
         checkPrivacyConfirmation()
         loadPortMap()
         loadServerList()

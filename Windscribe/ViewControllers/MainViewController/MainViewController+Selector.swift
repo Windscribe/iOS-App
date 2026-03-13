@@ -40,7 +40,6 @@ extension MainViewController {
             isLoadingLatencyValues = false
             configureBestLocation(selectBestLocation: selectBestLocation, connectToBestLocation: connectToBestLocation)
             reloadTableViews()
-            hideSplashView()
             endRefreshControls()
         }
     }
@@ -276,7 +275,6 @@ extension MainViewController {
             }
         }
         reloadTableViews()
-        hideSplashView()
         configureBestLocation()
     }
 

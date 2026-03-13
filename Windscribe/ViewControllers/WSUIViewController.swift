@@ -12,7 +12,6 @@ import UIKit
 import Combine
 
 class WSUIViewController: UIViewController {
-    var splashView: LoadingSplashView?
     var promptBackgroundView: PromptBackgroundView!
 
     // loading views
@@ -47,27 +46,6 @@ class WSUIViewController: UIViewController {
 
     func changeNavigationBarStyle(isHidden: Bool) {
         navigationController?.isNavigationBarHidden = isHidden
-    }
-
-    func showSplashView() {
-        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(hideSplashView), userInfo: nil, repeats: false)
-        splashView = LoadingSplashView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
-        view.addSubview(splashView!)
-        view.bringSubviewToFront(splashView!)
-    }
-
-    override func viewWillTransition(to size: CGSize, with _: UIViewControllerTransitionCoordinator) {
-        splashView?.updateSize(size: size)
-    }
-
-    @objc func hideSplashView() {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.5, animations: {
-                self.splashView?.layer.opacity = 0.1
-            }, completion: { _ in
-                self.splashView?.removeFromSuperview()
-            })
-        }
     }
 
     func openLink(url: String, asSheet: Bool = false) {

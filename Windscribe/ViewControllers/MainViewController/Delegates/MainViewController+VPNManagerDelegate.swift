@@ -48,7 +48,6 @@ extension MainViewController: VPNManagerDelegate {
         }
         if vpnManager.userTappedToDisconnect { return }
         connectionStateViewModel.checkConnectedState()
-        hideSplashView()
         updateRefreshControls()
         protocolSelectionChanged()
     }
