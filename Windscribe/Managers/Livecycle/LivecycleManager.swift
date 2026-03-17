@@ -34,6 +34,7 @@ class LivecycleManager: LivecycleManagerType {
     private let locationsManager: LocationsManager
     private let unblockWgParamsRepository: UnblockWgParamsRepository
     private let wifiManager: WifiManager
+    private let locationListRepository: LocationListRepository
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -57,7 +58,8 @@ class LivecycleManager: LivecycleManagerType {
          connectivityManager: ProtocolManagerType,
          locationsManager: LocationsManager,
          unblockWgParamsRepository: UnblockWgParamsRepository,
-         wifiManager: WifiManager) {
+         wifiManager: WifiManager,
+         locationListRepository: LocationListRepository) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences
@@ -72,6 +74,7 @@ class LivecycleManager: LivecycleManagerType {
         self.locationsManager = locationsManager
         self.unblockWgParamsRepository = unblockWgParamsRepository
         self.wifiManager = wifiManager
+        self.locationListRepository = locationListRepository
     }
 
     /// Fresh app launch.
@@ -82,6 +85,8 @@ class LivecycleManager: LivecycleManagerType {
                 await notificationRepo.loadNotifications()
                 unblockWgParamsRepository.refreshParams()
             }
+            try? await locationListRepository.updateLocations()
+            try? await locationListRepository.updatedServerList()
         }
     }
 

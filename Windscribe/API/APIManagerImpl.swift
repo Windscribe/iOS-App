@@ -13,15 +13,18 @@ class APIManagerImpl: APIManager {
     var bridgeApi: WSNetBridgeAPIType
     private let logger: FileLogger
     let apiUtil: APIUtilService
+    let preferences: Preferences
     var userSessionRepository: UserSessionRepository?
 
     init(api: WSNetServerAPI,
          bridgeApi: WSNetBridgeAPIType,
          logger: FileLogger,
-         apiUtil: APIUtilService) {
+         apiUtil: APIUtilService,
+         preferences: Preferences) {
         self.api = api
         self.bridgeApi = bridgeApi
         self.logger = logger
         self.apiUtil = apiUtil
+        self.preferences = preferences
     }
 }

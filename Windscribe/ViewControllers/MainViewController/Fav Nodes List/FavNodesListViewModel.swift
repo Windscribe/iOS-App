@@ -15,7 +15,7 @@ protocol FavouriteListViewModelType {
     var presentAlertTrigger: PassthroughSubject<FavouritesIPAlertType, Never> { get }
     var showMaintenanceLocationTrigger: PassthroughSubject<Void, Never> { get }
     var showUpgradeTrigger: PassthroughSubject<Void, Never> { get }
-    func setSelectedFav(favourite: GroupModel)
+    func setSelectedFav(favourite: DatacenterModel)
 }
 
 class FavouriteListViewModel: FavouriteListViewModelType {
@@ -29,22 +29,25 @@ class FavouriteListViewModel: FavouriteListViewModelType {
     var userSessionRepository: UserSessionRepository
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
+    private let locationListRepository: LocationListRepository
 
     init(logger: FileLogger,
          vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          userSessionRepository: UserSessionRepository,
          locationsManager: LocationsManager,
-         protocolManager: ProtocolManagerType) {
+         protocolManager: ProtocolManagerType,
+         locationListRepository: LocationListRepository) {
         self.logger = logger
         self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.userSessionRepository = userSessionRepository
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
+        self.locationListRepository = locationListRepository
     }
 
-    func setSelectedFav(favourite: GroupModel) {
+    func setSelectedFav(favourite: DatacenterModel) {
         if !connectivity.internetConnectionAvailable() { return }
         if vpnStateRepository.configurationState == ConfigurationState.disabling {
             presentAlertTrigger.send(.disconnecting)
@@ -54,7 +57,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
             showMaintenanceLocationTrigger.send()
             return
         }
-        if !canAccesstoProLocation() && favourite.premiumOnly {
+        if !canAccesstoProLocation() && favourite.isPremiumOnly {
             showUpgradeTrigger.send(())
             return
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
@@ -79,33 +82,35 @@ extension FavouriteListViewModel {
     /// Checks if the selected favourite location is under maintenance or has disabled status.
     /// - Parameter favourite: The GroupModel representing the selected favourite location
     /// - Returns: true if location is under maintenance or disabled, false otherwise
-    private func checkMaintenanceLocation(favourite: GroupModel) -> Bool {
+    private func checkMaintenanceLocation(favourite: DatacenterModel) -> Bool {
         // Get the parent server to check status
-        guard let location = try? locationsManager.getLocation(from: "\(favourite.id)") else {
+        guard let locationInfo = try? locationsManager.getLocation(from: favourite.id) else {
             // Location not found in server list - treat as maintenance
             logger.logD("FavouriteListViewModel", "Location not found for favourite \(favourite.id), treating as maintenance")
             return true
         }
 
-        let server = location.0
-        let group = location.1
+        let location = locationInfo.0
+        let datacenter = locationInfo.1
 
         // Check if server is disabled
-        if server.status == false {
-            logger.logD("FavouriteListViewModel", "Server \(server.name) is disabled (status=false)")
+        if datacenter.status == 0 {
+            logger.logD("FavouriteListViewModel", "Server \(location.name) is disabled (status=false)")
             return true
         }
 
+        let servers = locationListRepository.getServers(for: favourite.id)
+
         // Check if no nodes available for non-premium locations
-        if !group.isNodesAvailable() && !group.premiumOnly {
-            logger.logD("FavouriteListViewModel", "No nodes available for non-premium location \(group.city)")
+        if servers.isEmpty && !datacenter.isPremiumOnly {
+            logger.logD("FavouriteListViewModel", "No nodes available for non-premium location \(datacenter.city)")
             return true
         }
 
         // Check if no nodes available for premium locations (when user is premium)
-        if !group.isNodesAvailable() && group.premiumOnly &&
+        if servers.isEmpty && datacenter.isPremiumOnly &&
             userSessionRepository.sessionModel?.isPremium == true {
-            logger.logD("FavouriteListViewModel", "No nodes available for premium location \(group.city)")
+            logger.logD("FavouriteListViewModel", "No nodes available for premium location \(datacenter.city)")
             return true
         }
 

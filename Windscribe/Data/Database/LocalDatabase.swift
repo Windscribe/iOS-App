@@ -14,12 +14,19 @@ protocol LocalDatabase {
     func migrate()
 
     // MARK: After Modelization of Database
-    func getServers() -> [Server]?
-    func saveServers(servers: [Server])
+    func getServers() -> [Server]? //Needs to be kept if the user migrates and has no Locations yet
 
     func getSessionPublisher() -> AnyPublisher<Session?, Never>
     func getSession() -> Session?
     func saveSession(session: Session)
+
+    // MARK: New Server Architecture
+    func getLocations() -> [LocationObject]?
+    func saveLocations(locations: [LocationObject])
+
+    func getServerMachines() -> [ServerMachineObject]?
+    func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineObject], Never>
+    func saveServerMachines(serverMachines: [ServerMachineObject])
 
     // MARK: Before Modelization of Databas)
     func getMobilePlans() -> [MobilePlan]?
@@ -70,7 +77,7 @@ protocol LocalDatabase {
     func saveFavourite(favourite: Favourite)
     func getFavouriteListPublisher() -> AnyPublisher<[Favourite], Never>
     func getFavouriteList() -> [Favourite]
-    func removeFavourite(groupId: String)
+    func removeFavourite(datacenterId: String)
 
     func toggleRobertRule(id: String)
     func saveOldSession()

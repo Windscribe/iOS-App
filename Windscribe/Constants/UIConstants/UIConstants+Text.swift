@@ -542,11 +542,13 @@ enum TextsAsset {
         static var connectedDNS: String { return "Connected DNS".localized }
         static var allowLan: String { return "Allow LAN Traffic".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
+        static var useServerpede: String { return "Use Serverpede".localized }
         static var autoSecure: String { "Auto-Secure".localized }
         static var autoSecureNew: String { "Auto-Secure New Networks".localized }
         static var protocolType: String { "Protocol".localized }
         static var port: String { "Port".localized }
         static var configuration: String { "Configuration".localized }
+        static var backup: String { "Use Backup IPs".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized
@@ -562,6 +564,9 @@ enum TextsAsset {
         }
         static var circumventCensorshipDescription: String {
             return "Connect to the VPN even in hostile environment".localized
+        }
+        static var serverpedeDescription: String {
+            return "Use Serverpede backup ips".localized
         }
         static var networkOptionsDescription: String {
             return "The Network Options feature lets you control how the Windscribe app behaves on different networks.".localized
@@ -659,7 +664,7 @@ enum TextsAsset {
         static let languages: [String] = Languages.allCases.map { $0.name }
         static let languagesList: [Languages] = Languages.allCases
         static var hapticFeedback: String { "Haptic Feedback".localized }
-        static var showServerHealth: String { "Location Load".localized }
+        static var showServerNetLoad: String { "Location Load".localized }
         static var enabled: String { "Enabled".localized }
         static var disabled: String { "Disabled".localized }
         static var customBackground: String { "Custom Background".localized }
@@ -682,8 +687,8 @@ enum TextsAsset {
                 return Fields.Values.latency
             case TextsAsset.General.hapticFeedback:
                 return Fields.hapticFeedback
-            case TextsAsset.General.showServerHealth:
-                return Fields.showServerHealth
+            case TextsAsset.General.showServerNetLoad:
+                return Fields.showServerNetLoad
             default:
                 return nil
             }

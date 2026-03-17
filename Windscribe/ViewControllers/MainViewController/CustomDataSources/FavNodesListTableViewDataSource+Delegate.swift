@@ -10,7 +10,7 @@ import Combine
 import UIKit
 
 protocol FavouriteListTableViewDelegate: AnyObject {
-    func setSelectedFavourite(favourite: GroupModel)
+    func setSelectedFavourite(favourite: DatacenterModel)
     func reloadFavouriteListTableView()
     func hideFavouritesRefreshControl()
     func showFavouritesRefreshControl()
@@ -24,16 +24,16 @@ protocol FavouriteListTableViewDataSource: WSTableViewDataSource,
     var delegate: FavouriteListTableViewDelegate? { get set }
     var scrollHappened: Bool { get set }
 
-    var favList: [FavouriteGroupModel] { get }
+    var favList: [FavoriteDatacenterlModel] { get }
 
-    func updateFavoriteList(with favList: [FavouriteGroupModel])
+    func updateFavoriteList(with favList: [FavoriteDatacenterlModel])
 }
 
 class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteListTableViewDataSource {
     weak var delegate: FavouriteListTableViewDelegate?
     var scrollHappened = false
 
-    var favList: [FavouriteGroupModel] = []
+    var favList: [FavoriteDatacenterlModel] = []
     private var cancellables = Set<AnyCancellable>()
     private var locationLoad: Bool = false
 
@@ -43,13 +43,13 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
     private let userSessionRepository: UserSessionRepository
     private let languageManager: LanguageManager
     private let latencyRepository: LatencyRepository
-    private let serverRepository: ServerRepository
+    private let locationListRepository: LocationListRepository
     private let alertManager: AlertManager
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
-         serverRepository: ServerRepository,
+         locationListRepository: LocationListRepository,
          userSessionRepository: UserSessionRepository,
          languageManager: LanguageManager,
          latencyRepository: LatencyRepository,
@@ -57,7 +57,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
         self.lookAndFeelRepository = lookAndFeelRepository
         self.hapticFeedbackManager = hapticFeedbackManager
         self.preferences = preferences
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.userSessionRepository = userSessionRepository
         self.languageManager = languageManager
         self.latencyRepository = latencyRepository
@@ -75,9 +75,9 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
             }
             .store(in: &cancellables)
 
-        preferences.getShowServerHealth()
+        preferences.getShowServerNetLoad()
             .sink {[weak self] locationLoad in
-                self?.locationLoad = locationLoad ?? DefaultValues.showServerHealth
+                self?.locationLoad = locationLoad ?? DefaultValues.showServerNetLoad
                 self?.delegate?.reloadFavouriteListTableView()
             }
             .store(in: &cancellables)
@@ -95,7 +95,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
             .store(in: &cancellables)
     }
 
-    func updateFavoriteList(with favList: [FavouriteGroupModel]) {
+    func updateFavoriteList(with favList: [FavoriteDatacenterlModel]) {
         self.favList = favList
         delegate?.reloadFavouriteListTableView()
     }
@@ -120,8 +120,11 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
         let favourite = favList[indexPath.row]
-
-        let latency = latencyRepository.getPingData(ip: favourite.groupModel.pingIp)?.latency ?? -1
+        var latency = -1
+        if let randomServer = locationListRepository.getRandomServer(for: favourite.datacenterModel.id),
+           let newlatency = latencyRepository.getPingData(ip: randomServer.ip)?.latency {
+            latency = newlatency
+        }
 
         if cell.favNodeCellViewModel == nil {
             cell.favNodeCellViewModel = FavNodeTableViewCellModel()
@@ -146,7 +149,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let favourite = favList[indexPath.row]
-        delegate?.setSelectedFavourite(favourite: favourite.groupModel)
+        delegate?.setSelectedFavourite(favourite: favourite.datacenterModel)
     }
 
     func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
@@ -187,15 +190,15 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
     }
 }
 
-extension FavouriteListTableViewDataSourceImpl: NodeTableViewCellModelDelegate {
-    func saveAsFavorite(groupId: String) {
-        serverRepository.saveFavorite(for: FavouriteModel(id: "\(groupId)"))
+extension FavouriteListTableViewDataSourceImpl: DatacenterTableViewCellModelDelegate {
+    func saveAsFavorite(datacenterId: Int) {
+        locationListRepository.saveFavorite(for: FavouriteModel(id: String(datacenterId)))
     }
 
-    func removeFavorite(groupId: String) {
+    func removeFavorite(datacenterId: Int) {
         let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.serverRepository.removeFavorite(with: groupId)
+            self.locationListRepository.removeFavorite(with: datacenterId)
         }
         alertManager.showAlert(title: TextsAsset.Favorites.removeTitle,
                                message: TextsAsset.Favorites.removeMessage,

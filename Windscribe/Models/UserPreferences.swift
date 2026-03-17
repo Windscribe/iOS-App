@@ -23,7 +23,7 @@ import RealmSwift
     dynamic var allowLan: Bool = false
     dynamic var autoSecureNewNetworks: Bool = true
     dynamic var hapticFeedback: Bool = true
-    dynamic var showServerHealth: Bool = false
+    dynamic var showServerNetLoad: Bool = false
     dynamic var protocolType: String = ""
     dynamic var port: String = ""
 

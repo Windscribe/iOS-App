@@ -29,7 +29,7 @@ class ConfigurationsManager {
     let locationsManager: LocationsManager
     let ipRepository: IPRepository
     let userSessionRepository: UserSessionRepository
-    let serverRepository: ServerRepository
+    let locationListRepository: LocationListRepository
     let bridgeAPI: WSNetBridgeAPIType
     let bridgeApiRepository: BridgeApiRepository
     let credentialsRepository: CredentialsRepository
@@ -58,13 +58,13 @@ class ConfigurationsManager {
 
     /// Tracks all node hostnames that failed during current location session
     /// Cleared when location changes, protocol changes, or connection succeeds
-    var failedNodeHostnames: Set<String> = []
+    var failedServerHostnames: Set<String> = []
 
-    /// Tracks current location ID to detect location changes and clear failed nodes
+    /// Tracks current location ID to detect location changes and clear failed servers
     private var lastLocationId: String?
 
-    /// Tracks current protocol to detect protocol changes during failover and clear failed nodes
-    /// This allows different protocols to try the same nodes that failed with previous protocols
+    /// Tracks current protocol to detect protocol changes during failover and clear failed servers
+    /// This allows different protocols to try the same servers that failed with previous protocols
     var currentConnectionProtocol: String = ""
 
     /// Wait for disconnect event after manager is disabled.
@@ -100,7 +100,7 @@ class ConfigurationsManager {
          locationsManager: LocationsManager,
          ipRepository: IPRepository,
          userSessionRepository: UserSessionRepository,
-         serverRepository: ServerRepository,
+         locationListRepository: LocationListRepository,
          bridgeAPI: WSNetBridgeAPIType,
          bridgeApiRepository: BridgeApiRepository,
          credentialsRepository: CredentialsRepository,
@@ -118,7 +118,7 @@ class ConfigurationsManager {
         self.locationsManager = locationsManager
         self.ipRepository = ipRepository
         self.userSessionRepository = userSessionRepository
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.bridgeAPI = bridgeAPI
         self.bridgeApiRepository = bridgeApiRepository
         self.credentialsRepository = credentialsRepository
@@ -338,25 +338,25 @@ class ConfigurationsManager {
     /// Adds the failed node hostname to the exclusion list for current location session
     func updateFailedNode() {
         if let hostname = preferences.getLastNodeIP() {
-            failedNodeHostnames.insert(hostname)
-            logger.logI("ConfigurationsManager", "Added failed node: \(hostname), total failed: \(failedNodeHostnames.count)")
+            failedServerHostnames.insert(hostname)
+            logger.logI("ConfigurationsManager", "Added failed node: \(hostname), total failed: \(failedServerHostnames.count)")
         }
     }
 
-    /// Clears all failed nodes and resets protocol tracking (called on success, location change, or protocol change)
-    func clearFailedNodes() {
-        if !failedNodeHostnames.isEmpty {
-            logger.logI("ConfigurationsManager", "Cleared \(failedNodeHostnames.count) failed nodes")
-            failedNodeHostnames.removeAll()
+    /// Clears all failed servers and resets protocol tracking (called on success, location change, or protocol change)
+    func clearFailedServers() {
+        if !failedServerHostnames.isEmpty {
+            logger.logI("ConfigurationsManager", "Cleared \(failedServerHostnames.count) failed servers")
+            failedServerHostnames.removeAll()
             currentConnectionProtocol = ""  // Reset protocol tracking for fresh start
         }
     }
 
-    /// Clears failed nodes if location has changed
-    func clearFailedNodesIfLocationChanged(currentLocationId: String) {
+    /// Clears failed servers if location has changed
+    func clearFailedServersIfLocationChanged(currentLocationId: String) {
         if lastLocationId != currentLocationId {
             logger.logI("ConfigurationsManager", "Location changed from \(lastLocationId ?? "nil") to \(currentLocationId)")
-            clearFailedNodes()
+            clearFailedServers()
             lastLocationId = currentLocationId
         }
     }

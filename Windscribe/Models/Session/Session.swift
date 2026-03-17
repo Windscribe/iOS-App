@@ -16,7 +16,7 @@ struct DataLeftModel {
     let isPro: Bool
 }
 
-@objcMembers class Session: Object, Decodable {
+@objcMembers class Session: Object {
     dynamic var session: String = "session"
     dynamic var sessionAuthHash: String = ""
     dynamic var username: String = ""
@@ -39,59 +39,6 @@ struct DataLeftModel {
 
     override static func primaryKey() -> String? {
         return "session"
-    }
-
-    enum CodingKeys: String, CodingKey {
-        case data
-        case sessionAuthHash = "session_auth_hash"
-        case username
-        case userId = "user_id"
-        case trafficUsed = "traffic_used"
-        case trafficMax = "traffic_max"
-        case status
-        case email
-        case emailStatus = "email_status"
-        case billingPlanId = "billing_plan_id"
-        case isPremium = "is_premium"
-        case premiumExpiryDate = "premium_expiry_date"
-        case regDate = "reg_date"
-        case lastReset = "last_reset"
-        case locRev = "loc_rev"
-        case locHash = "loc_hash"
-        case alc
-        case sip
-    }
-
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        sessionAuthHash = try data.decodeIfPresent(String.self, forKey: .sessionAuthHash) ?? ""
-        username = try data.decodeIfPresent(String.self, forKey: .username) ?? ""
-        userId = try data.decodeIfPresent(String.self, forKey: .userId) ?? ""
-        trafficUsed = try data.decodeIfPresent(Double.self, forKey: .trafficUsed) ?? 0.0
-        trafficMax = try data.decodeIfPresent(Double.self, forKey: .trafficMax) ?? 0.0
-        status = try data.decodeIfPresent(Int.self, forKey: .status) ?? 0
-        email = try data.decodeIfPresent(String.self, forKey: .email) ?? ""
-        emailStatus = try data.decodeIfPresent(Int.self, forKey: .emailStatus) == 1 ? true : false
-        billingPlanId = try data.decodeIfPresent(Int.self, forKey: .billingPlanId) ?? 0
-        isPremium = try data.decodeIfPresent(Int.self, forKey: .isPremium) == 1 ? true : false
-        premiumExpiryDate = try data.decodeIfPresent(String.self, forKey: .premiumExpiryDate) ?? ""
-        regDate = try data.decodeIfPresent(Int.self, forKey: .regDate) ?? 0
-        lastReset = try data.decodeIfPresent(String.self, forKey: .lastReset) ?? ""
-        do {
-            locRev = try data.decodeIfPresent(Int.self, forKey: .locRev) ?? 0
-        } catch DecodingError.typeMismatch {
-            let value = try container.decodeIfPresent(Bool.self, forKey: .locRev) ?? false
-            locRev = value ? 1 : 0
-        }
-        locHash = try data.decodeIfPresent(String.self, forKey: .locHash) ?? ""
-        if let alcArray = try data.decodeIfPresent([String].self, forKey: .alc) {
-            setALC(array: alcArray)
-        }
-        if let sip = try data.decodeIfPresent(SipCount.self, forKey: .sip) {
-            setSip(object: sip)
-        }
     }
 
     convenience init(sessionModel: SessionModel) {
@@ -152,18 +99,8 @@ class OldSession: Session {
     }
 }
 
-@objcMembers class SipCount: Object, Decodable {
+@objcMembers class SipCount: Object {
     dynamic var countNumber: Int = 0
-
-    enum CodingKeys: String, CodingKey {
-        case countNumber = "count"
-    }
-
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        countNumber = try container.decodeIfPresent(Int.self, forKey: .countNumber) ?? 0
-    }
 
     convenience init(model: SipCountModel) {
         self.init()
@@ -171,16 +108,52 @@ class OldSession: Session {
     }
 }
 
-struct SipCountModel: Equatable {
+struct SipCountModel: Decodable, Equatable {
     var countNumber: Int = 0
+
+    enum CodingKeys: String, CodingKey {
+        case countNumber = "count"
+    }
 
     init(countNumber: Int) {
         self.countNumber = countNumber
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        countNumber = try container.decodeIfPresent(Int.self, forKey: .countNumber) ?? 0
+    }
 }
 
-struct SessionModel: Equatable {
-    let sessionAuthHash: String
+struct ServerInventoryModel: Decodable, Equatable {
+    let action: String
+    let enabled: [ServerMachineModel]
+    let disabled: [DisabledServerModel]
+    let revision: Int64
+    let backup: Int
+
+    var hasBakcup: Bool { backup == 1 }
+
+    enum CodingKeys: String, CodingKey {
+        case action
+        case enabled
+        case disabled
+        case revision
+        case backup
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        action = try container.decodeIfPresent(String.self, forKey: .action) ?? ""
+        enabled = try container.decodeIfPresent([ServerMachineModel].self, forKey: .enabled) ?? []
+        disabled = try container.decodeIfPresent([DisabledServerModel].self, forKey: .disabled) ?? []
+        revision = try container.decodeIfPresent(Int64.self, forKey: .revision) ?? 0
+        backup = (try? container.decodeIfPresent(Int.self, forKey: .backup)) ?? 0
+    }
+}
+
+struct SessionModel: Decodable, Equatable {
+    var sessionAuthHash: String
     let username: String
     let userId: String
     let trafficUsed: Double
@@ -198,6 +171,8 @@ struct SessionModel: Equatable {
 
     let alc: [String]
     let sipCount: [SipCountModel]
+
+    let inventory: ServerInventoryModel?
 
     var planType: String = "0"
 
@@ -240,6 +215,63 @@ struct SessionModel: Equatable {
         status == 3
     }
 
+    enum CodingKeys: String, CodingKey {
+        case data
+        case sessionAuthHash = "session_auth_hash"
+        case username
+        case userId = "user_id"
+        case trafficUsed = "traffic_used"
+        case trafficMax = "traffic_max"
+        case status
+        case email
+        case emailStatus = "email_status"
+        case billingPlanId = "billing_plan_id"
+        case isPremium = "is_premium"
+        case premiumExpiryDate = "premium_expiry_date"
+        case regDate = "reg_date"
+        case lastReset = "last_reset"
+        case locRev = "loc_rev"
+        case locHash = "loc_hash"
+        case alc
+        case sip
+        case inventory = "server_inventory"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
+        sessionAuthHash = try data.decodeIfPresent(String.self, forKey: .sessionAuthHash) ?? ""
+        username = try data.decodeIfPresent(String.self, forKey: .username) ?? ""
+        userId = try data.decodeIfPresent(String.self, forKey: .userId) ?? ""
+        trafficUsed = try data.decodeIfPresent(Double.self, forKey: .trafficUsed) ?? 0.0
+        trafficMax = try data.decodeIfPresent(Double.self, forKey: .trafficMax) ?? 0.0
+        status = try data.decodeIfPresent(Int.self, forKey: .status) ?? 0
+        email = try data.decodeIfPresent(String.self, forKey: .email) ?? ""
+        emailStatus = try data.decodeIfPresent(Int.self, forKey: .emailStatus) == 1 ? true : false
+        billingPlanId = try data.decodeIfPresent(Int.self, forKey: .billingPlanId) ?? 0
+        isPremium = try data.decodeIfPresent(Int.self, forKey: .isPremium) == 1 ? true : false
+        premiumExpiryDate = try data.decodeIfPresent(String.self, forKey: .premiumExpiryDate) ?? ""
+        regDate = try data.decodeIfPresent(Int.self, forKey: .regDate) ?? 0
+        lastReset = try data.decodeIfPresent(String.self, forKey: .lastReset) ?? ""
+        do {
+            locRev = try data.decodeIfPresent(Int.self, forKey: .locRev) ?? 0
+        } catch DecodingError.typeMismatch {
+            let value = try container.decodeIfPresent(Bool.self, forKey: .locRev) ?? false
+            locRev = value ? 1 : 0
+        }
+        locHash = try data.decodeIfPresent(String.self, forKey: .locHash) ?? ""
+
+        alc = try data.decodeIfPresent([String].self, forKey: .alc) ?? []
+
+        if let sip = try data.decodeIfPresent(SipCountModel.self, forKey: .sip) {
+            sipCount = [sip]
+        } else {
+            sipCount = []
+        }
+
+        inventory = try? data.decodeIfPresent(ServerInventoryModel.self, forKey: .inventory)
+    }
+
     init(from: Session) {
         sessionAuthHash = from.sessionAuthHash
         username = from.username
@@ -259,6 +291,8 @@ struct SessionModel: Equatable {
 
         alc = Array(from.alc)
         sipCount = Array(from.sipCount.map { SipCountModel(countNumber: $0.countNumber)})
+
+        inventory = nil
 
         planType = isUserPro ? "1" : "0"
     }
@@ -302,6 +336,7 @@ struct SessionModel: Equatable {
         self.locHash = locHash
         self.alc = alc
         self.sipCount = [SipCountModel(countNumber: sipCount)]
+        self.inventory = nil
     }
 
     func getIsPremium() -> Int {

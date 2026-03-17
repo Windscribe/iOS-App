@@ -54,13 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         purchaseManager.verifyPendingTransaction()
         setApplicationWindow()
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-        if preferences.userSessionAuth() != nil {
-            delay(2) {
-                Task {
-                    try? await self.latencyRepository.loadLatency()
-                }
-            }
-        }
         Task { @MainActor [weak self] in
             guard let self = self else { return }
 
@@ -75,10 +68,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Task.detached { [unowned self] in
             await latencyRepository.loadCustomConfigLatency()
-            if await preferences.userSessionAuth() != nil {
-                try? await Task.sleep(nanoseconds: 2_000_000_000)
-                try? await self.latencyRepository.loadLatency()
-            }
         }
 
         return true

@@ -22,7 +22,7 @@ enum Fields {
     static let autoSecureNewSwitch = "Auto Secure New Networks"
     static let configuredLocation = "ConfiguredLocation"
     static let hapticFeedback = "Haptic Feedback"
-    static let showServerHealth = "Show Server Health"
+    static let showServerNetLoad = "Show Server Health"
 
     static var appearances: [String] {
         return ["Light", "Dark"]
@@ -70,8 +70,8 @@ enum Fields {
 }
 
 enum ReuseIdentifiers {
-    static let serverSectionCellReuseIdentifier = "server-section-cell"
-    static let nodeCellReuseIdentifier = "node-cell"
+    static let locationSectionCellReuseIdentifier = "location-section-cell"
+    static let datacenterCellReuseIdentifier = "datacenter-cell"
     static let favNodeCellReuseIdentifier = "fav-node-cell"
     static let staticIPCellReuseIdentifier = "static-ip-cell"
     static let customConfigCellReuseIdentifier = "custom-config-cell"

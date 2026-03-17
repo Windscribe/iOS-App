@@ -1,0 +1,106 @@
+{
+    "data": {
+        "locations": [
+            {
+                "id": 65,
+                "name": "US Central",
+                "country_code": "US",
+                "short_name": "US-C",
+                "sort_order": 1,
+                "continent": "North America",
+                "datacenters": [
+                    {
+                        "id": 156,
+                        "city": "Atlanta",
+                        "nick": "Peachtree",
+                        "iata": "ATL",
+                        "status": 1,
+                        "gps": "33.75,-84.39",
+                        "tz": "America/New_York",
+                        "p2p": 0,
+                        "premium": 0,
+                        "wg_pubkey": "ciOW8sri5RR+ulCmENWpg5TVUFPz1URqHRk9zEYrYHg=",
+                        "wg_endpoint": "atl-156-wg.whiskergalaxy.com",
+                        "ovpn_x509": "atl-156.windscribe.com",
+                        "link_speed": 10000
+                    },
+                    {
+                        "id": 276,
+                        "city": "Chicago",
+                        "nick": "Res",
+                        "iata": "ORD",
+                        "status": 1,
+                        "gps": "41.88,-87.63",
+                        "tz": "America/Chicago",
+                        "p2p": 0,
+                        "premium": 1,
+                        "wg_pubkey": "/iq9FzEZ+j0yxItv5sl4sxN4a8BWWcsvy7zKxcjzb38=",
+                        "wg_endpoint": "ord-276-wg.whiskergalaxy.com",
+                        "ovpn_x509": "ord-276.windscribe.com",
+                        "link_speed": 1000
+                    },
+                    {
+                        "id": 328,
+                        "city": "Dallas",
+                        "nick": "Ammo",
+                        "iata": "DFW",
+                        "status": 0,
+                        "gps": "32.78,-96.81",
+                        "tz": "America/Chicago",
+                        "p2p": 0,
+                        "premium": 1,
+                        "wg_pubkey": "OhfZprfgCdrELOzmZyXaVa35AssZyYkzNiAeulqIXis=",
+                        "wg_endpoint": "dfw-328-wg.whiskergalaxy.com",
+                        "ovpn_x509": "dfw-328.windscribe.com",
+                        "link_speed": 1000
+                    },
+                    {
+                        "id": 192,
+                        "city": "Dallas",
+                        "nick": "BBQ",
+                        "iata": "DFW",
+                        "status": 1,
+                        "gps": "32.78,-96.81",
+                        "tz": "America/Chicago",
+                        "p2p": 0,
+                        "premium": 0,
+                        "wg_pubkey": "47tLjymDPpTIBerb+wn02/XNFABF4YDAGwOnijSoZmQ=",
+                        "wg_endpoint": "dfw-192-wg.whiskergalaxy.com",
+                        "ovpn_x509": "dfw-192.windscribe.com",
+                        "link_speed": 10000
+                    },
+                    {
+                        "id": 275,
+                        "city": "Dallas",
+                        "nick": "Res",
+                        "iata": "DFW",
+                        "status": 1,
+                        "gps": "32.78,-96.81",
+                        "tz": "America/Chicago",
+                        "p2p": 0,
+                        "premium": 1,
+                        "wg_pubkey": "ygKcwag0ieD94/czDeuTNgBOoqTysE6ZAXaQPU7DGgg=",
+                        "wg_endpoint": "dfw-275-wg.whiskergalaxy.com",
+                        "ovpn_x509": "dfw-275.windscribe.com",
+                        "link_speed": 1000
+                    },
+                    {
+                        "id": 424,
+                        "city": "Houston",
+                        "nick": "Space City",
+                        "iata": "IAH",
+                        "status": 1,
+                        "gps": "29.76,-95.37",
+                        "tz": "America/Chicago",
+                        "p2p": 0,
+                        "premium": 1,
+                        "wg_pubkey": "dnHFw0734MSeGM26Rzt1cEdyIrA+QAyqjzlnU5tvj0U=",
+                        "wg_endpoint": "iah-424-wg.whiskergalaxy.com",
+                        "ovpn_x509": "iah-424.windscribe.com",
+                        "link_speed": 10000
+                    }
+                ]
+            }
+        ]
+    }
+}

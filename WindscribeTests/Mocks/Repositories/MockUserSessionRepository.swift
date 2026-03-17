@@ -11,7 +11,6 @@ import Foundation
 import Combine
 
 class MockUserSessionRepository: UserSessionRepository {
-
     // MARK: Properties
     var sessionAuth: String? = "mock-session-auth"
     var sessionModel: SessionModel?
@@ -22,8 +21,7 @@ class MockUserSessionRepository: UserSessionRepository {
     var getUpdatedUserCalled = false
     var loginCalled = false
     var updateCalled = false
-    var lastLoginSession: Session?
-    var lastUpdateSession: Session?
+    var lastUpdateSession: SessionModel?
 
     // MARK: Mock Configuration
 
@@ -33,11 +31,12 @@ class MockUserSessionRepository: UserSessionRepository {
 
     // MARK: UserSessionRepository Protocol
 
-    func update(session: Session) async {
+    func update(session: Windscribe.SessionModel) async {
         updateCalled = true
+        lastUpdateSession = session
         self.oldSessionModel = self.sessionModel
-        self.sessionModel = session.getModel()
-        sessionModelSubject.send(sessionModel)
+        self.sessionModel = session
+        sessionModelSubject.send(session)
     }
 
     func clearSession() {
@@ -71,10 +70,11 @@ class MockUserSessionRepository: UserSessionRepository {
         getUpdatedUserCalled = false
         loginCalled = false
         updateCalled = false
-        lastLoginSession = nil
         lastUpdateSession = nil
         shouldThrowError = false
         errorToThrow = Errors.notDefined
+        sessionModel = nil
+        oldSessionModel = nil
     }
 
     func syncSession() async -> Bool {

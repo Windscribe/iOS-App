@@ -23,7 +23,7 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
     private var currentLanguage: String = DefaultValues.language
     private var locationOrder: String = DefaultValues.orderLocationsBy
     private var isHapticFeedbackEnabled = DefaultValues.hapticFeedback
-    private var isLocationLoadEnabled = DefaultValues.showServerHealth
+    private var isLocationLoadEnabled = DefaultValues.showServerNetLoad
     private var notificationsEnabled = false
 
     // MARK: - Dependencies
@@ -59,11 +59,11 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
             }
             .store(in: &cancellables)
 
-        preferences.getShowServerHealth()
+        preferences.getShowServerNetLoad()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] enabled in
                 guard let self = self else { return }
-                self.isLocationLoadEnabled = enabled ?? DefaultValues.showServerHealth
+                self.isLocationLoadEnabled = enabled ?? DefaultValues.showServerNetLoad
                 self.reloadItems()
             }
             .store(in: &cancellables)
@@ -150,7 +150,7 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
             }
         case .locationLoad:
             if case .toggle(let isSelected, _) = action {
-                preferences.saveShowServerHealth(show: isSelected)
+                preferences.saveShowServerNetLoad(show: isSelected)
             }
         case .locationOrder:
             if case .multiple(let currentOption, _) = action {

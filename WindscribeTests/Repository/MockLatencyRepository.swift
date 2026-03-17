@@ -12,8 +12,10 @@ import Combine
 
 class MockLatencyRepository: LatencyRepository {
 
+
     // Protocol Properties
     var latency = CurrentValueSubject<[PingDataModel], Never>([])
+    var latencyUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     // Mock Configuration
     var shouldThrowErrorOnLoadLatency = false

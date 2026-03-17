@@ -14,7 +14,7 @@ extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 61,
+            schemaVersion: 62,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -290,6 +290,11 @@ extension LocalDatabaseImpl {
                     migration.enumerateObjects(ofType: CustomConfig.className()) { _, newObject in
                         newObject!["saveCredentials"] = true
                     }
+                } else if oldSchemaVersion < 62 {
+                    // Add new server architecture tables
+                    migration.enumerateObjects(ofType: LocationObject.className()) { _, _ in }
+                    migration.enumerateObjects(ofType: DatacenterObject.className()) { _, _ in }
+                    migration.enumerateObjects(ofType: ServerMachineObject.className()) { _, _ in }
                 }
             }, deleteRealmIfMigrationNeeded: false
         )

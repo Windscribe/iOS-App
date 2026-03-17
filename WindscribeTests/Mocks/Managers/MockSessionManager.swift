@@ -87,7 +87,7 @@ class MockSessionManager: SessionManager {
         loginCalled = true
     }
 
-    func updateFrom(session: Windscribe.Session) async {
+    func updateFrom(session: Windscribe.SessionModel) async {
         updateFromCalled = true
     }
 }

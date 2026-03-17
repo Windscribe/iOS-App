@@ -37,8 +37,8 @@ protocol Preferences {
     func getSelectedPort() -> AnyPublisher<String?, Never>
     func saveDarkMode(darkMode: Bool)
     func getDarkMode() -> AnyPublisher<Bool?, Never>
-    func saveShowServerHealth(show: Bool)
-    func getShowServerHealth() -> AnyPublisher<Bool?, Never>
+    func saveShowServerNetLoad(show: Bool)
+    func getShowServerNetLoad() -> AnyPublisher<Bool?, Never>
     func savePingMethod(method: String)
     func getPingMethod() -> AnyPublisher<String?, Never>
     func getPingMethodSync() -> String
@@ -101,6 +101,9 @@ protocol Preferences {
     func getCircumventCensorshipEnabled() -> AnyPublisher<Bool, Never>
     func isCircumventCensorshipEnabled() -> Bool
     func saveCircumventCensorshipStatus(status: Bool)
+
+    func getServerpedeEnabled() -> AnyPublisher<Bool, Never>
+    func saveServerpedeEnable(status: Bool)
 
     func setLanguageManagerSelectedLanguage(language: Languages)
     func setLanguageManagerDefaultLanguage(language: String)
@@ -246,4 +249,10 @@ protocol Preferences {
     // Unblock WG Params
     func saveUnblockWgParams(param: UnblockWgParams)
     func getUnblockWgParams() -> UnblockWgParams?
+
+    // Locations and Servers revision
+    func saveServerRevision(revision: Int64)
+    func getServerRevision() -> Int64
+    func saveHasIpBackup(backup: Bool)
+    func getHasIpBackup() -> Bool
 }

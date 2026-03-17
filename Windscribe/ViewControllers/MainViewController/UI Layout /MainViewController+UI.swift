@@ -23,19 +23,19 @@ extension MainViewController {
     }
 
     func addDataSources() {
-        serverListTableViewDataSource = Assembler.resolve(ServerListTableViewDataSource.self)
-        favNodesListTableViewDataSource = Assembler.resolve(FavouriteListTableViewDataSource.self)
+        locationsListTableViewDataSource = Assembler.resolve(LocationsListTableViewDataSource.self)
+        favoriteListTableViewDataSource = Assembler.resolve(FavouriteListTableViewDataSource.self)
         staticIPListTableViewDataSource = Assembler.resolve(StaticIPListTableViewDataSource.self)
 
         customConfigListTableViewDataSource = Assembler.resolve(CustomConfigListTableViewDataSource.self)
 
-        serverListTableView.dataSource = serverListTableViewDataSource
-        serverListTableView.delegate = serverListTableViewDataSource
-        serverListTableViewDataSource.delegate = self
+        locationsListTableView.dataSource = locationsListTableViewDataSource
+        locationsListTableView.delegate = locationsListTableViewDataSource
+        locationsListTableViewDataSource.delegate = self
 
-        favTableView.dataSource = favNodesListTableViewDataSource
-        favTableView.delegate = favNodesListTableViewDataSource
-        favNodesListTableViewDataSource.delegate = self
+        favTableView.dataSource = favoriteListTableViewDataSource
+        favTableView.delegate = favoriteListTableViewDataSource
+        favoriteListTableViewDataSource.delegate = self
 
         staticIpTableView.dataSource = staticIPListTableViewDataSource
         staticIpTableView.delegate = staticIPListTableViewDataSource
@@ -67,23 +67,23 @@ extension MainViewController {
         scrollView.contentSize = CGSize(width: view.frame.width * 4, height: 0)
         view.addSubview(scrollView)
 
-        serverListTableView = PlainExpyTableView()
-        serverListTableView.tag = 0
-        serverListTableView.clipsToBounds = false
-        serverListTableView.register(
-            NodeTableViewCell.self,
-            forCellReuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
-        serverListTableView.register(
-            ServerSectionCell.self,
-            forCellReuseIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)
-        serverListTableView.register(
+        locationsListTableView = PlainExpyTableView()
+        locationsListTableView.tag = 0
+        locationsListTableView.clipsToBounds = false
+        locationsListTableView.register(
+            DatacenterTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.datacenterCellReuseIdentifier)
+        locationsListTableView.register(
+            LocationSectionCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.locationSectionCellReuseIdentifier)
+        locationsListTableView.register(
             BestLocationCell.self,
             forCellReuseIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)
-        scrollView.addSubview(serverListTableView)
+        scrollView.addSubview(locationsListTableView)
 
         // Set table headers
         serverHeaderView = Assembler.resolve(ServerInfoView.self)
-        serverListTableView.tableHeaderView = serverHeaderView
+        locationsListTableView.tableHeaderView = serverHeaderView
 
         favTableView = PlainTableView()
         favTableView.tag = 1
@@ -96,7 +96,7 @@ extension MainViewController {
         favTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         favTableViewRefreshControl.backView = RefreshControlBackView(frame: favTableViewRefreshControl.bounds)
         let favHeaderView = Assembler.resolve(ListHeaderView.self)
-        favHeaderView.viewModel.updateType(with: .favNodes)
+        favHeaderView.viewModel.updateType(with: .favorites)
         favTableView.tableHeaderView = favHeaderView
 
         staticIpTableView = PlainTableView()
@@ -153,12 +153,12 @@ extension MainViewController {
         logger.logI("MainViewController", "setTableViewInsets")
         guard let session = session else { return }
         if session.isPremium {
-            serverListTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            locationsListTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             favTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             staticIpTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             customConfigTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         } else {
-            serverListTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+            locationsListTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
             favTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
             staticIpTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
             customConfigTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
@@ -169,7 +169,7 @@ extension MainViewController {
         switch scrollView.contentOffset.x {
         case 0:
             selectedHeaderViewTab = .all
-            tableViewScrolled(toTop: serverListTableView.contentOffset.y <= 0)
+            tableViewScrolled(toTop: locationsListTableView.contentOffset.y <= 0)
         case view.frame.width:
             selectedHeaderViewTab = .fav
             tableViewScrolled(toTop: favTableView.contentOffset.y <= 0)

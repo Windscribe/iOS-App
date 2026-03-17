@@ -23,7 +23,7 @@ class SearchLocationsView: UIView {
     }()
 
     var viewModel: SearchLocationsViewModelType
-    let serverSectionOpacity: Float
+    let locationSectionOpacity: Float
     let clearButtonFont = UIFont.text(size: 16)
     private var isDarkMode: Bool = DefaultValues.darkMode
 
@@ -34,9 +34,9 @@ class SearchLocationsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(viewModel: SearchLocationsViewModelType, serverSectionOpacity: Float) {
+    init(viewModel: SearchLocationsViewModelType, locationSectionOpacity: Float) {
         self.viewModel = viewModel
-        self.serverSectionOpacity = serverSectionOpacity
+        self.locationSectionOpacity = locationSectionOpacity
         super.init(frame: .zero)
         isUserInteractionEnabled = false
 
@@ -102,7 +102,7 @@ class SearchLocationsView: UIView {
         searchTextfield.font = UIFont.text(size: 14)
 
         exitSearchButton.imageView?.contentMode = .scaleAspectFit
-        exitSearchButton.layer.opacity = serverSectionOpacity
+        exitSearchButton.layer.opacity = locationSectionOpacity
 
         stackContainerView.addArrangedSubviews([searchIcon, spacerView, searchTextfield, clearSearchButton, exitSearchButton])
     }

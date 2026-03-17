@@ -56,12 +56,10 @@ class AdvanceRepositoryTests: XCTestCase {
     func test_emptyAdvanceRepository() {
 
         let pingType = repository.getPingType()
-        let forcedNode = repository.getForcedNode()
-        let countryOverride = repository.getCountryOverride()
+        let forcedServer = repository.getForcedServer()
 
         XCTAssertEqual(pingType, 0, "Fresh Advance Repository PingType should default to 0")
-        XCTAssertNil(forcedNode, "Fresh Advance Repository should have no ForceNode")
-        XCTAssertNil(countryOverride, "Fresh Advance Repository should have no CountryOverride")
+        XCTAssertNil(forcedServer, "Fresh Advance Repository should have no ForcedServer")
     }
 
     func test_updatePingType() {
@@ -86,44 +84,21 @@ class AdvanceRepositoryTests: XCTestCase {
         XCTAssertEqual(pingType, 0, "Advance Repository PingType should be 0 if not set again")
     }
 
-    func test_updateForceNode() {
-        let inputForceNode = "192:123:56:90"
-        mockPreferences.saveAdvanceParams(params: "\(wsForceNode)=\(inputForceNode)")
-        var forcedNode = repository.getForcedNode()
+    func test_updateForcedServer() {
+        let inputForcedServer = "192:123:56:90"
+        mockPreferences.saveAdvanceParams(params: "\(wsForceNode)=\(inputForcedServer)")
+        var forcedServer = repository.getForcedServer()
 
-        XCTAssertEqual(forcedNode, inputForceNode, "Advance Repository force node should be updated to the one set")
+        XCTAssertEqual(forcedServer, inputForcedServer, "Advance Repository forced server should be updated to the one set")
 
         mockPreferences.saveAdvanceParams(params: "\(wsForceNode)=canbeanything")
-        forcedNode = repository.getForcedNode()
+        forcedServer = repository.getForcedServer()
 
-        XCTAssertEqual(forcedNode, "canbeanything", "Advance Repository ForceNode can be any string")
-
-        mockPreferences.saveAdvanceParams(params: "")
-        forcedNode = repository.getForcedNode()
-
-        XCTAssertNil(forcedNode, "Fresh Advance Repository should have no ForceNode if it reset")
-    }
-
-    func test_countryOverride() {
-        mockPreferences.saveAdvanceParams(params: "\(wsServerOverrride)=\(ignoreCountryOverride)")
-        var countryCode = repository.getCountryOverride()
-
-        XCTAssertEqual(countryCode, ignoreCountryCode, "Advance Repository country override should be ignore")
-
-        mockPreferences.saveAdvanceParams(params: "\(wsServerOverrride)=US")
-        countryCode = repository.getCountryOverride()
-
-        XCTAssertEqual(countryCode, "US", "Advance Repository country override should be US")
+        XCTAssertEqual(forcedServer, "canbeanything", "Advance Repository ForcedServer can be any string")
 
         mockPreferences.saveAdvanceParams(params: "")
-        countryCode = repository.getCountryOverride()
+        forcedServer = repository.getForcedServer()
 
-        XCTAssertNil(countryCode, "Fresh Advance Repository should have no country override if the param is set as empty")
-
-        mockVPNStateRepository.mockStatus = .connected
-
-        countryCode = repository.getCountryOverride()
-
-        XCTAssertEqual(countryCode, ignoreCountryCode, "Advance Repository country override should be ignore if param is empty but VPN is connected")
+        XCTAssertNil(forcedServer, "Fresh Advance Repository should have no ForcedServer if it reset")
     }
 }

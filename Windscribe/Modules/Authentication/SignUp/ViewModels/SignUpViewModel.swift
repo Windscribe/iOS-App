@@ -268,13 +268,9 @@ class SignUpViewModelImpl: SignUpViewModel {
                         captchaTrailY: captchaTrailY
                     )
 
-                    // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
-                    let sessionModel = session.getModel()
-
                     Task {
                         // Create unmanaged Session from model (safe to use on any thread)
-                        let sessionForStorage = Session(sessionModel: sessionModel)
-                        await self.sessionManager.updateFrom(session: sessionForStorage)
+                        await self.sessionManager.updateFrom(session: session)
                         self.prepareUserData()
                     }
                 } catch {
@@ -387,12 +383,6 @@ class SignUpViewModelImpl: SignUpViewModel {
             }
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    Task {
-                        try? await self.latencyRepository.loadLatency()
-                    }
-                }
                 self.routeTo.send(.main)
                 self.showLoadingView = false
             }).store(in: &cancellables)

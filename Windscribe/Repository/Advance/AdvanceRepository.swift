@@ -9,7 +9,6 @@
 import Foundation
 
 protocol AdvanceRepository {
-    func getCountryOverride() -> String?
-    func getForcedNode() -> String?
+    func getForcedServer() -> String?
     func getPingType() -> Int32
 }

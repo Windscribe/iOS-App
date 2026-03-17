@@ -21,15 +21,17 @@ enum DefaultValues {
     static let appID = "1129435228"
     static let customDNSValue = DNSValue(type: .empty, value: "", servers: [])
     static let darkMode = true
-    static let serverHealth = false
+    static let serverNetLoad = false
     static let firewallMode = true
     static let killSwitch = false
     static let allowLANMode = false
     static let autoSecureNewNetworks = true
     static let hapticFeedback = true
     static let autoSecure = true
-    static let showServerHealth = false
+    static let showServerNetLoad = false
     static let circumventCensorship = false
+    static let serverpede = false
     static let aspectRatio = "Stretch"
     static let pingMethod = "http"
+    static let revision: Int64 = 0
 }

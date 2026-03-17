@@ -10,7 +10,7 @@ import UIKit
 
 extension MainViewController {
     func updateLayoutForTheme(isDarkMode: Bool) {
-        if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
+        if let serverRefreshControl = locationsListTableView.refreshControl as? WSRefreshControl {
             serverRefreshControl.backView.label.backgroundColor = .clear
         }
 
@@ -18,7 +18,7 @@ extension MainViewController {
         favTableView.backgroundColor = backgroundColor
         staticIpTableView.backgroundColor = backgroundColor
         customConfigTableView.backgroundColor = backgroundColor
-        serverListTableView.backgroundColor = backgroundColor
+        locationsListTableView.backgroundColor = backgroundColor
         reloadTableViews()
     }
 }

@@ -189,7 +189,7 @@ class StaticIpRepositoryTests: XCTestCase {
 
         // When
         let result = repository.getStaticIp(id: targetId)
-        let resultFromString = repository.getStaticIp(id: "\(targetId)")
+        let resultFromString = repository.getStaticIp(id: targetId)
 
         // Then
         XCTAssertNotNil(result)

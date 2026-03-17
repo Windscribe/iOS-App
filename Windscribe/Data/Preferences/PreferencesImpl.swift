@@ -402,12 +402,12 @@ class PreferencesImpl: Preferences {
         return observeKey(SharedKeys.darkMode, type: Bool.self, defaultValue: DefaultValues.darkMode)
     }
 
-    func saveShowServerHealth(show: Bool) {
-        setBool(show, forKey: SharedKeys.serverHealth)
+    func saveShowServerNetLoad(show: Bool) {
+        setBool(show, forKey: SharedKeys.serverNetLoad)
     }
 
-    func getShowServerHealth() -> AnyPublisher<Bool?, Never> {
-        return observeKey(SharedKeys.serverHealth, type: Bool.self, defaultValue: DefaultValues.showServerHealth)
+    func getShowServerNetLoad() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.serverNetLoad, type: Bool.self, defaultValue: DefaultValues.showServerNetLoad)
     }
 
     func savePingMethod(method: String) {
@@ -463,6 +463,14 @@ class PreferencesImpl: Preferences {
             return value
         }
         return false
+    }
+
+    func getServerpedeEnabled() -> AnyPublisher<Bool, Never> {
+        return observeKeyNonOptional(SharedKeys.serverpedeEnabled, type: Bool.self, defaultValue: false) { $0 ?? false }
+    }
+
+    func saveServerpedeEnable(status: Bool) {
+        setBool(status, forKey: SharedKeys.serverpedeEnabled)
     }
 
     func isRestrictedCountry() -> Bool {
@@ -629,6 +637,22 @@ class PreferencesImpl: Preferences {
         }
         return try? JSONDecoder().decode(UnblockWgParams.self, from: data)
     }
+
+    // Locations and Servers revision
+    func saveServerRevision(revision: Int64) {
+        setInt64(revision, forKey: SharedKeys.serverRevision)
+    }
+
+    func getServerRevision() -> Int64 {
+        return getInt64(forKey: SharedKeys.serverRevision) ?? DefaultValues.revision
+    }
+
+    func saveHasIpBackup(backup: Bool){
+        setBool(backup, forKey: SharedKeys.hasIpBackup)
+    }
+    func getHasIpBackup() -> Bool {
+        return getBool(key: SharedKeys.hasIpBackup)
+    }
 }
 
 // MARK: Utility Methods
@@ -706,6 +730,14 @@ extension PreferencesImpl {
     }
 
     func setInt(_ value: Int?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
+    }
+
+    func getInt64(forKey: String) -> Int64? {
+        return (sharedDefault?.object(forKey: forKey) as? NSNumber)?.int64Value
+    }
+
+    func setInt64(_ value: Int64?, forKey: String) {
         sharedDefault?.setValue(value, forKey: forKey)
     }
 

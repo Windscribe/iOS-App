@@ -9,12 +9,13 @@
 import Foundation
 
 extension APIManagerImpl {
-    func getSession(_ appleID: String?) async throws -> Session {
+    func getSession(_ appleID: String?) async throws -> SessionModel {
         guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
-        return try await apiUtil.makeApiCall(modalType: Session.self) { completion in
-            self.api.session(sessionAuth, appleId: appleID ?? "", gpDeviceId: "", callback: completion)
+        let revision = preferences.getServerRevision()
+        return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
+            self.api.session(sessionAuth, appleId: appleID ?? "", gpDeviceId: "", invRev: revision, backup: false, callback: completion)
         }
     }
 
@@ -36,9 +37,10 @@ extension APIManagerImpl {
         }
     }
 
-    func getSession(sessionAuth: String) async throws -> Session {
-        return try await apiUtil.makeApiCall(modalType: Session.self) { completion in
-            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", callback: completion)
+    func getSession(sessionAuth: String) async throws -> SessionModel {
+        let revision = preferences.getServerRevision()
+        return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
+            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", invRev: revision, backup: false, callback: completion)
         }
     }
 }

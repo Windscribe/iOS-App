@@ -1,5 +1,5 @@
 //
-//  MainViewController+ServerList.swift
+//  MainViewController+LocationList.swift
 //  Windscribe
 //
 //  Created by Thomas on 08/11/2021.
@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-extension MainViewController: ServerListTableViewDelegate {
-    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
+extension MainViewController: LocationsListTableViewDelegate {
+    func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel) {
         searchLocationsView.viewModel.dismiss()
-        serverListViewModel.setSelectedServerAndGroup(server: server, group: group)
+        serverListViewModel.setSelectedLocationAndDatacenter(location: location, datacenter: datacenter)
     }
 
     func connectToBestLocation() {
@@ -20,9 +20,9 @@ extension MainViewController: ServerListTableViewDelegate {
         serverListViewModel.connectToBestLocation()
     }
 
-    func reloadServerListTableView() {
+    func reloadLocationsListTableView() {
         DispatchQueue.main.async { [weak self] in
-            self?.serverListTableView.reloadData()
+            self?.locationsListTableView.reloadData()
         }
     }
 }

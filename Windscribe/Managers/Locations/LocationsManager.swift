@@ -16,9 +16,10 @@ struct LocationUIInfo {
 }
 
 protocol LocationsManager {
-    func getBestLocationModel(from groupId: String) -> BestLocationModel?
+    func getBestLocationModel(from datacenterId: Int) -> BestLocationModel?
     func getBestLocationModel() -> BestLocationModel?
-    func getLocation(from groupId: String) throws -> (ServerModel, GroupModel)
+    func getLocation(from datacenterId: Int) throws -> (LocationModel, DatacenterModel)
+    func getLocation(from datacenterId: String) throws -> (LocationModel, DatacenterModel)
     func getLocationUIInfo() -> LocationUIInfo
     func saveLastSelectedLocation(with locationID: String)
     func saveStaticIP(withID staticID: Int?)
@@ -26,106 +27,122 @@ protocol LocationsManager {
     func clearLastSelectedLocation()
     func saveBestLocation(with locationID: String)
     func selectBestLocation(with locationID: String)
-    func getBestLocation() -> String
+    func getBestLocation() -> Int
     func getLastSelectedLocation() -> String
     func getLocationType() -> LocationType?
     func getLocationType(id: String) -> LocationType?
-    func getId() -> String
-    func getId(location: String) -> String
+    func getId() -> Int
+    func getId(location: String) -> Int
+    func getCustomId(location: String) -> String
     func isCustomConfigSelected() -> Bool
     func checkLocationValidity()
     func checkForForceDisconnect() -> Bool
 
     var selectedLocationUpdated: CurrentValueSubject<Bool, Never> { get }
-    var bestLocationUpdated: CurrentValueSubject<String, Never> { get }
+    var bestLocationUpdatedTrigger: PassthroughSubject<Void, Never> { get }
 }
 
 class LocationsManagerImpl: LocationsManager {
+
     private let customConfigRepository: CustomConfigRepository
     private let preferences: Preferences
     private let logger: FileLogger
     private let staticIpRepository: StaticIpRepository
     private let languageManager: LanguageManager
-    private let serverRepository: ServerRepository
+    private let locationListRepository: LocationListRepository
     private let userSessionRepository: UserSessionRepository
 
     private var cancellables = Set<AnyCancellable>()
 
     let selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
-    let bestLocationUpdated = CurrentValueSubject<String, Never>("")
+    let bestLocationUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     init(customConfigRepository: CustomConfigRepository,
          preferences: Preferences,
          logger: FileLogger,
          languageManager: LanguageManager,
          userSessionRepository: UserSessionRepository,
-         serverRepository: ServerRepository,
+         locationListRepository: LocationListRepository,
          staticIpRepository: StaticIpRepository) {
         self.customConfigRepository = customConfigRepository
         self.preferences = preferences
         self.logger = logger
         self.languageManager = languageManager
         self.userSessionRepository = userSessionRepository
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.staticIpRepository = staticIpRepository
 
         languageManager.activelanguage.sink { [weak self] _ in
             self?.selectedLocationUpdated.send(false)
         }.store(in: &cancellables)
 
-        serverRepository.serverListSubject
+        locationListRepository.locationListSubject
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
                 self?.selectedLocationUpdated.send(false)
             })
             .store(in: &cancellables)
+        bestLocationUpdatedTrigger.send(())
     }
 
     func getBestLocationModel() -> BestLocationModel? {
         getBestLocationModel(from: getBestLocation())
     }
 
-    func getBestLocationModel(from groupId: String) -> BestLocationModel? {
-        guard let groupServer = try? getLocation(from: groupId),
-              let node = groupServer.1.nodes.randomElement() else { return nil }
-        return BestLocationModel(node: node,
-                                 group: groupServer.1,
-                                 server: groupServer.0)
+    func getBestLocationModel(from datacenterId: Int) -> BestLocationModel? {
+        guard let locationDatacenter = try? getLocation(from: datacenterId) else { return nil }
+        return BestLocationModel(datacenter: locationDatacenter.1,
+                                 location: locationDatacenter.0)
     }
 
-    func getLocation(from groupId: String) throws -> (ServerModel, GroupModel) {
-        let servers = serverRepository.currentServerModels
-        guard !servers.isEmpty else { throw VPNConfigurationErrors.locationNotFound(groupId) }
-        let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
-        guard let serverResultSafe = serverResult else { throw VPNConfigurationErrors.locationNotFound(groupId) }
-        let groupResult = serverResultSafe.groups.first(where: { groupId == "\($0.id)" })
-        guard let groupResultSafe = groupResult else { throw VPNConfigurationErrors.locationNotFound(groupId)
+    func getLocation(from datacenterId: String) throws -> (LocationModel, DatacenterModel) {
+        if let intId = Int(datacenterId) {
+            return try getLocation(from: intId)
         }
-        return (serverResultSafe, groupResultSafe)
+        throw VPNConfigurationErrors.locationNotFound(datacenterId)
+    }
+
+    func getLocation(from datacenterId: Int) throws -> (LocationModel, DatacenterModel) {
+        let locations = locationListRepository.currentLocationModels
+        guard !locations.isEmpty else { throw VPNConfigurationErrors.locationNotFound(String(datacenterId)) }
+        var datacenterResult: DatacenterModel?
+        let locationResult = locations.first { $0.datacenters.first {
+            if datacenterId == $0.id {
+                datacenterResult = $0
+                return true
+            }
+            return false
+        } != nil }
+        guard let locationResultSafe = locationResult,
+              let datacenterResultSafe = datacenterResult else {
+            throw VPNConfigurationErrors.locationNotFound(String(datacenterId))
+        }
+        return (locationResultSafe, datacenterResultSafe)
     }
 
     func getLocationUIInfo() -> LocationUIInfo {
-        var groupId = getLastSelectedLocation()
+        let selectedId = getLastSelectedLocation()
         let bestLocationId = getBestLocation()
+        var selectedLocationId = Int(selectedId) ?? 0
 
-        // If no location selected but best location exists, use best location
-        if (groupId.isEmpty || groupId == "0") && !bestLocationId.isEmpty && bestLocationId != "0" {
-            groupId = bestLocationId
-        }
-
-        guard let locationType = getLocationType(id: groupId) else {
+        guard let locationType = getLocationType(id: selectedId) else {
             return getEmptyUIInfo()
         }
 
+        // If no location selected but best location exists, use best location
+        if (selectedId.isEmpty || selectedId == "0") && bestLocationId != 0 {
+            selectedLocationId = bestLocationId
+        }
+
         if locationType == .server {
-            guard let location = try? getLocation(from: groupId) else {
+            guard let location = try? getLocation(from: selectedLocationId) else {
                 return getEmptyUIInfo()
             }
-            let cityName = bestLocationId == groupId ? TextsAsset.bestLocation : location.1.city
+            let cityName = bestLocationId == selectedLocationId ? TextsAsset.bestLocation : location.1.city
             return LocationUIInfo(nickName: location.1.nick, cityName: cityName, countryCode: location.0.countryCode, isServer: true)
         } else {
-            let locationID = getId()
             if locationType == .custom {
-                guard let customConfig = customConfigRepository.getCustomConfig(fileId: locationID) else {
+                let customId = getCustomId(location: selectedId)
+                guard let customConfig = customConfigRepository.getCustomConfig(fileId: customId) else {
                     return getEmptyUIInfo()
                 }
                 // Never show emergency connect configs in the UI
@@ -134,6 +151,7 @@ class LocationsManagerImpl: LocationsManager {
                 }
                 return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation, isServer: false)
             } else if locationType == .staticIP {
+                let locationID = getId()
                 guard let staticIP = staticIpRepository.getStaticIp(id: locationID) else {
                     return getEmptyUIInfo()
                 }
@@ -149,11 +167,12 @@ class LocationsManagerImpl: LocationsManager {
 
     func checkForForceDisconnect() -> Bool {
         let locationID = getLastSelectedLocation()
-        guard !locationID.isEmpty, locationID != "0" else { return false }
-        guard let serverGroup = try? getLocation(from: locationID) else { return false }
-        if serverGroup.1.bestNode?.forceDisconnect ?? false {
-            if let sisterLocationID = getSisterLocationID(from: locationID) {
-                saveLastSelectedLocation(with: sisterLocationID)
+        guard !locationID.isEmpty, locationID != "0", let datacenterId = Int(locationID) else {
+            return false
+        }
+        if locationListRepository.getServers(for: datacenterId).isEmpty {
+            if let sisterLocationID = getSisterLocationId(from: datacenterId) {
+                saveLastSelectedLocation(with: "\(sisterLocationID)")
                 return true
             }
         }
@@ -170,6 +189,7 @@ class LocationsManagerImpl: LocationsManager {
         preferences.saveLastSelectedLocation(with: locationID)
         selectedLocationUpdated.send(true)
     }
+
     func saveStaticIP(withID staticID: Int?) {
         saveLastSelectedLocation(with: "static_\(staticID ?? 0)")
     }
@@ -188,7 +208,7 @@ class LocationsManagerImpl: LocationsManager {
         self.logger.logI("LocationsManager", "Saved BestLocation ID: \(locationID) (previous: \(currentBestLocation))")
         checkLocationValidity()
         // Always send update even if location is same, to ensure UI reactivity
-        bestLocationUpdated.send(locationID)
+        bestLocationUpdatedTrigger.send(())
     }
 
     func selectBestLocation(with locationID: String) {
@@ -196,8 +216,11 @@ class LocationsManagerImpl: LocationsManager {
         saveBestLocation(with: locationID)
     }
 
-    func getBestLocation() -> String {
-        preferences.getBestLocation()
+    func getBestLocation() -> Int {
+        if let locationId = Int(preferences.getBestLocation()) {
+            return locationId
+        }
+        return 0
     }
 
     func getLastSelectedLocation() -> String {
@@ -214,19 +237,27 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     /// Gets id from location id which can be used to access data from database.
-    func getId() -> String {
+    func getId() -> Int {
         return getId(location: getLastSelectedLocation())
     }
 
-    func getId(location: String) -> String {
+    func getId(location: String) -> Int {
         guard !location.isEmpty else {
             return getBestLocation()
         }
 
         let parts = location.split(separator: "_")
         if parts.count == 1 {
-            return location
+            return Int(location) ?? 0
         }
+        return Int(parts[1]) ?? 0
+    }
+
+    func getCustomId(location: String) -> String {
+        guard !location.isEmpty else { return "" }
+
+        let parts = location.split(separator: "_")
+        guard parts.count == 2 else { return "" }
         return String(parts[1])
     }
 
@@ -237,25 +268,25 @@ class LocationsManagerImpl: LocationsManager {
     func checkLocationValidity() {
         let locationType = getLocationType() ?? .server
 
-        let locationID = getLastSelectedLocation()
-        guard !locationID.isEmpty, locationID != "0" else {
+        let locationId = getLastSelectedLocation()
+        guard !locationId.isEmpty, locationId != "0" else {
             self.logger.logI("LocationsManager", "Location is empty or invalid.. Switching to Best location.")
             updateToBestLocation()
             return
         }
         var isPremiumOnly = false
-        if locationType == .server {
-            guard let currentLocation = try? getLocation(from: locationID) else {
-                self.logger.logI("LocationsManager", "Unable to find location with ID: \(locationID). Switching to Sister location.")
-                if let sisterLocationID = getSisterLocationID(from: locationID) {
-                    saveLastSelectedLocation(with: sisterLocationID)
+        if locationType == .server, let datacenterId = Int(locationId) {
+            guard let currentLocation = try? getLocation(from: datacenterId) else {
+                self.logger.logI("LocationsManager", "Unable to find location with ID: \(datacenterId). Switching to Sister location.")
+                if let sisterLocationId = getSisterLocationId(from: datacenterId) {
+                    saveLastSelectedLocation(with: String(sisterLocationId))
                 } else {
                     self.logger.logI("LocationsManager", "Unable to find sister location. Switching to Best location.")
                     updateToBestLocation()
                 }
                 return
             }
-            isPremiumOnly = currentLocation.1.premiumOnly
+            isPremiumOnly = currentLocation.1.isPremiumOnly
         }
         if userSessionRepository.sessionModel != nil,
            !userSessionRepository.canAccesstoProLocation(),
@@ -267,18 +298,16 @@ class LocationsManagerImpl: LocationsManager {
 
 extension LocationsManagerImpl {
     private func updateToBestLocation() {
-        saveLastSelectedLocation(with: getBestLocation())
+        saveLastSelectedLocation(with: String(getBestLocation()))
     }
 
-    private func getSisterLocationID(from groupId: String) -> String? {
-        let servers = serverRepository.currentServerModels
-        guard !servers.isEmpty else { return nil }
-        let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
-        guard let serverResultSafe = serverResult else { return nil }
-        let groupResult = serverResultSafe.groups.filter {
-            groupId != "\($0.id)" && $0.isNodesAvailable()
-        }.randomElement()
-        guard let groupResultSafe = groupResult else { return nil }
-        return "\(groupResultSafe.id)"
+    private func getSisterLocationId(from datacenterId: Int) -> Int? {
+        let locations = locationListRepository.currentLocationModels
+        guard !locations.isEmpty else { return nil }
+        let location = locations.first { $0.datacenters.first { datacenterId == $0.id } != nil }
+        guard let safeLocation = location else { return nil }
+        let datacenter = safeLocation.datacenters.filter { datacenterId != $0.id }
+            .randomElement()
+        return datacenter?.id
     }
 }

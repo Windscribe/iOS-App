@@ -78,16 +78,21 @@ class PreferencesTests: XCTestCase {
 
     func testProtocolPreferences() {
         let preferences = mockContainer.resolve(Preferences.self)!
-        preferences.saveSelectedProtocol(selectedProtocol: testProtocol)
 
         let expectation = self.expectation(description: "Get protocol")
 
+        // Subscribe first, then save to ensure we catch the update
         preferences.getSelectedProtocol()
+            .dropFirst() // Drop the initial value (TextsAsset.wireGuard)
+            .first() // Only take the first emission after the initial
             .sink { selectedProtocol in
                 XCTAssertEqual(selectedProtocol, self.testProtocol)
                 expectation.fulfill()
             }
             .store(in: &cancellables)
+
+        // Now trigger the save
+        preferences.saveSelectedProtocol(selectedProtocol: testProtocol)
 
         waitForExpectations(timeout: 1.0, handler: nil)
 
@@ -225,13 +230,22 @@ class PreferencesTests: XCTestCase {
     func testSyncMethods() {
         let preferences = mockContainer.resolve(Preferences.self)!
 
-        // These are read-only methods in the mock, so no cleanup needed
+        // These are read-only methods in the mock
         XCTAssertFalse(preferences.getKillSwitchSync())
         XCTAssertFalse(preferences.getAllowLaneSync())
         XCTAssertEqual(preferences.getPingMethodSync(), "")
-        XCTAssertEqual(preferences.getConnectionModeSync(), "")
-        XCTAssertEqual(preferences.getSelectedProtocolSync(), "")
-        XCTAssertEqual(preferences.getSelectedPortSync(), "")
+
+        // getConnectionModeSync returns the default value from mockConnectionMode
+        let connectionMode = preferences.getConnectionModeSync()
+        XCTAssertEqual(connectionMode, Fields.Values.manual, "Connection mode should default to manual")
+
+        // For protocol and port sync methods, the non-optional versions return ""
+        // Note: Swift may resolve to either the String or String? version depending on context
+        let protocolSync: String = preferences.getSelectedProtocolSync()
+        XCTAssertEqual(protocolSync, "", "Non-optional getSelectedProtocolSync should return empty string")
+
+        let portSync: String = preferences.getSelectedPortSync()
+        XCTAssertEqual(portSync, "", "Non-optional getSelectedPortSync should return empty string")
     }
 
     func testLocationPreferences() {

@@ -1,5 +1,5 @@
 //
-//  Section.swift
+//  LocationSection.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-24.
@@ -8,12 +8,12 @@
 
 import Foundation
 
-struct ServerSection {
-    var server: ServerModel?
+struct LocationSection {
+    var location: LocationModel?
     var collapsed: Bool
 
-    init(server: ServerModel, collapsed: Bool) {
-        self.server = server
+    init(location: LocationModel, collapsed: Bool) {
+        self.location = location
         self.collapsed = collapsed
     }
 }

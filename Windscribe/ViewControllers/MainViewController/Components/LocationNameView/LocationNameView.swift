@@ -37,7 +37,7 @@ class LocationNameViewModelImpl: LocationNameViewModel {
                 self.locationInfoUpdatedTrigger.send()
         }.store(in: &cancellables)
 
-        locationsManager.bestLocationUpdated
+        locationsManager.bestLocationUpdatedTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
             guard let self = self else { return }

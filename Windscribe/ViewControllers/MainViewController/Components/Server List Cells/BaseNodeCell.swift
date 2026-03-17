@@ -8,27 +8,28 @@
 
 import UIKit
 
-protocol BaseNodeCellViewModelType: ServerCellModelType {
+protocol BaseNodeCellViewModelType: LocationCellModelType {
     var signalImage: UIImage? { get }
     var latencyValue: NSAttributedString { get }
     var nickName: String { get }
-    var groupId: String { get }
+    var datacenterId: Int { get }
     var isActionVisible: Bool { get }
     var isSignalVisible: Bool { get }
     var isDisabled: Bool { get }
+    var showP2P: Bool { get }
 
     func favoriteSelected()
 }
 
 class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
-    var locationLoad: Bool = DefaultValues.showServerHealth
-    var showServerHealth: Bool { locationLoad }
+    var locationLoad: Bool = DefaultValues.showServerNetLoad
+    var showServerNetLoad: Bool { locationLoad }
     var isSavedHasFav: Bool = false
     var isDarkMode: Bool = false
     var latency = -1
 
-    var groupId: String { "" }
+    var datacenterId: Int { 0 }
 
     var name: String { "" }
 
@@ -57,7 +58,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
         0.4
     }
 
-    var serverHealth: CGFloat { 0.0 }
+    var serverNetLoad: CGFloat { 0.0 }
 
     var hasProLocked: Bool { false }
 
@@ -78,6 +79,8 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var isActionVisible: Bool { true }
 
     var isSignalVisible: Bool { true }
+
+    var showP2P: Bool { false }
 
     var isDisabled: Bool { false }
 
@@ -115,13 +118,15 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     }
 }
 
-class BaseNodeCell: ServerListCell {
+class BaseNodeCell: LocationListCell {
     var favButton = ImageButton()
     var nickNameLabel = UILabel()
     var infoStackView = UIStackView()
     var latencyLabel = UILabel()
     var signalBarsIcon = UIImageView()
     var latencyView = UIView()
+    var p2pIcon = UIImageView()
+    var p2pContainer = UIView()
     var disabledIcon = UIImageView()
     var disabledContainer = UIView()
 
@@ -158,6 +163,13 @@ class BaseNodeCell: ServerListCell {
         disabledIcon.image = UIImage(named: ImagesAsset.locationDown)?.withRenderingMode(.alwaysTemplate)
         disabledContainer.addSubview(disabledIcon)
         iconsStackView.insertArrangedSubview(disabledContainer, at: 0)
+
+        p2pIcon.contentMode = .scaleAspectFit
+        p2pIcon.image = UIImage(named: ImagesAsset.p2p)
+        p2pIcon.setImageColor(color: .white)
+        p2pIcon.layer.opacity = 0.7
+        p2pContainer.addSubview(p2pIcon)
+        iconsStackView.insertArrangedSubview(p2pContainer, at: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -172,6 +184,8 @@ class BaseNodeCell: ServerListCell {
         signalBarsIcon.translatesAutoresizingMaskIntoConstraints = false
         nickNameLabel.translatesAutoresizingMaskIntoConstraints = false
         latencyView.translatesAutoresizingMaskIntoConstraints = false
+        p2pContainer.translatesAutoresizingMaskIntoConstraints = false
+        p2pIcon.translatesAutoresizingMaskIntoConstraints = false
         disabledContainer.translatesAutoresizingMaskIntoConstraints = false
         disabledIcon.translatesAutoresizingMaskIntoConstraints = false
 
@@ -195,6 +209,17 @@ class BaseNodeCell: ServerListCell {
             disabledIcon.centerXAnchor.constraint(equalTo: disabledContainer.centerXAnchor),
             disabledIcon.heightAnchor.constraint(equalToConstant: 16),
             disabledIcon.widthAnchor.constraint(equalToConstant: 14),
+
+            // p2pContainer
+            p2pContainer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            p2pContainer.heightAnchor.constraint(equalToConstant: 24),
+            p2pContainer.widthAnchor.constraint(equalToConstant: 24),
+
+            // p2pIcon
+            p2pIcon.centerYAnchor.constraint(equalTo: p2pContainer.centerYAnchor),
+            p2pIcon.centerXAnchor.constraint(equalTo: p2pContainer.centerXAnchor),
+            p2pIcon.heightAnchor.constraint(equalToConstant: 16),
+            p2pIcon.widthAnchor.constraint(equalToConstant: 16),
 
             // latencyView
             latencyView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -223,6 +248,7 @@ class BaseNodeCell: ServerListCell {
         nickNameLabel.text = baseNodeCellViewModel?.nickName
 
         latencyView.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
+        p2pContainer.isHidden = !(baseNodeCellViewModel?.showP2P ?? false)
         disabledContainer.isHidden = !(baseNodeCellViewModel?.isDisabled ?? false)
 
         let isDark = viewModel?.isDarkMode ?? false
@@ -231,6 +257,7 @@ class BaseNodeCell: ServerListCell {
         latencyLabel.textColor = .from(.textColor, isDark)
         signalBarsIcon.setImageColor(color: .from(.iconColor, isDark))
         icon.setImageColor(color: .from(.iconColor, isDark))
+        p2pIcon.setImageColor(color: .from(.iconColor, isDark))
         disabledIcon.setImageColor(color: .from(.iconColor, isDark))
 
         super.updateUI()

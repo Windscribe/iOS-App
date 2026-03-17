@@ -16,6 +16,7 @@ final class FavouriteListViewModelTests: XCTestCase {
     var mockUserSessionRepository: MockUserSessionRepository!
     var mockConnectivity: MockConnectivityManager!
     var mockVPNStateRepository: MockVPNStateRepository!
+    var mockLocationListRepository: MockLocationListRepository!
     var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
@@ -25,6 +26,7 @@ final class FavouriteListViewModelTests: XCTestCase {
         mockUserSessionRepository = MockUserSessionRepository()
         mockConnectivity = MockConnectivityManager()
         mockVPNStateRepository = MockVPNStateRepository()
+        mockLocationListRepository = MockLocationListRepository()
         cancellables = Set<AnyCancellable>()
 
         viewModel = FavouriteListViewModel(
@@ -33,7 +35,8 @@ final class FavouriteListViewModelTests: XCTestCase {
             connectivity: mockConnectivity,
             userSessionRepository: mockUserSessionRepository,
             locationsManager: mockLocationsManager,
-            protocolManager: MockProtocolManager()
+            protocolManager: MockProtocolManager(),
+            locationListRepository: mockLocationListRepository
         )
 
         mockConnectivity.mockInternetAvailable = true
@@ -46,6 +49,7 @@ final class FavouriteListViewModelTests: XCTestCase {
         mockUserSessionRepository = nil
         mockConnectivity = nil
         mockVPNStateRepository = nil
+        mockLocationListRepository = nil
         cancellables = nil
         super.tearDown()
     }
@@ -53,41 +57,31 @@ final class FavouriteListViewModelTests: XCTestCase {
     // MARK: Maintenance Check Tests
 
     func testDisabledServerShowsMaintenancePopup() {
-        let disabledServer = createMockServer(id: 1, name: "Test Server", status: false)
-        let group = createMockGroup(id: 123, city: "New York")
+        let (location, datacenter) = createMockLocationWithDatacenter(
+            locationId: 1,
+            locationName: "Test Location",
+            datacenterId: 123,
+            city: "New York",
+            status: 0  // Disabled
+        )
         var maintenanceTriggered = false
 
-        mockLocationsManager.mockLocation = (disabledServer, group)
+        mockLocationListRepository.locationListSubject.send([location])
+        mockLocationListRepository.datacenterListSubject.send([datacenter])
+        mockLocationsManager.mockLocation = (location, datacenter)
 
         viewModel.showMaintenanceLocationTrigger
             .sink { _ in maintenanceTriggered = true }
             .store(in: &cancellables)
 
-        viewModel.setSelectedFav(favourite: group)
+        viewModel.setSelectedFav(favourite: datacenter)
 
         XCTAssertTrue(maintenanceTriggered)
         XCTAssertTrue(mockLocationsManager.getLocationCalled, "Should check location status")
     }
 
-    func testEnabledServerDoesNotShowMaintenancePopup() {
-        let enabledServer = createMockServer(id: 1, name: "Test Server", status: true)
-        let group = createMockGroup(id: 123, city: "New York")
-        var maintenanceTriggered = false
-
-        mockLocationsManager.mockLocation = (enabledServer, group)
-
-        viewModel.showMaintenanceLocationTrigger
-            .sink { _ in maintenanceTriggered = true }
-            .store(in: &cancellables)
-
-        viewModel.setSelectedFav(favourite: group)
-
-        XCTAssertFalse(maintenanceTriggered)
-        XCTAssertTrue(mockLocationsManager.getLocationCalled, "Should check location status")
-    }
-
     func testLocationNotFoundShowsMaintenancePopup() {
-        let group = createMockGroup(id: 999, city: "Unknown City")
+        let datacenter = createMockDatacenter(id: 999, city: "Unknown City")
         var maintenanceTriggered = false
 
         mockLocationsManager.mockLocationError = VPNConfigurationErrors.locationNotFound("999")
@@ -96,98 +90,154 @@ final class FavouriteListViewModelTests: XCTestCase {
             .sink { _ in maintenanceTriggered = true }
             .store(in: &cancellables)
 
-        viewModel.setSelectedFav(favourite: group)
+        viewModel.setSelectedFav(favourite: datacenter)
 
         XCTAssertTrue(maintenanceTriggered)
         XCTAssertTrue(mockLocationsManager.getLocationCalled, "Should attempt to get location")
     }
 
     func testNoNodesAvailableShowsMaintenancePopup() {
-        let enabledServer = createMockServer(id: 1, name: "Test Server", status: true)
-        let groupWithNoNodes = createMockGroup(id: 123, city: "New York", nodes: [])
+        let (location, datacenter) = createMockLocationWithDatacenter(
+            locationId: 1,
+            locationName: "Test Location",
+            datacenterId: 123,
+            city: "New York",
+            status: 1,
+            hasServers: false  // No servers available
+        )
         var maintenanceTriggered = false
 
-        mockLocationsManager.mockLocation = (enabledServer, groupWithNoNodes)
+        mockLocationListRepository.locationListSubject.send([location])
+        mockLocationListRepository.datacenterListSubject.send([datacenter])
+        mockLocationsManager.mockLocation = (location, datacenter)
 
         viewModel.showMaintenanceLocationTrigger
             .sink { _ in maintenanceTriggered = true }
             .store(in: &cancellables)
 
-        viewModel.setSelectedFav(favourite: groupWithNoNodes)
+        viewModel.setSelectedFav(favourite: datacenter)
 
-        XCTAssertTrue(maintenanceTriggered, "Maintenance popup should be triggered when no nodes available")
+        XCTAssertTrue(maintenanceTriggered, "Maintenance popup should be triggered when no servers available")
     }
 
     func testPremiumLocationWithNoNodesShowsMaintenanceForPremiumUser() {
-        let enabledServer = createMockServer(id: 1, name: "Premium Server", status: true)
-        let premiumGroupWithNoNodes = createMockGroup(id: 456, city: "Tokyo", premiumOnly: true, nodes: [])
+        let (location, datacenter) = createMockLocationWithDatacenter(
+            locationId: 1,
+            locationName: "Premium Location",
+            datacenterId: 456,
+            city: "Tokyo",
+            status: 1,
+            isPremium: 1,
+            hasServers: false  // No servers available
+        )
         var maintenanceTriggered = false
 
-        mockLocationsManager.mockLocation = (enabledServer, premiumGroupWithNoNodes)
+        mockLocationListRepository.locationListSubject.send([location])
+        mockLocationListRepository.datacenterListSubject.send([datacenter])
+        mockLocationsManager.mockLocation = (location, datacenter)
         mockUserSessionRepository.setMockSession(userId: "123", isPremium: true)
 
         viewModel.showMaintenanceLocationTrigger
             .sink { _ in maintenanceTriggered = true }
             .store(in: &cancellables)
 
-        viewModel.setSelectedFav(favourite: premiumGroupWithNoNodes)
+        viewModel.setSelectedFav(favourite: datacenter)
 
-        XCTAssertTrue(maintenanceTriggered, "Maintenance popup should be triggered for premium user with no nodes")
+        XCTAssertTrue(maintenanceTriggered, "Maintenance popup should be triggered for premium user with no servers")
     }
 
     // MARK: Helper Methods
 
-    private func createMockServer(id: Int, name: String, status: Bool) -> ServerModel {
-        return ServerModel(
+    private func createMockLocation(id: Int, name: String, countryCode: String = "US", status: Int = 1, premiumOnly: Int = 0) -> LocationModel {
+        return LocationModel(
             id: id,
             name: name,
-            countryCode: "US",
-            status: status,
-            premiumOnly: false,
-            dnsHostname: "test.windscribe.com",
-            groups: [],
-            locType: "datacenter",
-            p2p: false,
-            wasEdited: false,
-            timezone: "UTC"
+            countryCode: countryCode,
+            shortName: countryCode,
+            premiumOnly: premiumOnly,
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: []
         )
     }
 
-    private func createMockGroup(
+    private func createMockDatacenter(
         id: Int,
         city: String,
-        premiumOnly: Bool = false,
-        nodes: [NodeModel] = [createMockNode()]
-    ) -> GroupModel {
-        return GroupModel(
+        nick: String = "Test Nick",
+        isPremium: Int = 0,
+        status: Int = 1,
+        servers: [ServerMachineModel] = []
+    ) -> DatacenterModel {
+        var datacenter = DatacenterModel(
             id: id,
-            countryCode: "US",
             city: city,
-            nick: "Test Nick",
-            premiumOnly: premiumOnly,
-            nodes: nodes,
-            bestNode: nodes.first,
-            bestNodeHostname: nodes.first?.hostname ?? "",
-            wgPublicKey: "test-key",
+            nick: nick,
+            iata: "TST",
+            status: status,
+            gps: "0.0,0.0",
+            tz: "UTC",
+            p2p: 1,
+            isPremium: isPremium,
+            wgPubkey: "test-wg-key",
+            wgEndpoint: "test.windscribe.com:443",
             ovpnX509: "test-cert",
-            pingIp: "1.2.3.4",
-            linkSpeed: "1000",
-            health: 100,
-            pingHost: "test.windscribe.com",
-            wasEdited: false,
-            timezone: "UTC"
+            linkSpeed: 1000
+        )
+        datacenter.servers = servers.isEmpty ? [createMockServerMachine(datacenterId: id)] : servers
+        return datacenter
+    }
+
+    private func createMockServerMachine(
+        id: Int = 1,
+        hostname: String = "test-node.windscribe.com",
+        ip: String = "1.2.3.4",
+        datacenterId: Int
+    ) -> ServerMachineModel {
+        return ServerMachineModel(
+            id: id,
+            hostname: hostname,
+            ip: ip,
+            ip2: "1.2.3.5",
+            ip3: "1.2.3.6",
+            ipv6: 0,
+            datacenterId: datacenterId,
+            weight: 100,
+            netLoad: 50,
+            sclass: 1
         )
     }
 
-    private static func createMockNode() -> NodeModel {
-        return NodeModel(
-            ip1: "1.2.3.4",
-            ip2: "1.2.3.5",
-            ip3: "1.2.3.6",
-            hostname: "test-node.windscribe.com",
-            dnsHostname: "test-node.windscribe.com",
-            forceDisconnect: false,
-            weight: 100
+    private func createMockLocationWithDatacenter(
+        locationId: Int,
+        locationName: String,
+        datacenterId: Int,
+        city: String,
+        status: Int = 1,
+        isPremium: Int = 0,
+        hasServers: Bool = true
+    ) -> (location: LocationModel, datacenter: DatacenterModel) {
+        let servers = hasServers ? [createMockServerMachine(datacenterId: datacenterId)] : []
+        var datacenter = createMockDatacenter(
+            id: datacenterId,
+            city: city,
+            isPremium: isPremium,
+            status: status,
+            servers: servers
         )
+        datacenter.locationId = locationId
+
+        let location = LocationModel(
+            id: locationId,
+            name: locationName,
+            countryCode: "US",
+            shortName: "US",
+            premiumOnly: isPremium,
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: [datacenter]
+        )
+
+        return (location, datacenter)
     }
 }

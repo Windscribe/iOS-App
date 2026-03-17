@@ -8,8 +8,8 @@
 
 import UIKit
 
-class FavNodeTableViewCellModel: NodeTableViewCellModel {
-    var displayingFavGroup: FavouriteGroupModel?
+class FavNodeTableViewCellModel: DatacenterTableViewCellModel {
+    var displayingFavGroup: FavoriteDatacenterlModel?
 
     var pinnedIpText: String {
         return displayingFavGroup?.pinnedIp ?? TextsAsset.Favorites.randomIP
@@ -19,15 +19,15 @@ class FavNodeTableViewCellModel: NodeTableViewCellModel {
 
     override var name: String {
         // Show full name with nickname: "New York Empire" instead of just "New York"
-        let cityName = displayingGroup?.city ?? ""
-        let nickname = displayingGroup?.nick ?? ""
+        let cityName = displayingDatacenter?.city ?? ""
+        let nickname = displayingDatacenter?.nick ?? ""
         if !nickname.isEmpty {
             return "\(cityName) \(nickname)"
         }
         return cityName
     }
 
-    func update(displayingFavGroup: FavouriteGroupModel?,
+    func update(displayingFavGroup: FavoriteDatacenterlModel?,
                 locationLoad: Bool,
                 isSavedHasFav: Bool,
                 isUserPro: Bool,
@@ -35,7 +35,7 @@ class FavNodeTableViewCellModel: NodeTableViewCellModel {
                 isDarkMode: Bool,
                 latency: Int) {
         self.displayingFavGroup = displayingFavGroup
-        self.displayingGroup = displayingFavGroup?.groupModel
+        self.displayingDatacenter = displayingFavGroup?.datacenterModel
         self.locationLoad = locationLoad
         self.isSavedHasFav = isSavedHasFav
         self.isUserPro = isUserPro

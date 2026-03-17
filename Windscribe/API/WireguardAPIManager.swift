@@ -9,7 +9,7 @@
 import Foundation
 
 protocol WireguardAPIManager {
-    func getSession() async throws -> Session
+    func getSession() async throws -> SessionModel
     func wgConfigInit(clientPublicKey: String, deleteOldestKey: Bool) async throws -> DynamicWireGuardConfig
 }
 
@@ -32,12 +32,13 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
         }
     }
 
-    func getSession() async throws -> Session {
+    func getSession() async throws -> SessionModel {
         guard let sessionAuth = preferences.userSessionAuth() else {
             throw Errors.validationFailure
         }
-        return try await apiUtil.makeApiCall(modalType: Session.self) { completion in
-            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", callback: completion)
+        let revision = preferences.getServerRevision()
+        return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
+            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", invRev: revision, backup: false, callback: completion)
         }
     }
 }

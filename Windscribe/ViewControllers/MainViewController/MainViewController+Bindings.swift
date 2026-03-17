@@ -10,6 +10,16 @@ import Combine
 import UIKit
 
 extension MainViewController {
+
+    func bindLatencyViewModel() {
+        latencyViewModel.latencyUpdatedTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.reloadTableViews()
+            }
+            .store(in: &cancellables)
+    }
+
     func bindVPNConnectionsViewModel() {
         vpnConnectionViewModel.connectedState
             .receive(on: DispatchQueue.main)
@@ -259,6 +269,23 @@ extension MainViewController {
             }
             .store(in: &cancellables)
 
+        viewModel.locationOrderBy
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.expandedSections = self.locationsListTableView.expandedSections
+                self.locationsListTableView.collapseExpandedSections()
+                self.loadLocationsTable(locations: self.viewModel.locationsList.value)
+            }
+            .store(in: &cancellables)
+
+        viewModel.locationsList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] locations in
+                guard let self = self else { return }
+                self.loadLocationsTable(locations: locations)
+            }
+            .store(in: &cancellables)
         setNetworkSsid()
     }
 

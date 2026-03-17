@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension MainViewController: FavouriteListTableViewDelegate {
-    func setSelectedFavourite(favourite: GroupModel) {
+    func setSelectedFavourite(favourite: DatacenterModel) {
         favNodesListViewModel.setSelectedFav(favourite: favourite)
     }
 

@@ -1,0 +1,86 @@
+{
+    "data": {
+        "servers": [
+            {
+                "id": 1738,
+                "host": "us-central-130.windscribe.com",
+                "ip": "67.213.215.13",
+                "ip2": "67.213.208.65",
+                "ip3": "67.213.208.66",
+                "ipv6": 0,
+                "dc_id": 156,
+                "weight": 1,
+                "net_load": 14,
+                "s_class": 0
+            },
+            {
+                "id": 1739,
+                "host": "us-central-131.windscribe.com",
+                "ip": "67.213.215.11",
+                "ip2": "67.213.208.33",
+                "ip3": "67.213.208.34",
+                "ipv6": 0,
+                "dc_id": 156,
+                "weight": 1,
+                "net_load": 15,
+                "s_class": 0
+            },
+            {
+                "id": 1740,
+                "host": "us-central-132.windscribe.com",
+                "ip": "67.213.214.255",
+                "ip2": "67.213.208.1",
+                "ip3": "67.213.208.2",
+                "ipv6": 0,
+                "dc_id": 156,
+                "weight": 1,
+                "net_load": 13,
+                "s_class": 0
+            },
+            {
+                "id": 1746,
+                "host": "us-central-137.windscribe.com",
+                "ip": "206.223.227.197",
+                "ip2": "162.43.191.50",
+                "ip3": "162.43.191.51",
+                "ipv6": 0,
+                "dc_id": 192,
+                "weight": 1,
+                "net_load": 9,
+                "s_class": 0
+            },
+            {
+                "id": 1747,
+                "host": "us-central-138.windscribe.com",
+                "ip": "206.223.227.195",
+                "ip2": "162.43.191.66",
+                "ip3": "162.43.191.67",
+                "ipv6": 0,
+                "dc_id": 192,
+                "weight": 1,
+                "net_load": 7,
+                "s_class": 0
+            },
+            {
+                "id": 1748,
+                "host": "us-central-139.windscribe.com",
+                "ip": "206.223.227.193",
+                "ip2": "162.43.191.82",
+                "ip3": "162.43.191.83",
+                "ipv6": 0,
+                "dc_id": 192,
+                "weight": 1,
+                "net_load": 7,
+                "s_class": 0
+            }
+        ],
+        "revision": 1238,
+        "debug_source": {
+            "locations": "n/a",
+            "servers": "db",
+            "server_delta": "n/a",
+            "server_revision": "cache"
+        }
+    }
+}
+        

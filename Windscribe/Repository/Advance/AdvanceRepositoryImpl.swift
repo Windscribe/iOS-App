@@ -19,24 +19,7 @@ class AdvanceRepositoryImpl: AdvanceRepository {
         self.vpnStateRepository = vpnStateRepository
     }
 
-    func getCountryOverride() -> String? {
-        let countryCode = getValue(key: wsServerOverrride)
-        let overriddenCountryCode = preferences.getCountryOverride()
-        let isConnectedVPN = vpnStateRepository.isConnected()
-        return if let countryCode = countryCode {
-            if countryCode == ignoreCountryOverride {
-                ignoreCountryCode
-            } else {
-                countryCode
-            }
-        } else if overriddenCountryCode == nil && isConnectedVPN {
-            ignoreCountryCode
-        } else {
-            overriddenCountryCode
-        }
-    }
-
-    func getForcedNode() -> String? {
+    func getForcedServer() -> String? {
         return getValue(key: wsForceNode)
     }
 

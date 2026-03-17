@@ -218,7 +218,7 @@ class ViewControllerModule: Assembly {
                     preferences: r.resolve(Preferences.self)!,
                     backgroundFileManager: r.resolve(BackgroundFileManaging.self)!,
                     soundFileManager: r.resolve(SoundFileManaging.self)!,
-                    serverRepository: r.resolve(ServerRepository.self)!,
+                    locationListRepository: r.resolve(LocationListRepository.self)!,
                     router: r.resolve(LookAndFeelNavigationRouter.self)!
                 )
             )
@@ -515,23 +515,23 @@ class ViewControllerModule: Assembly {
             )
         }.inObjectScope(.transient)
 
-        container.register(ServerListTableViewDataSource.self) { r in
-            ServerListTableViewDataSourceImpl(locationsManager: r.resolve(LocationsManager.self)!,
-                                              lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                                              hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                                              preferences: r.resolve(Preferences.self)!,
-                                              serverRepository: r.resolve(ServerRepository.self)!,
-                                              userSessionRepository: r.resolve(UserSessionRepository.self)! ,
-                                              latencyRepository: r.resolve(LatencyRepository.self)!,
-                                              languageManager: r.resolve(LanguageManager.self)!,
-                                              alertManager: r.resolve(AlertManager.self)!)
+        container.register(LocationsListTableViewDataSource.self) { r in
+            LocationsListTableViewDataSourceImpl(locationsManager: r.resolve(LocationsManager.self)!,
+                                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                                 hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                                                 preferences: r.resolve(Preferences.self)!,
+                                                 locationListRepository: r.resolve(LocationListRepository.self)!,
+                                                 userSessionRepository: r.resolve(UserSessionRepository.self)! ,
+                                                 latencyRepository: r.resolve(LatencyRepository.self)!,
+                                                 languageManager: r.resolve(LanguageManager.self)!,
+                                                 alertManager: r.resolve(AlertManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(FavouriteListTableViewDataSource.self) { r in
             FavouriteListTableViewDataSourceImpl(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                                  hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                                                  preferences: r.resolve(Preferences.self)!,
-                                                 serverRepository: r.resolve(ServerRepository.self)!,
+                                                 locationListRepository: r.resolve(LocationListRepository.self)!,
                                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                                  languageManager: r.resolve(LanguageManager.self)!,
                                                  latencyRepository: r.resolve(LatencyRepository.self)!,

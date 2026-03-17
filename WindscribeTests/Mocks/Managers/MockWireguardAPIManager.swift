@@ -40,7 +40,7 @@ class MockWireguardAPIManager: WireguardAPIManager {
         return response
     }
 
-    func getSession() async throws -> Session {
+    func getSession() async throws -> SessionModel {
         // Not needed for these tests
         throw Errors.notDefined
     }

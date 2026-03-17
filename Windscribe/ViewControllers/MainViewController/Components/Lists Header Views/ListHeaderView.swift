@@ -10,7 +10,7 @@ import Combine
 import UIKit
 
 enum ListHeaderViewType {
-    case staticIP, customConfig, favNodes, empty
+    case staticIP, customConfig, favorites, empty
 
     var description: String {
         switch self {
@@ -18,7 +18,7 @@ enum ListHeaderViewType {
             return TextsAsset.staticIPList
         case .customConfig:
             return TextsAsset.customConfigs
-        case .favNodes:
+        case .favorites:
             return TextsAsset.favoriteNodes
         case .empty:
             return ""

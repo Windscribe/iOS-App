@@ -174,7 +174,7 @@ class ViewModels: Assembly {
                 preferences: r.resolve(Preferences.self)!,
                 backgroundFileManager: r.resolve(BackgroundFileManaging.self)!,
                 soundFileManager: r.resolve(SoundFileManaging.self)!,
-                serverRepository: r.resolve(ServerRepository.self)!,
+                locationListRepository: r.resolve(LocationListRepository.self)!,
                 router: r.resolve(LookAndFeelNavigationRouter.self)!
             )
         }.inObjectScope(.transient)
@@ -332,7 +332,7 @@ class ViewModels: Assembly {
         container.register(MainViewModel.self) { r in
             MainViewModelImpl(vpnManager: r.resolve(VPNManager.self)!,
                               logger: r.resolve(FileLogger.self)!,
-                              serverRepository: r.resolve(ServerRepository.self)!,
+                              locationListRepository: r.resolve(LocationListRepository.self)!,
                               portMapRepo: r.resolve(PortMapRepository.self)!,
                               staticIpRepository: r.resolve(StaticIpRepository.self)!,
                               preferences: r.resolve(Preferences.self)!,
@@ -376,7 +376,8 @@ class ViewModels: Assembly {
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
                                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
-                                userSessionRepository: r.resolve(UserSessionRepository.self)!)
+                                userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                locationListRepository: r.resolve(LocationListRepository.self)!)
         }.inObjectScope(.transient)
         container.register(ListSelectionViewModelType.self) { r in
             ListSelectionViewModel(
@@ -399,15 +400,17 @@ class ViewModels: Assembly {
                                    connectivity: r.resolve(ConnectivityManager.self)!,
                                    userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                    locationsManager: r.resolve(LocationsManager.self)!,
-                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
+                                   protocolManager: r.resolve(ProtocolManagerType.self)!,
+                                   locationListRepository: r.resolve(LocationListRepository.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
-            ServerListViewModel(logger: r.resolve(FileLogger.self)!,
-                                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
-                                connectivity: r.resolve(ConnectivityManager.self)!,
-                                userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                                locationsManager: r.resolve(LocationsManager.self)!,
-                                protocolManager: r.resolve(ProtocolManagerType.self)!)
+            LocationListViewModel(logger: r.resolve(FileLogger.self)!,
+                                  vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                                  connectivity: r.resolve(ConnectivityManager.self)!,
+                                  userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                                  locationsManager: r.resolve(LocationsManager.self)!,
+                                  protocolManager: r.resolve(ProtocolManagerType.self)!,
+                                  locationListRepository: r.resolve(LocationListRepository.self)!)
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
@@ -419,7 +422,7 @@ class ViewModels: Assembly {
 
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!,
-                                 serverRepository: r.resolve(ServerRepository.self)!,
+                                 locationListRepository: r.resolve(LocationListRepository.self)!,
                                  staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.transient)
 
@@ -456,7 +459,7 @@ class ViewModels: Assembly {
                             apiManager: r.resolve(APIManager.self)!,
                             userSessionRepository: r.resolve(UserSessionRepository.self)!,
                             bridgeApiRepository: r.resolve(BridgeApiRepository.self)!,
-                            serverRepository: r.resolve(ServerRepository.self)!,
+                            locationListRepository: r.resolve(LocationListRepository.self)!,
                             hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
 
@@ -468,7 +471,7 @@ class ViewModels: Assembly {
         container.register(ServerInfoViewModelType.self) { r in
             ServerInfoViewModel(languageManager: r.resolve(LanguageManager.self)!,
                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                                serverRepository: r.resolve(ServerRepository.self)!)
+                                locationListRepository: r.resolve(LocationListRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register(ListHeaderViewModelType.self) { r in

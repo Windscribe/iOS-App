@@ -42,7 +42,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
         self.locationsManager = locationsManager
         self.backgroundFileManager = backgroundFileManager
 
-        locationsManager.bestLocationUpdated
+        locationsManager.bestLocationUpdatedTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
             guard let self = self else { return }

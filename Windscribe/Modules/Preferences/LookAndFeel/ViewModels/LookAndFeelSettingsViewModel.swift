@@ -85,7 +85,7 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
     private let preferences: Preferences
     private let backgroundFileManager: BackgroundFileManaging
     private let soundFileManager: SoundFileManaging
-    private let serverRepository: ServerRepository
+    private let locationListRepository: LocationListRepository
 
     private var appearance: String = ""
     private var aspectRatio: BackgroundAspectRatioType = .stretch
@@ -103,12 +103,12 @@ final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, Look
          preferences: Preferences,
          backgroundFileManager: BackgroundFileManaging,
          soundFileManager: SoundFileManaging,
-         serverRepository: ServerRepository,
+         locationListRepository: LocationListRepository,
          router: LookAndFeelNavigationRouter) {
         self.preferences = preferences
         self.backgroundFileManager = backgroundFileManager
         self.soundFileManager = soundFileManager
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.lookAndFeelRepository = lookAndFeelRepository
         self.router = router
 
@@ -331,7 +331,7 @@ extension LookAndFeelSettingsViewModelImpl {
             do {
                 let jsonData = try Data(contentsOf: fileURL)
                 let regionList = try JSONDecoder().decode([ExportedRegion].self, from: jsonData)
-                serverRepository.updateRegions(with: regionList)
+                locationListRepository.updateRegions(with: regionList)
                 logger.logI("LookAndFeelSettingsViewModel", "Import Locations finished")
                 showAlert(for: .customImportSucceeded)
             } catch {
@@ -343,14 +343,14 @@ extension LookAndFeelSettingsViewModelImpl {
 
     private func getServersDocumentFormatInfo() -> DocumentFormatInfo? {
         logger.logI("LookAndFeelSettingsViewModel", "Export Locations pressed")
-        let serverModels = serverRepository.currentServerModels
-        guard !serverModels.isEmpty else {
+        let locationModels = locationListRepository.currentLocationModels
+        guard !locationModels.isEmpty else {
             logger.logI("LookAndFeelSettingsViewModel", "Export Locations failed, no local servers to export")
             return nil
         }
 
         do {
-            let jsonData = try buildLocationsJsonString(serverModels: serverModels)
+            let jsonData = try buildLocationsJsonString(locationModels: locationModels)
             logger.logI("LookAndFeelSettingsViewModel", "Export Locations successful")
             return DocumentFormatInfo(fileData: jsonData, type: .json, tempFileName: "besugo.json")
         } catch {
@@ -360,12 +360,12 @@ extension LookAndFeelSettingsViewModelImpl {
     }
 
     private func resetLocations() {
-        serverRepository.updateRegions(with: [])
+        locationListRepository.updateRegions(with: [])
         showAlert(for: .resetSucceeded)
     }
 
-    private func buildLocationsJsonString(serverModels: [ServerModel]) throws -> Data {
-        let regions: [ExportedRegion] = serverModels.compactMap { ExportedRegion(model: $0) }
+    private func buildLocationsJsonString(locationModels: [LocationModel]) throws -> Data {
+        let regions: [ExportedRegion] = locationModels.compactMap { ExportedRegion(model: $0) }
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         return try encoder.encode(regions)

@@ -15,9 +15,9 @@ extension APIManagerImpl {
                secureToken: String,
                captchaSolution: String,
                captchaTrailX: [CGFloat],
-               captchaTrailY: [CGFloat]) async throws -> Session {
+               captchaTrailY: [CGFloat]) async throws -> SessionModel {
 
-        return try await apiUtil.makeApiCall(modalType: Session.self) { [weak self] completion in
+        return try await apiUtil.makeApiCall(modalType: SessionModel.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
@@ -43,9 +43,9 @@ extension APIManagerImpl {
                 secureToken: String,
                 captchaSolution: String,
                 captchaTrailX: [CGFloat],
-                captchaTrailY: [CGFloat]) async throws -> Session {
+                captchaTrailY: [CGFloat]) async throws -> SessionModel {
 
-        return try await apiUtil.makeApiCall(modalType: Session.self) { [weak self] completion in
+        return try await apiUtil.makeApiCall(modalType: SessionModel.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
@@ -91,8 +91,8 @@ extension APIManagerImpl {
         }
     }
 
-    func signUpUsingToken(token: String) async throws -> Session {
-        return try await apiUtil.makeApiCall(modalType: Session.self) { completion in
+    func signUpUsingToken(token: String) async throws -> SessionModel {
+        return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
             self.api.signup(usingToken: token, callback: completion)
         }
     }

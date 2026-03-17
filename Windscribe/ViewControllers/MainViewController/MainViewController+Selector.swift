@@ -168,7 +168,7 @@ extension MainViewController {
     }
 
     func performTableReload() {
-        serverListTableView.reloadData()
+        locationsListTableView.reloadData()
         favTableView.reloadData()
         staticIpTableView.reloadData()
         customConfigTableView.reloadData()
@@ -183,40 +183,22 @@ extension MainViewController {
     }
 
     @objc func reloadServerListOrder() {
-        let results = viewModel.serverList.value
+        let results = viewModel.locationsList.value
         if results.count == 0 { return }
         DispatchQueue.main.async {
-            self.loadServerTable(servers: results)
+            self.loadLocationsTable(locations: results)
             self.reloadFavouriteOrder()
             self.configureBestLocation()
         }
     }
 
     @objc func loadServerList() {
-        viewModel.locationOrderBy
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                self.expandedSections = self.serverListTableView.expandedSections
-                self.serverListTableView.collapseExpandedSections()
-                self.loadServerTable(servers: self.viewModel.serverList.value)
-            }
-            .store(in: &cancellables)
-
         reloadFavouriteOrder()
-
-        viewModel.serverList
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] servers in
-                guard let self = self else { return }
-                self.loadServerTable(servers: servers)
-            }
-            .store(in: &cancellables)
     }
 
-    func loadServerTable(servers: [ServerModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
-        let serverSectionsOrdered = viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: servers)
-        self.serverListTableViewDataSource.updateServerList(with: serverSectionsOrdered, shouldColapse: shouldColapse)
+    func loadLocationsTable(locations: [LocationModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
+        let locationSectionsOrdered = viewModel.sortLocationListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, locations: locations)
+        self.locationsListTableViewDataSource.updateServerList(with: locationSectionsOrdered, shouldColapse: shouldColapse)
 
         reloadFinishedCompletion?()
         DispatchQueue.main.async { [weak self] in

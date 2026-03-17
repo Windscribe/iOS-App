@@ -22,7 +22,7 @@ protocol SessionManager {
     func updateSession(_ appleID: String) async throws
     func updateSession(_ appleID: String, force: Bool) async throws
     func login(auth: String) async throws
-    func updateFrom(session: Session) async
+    func updateFrom(session: SessionModel) async
     func keepSessionUpdated()
     var sessionFetchInProgress: Bool { get set }
     var updateSessionTask: Task<Void, Error>? { get set }
@@ -39,7 +39,6 @@ class SessionManagerImpl: SessionManager {
     private let logger: FileLogger
     private let apiManager: APIManager
     private let credentialsRepo: CredentialsRepository
-    private let serverRepo: ServerRepository
     private let staticIPRepo: StaticIpRepository
     private let portmapRepo: PortMapRepository
     private let preferences: Preferences
@@ -48,6 +47,7 @@ class SessionManagerImpl: SessionManager {
     private let locationsManager: LocationsManager
     private let vpnStateRepository: VPNStateRepository
     private let unblockWgParamsRepository: UnblockWgParamsRepository
+    private let locationListRepository: LocationListRepository
 
     private let vpnManager: VPNManager
     private let ssoManager: SSOManaging
@@ -59,7 +59,6 @@ class SessionManagerImpl: SessionManager {
           logger: FileLogger,
           apiManager: APIManager,
           credentialsRepo: CredentialsRepository,
-          serverRepo: ServerRepository,
           staticIPRepo: StaticIpRepository,
           portmapRepo: PortMapRepository,
           preferences: Preferences,
@@ -69,12 +68,12 @@ class SessionManagerImpl: SessionManager {
           vpnStateRepository: VPNStateRepository,
           vpnManager: VPNManager,
           ssoManager: SSOManaging,
-          unblockWgParamsRepository: UnblockWgParamsRepository) {
+          unblockWgParamsRepository: UnblockWgParamsRepository,
+          locationListRepository: LocationListRepository) {
         self.wgCredentials = wgCredentials
         self.logger = logger
         self.apiManager = apiManager
         self.credentialsRepo = credentialsRepo
-        self.serverRepo = serverRepo
         self.staticIPRepo = staticIPRepo
         self.portmapRepo = portmapRepo
         self.preferences = preferences
@@ -85,6 +84,7 @@ class SessionManagerImpl: SessionManager {
         self.vpnManager = vpnManager
         self.ssoManager = ssoManager
         self.unblockWgParamsRepository = unblockWgParamsRepository
+        self.locationListRepository = locationListRepository
 
         keepSessionUpdated()
     }
@@ -143,9 +143,6 @@ class SessionManagerImpl: SessionManager {
 
     func updateSession(force: Bool) async throws {
         try await updateSessionUsing(token: nil, force: force)
-        if force {
-            try? await serverRepo.updatedServers()
-        }
     }
 
     func updateSession(_ appleID: String) async throws {
@@ -193,12 +190,13 @@ class SessionManagerImpl: SessionManager {
     }
 
     func login(auth: String) async throws {
-        let session = try await self.apiManager.getSession(sessionAuth: auth)
+        var session = try await self.apiManager.getSession(sessionAuth: auth)
         wgCredentials.delete()
         if session.sessionAuthHash.isEmpty {
             session.sessionAuthHash = auth
         }
         Task {
+            try? await locationListRepository.updatedServerList()
             await updateFrom(session: session)
             if unblockWgParamsRepository.needsRefresh() {
                 unblockWgParamsRepository.refreshParams()
@@ -206,7 +204,7 @@ class SessionManagerImpl: SessionManager {
         }
     }
 
-    func updateFrom(session: Session) async {
+    func updateFrom(session: SessionModel) async {
         await userSessionRepository.update(session: session)
     }
 
@@ -262,12 +260,9 @@ class SessionManagerImpl: SessionManager {
             logger.logI("SessionManager", "No old session found")
             return
         }
-        if oldSession.locHash != newSession.locHash {
-            try? await serverRepo.updatedServers()
-        }
         if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
             logger.logI("SessionManager", "ALC changes detected. Request to retrieve server list")
-            try? await serverRepo.updatedServers()
+            try? await locationListRepository.updatedServerList()
         }
         let sipCount = staticIPRepo.staticIPs.count
         if sipCount != newSession.getSipCount() {
@@ -278,13 +273,12 @@ class SessionManagerImpl: SessionManager {
         if !newSession.isPremium && oldSession.isPremium {
             logger.logI("SessionManager", "User's pro plan expired.")
             _ = try? await Task.sleep(nanoseconds: 3_000_000_000)
-            self.logger.logI("SessionManager", "Updated server list.")
-            try? await serverRepo.updatedServers()
+            try? await locationListRepository.updatedServerList()
             try? await credentialsRepo.getUpdatedIKEv2Crendentials()
             try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
         }
         if newSession.isPremium && !oldSession.isPremium {
-            try? await serverRepo.updatedServers()
+            try? await locationListRepository.updatedServerList()
             try? await credentialsRepo.getUpdatedIKEv2Crendentials()
             try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
         }
@@ -295,7 +289,7 @@ class SessionManagerImpl: SessionManager {
 
         let portMaps = portmapRepo.currentPortMaps.filter({ $0.heading == wireGuard })
         if portMaps.first == nil {
-            try? await serverRepo.updatedServers()
+            try? await locationListRepository.updatedServerList()
             _ = try? await portmapRepo.getUpdatedPortMap()
         }
         preferences.saveUserStatus(value: userSessionRepository.sessionModel?.isUserPro ?? false)
