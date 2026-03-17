@@ -67,15 +67,10 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
             do {
                 let result = try await self.apiManager.regToken()
-                let session = try await self.apiManager.signUpUsingToken(token: result.token)
-
-                // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
-                let sessionModel = session.getModel()
+                let sessionModel = try await self.apiManager.signUpUsingToken(token: result.token)
 
                 Task { @MainActor in
-                    // Create unmanaged Session from model (safe to use on any thread)
-                    let sessionForStorage = Session(sessionModel: sessionModel)
-                    await self.sessionManager.updateFrom(session: sessionForStorage)
+                    await self.sessionManager.updateFrom(session: sessionModel)
                     self.keyChainDatabase.setGhostAccountCreated()
                     self.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(sessionModel.userId)")
                     self.prepareUserData()

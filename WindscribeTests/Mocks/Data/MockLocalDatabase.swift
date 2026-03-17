@@ -18,8 +18,11 @@ class MockLocalDatabase: LocalDatabase {
     let networksSubject = CurrentValueSubject<[Windscribe.WifiNetwork], Never>([])
     let readNoticesSubject = CurrentValueSubject<[Windscribe.ReadNotice], Never>([])
     let customConfigsSubject = CurrentValueSubject<[Windscribe.CustomConfig], Never>([])
+    let serverMachinesSubject = CurrentValueSubject<[Windscribe.ServerMachineObject], Never>([])
 
     var mockServers: [Server]? = []
+    var mockLocations: [LocationObject]? = []
+    var mockServerMachines: [ServerMachineObject]? = []
     let mockFavoritesSubject = CurrentValueSubject<[String: Favourite], Never>([:])
     // PortMap tracking
     var savePortMapCalled = false
@@ -101,6 +104,22 @@ class MockLocalDatabase: LocalDatabase {
 
     func saveServers(servers: [Windscribe.Server]) {
         mockServers = servers
+    }
+
+    func getLocations() -> [LocationObject]? {
+        return mockLocations
+    }
+
+    func saveLocations(locations: [LocationObject]) {
+        mockLocations = locations
+    }
+
+    func getServerMachines() -> [ServerMachineObject]? {
+        return mockServerMachines
+    }
+
+    func saveServerMachines(serverMachines: [ServerMachineObject]) {
+        mockServerMachines = serverMachines
     }
 
     func getStaticIPs() -> [Windscribe.StaticIP]? {
@@ -336,6 +355,10 @@ class MockLocalDatabase: LocalDatabase {
         return
     }
 
+    func removeFavourite(datacenterId: String) {
+        removeFavourite(groupId: datacenterId)
+    }
+
     func saveUnblockWgParams(params: [Windscribe.UnblockWgParamsObj]) {
         saveUnblockWgParamsCalled = true
         mockUnblockWgParams = params
@@ -343,6 +366,10 @@ class MockLocalDatabase: LocalDatabase {
 
     func getUnblockWgParams() -> [Windscribe.UnblockWgParamsObj] {
         return mockUnblockWgParams
+    }
+
+    func getServerMachinesPublisher() -> AnyPublisher<[Windscribe.ServerMachineObject], Never> {
+        serverMachinesSubject.eraseToAnyPublisher()
     }
 
     // MARK: - Helper Methods
@@ -354,6 +381,8 @@ class MockLocalDatabase: LocalDatabase {
         networksSubject.send([])
         readNoticesSubject.send([])
         mockServers = []
+        mockLocations = []
+        mockServerMachines = []
         mockFavoritesSubject.send([:])
         savePortMapCalled = false
         saveSuggestedPortsCalled = false

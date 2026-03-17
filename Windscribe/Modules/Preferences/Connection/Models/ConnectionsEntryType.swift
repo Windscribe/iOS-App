@@ -14,7 +14,8 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
          alwaysOn(isSelected: Bool),
          connectedDns(currentOption: String, customValue: String, options: [MenuOption]),
          allowLan(isSelected: Bool),
-         circunventCensorship(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption])
+         circunventCensorship(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption]),
+         serverpede(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption])
 
     var id: Int {
         switch self {
@@ -24,6 +25,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .connectedDns: 4
         case .allowLan: 5
         case .circunventCensorship: 6
+        case .serverpede: 6
         }
     }
     var title: String {
@@ -34,6 +36,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .connectedDns: TextsAsset.Connection.connectedDNS
         case .allowLan: TextsAsset.Connection.allowLan
         case .circunventCensorship: TextsAsset.Connection.circumventCensorship
+        case .serverpede: TextsAsset.Connection.useServerpede
         }
     }
     var icon: String {
@@ -44,6 +47,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .connectedDns: ImagesAsset.Connection.connectedDNS
         case .allowLan: ImagesAsset.Connection.allowLan
         case .circunventCensorship: ImagesAsset.Connection.circumventCensorship
+        case .serverpede: ImagesAsset.Connection.circumventCensorship
         }
     }
     var message: String? {
@@ -54,6 +58,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .connectedDns: nil
         case .allowLan: nil
         case .circunventCensorship: nil
+        case .serverpede: nil
         }
     }
     var action: MenuEntryActionType? {
@@ -64,6 +69,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case let .connectedDns(currentOption, _, options): .multiple(currentOption: currentOption, options: options, parentId: id)
         case let .allowLan(isSelected): .toggle(isSelected: isSelected, parentId: id)
         case let .circunventCensorship(isSelected, _, _): .toggle(isSelected: isSelected, parentId: id)
+        case let .serverpede(isSelected, _, _): .toggle(isSelected: isSelected, parentId: id)
         }
     }
     var secondaryEntries: [MenuSecondaryEntryItem] {
@@ -100,6 +106,12 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
             } else {
                 return [.circunventCensorshipInfo]
             }
+        case let .serverpede(isSelected, paramSelected, paramOptions):
+            if isSelected {
+                return [.serverpedInfo, .backupMenu(currentOption: paramSelected, options: paramOptions)]
+            } else {
+                return [.serverpedInfo]
+            }
         default:
             return []
         }
@@ -115,7 +127,9 @@ enum ConnectionSecondaryEntryIDs: Int {
          connectedDnsCustom,
          allowLanInfo,
          circunventCensorshipInfo,
-         wgUnlockMenu
+         wgUnlockMenu,
+         serverpedInfo,
+         backupMenu
 
     var id: Int { rawValue }
 }
@@ -129,7 +143,9 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
          connectedDnsCustom(value: String),
          allowLanInfo,
          circunventCensorshipInfo,
-         wgUnlockMenu(currentOption: String, options: [MenuOption])
+         wgUnlockMenu(currentOption: String, options: [MenuOption]),
+         serverpedInfo,
+         backupMenu(currentOption: String, options: [MenuOption])
 
     var id: Int {
         switch self {
@@ -151,6 +167,10 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
             ConnectionSecondaryEntryIDs.circunventCensorshipInfo.id
         case .wgUnlockMenu:
             ConnectionSecondaryEntryIDs.wgUnlockMenu.id
+        case .serverpedInfo:
+            ConnectionSecondaryEntryIDs.serverpedInfo.id
+        case .backupMenu:
+            ConnectionSecondaryEntryIDs.backupMenu.id
         }
     }
     var title: String {
@@ -158,6 +178,7 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
         case .protocolMenu: TextsAsset.Connection.protocolType
         case .portMenu: TextsAsset.Connection.port
         case .wgUnlockMenu: TextsAsset.Connection.configuration
+        case .backupMenu: TextsAsset.Connection.backup
         default: ""
         }
     }
@@ -181,6 +202,10 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
         case .circunventCensorshipInfo:
                 .infoLink(message: TextsAsset.Connection.circumventCensorshipDescription, parentId: id)
         case let .wgUnlockMenu(currentOption, options):
+                .multiple(currentOption: currentOption, options: options, parentId: id)
+        case .serverpedInfo:
+                .infoLink(message: TextsAsset.Connection.serverpedeDescription, parentId: id)
+        case let .backupMenu(currentOption, options):
                 .multiple(currentOption: currentOption, options: options, parentId: id)
         }
     }

@@ -228,6 +228,6 @@ extension MainViewController: FreeAccountFooterViewDelegate {
     }
 
     func updateFooterViewVisibility(visible: Bool) {
-        serverListTableView.verticalScrollIndicatorInsets.bottom = visible ? 100 : 0
+        locationsListTableView.verticalScrollIndicatorInsets.bottom = visible ? 100 : 0
     }
 }

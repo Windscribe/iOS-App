@@ -33,7 +33,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     // MARK: table views
     var scrollView: WSScrollView!
     var favTableViewRefreshControl, staticIpTableViewRefreshControl, customConfigsTableViewRefreshControl: WSRefreshControl!
-    var serverListTableView: PlainExpyTableView!
+    var locationsListTableView: PlainExpyTableView!
     var favTableView, staticIpTableView, customConfigTableView: PlainTableView!
     var staticIPTableViewFooterView: StaticIPListFooterView!
     var customConfigTableViewFooterView: CustomConfigListFooterView!
@@ -45,7 +45,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     // search
     var searchLocationsView: SearchLocationsView!
 
-    var sortedServerList: [ServerSection]?
+    var sortedlocationList: [LocationSection]?
 
     // MARK: connection views
     var connectButtonView: ConnectButtonView!
@@ -58,8 +58,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var wifiInfoView: WifiInfoView!
 
     // MARK: datasources
-    var serverListTableViewDataSource: ServerListTableViewDataSource!
-    var favNodesListTableViewDataSource: FavouriteListTableViewDataSource!
+    var locationsListTableViewDataSource: LocationsListTableViewDataSource!
+    var favoriteListTableViewDataSource: FavouriteListTableViewDataSource!
     var staticIPListTableViewDataSource: StaticIPListTableViewDataSource!
     var customConfigListTableViewDataSource: CustomConfigListTableViewDataSource!
 
@@ -80,7 +80,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     // MARK: Server section
 
-    let serverSectionOpacity: Float = 1
+    let locationSectionOpacity: Float = 1
 
     // MARK: shake for data trigger
 
@@ -133,7 +133,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         return viewModel.wifiNetwork.value
     }
 
-    lazy var serverListTableViewRefreshControl: WSRefreshControl = {
+    lazy var locationsListTableViewRefreshControl: WSRefreshControl = {
         let refreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         refreshControl.addTarget(self, action: #selector(serverRefreshControlValueChanged), for: .valueChanged)
         refreshControl.backView = RefreshControlBackView(frame: refreshControl.bounds)
@@ -262,7 +262,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
-            let locationId = "\(bestLocation.groupId)"
+            let locationId = "\(bestLocation.datacenterId)"
             logger.logD("MainViewController", "Configuring best location.")
             if selectBestLocation || noSelectedNodeToConnect() || userJustLoggedIn {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
@@ -275,9 +275,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 logger.logD("MainViewController", "Forcing to connect to best location.")
                 enableVPNConnection()
             }
-            guard let displayingGroup = self.viewModel.serverList.value
-                .flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
-            let isGroupProOnly = displayingGroup.premiumOnly
+            guard let displayingDatacenter = self.viewModel.locationsList.value
+                .flatMap({ $0.datacenters }).filter({ $0.id == bestLocation.datacenterId }).first else { return }
+            let isGroupProOnly = displayingDatacenter.isPremiumOnly
 
             if let isUserPro = viewModel.sessionModel.value?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
@@ -293,17 +293,14 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func clearScrollHappened() {
-        serverListTableViewDataSource.scrollHappened = false
-        favNodesListTableViewDataSource.scrollHappened = false
+        locationsListTableViewDataSource.scrollHappened = false
+        favoriteListTableViewDataSource.scrollHappened = false
         customConfigListTableViewDataSource.scrollHappened = false
         staticIPListTableViewDataSource.scrollHappened = false
     }
 
     func reloadServerList() {
-        let results = viewModel.serverList.value
-        if results.count == 0 { return }
-
-        if viewModel.checkAccountWasDowngraded(for: results) {
+        if viewModel.checkAccountWasDowngraded() {
             if vpnConnectionViewModel.isDisconnected() {
                 loadLatencyValues()
             } else {
@@ -313,7 +310,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if isAnyRefreshControlIsRefreshing() {
             loadLatencyValues()
         }
-        vpnConnectionViewModel.checkForForceDisconnect()
     }
 
     func reloadCustomConfigs() {

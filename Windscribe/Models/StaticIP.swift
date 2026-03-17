@@ -68,7 +68,13 @@ struct StaticIPModel {
         self.pingHost = from.pingHost
         self.nodes = from.nodes.map { $0.getNodeModel() }
     }
+
+    var serverMachineList: [ServerMachineModel] {
+        nodes.map { ServerMachineModel(from: $0) }
+    }
 }
+
+class StaticIPNode: Node {}
 
 @objcMembers class StaticIP: Object, Decodable {
     dynamic var id: Int = 0
@@ -230,4 +236,53 @@ struct StaticIPList: Decodable {
         staticIPs.removeAll()
         staticIPs.append(objectsIn: array)
     }
+}
+
+@objcMembers class Node: Object, Decodable {
+    dynamic var ip: String = ""
+    dynamic var ip2: String = ""
+    dynamic var ip3: String = ""
+    dynamic var hostname: String = ""
+    dynamic var dnsHostname: String = ""
+    dynamic var weight: Int = 0
+    dynamic var group: String = ""
+    dynamic var gps: String = ""
+    dynamic var forceDisconnect: Bool = false
+
+    enum CodingKeys: String, CodingKey {
+        case ip
+        case ip2
+        case ip3
+        case hostname
+        case dnsHostname = "dns_hostname"
+        case weight
+        case group
+        case gps
+        case forceDisconnect = "force_disconnect"
+    }
+
+    required convenience init(from decoder: Decoder) throws {
+        self.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        ip = try container.decodeIfPresent(String.self, forKey: .ip) ?? ""
+        ip2 = try container.decodeIfPresent(String.self, forKey: .ip2) ?? ""
+        ip3 = try container.decodeIfPresent(String.self, forKey: .ip3) ?? ""
+        hostname = try container.decodeIfPresent(String.self, forKey: .hostname) ?? ""
+        dnsHostname = try container.decodeIfPresent(String.self, forKey: .dnsHostname) ?? ""
+        weight = try container.decodeIfPresent(Int.self, forKey: .weight) ?? 0
+        group = try container.decodeIfPresent(String.self, forKey: .group) ?? ""
+        gps = try container.decodeIfPresent(String.self, forKey: .gps) ?? ""
+        forceDisconnect = try container.decodeIfPresent(Int.self, forKey: .forceDisconnect) == 1 ? true : false
+    }
+
+    func getNodeModel() -> NodeModel {
+        return NodeModel(ip1: ip,
+                         ip2: ip2,
+                         ip3: ip3,
+                         hostname: hostname,
+                         dnsHostname: dnsHostname,
+                         forceDisconnect: forceDisconnect,
+                         weight: weight)
+    }
+
 }

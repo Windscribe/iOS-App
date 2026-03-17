@@ -68,26 +68,27 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         let emergencyConfigs = customConfigRepository.customConfigs.value.filter { config in
             config.name == configuationName
         }
-        
+
         emergencyConfigs.forEach { config in
             customConfigRepository.removeCustomConfig(fileId: config.id)
         }
-        
+
         // Then clear the location if it's pointing to an emergency custom config
         if locationsManager.getLocationType() == .custom {
             // Check if the current custom config is an emergency config
-            let locationID = locationsManager.getId()
+            let locationId = locationsManager.getLastSelectedLocation()
+            let customId = locationsManager.getCustomId(location: locationId)
             let isEmergencyConfig = emergencyConfigs.contains { config in
-                config.id == locationID
+                config.id == customId
             }
-            
+
             if isEmergencyConfig {
                 locationsManager.clearLastSelectedLocation()
                 let bestLocation = locationsManager.getBestLocation()
-                locationsManager.saveBestLocation(with: bestLocation)
+                locationsManager.saveBestLocation(with: String(bestLocation))
             }
         }
-        
+
         // Finally, refresh protocols asynchronously
         Task {
             logger.logI("EmergencyRepository", "cleansEmergencyConfigs for getRefreshedProtocols")

@@ -48,9 +48,4 @@ class StaticIpRepositoryImpl: StaticIpRepository {
     func getStaticIp(id: Int) -> StaticIPModel? {
         return localDatabase.getStaticIPs()?.first { $0.id == id }?.getModel()
     }
-
-    func getStaticIp(id: String) -> StaticIPModel? {
-        guard let staticID = Int(id) else { return nil }
-        return getStaticIp(id: staticID)
-    }
 }

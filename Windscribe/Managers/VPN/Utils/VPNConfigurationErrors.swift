@@ -12,7 +12,7 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case credentialsNotFound(String)
     case customConfigSupportNotAvailable
     case locationNotFound(String)
-    case noValidNodeFound
+    case noValidServerFound
     case invalidLocationType
     case invalidServerConfig
     case configNotFound
@@ -35,8 +35,8 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return "IKEv2 does not support custom config."
         case let .locationNotFound(id):
             return "No location found matching location ID: \(id)"
-        case .noValidNodeFound:
-            return "No valid found to connect."
+        case .noValidServerFound:
+            return "No valid server found to connect."
         case .invalidLocationType:
             return "Invalid location error."
         case .invalidServerConfig:

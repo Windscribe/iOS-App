@@ -11,9 +11,10 @@ import Combine
 import StoreKit
 
 protocol MainViewModel {
-    var serverList: CurrentValueSubject<[ServerModel], Never> { get }
+    var serverList: CurrentValueSubject<[ServerMachineModel], Never> { get }
+    var locationsList: CurrentValueSubject<[LocationModel], Never> { get }
     var portMapHeadings: CurrentValueSubject<[String]?, Never> { get }
-    var favouriteList: CurrentValueSubject<[FavouriteGroupModel]?, Never> { get }
+    var favouriteList: CurrentValueSubject<[FavoriteDatacenterlModel]?, Never> { get }
     var staticIPs: CurrentValueSubject<[StaticIPModel]?, Never> { get }
     var customConfigs: CurrentValueSubject<[CustomConfigModel], Never> { get }
     var oldSession: SessionModel? { get }
@@ -27,7 +28,7 @@ protocol MainViewModel {
     var appNetwork: CurrentValueSubject<AppNetwork, Never> { get }
     var wifiNetwork: CurrentValueSubject<WifiNetworkModel?, Never> { get }
     var sessionModel: CurrentValueSubject<SessionModel?, Never> { get }
-    var favouriteGroups: CurrentValueSubject<[GroupModel], Never> { get }
+    var favouriteDatacenters: CurrentValueSubject<[DatacenterModel], Never> { get }
 
     var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }
     var showNotificationsTrigger: PassthroughSubject<Void, Never> { get }
@@ -44,26 +45,26 @@ protocol MainViewModel {
     var didShowProPlanExpiredPopup: Bool { get set }
 
     var promoPayload: CurrentValueSubject<PushNotificationPayload?, Never> { get }
-    func loadServerList()
-    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel]) -> [ServerSection]
+    func loadLocationList()
+    func sortLocationListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, locations: [LocationModel]) -> [LocationSection]
     func loadPortMap()
     func loadStaticIPLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
     func loadCustomConfigLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void)
     func saveLastNotificationTimestamp()
     func getLastNotificationTimestamp() -> Double?
-    func sortFavouriteNodesUsingUserPreferences(favList: [FavouriteGroupModel]) -> [FavouriteGroupModel]
+    func sortFavouriteNodesUsingUserPreferences(favList: [FavoriteDatacenterlModel]) -> [FavoriteDatacenterlModel]
     func getStaticIp() -> [StaticIPModel]
-    func getLatency(ip: String?) -> Int
+    func getLatency(datacenter: DatacenterModel) -> Int
     func isPrivacyPopupAccepted() -> Bool
     func updateTrustNetworkSwitch(network: WifiNetworkModel, status: Bool)
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetworkModel) async
     func updateSSID()
-    func getServerModel(from groupId: Int) -> ServerModel?
+    func getLocationModel(from datacenterId: Int) -> LocationModel?
     func runHapticFeedback(level: HapticFeedbackLevel)
-    func checkAccountWasDowngraded(for serverList: [ServerModel]) -> Bool
+    func checkAccountWasDowngraded() -> Bool
     func keepSessionUpdated()
 
     func showSimpleAlert(viewController: UIViewController?, title: String, message: String, buttonText: String)

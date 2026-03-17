@@ -15,7 +15,6 @@ protocol UserDataRepository {
 }
 
 class UserDataRepositoryImpl: UserDataRepository {
-    private let serverRepository: ServerRepository
     private let credentialsRepository: CredentialsRepository
     private let portMapRepository: PortMapRepository
     private let latencyRepository: LatencyRepository
@@ -24,8 +23,12 @@ class UserDataRepositoryImpl: UserDataRepository {
     private let emergencyRepository: EmergencyRepository
     private let logger: FileLogger
 
-    init(serverRepository: ServerRepository, credentialsRepository: CredentialsRepository, portMapRepository: PortMapRepository, latencyRepository: LatencyRepository, staticIpRepository: StaticIpRepository, notificationsRepository: NotificationRepository, emergencyRepository: EmergencyRepository, logger: FileLogger) {
-        self.serverRepository = serverRepository
+    init(credentialsRepository: CredentialsRepository,
+         portMapRepository: PortMapRepository,
+         latencyRepository: LatencyRepository,
+         staticIpRepository: StaticIpRepository,
+         notificationsRepository: NotificationRepository,
+         emergencyRepository: EmergencyRepository, logger: FileLogger) {
         self.credentialsRepository = credentialsRepository
         self.portMapRepository = portMapRepository
         self.latencyRepository = latencyRepository
@@ -36,9 +39,6 @@ class UserDataRepositoryImpl: UserDataRepository {
     }
 
     func prepareUserData() async throws {
-        logger.logI("UserDataRepository", "Getting server list.")
-        try await serverRepository.updatedServers()
-
         // Pick initial best location based on timezone
         latencyRepository.pickBestLocation()
 
@@ -62,20 +62,5 @@ class UserDataRepositoryImpl: UserDataRepository {
         _ = try await (serverConfig, portMap, notifications)
 
         logger.logI("UserDataRepository", "All data loaded successfully.")
-
-        // Load latency in background - don't block navigation
-        if !self.emergencyRepository.isConnected() {
-            Task.detached { [weak self] in
-                guard let self = self else { return }
-                self.logger.logI("UserDataRepository", "Loading latency in background.")
-                try? await self.latencyRepository.loadLatency()
-                self.logger.logI("UserDataRepository", "Latency loading complete.")
-
-                // Notify UI to reload table with new ping times
-                await MainActor.run {
-                    NotificationCenter.default.post(name: Notifications.reloadTableViews, object: nil)
-                }
-            }
-        }
     }
 }

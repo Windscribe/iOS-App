@@ -12,5 +12,4 @@ protocol StaticIpRepository {
     var staticIPs: [StaticIPModel] { get }
     func updateStaticServers() async throws
     func getStaticIp(id: Int) -> StaticIPModel?
-    func getStaticIp(id: String) -> StaticIPModel?
 }

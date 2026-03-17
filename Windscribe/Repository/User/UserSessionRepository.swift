@@ -16,7 +16,7 @@ protocol UserSessionRepository {
     var oldSessionModel: SessionModel? { get }
     var sessionModelSubject: CurrentValueSubject<SessionModel?, Never> { get }
 
-    func update(session: Session) async
+    func update(session: SessionModel) async
     func clearSession()
     func canAccesstoProLocation() -> Bool
     func syncSession() async -> Bool
@@ -27,6 +27,7 @@ protocol UserSessionRepository {
 class UserSessionRepositoryImpl: UserSessionRepository {
     private let preferences: Preferences
     private let localDatabase: LocalDatabase
+    private let locationListRepository: LocationListRepository
 
     var sessionModel: SessionModel?
     var oldSessionModel: SessionModel?
@@ -39,24 +40,29 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     var keepSessionUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     init(preferences: Preferences,
-         localDatabase: LocalDatabase) {
+         localDatabase: LocalDatabase,
+         locationListRepository: LocationListRepository) {
         self.preferences = preferences
         self.localDatabase = localDatabase
+        self.locationListRepository = locationListRepository
     }
 
-    func update(session: Session) async {
+    func update(session: SessionModel) async {
         localDatabase.saveOldSession()
-        localDatabase.saveSession(session: session)
-        let model = session.getModel()
+        localDatabase.saveSession(session: Session(sessionModel: session))
+
+        if let inventory = session.inventory {
+            locationListRepository.updateInventory(with: inventory)
+        }
 
         await MainActor.run { [weak self] in
                guard let self = self else { return }
 
                self.oldSessionModel = self.sessionModel
-               self.sessionModel = model
-               sessionModelSubject.send(model)
-               if !model.sessionAuthHash.isEmpty {
-                   preferences.saveUserSessionAuth(sessionAuth: model.sessionAuthHash)
+               self.sessionModel = session
+               sessionModelSubject.send(session)
+               if !session.sessionAuthHash.isEmpty {
+                   preferences.saveUserSessionAuth(sessionAuth: session.sessionAuthHash)
                }
         }
     }
@@ -76,7 +82,7 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         }
 
         if sessionModel == nil {
-            await update(session: currentSession)
+            await update(session: SessionModel(from: currentSession))
         }
 
         localDatabase.saveOldSession()

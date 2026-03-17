@@ -174,9 +174,9 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
 
     private func setBestLocation() {
         let locationID = locationsManager.getBestLocation()
-        if !locationID.isEmpty, locationID != "0", !self.vpnStateRepository.isConnecting() {
+        if locationID != 0, !self.vpnStateRepository.isConnecting() {
             self.logger.logD("CustomConfigPickerViewModel", "Changing selected location to Best location ID \(locationID) from the server list.")
-            self.locationsManager.saveLastSelectedLocation(with: locationID)
+            self.locationsManager.saveLastSelectedLocation(with: String(locationID))
             self.configureVPNTrigger.send(())
         } else {
             self.locationsManager.saveBestLocation(with: "")

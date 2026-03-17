@@ -1,5 +1,5 @@
 //
-//  ServerListTableViewDataSource+Delegate.swift
+//  LocationsListTableViewDataSource+Delegate.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-31.
@@ -10,33 +10,33 @@ import ExpyTableView
 import UIKit
 import Combine
 
-protocol ServerListTableViewDelegate: AnyObject {
-    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel)
-    func reloadServerListTableView()
+protocol LocationsListTableViewDelegate: AnyObject {
+    func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel)
+    func reloadLocationsListTableView()
     func connectToBestLocation()
     func handleRefresh()
     func tableViewScrolled(toTop: Bool)
 }
 
-protocol ServerListTableViewDataSource: WExpyTableViewDataSource,
+protocol LocationsListTableViewDataSource: WExpyTableViewDataSource,
                                         ExpyTableViewDataSource,
                                         WExpyTableViewDataSourceDelegate,
                                         WTableViewDataSourceDelegate {
-    var delegate: ServerListTableViewDelegate? { get set }
+    var delegate: LocationsListTableViewDelegate? { get set }
     var scrollHappened: Bool { get set }
 
-    var serverSections: [ServerSection] { get }
+    var locationsSections: [LocationSection] { get }
 
-    func updateServerList(with serverSections: [ServerSection], shouldColapse: Bool)
+    func updateServerList(with locationsSections: [LocationSection], shouldColapse: Bool)
     func updateShouldColapse(with value: Bool)
     func setBestLocationVisibility(to visible: Bool)
 }
 
-class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
-                                         ServerListTableViewDataSource {
+class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
+                                         LocationsListTableViewDataSource {
 
-    weak var delegate: ServerListTableViewDelegate?
-    var serverSections: [ServerSection] = []
+    weak var delegate: LocationsListTableViewDelegate?
+    var locationsSections: [LocationSection] = []
     var scrollHappened = false
 
     private var shouldColapse: Bool = false
@@ -53,14 +53,14 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     private let userSessionRepository: UserSessionRepository
     private let latencyRepository: LatencyRepository
     private let languageManager: LanguageManager
-    private let serverRepository: ServerRepository
+    private let locationListRepository: LocationListRepository
     private let alertManager: AlertManager
 
     init(locationsManager: LocationsManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
-         serverRepository: ServerRepository,
+         locationListRepository: LocationListRepository,
          userSessionRepository: UserSessionRepository,
          latencyRepository: LatencyRepository,
          languageManager: LanguageManager,
@@ -69,7 +69,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         self.lookAndFeelRepository = lookAndFeelRepository
         self.hapticFeedbackManager = hapticFeedbackManager
         self.preferences = preferences
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.userSessionRepository = userSessionRepository
         self.latencyRepository = latencyRepository
         self.languageManager = languageManager
@@ -87,39 +87,39 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     private func bind() {
         self.lookAndFeelRepository.isDarkModeSubject
             .sink {[weak self] _ in
-                self?.delegate?.reloadServerListTableView()
+                self?.delegate?.reloadLocationsListTableView()
             }
             .store(in: &cancellables)
 
         self.languageManager.activelanguage
             .sink {[weak self] _ in
-                self?.delegate?.reloadServerListTableView()
+                self?.delegate?.reloadLocationsListTableView()
             }
             .store(in: &cancellables)
 
-        preferences.getShowServerHealth()
+        preferences.getShowServerNetLoad()
             .sink {[weak self] locationLoad in
-                self?.locationLoad = locationLoad ?? DefaultValues.showServerHealth
-                self?.delegate?.reloadServerListTableView()
+                self?.locationLoad = locationLoad ?? DefaultValues.showServerNetLoad
+                self?.delegate?.reloadLocationsListTableView()
             }
             .store(in: &cancellables)
 
-        serverRepository.favouriteListSubject
+        locationListRepository.favouriteListSubject
             .sink {[weak self] _ in
                 guard let self = self else { return }
-                self.delegate?.reloadServerListTableView()
-                self.favList = self.serverRepository.favouriteListSubject.value
+                self.delegate?.reloadLocationsListTableView()
+                self.favList = self.locationListRepository.favouriteListSubject.value
             }
             .store(in: &cancellables)
 
         userSessionRepository.sessionModelSubject
             .sink {[weak self] _ in
-                self?.delegate?.reloadServerListTableView()
+                self?.delegate?.reloadLocationsListTableView()
             }
             .store(in: &cancellables)
 
         Publishers.CombineLatest(
-            locationsManager.bestLocationUpdated,
+            locationsManager.bestLocationUpdatedTrigger,
             locationsManager.selectedLocationUpdated
         )
         .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
@@ -132,7 +132,7 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
     func setBestLocationVisibility(to visible: Bool) {
         bestLocationVisible = visible
-        delegate?.reloadServerListTableView()
+        delegate?.reloadLocationsListTableView()
     }
 
     func refreshBestLocation() {
@@ -141,35 +141,33 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
     private func updateBestlocation(with value: BestLocationModel?) {
         bestLocationModel = value
-        delegate?.reloadServerListTableView()
+        delegate?.reloadLocationsListTableView()
     }
 
-    func updateServerList(with serverSections: [ServerSection], shouldColapse: Bool) {
+    func updateServerList(with locationsSections: [LocationSection], shouldColapse: Bool) {
         self.shouldColapse = shouldColapse
-        self.serverSections = serverSections.map { serverSection in
-            if let server = serverSection.server {
+        self.locationsSections = locationsSections
+            .map { locationSection in
+            if let location = locationSection.location {
                 if shouldColapse {
-                    return ServerSection(server: server, collapsed: true)
+                    return LocationSection(location: location, collapsed: true)
                 } else {
-                    if let oldSection = serverSections.first(where: { $0.server?.id == server.id }) {
-                        if !oldSection.collapsed {
-                            print("ahah \(oldSection.server?.name)")
-                        }
-                        return ServerSection(server: server, collapsed: oldSection.collapsed)
+                    if let oldSection = locationsSections.first(where: { $0.location?.id == location.id }) {
+                        return LocationSection(location: location, collapsed: oldSection.collapsed)
                     }
                 }
             }
-            return serverSection
+            return locationSection
         }
-        delegate?.reloadServerListTableView()
+        delegate?.reloadLocationsListTableView()
     }
 
     func updateShouldColapse(with value: Bool) {
-        updateServerList(with: serverSections, shouldColapse: value)
+        updateServerList(with: locationsSections, shouldColapse: value)
     }
 
     func numberOfSections(in _: UITableView) -> Int {
-        return serverSections.count + (showBestLocation() ? 1 : 0)
+        return locationsSections.count + (showBestLocation() ? 1 : 0)
     }
 
     private func showBestLocation() -> Bool {
@@ -183,8 +181,8 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 && showBestLocation() { return 1 }
         let calculatedSection = getCalculatedSection(from: section)
-        if serverSections.indices.contains(calculatedSection) {
-            guard let count = serverSections[calculatedSection].server?.groups.count else { return 0 }
+        if locationsSections.indices.contains(calculatedSection) {
+            guard let count = locationsSections[calculatedSection].location?.datacenters.count else { return 0 }
             return count + 1
         } else {
             return 0
@@ -193,28 +191,33 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell
-        ?? NodeTableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
+            withIdentifier: ReuseIdentifiers.datacenterCellReuseIdentifier, for: indexPath) as? DatacenterTableViewCell
+        ?? DatacenterTableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.datacenterCellReuseIdentifier)
         let calculatedSection = getCalculatedSection(from: indexPath.section)
-        if (serverSections.count > calculatedSection) && ((serverSections[calculatedSection].server?.groups.count ?? 0) > indexPath.row - 1) {
-            let group = serverSections[calculatedSection].server?.groups[indexPath.row - 1]
+        if locationsSections.count > calculatedSection,
+           let locationModel = locationsSections[calculatedSection].location,
+           (locationModel.datacenters.count > indexPath.row - 1) {
+            let datacenter = locationsSections[calculatedSection].location?.datacenters[indexPath.row - 1]
 
             var latency = -1
-            if let group = group {
-                latency = latencyRepository.getPingData(ip: group.pingIp)?.latency ?? latency
+            if let datacenter = datacenter,
+               let randomServer = locationListRepository.getRandomServer(for: datacenter.id),
+               let newlatency = latencyRepository.getPingData(ip: randomServer.ip)?.latency {
+                latency = newlatency
             }
 
-            if cell.nodeCellViewModel == nil {
-                cell.nodeCellViewModel = NodeTableViewCellModel()
-                cell.nodeCellViewModel?.delegate = self
+            if cell.datacenterCellViewModel == nil {
+                cell.datacenterCellViewModel = DatacenterTableViewCellModel()
+                cell.datacenterCellViewModel?.delegate = self
             }
-            cell.nodeCellViewModel?.update(displayingGroup: group,
-                                           locationLoad: locationLoad,
-                                           isSavedHasFav: isGroupFavorite(group?.id),
-                                           isUserPro: userSessionRepository.sessionModel?.isUserPro ?? false,
-                                           isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
-                                           isDarkMode: lookAndFeelRepository.isDarkMode,
-                                           latency: latency)
+            cell.datacenterCellViewModel?.update(displayingDatacenter: datacenter,
+                                                 locationLoad: locationLoad,
+                                                 isSavedHasFav: isGroupFavorite(datacenter?.id),
+                                                 isUserPro: userSessionRepository.sessionModel?.isUserPro ?? false,
+                                                 isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
+                                                 isDarkMode: lookAndFeelRepository.isDarkMode,
+                                                 latency: latency,
+                                                 countryCode: locationModel.countryCode)
             cell.refreshUI()
         }
         return cell
@@ -228,11 +231,11 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         let calculatedSection = getCalculatedSection(from: indexPath.section)
 
         // Bounds check to prevent crash when serverSections is updated
-        guard calculatedSection >= 0 && calculatedSection < serverSections.count else { return }
+        guard calculatedSection >= 0 && calculatedSection < locationsSections.count else { return }
 
-        guard let server = serverSections[calculatedSection].server else { return }
-        let group = server.groups[indexPath.row - 1]
-        delegate?.setSelectedServerAndGroup(server: server, group: group)
+        guard let location = locationsSections[calculatedSection].location else { return }
+        let datacenter = location.datacenters[indexPath.row - 1]
+        delegate?.setSelectedLocationAndDatacenter(location: location, datacenter: datacenter)
     }
 
     func tableView(_ tableView: ExpyTableView, expandableCellForSection section: Int) -> UITableViewCell {
@@ -254,34 +257,36 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
             let calculatedSection = getCalculatedSection(from: section)
 
             // Bounds check to prevent crash when serverSections is updated during scrolling
-            guard calculatedSection >= 0 && calculatedSection < serverSections.count else {
+            guard calculatedSection >= 0 && calculatedSection < locationsSections.count else {
                 // Return empty cell if section index is out of bounds
                 return UITableViewCell()
             }
 
-            let serverSection = serverSections[calculatedSection]
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)! as? ServerSectionCell
-            ?? ServerSectionCell(
-                style: .default,
-                reuseIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)
-            if cell.serverCellViewModel == nil {
-                cell.serverCellViewModel = ServerSectionCellModel()
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifiers.locationSectionCellReuseIdentifier)! as? LocationSectionCell
+            ?? LocationSectionCell(style: .default, reuseIdentifier: ReuseIdentifiers.locationSectionCellReuseIdentifier)
+            if locationsSections.count <= calculatedSection {
+                return cell
+            }
+
+            let locationSection = locationsSections[calculatedSection]
+            if cell.locationCellViewModel == nil {
+                cell.locationCellViewModel = LocationSectionCellModel()
             }
 
             if let expanded = tableView.expandedSections[section] {
-                serverSections[calculatedSection].collapsed = !expanded
+                locationsSections[calculatedSection].collapsed = !expanded
             }
-
-            cell.serverCellViewModel?.update(serverModel: serverSections[calculatedSection].server,
-                                             locationLoad: locationLoad,
-                                             isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
-                                             isDarkMode: lookAndFeelRepository.isDarkMode)
-            cell.setCollapsed(collapsed: serverSection.collapsed)
-            if !serverSection.collapsed {
-                print("ahah \(serverSection.server?.name ?? "")")
+            if section <= locationsSections.count {
+                cell.locationCellViewModel?.update(locationModel: locationsSections[calculatedSection].location,
+                                                   locationLoad: locationLoad,
+                                                   isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
+                                                   isDarkMode: lookAndFeelRepository.isDarkMode)
+                cell.setCollapsed(collapsed: locationSection.collapsed)
+                if !locationSection.collapsed {
+                    print("ahah \(locationSection.location?.name ?? "")")
+                }
+                cell.refreshUI()
             }
-            cell.refreshUI()
             return cell
         }
     }
@@ -292,17 +297,17 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
 
     func changeForSection(tableView: UITableView, state: ExpyState, section: Int) {
         let calculatedSection = getCalculatedSection(from: section)
-
         // Bounds check to prevent crash when serverSections is updated
-        guard calculatedSection >= 0 && calculatedSection < serverSections.count else { return }
+        guard calculatedSection >= 0 && calculatedSection < locationsSections.count else { return }
 
-        guard let cell = tableView.cellForRow(at: IndexPath(item: 0, section: section)) as? ServerSectionCell else { return }
+        guard let cell = tableView.cellForRow(at: IndexPath(item: 0, section: section)) as? LocationSectionCell else { return }
+
         switch state {
         case .willExpand:
-            serverSections[calculatedSection].collapsed = false
+            locationsSections[calculatedSection].collapsed = false
             cell.expand()
         case .willCollapse:
-            serverSections[calculatedSection].collapsed = true
+            locationsSections[calculatedSection].collapsed = true
             cell.collapse()
         default:
             return
@@ -331,27 +336,27 @@ class ServerListTableViewDataSourceImpl: WExpyTableViewDataSource,
         true
     }
 
-    private func getServerModel(from groupId: Int) -> ServerModel? {
-        try? locationsManager.getLocation(from: String(groupId)).0
+    private func getLocationModel(from datacenterId: Int) -> LocationModel? {
+        try? locationsManager.getLocation(from: datacenterId).0
     }
 
-    private func isGroupFavorite(_ groupId: Int?) -> Bool {
-        guard let groupId = groupId else { return false }
+    private func isGroupFavorite(_ datacenterId: Int?) -> Bool {
+        guard let datacenterId = datacenterId else { return false }
         return favList
             .map { $0.id }
-            .contains(String(groupId))
+            .contains(String(datacenterId))
     }
 }
 
-extension ServerListTableViewDataSourceImpl: NodeTableViewCellModelDelegate {
-    func saveAsFavorite(groupId: String) {
-        serverRepository.saveFavorite(for: FavouriteModel(id: "\(groupId)"))
+extension LocationsListTableViewDataSourceImpl: DatacenterTableViewCellModelDelegate {
+    func saveAsFavorite(datacenterId: Int) {
+        locationListRepository.saveFavorite(for: FavouriteModel(id: "\(datacenterId)"))
     }
 
-    func removeFavorite(groupId: String) {
+    func removeFavorite(datacenterId: Int) {
         let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.serverRepository.removeFavorite(with: groupId)
+            self.locationListRepository.removeFavorite(with: datacenterId)
         }
         alertManager.showAlert(title: TextsAsset.Favorites.removeTitle,
                                       message: TextsAsset.Favorites.removeMessage,

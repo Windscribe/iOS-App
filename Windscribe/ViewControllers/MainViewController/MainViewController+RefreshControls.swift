@@ -25,12 +25,9 @@ extension MainViewController {
                 latencyViewModel.loadAllServerLatency(
                     onAllServerCompletion: { [weak self] in
                         guard let self else { return }
-
-                        self.loadServerTable(servers: self.viewModel.serverList.value)
                         DispatchQueue.main.async {
                             self.favTableView.reloadData()
                         }
-                        self.endRefreshControls(update: false)
                     }, onStaticCompletion: { [weak self] in
                         guard let self else { return }
 
@@ -38,18 +35,16 @@ extension MainViewController {
                         DispatchQueue.main.async {
                             self.staticIpTableView.reloadData()
                         }
-                        self.endRefreshControls(update: false)
                     }, onCustomConfigCompletion: {  [weak self] in
                         guard let self else { return }
                         DispatchQueue.main.async {
                             self.customConfigTableView.reloadData()
                         }
-                        self.endRefreshControls(update: false)
                     },
                     onExitCompletion: { [weak self] in
                         guard let self, self.isRefreshing else { return }
-
                         self.isRefreshing = false
+                        self.endRefreshControls(update: false)
                         self.isLoadingLatencyValues = false
                     })
             } else {
@@ -59,14 +54,14 @@ extension MainViewController {
     }
 
     func hideTextOnRefreshControls() {
-        serverListTableView.refreshControl?.attributedTitle = nil
+        locationsListTableView.refreshControl?.attributedTitle = nil
         favTableViewRefreshControl.attributedTitle = nil
         staticIpTableViewRefreshControl.attributedTitle = nil
         customConfigsTableViewRefreshControl.attributedTitle = nil
     }
 
     func beginRefreshControls() {
-        serverListTableView.refreshControl?.beginRefreshing()
+        locationsListTableView.refreshControl?.beginRefreshing()
         favTableViewRefreshControl.beginRefreshing()
         staticIpTableViewRefreshControl.beginRefreshing()
         customConfigsTableViewRefreshControl.beginRefreshing()
@@ -75,7 +70,7 @@ extension MainViewController {
     func endRefreshControls(update: Bool = true) {
         isServerListLoading = false
         DispatchQueue.main.async { [weak self] in
-            self?.serverListTableView.refreshControl?.endRefreshing()
+            self?.locationsListTableView.refreshControl?.endRefreshing()
             self?.favTableViewRefreshControl.endRefreshing()
             self?.staticIpTableViewRefreshControl.endRefreshing()
             self?.customConfigsTableViewRefreshControl.endRefreshing()
@@ -90,14 +85,14 @@ extension MainViewController {
 
     func updateRefreshControls() {
         if vpnConnectionViewModel.isDisconnected() {
-            if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
+            if let serverRefreshControl = locationsListTableView.refreshControl as? WSRefreshControl {
                 showRefreshControlDisconnectedState(serverRefreshControl)
             }
             showRefreshControlDisconnectedState(favTableViewRefreshControl)
             showRefreshControlDisconnectedState(staticIpTableViewRefreshControl)
             showRefreshControlDisconnectedState(customConfigsTableViewRefreshControl)
         } else {
-            if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
+            if let serverRefreshControl = locationsListTableView.refreshControl as? WSRefreshControl {
                 showRefreshControlConnectedState(serverRefreshControl)
             }
             showRefreshControlConnectedState(favTableViewRefreshControl)
@@ -120,13 +115,13 @@ extension MainViewController {
     }
 
     func isAnyRefreshControlIsRefreshing() -> Bool {
-        return serverListTableView.refreshControl?.isRefreshing ?? false || favTableViewRefreshControl.isRefreshing || staticIpTableViewRefreshControl.isRefreshing || customConfigsTableViewRefreshControl.isRefreshing
+        return locationsListTableView.refreshControl?.isRefreshing ?? false || favTableViewRefreshControl.isRefreshing || staticIpTableViewRefreshControl.isRefreshing || customConfigsTableViewRefreshControl.isRefreshing
     }
 
     func addRefreshControls() {
-        serverListTableViewRefreshControl.resetText()
-        serverListTableView.refreshControl = serverListTableViewRefreshControl
-        if favNodesListTableViewDataSource.favList.count > 0 {
+        locationsListTableViewRefreshControl.resetText()
+        locationsListTableView.refreshControl = locationsListTableViewRefreshControl
+        if favoriteListTableViewDataSource.favList.count > 0 {
             favTableView.addSubview(favTableViewRefreshControl)
         }
         staticIpTableView.addSubview(staticIpTableViewRefreshControl)
@@ -134,7 +129,7 @@ extension MainViewController {
     }
 
     func removeRefreshControls() {
-        serverListTableView.refreshControl = nil
+        locationsListTableView.refreshControl = nil
         favTableViewRefreshControl.removeFromSuperview()
         staticIpTableViewRefreshControl.removeFromSuperview()
         customConfigsTableViewRefreshControl.removeFromSuperview()
@@ -145,10 +140,10 @@ extension MainViewController {
 
 extension MainViewController {
     public func beginRefreshingServerList() {
-        if serverListTableView.refreshControl == nil {
-            serverListTableView.refreshControl = serverListTableViewRefreshControl
+        if locationsListTableView.refreshControl == nil {
+            locationsListTableView.refreshControl = locationsListTableViewRefreshControl
         }
-        serverListTableView.refreshControl?.beginRefreshing()
+        locationsListTableView.refreshControl?.beginRefreshing()
         isServerListLoading = true
     }
 
@@ -168,11 +163,11 @@ extension MainViewController {
 
     func restartServerRefreshControl() {
         if isServerListLoading {
-            if serverListTableView.refreshControl == nil {
-                serverListTableView.refreshControl = serverListTableViewRefreshControl
+            if locationsListTableView.refreshControl == nil {
+                locationsListTableView.refreshControl = locationsListTableViewRefreshControl
             }
-            serverListTableView.refreshControl?.attributedTitle = nil
-            serverListTableView.refreshControl?.beginRefreshing()
+            locationsListTableView.refreshControl?.attributedTitle = nil
+            locationsListTableView.refreshControl?.beginRefreshing()
         }
     }
 }

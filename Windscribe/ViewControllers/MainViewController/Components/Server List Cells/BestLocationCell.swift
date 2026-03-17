@@ -8,11 +8,11 @@
 
 import UIKit
 
-class BestLocationCellModel: ServerCellModelType {
+class BestLocationCellModel: LocationCellModelType {
     var isDarkMode: Bool = false
 
     var displayingBestLocation: BestLocationModel?
-    var locationLoad: Bool = DefaultValues.showServerHealth
+    var locationLoad: Bool = DefaultValues.showServerNetLoad
 
     var name: String {
         TextsAsset.bestLocation
@@ -40,8 +40,8 @@ class BestLocationCellModel: ServerCellModelType {
 
     var hasProLocked: Bool = false
 
-    var serverHealth: CGFloat {
-        CGFloat(self.displayingBestLocation?.health ?? 0)
+    var serverNetLoad: CGFloat {
+        CGFloat(self.displayingBestLocation?.netLoad ?? 0)
     }
 
     func update(bestLocationModel: BestLocationModel?,
@@ -57,7 +57,7 @@ class BestLocationCellModel: ServerCellModelType {
     }
 }
 
-class BestLocationCell: ServerListCell {
+class BestLocationCell: LocationListCell {
     var bestCellViewModel: BestLocationCellModel? {
         didSet {
             viewModel = bestCellViewModel

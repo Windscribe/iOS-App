@@ -26,10 +26,6 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObjectList(type: Server.self)
     }
 
-    func saveServers(servers: [Server]) {
-        return updateRealmObjects(objects: servers)
-    }
-
     func saveSession(session: Session) {
         do {
             let realm = try Realm()
@@ -47,6 +43,27 @@ class LocalDatabaseImpl: LocalDatabase {
 
     func getSession() -> Session? {
         return getRealmObject(type: Session.self)
+    }
+
+    // MARK: - Server V2 Architecture
+    func getLocations() -> [LocationObject]? {
+        return getRealmObjectList(type: LocationObject.self)
+    }
+
+    func saveLocations(locations: [LocationObject]) {
+        return updateRealmObjects(objects: locations)
+    }
+
+    func getServerMachines() -> [ServerMachineObject]? {
+        return getRealmObjectList(type: ServerMachineObject.self)
+    }
+
+    func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineObject], Never> {
+        return getSafeRealmArrayPublisher(type: ServerMachineObject.self)
+    }
+
+    func saveServerMachines(serverMachines: [ServerMachineObject]) {
+        return updateRealmObjects(objects: serverMachines)
     }
 
     // MARK: - Before Modelization of Database
@@ -236,8 +253,8 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObjectList(type: Favourite.self) ?? []
     }
 
-    func removeFavourite(groupId: String) {
-        if let object = getRealmObject(type: Favourite.self, primaryKey: groupId) {
+    func removeFavourite(datacenterId: String) {
+        if let object = getRealmObject(type: Favourite.self, primaryKey: datacenterId) {
             deleteRealmObject(object: object)
         }
     }

@@ -10,10 +10,10 @@ import Foundation
 
 protocol APIManager {
     // Session
-    func getSession(_ appleID: String?) async throws -> Session
+    func getSession(_ appleID: String?) async throws -> SessionModel
     func getWebSession() async throws -> WebSession
     func deleteSession() async throws -> APIMessage
-    func getSession(sessionAuth: String) async throws -> Session
+    func getSession(sessionAuth: String) async throws -> SessionModel
 
     // Signup and Login
     func login(username: String,
@@ -22,7 +22,7 @@ protocol APIManager {
                secureToken: String,
                captchaSolution: String,
                captchaTrailX: [CGFloat],
-               captchaTrailY: [CGFloat]) async throws -> Session
+               captchaTrailY: [CGFloat]) async throws -> SessionModel
     func signup(username: String,
                 password: String,
                 referringUsername: String,
@@ -31,11 +31,11 @@ protocol APIManager {
                 secureToken: String,
                 captchaSolution: String,
                 captchaTrailX: [CGFloat],
-                captchaTrailY: [CGFloat]) async throws -> Session
+                captchaTrailY: [CGFloat]) async throws -> SessionModel
     func authTokenLogin(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
     func authTokenSignup(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
     func regToken() async throws -> Token
-    func signUpUsingToken(token: String) async throws -> Session
+    func signUpUsingToken(token: String) async throws -> SessionModel
     func ssoSession(token: String) async throws -> SSOSession
 
     // Account
@@ -50,12 +50,15 @@ protocol APIManager {
     func claimVoucherCode(code: String) async throws -> ClaimVoucherCodeResponse
 
     // VPN
-    func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) async throws -> ServerList
     func getStaticIpList() async throws -> StaticIPList
     func getOpenVPNServerConfig(openVPNVersion: String) async throws -> String
     func getIKEv2ServerCredentials() async throws -> IKEv2ServerCredentials
     func getOpenVPNServerCredentials() async throws -> OpenVPNServerCredentials
     func getPortMap(version: Int, forceProtocols: [String]) async throws -> PortMapList
+
+    // Locations and Serves
+    func getLocationsList() async throws -> LocationsListModel
+    func getServerMachinesList() async throws -> ServerMachinesListModel
 
     // Billing
     func getMobileBillingPlans(promo: String?) async throws -> MobilePlanList

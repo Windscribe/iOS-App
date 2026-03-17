@@ -12,6 +12,7 @@ import Combine
 @testable import Windscribe
 
 class MockPreferences: Preferences {
+
     var mockConnectionCount = 0
     var mockAdvanceParams: String?
     var mockLastReviewDate: Date?
@@ -26,6 +27,7 @@ class MockPreferences: Preferences {
     var mockDarkMode: Bool?
     var mockSelectedProtocol = CurrentValueSubject<String?,Never>(TextsAsset.wireGuard)
     var mockConnectionMode = CurrentValueSubject<String?,Never>(Fields.Values.manual)
+    var mockServerpedeEnabled = CurrentValueSubject<Bool,Never>(false)
     var mockFavouriteIds: [String] = []
     var mockCustomLocations: [ExportedRegion] = []
     private let favouriteIdsSubject = CurrentValueSubject<[String], Never>([])
@@ -185,9 +187,9 @@ class MockPreferences: Preferences {
         return Just(mockSelectedPort).eraseToAnyPublisher()
     }
 
-    func saveShowServerHealth(show: Bool) {}
+    func saveShowServerNetLoad(show: Bool) {}
 
-    func getShowServerHealth() -> AnyPublisher<Bool?, Never> {
+    func getShowServerNetLoad() -> AnyPublisher<Bool?, Never> {
         return Just(nil).eraseToAnyPublisher()
     }
 
@@ -760,5 +762,27 @@ class MockPreferences: Preferences {
 
     func getUserStatus() -> Bool {
         userStatus ?? false
+    }
+
+    func saveServerRevision(revision: Int64) {
+
+    }
+
+    func getServerRevision() -> Int64 {
+        0
+    }
+
+    func getServerpedeEnabled() -> AnyPublisher<Bool, Never> {
+        mockServerpedeEnabled.eraseToAnyPublisher()
+    }
+
+    func saveServerpedeEnable(status: Bool) {
+    }
+
+    func saveHasIpBackup(backup: Bool) {
+    }
+
+    func getHasIpBackup() -> Bool {
+        false
     }
 }

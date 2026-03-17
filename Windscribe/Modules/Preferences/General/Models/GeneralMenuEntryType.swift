@@ -32,7 +32,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case .language: TextsAsset.General.language
         case .notification: TextsAsset.General.pushNotificationSettings
         case .hapticFeedback: TextsAsset.General.hapticFeedback
-        case .locationLoad: TextsAsset.General.showServerHealth
+        case .locationLoad: TextsAsset.General.showServerNetLoad
         case .version: TextsAsset.General.version
         }
     }

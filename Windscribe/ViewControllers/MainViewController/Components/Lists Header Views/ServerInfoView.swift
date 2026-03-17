@@ -10,36 +10,36 @@ import UIKit
 import Combine
 
 protocol ServerInfoViewModelType {
-    var serverCountSubject: PassthroughSubject<Int, Never> { get }
+    var locationsCountSubject: PassthroughSubject<Int, Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     func updateWithSearchCount(searchCount: Int)
 }
 
 class ServerInfoViewModel: ServerInfoViewModelType {
-    let serverCountSubject = PassthroughSubject<Int, Never>()
+    let locationsCountSubject = PassthroughSubject<Int, Never>()
     let isDarkMode: CurrentValueSubject<Bool, Never>
     private var cancellables = Set<AnyCancellable>()
     private let languageManager: LanguageManager
-    private let serverRepository: ServerRepository
+    private let locationListRepository: LocationListRepository
 
     private var count = 0
 
     init(languageManager: LanguageManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
-         serverRepository: ServerRepository) {
+         locationListRepository: LocationListRepository) {
         self.languageManager = languageManager
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.isDarkMode = lookAndFeelRepository.isDarkModeSubject
 
-        serverRepository.serverListSubject
+        locationListRepository.locationListSubject
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { _ in },
-                receiveValue: { [weak self] servers in
+                receiveValue: { [weak self] locations in
                     guard let self = self else { return }
                     // Count total groups across all servers
-                    self.count = servers.reduce(0) { $0 + $1.groups.count }
-                    self.serverCountSubject.send(self.count)
+                    self.count = locations.reduce(0) { $0 + $1.datacenters.count }
+                    self.locationsCountSubject.send(self.count)
             })
             .store(in: &cancellables)
 
@@ -47,19 +47,19 @@ class ServerInfoViewModel: ServerInfoViewModelType {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.serverCountSubject.send(self.count)
+                self.locationsCountSubject.send(self.count)
             }
             .store(in: &cancellables)
     }
 
     func updateWithSearchCount(searchCount: Int) {
         if searchCount >= 0 {
-            self.serverCountSubject.send(searchCount)
+            self.locationsCountSubject.send(searchCount)
         } else {
-            let servers = serverRepository.currentServerModels
+            let servers = locationListRepository.currentLocationModels
             // Count total groups across all servers
-            let totalGroupCount = servers.reduce(0) { $0 + $1.groups.count }
-            self.serverCountSubject.send(totalGroupCount)
+            let totalGroupCount = servers.reduce(0) { $0 + $1.datacenters.count }
+            self.locationsCountSubject.send(totalGroupCount)
         }
     }
 }
@@ -90,7 +90,7 @@ class ServerInfoView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel.serverCountSubject
+        viewModel.locationsCountSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] count in
                 self?.infoLabel.text = "\(TextsAsset.allServers) (\(count))"

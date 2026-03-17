@@ -10,7 +10,6 @@ import Foundation
 @testable import Windscribe
 
 class MockAPIManager: APIManager {
-
     var shouldThrowError = false
     var customError: Error = Errors.notDefined
     var mockLeaderboard: Leaderboard?
@@ -29,7 +28,7 @@ class MockAPIManager: APIManager {
     var getStaticIpListCalled = false
 
     // Session tracking
-    var mockSession: Session?
+    var mockSession: SessionModel?
 
     // MobilePlan tracking
     var mobilePlanListToReturn: MobilePlanList?
@@ -45,7 +44,8 @@ class MockAPIManager: APIManager {
     var pinIpCalled = false
     var lastPinnedIp: String?
 
-    var mockServerList: ServerList?
+    var mockServerList: ServerMachinesListModel?
+    var mockLocationList: LocationsListModel?
 
     // UnblockWg tracking
     var wgUnlockParamsCalled = false
@@ -88,6 +88,7 @@ class MockAPIManager: APIManager {
         pinIpCalled = false
         lastPinnedIp = nil
         mockServerList = nil
+        mockLocationList = nil
         getIpCalled = false
         getIpUsedPingTest = nil
         mockIpAddress = nil
@@ -146,7 +147,7 @@ class MockAPIManager: APIManager {
 
     // MARK: - Session Methods
 
-    func getSession(_ appleID: String?) async throws -> Session {
+    func getSession(_ appleID: String?) async throws -> SessionModel {
         if shouldThrowError {
             throw customError
         }
@@ -166,18 +167,42 @@ class MockAPIManager: APIManager {
         fatalError("Not implemented")
     }
 
-    func getSession(sessionAuth: String) async throws -> Session {
-        fatalError("Not implemented")
+    func getSession(sessionAuth: String) async throws -> SessionModel {
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let session = mockSession else {
+            throw Errors.notDefined
+        }
+
+        return session
     }
 
     // MARK: - Signup and Login Methods
 
-    func login(username: String, password: String, code2fa: String, secureToken: String, captchaSolution: String, captchaTrailX: [CGFloat], captchaTrailY: [CGFloat]) async throws -> Session {
-        fatalError("Not implemented")
+    func login(username: String, password: String, code2fa: String, secureToken: String, captchaSolution: String, captchaTrailX: [CGFloat], captchaTrailY: [CGFloat]) async throws -> SessionModel {
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let session = mockSession else {
+            throw Errors.notDefined
+        }
+
+        return session
     }
 
-    func signup(username: String, password: String, referringUsername: String, email: String, voucherCode: String, secureToken: String, captchaSolution: String, captchaTrailX: [CGFloat], captchaTrailY: [CGFloat]) async throws -> Session {
-        fatalError("Not implemented")
+    func signup(username: String, password: String, referringUsername: String, email: String, voucherCode: String, secureToken: String, captchaSolution: String, captchaTrailX: [CGFloat], captchaTrailY: [CGFloat]) async throws -> SessionModel {
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let session = mockSession else {
+            throw Errors.notDefined
+        }
+
+        return session
     }
 
     func authTokenLogin(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
@@ -192,8 +217,16 @@ class MockAPIManager: APIManager {
         fatalError("Not implemented")
     }
 
-    func signUpUsingToken(token: String) async throws -> Session {
-        fatalError("Not implemented")
+    func signUpUsingToken(token: String) async throws -> SessionModel {
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let session = mockSession else {
+            throw Errors.notDefined
+        }
+
+        return session
     }
 
     func ssoSession(token: String) async throws -> SSOSession {
@@ -240,10 +273,27 @@ class MockAPIManager: APIManager {
 
     // MARK: - VPN Methods
 
-    func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) async throws -> ServerList {
-        guard let serverList = mockServerList, !shouldThrowError else {
+    func getLocationsList() async throws -> LocationsListModel {
+        if shouldThrowError {
             throw customError
         }
+
+        guard let locationList = mockLocationList else {
+            throw Errors.datanotfound
+        }
+
+        return locationList
+    }
+
+    func getServerMachinesList() async throws -> ServerMachinesListModel {
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let serverList = mockServerList else {
+            throw Errors.datanotfound
+        }
+
         return serverList
     }
 

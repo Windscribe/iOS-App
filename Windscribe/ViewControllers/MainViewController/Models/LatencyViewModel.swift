@@ -7,8 +7,11 @@
 //
 
 import Foundation
+import Combine
 
 protocol LatencyViewModel {
+    var latencyUpdatedTrigger: PassthroughSubject<Void, Never> { get }
+
     func loadAllServerLatency(onAllServerCompletion: @escaping () -> Void,
                               onStaticCompletion: @escaping () -> Void,
                               onCustomConfigCompletion: @escaping () -> Void,
@@ -17,13 +20,17 @@ protocol LatencyViewModel {
 
 class LatencyViewModelImpl: LatencyViewModel {
     let latencyRepo: LatencyRepository
-    let serverRepository: ServerRepository
+    let locationListRepository: LocationListRepository
     let staticIpRepository: StaticIpRepository
 
-    init(latencyRepo: LatencyRepository, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository) {
+    let latencyUpdatedTrigger: PassthroughSubject<Void, Never>
+
+    init(latencyRepo: LatencyRepository, locationListRepository: LocationListRepository, staticIpRepository: StaticIpRepository) {
         self.latencyRepo = latencyRepo
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.staticIpRepository = staticIpRepository
+
+        latencyUpdatedTrigger = latencyRepo.latencyUpdatedTrigger
     }
 
     func loadAllServerLatency(onAllServerCompletion: @escaping () -> Void,
@@ -35,20 +42,18 @@ class LatencyViewModelImpl: LatencyViewModel {
 
             await latencyRepo.loadStaticIpLatency()
             onStaticCompletion()
-            onExitCompletion()
 
             try await latencyRepo.loadLatency()
             onAllServerCompletion()
-            onExitCompletion()
 
             await latencyRepo.loadCustomConfigLatency()
             onCustomConfigCompletion()
+
             onExitCompletion()
         }
     }
 
     private func updateServerList() async throws -> [StaticIPModel] {
-        try await serverRepository.updatedServers()
         try await staticIpRepository.updateStaticServers()
         return staticIpRepository.staticIPs
     }

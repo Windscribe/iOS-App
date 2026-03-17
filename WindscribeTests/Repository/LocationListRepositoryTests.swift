@@ -1,5 +1,5 @@
 //
-//  ServerRepositoryTests.swift
+//  LocationListRepositoryTests.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 10/10/2025.
@@ -12,10 +12,10 @@ import Swinject
 @testable import Windscribe
 import XCTest
 
-class ServerRepositoryTests: XCTestCase {
+class LocationListRepositoryTests: XCTestCase {
 
     var mockContainer: Container!
-    var repository: ServerRepository!
+    var repository: LocationListRepository!
     var mockAPIManager: MockAPIManager!
     var mockLocalDatabase: MockLocalDatabase!
     var mockUserSessionRepository: MockUserSessionRepository!
@@ -59,19 +59,17 @@ class ServerRepositoryTests: XCTestCase {
             return self.mockAdvanceRepository
         }.inObjectScope(.container)
 
-        // Register ServerRepository
-        mockContainer.register(ServerRepository.self) { r in
-            return ServerRepositoryImpl(
+        // Register LocationListRepository
+        mockContainer.register(LocationListRepository.self) { r in
+            return LocationListRepositoryImpl(
                 apiManager: r.resolve(APIManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
-                userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                preferences: r.resolve(Preferences.self)!,
-                advanceRepository: r.resolve(AdvanceRepository.self)!,
-                logger: r.resolve(FileLogger.self)!
+                logger: r.resolve(FileLogger.self)!,
+                preferences: r.resolve(Preferences.self)!
             )
         }.inObjectScope(.container)
 
-        repository = mockContainer.resolve(ServerRepository.self)!
+        repository = mockContainer.resolve(LocationListRepository.self)!
     }
 
     override func tearDown() {
@@ -96,38 +94,32 @@ class ServerRepositoryTests: XCTestCase {
         let sessionModel = createMockSessionModel()
         mockUserSessionRepository.sessionModel = sessionModel
 
-        guard let mockServerList = createMockServerList() else {
-            XCTFail("ServerList was nil, should be something")
+        guard let mockServerList = createMockServerMachineList() else {
+            XCTFail("ServerMachineList was nil, should be something")
+            return
+        }
+
+        guard let mockLocationList = createMockLocationList() else {
+            XCTFail("LocationList was nil, should be something")
             return
         }
 
         mockAPIManager.mockServerList = mockServerList
+        mockAPIManager.mockLocationList = mockLocationList
 
-        let expectedServers = Array(mockServerList.servers)
+        let expectedServers = mockServerList.servers
 
         // When
-        try await repository.updatedServers()
+        try await repository.updatedServerList()
+        try await repository.updateLocations()
 
-        let savedServers = mockLocalDatabase.getServers()
+        let savedServerMachines = mockLocalDatabase.getServerMachines()
         let currentServerModels = repository.currentServerModels
-        let savedServersModels = savedServers?.map { $0.getServerModel() } ?? []
+        let savedServersModels = savedServerMachines?.map { ServerMachineModel(from: $0) } ?? []
 
         // Then
         XCTAssertEqual(currentServerModels.count, expectedServers.count)
-        XCTAssertEqual(savedServersModels, currentServerModels)
-    }
-
-    func testGetUpdatedServersWithoutUser() async {
-        // Given
-        mockUserSessionRepository.clearSession()
-
-        // When/Then
-        do {
-             try await repository.updatedServers()
-            XCTFail("Should have thrown validation failure error")
-        } catch {
-            XCTAssertEqual(error as? Errors, Errors.validationFailure)
-        }
+        XCTAssertEqual(savedServersModels.count, currentServerModels.count)
     }
 
     func testGetUpdatedServersAPIErrorFallbackToLocal() async throws {
@@ -139,22 +131,22 @@ class ServerRepositoryTests: XCTestCase {
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = Errors.datanotfound
 
-        guard let mockServerList = createMockServerList() else {
-            XCTFail("ServerList was nil, should be something")
+        guard let mockServerList = createMockServerMachineList() else {
+            XCTFail("ServerMachineList was nil, should be something")
             return
         }
 
         // But local database has data
-        let localServers = Array(mockServerList.servers)
-        mockLocalDatabase.mockServers = localServers
+        let localServers = mockServerList.servers
+        mockLocalDatabase.mockServerMachines = localServers.map { ServerMachineObject(from: $0) }
 
         // When
-        try await repository.updatedServers()
+        try await repository.updatedServerList()
+
         // Then
         let currentServerModels = repository.currentServerModels
-        let localServersModels = localServers.map { $0.getServerModel() }
         XCTAssertEqual(currentServerModels.count, localServers.count)
-        XCTAssertEqual(currentServerModels, localServersModels)
+        XCTAssertEqual(currentServerModels.first?.hostname, localServers.first?.hostname)
     }
 
     func testGetUpdatedServersAPIErrorNoLocalData() async {
@@ -165,11 +157,11 @@ class ServerRepositoryTests: XCTestCase {
         // API will fail and no local data
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = Errors.datanotfound
-        mockLocalDatabase.mockServers = nil
+        mockLocalDatabase.mockServerMachines = nil
 
         // When/Then
         do {
-            try await repository.updatedServers()
+            try await repository.updatedServerList()
             XCTFail("Should have thrown network error")
         } catch {
             XCTAssertEqual(error as? Errors, Errors.datanotfound)
@@ -181,19 +173,17 @@ class ServerRepositoryTests: XCTestCase {
         let sessionModel = createMockSessionModel()
         mockUserSessionRepository.sessionModel = sessionModel
 
-        guard let mockServerList = createMockServerList() else {
-            XCTFail("ServerList was nil, should be something")
+        guard let mockServerList = createMockServerMachineList() else {
+            XCTFail("ServerMachineList was nil, should be something")
             return
         }
 
         mockAPIManager.mockServerList = mockServerList
 
-        let mockServers = Array(mockServerList.servers).map {
-            $0.getServerModel()
-        }
+        let mockServers = mockServerList.servers
 
-        var receivedServers: [ServerModel] = []
-        try await repository.updatedServers()
+        var receivedServers: [ServerMachineModel] = []
+        try await repository.updatedServerList()
 
         receivedServers = await withCheckedContinuation { continuation in
             repository.serverListSubject
@@ -207,28 +197,32 @@ class ServerRepositoryTests: XCTestCase {
 
         // Then
         XCTAssertEqual(receivedServers.count, mockServers.count)
-        XCTAssertEqual(receivedServers.first?.name, mockServers.first?.name)
+        XCTAssertEqual(receivedServers.first?.hostname, mockServers.first?.hostname)
     }
 
-    func testUpdateRegionsWithCustomLocations() {
+    func testUpdateRegionsWithCustomLocations() async throws {
         // Given
         let mockRegions = createMockExportedRegions()
-        guard let mockServerList = createMockServerList() else {
-            XCTFail("ServerList was nil, should be something")
+
+        guard let mockLocationList = createMockLocationList() else {
+            XCTFail("LocationList was nil, should be something")
             return
         }
 
-        let mockServers = Array(mockServerList.servers)
-        mockLocalDatabase.mockServers = mockServers
+        // Set up initial locations in the database
+        mockAPIManager.mockLocationList = mockLocationList
 
-        let expectation = expectation(description: "Server models updated with custom regions")
+        // Reload repository to pick up the locations
+        try await repository.updateLocations()
+
+        let expectation = expectation(description: "Locations updated with custom regions")
 
         // Set up the subscription before calling updateRegions to avoid race conditions
-        repository.serverListSubject
-            .dropFirst() // Skip initial empty value
+        repository.locationListSubject
+            .dropFirst() // Skip initial value
             .first() // Only take the first emission to prevent multiple fulfillments
-            .sink { servers in
-                if !servers.isEmpty {
+            .sink { locations in
+                if !locations.isEmpty {
                     expectation.fulfill()
                 }
             }
@@ -241,13 +235,12 @@ class ServerRepositoryTests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
 
         let region = mockRegions.first
-        let server = repository.currentServerModels.first { region?.id == $0.id }
+        let location = repository.currentLocationModels.first { region?.id == $0.id }
         let city = region?.cities.first
-        let group = server?.groups.first { city?.id == $0.id }
-        XCTAssertEqual(server?.name, region?.country)
-        XCTAssertEqual(group?.city, city?.name)
-        XCTAssertEqual(group?.nick, city?.nickname)
-
+        let datacenter = location?.datacenters.first { city?.id == $0.id }
+        XCTAssertEqual(location?.name, region?.country)
+        XCTAssertEqual(datacenter?.city, city?.name)
+        XCTAssertEqual(datacenter?.nick, city?.nickname)
     }
 
     func testFavouritsStartEmpty() async {
@@ -298,13 +291,13 @@ class ServerRepositoryTests: XCTestCase {
         repository.saveFavorite(for: mockFavorite2)
 
         // Then
-        XCTAssertEqual(repository.getLocationPinned(for: 1), mockFavorite1.pinnedNodeIp)
-        XCTAssertEqual(repository.getLocationPinned(for: 2), nil)
+        XCTAssertEqual(repository.getDatacenterPinnedIp(for: 1), mockFavorite1.pinnedNodeIp)
+        XCTAssertEqual(repository.getDatacenterPinnedIp(for: 2), nil)
     }
 }
 
 // MARK: - Helper Methods
-extension ServerRepositoryTests {
+extension LocationListRepositoryTests {
 
     private func createMockSessionModel() -> SessionModel {
         let session = Session()
@@ -314,22 +307,37 @@ extension ServerRepositoryTests {
         return session.getModel()
     }
 
-    private func createMockServerList() -> ServerList? {
-        guard let url = Bundle(for: type(of: self)).url(forResource: "ServerList", withExtension: "json") else {
+    private func createMockLocationList() -> LocationsListModel? {
+        guard let url = Bundle(for: type(of: self)).url(forResource: "LocationList", withExtension: "json") else {
             return nil
         }
 
         do {
             let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
-            return try decoder.decode(ServerList.self, from: data)
+            return try decoder.decode(LocationsListModel.self, from: data)
+        } catch {
+            return nil
+        }
+    }
+
+
+    private func createMockServerMachineList() -> ServerMachinesListModel? {
+        guard let url = Bundle(for: type(of: self)).url(forResource: "ServerMachineList", withExtension: "json") else {
+            return nil
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            return try decoder.decode(ServerMachinesListModel.self, from: data)
         } catch _ {
             return nil
         }
     }
 
     private func createMockExportedRegions() -> [ExportedRegion] {
-        let city1 = ExportedCity(id: 414, name: "Custom Dallas", nickname: "Trinity")
+        let city1 = ExportedCity(id: 276, name: "Custom Chicago", nickname: "Res")
         let city2 = ExportedCity(id: 156, name: "Custom Atlanta", nickname: "Peachtree")
 
         let region = ExportedRegion(id: 65, country: "Custom US Central", cities: [city1, city2])

@@ -414,7 +414,7 @@ class MainViewController: PreferredFocusedViewController {
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
-            let locationId = "\(bestLocation.groupId)"
+            let locationId = "\(bestLocation.datacenterId)"
             logger.logD("MainViewController", "Configuring best location.")
             if selectBestLocation || noSelectedNodeToConnect() {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
@@ -423,8 +423,8 @@ class MainViewController: PreferredFocusedViewController {
                 logger.logD("MainViewController", "Forcing to connect to best location.")
                 enableVPNConnection()
             }
-            guard let displayingGroup = self.viewModel.serverList.value.flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
-            let isGroupProOnly = displayingGroup.premiumOnly
+            guard let displayingDataCenter = self.viewModel.locationsList.value.flatMap({ $0.datacenters }).filter({ $0.id == bestLocation.datacenterId }).first else { return }
+            let isGroupProOnly = displayingDataCenter.isPremiumOnly
             if let isUserPro = viewModel.sessionModel.value?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
                isGroupProOnly,
@@ -435,16 +435,16 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func setFlagImages() {
-        self.viewModel.serverList
+        self.viewModel.locationsList
             .receive(on: DispatchQueue.main)
             .sink { [self] results in
-                self.viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: results) { serverSectionsOrdered in
-                    if serverSectionsOrdered.count > 2 {
-                        self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode.lowercased() ?? "")-s")
-                        self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode.lowercased() ?? "")-s")
-                        self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode.lowercased() ?? "")-s")
-                    }
-
+                let locationSectionsOrdered = self.viewModel.sortLocationListUsingUserPreferences(ignoreStreaming: true,
+                                                                                                  isForStreaming: false,
+                                                                                                  locations: results)
+                if locationSectionsOrdered.count > 2 {
+                    self.firstServer.image = UIImage(named: "\(locationSectionsOrdered[0].location?.countryCode.lowercased() ?? "")-s")
+                    self.secondServer.image = UIImage(named: "\(locationSectionsOrdered[1].location?.countryCode.lowercased() ?? "")-s")
+                    self.thirdServer.image = UIImage(named: "\(locationSectionsOrdered[2].location?.countryCode.lowercased() ?? "")-s")
                 }
             }
             .store(in: &self.cancellables)
@@ -625,15 +625,13 @@ class MainViewController: PreferredFocusedViewController {
     }
 }
 
-extension MainViewController: ServerListTableViewDelegate {
-    func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel) {
+extension MainViewController: LocationsListTableViewDelegate {
+    func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel) {
         if let isUserPro = userSessionRepository.sessionModel?.isPremium {
-            if group.premiumOnly && !isUserPro {
+            if datacenter.isPremiumOnly && !isUserPro {
                 router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             } else {
-                serverListViewModel.setSelectedServerAndGroup(server: server,
-                                                              group: group)
+                serverListViewModel.setSelectedLocationAndDatacenter(location: location, datacenter: datacenter)
             }
         }
     }
@@ -654,7 +652,7 @@ extension MainViewController: ServerListTableViewDelegate {
 }
 
 extension MainViewController: FavouriteListTableViewDelegate {
-    func setSelectedFavourite(favourite: GroupModel) {
+    func setSelectedFavourite(favourite: DatacenterModel) {
         favNodesListViewModel.setSelectedFav(favourite: favourite)
     }
 }

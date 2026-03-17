@@ -97,7 +97,7 @@ Windscribe/
 - **CustomConfig**: Custom VPN configurations
 
 ### 3. Repositories
-- **ServerRepository**: Server data management
+- **LocationListRepository**: Server data management
 - **UserSessionRepository**: User data management
 - **CredentialsRepository**: Credential management
 - **LatencyRepository**: Server latency data

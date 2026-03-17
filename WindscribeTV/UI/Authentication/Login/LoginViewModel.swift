@@ -170,17 +170,13 @@ class LoginViewModelImpl: LoginViewModel {
         }
     }
 
-    private func handleLoginSuccess(session: Session) {
-        // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
-        let sessionModel = session.getModel()
-
+    private func handleLoginSuccess(session: SessionModel) {
         preferences.saveLoginDate(date: Date())
         wifiManager.saveCurrentWifiNetworks()
         Task {
             // Create unmanaged Session from model (safe to use on any thread)
-            let sessionForStorage = Session(sessionModel: sessionModel)
-            await sessionManager.updateFrom(session: sessionForStorage)
-            logger.logI("LoginViewModel", "Login successful. Preparing user data for \(sessionModel.username)")
+            await sessionManager.updateFrom(session: session)
+            logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
             prepareUserData()
         }
     }
@@ -343,11 +339,6 @@ class LoginViewModelImpl: LoginViewModel {
                     }
                 }
             }.sink { _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    Task {
-                        try? await self.latencyRepository.loadLatency()
-                    }
-                }
                 self.showLoadingView.send(false)
                 self.routeToMainView.send(true)
             } receiveValue: { _ in }.store(in: &appCancellable)

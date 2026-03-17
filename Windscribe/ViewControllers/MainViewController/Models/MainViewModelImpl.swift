@@ -14,7 +14,7 @@ class MainViewModelImpl: MainViewModel {
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let vpnManager: VPNManager
     let logger: FileLogger
-    let serverRepository: ServerRepository
+    let locationListRepository: LocationListRepository
     let portMapRepo: PortMapRepository
     let staticIpRepository: StaticIpRepository
     let preferences: Preferences
@@ -34,9 +34,10 @@ class MainViewModelImpl: MainViewModel {
     private let alertManager: AlertManager
     private let wifiManager: WifiManager
 
-    let serverList = CurrentValueSubject<[ServerModel], Never>([])
+    let serverList = CurrentValueSubject<[ServerMachineModel], Never>([])
+    let locationsList = CurrentValueSubject<[LocationModel], Never>([])
     var portMapHeadings = CurrentValueSubject<[String]?, Never>(nil)
-    var favouriteList = CurrentValueSubject<[FavouriteGroupModel]?, Never>(nil)
+    var favouriteList = CurrentValueSubject<[FavoriteDatacenterlModel]?, Never>(nil)
     var staticIPs = CurrentValueSubject<[StaticIPModel]?, Never>(nil)
     var locationOrderBy = CurrentValueSubject<String, Never>(DefaultValues.orderLocationsBy)
     let latencies = CurrentValueSubject<[PingDataModel], Never>([])
@@ -48,7 +49,7 @@ class MainViewModelImpl: MainViewModel {
     var appNetwork = CurrentValueSubject<AppNetwork, Never>(AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
     var wifiNetwork = CurrentValueSubject<WifiNetworkModel?, Never>(nil)
     var sessionModel = CurrentValueSubject<SessionModel?, Never>(nil)
-    var favouriteGroups = CurrentValueSubject<[GroupModel], Never>([])
+    var favouriteDatacenters = CurrentValueSubject<[DatacenterModel], Never>([])
     let promoPayload = CurrentValueSubject<PushNotificationPayload?, Never>(nil)
 
     let customConfigs = CurrentValueSubject<[CustomConfigModel], Never>([])
@@ -74,7 +75,7 @@ class MainViewModelImpl: MainViewModel {
 
     init(vpnManager: VPNManager,
          logger: FileLogger,
-         serverRepository: ServerRepository,
+         locationListRepository: LocationListRepository,
          portMapRepo: PortMapRepository,
          staticIpRepository: StaticIpRepository,
          preferences: Preferences,
@@ -97,7 +98,7 @@ class MainViewModelImpl: MainViewModel {
 
         self.vpnManager = vpnManager
         self.logger = logger
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.portMapRepo = portMapRepo
         self.staticIpRepository = staticIpRepository
         self.preferences = preferences
@@ -128,7 +129,7 @@ class MainViewModelImpl: MainViewModel {
         wifiManager.saveCurrentWifiNetworks()
 
         loadNotifications()
-        loadServerList()
+        loadLocationList()
         loadFavourite()
         loadTvFavourites()
         loadCustomConfigs()
@@ -166,11 +167,19 @@ class MainViewModelImpl: MainViewModel {
             }
             .store(in: &cancellables)
 
-        serverRepository.serverListSubject
+        locationListRepository.serverListSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 guard let self = self else { return }
                 self.serverList.send(data)
+            }
+            .store(in: &cancellables)
+
+        locationListRepository.locationListSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                self.locationsList.send(data)
             }
             .store(in: &cancellables)
 
@@ -238,21 +247,21 @@ class MainViewModelImpl: MainViewModel {
             .store(in: &cancellables)
     }
 
-    func sortFavouriteNodesUsingUserPreferences(favList: [FavouriteGroupModel]) -> [FavouriteGroupModel] {
-        var favNodesOrdered = [FavouriteGroupModel]()
+    func sortFavouriteNodesUsingUserPreferences(favList: [FavoriteDatacenterlModel]) -> [FavoriteDatacenterlModel] {
+        var favNodesOrdered = [FavoriteDatacenterlModel]()
         switch locationOrderBy.value {
         case Fields.Values.geography, Fields.Values.alphabet:
             favNodesOrdered = favList.sorted {
-                if $0.groupModel.city == $1.groupModel.city {
-                    return $0.groupModel.nick < $1.groupModel.nick
+                if $0.datacenterModel.city == $1.datacenterModel.city {
+                    return $0.datacenterModel.nick < $1.datacenterModel.nick
                 } else {
-                    return $0.groupModel.city < $1.groupModel.city
+                    return $0.datacenterModel.city < $1.datacenterModel.city
                 }
             }
         case Fields.Values.latency:
             favNodesOrdered = favList.sorted { fav1, fav2 -> Bool in
-                let firstLatency = getLatency(ip: fav1.groupModel.pingIp)
-                let secondLatency = getLatency(ip: fav2.groupModel.pingIp)
+                let firstLatency = getLatency(datacenter: fav1.datacenterModel)
+                let secondLatency = getLatency(datacenter: fav2.datacenterModel)
                 return firstLatency < secondLatency
             }
         default:
@@ -261,99 +270,89 @@ class MainViewModelImpl: MainViewModel {
         return favNodesOrdered
     }
 
-    func getLatency(ip: String? = nil) -> Int {
-        return latencyRepo.getPingData(ip: ip ?? "")?.latency ?? -1
+    func getLatency(datacenter: DatacenterModel) -> Int {
+        let ip = datacenter.pingServer?.ip ?? ""
+        return latencyRepo.getPingData(ip: ip)?.latency ?? -1
     }
 
-    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel]) -> [ServerSection]{
-        var serverSections = [ServerSection]()
-        var serverSectionsOrdered = [ServerSection]()
-        if servers.count == 0 {
+    func sortLocationListUsingUserPreferences(ignoreStreaming: Bool,
+                                              isForStreaming: Bool,
+                                              locations: [LocationModel]) -> [LocationSection] {
+        var locationSections = [LocationSection]()
+        var locationSectionsOrdered = [LocationSection]()
+        if locations.count == 0 {
             return []
         }
-
-        if ignoreStreaming {
-            serverSections = servers.map { ServerSection(server: $0, collapsed: true) }
-        } else {
-            serverSections = servers.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
-        }
-
+        locationSections = locations.map { LocationSection(location: $0, collapsed: true) }
         let orderBy = locationOrderBy.value
 
         switch orderBy {
         case Fields.Values.geography:
-            serverSectionsOrdered = sortServersByGeography(serverSections)
+            locationSectionsOrdered = sortServersByGeography(locationSections)
         case Fields.Values.alphabet:
-            serverSectionsOrdered = sortServersByAlphabet(serverSections)
+            locationSectionsOrdered = sortServersByAlphabet(locationSections)
         case Fields.Values.latency:
-            serverSectionsOrdered = sortServersByLatency(serverSections)
+            locationSectionsOrdered = sortLocationsByLatency(locationSections)
         default:
-            serverSectionsOrdered = serverSections
+            locationSectionsOrdered = locationSections
         }
-        serverSectionsOrdered = sortServerNodes(serverList: serverSectionsOrdered, orderBy: orderBy)
-        return serverSectionsOrdered
+        locationSectionsOrdered = sortLocationDatacenters(locationSectionsList: locationSectionsOrdered, orderBy: orderBy)
+        return locationSectionsOrdered
     }
 
-    private func sortServersByGeography(_ serverSections: [ServerSection]) -> [ServerSection] {
-        return serverSections
+    private func sortServersByGeography(_ locationSections: [LocationSection]) -> [LocationSection] {
+        return locationSections
     }
 
-    private func sortServersByAlphabet(_ serverSections: [ServerSection]) -> [ServerSection] {
-        return serverSections.sorted { serverSection1, serverSection2 -> Bool in
-            guard let countryCode1 = serverSection1.server?.name,
-                  let countryCode2 = serverSection2.server?.name else { return false }
+    private func sortServersByAlphabet(_ locationSections: [LocationSection]) -> [LocationSection] {
+        return locationSections.sorted { locationSection1, locationSection2 -> Bool in
+            guard let countryCode1 = locationSection1.location?.name,
+                  let countryCode2 = locationSection2.location?.name else { return false }
             return countryCode1 < countryCode2
         }
     }
 
-    private func sortServersByLatency(_ serverSections: [ServerSection]) -> [ServerSection] {
-        let serversMappedWithPing = serverSections.map { serverSection -> (ServerSection, Int) in
-            guard let hostnames = serverSection.server?.groups.filter({$0.pingIp != ""}).map({$0.pingIp}) else {
-                return (serverSection, -1)
+    private func sortLocationsByLatency(_ locationSections: [LocationSection]) -> [LocationSection] {
+        var mappedLocations = locationSections.compactMap { section in
+            if let pingServer = section.location?.datacenters.randomElement()?.pingServer,
+               let latency = latencyRepo.getPingData(ip: pingServer.ip)?.latency {
+                return (section, latency)
             }
-            let nodeList = hostnames.compactMap({
-                let latency = self.latencyRepo.getPingData(ip: $0)?.latency
-                return latency == -1 ? nil : latency
-            })
-            guard nodeList.count != 0 else { return (serverSection, -1) }
-
-            // Use lowest latency instead of average for more accurate region ranking
-            let latency = nodeList.min() ?? -1
-            guard latency != 0 else { return (serverSection, -1) }
-            return (serverSection, latency)
+            return (section, -1)
         }
 
-        let serverMappedSorted = serversMappedWithPing.sorted { (serverSection1, serverSection2) -> Bool in
-            guard serverSection1.1 > 0 else { return false }
-            guard serverSection2.1 > 0 else { return true }
-            return serverSection1.1 < serverSection2.1
+        mappedLocations.sort {
+            if $1.1 == -1 {
+                return true
+            }
+            return $0.1 < $1.1
         }
 
-        return serverMappedSorted.map { $0.0 }
+        return mappedLocations.map { $0.0 }
     }
 
-    private func sortServerNodes(serverList: [ServerSection], orderBy: String) -> [ServerSection] {
-        guard orderBy != Fields.Values.geography else { return serverList }
-        return serverList.map {
-            guard let serverModel = $0.server else { return $0 }
-            var sortedGroups = [GroupModel]()
+    private func sortLocationDatacenters(locationSectionsList: [LocationSection], orderBy: String) -> [LocationSection] {
+        guard orderBy != Fields.Values.geography else { return locationSectionsList }
+        return locationSectionsList.map {
+            guard let locationModel = $0.location else { return $0 }
+            var sortedDatacenters = [DatacenterModel]()
             switch orderBy {
             case Fields.Values.latency:
-                sortedGroups = serverModel.groups.sorted {
-                    guard let ping0 = self.latencyRepo.getPingData(ip: $0.pingIp)?.latency, ping0 != -1 else { return false }
-                    guard let ping1 = self.latencyRepo.getPingData(ip: $1.pingIp)?.latency, ping1 != -1 else { return true }
+                sortedDatacenters = locationModel.datacenters.sorted {
+                    guard let ping0 = self.latencyRepo.getPingData(ip: $0.pingServer?.ip ?? "")?.latency, ping0 != -1 else { return false }
+                    guard let ping1 = self.latencyRepo.getPingData(ip: $1.pingServer?.ip ?? "")?.latency, ping1 != -1 else { return true }
                     return ping0 < ping1
                 }
             default:
-                sortedGroups = serverModel.groups.sorted {
+                sortedDatacenters = locationModel.datacenters.sorted {
                     if $0.city == $1.city {
                         return $0.nick < $1.nick
                     }
                     return $0.city < $1.city
                 }
             }
-            let sortedServerModel = serverModel.copyModelWith(newGroups: sortedGroups)
-            return ServerSection(server: sortedServerModel, collapsed: $0.collapsed)
+            let sortedServerModel = locationModel.copyModelWith(datacenters: sortedDatacenters)
+            return LocationSection(location: locationModel, collapsed: $0.collapsed)
         }
     }
 
@@ -364,36 +363,36 @@ class MainViewModelImpl: MainViewModel {
         }
     }
 
-    private func getFavouriteGroup(id: String, servers: [ServerModel]) -> GroupModel? {
-        servers.flatMap { $0.groups }
+    private func getFavouriteDatacenter(id: String, locations: [LocationModel]) -> DatacenterModel? {
+        locations.flatMap { $0.datacenters }
             .first { $0.id == Int(id) }
     }
 
     private func loadTvFavourites() {
-        Publishers.CombineLatest(preferences.observeFavouriteIds(), serverList)
-            .map { ids, servers in
-                ids.compactMap { id in self.getFavouriteGroup(id: id, servers: servers) }
+        Publishers.CombineLatest(preferences.observeFavouriteIds(), locationsList)
+            .map { ids, locations in
+                ids.compactMap { id in self.getFavouriteDatacenter(id: id, locations: locations) }
             }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] groups in
-                self?.favouriteGroups.send(groups)
+            .sink { [weak self] datacenters in
+                self?.favouriteDatacenters.send(datacenters)
             }
             .store(in: &cancellables)
     }
 
     func loadFavourite() {
-        serverRepository.serverListSubject.combineLatest(
-            serverRepository.favouriteListSubject)
+        locationListRepository.locationListSubject.combineLatest(
+            locationListRepository.favouriteListSubject)
         .receive(on: RunLoop.main)
-        .sink { [weak self] (serverModels, favList) in
+        .sink { [weak self] (locationModels, favList) in
             guard let self = self else { return }
-            let favGroupModels = favList
+            let favDatacenterModels = favList
                 .compactMap { favNode in
-                    return serverModels.flatMap { $0.groups }
+                    return locationModels.flatMap { $0.datacenters }
                         .first { "\($0.id)" == favNode.id }
-                        .map { FavouriteGroupModel(favourite: favNode, groupModel: $0)}
+                        .map { FavoriteDatacenterlModel(favourite: favNode, datacenterModel: $0)}
                 }
-            favouriteList.send(favGroupModels)
+            favouriteList.send(favDatacenterModels)
         }
         .store(in: &cancellables)
     }
@@ -440,16 +439,6 @@ class MainViewModelImpl: MainViewModel {
     }
 
     func loadLatencies() {
-        serverRepository.serverListSubject
-            .first(where: { !$0.isEmpty })
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                Task {
-                    try? await self.latencyRepo.loadLatency()
-                }
-            }
-            .store(in: &cancellables)
-
         latencyRepo.latency
             .sink { [weak self] data in
                 guard let self = self else { return }
@@ -550,9 +539,10 @@ class MainViewModelImpl: MainViewModel {
         wifiNetworkRepository.updateNetworkTrustStatus(network: network, trusted: status)
     }
 
-    func loadServerList() {
+    func loadLocationList() {
         Task {
-            try? await serverRepository.updatedServers()
+            try? await locationListRepository.updateLocations()
+            try? await locationListRepository.updatedServerList()
             // Load static IPs after server list completes to avoid parallel API calls
             try? await staticIpRepository.updateStaticServers()
             staticIPs.send(staticIpRepository.staticIPs)
@@ -576,22 +566,21 @@ class MainViewModelImpl: MainViewModel {
         updateSSIDTrigger.send(())
     }
 
-    func getServerModel(from groupId: Int) -> ServerModel? {
-        try? locationsManager.getLocation(from: String(groupId)).0
+    func getLocationModel(from datacenterId: Int) -> LocationModel? {
+        try? locationsManager.getLocation(from: datacenterId).0
     }
 
     func runHapticFeedback(level: HapticFeedbackLevel) {
         hapticFeedbackManager.run(level: level)
     }
 
-    func checkAccountWasDowngraded(for serverList: [ServerModel]) -> Bool {
+    func checkAccountWasDowngraded() -> Bool {
         if let oldSession = oldSession,
            let newSession = userSessionRepository.sessionModel {
-            let groups = serverList.compactMap { $0.groups }.flatMap { $0 }
-            let nodes = groups.compactMap { $0.nodes }.flatMap { $0 }
+            let serverList = serverList.value
             if oldSession.isPremium &&
                 !newSession.isPremium &&
-                !nodes.isEmpty {
+                !serverList.isEmpty {
                 logger.logD("MainViewModel", "Account downgrade detected.")
                return true
             }

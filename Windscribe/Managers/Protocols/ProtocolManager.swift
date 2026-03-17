@@ -202,6 +202,7 @@ class ProtocolManager: ProtocolManagerType {
     @MainActor
     func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool, isFromFailover: Bool) async {
         if failoverNetworkName != .none && failoverNetworkName != connectivity.getNetwork().networkType {
+            logger.logI("ProtocolManager", "Network failover, reseting all protocols, network name: \(failoverNetworkName)")
             goodProtocol = nil
             userSelected = nil
             protocolsToConnectList.removeAll()
@@ -209,6 +210,7 @@ class ProtocolManager: ProtocolManagerType {
         }
         failoverNetworkName = connectivity.getNetwork().networkType
         if shouldReset {
+            logger.logI("ProtocolManager", "Should reset selected, reseting all protocols")
             getProtocolList()
             userSelected = nil
         }
@@ -248,11 +250,11 @@ class ProtocolManager: ProtocolManagerType {
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
 
-        let locationID = locationManager.getId()
-        if !locationID.isEmpty,
-           let locationType = locationManager.getLocationType(),
+        let locationId = locationManager.getLastSelectedLocation()
+        let customId = locationManager.getCustomId(location: locationId)
+        if let locationType = locationManager.getLocationType(),
            locationType == .custom,
-           let config = customConfigRepository.getCustomConfig(fileId: locationID) {
+           let config = customConfigRepository.getCustomConfig(fileId: String(customId)) {
             let protocolName = config.protocolType
             appendPort(proto: protocolName, port: config.port)
             setPriority(proto: protocolName, type: .normal)

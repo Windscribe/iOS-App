@@ -21,7 +21,7 @@ extension MainViewController {
     func addSearchViews() {
         var viewModel = Assembler.resolve(SearchLocationsViewModelType.self)
         viewModel.delegate = self
-        searchLocationsView = SearchLocationsView(viewModel: viewModel, serverSectionOpacity: serverSectionOpacity)
+        searchLocationsView = SearchLocationsView(viewModel: viewModel, locationSectionOpacity: locationSectionOpacity)
         view.addSubview(searchLocationsView)
         searchLocationsView.loadView()
 
@@ -52,9 +52,9 @@ extension MainViewController {
     }
 
     func reloadServerListForSearch(reloadFinishedCompletion: (() -> Void)? = nil) {
-        let results = viewModel.serverList.value
+        let results = viewModel.locationsList.value
         if results.count == 0 { return }
-        loadServerTable(servers: results, shouldColapse: true, reloadFinishedCompletion: reloadFinishedCompletion)
+        loadLocationsTable(locations: results, shouldColapse: true, reloadFinishedCompletion: reloadFinishedCompletion)
     }
 }
 
@@ -63,38 +63,38 @@ extension MainViewController: SearchCountryViewDelegate {
         reloadServerListForSearch { [weak self] in
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                guard let serverSections = self.serverListTableViewDataSource?.serverSections else { return }
-                var resultServerSections = [ServerSection]()
-                let serverModels = serverSections.map {$0.server!}
-                let sortedModels = self.find(groupList: serverModels, keyword: text)
-                resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: text.isEmpty)}
-                self.serverListTableViewDataSource.updateServerList(with: resultServerSections, shouldColapse: false)
+                guard let locationSections = self.locationsListTableViewDataSource?.locationsSections else { return }
+                var resultLocationSections = [LocationSection]()
+                let locationModels = locationSections.map {$0.location!}
+                let sortedModels = self.find(locationList: locationModels, keyword: text)
+                resultLocationSections = sortedModels.map {LocationSection(location: $0, collapsed: text.isEmpty)}
+                self.locationsListTableViewDataSource.updateServerList(with: resultLocationSections, shouldColapse: false)
                 // Sync tableView with new section count before expanding/collapsing
-                self.serverListTableView.reloadData()
-                for (index, serverSection) in resultServerSections.enumerated() {
-                    if serverSection.collapsed == false, !text.isEmpty {
-                        self.serverListTableView.expand(index)
+                self.locationsListTableView.reloadData()
+                for (index, locationSection) in resultLocationSections.enumerated() {
+                    if locationSection.collapsed == false, !text.isEmpty {
+                        self.locationsListTableView.expand(index)
                     } else {
-                        self.serverListTableView.collapse(index)
+                        self.locationsListTableView.collapse(index)
                     }
                 }
                 if text.isEmpty {
                     self.serverHeaderView.updadeWithSearchResult(searchCount: -1)
                 } else {
-                    self.serverHeaderView.updadeWithSearchResult(searchCount: resultServerSections.count)
+                    self.serverHeaderView.updadeWithSearchResult(searchCount: resultLocationSections.count)
                 }
             }
         }
     }
 
-    private func find(groupList: [ServerModel], keyword: String) -> [ServerModel] {
-        var groupNamePrefixMatches: [ServerModel] = []
-        var cityPrefixMatches: [ServerModel] = []
-        var groupNameContainsMatches: [ServerModel] = []
-        var cityContainsMatches: [ServerModel] = []
-        var serverList: [ServerModel] = groupList
+    private func find(locationList: [LocationModel], keyword: String) -> [LocationModel] {
+        var groupNamePrefixMatches: [LocationModel] = []
+        var cityPrefixMatches: [LocationModel] = []
+        var groupNameContainsMatches: [LocationModel] = []
+        var cityContainsMatches: [LocationModel] = []
+        var serverList: [LocationModel] = locationList
 
-        var bestLocations: [ServerModel] = []
+        var bestLocations: [LocationModel] = []
 
         if let first = serverList.first {
             if first.name == Fields.Values.bestLocation {
@@ -105,8 +105,8 @@ extension MainViewController: SearchCountryViewDelegate {
 
         let lowerCaseKeyword = keyword.lowercased()
 
-        for serverModel in serverList {
-            if let (filteredGroup, matchType) = filterIfContains(serverModel: serverModel, keyword: lowerCaseKeyword) {
+        for locationModel in serverList {
+            if let (filteredGroup, matchType) = filterIfContains(locationModel: locationModel, keyword: lowerCaseKeyword) {
                 switch matchType {
                 case .groupPrefix:
                     groupNamePrefixMatches.append(filteredGroup)
@@ -124,34 +124,34 @@ extension MainViewController: SearchCountryViewDelegate {
 
     /// Checks what kind of MatchType best fits group with the keyword from the search
     /// This will allow the list to be better order and give priority to the the keyword being in the server name first and then in the city name or nick name
-    private func filterIfContains(serverModel: ServerModel, keyword: String) -> (ServerModel, MatchType)? {
-        var cities: [GroupModel] = []
+    private func filterIfContains(locationModel: LocationModel, keyword: String) -> (LocationModel, MatchType)? {
+        var datacenterList: [DatacenterModel] = []
         var bestMatch: MatchType?
-        let name = serverModel.name.lowercased()
+        let name = locationModel.name.lowercased()
         if name.hasPrefix(keyword) {
             bestMatch = .groupPrefix
         } else if name.contains(keyword) {
             bestMatch = .groupContains
         }
-        for cityGroup in serverModel.groups {
+        for cityGroup in locationModel.datacenters {
             let nick = cityGroup.nick.lowercased()
             let city = cityGroup.city.lowercased()
             if nick.hasPrefix(keyword) || city.hasPrefix(keyword) {
                 bestMatch = bestMatch ?? .cityPrefix
-                cities.append(cityGroup)
+                datacenterList.append(cityGroup)
             } else if nick.contains(keyword) || city.contains(keyword) {
                 if bestMatch == nil {
                     bestMatch = .cityContains
                 }
-                cities.append(cityGroup)
+                datacenterList.append(cityGroup)
             }
         }
         if let match = bestMatch, match == .groupPrefix || match == .groupContains {
-            cities = serverModel.groups
+            datacenterList = locationModel.datacenters
         }
         if let match = bestMatch {
-            let newServer = serverModel.copyModelWith(newGroups: cities)
-            return (newServer, match)
+            let newLocation = locationModel.copyModelWith(datacenters: datacenterList)
+            return (newLocation, match)
         }
         return nil
     }
@@ -164,8 +164,8 @@ extension MainViewController: SearchCountryViewDelegate {
         toggleSearchViews(to: true)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.expandedSections = self.serverListTableView.expandedSections
-            self.serverListTableView.collapseExpandedSections()
+            self.expandedSections = self.locationsListTableView.expandedSections
+            self.locationsListTableView.collapseExpandedSections()
 
             self.listSelectionViewTopConstraint.isActive = true
             self.listSelectionViewBottomConstraint.isActive = false
@@ -173,7 +173,7 @@ extension MainViewController: SearchCountryViewDelegate {
                 self.view.layoutIfNeeded()
                 self.searchLocationsView.setSearchSelected(isSelected: true)
             }
-            serverListTableViewDataSource.setBestLocationVisibility(to: false)
+            locationsListTableViewDataSource.setBestLocationVisibility(to: false)
         }
     }
 
@@ -192,7 +192,7 @@ extension MainViewController: SearchCountryViewDelegate {
                 self.view.layoutIfNeeded()
                 self.searchLocationsView.setSearchSelected(isSelected: false)
             }
-            serverListTableViewDataSource.setBestLocationVisibility(to: true)
+            locationsListTableViewDataSource.setBestLocationVisibility(to: true)
         }
     }
 }

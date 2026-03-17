@@ -47,7 +47,6 @@ class VPNManagerImpl: VPNManager {
     private let activeManagerKey = "activeManager"
 
     let logger: FileLogger
-    let serverRepository: ServerRepository
     let staticIpRepository: StaticIpRepository
     let preferences: Preferences
     let connectivity: ConnectivityManager
@@ -71,7 +70,6 @@ class VPNManagerImpl: VPNManager {
     /// The current configuration state of the VPN, with thread-safe access.
 
     init(logger: FileLogger,
-         serverRepository: ServerRepository,
          staticIpRepository: StaticIpRepository,
          preferences: Preferences,
          connectivity: ConnectivityManager,
@@ -83,7 +81,6 @@ class VPNManagerImpl: VPNManager {
          bridgeAPI: WSNetBridgeAPIType,
          userSessionRepository: UserSessionRepository) {
         self.logger = logger
-        self.serverRepository = serverRepository
         self.staticIpRepository = staticIpRepository
         self.preferences = preferences
         self.connectivity = connectivity

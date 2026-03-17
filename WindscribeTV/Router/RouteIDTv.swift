@@ -18,7 +18,7 @@ enum RouteID {
     case forgotPassword
     case preferences
     case serverList(bestLocation: BestLocationModel?)
-    case serverListDetail(server: ServerModel, delegate: ServerListTableViewDelegate?)
+    case locationListDetail(location: LocationModel, delegate: LocationsListTableViewDelegate?)
     case upgrade(promoCode: String?, pcpID: String?, shouldBeRoot: Bool = false)
     case confirmEmail(delegate: ConfirmEmailViewControllerDelegate?)
     case addEmail

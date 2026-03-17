@@ -78,7 +78,7 @@ extension SSOManager: ASAuthorizationControllerDelegate {
 
             do {
                 let ssoSession = try await self.apiManager.ssoSession(token: token)
-                let session = try await self.apiManager.getSession(sessionAuth: ssoSession.sessionAuth)
+                var session = try await self.apiManager.getSession(sessionAuth: ssoSession.sessionAuth)
 
                 // Get session from "\GET" will not have session auth set.
                 session.sessionAuthHash = ssoSession.sessionAuth

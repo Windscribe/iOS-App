@@ -15,7 +15,7 @@ import XCTest
 
 class UserDataRepositoryTests: XCTestCase {
     var mockContainer: Container!
-    var mockServerRepository: MockServerRepository!
+    var mockLocationListRepository: MockLocationListRepository!
     var mockCredentialsRepository: MockCredentialsRepository!
     var mockPortMapRepository: MockPortMapRepository!
     var mockLatencyRepository: MockLatencyRepository!
@@ -28,7 +28,7 @@ class UserDataRepositoryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockContainer = Container()
-        mockServerRepository = MockServerRepository()
+        mockLocationListRepository = MockLocationListRepository()
         mockCredentialsRepository = MockCredentialsRepository()
         mockPortMapRepository = MockPortMapRepository()
         mockLatencyRepository = MockLatencyRepository()
@@ -37,9 +37,9 @@ class UserDataRepositoryTests: XCTestCase {
         mockEmergencyRepository = MockEmergencyRepository()
         mockLogger = MockLogger()
 
-        // Register mock ServerRepository
-        mockContainer.register(ServerRepository.self) { _ in
-            return self.mockServerRepository
+        // Register mock LocationListRepository
+        mockContainer.register(LocationListRepository.self) { _ in
+            return self.mockLocationListRepository
         }
 
         // Register mock CredentialsRepository
@@ -77,8 +77,7 @@ class UserDataRepositoryTests: XCTestCase {
 
         // Register UserDataRepository for unit tests
         mockContainer.register(UserDataRepository.self) { _ in
-            return UserDataRepositoryImpl(serverRepository: self.mockServerRepository,
-                                          credentialsRepository: self.mockCredentialsRepository,
+            return UserDataRepositoryImpl(credentialsRepository: self.mockCredentialsRepository,
                                           portMapRepository: self.mockPortMapRepository,
                                           latencyRepository: self.mockLatencyRepository,
                                           staticIpRepository: self.mockStaticIpRepository,
@@ -93,7 +92,7 @@ class UserDataRepositoryTests: XCTestCase {
     override func tearDown() {
         mockContainer = nil
         repository = nil
-        mockServerRepository = nil
+        mockLocationListRepository = nil
         mockCredentialsRepository = nil
         mockPortMapRepository = nil
         mockLatencyRepository = nil
@@ -108,7 +107,6 @@ class UserDataRepositoryTests: XCTestCase {
 
     func testPrepareUserDataSuccess() async throws {
         // Given
-        mockServerRepository.mockServers = []
         mockCredentialsRepository.mockOpenVPNCredentials = ServerCredentialsModel(username: "test", password: "test")
         mockCredentialsRepository.mockIKEv2Credentials = ServerCredentialsModel(username: "test", password: "test")
         mockPortMapRepository.portMapsToReturn = []
@@ -121,7 +119,6 @@ class UserDataRepositoryTests: XCTestCase {
         try await repository.prepareUserData()
 
         // Then
-        XCTAssertTrue(mockServerRepository.updatedServersCalled, "Should update servers")
         XCTAssertTrue(mockLatencyRepository.pickBestLocationCalled, "Should pick best location")
         XCTAssertTrue(mockLatencyRepository.loadQuickLatencyCalled, "Should load quick latency when not in emergency mode")
         XCTAssertTrue(mockCredentialsRepository.getUpdatedOpenVPNCrendentialsCalled, "Should get OpenVPN credentials")
@@ -134,7 +131,6 @@ class UserDataRepositoryTests: XCTestCase {
 
     func testPrepareUserDataWhenEmergencyConnected() async throws {
         // Given
-        mockServerRepository.mockServers = []
         mockCredentialsRepository.mockOpenVPNCredentials = ServerCredentialsModel(username: "test", password: "test")
         mockCredentialsRepository.mockIKEv2Credentials = ServerCredentialsModel(username: "test", password: "test")
         mockPortMapRepository.portMapsToReturn = []
@@ -150,30 +146,14 @@ class UserDataRepositoryTests: XCTestCase {
         try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
 
         // Then
-        XCTAssertTrue(mockServerRepository.updatedServersCalled, "Should update servers")
         XCTAssertTrue(mockLatencyRepository.pickBestLocationCalled, "Should pick best location")
         XCTAssertTrue(mockEmergencyRepository.isConnectedCalled, "Should check emergency connection status")
         XCTAssertFalse(mockLatencyRepository.loadQuickLatencyCalled, "Should NOT load quick latency in emergency mode")
         XCTAssertFalse(mockLatencyRepository.loadLatencyCalled, "Should NOT load full latency in emergency mode")
     }
 
-    func testPrepareUserDataHandlesServerRepositoryError() async throws {
-        // Given
-        mockServerRepository.shouldThrowError = true
-        mockServerRepository.errorToThrow = NSError(domain: "Test", code: 1, userInfo: nil)
-
-        // When/Then
-        do {
-            try await repository.prepareUserData()
-            XCTFail("Should throw error when server repository fails")
-        } catch {
-            XCTAssertTrue(mockServerRepository.updatedServersCalled, "Should attempt to update servers")
-        }
-    }
-
     func testPrepareUserDataHandlesCriticalErrors() async throws {
         // Given
-        mockServerRepository.mockServers = []
         mockPortMapRepository.shouldThrowError = true
         mockPortMapRepository.errorToThrow = NSError(domain: "Test", code: 1, userInfo: nil)
 
@@ -182,14 +162,12 @@ class UserDataRepositoryTests: XCTestCase {
             try await repository.prepareUserData()
             XCTFail("Should throw error when critical repository fails")
         } catch {
-            XCTAssertTrue(mockServerRepository.updatedServersCalled, "Should complete server update before failing")
             XCTAssertTrue(mockPortMapRepository.getUpdatedPortMapCalled, "Should attempt to get port map")
         }
     }
 
     func testPrepareUserDataIgnoresNonCriticalErrors() async throws {
         // Given
-        mockServerRepository.mockServers = []
         mockCredentialsRepository.shouldThrowErrorOnIKEv2 = true
         mockCredentialsRepository.shouldThrowErrorOnOpenVPN = true
         mockStaticIpRepository.shouldThrowError = true
@@ -200,7 +178,6 @@ class UserDataRepositoryTests: XCTestCase {
         try await repository.prepareUserData()
 
         // Then - Should complete successfully despite credential and static IP errors
-        XCTAssertTrue(mockServerRepository.updatedServersCalled, "Should update servers")
         XCTAssertTrue(mockCredentialsRepository.getUpdatedIKEv2CrendentialsCalled, "Should attempt IKEv2")
         XCTAssertTrue(mockCredentialsRepository.getUpdatedOpenVPNCrendentialsCalled, "Should attempt OpenVPN")
         XCTAssertTrue(mockStaticIpRepository.updateStaticServersCalled, "Should attempt static IPs")

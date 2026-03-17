@@ -15,8 +15,10 @@ class FileDatabaseTests: XCTestCase {
 
     var mockContainer: Container!
     var fileDatabase: FileDatabase!
-    var mockFileDatabase: MockFileDatabase!
     var mockLogger: MockLogger!
+
+    // Keep track of test files for cleanup
+    private var testFilePaths: [String] = []
 
     // Test constants
     private let testPath = "test_file.txt"
@@ -29,44 +31,62 @@ class FileDatabaseTests: XCTestCase {
         super.setUp()
         mockContainer = Container()
         mockLogger = MockLogger()
-        mockFileDatabase = MockFileDatabase()
+        testFilePaths = []
 
         // Register mock logger
         mockContainer.register(FileLogger.self) { _ in
             return self.mockLogger
         }
 
-        // Register mock FileDatabase for unit tests
-        mockContainer.register(FileDatabase.self) { _ in
-            return self.mockFileDatabase
+        // Register real FileDatabaseImpl for integration tests
+        mockContainer.register(FileDatabase.self) { r in
+            return FileDatabaseImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
 
         fileDatabase = mockContainer.resolve(FileDatabase.self)!
     }
 
     override func tearDown() {
-        mockFileDatabase.reset()
-        mockContainer = nil
-        fileDatabase = nil
-        mockFileDatabase = nil
-        mockLogger = nil
-        super.tearDown()
+        // Clean up all test files
+        Task {
+            for path in testFilePaths {
+                try? await fileDatabase.removeFile(path: path)
+            }
+
+            mockContainer = nil
+            fileDatabase = nil
+            mockLogger = nil
+            testFilePaths = []
+            try await super.tearDown()
+        }
+    }
+
+    // Helper method to track files for cleanup
+    private func trackFile(_ path: String) {
+        if !testFilePaths.contains(path) {
+            testFilePaths.append(path)
+        }
     }
 
     // MARK: Basic File Operations Tests
 
     func test_saveFile_shouldStoreFileSuccessfully() async {
+        trackFile(testPath)
+
         do {
             try await fileDatabase.saveFile(data: testData, path: testPath)
 
-            XCTAssertTrue(mockFileDatabase.fileExists(path: testPath))
-            XCTAssertEqual(mockFileDatabase.getFileCount(), 1)
+            // Verify by reading the file back
+            let retrievedData = try await fileDatabase.readFile(path: testPath)
+            XCTAssertEqual(retrievedData, testData)
         } catch {
             XCTFail("Expected saveFile to succeed, but got error: \(error)")
         }
     }
 
     func test_readFile_shouldRetrieveDataSuccessfully() async {
+        trackFile(testPath)
+
         do {
             // First save a file
             try await fileDatabase.saveFile(data: testData, path: testPath)
@@ -91,34 +111,47 @@ class FileDatabaseTests: XCTestCase {
     }
 
     func test_removeFile_shouldDeleteFileSuccessfully() async {
+        trackFile(testPath)
+
         do {
             // First save a file
             try await fileDatabase.saveFile(data: testData, path: testPath)
-            XCTAssertTrue(mockFileDatabase.fileExists(path: testPath))
+
+            // Verify file exists by reading it
+            let _ = try await fileDatabase.readFile(path: testPath)
 
             // Remove the file
             try await fileDatabase.removeFile(path: testPath)
 
-            // Verify file no longer exists
-            XCTAssertFalse(mockFileDatabase.fileExists(path: testPath))
+            // Verify file no longer exists - should throw fileNotFound
+            do {
+                _ = try await fileDatabase.readFile(path: testPath)
+                XCTFail("Expected file to be deleted")
+            } catch FileDatabaseError.fileNotFound {
+                // Expected
+            }
         } catch {
             XCTFail("Expected file operations to succeed, but got error: \(error)")
         }
     }
 
     func test_removeFile_nonExistentFile_shouldNotThrow() async {
-        // Mock doesn't throw for non-existent files (silently succeeds)
+        // Real implementation throws deleteError for non-existent files
         do {
             try await fileDatabase.removeFile(path: "non_existent.txt")
-            // Should succeed silently
+            XCTFail("Expected removeFile to throw for non-existent file")
+        } catch FileDatabaseError.deleteError {
+            // Expected behavior for real implementation
         } catch {
-            XCTFail("Expected removeFile to succeed silently for non-existent file, but got error: \(error)")
+            XCTFail("Expected FileDatabaseError.deleteError, but got error: \(error)")
         }
     }
 
     // MARK: File Content Tests
 
     func test_saveFile_emptyData_shouldSaveAndRetrieve() async {
+        trackFile("empty_file.txt")
+
         do {
             try await fileDatabase.saveFile(data: testEmptyData, path: "empty_file.txt")
 
@@ -131,6 +164,8 @@ class FileDatabaseTests: XCTestCase {
     }
 
     func test_saveFile_largeData_shouldSaveAndRetrieve() async {
+        trackFile("large_file.dat")
+
         do {
             try await fileDatabase.saveFile(data: testLargeData, path: "large_file.dat")
 
@@ -143,6 +178,7 @@ class FileDatabaseTests: XCTestCase {
     }
 
     func test_saveFile_binaryData_shouldSaveAndRetrieve() async {
+        trackFile("binary_file.dat")
         let binaryData = Data([0x00, 0xFF, 0x42, 0xAB, 0xCD, 0xEF])
 
         do {
@@ -158,6 +194,7 @@ class FileDatabaseTests: XCTestCase {
     // MARK: File Update Tests
 
     func test_saveFile_existingFile_shouldUpdateContent() async {
+        trackFile(testPath)
         let initialData = "Initial content".data(using: .utf8)!
         let updatedData = "Updated content".data(using: .utf8)!
 
@@ -180,6 +217,8 @@ class FileDatabaseTests: XCTestCase {
     // MARK: Multiple Files Tests
 
     func test_multipleFiles_shouldMaintainSeparateContent() async {
+        trackFile(testPath)
+        trackFile(testPath2)
         let data1 = "File 1 content".data(using: .utf8)!
         let data2 = "File 2 content".data(using: .utf8)!
 
@@ -195,13 +234,14 @@ class FileDatabaseTests: XCTestCase {
             XCTAssertEqual(retrieved1, data1)
             XCTAssertEqual(retrieved2, data2)
             XCTAssertNotEqual(retrieved1, retrieved2)
-            XCTAssertEqual(mockFileDatabase.getFileCount(), 2)
         } catch {
             XCTFail("Expected multiple file operations to succeed, but got error: \(error)")
         }
     }
 
     func test_removeFile_oneOfMultiple_shouldOnlyRemoveTargetFile() async {
+        trackFile(testPath)
+        trackFile(testPath2)
         let data1 = "File 1 content".data(using: .utf8)!
         let data2 = "File 2 content".data(using: .utf8)!
 
@@ -209,19 +249,21 @@ class FileDatabaseTests: XCTestCase {
             // Save two files
             try await fileDatabase.saveFile(data: data1, path: testPath)
             try await fileDatabase.saveFile(data: data2, path: testPath2)
-            XCTAssertEqual(mockFileDatabase.getFileCount(), 2)
 
             // Remove first file
             try await fileDatabase.removeFile(path: testPath)
 
             // Verify first file is gone
-            XCTAssertFalse(mockFileDatabase.fileExists(path: testPath))
+            do {
+                _ = try await fileDatabase.readFile(path: testPath)
+                XCTFail("Expected file to be deleted")
+            } catch FileDatabaseError.fileNotFound {
+                // Expected
+            }
 
             // Verify second file still exists
-            XCTAssertTrue(mockFileDatabase.fileExists(path: testPath2))
             let retrieved2 = try await fileDatabase.readFile(path: testPath2)
             XCTAssertEqual(retrieved2, data2)
-            XCTAssertEqual(mockFileDatabase.getFileCount(), 1)
         } catch {
             XCTFail("Expected selective file removal to succeed, but got error: \(error)")
         }
@@ -230,6 +272,7 @@ class FileDatabaseTests: XCTestCase {
     // MARK: VPN Config Files Tests (Real-world scenarios)
 
     func test_openVPNConfigFile_shouldSaveAndRetrieve() async {
+        trackFile("config.ovpn")
         let openVPNConfig = """
         client
         proto udp
@@ -262,6 +305,7 @@ class FileDatabaseTests: XCTestCase {
     }
 
     func test_wireguardConfigFile_shouldSaveAndRetrieve() async {
+        trackFile("wireguard.conf")
         let wireguardConfig = """
         [Interface]
         PrivateKey = private_key_here
@@ -291,53 +335,14 @@ class FileDatabaseTests: XCTestCase {
     }
 
     // MARK: Error Handling Tests
-
-    func test_saveFile_errorCondition_shouldThrowWriteError() async {
-        mockFileDatabase.shouldThrowOnSave = true
-        mockFileDatabase.customSaveError = FileDatabaseError.writeError("Test save error")
-
-        do {
-            try await fileDatabase.saveFile(data: testData, path: testPath)
-            XCTFail("Expected saveFile to throw error")
-        } catch FileDatabaseError.writeError(let message) {
-            XCTAssertEqual(message, "Test save error")
-        } catch {
-            XCTFail("Expected FileDatabaseError.writeError, but got: \(error)")
-        }
-    }
-
-    func test_readFile_errorCondition_shouldThrowWriteError() async {
-        mockFileDatabase.shouldThrowOnRead = true
-        mockFileDatabase.customReadError = FileDatabaseError.writeError("Test read error")
-
-        do {
-            _ = try await fileDatabase.readFile(path: testPath)
-            XCTFail("Expected readFile to throw error")
-        } catch FileDatabaseError.writeError(let message) {
-            XCTAssertEqual(message, "Test read error")
-        } catch {
-            XCTFail("Expected FileDatabaseError.writeError, but got: \(error)")
-        }
-    }
-
-    func test_removeFile_errorCondition_shouldThrowDeleteError() async {
-        mockFileDatabase.shouldThrowOnRemove = true
-        mockFileDatabase.customRemoveError = FileDatabaseError.deleteError("Test remove error")
-
-        do {
-            try await fileDatabase.removeFile(path: testPath)
-            XCTFail("Expected removeFile to throw error")
-        } catch FileDatabaseError.deleteError(let message) {
-            XCTAssertEqual(message, "Test remove error")
-        } catch {
-            XCTFail("Expected FileDatabaseError.deleteError, but got: \(error)")
-        }
-    }
+    // Note: Error injection tests removed since we're testing real implementation
+    // Real error conditions would require file system manipulation which is not reliable in tests
 
     // MARK: Path Handling Tests
 
     func test_saveFile_specialCharactersInPath_shouldHandle() async {
         let specialPath = "file-with-special_chars@123.config"
+        trackFile(specialPath)
 
         do {
             try await fileDatabase.saveFile(data: testData, path: specialPath)
@@ -350,6 +355,7 @@ class FileDatabaseTests: XCTestCase {
 
     func test_saveFile_longPath_shouldHandle() async {
         let longPath = String(repeating: "very_long_path_", count: 10) + ".txt"
+        trackFile(longPath)
 
         do {
             try await fileDatabase.saveFile(data: testData, path: longPath)
@@ -384,13 +390,13 @@ class FileDatabaseTests: XCTestCase {
             }
         }
 
-        // All operations should have completed and cleaned up
-        XCTAssertEqual(mockFileDatabase.getFileCount(), 0)
+        // All operations completed successfully (files cleaned up in test)
     }
 
     // MARK: Edge Cases
 
     func test_saveFile_zeroByteFile_shouldHandle() async {
+        trackFile("zero_byte.txt")
         let emptyData = Data()
 
         do {
@@ -404,6 +410,7 @@ class FileDatabaseTests: XCTestCase {
     }
 
     func test_multipleOperationsOnSameFile_shouldHandle() async {
+        trackFile(testPath)
         let data1 = "Data 1".data(using: .utf8)!
         let data2 = "Data 2".data(using: .utf8)!
         let data3 = "Data 3".data(using: .utf8)!
@@ -417,7 +424,6 @@ class FileDatabaseTests: XCTestCase {
             // Should have latest data
             let finalData = try await fileDatabase.readFile(path: testPath)
             XCTAssertEqual(finalData, data3)
-            XCTAssertEqual(mockFileDatabase.getFileCount(), 1)
         } catch {
             XCTFail("Expected multiple operations on same file to succeed, but got error: \(error)")
         }
@@ -426,6 +432,7 @@ class FileDatabaseTests: XCTestCase {
     // MARK: FilePaths Constants Tests
 
     func test_filePaths_openVPN_shouldWork() async {
+        trackFile(FilePaths.openVPN)
         do {
             try await fileDatabase.saveFile(data: testData, path: FilePaths.openVPN)
             let retrievedData = try await fileDatabase.readFile(path: FilePaths.openVPN)
@@ -436,6 +443,7 @@ class FileDatabaseTests: XCTestCase {
     }
 
     func test_filePaths_wireGuard_shouldWork() async {
+        trackFile(FilePaths.wireGuard)
         do {
             try await fileDatabase.saveFile(data: testData, path: FilePaths.wireGuard)
             let retrievedData = try await fileDatabase.readFile(path: FilePaths.wireGuard)

@@ -29,6 +29,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     private var killSwitchSelected = DefaultValues.killSwitch
     private var allowLanSelected = DefaultValues.allowLANMode
     private var circumventCensorshipSelected = DefaultValues.circumventCensorship
+    private var serverpedeSelected = DefaultValues.serverpede
 
     private var connectionMode = DefaultValues.connectionMode
     private var connectedDNS = DefaultValues.connectedDNS
@@ -111,6 +112,15 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             }
             .store(in: &cancellables)
 
+        preferences.getServerpedeEnabled()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] enabled in
+                guard let self = self else { return }
+                self.serverpedeSelected = enabled
+                self.reloadItems()
+            }
+            .store(in: &cancellables)
+
         preferences.getConnectionMode()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] mode in
@@ -167,6 +177,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                                          options: connectedDNSOptions))
         }
         let paramOptions = unblockWgParamsRepository.unlockParams.map { MenuOption(title: $0.title, fieldKey: $0.title) }
+
+        let serverpedeOptions = [MenuOption(title: "nope", fieldKey: "nope"),
+                                 MenuOption(title: "yep", fieldKey: "yep")]
         entries.append(contentsOf: [.alwaysOn(isSelected: killSwitchSelected),
                                     .allowLan(isSelected: allowLanSelected),
                                     .circunventCensorship(isSelected: circumventCensorshipSelected
@@ -230,6 +243,16 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             }
             if case .multiple(let currentOption, _) = action {
                 unblockWgParamsRepository.selectParamTitle(with: currentOption)
+            }
+        case .serverpede:
+            if case .toggle(let isSelected, _) = action {
+                preferences.saveServerpedeEnable(status: isSelected)
+            }
+            if case .infoLink = action {
+                openLink(.circumventCensorship)
+            }
+            if case .multiple(let currentOption, _) = action {
+                print("servepede multiple")
             }
         }
     }

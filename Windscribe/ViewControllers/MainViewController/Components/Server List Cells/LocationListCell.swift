@@ -9,7 +9,7 @@
 import SwipeCellKit
 import UIKit
 
-protocol ServerCellModelType {
+protocol LocationCellModelType {
     var name: String { get }
     var iconImage: UIImage? { get }
     var shouldTintIcon: Bool { get }
@@ -20,7 +20,7 @@ protocol ServerCellModelType {
     var actionSize: CGFloat { get }
     var actionRightOffset: CGFloat { get }
     var actionOpacity: Float { get }
-    var serverHealth: CGFloat { get }
+    var serverNetLoad: CGFloat { get }
     var locationLoad: Bool { get }
     var hasProLocked: Bool { get }
     var isDarkMode: Bool { get }
@@ -57,7 +57,7 @@ class HealthCircleView: CompletionCircleView {
     }
 }
 
-class ServerListCell: SwipeTableViewCell {
+class LocationListCell: SwipeTableViewCell {
     var icon = UIImageView()
     var circleView = UIView()
     var actionImage = UIImageView()
@@ -76,7 +76,7 @@ class ServerListCell: SwipeTableViewCell {
         return icon.widthAnchor.constraint(equalToConstant: viewModel?.iconSize ?? 0)
     }()
 
-    var viewModel: ServerCellModelType?
+    var viewModel: LocationCellModelType?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -194,7 +194,7 @@ class ServerListCell: SwipeTableViewCell {
 
         nameLabel.textColor = viewModel.nameColor(for: viewModel.isDarkMode)
 
-        healthCircle.health = viewModel.serverHealth
+        healthCircle.health = viewModel.serverNetLoad
 
         circleView.isHidden = !viewModel.locationLoad
         healthCircle.isHidden = !viewModel.locationLoad

@@ -11,7 +11,6 @@ import Foundation
 @testable import Windscribe
 
 class MockAdvanceRepository: AdvanceRepository {
-
     // MARK: - Mock Properties
     var countryOverrideToReturn = "CountryOverride"
     var forcedNodeToReturn = "ForceNode"
@@ -29,6 +28,10 @@ class MockAdvanceRepository: AdvanceRepository {
 
     func getPingType() -> Int32 {
         return pingTypeToReturn
+    }
+
+    func getForcedServer() -> String? {
+        nil
     }
 
     // MARK: - Test Helpers

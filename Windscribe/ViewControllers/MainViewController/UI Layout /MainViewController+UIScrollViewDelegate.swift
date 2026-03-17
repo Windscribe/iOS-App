@@ -15,14 +15,14 @@ extension MainViewController: UIScrollViewDelegate {
     }
 
     func disableTableViewScrolls() {
-        serverListTableView.isScrollEnabled = false
+        locationsListTableView.isScrollEnabled = false
         favTableView.isScrollEnabled = false
         staticIpTableView.isScrollEnabled = false
         customConfigTableView.isScrollEnabled = false
     }
 
     func enableTableViewScrolls() {
-        serverListTableView.isScrollEnabled = true
+        locationsListTableView.isScrollEnabled = true
         favTableView.isScrollEnabled = true
         staticIpTableView.isScrollEnabled = true
         customConfigTableView.isScrollEnabled = true

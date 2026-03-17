@@ -30,7 +30,7 @@ class IPInfoViewModel: IPInfoViewModelType {
     private let apiManager: APIManager
     private let userSessionRepository: UserSessionRepository
     private let bridgeApiRepository: BridgeApiRepository
-    private let serverRepository: ServerRepository
+    private let locationListRepository: LocationListRepository
     private let hapticFeedbackManager: HapticFeedbackManager
 
     let statusSubject = CurrentValueSubject<ConnectionState?, Never>(nil)
@@ -51,7 +51,7 @@ class IPInfoViewModel: IPInfoViewModelType {
          apiManager: APIManager,
          userSessionRepository: UserSessionRepository,
          bridgeApiRepository: BridgeApiRepository,
-         serverRepository: ServerRepository,
+         locationListRepository: LocationListRepository,
          hapticFeedbackManager: HapticFeedbackManager) {
         self.logger = logger
         self.preferences = preferences
@@ -60,7 +60,7 @@ class IPInfoViewModel: IPInfoViewModelType {
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.bridgeApiRepository = bridgeApiRepository
-        self.serverRepository = serverRepository
+        self.locationListRepository = locationListRepository
         self.hapticFeedbackManager = hapticFeedbackManager
 
         ipRepository.ipState
@@ -76,7 +76,7 @@ class IPInfoViewModel: IPInfoViewModelType {
             }
             .store(in: &cancellables)
 
-        serverRepository.favouriteListSubject.combineLatest(locationManager.selectedLocationUpdated)
+        locationListRepository.favouriteListSubject.combineLatest(locationManager.selectedLocationUpdated)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else { return }
@@ -116,20 +116,19 @@ class IPInfoViewModel: IPInfoViewModelType {
     }
 
     private func isLocationPinned(groupId: String) -> Bool {
-        let favourites = serverRepository.favouriteListSubject.value
+        let favourites = locationListRepository.favouriteListSubject.value
         return favourites.first { $0.id == groupId &&  $0.pinnedIp != nil } != nil
     }
 
-    private func getNodeIp(groupId: String) -> GroupModel? {
-        guard let groupId = Int(groupId) else { return nil }
-        let allGroups = serverRepository.currentGroupModels
-        return allGroups.first { $0.id == groupId }
+    private func getServerIp(datacenterIp: Int) -> DatacenterModel? {
+        locationListRepository.currentDatacenterModels
+            .first { $0.id == datacenterIp }
     }
 
     private func performPinIp() async {
         let groupId = locationManager.getLastSelectedLocation()
         if isLocationPinned(groupId: groupId) {
-            serverRepository.removeFavorite(with: groupId)
+            locationListRepository.removeFavorite(with: groupId)
             return
         } else {
             guard let pinnedIp = ipAddressSubject.value else { return }
@@ -137,7 +136,7 @@ class IPInfoViewModel: IPInfoViewModelType {
                 _ = try await apiManager.pinIp(ip: pinnedIp)
                 logger.logI("IPInfoViewModel", "Pin IP request successful")
                 let nodeIp = preferences.getLastNodeIP()
-                serverRepository.saveFavorite(for: FavouriteModel(id: groupId,
+                locationListRepository.saveFavorite(for: FavouriteModel(id: groupId,
                                                                   pinnedIp: pinnedIp, pinnedNodeIp: nodeIp))
             } catch {
                 logger.logE("IPInfoViewModel", "Pin IP request failed: \(error)")

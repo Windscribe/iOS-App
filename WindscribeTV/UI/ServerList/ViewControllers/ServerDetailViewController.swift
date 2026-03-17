@@ -23,10 +23,10 @@ class ServerDetailViewController: UIViewController {
     var gradient,
         backgroundGradient,
         flagBottomGradient: CAGradientLayer!
-    var server: ServerModel?
+    var location: LocationModel?
     var viewModel: MainViewModel?, serverListViewModel: ServerListViewModelType?, logger: FileLogger!
-    weak var delegate: ServerListTableViewDelegate?
-    var favList: [GroupModel]?
+    weak var delegate: LocationsListTableViewDelegate?
+    var favList: [DatacenterModel]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,10 +61,10 @@ class ServerDetailViewController: UIViewController {
         flagBackgroundView.layer.mask = backgroundGradient
         view.addSubview(flagBackgroundView)
         flagBackgroundView.sendToBack()
-        if let server = server {
-            flagView.image = UIImage(named: "\(server.countryCode.lowercased())-l")
-            serverTitle.text = server.name
-            countLabel.text = String(describing: server.groups.count)
+        if let location = location {
+            flagView.image = UIImage(named: "\(location.countryCode.lowercased())-l")
+            serverTitle.text = location.name
+            countLabel.text = String(describing: location.datacenters.count)
         }
         tableView.contentInset = UIEdgeInsets.zero
         tableView.register(UINib(nibName: "ServerDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "ServerDetailTableViewCell")
@@ -73,7 +73,7 @@ class ServerDetailViewController: UIViewController {
     func bindData() {
         viewModel?.favouriteList
             .sink { favList in
-                self.favList = favList?.compactMap { $0.groupModel }
+                self.favList = favList?.compactMap { $0.datacenterModel }
             }
             .store(in: &cancellables)
     }
@@ -81,15 +81,15 @@ class ServerDetailViewController: UIViewController {
 
 extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return server?.groups.count ?? 0
+        return location?.datacenters.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as? ServerDetailTableViewCell else { return ServerDetailTableViewCell() }
-        if let group = server?.groups[indexPath.row] {
-            cell.bindData(group: group)
-            cell.displayingGroup = group
-            cell.displayingNodeServer = server
+        if let datacenter = location?.datacenters[indexPath.row] {
+            cell.bindData(datacenter: datacenter)
+            cell.displayingDatacenter = datacenter
+            cell.displayingNodeServer = location
         }
         cell.delegate = self
         cell.focusStyle = UITableViewCell.FocusStyle.custom
@@ -101,10 +101,10 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
     }
 }
 
-extension ServerDetailViewController: ServerListTableViewDelegate {
-    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
+extension ServerDetailViewController: LocationsListTableViewDelegate {
+    func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel) {
         navigationController?.popToRootViewController(animated: true)
-        delegate?.setSelectedServerAndGroup(server: server, group: group)
+        delegate?.setSelectedLocationAndDatacenter(location: location, datacenter: datacenter)
     }
 
     func showUpgradeView() {

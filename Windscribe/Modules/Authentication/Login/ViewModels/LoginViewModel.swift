@@ -190,25 +190,19 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     /// Common logic that runs after a successful login, shared between normal login and captcha login flows.
-    private func handleSuccessfulLogin(session: Session) {
+    private func handleSuccessfulLogin(session: SessionModel) {
         // Save login time to preferences
         preferences.saveLoginDate(date: Date())
 
         // Cache current Wi-Fi state to use for reconnect logic
         wifiManager.saveCurrentWifiNetworks()
 
-        // Convert Realm object to thread-safe model BEFORE Task to avoid threading violation
-        let sessionModel = session.getModel()
-
         Task {
-            // Create unmanaged Session from model (safe to use on any thread)
-            let sessionForStorage = Session(sessionModel: sessionModel)
-
             // Store authenticated session
-            await sessionManager.updateFrom(session: sessionForStorage)
+            await sessionManager.updateFrom(session: session)
 
             // Log the success with the username
-            logger.logI("LoginViewModel", "Login successful, preparing user data for \(sessionModel.username)")
+            logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
 
             // Continue with user-specific data preparation and transition to main app screen
             prepareUserData()
@@ -369,11 +363,6 @@ class LoginViewModelImpl: LoginViewModel {
                     }
                 }
             }.sink { _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    Task {
-                        try? await self.latencyRepository.loadLatency()
-                    }
-                }
                 self.showLoadingView = false
                 self.routeToMainView.send(true)
             } receiveValue: { _ in }.store(in: &cancellables)

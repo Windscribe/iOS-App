@@ -103,8 +103,8 @@ extension VPNManagerImpl {
     ///   - port: The port number for the protocol.
     /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
     private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
-        // Clear failed nodes if user changed location, keep them if same location for retry filtering
-        configManager.clearFailedNodesIfLocationChanged(currentLocationId: id)
+        // Clear failed servers if user changed location, keep them if same location for retry filtering
+        configManager.clearFailedServersIfLocationChanged(currentLocationId: id)
         return configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings(): self.makeUserSettings(), connectionType: connectionType)
             .catch { error in
                 self.logger.logE("VPNConfiguration", "Fail to connect with error: \(error).")
@@ -137,7 +137,7 @@ extension VPNManagerImpl {
                             self.logger.logI("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
                             return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
                         }
-                    case .noValidNodeFound:
+                    case .noValidServerFound:
                         self.logger.logI("VPNManager", "noValidNodeFound - should trigger protocol failover")
                     default: ()
                     }
@@ -167,7 +167,6 @@ extension VPNManagerImpl {
                     try await self.sessionManager.updateSession()
                     try await self.credentialsRepository.getUpdatedOpenVPNCrendentials()
                     try await self.credentialsRepository.getUpdatedIKEv2Crendentials()
-                    try await self.serverRepository.updatedServers()
                     do {
                         if let updatedLocation = try await self.configManager.validateLocation(lastLocation: locationID) {
                             promise(.success(updatedLocation))

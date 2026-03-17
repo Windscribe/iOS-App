@@ -71,12 +71,11 @@ class ControlPlane {
             defer { self.runningHealthCheck = false }
 
             do {
-                let session = try await getSession()
-                let sessionModel = session.getModel()
-                consoleLogger.debug("User session update successful. Status: \(session.status, privacy: .public)")
+                let sessionModel = try await getSession()
+                consoleLogger.debug("User session update successful. Status: \(sessionModel.status, privacy: .public)")
 
-                if session.status != 1 {
-                    consoleLogger.debug("Session status is \(session.status, privacy: .public) (not active), stopping tunnel.")
+                if sessionModel.status != 1 {
+                    consoleLogger.debug("Session status is \(sessionModel.status, privacy: .public) (not active), stopping tunnel.")
                     await stopTunnel(reason: .accountStatusChanged)
                     return
                 }
@@ -122,13 +121,13 @@ class ControlPlane {
         await onTunnelShouldStop(reason, error)
     }
 
-    func getSession() async throws -> Session {
+    func getSession() async throws -> SessionModel {
         guard let sessionAuth = preferences.userSessionAuth() else {
             throw Errors.validationFailure
         }
-
-        return try await apiUtil.makeApiCall(modalType: Session.self) { completion in
-            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", callback: completion)
+        let revision = preferences.getServerRevision()
+        return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
+            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", invRev: revision, backup: false, callback: completion)
         }
     }
 }

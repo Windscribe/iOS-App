@@ -58,7 +58,7 @@ protocol ConnectionViewModelType {
     func getSelectedCountryInfo() -> LocationUIInfo
     func isBestLocationSelected() -> Bool
     func isCustomConfigSelected() -> Bool
-    func getBestLocationId() -> String
+    func getBestLocationId() -> Int
     func getBestLocation() -> BestLocationModel?
     func getLocationType() -> LocationType?
     func isNetworkCellularWhileConnecting(for network: WifiNetworkModel?) -> Bool
@@ -105,6 +105,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let customSoundPlaybackManager: CustomSoundPlaybackManaging
     let privacyStateManager: PrivacyStateManaging
     let userSessionRepository: UserSessionRepository
+    let locationListRepository: LocationListRepository
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -128,7 +129,8 @@ class ConnectionViewModel: ConnectionViewModelType {
          ipRepository: IPRepository,
          customSoundPlaybackManager: CustomSoundPlaybackManaging,
          privacyStateManager: PrivacyStateManaging,
-         userSessionRepository: UserSessionRepository) {
+         userSessionRepository: UserSessionRepository,
+         locationListRepository: LocationListRepository) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -144,6 +146,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.customSoundPlaybackManager = customSoundPlaybackManager
         self.privacyStateManager = privacyStateManager
         self.userSessionRepository = userSessionRepository
+        self.locationListRepository = locationListRepository
 
         appReviewManager = AppReviewManager(preferences: preferences, logger: logger)
 
@@ -228,6 +231,14 @@ class ConnectionViewModel: ConnectionViewModelType {
                 self?.reviewRequestTrigger.send(())
             }
             .store(in: &cancellables)
+
+        locationListRepository.datacenterListSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.checkForForceDisconnect()
+            }
+            .store(in: &cancellables)
+
     }
 }
 
@@ -291,7 +302,7 @@ extension ConnectionViewModel {
     }
 
     func isBestLocationSelected() -> Bool {
-        return locationsManager.getBestLocation() == locationsManager.getLastSelectedLocation()
+        return String(locationsManager.getBestLocation()) == locationsManager.getLastSelectedLocation()
     }
 
     func saveLastSelectedLocation(with locationID: String) {
@@ -302,7 +313,7 @@ extension ConnectionViewModel {
         locationsManager.selectBestLocation(with: locationID)
     }
 
-    func getBestLocationId() -> String {
+    func getBestLocationId() -> Int {
         return locationsManager.getBestLocation()
     }
 
@@ -567,7 +578,7 @@ extension ConnectionViewModel {
         case .credentialsNotFound,
                 .invalidLocationType,
                 .customConfigSupportNotAvailable,
-                .noValidNodeFound,
+                .noValidServerFound,
                 .invalidServerConfig,
                 .configNotFound,
                 .incorrectVPNManager,
@@ -578,7 +589,7 @@ extension ConnectionViewModel {
         case .accountBanned:
             return true
         case .locationNotFound(let id):
-            reloadLocationsTrigger.send(id)
+            reloadLocationsTrigger.send(String(id))
         case .networkIsOffline:
             showNoConnectionAlertTrigger.send(())
         case .upgradeRequired:
@@ -612,9 +623,9 @@ extension ConnectionViewModel {
         }
 
         connectedState.send(ConnectionStateInfo(state: state,
-                                                  isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
-                                                  internetConnectionAvailable: false,
-                                                  connectedWifi: nil))
+                                                isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
+                                                internetConnectionAvailable: false,
+                                                connectedWifi: nil))
 
     }
 

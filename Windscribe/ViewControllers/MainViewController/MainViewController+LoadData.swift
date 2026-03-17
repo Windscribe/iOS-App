@@ -21,7 +21,7 @@ extension MainViewController {
                 // Now we're working with plain strings - no Realm threading issues
                 let portMapProvidedProtocols = (headings ?? []).sorted()
                 if appProtocols != portMapProvidedProtocols {
-                    self.viewModel.loadServerList()
+                    self.viewModel.loadLocationList()
                     self.viewModel.loadPortMap()
                 }
             }
@@ -34,11 +34,11 @@ extension MainViewController {
             .sink { [weak self] favList in
                 guard let self = self else { return }
                 if favList?.count == 0 {
-                    favNodesListTableViewDataSource.updateFavoriteList(with: [])
+                    favoriteListTableViewDataSource.updateFavoriteList(with: [])
                 }
                 if let favList = favList {
                     let orderedFavList = viewModel.sortFavouriteNodesUsingUserPreferences(favList: favList)
-                    favNodesListTableViewDataSource.updateFavoriteList(with: orderedFavList)
+                    favoriteListTableViewDataSource.updateFavoriteList(with: orderedFavList)
                 }
 
             }

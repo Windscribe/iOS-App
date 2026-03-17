@@ -13,9 +13,9 @@ import UIKit
 class ServerListRouter: RootRouter {
     func routeTo(to: RouteID, from: UIViewController) {
         switch to {
-        case let RouteID.serverListDetail(server, delegate):
+        case let RouteID.locationListDetail(location, delegate):
             let vc = Assembler.resolve(ServerDetailViewController.self)
-            vc.server = server
+            vc.location = location
             vc.delegate = delegate
             from.navigationController?.pushViewController(vc, animated: true)
 

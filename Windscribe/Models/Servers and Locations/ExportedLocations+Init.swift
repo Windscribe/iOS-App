@@ -7,17 +7,17 @@
 //
 
 extension ExportedRegion {
-    init(model: ServerModel) {
+    init(model: LocationModel) {
         id = model.id
         country = model.name
-        cities = model.groups.map {
+        cities = model.datacenters.map {
             ExportedCity(model: $0)
         }
     }
 }
 
 extension ExportedCity {
-    init(model: GroupModel) {
+    init(model: DatacenterModel) {
         id = model.id
         name = model.city
         nickname =  model.nick

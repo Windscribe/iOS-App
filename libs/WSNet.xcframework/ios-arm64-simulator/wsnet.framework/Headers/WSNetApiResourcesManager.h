@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)authTokenLogin:(NSString*)username useAsciiCaptcha:(BOOL)useAsciiCaptcha;
 -(void)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY;
 -(void)logout;
+-(void)authTokenSignup:(NSString*)username useAsciiCaptcha:(BOOL)useAsciiCaptcha;
+-(void)signup:(NSString*)username password:(NSString*)password referringUsername:(NSString*)referringUsername email:(NSString*)email voucherCode:(NSString*)voucherCode secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY;
 -(void)fetchSession;
 -(void)fetchServerCredentials;
 -(NSString*)authHash;
@@ -33,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)serverConfigs;
 -(NSString*)notifications;
 -(NSString*)checkUpdate;
--(NSString*)authTokenLoginResult;
+-(NSString*)authTokenResult;
 -(NSString*)amneziawgUnblockParams;
 -(void)setUpdateIntervals:(int)sessionInDisconnectedStateMs sessionInConnectedStateMs:(int)sessionInConnectedStateMs locationsMs:(int)locationsMs staticIpsMs:(int)staticIpsMs serverConfigsAndCredentialsMs:(int)serverConfigsAndCredentialsMs portMapMs:(int)portMapMs notificationsMs:(int)notificationsMs checkUpdateMs:(int)checkUpdateMs amneziawgUnblockParamsMs:(int)amneziawgUnblockParamsMs;
 

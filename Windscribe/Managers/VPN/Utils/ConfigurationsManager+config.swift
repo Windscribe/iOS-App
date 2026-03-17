@@ -14,12 +14,12 @@ import WireGuardKit
 extension ConfigurationsManager {
     /// Builds the appropriate VPN configuration based on location, location type, protocol, and port.
     func buildConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> VPNConfiguration {
-        // Detect protocol change and clear failed nodes to give new protocol a fresh start
-        // This allows protocol failover to try the same nodes that failed with previous protocols
+        // Detect protocol change and clear failed servers to give new protocol a fresh start
+        // This allows protocol failover to try the same servers that failed with previous protocols
         if currentConnectionProtocol != proto {
-            if !currentConnectionProtocol.isEmpty && !failedNodeHostnames.isEmpty {
-                logger.logI("ConfigurationsManager", "Protocol changed from \(currentConnectionProtocol) to \(proto) - clearing \(failedNodeHostnames.count) failed nodes for fresh start")
-                clearFailedNodes()
+            if !currentConnectionProtocol.isEmpty && !failedServerHostnames.isEmpty {
+                logger.logI("ConfigurationsManager", "Protocol changed from \(currentConnectionProtocol) to \(proto) - clearing \(failedServerHostnames.count) failed servers for fresh start")
+                clearFailedServers()
             }
             currentConnectionProtocol = proto
         }
@@ -29,9 +29,9 @@ extension ConfigurationsManager {
         }
         // If location type is custom config, proto/port does not matter just use whats in the profile.
         if locationType == .custom {
-            let locationId = locationsManager.getId(location: location)
+            let locationId = String(locationsManager.getCustomId(location: location))
             do {
-                return try await wgConfigFromCustomConfig(locationID: locationId)
+                return try await wgConfigFromCustomConfig(locationId: locationId)
             } catch {
                 return try await openConfigFromCustomConfig(locationID: locationId)
             }
@@ -46,15 +46,15 @@ extension ConfigurationsManager {
     }
 
     /// Builds WireGuard configuration from a custom  config's location id..
-    private func wgConfigFromCustomConfig(locationID: String) async throws -> WireguardVPNConfiguration {
-        let configFilePath = "\(locationID).conf"
+    private func wgConfigFromCustomConfig(locationId: String) async throws -> WireguardVPNConfiguration {
+        let configFilePath = "\(locationId).conf"
         return try await wgConfigurationFromPath(path: configFilePath)
     }
 
     /// Gets the protocol type from the stored configuration based on location ID.
     func getProtoFromConfig(locationId: String) async -> String? {
         do {
-            _ = try await wgConfigFromCustomConfig(locationID: locationId)
+            _ = try await wgConfigFromCustomConfig(locationId: locationId)
             return TextsAsset.wireGuard
         } catch {
             do {
@@ -78,8 +78,6 @@ extension ConfigurationsManager {
             logger.logE("ConfigurationsManager", "Error reading custom config \(configFilePath): \(error.localizedDescription)")
             throw VPNConfigurationErrors.configNotFound
         }
-
-
 
         guard let config = customConfigRepository.getCustomConfig(fileId: locationID) else {
             throw VPNConfigurationErrors.configNotFound
@@ -124,26 +122,25 @@ extension ConfigurationsManager {
         }
         switch locationType {
         case .server:
-            let serverGroup = try locationsManager.getLocation(from: location)
-            let node = try getNodeFrom(group: serverGroup.1)
-            let ip = node.ip3
-            let hostname = node.hostname
-            let publickey = serverGroup.1.wgPublicKey
-            serverRepository.saveLastConnectedHost(for: hostname, with: location)
+            let locationDatacenter = try locationsManager.getLocation(from: location)
+            let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
+            let ip = server.ip3
+            let hostname = server.hostname
+            let publickey = locationDatacenter.1.wgPubkey
+            locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         case .staticIP:
-            let locationID = locationsManager.getId(location: location)
-            let staticLocation = try getStaticIPLocation(id: locationID)
+            let locationId = locationsManager.getId(location: location)
+            let staticLocation = try getStaticIPLocation(id: locationId)
             guard let node = Array(staticLocation.nodes).randomElement() else {
-                throw VPNConfigurationErrors.noValidNodeFound
+                throw VPNConfigurationErrors.noValidServerFound
             }
             let ip = staticLocation.wgIp
             let hostname = node.hostname
             let publickey = staticLocation.wgPublicKey
-            serverRepository.saveLastConnectedHost(for: hostname, with: location)
-
+            locationListRepository.saveLastConnectedHost(for: hostname, with: locationId)
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
@@ -172,11 +169,12 @@ extension ConfigurationsManager {
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
-            let serverGroup = try locationsManager.getLocation(from: location)
-            let node = try getNodeFrom(group: serverGroup.1)
-            let ip = node.ip1
-            let hostname = node.hostname
-            serverRepository.saveLastConnectedHost(for: hostname, with: location)
+            let locationId = locationsManager.getId(location: location)
+            let locationDatacenter = try locationsManager.getLocation(from: locationId)
+            let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
+            let ip = server.ip
+            let hostname = server.hostname
+            locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
             guard let auth = keychainDb.retrieve(username: username) else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
@@ -184,10 +182,12 @@ extension ConfigurationsManager {
         case .staticIP:
             let locationID = locationsManager.getId(location: location)
             let staticLocation = try getStaticIPLocation(id: locationID)
-            let node = try getRandomNode(nodes: staticLocation.nodes)
+            guard let node = Array(staticLocation.nodes).randomElement() else {
+                throw VPNConfigurationErrors.noValidServerFound
+            }
             let ip = node.ip1
             let hostname = node.hostname
-            serverRepository.saveLastConnectedHost(for: hostname, with: location)
+            locationListRepository.saveLastConnectedHost(for: hostname, with: locationID)
             guard let credentials = staticLocation.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
@@ -205,7 +205,7 @@ extension ConfigurationsManager {
 
     /// Constructs an OpenVPN configuration using location, protocol, port, and user preferences.
     private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> OpenVPNConfiguration {
-        let locationID = locationsManager.getId(location: location)
+        let locationId = locationsManager.getId(location: location)
         guard let locationType = locationsManager.getLocationType(id: location) else {
             throw VPNConfigurationErrors.invalidLocationType
         }
@@ -215,16 +215,18 @@ extension ConfigurationsManager {
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
-            let serverGroup = try locationsManager.getLocation(from: location)
-            let node = try getNodeFrom(group: serverGroup.1)
-            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
-            let hostname = node.ip2
-            serverRepository.saveLastConnectedHost(for: node.hostname, with: location)
-            let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: serverGroup.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
+            let locationDatacenter = try locationsManager.getLocation(from: location)
+            let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
+            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: server.ip, ip3: server.ip3)
+            let hostname = server.ip2
+            locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
+            let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: locationDatacenter.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
         case .staticIP:
-            let staticLocation = try getStaticIPLocation(id: locationID)
-            let node = try getRandomNode(nodes: staticLocation.nodes)
+            let staticLocation = try getStaticIPLocation(id: locationId)
+            guard let node = Array(staticLocation.nodes).randomElement() else {
+                throw VPNConfigurationErrors.noValidServerFound
+            }
             guard let credentials = staticLocation.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN)
             }
@@ -233,7 +235,7 @@ extension ConfigurationsManager {
             keychainDb.save(username: username, password: password)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
-            serverRepository.saveLastConnectedHost(for: node.hostname, with: location)
+            locationListRepository.saveLastConnectedHost(for: hostname, with: locationId)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: staticLocation.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1)
         default:
@@ -345,38 +347,38 @@ extension ConfigurationsManager {
     }
 
     /// Gets static ip location from database.
-    private func getStaticIPLocation(id: String) throws -> StaticIPModel {
+    private func getStaticIPLocation(id: Int) throws -> StaticIPModel {
         guard let staticIP = staticIpRepository.getStaticIp(id: id) else {
-            throw VPNConfigurationErrors.locationNotFound(id)
+            throw VPNConfigurationErrors.locationNotFound(String(id))
         }
         return staticIP
     }
 
-    /// Selects a node from the group, checks is there is a pinned iP or a forced node, if not then
-    /// gets a random node from the groups nodes
+    /// Selects a node from the group, checks is there is a pinned iP or a forced server, if not then
+    /// gets a random server from the Datacenter Servers
     ///
     /// - Parameters:
-    ///   - group: A `GroupModel` representeing the location the user is connecting to.
+    ///   - group: A `DatacenterModel` representeing the location the user is connecting to.
     ///
     /// - Throws:
-    ///   - `VPNConfigurationErrors.noValidNodeFound` if there are no nodes available to select from.
+    ///   - `VPNConfigurationErrors.noValidServerFound` if there are no servers available to select from.
     ///
-    private func getNodeFrom(group: GroupModel) throws -> NodeModel {
-        let nodes = group.nodes
-        if nodes.isEmpty {
-            throw VPNConfigurationErrors.noValidNodeFound
+    private func geServerFrom(datacenterId: Int) throws -> ServerMachineModel {
+        let servers = locationListRepository.getServers(for: datacenterId)
+        if servers.isEmpty {
+            throw VPNConfigurationErrors.noValidServerFound
         } else {
             // Check if we have a forced node
-            let forceNode = advanceRepository.getForcedNode()
-            if let forceNode = forceNode, let node = nodes.first(where: { $0.hostname == forceNode }) {
-                logger.logI("ConfigurationsManager", "getNodeFrom returns node: \(node)")
-                return node
+            let forceHostname = advanceRepository.getForcedServer()
+            if let forceHostname = forceHostname, let server = servers.first(where: { $0.hostname == forceHostname }) {
+                logger.logI("ConfigurationsManager", "getNodeFrom returns node: \(server)")
+                return server
             }
 
             // Check if we have a pinned ip for this location
-            let pinnedNodeIp = serverRepository.getLocationPinned(for: group.id)
+            let pinnedNodeIp = locationListRepository.getDatacenterPinnedIp(for: datacenterId)
             if let pinnedNodeIp = pinnedNodeIp,
-               let pinnedNode = nodes.first(where: { $0.hostname == pinnedNodeIp }) {
+               let pinnedNode = servers.first(where: { $0.hostname == pinnedNodeIp }) {
                 if !preferences.getIgnorePinIP() {
                     logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedNode)")
                     return pinnedNode
@@ -386,92 +388,92 @@ extension ConfigurationsManager {
             }
 
              logger.logI("ConfigurationsManager", "getNodeFrom found no pinned or forced node so trying random")
-            return try getRandomNode(nodes: nodes)
+            return try getRandomServer(servers: servers)
         }
     }
 
-    /// Selects a random node from the provided list of nodes, considering specific constraints and preferences.
+    /// Selects a random node from the provided list of servers, considering specific constraints and preferences.
     ///
     /// - Parameters:
-    ///   - nodes: An array of `Node` objects representing server or static ip location.
+    ///   - servers: An array of `ServerMachineModel` objects representing server or static ip location.
     ///
     /// - Throws:
-    ///   - `VPNConfigurationErrors.noValidNodeFound` if there are no nodes available to select from.
+    ///   - `VPNConfigurationErrors.noValidServerFound` if there are no servers  available to select from.
     /// - Discussion:
-    ///   The selection filters nodes under maintenance, excludes previously failed nodes, and then uses weighted random selection.
-    ///   This ensures that nodes with fewer connections or lowers weight are
-    ///   chosen more frequently, balancing load across nodes. If no weighted selection is possible, it falls back
-    ///   to a purely random selection. This function guarantees that a valid node is selected, if available.
-    private func getRandomNode(nodes: [NodeModel]) throws -> NodeModel {
-        if nodes.isEmpty {
-            throw VPNConfigurationErrors.noValidNodeFound
+    ///   The selection filters servers  under maintenance, excludes previously failed servers, and then uses weighted random selection.
+    ///   This ensures that servers with fewer connections or lowers weight are
+    ///   chosen more frequently, balancing load across servers. If no weighted selection is possible, it falls back
+    ///   to a purely random selection. This function guarantees that a valid server is selected, if available.
+    private func getRandomServer(servers: [ServerMachineModel]) throws -> ServerMachineModel {
+        if servers.isEmpty {
+            throw VPNConfigurationErrors.noValidServerFound
         } else {
-            // Filter out nodes under maintenance
-            var validNodes = nodes.filter { $0.forceDisconnect == false }
-
-            // Filter out all previously failed nodes to avoid retry
-            if !failedNodeHostnames.isEmpty {
-                let beforeCount = validNodes.count
-                validNodes = validNodes.filter { !failedNodeHostnames.contains($0.hostname) }
-                let excludedCount = beforeCount - validNodes.count
+            var copyServers = servers
+            // Filter out all previously failed servers to avoid retry
+            if !failedServerHostnames.isEmpty {
+                let beforeCount = copyServers.count
+                copyServers = copyServers.filter { !failedServerHostnames.contains($0.hostname) }
+                let excludedCount = beforeCount - copyServers.count
                 if excludedCount > 0 {
-                    logger.logI("ConfigurationsManager", "Excluded \(excludedCount) failed nodes from selection, \(validNodes.count) nodes remaining")
+                    logger.logI("ConfigurationsManager", "Excluded \(excludedCount) failed servers from selection, \(copyServers.count) servers remaining")
                 }
             }
 
-            // If all nodes exhausted after filtering, throw error to trigger protocol failover
+            // If all servers exhausted after filtering, throw error to trigger protocol failover
             // This ensures the connection fails properly and allows ProtocolManager to try the next protocol
-            guard !validNodes.isEmpty else {
-                logger.logE("ConfigurationsManager", "No valid nodes available in location")
-                throw VPNConfigurationErrors.noValidNodeFound
+            guard !copyServers.isEmpty else {
+                logger.logE("ConfigurationsManager", "No valid servers available in location")
+                throw VPNConfigurationErrors.noValidServerFound
             }
 
-            var weightCounter = validNodes.reduce(0) { $0 + $1.weight }
+            var weightCounter = copyServers.reduce(0) { $0 + $1.weight }
             if weightCounter >= 1 {
                 let randomNumber = Int.random(in: 0 ..< Int(weightCounter))
                 weightCounter = 0
-                for node in validNodes {
-                    weightCounter += node.weight
+                for server in copyServers {
+                    weightCounter += server.weight
                     if randomNumber < weightCounter {
-                        logger.logI("ConfigurationsManager", "getRandomNode returns calculated node: \(node)")
-                        return node
+                        logger.logI("ConfigurationsManager", "getRandomNode returns calculated node: \(server)")
+                        return server
                     }
                 }
             }
-            guard let randomNode = validNodes.randomElement() else {
-                throw VPNConfigurationErrors.noValidNodeFound
+            guard let randomServer = copyServers.randomElement() else {
+                throw VPNConfigurationErrors.noValidServerFound
             }
-            logger.logI("ConfigurationsManager", "getRandomNode returns random node: \(randomNode)")
-            return randomNode
+            logger.logI("ConfigurationsManager", "getRandomNode returns random node: \(randomServer)")
+            return randomServer
         }
     }
 
     @MainActor
     func validateLocation(lastLocation: String) async throws -> String? {
         do {
-            let locationID = locationsManager.getId(location: lastLocation)
-            guard let locationType = locationsManager.getLocationType(id: locationID) else {
+            let locationId = locationsManager.getId(location: lastLocation)
+            guard let locationType = locationsManager.getLocationType(id: lastLocation) else {
                 throw VPNConfigurationErrors.invalidLocationType
             }
 
             switch locationType {
             case .server:
-                let location = try locationsManager.getLocation(from: locationID)
+                let locationDatacenter = try locationsManager.getLocation(from: locationId)
                 let isFreeUser = userSessionRepository.sessionModel?.isPremium == false
-                if isFreeUser, location.1.premiumOnly {
+                if isFreeUser, locationDatacenter.1.isPremiumOnly {
                     throw VPNConfigurationErrors.invalidLocationType
                 }
-                _ = try getNodeFrom(group: location.1)
+                _ = try geServerFrom(datacenterId: locationDatacenter.1.id)
                 return lastLocation
             case .staticIP:
-                let location = try getStaticIPLocation(id: locationID)
-                _ = try getRandomNode(nodes: location.nodes)
+                let staticLocation = try getStaticIPLocation(id: locationId)
+                guard let _ = Array(staticLocation.nodes).randomElement() else {
+                    throw VPNConfigurationErrors.noValidServerFound
+                }
                 return lastLocation
             case .custom:
                 do {
-                    _ = try await wgConfigFromCustomConfig(locationID: locationID)
+                    _ = try await wgConfigFromCustomConfig(locationId: lastLocation)
                 } catch {
-                    _ = try await openConfigFromCustomConfig(locationID: locationID)
+                    _ = try await openConfigFromCustomConfig(locationID: lastLocation)
                 }
                 return lastLocation
             }
@@ -483,25 +485,19 @@ extension ConfigurationsManager {
     }
 
     private func handleLocationFallback(for location: String) -> String? {
-        let locationID = locationsManager.getId(location: location)
+        let locationId = locationsManager.getId(location: location)
         logger.logI("VPNConfiguration", "Looking for fallback location for \(location)")
-        let servers = serverRepository.currentServerModels
-        var groupResult: GroupModel?
-        for server in servers {
-            for group in server.groups where locationID == "\(group.id)" {
-                groupResult = server.groups.filter { $0.isNodesAvailable() }.randomElement()
-            }
-        }
-        if let city = groupResult {
-            return "\(city.id)"
+        let locations = locationListRepository.currentLocationModels
+        guard !locations.isEmpty else { return nil }
+        let location = locations.first { $0.datacenters.first { locationId == $0.id } != nil }
+        guard let safeLocation = location else { return nil }
+        let datacenter = safeLocation.datacenters.filter { locationId != $0.id && !locationListRepository.getServers(for: locationId).isEmpty }
+            .randomElement()
+        if let safeDatacenter = datacenter {
+            return String(safeDatacenter.id)
         } else {
-            let bestLocation = locationsManager.getBestLocation()
-            if !bestLocation.isEmpty {
-                return bestLocation
-            }
+            return String(locationsManager.getBestLocation())
         }
-
-        return nil
     }
 
     func validateAccessToLocation(locationID: String, connectionType: ConnectionType = .user) -> Future<Void, Error> {
@@ -528,14 +524,14 @@ extension ConfigurationsManager {
                         promise(.failure(VPNConfigurationErrors.accountExpired))
                     } else if session?.status == 3 {
                         promise(.failure(VPNConfigurationErrors.accountBanned))
-                    } else if isFreeUser, location.1.premiumOnly {
+                    } else if isFreeUser, location.1.isPremiumOnly {
                         promise(.failure(VPNConfigurationErrors.upgradeRequired))
                     } else {
                         promise(.success(()))
                     }
                 case .custom:
-                    let customID = self.locationsManager.getId(location: locationID)
-                    guard let customConfig = self.customConfigRepository.getCustomConfig(fileId: customID) else {
+                    let customId = self.locationsManager.getCustomId(location: locationID)
+                    guard let customConfig = self.customConfigRepository.getCustomConfig(fileId: customId) else {
                         promise(.failure(VPNConfigurationErrors.customConfigSupportNotAvailable))
                         return
                     }

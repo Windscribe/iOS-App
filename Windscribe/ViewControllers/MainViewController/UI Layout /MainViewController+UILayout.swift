@@ -13,7 +13,7 @@ extension MainViewController {
     func addAutoLayoutConstraints() {
         flagBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        serverListTableView.translatesAutoresizingMaskIntoConstraints = false
+        locationsListTableView.translatesAutoresizingMaskIntoConstraints = false
         favTableView.translatesAutoresizingMaskIntoConstraints = false
         staticIpTableView.translatesAutoresizingMaskIntoConstraints = false
         staticIPTableViewFooterView.translatesAutoresizingMaskIntoConstraints = false
@@ -109,10 +109,10 @@ extension MainViewController {
             scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
             scrollView.rightAnchor.constraint(equalTo: view.rightAnchor),
 
-            // serverListTableViews
-            serverListTableView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            serverListTableView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            serverListTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            // locationsListTableViews
+            locationsListTableView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            locationsListTableView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            locationsListTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
             // freeAccountViewFooterView
             freeAccountViewFooterView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -122,7 +122,7 @@ extension MainViewController {
             favTableView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             favTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             favTableView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            favTableView.leftAnchor.constraint(equalTo: serverListTableView.rightAnchor),
+            favTableView.leftAnchor.constraint(equalTo: locationsListTableView.rightAnchor),
 
             // favTableView
             staticIpTableView.topAnchor.constraint(equalTo: scrollView.topAnchor),

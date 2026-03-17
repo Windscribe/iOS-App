@@ -10,8 +10,8 @@ import Combine
 import Swinject
 import UIKit
 
-protocol ServerListTableViewDelegate: AnyObject {
-    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel)
+protocol LocationsListTableViewDelegate: AnyObject {
+    func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel)
     func showUpgradeView()
     func showExpiredAccountView()
     func showOutOfDataPopUp()
@@ -19,7 +19,7 @@ protocol ServerListTableViewDelegate: AnyObject {
 }
 
 protocol FavouriteListTableViewDelegate: AnyObject {
-    func setSelectedFavourite(favourite: GroupModel)
+    func setSelectedFavourite(favourite: DatacenterModel)
     func showUpgradeView()
     func showExpiredAccountView()
     func showOutOfDataPopUp()
@@ -34,7 +34,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet var cityLabel: UILabel!
     @IBOutlet var connectButton: UIButton!
     @IBOutlet var proIcon: UIImageView!
-    weak var delegate: ServerListTableViewDelegate?
+    weak var delegate: LocationsListTableViewDelegate?
     weak var favDelegate: FavouriteListTableViewDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
@@ -44,13 +44,13 @@ class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet var connectButtonTrailing: NSLayoutConstraint!
     let latencyRepository = Assembler.resolve(LatencyRepository.self)
     lazy var preferences = Assembler.resolve(Preferences.self)
-    lazy var serverRepository = Assembler.resolve(ServerRepository.self)
+    lazy var locationListRepository = Assembler.resolve(LocationListRepository.self)
     lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)
     lazy var staticIpRepository = Assembler.resolve(StaticIpRepository.self)
     lazy var alertManager = Assembler.resolve(AlertManager.self)
 
-    var displayingGroup: GroupModel?
-    var displayingNodeServer: ServerModel?
+    var displayingDatacenter: DatacenterModel?
+    var displayingNodeServer: LocationModel?
     var favIDs: [String] = []
     private var cancellables = Set<AnyCancellable>()
     let vpnManager = Assembler.resolve(VPNManager.self)
@@ -60,7 +60,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         return myPreferredFocusedView
     }
 
-    var displayingFavGroup: GroupModel? {
+    var displayingFavDatacenter: DatacenterModel? {
         didSet {
             updateUIForFavourite()
         }
@@ -121,7 +121,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         descriptionLabel.isHidden = true
         descriptionLabel.text = ""
         proIcon.isHidden = true
-        if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
+        if let premiumOnly = displayingDatacenter?.isPremiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
             if premiumOnly && !isUserPro {
                 proIcon.isHidden = false
             }
@@ -131,7 +131,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     func updateUIForFavourite() {
         connectButtonTrailing.constant = 0
         favButton.isHidden = false
-        if let city = displayingFavGroup?.city, let nick = displayingFavGroup?.nick {
+        if let city = displayingFavDatacenter?.city, let nick = displayingFavDatacenter?.nick {
             let fullText = "\(city) \(nick)"
             let attributedString = NSMutableAttributedString(string: fullText)
 
@@ -142,7 +142,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
             cityLabel.attributedText = attributedString
         }
-        guard let pingIp = displayingFavGroup?.pingIp,
+        guard let pingIp = displayingFavDatacenter?.pingServer?.ip,
               let minTime = latencyRepository.getPingData(ip: pingIp)?.latency
         else {
             latencyLabel.text = "--"
@@ -154,7 +154,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             latencyLabel.text = "--"
         }
 
-        if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
+        if let premiumOnly = displayingFavDatacenter?.isPremiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
             if premiumOnly && !isUserPro {
                 proIcon.isHidden = false
             } else {
@@ -165,7 +165,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
         preferences.observeFavouriteIds().sink { favIDs in
             self.favIDs = favIDs
-            if let id = self.displayingFavGroup?.id {
+            if let id = self.displayingFavDatacenter?.id {
                 self.isFavourited = favIDs.map { $0 }.contains("\(id)")
                 self.setFavButtonImage()
             }
@@ -266,14 +266,14 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
-                if let premiumOnly = displayingFavGroup?.premiumOnly,
+                if let premiumOnly = displayingFavDatacenter?.isPremiumOnly,
                    let isUserPro = userSessionRepository.sessionModel?.isPremium,
                    favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
                 }
-                if let premiumOnly = displayingGroup?.premiumOnly,
+                if let premiumOnly = displayingDatacenter?.isPremiumOnly,
                    let isUserPro = userSessionRepository.sessionModel?.isPremium,
                    favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
@@ -296,10 +296,10 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
     }
 
-    func bindData(group: GroupModel) {
-        displayingGroup = group
-        let city = group.city
-        let nick = group.nick
+    func bindData(datacenter: DatacenterModel) {
+        displayingDatacenter = datacenter
+        let city = datacenter.city
+        let nick = datacenter.nick
         let fullText = "\(city) \(nick)"
         let attributedString = NSMutableAttributedString(string: fullText)
 
@@ -310,7 +310,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
         cityLabel.attributedText = attributedString
 
-        guard let minTime = latencyRepository.getPingData(ip: group.pingIp)?.latency else {
+        guard let pintIP = datacenter.pingServer?.ip, let minTime = latencyRepository.getPingData(ip: pintIP)?.latency else {
             latencyLabel.text = " "
             return
         }
@@ -321,28 +321,28 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
         preferences.observeFavouriteIds().sink { favIDs in
             self.favIDs = favIDs
-            self.isFavourited = favIDs.map { $0 }.contains("\(group.id)")
+            self.isFavourited = favIDs.map { $0 }.contains("\(datacenter.id)")
             self.setupUI()
         }.store(in: &cancellables)
     }
 
     @objc func favButtonTapped() {
-        var group = displayingGroup
-        if displayingFavGroup != nil {
-            group = displayingFavGroup
+        var datacenter = displayingDatacenter
+        if displayingFavDatacenter != nil {
+            datacenter = displayingFavDatacenter
         }
-        guard let group = group else {
+        guard let datacenter = datacenter else {
             return
         }
         if isFavourited {
             isFavourited = false
             setFavButtonImage()
-            preferences.removeFavouriteId("\(group.id)")
+            preferences.removeFavouriteId("\(datacenter.id)")
             delegate?.reloadTable(cell: self)
         } else {
             isFavourited = true
             setFavButtonImage()
-            preferences.addFavouriteId("\(group.id)")
+            preferences.addFavouriteId("\(datacenter.id)")
             delegate?.reloadTable(cell: self)
         }
     }
@@ -352,12 +352,9 @@ class ServerDetailTableViewCell: UITableViewCell {
             return true
         }
 
-        // Check whichever group is set (regular server list or favorites)
-        let group = displayingGroup ?? displayingFavGroup
-        if let bestNode = group?.bestNode,
-           let bestNodeHostname = group?.bestNodeHostname,
-           bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
-           bestNodeHostname != "" {
+        // Check whichever datacenter is set (regular location list or favorites)
+        let datacenter = displayingDatacenter ?? displayingFavDatacenter
+        if datacenter?.servers.isEmpty == false {
             return true
         }
 
@@ -395,25 +392,25 @@ class ServerDetailTableViewCell: UITableViewCell {
             guard let staticIp = displayingStaticIP else { return }
             staticIpDelegate?.setSelectedStaticIP(staticIP: staticIp)
         } else {
-            guard let server = displayingNodeServer, let group = displayingGroup else {
-                guard let favGroup = displayingFavGroup else { return }
-                favDelegate?.setSelectedFavourite(favourite: favGroup)
+            guard let location = displayingNodeServer, let datacenter = displayingDatacenter else {
+                guard let favDatacenter = displayingFavDatacenter else { return }
+                favDelegate?.setSelectedFavourite(favourite: favDatacenter)
                 return
             }
-            delegate?.setSelectedServerAndGroup(server: server, group: group)
+            delegate?.setSelectedLocationAndDatacenter(location: location, datacenter: datacenter)
         }
     }
 
     func isHostStillActive(hostname: String, isStaticIP _: Bool = false) -> Bool {
         let staticIPNodes = staticIpRepository.staticIPs.flatMap({ $0.nodes })
-        let nodesList = serverRepository.currentServerModels.flatMap { $0.groups.flatMap { $0.nodes } }
-        for node in nodesList {
-            if node.hostname == hostname && node.forceDisconnect == false {
+        let serversList = locationListRepository.currentLocationModels.flatMap { $0.datacenters.flatMap { $0.servers } }
+        for server in serversList {
+            if server.hostname == hostname {
                 return true
             }
         }
-        for node in staticIPNodes {
-            if node.hostname == hostname && node.forceDisconnect == false {
+        for server in staticIPNodes {
+            if server.hostname == hostname && server.forceDisconnect == false {
                 return true
             }
         }

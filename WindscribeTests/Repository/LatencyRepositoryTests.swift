@@ -23,7 +23,7 @@ class LatencyRepositoryTests: XCTestCase {
     var mockLocationsManager: MockLocationsManager!
     var mockPreferences: MockPreferences!
     var mockAdvanceRepository: MockAdvanceRepository!
-    var mockServerRepository: MockServerRepository!
+    var mockLocationListRepository: MockLocationListRepository!
     var mockUserSessionRepository: MockUserSessionRepository!
     var mockStaticIpRepository: MockStaticIpRepository!
     private var cancellables = Set<AnyCancellable>()
@@ -38,7 +38,7 @@ class LatencyRepositoryTests: XCTestCase {
         mockLocationsManager = MockLocationsManager()
         mockPreferences = MockPreferences()
         mockAdvanceRepository = MockAdvanceRepository()
-        mockServerRepository = MockServerRepository()
+        mockLocationListRepository = MockLocationListRepository()
         mockUserSessionRepository = MockUserSessionRepository()
         mockStaticIpRepository = MockStaticIpRepository()
 
@@ -71,8 +71,8 @@ class LatencyRepositoryTests: XCTestCase {
             return self.mockAdvanceRepository
         }.inObjectScope(.container)
 
-        mockContainer.register(ServerRepository.self) { _ in
-            return self.mockServerRepository
+        mockContainer.register(LocationListRepository.self) { _ in
+            return self.mockLocationListRepository
         }.inObjectScope(.container)
 
         mockContainer.register(UserSessionRepository.self) { _ in
@@ -93,9 +93,9 @@ class LatencyRepositoryTests: XCTestCase {
                 locationsManager: r.resolve(LocationsManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 advanceRepository: r.resolve(AdvanceRepository.self)!,
-                serverRepository: r.resolve(ServerRepository.self)!,
                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                staticIpRepository: r.resolve(StaticIpRepository.self)!
+                staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                locationListRepository: r.resolve(LocationListRepository.self)!
             )
         }.inObjectScope(.container)
 
@@ -105,7 +105,7 @@ class LatencyRepositoryTests: XCTestCase {
     override func tearDown() {
         cancellables.removeAll()
         mockPingManager.reset()
-        mockServerRepository.reset()
+        mockLocationListRepository.reset()
         mockStaticIpRepository.reset()
         mockAdvanceRepository.reset()
         mockLocationsManager.reset()
@@ -119,7 +119,7 @@ class LatencyRepositoryTests: XCTestCase {
         mockLocationsManager = nil
         mockPreferences = nil
         mockAdvanceRepository = nil
-        mockServerRepository = nil
+        mockLocationListRepository = nil
         mockUserSessionRepository = nil
         mockStaticIpRepository = nil
         super.tearDown()
@@ -156,9 +156,10 @@ class LatencyRepositoryTests: XCTestCase {
     // MARK: LoadLatency Tests
 
     func testLoadLatencyWhenVPNConnected() async throws {
-        let mockServers = createMockServerModels()
-        mockServerRepository.mockServers = mockServers
-        mockServerRepository.currentServerModels = mockServers
+        let (locations, datacenters, serverMachines) = createMockData()
+        mockLocationListRepository.locationListSubject.send(locations)
+        mockLocationListRepository.datacenterListSubject.send(datacenters)
+        mockLocationListRepository.serverListSubject.send(serverMachines)
         mockVPNStateRepository.mockStatus = .connected
 
         try await repository.loadLatency()
@@ -167,8 +168,9 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     func testLoadLatencyWithEmptyServerList() async throws {
-        mockServerRepository.mockServers = []
-        mockServerRepository.currentServerModels = []
+        mockLocationListRepository.locationListSubject.send([])
+        mockLocationListRepository.datacenterListSubject.send([])
+        mockLocationListRepository.serverListSubject.send([])
         mockVPNStateRepository.mockStatus = .disconnected
 
         try await repository.loadLatency()
@@ -202,9 +204,10 @@ class LatencyRepositoryTests: XCTestCase {
     // MARK: PickBestLocation Tests
 
     func testPickBestLocationWithPingData() {
-        let mockServers = createMockServerModels()
-        mockServerRepository.mockServers = mockServers
-        mockServerRepository.currentServerModels = mockServers
+        let (locations, datacenters, serverMachines) = createMockData()
+        mockLocationListRepository.locationListSubject.send(locations)
+        mockLocationListRepository.datacenterListSubject.send(datacenters)
+        mockLocationListRepository.serverListSubject.send(serverMachines)
         mockUserSessionRepository.sessionModel = createMockSession(isPremium: true)
 
         let pingData1 = PingData(ip: "1.2.3.4", latency: 100)
@@ -224,9 +227,10 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     func testPickBestLocationFreeUser() {
-        let mockServers = createMockServerModelsWithPremium()
-        mockServerRepository.mockServers = mockServers
-        mockServerRepository.currentServerModels = mockServers
+        let (locations, datacenters, serverMachines) = createMockDataWithPremium()
+        mockLocationListRepository.locationListSubject.send(locations)
+        mockLocationListRepository.datacenterListSubject.send(datacenters)
+        mockLocationListRepository.serverListSubject.send(serverMachines)
         mockUserSessionRepository.sessionModel = createMockSession(isPremium: false)
 
         let pingDataFree = PingData(ip: "1.2.3.4", latency: 100) // Free location
@@ -245,9 +249,10 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     func testPickBestLocationByRegion() {
-        let mockServers = createMockServerModelsWithRegions()
-        mockServerRepository.mockServers = mockServers
-        mockServerRepository.currentServerModels = mockServers
+        let (locations, datacenters, serverMachines) = createMockDataWithRegions()
+        mockLocationListRepository.locationListSubject.send(locations)
+        mockLocationListRepository.datacenterListSubject.send(datacenters)
+        mockLocationListRepository.serverListSubject.send(serverMachines)
         mockUserSessionRepository.sessionModel = createMockSession(isPremium: true)
 
         repository.pickBestLocation()
@@ -277,9 +282,10 @@ class LatencyRepositoryTests: XCTestCase {
     // MARK: CheckLocationsValidity Tests
 
     func testCheckLocationsValidityWhenDisconnected() async {
-        let mockServers = createMockServerModels()
-        mockServerRepository.mockServers = mockServers
-        mockServerRepository.currentServerModels = mockServers
+        let (locations, datacenters, serverMachines) = createMockData()
+        mockLocationListRepository.locationListSubject.send(locations)
+        mockLocationListRepository.datacenterListSubject.send(datacenters)
+        mockLocationListRepository.serverListSubject.send(serverMachines)
         mockVPNStateRepository.mockStatus = .disconnected
 
         try? await Task.sleep(nanoseconds: 1_100_000_000)
@@ -330,235 +336,242 @@ class LatencyRepositoryTests: XCTestCase {
         return session.getModel()
     }
 
-    private func createMockServerModels() -> [ServerModel] {
-        let node1 = NodeModel(
-            ip1: "1.2.3.4",
+    /// Creates mock Location, Datacenter, and ServerMachine models for testing
+    private func createMockData() -> (locations: [LocationModel], datacenters: [DatacenterModel], serverMachines: [ServerMachineModel]) {
+        // Create server machines
+        let server1 = ServerMachineModel(
+            id: 1,
+            hostname: "us-east-001.windscribe.com",
+            ip: "1.2.3.4",
             ip2: "1.2.3.5",
             ip3: "1.2.3.6",
-            hostname: "us-east.windscribe.com",
-            dnsHostname: "us-east.windscribe.com",
-            forceDisconnect: false,
-            weight: 100
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 50,
+            sclass: 1
         )
 
-        let group1 = GroupModel(
-            id: 1,
-            countryCode: "US",
-            city: "New York",
-            nick: "Big Apple",
-            premiumOnly: false,
-            nodes: [node1],
-            bestNode: node1,
-            bestNodeHostname: "us-east.windscribe.com",
-            wgPublicKey: "test-key",
-            ovpnX509: "test-cert",
-            pingIp: "1.2.3.4",
-            linkSpeed: "1000",
-            health: 100,
-            pingHost: "us-east.windscribe.com",
-            wasEdited: false,
-            timezone: "America/New_York"
-        )
-
-        let node2 = NodeModel(
-            ip1: "5.6.7.8",
+        let server2 = ServerMachineModel(
+            id: 2,
+            hostname: "uk-london-001.windscribe.com",
+            ip: "5.6.7.8",
             ip2: "5.6.7.9",
             ip3: "5.6.7.10",
-            hostname: "uk-london.windscribe.com",
-            dnsHostname: "uk-london.windscribe.com",
-            forceDisconnect: false,
-            weight: 100
+            ipv6: 0,
+            datacenterId: 102,
+            weight: 100,
+            netLoad: 60,
+            sclass: 1
         )
 
-        let group2 = GroupModel(
-            id: 2,
-            countryCode: "GB",
+        // Create datacenters
+        var datacenter1 = DatacenterModel(
+            id: 101,
+            city: "New York",
+            nick: "Big Apple",
+            iata: "NYC",
+            status: 1,
+            gps: "40.7128,-74.0060",
+            tz: "America/New_York",
+            p2p: 1,
+            isPremium: 0,
+            wgPubkey: "test-wg-key-1",
+            wgEndpoint: "us-east.windscribe.com:443",
+            ovpnX509: "test-x509-1",
+            linkSpeed: 1000
+        )
+        datacenter1.locationId = 1
+        datacenter1.servers = [server1]
+
+        var datacenter2 = DatacenterModel(
+            id: 102,
             city: "London",
             nick: "Big Ben",
-            premiumOnly: false,
-            nodes: [node2],
-            bestNode: node2,
-            bestNodeHostname: "uk-london.windscribe.com",
-            wgPublicKey: "test-key",
-            ovpnX509: "test-cert",
-            pingIp: "5.6.7.8",
-            linkSpeed: "1000",
-            health: 100,
-            pingHost: "uk-london.windscribe.com",
-            wasEdited: false,
-            timezone: "Europe/London"
+            iata: "LON",
+            status: 1,
+            gps: "51.5074,-0.1278",
+            tz: "Europe/London",
+            p2p: 1,
+            isPremium: 0,
+            wgPubkey: "test-wg-key-2",
+            wgEndpoint: "uk-london.windscribe.com:443",
+            ovpnX509: "test-x509-2",
+            linkSpeed: 1000
         )
+        datacenter2.locationId = 2
+        datacenter2.servers = [server2]
 
-        let server1 = ServerModel(
+        // Create locations
+        let location1 = LocationModel(
             id: 1,
-            name: "US East",
+            name: "United States",
             countryCode: "US",
-            status: true,
-            premiumOnly: false,
-            dnsHostname: "us.windscribe.com",
-            groups: [group1],
-            locType: "datacenter",
-            p2p: false,
-            wasEdited: false,
-            timezone: "America/New_York"
+            shortName: "US",
+            premiumOnly: 0,
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: [datacenter1]
         )
 
-        let server2 = ServerModel(
+        let location2 = LocationModel(
             id: 2,
-            name: "UK London",
+            name: "United Kingdom",
             countryCode: "GB",
-            status: true,
-            premiumOnly: false,
-            dnsHostname: "uk.windscribe.com",
-            groups: [group2],
-            locType: "datacenter",
-            p2p: false,
-            wasEdited: false,
-            timezone: "Europe/London"
+            shortName: "UK",
+            premiumOnly: 0,
+            sortOrder: 2,
+            continent: "Europe",
+            datacenters: [datacenter2]
         )
 
-        return [server1, server2]
+        return (
+            locations: [location1, location2],
+            datacenters: [datacenter1, datacenter2],
+            serverMachines: [server1, server2]
+        )
     }
 
-    private func createMockServerModelsWithPremium() -> [ServerModel] {
-        let nodeFree = NodeModel(
-            ip1: "1.2.3.4",
+    /// Creates mock data with premium and free locations
+    private func createMockDataWithPremium() -> (locations: [LocationModel], datacenters: [DatacenterModel], serverMachines: [ServerMachineModel]) {
+        // Free server
+        let serverFree = ServerMachineModel(
+            id: 1,
+            hostname: "us-free-001.windscribe.com",
+            ip: "1.2.3.4",
             ip2: "1.2.3.5",
             ip3: "1.2.3.6",
-            hostname: "us-free.windscribe.com",
-            dnsHostname: "us-free.windscribe.com",
-            forceDisconnect: false,
-            weight: 100
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 70,
+            sclass: 1
         )
 
-        let groupFree = GroupModel(
-            id: 1,
-            countryCode: "US",
-            city: "New York",
-            nick: "Free",
-            premiumOnly: false,
-            nodes: [nodeFree],
-            bestNode: nodeFree,
-            bestNodeHostname: "us-free.windscribe.com",
-            wgPublicKey: "test-key",
-            ovpnX509: "test-cert",
-            pingIp: "1.2.3.4",
-            linkSpeed: "1000",
-            health: 100,
-            pingHost: "us-free.windscribe.com",
-            wasEdited: false,
-            timezone: "America/New_York"
-        )
-
-        let nodePremium = NodeModel(
-            ip1: "9.9.9.9",
+        // Premium server (better latency in tests)
+        let serverPremium = ServerMachineModel(
+            id: 2,
+            hostname: "us-premium-001.windscribe.com",
+            ip: "9.9.9.9",
             ip2: "9.9.9.10",
             ip3: "9.9.9.11",
-            hostname: "us-premium.windscribe.com",
-            dnsHostname: "us-premium.windscribe.com",
-            forceDisconnect: false,
-            weight: 100
+            ipv6: 0,
+            datacenterId: 102,
+            weight: 100,
+            netLoad: 30,
+            sclass: 1
         )
 
-        let groupPremium = GroupModel(
-            id: 2,
-            countryCode: "US",
+        // Free datacenter
+        var datacenterFree = DatacenterModel(
+            id: 101,
+            city: "New York",
+            nick: "Free",
+            iata: "NYC",
+            status: 1,
+            gps: "40.7128,-74.0060",
+            tz: "America/New_York",
+            p2p: 1,
+            isPremium: 0,
+            wgPubkey: "test-wg-key-free",
+            wgEndpoint: "us-free.windscribe.com:443",
+            ovpnX509: "test-x509-free",
+            linkSpeed: 1000
+        )
+        datacenterFree.locationId = 1
+        datacenterFree.servers = [serverFree]
+
+        // Premium datacenter
+        var datacenterPremium = DatacenterModel(
+            id: 102,
             city: "Los Angeles",
             nick: "Premium",
-            premiumOnly: true,
-            nodes: [nodePremium],
-            bestNode: nodePremium,
-            bestNodeHostname: "us-premium.windscribe.com",
-            wgPublicKey: "test-key",
-            ovpnX509: "test-cert",
-            pingIp: "9.9.9.9",
-            linkSpeed: "10000",
-            health: 100,
-            pingHost: "us-premium.windscribe.com",
-            wasEdited: false,
-            timezone: "America/Los_Angeles"
+            iata: "LAX",
+            status: 1,
+            gps: "34.0522,-118.2437",
+            tz: "America/Los_Angeles",
+            p2p: 1,
+            isPremium: 1,
+            wgPubkey: "test-wg-key-premium",
+            wgEndpoint: "us-premium.windscribe.com:443",
+            ovpnX509: "test-x509-premium",
+            linkSpeed: 10000
         )
+        datacenterPremium.locationId = 1
+        datacenterPremium.servers = [serverPremium]
 
-        let serverFree = ServerModel(
+        let location = LocationModel(
             id: 1,
-            name: "US Free",
+            name: "United States",
             countryCode: "US",
-            status: true,
-            premiumOnly: false,
-            dnsHostname: "us.windscribe.com",
-            groups: [groupFree],
-            locType: "datacenter",
-            p2p: false,
-            wasEdited: false,
-            timezone: "America/New_York"
+            shortName: "US",
+            premiumOnly: 0,
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: [datacenterFree, datacenterPremium]
         )
 
-        let serverPremium = ServerModel(
-            id: 2,
-            name: "US Premium",
-            countryCode: "US",
-            status: true,
-            premiumOnly: false,
-            dnsHostname: "us-premium.windscribe.com",
-            groups: [groupPremium],
-            locType: "datacenter",
-            p2p: false,
-            wasEdited: false,
-            timezone: "America/Los_Angeles"
+        return (
+            locations: [location],
+            datacenters: [datacenterFree, datacenterPremium],
+            serverMachines: [serverFree, serverPremium]
         )
-
-        return [serverFree, serverPremium]
     }
 
-    private func createMockServerModelsWithRegions() -> [ServerModel] {
+    /// Creates mock data with region-based locations
+    private func createMockDataWithRegions() -> (locations: [LocationModel], datacenters: [DatacenterModel], serverMachines: [ServerMachineModel]) {
         var countryCode = "US"
         if #available(iOS 16, tvOS 17, *) {
             countryCode = Locale.current.region?.identifier ?? countryCode
         }
-        let node = NodeModel(
-            ip1: "1.2.3.4",
+
+        let server = ServerMachineModel(
+            id: 1,
+            hostname: "us-east-001.windscribe.com",
+            ip: "1.2.3.4",
             ip2: "1.2.3.5",
             ip3: "1.2.3.6",
-            hostname: "us-east.windscribe.com",
-            dnsHostname: "us-east.windscribe.com",
-            forceDisconnect: false,
-            weight: 100
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 50,
+            sclass: 1
         )
 
-        let group = GroupModel(
-            id: 1,
-            countryCode: countryCode,
+        var datacenter = DatacenterModel(
+            id: 101,
             city: "New York",
             nick: "Big Apple",
-            premiumOnly: false,
-            nodes: [node],
-            bestNode: node,
-            bestNodeHostname: "us-east.windscribe.com",
-            wgPublicKey: "test-key",
-            ovpnX509: "test-cert",
-            pingIp: "1.2.3.4",
-            linkSpeed: "1000",
-            health: 100,
-            pingHost: "us-east.windscribe.com",
-            wasEdited: false,
-            timezone: "America/New_York"
+            iata: "NYC",
+            status: 1,
+            gps: "40.7128,-74.0060",
+            tz: "America/New_York",
+            p2p: 1,
+            isPremium: 0,
+            wgPubkey: "test-wg-key",
+            wgEndpoint: "us-east.windscribe.com:443",
+            ovpnX509: "test-x509",
+            linkSpeed: 1000
         )
+        datacenter.locationId = 1
+        datacenter.servers = [server]
 
-        let server = ServerModel(
+        let location = LocationModel(
             id: 1,
-            name: "US East",
+            name: "User Region Country",
             countryCode: countryCode,
-            status: true,
-            premiumOnly: false,
-            dnsHostname: "us.windscribe.com",
-            groups: [group],
-            locType: "datacenter",
-            p2p: false,
-            wasEdited: false,
-            timezone: "America/New_York"
+            shortName: countryCode,
+            premiumOnly: 0,
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: [datacenter]
         )
 
-        return [server]
+        return (
+            locations: [location],
+            datacenters: [datacenter],
+            serverMachines: [server]
+        )
     }
 
     private func createMockStaticIPs() -> [StaticIPModel] {

@@ -29,6 +29,7 @@ enum SharedKeys {
     static let serverSettings = "ServerSettings"
     static let lasUsedNodeIP = "LastUsedNodeIP"
     static let ignorePinIP = "IgnorePinIP"
+    static let serverpedeEnabled = "serverpedeEnabled"
 
     // UserPreferenceManager
     static let orderLocationsBy = "OrderLocationsBy"
@@ -38,7 +39,7 @@ enum SharedKeys {
     static let allowLanMode = "allowLanMode"
     static let hapticFeedback = "hapticFeedback"
     static let selectedProtocol = "selectedProtocol"
-    static let serverHealth = "serverHealth"
+    static let serverNetLoad = "serverHealth"
     static let darkMode = "darkMode"
     static let pingMethod = "pingMethod"
     static let connectedDNSValue = "connectedDNSValue"
@@ -125,6 +126,10 @@ enum SharedKeys {
 
     // Unblock WG Params
     static let unblockWgParams = "unblockWgParams"
+
+    // Locations and Servers revision
+    static let serverRevision = "serverRevision"
+    static let hasIpBackup = "hasIpBackup"
 
     /// Cached plist dictionary to avoid repeated file I/O
     private static let plistDictionary: [String: Any] = {

@@ -1,5 +1,5 @@
 //
-//  ServerListViewModel.swift
+//  LocationListViewModel.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 15/05/2024.
@@ -15,12 +15,11 @@ protocol ServerListViewModelType {
     var showUpgradeTrigger: PassthroughSubject<Void, Never> { get }
     var reloadTrigger: PassthroughSubject<Void, Never> { get }
 
-    func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel)
+    func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel)
     func connectToBestLocation()
 }
 
-class ServerListViewModel: ServerListViewModelType {
+class LocationListViewModel: ServerListViewModelType {
     var presentConnectingAlertTrigger = PassthroughSubject<Void, Never>()
     var showMaintenanceLocationTrigger = PassthroughSubject<Void, Never>()
     var showUpgradeTrigger = PassthroughSubject<Void, Never>()
@@ -32,40 +31,39 @@ class ServerListViewModel: ServerListViewModelType {
     private let userSessionRepository: UserSessionRepository
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
+    private let locationListRepository: LocationListRepository
 
     init(logger: FileLogger,
          vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          userSessionRepository: UserSessionRepository,
          locationsManager: LocationsManager,
-         protocolManager: ProtocolManagerType) {
+         protocolManager: ProtocolManagerType,
+         locationListRepository: LocationListRepository) {
         self.logger = logger
         self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.userSessionRepository = userSessionRepository
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
+        self.locationListRepository = locationListRepository
     }
 
-    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
+    func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel) {
         if !connectivity.internetConnectionAvailable() {
             return
         }
 
-        if checkMaintenanceLocation(server: server, group: group) {
+        if checkMaintenanceLocation(location: location, datacenter: datacenter) {
             showMaintenanceLocationTrigger.send(())
             return
         }
 
-        if !userSessionRepository.canAccesstoProLocation() && group.premiumOnly {
+        if !userSessionRepository.canAccesstoProLocation() && datacenter.isPremiumOnly {
             showUpgradeTrigger.send(())
             return
-        } else if !group.canConnect() {
-            reloadTrigger.send(())
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
-            guard let bestNode = group.bestNode else { return }
-            logger.logD("ServerListViewModel", "Tapped on a node with groupID: \(group.id) \(bestNode.hostname) from the server list.")
-            locationsManager.saveLastSelectedLocation(with: "\(group.id)")
+            locationsManager.saveLastSelectedLocation(with: "\(datacenter.id)")
             Task {
                 self.logger.logI("ServerListViewModel", "setSelectedServerAndGroup for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
@@ -76,10 +74,10 @@ class ServerListViewModel: ServerListViewModelType {
     }
 
     func connectToBestLocation() {
-        let locationID = locationsManager.getBestLocation()
-        if !locationID.isEmpty, locationID != "0", !self.vpnStateRepository.isConnecting() {
-            self.logger.logD("ServerListViewModel", "Tapped on Best Location with ID \(locationID) from the server list.")
-            self.locationsManager.selectBestLocation(with: locationID)
+        let locationId = locationsManager.getBestLocation()
+        if  locationId != 0, !self.vpnStateRepository.isConnecting() {
+            self.logger.logD("ServerListViewModel", "Tapped on Best Location with ID \(locationId) from the server list.")
+            self.locationsManager.selectBestLocation(with: String(locationId))
             Task {
                 self.logger.logI("ServerListViewModel", "connectToBestLocation for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
@@ -90,18 +88,21 @@ class ServerListViewModel: ServerListViewModelType {
     }
 }
 
-extension ServerListViewModel {
+extension LocationListViewModel {
     /// true: under maintenance
     /// false: not
-    private func checkMaintenanceLocation(server: ServerModel, group: GroupModel) -> Bool {
-        if server.status == false {
+    private func checkMaintenanceLocation(location: LocationModel, datacenter: DatacenterModel) -> Bool {
+        if datacenter.status == 0 {
             return true
         }
-        if !group.isNodesAvailable() && !group.premiumOnly {
-            return true
-        } else if !group.isNodesAvailable() && group.premiumOnly &&
-                    userSessionRepository.sessionModel?.isPremium == true {
-            return true
+
+        if !datacenter.isActive {
+            if !datacenter.isPremiumOnly {
+                return true
+            } else if datacenter.isPremiumOnly &&
+                        userSessionRepository.sessionModel?.isPremium == true {
+                return true
+            }
         }
         return false
     }

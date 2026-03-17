@@ -43,7 +43,7 @@ class StaticIPNodeCellModel: BaseNodeCellViewModel {
 
     override var actionVisible: Bool { false }
 
-    override var showServerHealth: Bool { false }
+    override var showServerNetLoad: Bool { false }
 
     func update(displayingStaticIP: StaticIPModel?,
                 isDarkMode: Bool,

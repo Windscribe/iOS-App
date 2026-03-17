@@ -50,7 +50,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     @IBOutlet var nothingToSeeLabel: UILabel!
     @IBOutlet var emptyDataView: EmptyListView!
 
-    weak var delegate: ServerListTableViewDelegate?
+    weak var delegate: LocationsListTableViewDelegate?
     weak var favDelegate: FavouriteListTableViewDelegate?
     weak var bestLocDelegate: BestLocationConnectionDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
@@ -61,8 +61,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     private var optionViews = [SideMenuOptionsView]()
     private var selectionOption = SideMenuType.all
 
-    var serverSectionsOrdered: [ServerSection] = []
-    var favGroups: [GroupModel] = []
+    var locationSectionsOrdered: [LocationSection] = []
+    var favDatacenters: [DatacenterModel] = []
     var staticIPModels = [StaticIPModel]()
     var staticIpSelected = false
     var bestLocation: BestLocationModel?
@@ -137,19 +137,18 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     }
 
     func bindData(isStreaming: Bool) {
-        self.viewModel.serverList
+        self.viewModel.locationsList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] results in
                 guard let self else { return }
 
-                viewModel.sortServerListUsingUserPreferences(ignoreStreaming: false,
-                    isForStreaming: isStreaming, servers: results) { [weak self] serverSectionsOrdered in
-                        guard let self else { return }
+                let locationSectionsOrdered = viewModel.sortLocationListUsingUserPreferences(ignoreStreaming: false,
+                                                                                             isForStreaming: isStreaming,
+                                                                                             locations: results)
 
-                        self.serverSectionsOrdered = serverSectionsOrdered
-                        self.addBestLocation()
-                        self.serverListCollectionView.reloadData()
-                }
+                self.locationSectionsOrdered = locationSectionsOrdered
+                self.addBestLocation()
+                self.serverListCollectionView.reloadData()
             }
             .store(in: &cancellables)
 
@@ -161,7 +160,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 self.changeEmptyViewVisibility()
             }
             .store(in: &cancellables)
-        viewModel.favouriteGroups
+        viewModel.favouriteDatacenters
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure(let error) = completion {
@@ -170,8 +169,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             } receiveValue: { [weak self] favourites in
                 guard let self else { return }
 
-                favGroups.removeAll()
-                favGroups.append(contentsOf: favourites)
+                favDatacenters.removeAll()
+                favDatacenters.append(contentsOf: favourites)
                 self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
                 if favourites.count == 0 {
                     self.setNeedsFocusUpdate()
@@ -186,18 +185,18 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
     private func addBestLocation() {
         guard !isWindflixLocationSelected else {
-            if serverSectionsOrdered.first?.server?.name == Fields.Values.bestLocation {
-                serverSectionsOrdered.removeFirst()
+            if locationSectionsOrdered.first?.location?.name == Fields.Values.bestLocation {
+                locationSectionsOrdered.removeFirst()
             }
             return
         }
 
         if  bestLocation != nil,
-            let groupId = bestLocation?.groupId,
-            let serverModel = viewModel.getServerModel(from: groupId) {
-            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
-            if serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
-                serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
+            let datacenterId = bestLocation?.datacenterId,
+            let locationModel = viewModel.getLocationModel(from: datacenterId) {
+            let bestLocation = locationModel.getBestLocationModel()
+            if locationSectionsOrdered.first?.location?.name != Fields.Values.bestLocation {
+                locationSectionsOrdered.insert(LocationSection(location: bestLocation, collapsed: true), at: 0)
             }
         }
     }
@@ -205,8 +204,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     private func changeEmptyViewVisibility() {
         switch selectionOption {
         case .fav:
-            emptyDataView.isHidden = favGroups.count > 0
-            emptyDataView.subviews.forEach { $0.isHidden = favGroups.count > 0 }
+            emptyDataView.isHidden = favDatacenters.count > 0
+            emptyDataView.subviews.forEach { $0.isHidden = favDatacenters.count > 0 }
             emptyDataView.configure(image: UIImage(named: ImagesAsset.favEmpty), text: TextsAsset.nothingToSeeHere)
         case .staticIp:
             emptyDataView.isHidden = staticIPModels.count > 0
@@ -386,7 +385,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 changeEmptyViewVisibility()
                 favTableView.reloadData()
             }
-            if favGroups.count != 0 {
+            if favDatacenters.count != 0 {
                 myPreferredFocusedView = favTableView
                 setNeedsFocusUpdate()
                 updateFocusIfNeeded()
@@ -485,24 +484,24 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
 extension ServerListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return serverSectionsOrdered.count
+        return locationSectionsOrdered.count
     }
 
     func collectionView(_: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as? ServerListCollectionViewCell else { return ServerListCollectionViewCell() }
-        let serverSection = serverSectionsOrdered[indexPath.item]
+        let locationSection = locationSectionsOrdered[indexPath.item]
 
         if indexPath.item == 0 && !isWindflixLocationSelected && bestLocation != nil {
             cell.flagImage.image = UIImage(named: "bestLocation_cell")
             cell.setup(isShadow: false)
         } else {
-            if let countrycode = serverSection.server?.countryCode {
+            if let countrycode = locationSection.location?.countryCode {
                 cell.flagImage.image = UIImage(named: "\(countrycode.lowercased())-s")
             }
             cell.setup(isShadow: true)
         }
 
-        cell.countryCode.text = serverSection.server?.name.localized
+        cell.countryCode.text = locationSection.location?.name.localized
         return cell
     }
 
@@ -515,8 +514,8 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
             bestLocDelegate?.connectToBestLocation()
             return
         }
-        if let selectedServer = serverSectionsOrdered[indexPath.row].server {
-            router.routeTo(to: .serverListDetail(server: selectedServer, delegate: delegate), from: self)
+        if let selectedLocation = locationSectionsOrdered[indexPath.row].location {
+            router.routeTo(to: .locationListDetail(location: selectedLocation, delegate: delegate), from: self)
         }
     }
 
@@ -560,15 +559,15 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
         if staticIpSelected {
             return staticIPModels.count
         } else {
-            return favGroups.count
+            return favDatacenters.count
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as? ServerDetailTableViewCell else { return ServerDetailTableViewCell() }
         if !staticIpSelected {
-            let favNodes = favGroups[indexPath.row]
-            cell.displayingFavGroup = favNodes
+            let favDatacenter = favDatacenters[indexPath.row]
+            cell.displayingFavDatacenter = favDatacenter
             cell.favDelegate = self
             cell.focusStyle = UITableViewCell.FocusStyle.custom
         } else {
@@ -590,7 +589,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension ServerListViewController: FavouriteListTableViewDelegate {
-    func setSelectedFavourite(favourite: GroupModel) {
+    func setSelectedFavourite(favourite: DatacenterModel) {
         navigationController?.popToRootViewController(animated: true)
         favDelegate?.setSelectedFavourite(favourite: favourite)
     }

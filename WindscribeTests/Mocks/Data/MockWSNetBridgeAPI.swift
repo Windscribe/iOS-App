@@ -9,7 +9,7 @@
 import Foundation
 @testable import Windscribe
 
-final class MockWSNetBridgeAPI: WSNetBridgeAPIType {
+class MockWSNetBridgeAPI: WSNetBridgeAPIType {
 
     // Mock Configuration
     var mockCurrentHost: String = ""

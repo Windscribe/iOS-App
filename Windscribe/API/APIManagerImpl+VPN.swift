@@ -22,12 +22,6 @@ extension APIManagerImpl {
         }
     }
 
-    func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) async throws -> ServerList {
-        return try await apiUtil.makeApiCall(modalType: ServerList.self) { completion in
-            self.api.serverLocations(languageCode, revision: revision, isPro: isPro, alcList: alcList, callback: completion)
-        }
-    }
-
     func getOpenVPNServerConfig(openVPNVersion _: String) async throws -> String {
         guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure

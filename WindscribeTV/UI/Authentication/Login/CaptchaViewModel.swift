@@ -18,7 +18,7 @@ class CaptchaViewModel {
     let isLoading = CurrentValueSubject<Bool, Never>(false)
     let errorMessage = CurrentValueSubject<String?, Never>(nil)
 
-    let loginSuccess = PassthroughSubject<Session, Never>()
+    let loginSuccess = PassthroughSubject<SessionModel, Never>()
     let loginError = PassthroughSubject<Error, Never>()
     let captchaDismiss = PassthroughSubject<Void, Never>()
 

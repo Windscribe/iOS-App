@@ -77,5 +77,6 @@ extension MainViewController {
         bindServerListViewModel()
         bindActions()
         bindViews()
+        bindLatencyViewModel()
     }
 }
