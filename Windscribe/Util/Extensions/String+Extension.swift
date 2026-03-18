@@ -173,6 +173,6 @@ extension StringProtocol {
                 return String(self[self.startIndex...lastColon]) + "***"
             }
         }
-        return self
+        return String(self)
     }
 }
