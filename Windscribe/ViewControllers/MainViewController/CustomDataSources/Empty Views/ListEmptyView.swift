@@ -129,6 +129,12 @@ class ListEmptyView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
+
+        let labelLeft = label.leftAnchor.constraint(equalTo: leftAnchor, constant: 80)
+        labelLeft.priority = .defaultHigh
+        let labelRight = label.rightAnchor.constraint(equalTo: rightAnchor, constant: -80)
+        labelRight.priority = .defaultHigh
+
         NSLayoutConstraint.activate([
             // imageView
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -137,10 +143,9 @@ class ListEmptyView: UIView {
             imageView.widthAnchor.constraint(equalToConstant: 32),
 
             // label
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 80),
-            label.rightAnchor.constraint(equalTo: rightAnchor, constant: -80),
+            labelLeft,
+            labelRight,
 
             // button
             button.centerXAnchor.constraint(equalTo: centerXAnchor),

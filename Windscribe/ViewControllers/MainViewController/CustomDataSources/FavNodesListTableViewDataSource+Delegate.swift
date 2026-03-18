@@ -159,16 +159,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
     func showEmptyView(tableView: UITableView) {
         let view = ListEmptyView(type: .favNodes, isDarkMode: lookAndFeelRepository.isDarkModeSubject, activeLanguage: languageManager.activelanguage)
         tableView.backgroundView = view
-        view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            // view
-            view.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-            view.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
-            view.heightAnchor.constraint(equalTo: tableView.heightAnchor),
-            view.widthAnchor.constraint(equalTo: tableView.widthAnchor)
-        ])
         view.updateLayout()
-        tableView.backgroundView = view
     }
 
     func handleRefresh() {

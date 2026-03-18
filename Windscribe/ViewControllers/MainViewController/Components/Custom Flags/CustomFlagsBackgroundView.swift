@@ -260,7 +260,6 @@ class FlagsBackgroundView: UIView {
 
             // topMaskGradient
             topMaskGradient.topAnchor.constraint(equalTo: topAnchor),
-            topMaskGradient.bottomAnchor.constraint(equalTo: bottomAnchor),
             topMaskGradient.centerXAnchor.constraint(equalTo: centerXAnchor),
             topMaskGradient.heightAnchor.constraint(equalTo: backgroundImageView.heightAnchor),
             topMaskGradient.widthAnchor.constraint(equalTo: widthAnchor)

@@ -188,6 +188,7 @@ class WifiInfoView: UIView {
 
         stackView.addArrangedSubviews([paddingView, trustedIcon, nameLabelSpacerView, nameLabel, actionButton])
         stackView.axis = .horizontal
+        stackView.alignment = .center
         actionButton.addSubview(actionImage)
         addSubview(stackView)
     }

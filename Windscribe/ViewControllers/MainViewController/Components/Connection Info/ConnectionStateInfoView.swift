@@ -310,6 +310,7 @@ class ConnectionStateInfoView: UIView {
         noConnectionIcon.isHidden = true
 
         stackView.addArrangedSubviews([pillView, circunventIcon, protocolLabel, portLabel, preferredIcon, actionIcon])
+        stackView.alignment = .center
         stackView.spacing = 8
 
         pillView.addSubview(pillLabel)
@@ -341,6 +342,7 @@ class ConnectionStateInfoView: UIView {
             stackView.rightAnchor.constraint(equalTo: rightAnchor),
 
             // pillView
+            pillView.heightAnchor.constraint(equalToConstant: 19),
             pillView.widthAnchor.constraint(equalToConstant: 39),
 
             // pillLabel

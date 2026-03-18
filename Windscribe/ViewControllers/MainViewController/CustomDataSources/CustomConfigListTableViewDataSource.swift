@@ -132,14 +132,6 @@ class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConf
             self?.logicDelegate?.addCustomConfig()
         }
         tableView.backgroundView = view
-        view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            // view
-            view.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-            view.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
-            view.heightAnchor.constraint(equalTo: tableView.heightAnchor),
-            view.widthAnchor.constraint(equalTo: tableView.widthAnchor)
-        ])
         view.updateLayout()
     }
 
