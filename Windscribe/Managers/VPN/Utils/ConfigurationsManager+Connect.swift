@@ -84,6 +84,11 @@ extension ConfigurationsManager {
                 cacheTunnelManager(manager: nextManager)
                 self.logger.logI("VPNConfiguration", "Starting VPN connection.")
                 progressPublisher.send(.update("Starting VPN connection."))
+                // Clear bridge API host before the tunnel starts so wsnet's
+                // autonomous reconnect doesn't use a stale cached token for
+                // the previous host. initBridgeApiIfNeeded sets the real host
+                // after the tunnel is up and triggers a fresh token fetch. (#969)
+                self.bridgeAPI.setCurrentHost("")
                 try nextManager.connection.startVPNTunnel()
 
                 self.delegate?.setActiveManager(with: VPNManagerType(from: wrapperProtocol))
@@ -252,52 +257,58 @@ extension ConfigurationsManager {
         }
     }
 
-    /// Pin IP if needed and test VPN connection for network connectivity.
+    /// Set up bridge API state, test connectivity, then pin IP.
+    /// Connectivity test runs first — its retry loop ensures the tunnel is
+    /// usable before we attempt pinIp, which avoids racing against wsnet's
+    /// cold start after a custom config disconnect (#969).
     private func pinIPAndTestConnectivity(proto: String, checkIsTaskCancelled: () -> Bool) async throws {
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        // Pin IP if needed (capture error but don't throw)
-        let ipPinningError = await performIPPinningIfNeeded(proto: proto)
-        // Test connectivity
+        // Set up bridge API state for non-custom-config connections
+        initBridgeApiIfNeeded(proto: proto)
+        // Test connectivity — confirms tunnel is usable
         let connectivitySuccess = await testConnectivity(checkIsTaskCancelled: checkIsTaskCancelled)
-        if connectivitySuccess {
-            if ipPinningError != nil {
-                showFailedPinIpTrigger.send()
-            }
-            return
-        } else {
+        if !connectivitySuccess {
             throw VPNConfigurationErrors.connectivityTestFailed
+        }
+        // Pin IP after tunnel is confirmed working
+        let ipPinningError = await pinIpIfNeeded()
+        if ipPinningError != nil {
+            showFailedPinIpTrigger.send()
         }
     }
 
-    /// Pin IP . Returns error if pinning fails, nil otherwise.
-    private func performIPPinningIfNeeded(proto: String) async -> Error? {
+    /// Initialise bridge API state for server connections so wsnet can
+    /// route through the VPN tunnel.  Skipped for custom configs.
+    private func initBridgeApiIfNeeded(proto: String) {
         if !preferences.getIgnorePinIP() && !preferences.isCustomConfigSelected() {
             let currentHost = preferences.getLastNodeIP() ?? ""
             if proto == "WireGuard" {
                 logger.logI("ConfigurationsManager","Bridge API - WSNEt - set host for wireguard: \(currentHost)")
                 bridgeAPI.setCurrentHost(currentHost)
-            } else {
-                bridgeAPI.setCurrentHost("")
             }
             bridgeAPI.setIgnoreSslErrors(true)
             bridgeAPI.setConnectedState(true)
             self.logger.logI("ConfigurationsManager", "wsnet setIsConnectedToVpnState to true")
             WSNet.instance().setIsConnectedToVpnState(true)
-            if let pinnedIp = preferences.getLastSelectedPinnedIp() {
-                logger.logI("ConfigurationsManager","Bridge API - WSNEt - Pinning IP: \(pinnedIp)")
-                do {
-                    _ = try await api.pinIp(ip: pinnedIp)
-                    logger.logI("ConfigurationsManager", "IP pinned successfully")
-                    return nil
-                } catch {
-                    logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
-                    return error
-                }
-            }
         } else {
             preferences.saveIgnorePinIP(status: false)
         }
-        return nil
+    }
+
+    /// Pin IP if there is one selected. Returns error on failure, nil otherwise.
+    private func pinIpIfNeeded() async -> Error? {
+        guard !preferences.isCustomConfigSelected(),
+              let pinnedIp = preferences.getLastSelectedPinnedIp() else {
+            return nil
+        }
+        logger.logI("ConfigurationsManager","Bridge API - WSNEt - Pinning IP: \(pinnedIp)")
+        do {
+            _ = try await api.pinIp(ip: pinnedIp)
+            logger.logI("ConfigurationsManager", "IP pinned successfully")
+            return nil
+        } catch {
+            logger.logE("ConfigurationsManager","Failed to pin IP: \(error)")
+            return error
+        }
     }
 
     /// Test connectivity with retries. Returns true if successful, false otherwise.
