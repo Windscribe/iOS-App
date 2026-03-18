@@ -63,7 +63,11 @@ extension MainViewController {
             wifiInfoView.topAnchor.constraint(equalTo: locationNameView.bottomAnchor, constant: 8),
             wifiInfoView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 7),
             wifiInfoView.heightAnchor.constraint(equalToConstant: 32),
-            wifiInfoView.bottomAnchor.constraint(equalTo: flagBackgroundView.bottomAnchor, constant: -1*(listSelectionView.viewHeight + 14)),
+            {
+                let constraint = wifiInfoView.bottomAnchor.constraint(equalTo: flagBackgroundView.bottomAnchor, constant: -1*(listSelectionView.viewHeight + 14))
+                constraint.priority = .defaultHigh
+                return constraint
+            }(),
 
             // ipInfoView
             ipInfoView.centerYAnchor.constraint(equalTo: wifiInfoView.centerYAnchor),

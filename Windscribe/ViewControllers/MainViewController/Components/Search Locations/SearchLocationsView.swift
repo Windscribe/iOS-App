@@ -85,6 +85,7 @@ class SearchLocationsView: UIView {
         addSubview(separatorView)
         separatorView.isHidden = true
         stackContainerView.axis = .horizontal
+        stackContainerView.alignment = .center
         stackContainerView.spacing = 0
         addSubview(stackContainerView)
 

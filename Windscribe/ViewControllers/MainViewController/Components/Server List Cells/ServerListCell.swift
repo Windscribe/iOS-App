@@ -98,6 +98,7 @@ class ServerListCell: SwipeTableViewCell {
         circleView.clipsToBounds = true
 
         iconsStackView.axis = .horizontal
+        iconsStackView.alignment = .center
         iconsStackView.spacing = 16
         iconsStackView.addArrangedSubview(actionImage)
 
