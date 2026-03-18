@@ -157,4 +157,22 @@ extension StringProtocol {
         }
         return result
     }
+
+    /// Returns the IP address with the last octet replaced by `***` for privacy.
+    /// Works for both IPv4 (e.g. `1.2.3.4` → `1.2.3.***`) and IPv6 (last group redacted).
+    /// Returns the original string unchanged if it doesn't look like an IP address.
+    var redactedIP: String {
+        if contains(".") {
+            // IPv4: replace last octet
+            if let lastDot = lastIndex(of: ".") {
+                return String(self[self.startIndex...lastDot]) + "***"
+            }
+        } else if contains(":") {
+            // IPv6: replace last group
+            if let lastColon = lastIndex(of: ":") {
+                return String(self[self.startIndex...lastColon]) + "***"
+            }
+        }
+        return self
+    }
 }

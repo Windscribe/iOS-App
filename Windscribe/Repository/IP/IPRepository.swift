@@ -41,7 +41,7 @@ class IPRepositoryImpl: IPRepository {
         // Migration: Check if IP exists in Realm (from older app versions)
         // If yes, migrate it to Preferences for future use
         if let realmIp = localDatabase.getIp() {
-            logger.logI("IPRepositoryImpl", "Migrating IP from Realm to Preferences: \(realmIp.userIp)")
+            logger.logI("IPRepositoryImpl", "Migrating IP from Realm to Preferences: \(realmIp.userIp.redactedIP)")
             preferences.saveCurrentIpAddress(ip: realmIp.userIp)
         }
 
@@ -49,7 +49,7 @@ class IPRepositoryImpl: IPRepository {
         // This ensures subscribers immediately get the correct value without race conditions
         let initialState: IPState?
         if let cachedIp = preferences.getCurrentIpAddress() {
-            logger.logI("IPRepositoryImpl", "Loaded cached IP from Preferences: \(cachedIp)")
+            logger.logI("IPRepositoryImpl", "Loaded cached IP from Preferences: \(cachedIp.redactedIP)")
             initialState = .available(cachedIp)
             self.currentIp = CurrentValueSubject<String?, Never>(cachedIp)
             wasObserved = true
@@ -106,7 +106,7 @@ class IPRepositoryImpl: IPRepository {
                 }
             }
 
-            logger.logI("IPRepositoryImpl", "IP was refreshed with: \(ipAddress) (usePingTest: \(usePingTest))")
+            logger.logI("IPRepositoryImpl", "IP was refreshed with: \(ipAddress.redactedIP) (usePingTest: \(usePingTest))")
             currentIp.send(ipAddress)
             preferences.saveCurrentIpAddress(ip: ipAddress)
         } catch {

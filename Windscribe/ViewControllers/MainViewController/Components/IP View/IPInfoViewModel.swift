@@ -157,7 +157,7 @@ class IPInfoViewModel: IPInfoViewModelType {
                     return false
                 }
                 if newIp != currentIp && !newIp.contains("--") {
-                    logger.logI("IPInfoViewModel", "IP changed from \(currentIp) to \(newIp)")
+                    logger.logI("IPInfoViewModel", "IP changed from \(currentIp.redactedIP) to \(newIp.redactedIP)")
                     return true
                 }
                 logger.logI("IPInfoViewModel", "IP state did not change within timeout")
