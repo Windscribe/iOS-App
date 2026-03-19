@@ -252,6 +252,12 @@ class SessionManagerImpl: SessionManager {
         }
     }
 
+    private func updateProtocolCredentials() async {
+        try? await credentialsRepo.getUpdatedIKEv2Crendentials()
+        try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
+        wgCredentials.delete()
+    }
+    
     @MainActor
     func checkForSessionChange() async {
         logger.logD("SessionManager", "Comparing new session with old session.")
@@ -274,17 +280,14 @@ class SessionManagerImpl: SessionManager {
             logger.logI("SessionManager", "User's pro plan expired.")
             _ = try? await Task.sleep(nanoseconds: 3_000_000_000)
             try? await locationListRepository.updatedServerList()
-            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
-            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
+            await updateProtocolCredentials()
         }
         if newSession.isPremium && !oldSession.isPremium {
             try? await locationListRepository.updatedServerList()
-            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
-            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
+            await updateProtocolCredentials()
         }
         if (oldSession.status == 3 && newSession.status == 1) || (oldSession.status == 2 && newSession.status == 1) {
-            try? await credentialsRepo.getUpdatedIKEv2Crendentials()
-            try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
+            await updateProtocolCredentials()
         }
 
         let portMaps = portmapRepo.currentPortMaps.filter({ $0.heading == wireGuard })
