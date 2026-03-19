@@ -91,7 +91,7 @@ extension MainViewController {
         }
     }
 
-    func checkEligibility(session: SessionModel?, isStaticIP: Bool) -> Bool {
+    func checkEligibility(session: SessionModel?, isStaticIP: Bool, islocationPremium: Bool) -> Bool {
         guard let session = session else {
             return false
         }
@@ -106,7 +106,7 @@ extension MainViewController {
             return false
         }
 
-        if let oldSession = viewModel.oldSession, !session.isPremium, oldSession.isPremium, !isStaticIP {
+        if islocationPremium, let oldSession = viewModel.oldSession, !session.isPremium, oldSession.isPremium, !isStaticIP {
             showProPlanExpiredPopup()
             return false
         }
@@ -227,8 +227,11 @@ extension MainViewController {
                 let session = viewModel.sessionModel.value
                 let locationType = vpnConnectionViewModel.getLocationType()
                 let isStaticIP = (locationType == .staticIP)
-
-                guard checkEligibility(session: session, isStaticIP: isStaticIP) else {
+                let islocationPremium = viewModel.getIsSelectedLocationPremium()
+                let isEligible = checkEligibility(session: session,
+                                                  isStaticIP: isStaticIP,
+                                                  islocationPremium: islocationPremium)
+                guard  isEligible else {
                     return
                 }
             }

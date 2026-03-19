@@ -69,4 +69,6 @@ protocol MainViewModel {
 
     func showSimpleAlert(viewController: UIViewController?, title: String, message: String, buttonText: String)
     func showAlert(title: String, message: String, actions: [UIAlertAction])
+
+    func getIsSelectedLocationPremium() -> Bool
 }
