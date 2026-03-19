@@ -21,16 +21,32 @@ class PreferencesConnectionView: UIView {
 
     lazy var circumventCensorshipView: SettingsSection = .fromNib()
 
+    lazy var egressView: SettingsSection = .fromNib()
+
+    lazy var ingressView: SettingsSection = .fromNib()
+
     @IBOutlet var contentStackView: UIStackView!
 
+    private var egressTitleText: String {
+        "\(TextsAsset.Connection.ipStack) - \(TextsAsset.Connection.egress)"
+    }
+
+    private var ingressTitleText: String {
+        "\(TextsAsset.Connection.ipStack) - \(TextsAsset.Connection.ingress)"
+    }
     func setup() {
         updateProtocols()
         updatePorts()
 
+        ingressView.isHidden = true
+        
         connectionModeView.populate(with: GeneralViewType.connectionMode.listOption,
                                     title: GeneralViewType.connectionMode.title)
 
         circumventCensorshipView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.Connection.circumventCensorship)
+
+        egressView.populate(with: viewModel.getIpStackOptions(), title: egressTitleText)
+        ingressView.populate(with: viewModel.getIpStackOptions(), title: ingressTitleText)
 
         protocolsView.isHidden = viewModel.getCurrentConnectionMode() == .auto
         portsView.isHidden = viewModel.getCurrentConnectionMode() == .auto
@@ -39,8 +55,10 @@ class PreferencesConnectionView: UIView {
         protocolsView.delegate = self
         connectionModeView.delegate = self
         circumventCensorshipView.delegate = self
+        egressView.delegate = self
+        ingressView.delegate = self
 
-        for item in [connectionModeView, protocolsView, portsView, circumventCensorshipView] {
+        for item in [connectionModeView, protocolsView, portsView, circumventCensorshipView, egressView, ingressView] {
             contentStackView.addArrangedSubview(item)
         }
         contentStackView.addArrangedSubview(UIView())
@@ -53,6 +71,8 @@ class PreferencesConnectionView: UIView {
         protocolsView.select(option: viewModel.getCurrentProtocol(), animated: false)
         portsView.select(option: viewModel.getCurrentPort(), animated: false)
         circumventCensorshipView.select(option: viewModel.getCircumventCensorshipStatus() ? TextsAsset.General.enabled : TextsAsset.General.disabled, animated: false)
+        egressView.select(option: viewModel.getCurrentEgressProtocol(), animated: false)
+        ingressView.select(option: viewModel.getCurrentIngressProtocol(), animated: false)
     }
 
     private func updateProtocols() {
@@ -74,6 +94,9 @@ class PreferencesConnectionView: UIView {
         portsView.updateText(with: viewModel.getPorts(), title: nil)
 
         circumventCensorshipView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.Connection.circumventCensorship)
+
+        egressView.updateText(with: viewModel.getIpStackOptions(), title: egressTitleText)
+        ingressView.updateText(with: viewModel.getIpStackOptions(), title: ingressTitleText)
     }
 
     private func bindViews() {
@@ -113,6 +136,14 @@ extension PreferencesConnectionView: SettingsSectionDelegate {
         }
         if view == circumventCensorshipView {
             viewModel.updateCircumventCensorshipStatus(status: value == TextsAsset.General.enabled)
+            return
+        }
+        if view == egressView {
+            viewModel.updateEgressProtocol(value: value)
+            return
+        }
+        if view == ingressView {
+            viewModel.updateIngressProtocol(value: value)
             return
         }
     }

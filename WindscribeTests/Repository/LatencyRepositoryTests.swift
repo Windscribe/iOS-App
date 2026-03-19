@@ -408,7 +408,6 @@ class LatencyRepositoryTests: XCTestCase {
             name: "United States",
             countryCode: "US",
             shortName: "US",
-            premiumOnly: 0,
             sortOrder: 1,
             continent: "North America",
             datacenters: [datacenter1]
@@ -419,7 +418,6 @@ class LatencyRepositoryTests: XCTestCase {
             name: "United Kingdom",
             countryCode: "GB",
             shortName: "UK",
-            premiumOnly: 0,
             sortOrder: 2,
             continent: "Europe",
             datacenters: [datacenter2]
@@ -505,7 +503,6 @@ class LatencyRepositoryTests: XCTestCase {
             name: "United States",
             countryCode: "US",
             shortName: "US",
-            premiumOnly: 0,
             sortOrder: 1,
             continent: "North America",
             datacenters: [datacenterFree, datacenterPremium]
@@ -561,7 +558,6 @@ class LatencyRepositoryTests: XCTestCase {
             name: "User Region Country",
             countryCode: countryCode,
             shortName: countryCode,
-            premiumOnly: 0,
             sortOrder: 1,
             continent: "North America",
             datacenters: [datacenter]

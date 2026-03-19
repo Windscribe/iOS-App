@@ -15,9 +15,13 @@ enum SharedKeys {
     static let sharedKeychainGroup = "\(SharedKeys.getValueFromPlistFile(key: "CFAccountID")).\(SharedKeys.getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
     static let preSharedKey = "preSharedKey"
     static let allowedIp = "allowedIp"
+    static let allowedIpV6 = "allowedIpV6"
     static let hashedCIDR = "hashedCIDR"
+    static let hashedCIDRv6 = "hashedCIDRv6"
     static let dns = "dns"
     static let address = "address"
+    static let addressV6 = "addressV6"
+    static let serverSupportsIPv6 = "serverSupportsIPv6"
     static let serverEndPoint = "serverEndPoint"
     static let serverHostName = "serverHostName"
     static let serverPublicKey = "serverPublicKey"
@@ -123,6 +127,10 @@ enum SharedKeys {
 
     // Custom App Icon
     static let customAppIcon = "customAppIcon"
+
+    // IP Stack
+    static let ipStackEgressKey = "ipStackEgress"
+    static let ipStackIngressKey = "ipStackIngress"
 
     // Unblock WG Params
     static let unblockWgParams = "unblockWgParams"

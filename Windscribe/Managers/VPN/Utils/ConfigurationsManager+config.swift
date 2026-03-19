@@ -128,7 +128,7 @@ extension ConfigurationsManager {
             let hostname = server.hostname
             let publickey = locationDatacenter.1.wgPubkey
             locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
-            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
+            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, ipv6: server.ipv6, vpnSettings: vpnSettings)
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         case .staticIP:
@@ -141,7 +141,7 @@ extension ConfigurationsManager {
             let hostname = node.hostname
             let publickey = staticLocation.wgPublicKey
             locationListRepository.saveLastConnectedHost(for: hostname, with: locationId)
-            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
+            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, ipv6: 0, vpnSettings: vpnSettings)
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         default:
@@ -150,8 +150,8 @@ extension ConfigurationsManager {
     }
 
     /// Gets Wireguard configuration from Api and saves to file.
-    private func updateWireguardConfig(ip: String, hostname: String, serverPublicKey: String, port: String, vpnSettings: VPNUserSettings) async throws {
-        wgCredentials.setNodeToConnect(serverEndPoint: ip, serverHostName: hostname, serverPublicKey: serverPublicKey, port: port)
+    private func updateWireguardConfig(ip: String, hostname: String, serverPublicKey: String, port: String, ipv6: Int, vpnSettings: VPNUserSettings) async throws {
+        wgCredentials.setNodeToConnect(serverEndPoint: ip, serverHostName: hostname, serverPublicKey: serverPublicKey, port: port, ipv6: ipv6)
         wgCredentials.deleteOldestKey = vpnSettings.deleteOldestKey
         return try await wgRepository.getCredentials()
     }

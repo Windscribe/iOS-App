@@ -154,7 +154,6 @@ final class FavouriteListViewModelTests: XCTestCase {
             name: name,
             countryCode: countryCode,
             shortName: countryCode,
-            premiumOnly: premiumOnly,
             sortOrder: 1,
             continent: "North America",
             datacenters: []
@@ -232,7 +231,6 @@ final class FavouriteListViewModelTests: XCTestCase {
             name: locationName,
             countryCode: "US",
             shortName: "US",
-            premiumOnly: isPremium,
             sortOrder: 1,
             continent: "North America",
             datacenters: [datacenter]

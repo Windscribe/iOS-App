@@ -32,7 +32,8 @@ extension Container {
                                           wgCrendentials: r.resolve(WgCredentials.self)!,
                                           alertManager: nil,
                                           logger: r.resolve(FileLogger.self)!,
-                                          ipManager: r.resolve(WireguardIPManager.self)!)
+                                          ipManager: r.resolve(WireguardIPManager.self)!,
+                                          preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.container)
     }
 }

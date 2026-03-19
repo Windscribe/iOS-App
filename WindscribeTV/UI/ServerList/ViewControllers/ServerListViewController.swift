@@ -146,9 +146,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                                                                                              isForStreaming: isStreaming,
                                                                                              locations: results)
 
-                self.locationSectionsOrdered = locationSectionsOrdered
-                self.addBestLocation()
-                self.serverListCollectionView.reloadData()
             }
             .store(in: &cancellables)
 

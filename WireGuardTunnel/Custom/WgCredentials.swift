@@ -13,11 +13,14 @@ import WireGuardKit
 class WgCredentials {
     var presharedKey: String?
     var allowedIps: String?
+    var allowedIpsV6: String?
     var address: String?
+    var addressV6: String?
     var dns: String?
 
     var serverEndPoint: String?
     var serverHostName: String?
+    var serverSupportsIPv6: Bool = false
     var serverPublicKey: String?
     var port: String?
     var deleteOldestKey = true
@@ -33,12 +36,15 @@ class WgCredentials {
     func load() {
         // Load state from saved
         address = preferences.getWireGuardAddress()
+        addressV6 = preferences.getWireGuardAddressV6()
         presharedKey = preferences.getWireGuardPresharedKey()
         allowedIps = preferences.getWireGuardAllowedIPs()
+        allowedIpsV6 = preferences.getWireGuardAllowedIPsV6()
 
         serverEndPoint = preferences.getWireGuardServerEndpoint()
         serverHostName = preferences.getWireGuardServerHostname()
         serverPublicKey = preferences.getWireGuardServerPublicKey()
+        serverSupportsIPv6 = preferences.getWireGuardServerSupportsIPv6()
         port = preferences.getWireGuardServerPort()
         dns = preferences.getWireGuardDNS()
     }
@@ -91,6 +97,8 @@ class WgCredentials {
             config.presharedKey = presharedKey
             config.allowedIPs = allowedIps
             config.hashedCIDR = hashedCIDR
+            config.hashedCIDRv6 = preferences.getWireGuardHashedCIDRv6()
+            config.allowedIPsV6 = preferences.getWireGuardAllowedIPsV6()
             return config
         }
         return nil
@@ -99,27 +107,34 @@ class WgCredentials {
     func saveInitResponse(config: DynamicWireGuardConfig) {
         presharedKey = config.presharedKey
         allowedIps = config.allowedIPs
+        allowedIpsV6 = config.allowedIPsV6
         preferences.saveWireGuardPresharedKey(config.presharedKey)
         preferences.saveWireGuardAllowedIPs(config.allowedIPs)
+        preferences.saveWireGuardAllowedIPsV6(config.allowedIPsV6)
         preferences.saveWireGuardHashedCIDR(config.hashedCIDR)
+        preferences.saveWireGuardHashedCIDRv6(config.hashedCIDRv6)
     }
 
     // Save locally generated IP and DNS
-    func saveGeneratedIP(ip: String, dns: String) {
+    func saveGeneratedIP(ip: String, dns: String, ipV6: String? = nil) {
         self.address = ip
+        self.addressV6 = ipV6
         self.dns = dns
         preferences.saveWireGuardAddress(ip)
+        preferences.saveWireGuardAddressV6(ipV6)
         preferences.saveWireGuardDNS(dns)
     }
 
-    func setNodeToConnect(serverEndPoint: String, serverHostName: String, serverPublicKey: String, port: String) {
+    func setNodeToConnect(serverEndPoint: String, serverHostName: String, serverPublicKey: String, port: String, ipv6: Int) {
         self.serverEndPoint = serverEndPoint
         self.serverHostName = serverHostName
         self.serverPublicKey = serverPublicKey
         self.port = port
+        self.serverSupportsIPv6 = ipv6 != 0
         preferences.saveWireGuardServerEndpoint(serverEndPoint)
         preferences.saveWireGuardServerHostname(serverHostName)
         preferences.saveWireGuardServerPublicKey(serverPublicKey)
+        preferences.saveWireGuardServerSupportsIPv6(serverSupportsIPv6)
         preferences.saveWireGuardServerPort(port)
     }
 
@@ -132,8 +147,11 @@ class WgCredentials {
         }
         dns = nil
         address = nil
+        addressV6 = nil
         presharedKey = nil
         allowedIps = nil
+        allowedIpsV6 = nil
+        serverSupportsIPv6 = false
         preferences.clearWireGuardConfiguration()
     }
 
@@ -147,10 +165,13 @@ class WgCredentials {
            let serverEndPoint = serverEndPoint,
            let port = port
         {
+            let fullAddress = addressV6 != nil ? "\(address), \(addressV6!)" : address
+            let fullAllowedIps = allowedIpsV6 != nil ? "\(allowedIps), \(allowedIpsV6!)" : allowedIps
+
             var lines: [String] = [
                 "[Interface]",
                 "PrivateKey = \(privateKey)",
-                "Address = \(address)",
+                "Address = \(fullAddress)",
                 "Dns = \(dns)"
             ]
             if preferences.isCircumventCensorshipEnabled() {
@@ -161,7 +182,7 @@ class WgCredentials {
                 "",
                 "[Peer]",
                 "PublicKey = \(serverPublicKey)",
-                "AllowedIPs = \(allowedIps)",
+                "AllowedIPs = \(fullAllowedIps)",
                 "Endpoint = \(serverEndPoint):\(port)",
                 "PresharedKey = \(presharedKey)"
             ])
@@ -172,6 +193,6 @@ class WgCredentials {
     }
 
     var debugDescription: String {
-        return "Endpoint: \(serverEndPoint ?? "") Hostname: \(serverHostName ?? "") Server public key: \(serverPublicKey ?? "") \n User public key: [async] Allowed Ip: \(allowedIps ?? "") Preshared key: \(presharedKey ?? "") Address: \(address ?? "") Port: \(port ?? "") Dns: \(dns ?? "")"
+        return "Endpoint: \(serverEndPoint ?? "") Hostname: \(serverHostName ?? "") Server public key: \(serverPublicKey ?? "") \n User public key: [async] Allowed Ip: \(allowedIps ?? "") Allowed IpV6: \(allowedIpsV6 ?? "") Preshared key: \(presharedKey ?? "") Address: \(address ?? "") AddressV6: \(addressV6 ?? "") Port: \(port ?? "") Dns: \(dns ?? "")"
     }
 }

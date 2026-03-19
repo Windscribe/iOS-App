@@ -15,7 +15,11 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
          connectedDns(currentOption: String, customValue: String, options: [MenuOption]),
          allowLan(isSelected: Bool),
          circunventCensorship(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption]),
-         serverpede(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption])
+         serverpede(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption]),
+         ipStack(
+            selectedEgressOption: String, egressOptions: [MenuOption],
+            selectedIngressOption: String, ingressOptions: [MenuOption]
+         )
 
     var id: Int {
         switch self {
@@ -25,7 +29,8 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .connectedDns: 4
         case .allowLan: 5
         case .circunventCensorship: 6
-        case .serverpede: 6
+        case .serverpede: 7
+        case .ipStack: 8
         }
     }
     var title: String {
@@ -37,6 +42,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .allowLan: TextsAsset.Connection.allowLan
         case .circunventCensorship: TextsAsset.Connection.circumventCensorship
         case .serverpede: TextsAsset.Connection.useServerpede
+        case .ipStack: TextsAsset.Connection.ipStack
         }
     }
     var icon: String {
@@ -48,6 +54,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .allowLan: ImagesAsset.Connection.allowLan
         case .circunventCensorship: ImagesAsset.Connection.circumventCensorship
         case .serverpede: ImagesAsset.Connection.circumventCensorship
+        case .ipStack: ImagesAsset.Connection.preferredProtocol
         }
     }
     var message: String? {
@@ -59,6 +66,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .allowLan: nil
         case .circunventCensorship: nil
         case .serverpede: nil
+        case .ipStack: nil
         }
     }
     var action: MenuEntryActionType? {
@@ -70,6 +78,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case let .allowLan(isSelected): .toggle(isSelected: isSelected, parentId: id)
         case let .circunventCensorship(isSelected, _, _): .toggle(isSelected: isSelected, parentId: id)
         case let .serverpede(isSelected, _, _): .toggle(isSelected: isSelected, parentId: id)
+        case .ipStack: .none(title: "", parentId: id)
         }
     }
     var secondaryEntries: [MenuSecondaryEntryItem] {
@@ -112,6 +121,9 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
             } else {
                 return [.serverpedInfo]
             }
+        case let .ipStack(selectedEgress, egressOptions, selectedIngress, ingressOptions):
+            return [.ipStackInfo, .egressMenu(currentOption: selectedEgress, options: egressOptions)]
+
         default:
             return []
         }
@@ -129,7 +141,10 @@ enum ConnectionSecondaryEntryIDs: Int {
          circunventCensorshipInfo,
          wgUnlockMenu,
          serverpedInfo,
-         backupMenu
+         backupMenu,
+         ipStackInfo,
+         ipStackEgressMenu,
+         ipStackIngressMenu
 
     var id: Int { rawValue }
 }
@@ -145,7 +160,10 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
          circunventCensorshipInfo,
          wgUnlockMenu(currentOption: String, options: [MenuOption]),
          serverpedInfo,
-         backupMenu(currentOption: String, options: [MenuOption])
+         backupMenu(currentOption: String, options: [MenuOption]),
+         ipStackInfo,
+         egressMenu(currentOption: String, options: [MenuOption]),
+         ingressMenu(currentOption: String, options: [MenuOption])
 
     var id: Int {
         switch self {
@@ -171,6 +189,12 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
             ConnectionSecondaryEntryIDs.serverpedInfo.id
         case .backupMenu:
             ConnectionSecondaryEntryIDs.backupMenu.id
+        case .ipStackInfo:
+            ConnectionSecondaryEntryIDs.ipStackInfo.id
+        case .egressMenu:
+            ConnectionSecondaryEntryIDs.ipStackEgressMenu.id
+        case .ingressMenu:
+            ConnectionSecondaryEntryIDs.ipStackIngressMenu.id
         }
     }
     var title: String {
@@ -179,6 +203,8 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
         case .portMenu: TextsAsset.Connection.port
         case .wgUnlockMenu: TextsAsset.Connection.configuration
         case .backupMenu: TextsAsset.Connection.backup
+        case .egressMenu: TextsAsset.Connection.egress
+        case .ingressMenu: TextsAsset.Connection.ingress
         default: ""
         }
     }
@@ -191,7 +217,9 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
         case .connectionModeInfo:
                 .infoLink(message: TextsAsset.Connection.connectionModeDescription, parentId: id)
         case let .protocolMenu(currentOption, options),
-            let .portMenu(currentOption, options):
+            let .portMenu(currentOption, options),
+            let .egressMenu(currentOption, options),
+            let .ingressMenu(currentOption, options):
                 .multiple(currentOption: currentOption, options: options, parentId: id)
         case .connectedDnsInfo:
                 .infoLink(message: TextsAsset.Connection.connectedDNSDescription, parentId: id)
@@ -207,6 +235,9 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
                 .infoLink(message: TextsAsset.Connection.serverpedeDescription, parentId: id)
         case let .backupMenu(currentOption, options):
                 .multiple(currentOption: currentOption, options: options, parentId: id)
+        case .ipStackInfo:
+                .infoLink(message: TextsAsset.Connection.ipStackDescription, parentId: id)
+
         }
     }
 }

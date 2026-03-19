@@ -549,9 +549,15 @@ enum TextsAsset {
         static var port: String { "Port".localized }
         static var configuration: String { "Configuration".localized }
         static var backup: String { "Use Backup IPs".localized }
+        static var ipStack: String { "IP Stack".localized }
+        static var egress: String { "Egress".localized }
+        static var ingress: String { "Ingress".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized
+        }
+        static var ipStackDescription: String {
+            "Configure IP stack for VPN connections.".localized
         }
         static var killSwitchDescription: String {
             return "Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services.".localized
@@ -668,6 +674,7 @@ enum TextsAsset {
         static var enabled: String { "Enabled".localized }
         static var disabled: String { "Disabled".localized }
         static var customBackground: String { "Custom Background".localized }
+        static var ipv4Only: String { "IPv4 Only".localized }
 
         static func getValue(displayText: String) -> String? {
             switch displayText {
@@ -1470,6 +1477,10 @@ enum TextsAsset {
 
     static var orderPreferences: [String] {
         return ["Geography".localized, "Alphabet".localized, "Latency".localized]
+    }
+
+    static var ipStackOptions: [String] {
+        return [TextsAsset.General.auto, TextsAsset.General.ipv4Only]
     }
 
     static let http = "http"
