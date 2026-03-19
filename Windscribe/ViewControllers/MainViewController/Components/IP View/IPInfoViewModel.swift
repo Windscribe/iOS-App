@@ -14,6 +14,7 @@ protocol IPInfoViewModelType {
     var ipAddressSubject: CurrentValueSubject<String?, Never> { get }
     var isFavouritedSubject: CurrentValueSubject<Bool, Never> { get }
     var areActionsAvailable: CurrentValueSubject<Bool, Never> { get }
+    var isRotatingIpSubject: CurrentValueSubject<Bool, Never> { get }
     var actionFailedSubject: PassthroughSubject<BridgeApiPopupType, Never> { get }
 
     func markBlurStaticIpAddress(isBlured: Bool)
@@ -37,6 +38,7 @@ class IPInfoViewModel: IPInfoViewModelType {
     let ipAddressSubject = CurrentValueSubject<String?, Never>(nil)
     let isFavouritedSubject =  CurrentValueSubject<Bool, Never>(false)
     let areActionsAvailable =  CurrentValueSubject<Bool, Never>(true)
+    let isRotatingIpSubject =  CurrentValueSubject<Bool, Never>(false)
     let actionFailedSubject = PassthroughSubject<BridgeApiPopupType, Never>()
     private var cancellables = Set<AnyCancellable>()
 
@@ -72,7 +74,8 @@ class IPInfoViewModel: IPInfoViewModelType {
                 return ipAddress
             }
             .sink { [weak self] ipAddress in
-                self?.ipAddressSubject.send(ipAddress)
+                guard let self = self else { return }
+                self.ipAddressSubject.send(ipAddress)
             }
             .store(in: &cancellables)
 
@@ -108,10 +111,14 @@ class IPInfoViewModel: IPInfoViewModelType {
     }
 
     func rotateIp() {
+        guard !isRotatingIpSubject.value else { return }
+        isRotatingIpSubject.send(true)
         Task {
             if await !performRotateIp() {
                 actionFailedSubject.send(.rotateIp)
             }
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+            isRotatingIpSubject.send(false)
         }
     }
 
