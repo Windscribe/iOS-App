@@ -37,6 +37,7 @@ protocol LocationsManager {
     func isCustomConfigSelected() -> Bool
     func checkLocationValidity()
     func checkForForceDisconnect() -> Bool
+    func getIsSelectedLocationPremium() -> Bool
 
     var selectedLocationUpdated: CurrentValueSubject<Bool, Never> { get }
     var bestLocationUpdatedTrigger: PassthroughSubject<Void, Never> { get }
@@ -293,6 +294,12 @@ class LocationsManagerImpl: LocationsManager {
            isPremiumOnly {
             updateToBestLocation()
         }
+    }
+
+    func getIsSelectedLocationPremium() -> Bool {
+        let datacenterId = getId()
+        guard let datacenter = locationListRepository.getDatacenter(by: datacenterId) else { return false }
+        return datacenter.isPremiumOnly
     }
 }
 

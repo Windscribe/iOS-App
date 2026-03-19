@@ -566,6 +566,10 @@ class MainViewModelImpl: MainViewModel {
         updateSSIDTrigger.send(())
     }
 
+    func getIsSelectedLocationPremium() -> Bool {
+        locationsManager.getIsSelectedLocationPremium()
+    }
+
     func getLocationModel(from datacenterId: Int) -> LocationModel? {
         try? locationsManager.getLocation(from: datacenterId).0
     }
