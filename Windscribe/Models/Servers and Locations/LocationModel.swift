@@ -61,11 +61,7 @@ struct LocationModel: Decodable {
         continent = try container.decodeIfPresent(String.self, forKey: .continent) ?? ""
         datacenters = try container.decodeIfPresent([DatacenterModel].self, forKey: .datacenters) ?? []
 
-        datacenters = datacenters.map {
-            var updatedDatacenter = $0
-            updatedDatacenter.locationId = id
-            return updatedDatacenter
-        }
+        mapDatacenters()
     }
 
     init(id: Int,
@@ -82,6 +78,8 @@ struct LocationModel: Decodable {
         self.sortOrder = sortOrder
         self.continent = continent
         self.datacenters = datacenters
+
+        mapDatacenters()
     }
 
     init(from object: LocationObject) {
@@ -92,6 +90,16 @@ struct LocationModel: Decodable {
         self.sortOrder = object.sortOrder
         self.continent = object.continent
         self.datacenters = object.datacenters.map { DatacenterModel(from: $0) }
+
+        mapDatacenters()
+    }
+
+    private mutating func mapDatacenters() {
+        datacenters = datacenters.map {
+            var updatedDatacenter = $0
+            updatedDatacenter.locationId = id
+            return updatedDatacenter
+        }
     }
 
     func copyModelWith(datacenters: [DatacenterModel]) -> LocationModel {

@@ -119,6 +119,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
         ?? FavNodeTableViewCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
+        guard !favList.isEmpty else { return cell }
         let favourite = favList[indexPath.row]
         var latency = -1
         if let randomServer = locationListRepository.getRandomServer(for: favourite.datacenterModel.id),
