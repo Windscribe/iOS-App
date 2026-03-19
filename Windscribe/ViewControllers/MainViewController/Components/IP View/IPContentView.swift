@@ -124,6 +124,14 @@ class IPInfoView: UIView {
             }
             .store(in: &cancellables)
 
+        viewModel.isRotatingIpSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isRotating in
+                guard let self = self else { return }
+                self.refreshButton.isEnabled = !isRotating
+            }
+            .store(in: &cancellables)
+
         // Add double-tap gesture recognizer
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
         doubleTapGesture.numberOfTapsRequired = 2
@@ -170,6 +178,8 @@ class IPInfoView: UIView {
 
         refreshButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
+            guard !self.viewModel.isRotatingIpSubject.value else { return }
+
             viewModel.runHapticFeedback(level: .medium)
 
             // Start continuous rolling animation until new IP arrives
