@@ -41,6 +41,8 @@ protocol LocationListRepository {
 
     func getDatacenterPinnedIp(for datacenterId: Int) -> String?
     func saveLastConnectedHost(for hostName: String, with locationId: Int)
+
+    func updateAllIfEmpty() async throws
 }
 
 class LocationListRepositoryImpl: LocationListRepository {
@@ -125,6 +127,15 @@ class LocationListRepositoryImpl: LocationListRepository {
         self.locationListSubject.send(updatedLocationList)
     }
 
+    private func updateDatacenterList(from locations: [LocationModel], shouldTrigger: Bool = true) {
+        let allDatacenters = locations.flatMap { $0.datacenters }
+        datacenterListSubject.send(allDatacenters)
+        if shouldTrigger {
+            datacentersUpdatedTrigger.send(())
+        }
+        logger.logI("LocationListRepositoryImpl", "Successfully updated \(allDatacenters.count) datacenters")
+    }
+
     private func loadInitialLocations() {
         if let locationObjects = localDatabase.getLocations(), !locationObjects.isEmpty {
             let locations = locationObjects.map { LocationModel(from: $0) }
@@ -134,15 +145,6 @@ class LocationListRepositoryImpl: LocationListRepository {
             let newlocationList = deprecatedList.map { $0.getLocationModel() }
             saveLocationList(with: newlocationList)
         }
-    }
-
-    private func updateDatacenterList(from locations: [LocationModel], shouldTrigger: Bool = true) {
-        let allDatacenters = locations.flatMap { $0.datacenters }
-        datacenterListSubject.send(allDatacenters)
-        if shouldTrigger {
-            datacentersUpdatedTrigger.send(())
-        }
-        logger.logI("LocationListRepositoryImpl", "Successfully updated \(allDatacenters.count) datacenters")
     }
 
     private func loadInitialServers() {
@@ -207,6 +209,15 @@ class LocationListRepositoryImpl: LocationListRepository {
             } else {
                 throw error
             }
+        }
+    }
+
+    func updateAllIfEmpty() async throws {
+        if currentServerModels.isEmpty {
+            try await updatedServerList()
+        }
+        if currentLocationModels.isEmpty {
+            try await updateLocations()
         }
     }
 

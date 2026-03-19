@@ -51,6 +51,8 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         localDatabase.saveOldSession()
         localDatabase.saveSession(session: Session(sessionModel: session))
 
+        try? await locationListRepository.updateAllIfEmpty()
+
         if let inventory = session.inventory {
             locationListRepository.updateInventory(with: inventory)
         }
