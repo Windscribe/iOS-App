@@ -44,12 +44,36 @@ extension PreferencesImpl {
         return getString(forKey: SharedKeys.allowedIp)
     }
 
+    func saveWireGuardAllowedIPsV6(_ ips: String?) {
+        setString(ips, forKey: SharedKeys.allowedIpV6)
+    }
+
+    func getWireGuardAllowedIPsV6() -> String? {
+        return getString(forKey: SharedKeys.allowedIpV6)
+    }
+
     func saveWireGuardHashedCIDR(_ cidr: [String]?) {
         sharedDefault?.setValue(cidr, forKey: SharedKeys.hashedCIDR)
     }
 
     func getWireGuardHashedCIDR() -> [String]? {
         return sharedDefault?.array(forKey: SharedKeys.hashedCIDR) as? [String]
+    }
+
+    func saveWireGuardHashedCIDRv6(_ cidr: [String]?) {
+        sharedDefault?.setValue(cidr, forKey: SharedKeys.hashedCIDRv6)
+    }
+
+    func getWireGuardHashedCIDRv6() -> [String]? {
+        return sharedDefault?.array(forKey: SharedKeys.hashedCIDRv6) as? [String]
+    }
+
+    func saveWireGuardAddressV6(_ address: String?) {
+        setString(address, forKey: SharedKeys.addressV6)
+    }
+
+    func getWireGuardAddressV6() -> String? {
+        return getString(forKey: SharedKeys.addressV6)
     }
 
     // WireGuard Server Configuration
@@ -59,6 +83,14 @@ extension PreferencesImpl {
 
     func getWireGuardServerEndpoint() -> String? {
         return getString(forKey: SharedKeys.serverEndPoint)
+    }
+
+    func saveWireGuardServerSupportsIPv6(_ supports: Bool) {
+        sharedDefault?.set(supports, forKey: SharedKeys.serverSupportsIPv6)
+    }
+
+    func getWireGuardServerSupportsIPv6() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.serverSupportsIPv6) ?? false
     }
 
     func saveWireGuardServerHostname(_ hostname: String?) {
@@ -90,9 +122,13 @@ extension PreferencesImpl {
         removeObjects(forKey: [
             SharedKeys.preSharedKey,
             SharedKeys.allowedIp,
+            SharedKeys.allowedIpV6,
             SharedKeys.hashedCIDR,
+            SharedKeys.hashedCIDRv6,
             SharedKeys.dns,
             SharedKeys.address,
+            SharedKeys.addressV6,
+            SharedKeys.serverSupportsIPv6,
             SharedKeys.serverEndPoint,
             SharedKeys.serverHostName,
             SharedKeys.serverPublicKey,

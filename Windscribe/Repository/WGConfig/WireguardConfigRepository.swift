@@ -21,15 +21,17 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private let wgCrendentials: WgCredentials
     private let alertManager: AlertManager?
     private let ipManager: WireguardIPManager
+    private let preferences: Preferences
     private var firstConnection = true
 
-    init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManager?, logger: FileLogger, ipManager: WireguardIPManager) {
+    init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManager?, logger: FileLogger, ipManager: WireguardIPManager, preferences: Preferences) {
         self.apiCallManager = apiCallManager
         self.fileDatabase = fileDatabase
         self.wgCrendentials = wgCrendentials
         self.alertManager = alertManager
         self.logger = logger
         self.ipManager = ipManager
+        self.preferences = preferences
     }
 
     func getCredentials() async throws {
@@ -72,7 +74,8 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
 
     private func generateLocalIP() async throws {
         // Get CIDR from wgInit response
-        guard let hashedCIDR = wgCrendentials.getWgInitResponse()?.hashedCIDR,
+        guard let initResponse = wgCrendentials.getWgInitResponse(),
+              let hashedCIDR = initResponse.hashedCIDR,
               let firstCIDR = hashedCIDR.first else {
             logger.logE("WireguardConfigRepository", "Missing hashedCIDR from wgInit response")
             throw RepositoryError.missingHashedCIDR
@@ -91,8 +94,23 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
 
             logger.logI("WireguardConfigRepository", "Generated IP: \(generatedIP) from CIDR: \(firstCIDR)")
 
+            // Generate IPv6 address if server supports it, egress is "Auto", and v6 CIDR is available
+            var generatedIPv6: String?
+            let egressPref = preferences.getEgressProtocolPreferenceSync()
+            if wgCrendentials.serverSupportsIPv6,
+               egressPref == Fields.Values.auto,
+               let hashedCIDRv6 = initResponse.hashedCIDRv6,
+               let firstCIDRv6 = hashedCIDRv6.first {
+                do {
+                    generatedIPv6 = try ipManager.generateIPv6(publicKeyBase64: publicKey, cidr: firstCIDRv6)
+                    logger.logI("WireguardConfigRepository", "Generated IPv6: \(generatedIPv6!) from CIDR: \(firstCIDRv6)")
+                } catch {
+                    logger.logE("WireguardConfigRepository", "Failed to generate IPv6: \(error.localizedDescription)")
+                }
+            }
+
             // Save generated IP and DNS
-            wgCrendentials.saveGeneratedIP(ip: generatedIP, dns: dns)
+            wgCrendentials.saveGeneratedIP(ip: generatedIP, dns: dns, ipV6: generatedIPv6)
         } catch {
             logger.logE("WireguardConfigRepository", "Failed to generate IP: \(error.localizedDescription)")
             throw RepositoryError.ipGenerationFailed(error.localizedDescription)

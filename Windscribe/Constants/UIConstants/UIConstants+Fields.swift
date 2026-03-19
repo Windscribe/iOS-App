@@ -36,6 +36,10 @@ enum Fields {
         [Values.auto, Values.custom]
     }
 
+    static var ipStackOptions: [String] {
+        [Values.auto, Values.ipv4Only]
+    }
+
     static var orderPreferences: [String] {
         return [Values.geography, Values.alphabet, Values.latency]
     }
@@ -66,6 +70,7 @@ enum Fields {
         static let dark = "Dark"
         static let light = "Light"
         static let bestLocation = "Best Location"
+        static let ipv4Only = "IPv4 Only"
     }
 }
 

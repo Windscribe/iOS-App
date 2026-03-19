@@ -48,6 +48,12 @@ protocol ConnectionsViewModelType {
     func getPort(by protocolType: String) -> [String]
 
     func saveConnectedDNSValue(value: String, completion: @escaping (_ isValid: Bool) -> Void)
+
+    func getCurrentEgressProtocol() -> String
+    func getCurrentIngressProtocol() -> String
+    func updateEgressProtocol(value: String)
+    func updateIngressProtocol(value: String)
+    func getIpStackOptions() -> [String]
 }
 
 class ConnectionsViewModel: ConnectionsViewModelType {
@@ -71,6 +77,8 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var autoSecure = CurrentValueSubject<Bool, Never>(DefaultValues.autoSecureNewNetworks)
     private var connectionMode = ConnectionModeType.defaultValue()
     private var connectedDNS = ConnectedDNSType.defaultValue()
+    private var egressProtocol = CurrentValueSubject<String, Never>(DefaultValues.ipv4Only)
+    private var ingressProtocol = CurrentValueSubject<String, Never>(DefaultValues.ipv4Only)
 
     let isCircumventCensorshipEnabled = CurrentValueSubject<Bool, Never>(DefaultValues.circumventCensorship)
     let isDarkMode: CurrentValueSubject<Bool, Never>
@@ -124,6 +132,12 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         }.store(in: &cancellables)
         preferences.getCircumventCensorshipEnabled().sink { [weak self] data in
             self?.isCircumventCensorshipEnabled.send(data)
+        }.store(in: &cancellables)
+        preferences.getEgressProtocolPreference().sink { [weak self] data in
+            self?.egressProtocol.send(data ?? DefaultValues.ipv4Only)
+        }.store(in: &cancellables)
+        preferences.getIngressProtocolPreference().sink { [weak self] data in
+            self?.ingressProtocol.send(data ?? DefaultValues.ipv4Only)
         }.store(in: &cancellables)
 
         let connectionModePublisher = preferences.getConnectionMode()
@@ -279,5 +293,47 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     func getCircumventCensorshipStatus() -> Bool {
         preferences.isCircumventCensorshipEnabled()
+    }
+
+    func getCurrentEgressProtocol() -> String {
+        return displayText(for: preferences.getEgressProtocolPreferenceSync())
+    }
+
+    func getCurrentIngressProtocol() -> String {
+        return displayText(for: preferences.getIngressProtocolPreferenceSync())
+    }
+
+    func updateEgressProtocol(value: String) {
+        preferences.saveEgressProtocolPreference(value: fieldValue(for: value))
+    }
+
+    func updateIngressProtocol(value: String) {
+        preferences.saveIngressProtocolPreference(value: fieldValue(for: value))
+    }
+
+    private func displayText(for fieldValue: String) -> String {
+        switch fieldValue {
+        case Fields.Values.auto:
+            return TextsAsset.General.auto
+        case Fields.Values.ipv4Only:
+            return TextsAsset.General.ipv4Only
+        default:
+            return TextsAsset.General.ipv4Only
+        }
+    }
+
+    private func fieldValue(for displayText: String) -> String {
+        switch displayText {
+        case TextsAsset.General.auto:
+            return Fields.Values.auto
+        case TextsAsset.General.ipv4Only:
+            return Fields.Values.ipv4Only
+        default:
+            return Fields.Values.ipv4Only
+        }
+    }
+
+    func getIpStackOptions() -> [String] {
+        return TextsAsset.ipStackOptions
     }
 }

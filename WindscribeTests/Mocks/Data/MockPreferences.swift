@@ -37,6 +37,10 @@ class MockPreferences: Preferences {
     var mockLastNodeIP: String?
     var mockIgnorePinIP: Bool?
     var mockWireGuardHashedCIDR: [String]?
+    var mockWireGuardHashedCIDRv6: [String]?
+    var mockWireGuardAllowedIPsV6: String?
+    var mockWireGuardAddressV6: String?
+    var mockEgressProtocolPreference: String = DefaultValues.ipv4Only
     var mockLastSelectedPinnedIp: String?
     var mockUnblockWgParams: Windscribe.UnblockWgParams?
     var disconnectReason: Windscribe.DisconnectReason?
@@ -650,6 +654,14 @@ class MockPreferences: Preferences {
         return mockWireGuardAllowedIPs
     }
 
+    func saveWireGuardAllowedIPsV6(_ ips: String?) {
+        mockWireGuardAllowedIPsV6 = ips
+    }
+
+    func getWireGuardAllowedIPsV6() -> String? {
+        return mockWireGuardAllowedIPsV6
+    }
+
     func saveWireGuardServerEndpoint(_ endpoint: String?) {
         mockWireGuardServerEndpoint = endpoint
     }
@@ -682,17 +694,31 @@ class MockPreferences: Preferences {
         return mockWireGuardServerPort
     }
 
+    var mockWireGuardServerSupportsIPv6: Bool = false
+
+    func saveWireGuardServerSupportsIPv6(_ supports: Bool) {
+        mockWireGuardServerSupportsIPv6 = supports
+    }
+
+    func getWireGuardServerSupportsIPv6() -> Bool {
+        return mockWireGuardServerSupportsIPv6
+    }
+
     func clearWireGuardConfiguration() {
         clearWireGuardConfigurationCalled = true
         mockWireGuardAddress = nil
+        mockWireGuardAddressV6 = nil
         mockWireGuardDNS = nil
         mockWireGuardPresharedKey = nil
         mockWireGuardAllowedIPs = nil
+        mockWireGuardAllowedIPsV6 = nil
         mockWireGuardServerEndpoint = nil
         mockWireGuardServerHostname = nil
         mockWireGuardServerPublicKey = nil
         mockWireGuardServerPort = nil
+        mockWireGuardServerSupportsIPv6 = false
         mockWireGuardHashedCIDR = nil
+        mockWireGuardHashedCIDRv6 = nil
     }
 
     func getSelectedProtocolSync() -> String? {
@@ -730,6 +756,41 @@ class MockPreferences: Preferences {
 
     func getWireGuardHashedCIDR() -> [String]? {
         return mockWireGuardHashedCIDR
+    }
+
+    func saveWireGuardHashedCIDRv6(_ cidr: [String]?) {
+        mockWireGuardHashedCIDRv6 = cidr
+    }
+
+    func getWireGuardHashedCIDRv6() -> [String]? {
+        return mockWireGuardHashedCIDRv6
+    }
+
+    func saveWireGuardAddressV6(_ address: String?) {
+        mockWireGuardAddressV6 = address
+    }
+
+    func getWireGuardAddressV6() -> String? {
+        return mockWireGuardAddressV6
+    }
+
+    func saveEgressProtocolPreference(value: String) {
+        mockEgressProtocolPreference = value
+    }
+
+    func getEgressProtocolPreference() -> AnyPublisher<String?, Never> {
+        return Just(mockEgressProtocolPreference).eraseToAnyPublisher()
+    }
+
+    func getEgressProtocolPreferenceSync() -> String {
+        return mockEgressProtocolPreference
+    }
+
+    func saveIngressProtocolPreference(value: String) {
+    }
+
+    func getIngressProtocolPreference() -> AnyPublisher<String?, Never> {
+        return Just(DefaultValues.ipv4Only).eraseToAnyPublisher()
     }
 
     func saveLastSelectedPinnedIp(with pinnedIP: String) {

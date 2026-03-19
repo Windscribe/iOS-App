@@ -30,7 +30,8 @@ class MockWgCredentials: WgCredentials {
             serverEndPoint: "192.0.2.1",
             serverHostName: "test-server.example.com",
             serverPublicKey: "test-server-public-key",
-            port: "443"
+            port: "443",
+            ipv6: 0
         )
     }
 
@@ -76,7 +77,8 @@ class MockWgCredentials: WgCredentials {
             serverEndPoint: "192.0.2.1",
             serverHostName: "test-server.example.com",
             serverPublicKey: "test-server-public-key",
-            port: "443"
+            port: "443",
+            ipv6: 0
         )
     }
 }

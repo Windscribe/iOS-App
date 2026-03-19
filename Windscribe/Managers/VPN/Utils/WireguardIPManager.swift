@@ -18,6 +18,25 @@ protocol WireguardIPManager {
     /// - Returns: Generated IP address string
     /// - Throws: WireguardIPError if inputs are invalid
     func generateIP(publicKeyBase64: String, cidr: String) throws -> String
+
+    /// Determines the IPv6 LAN IP for a WireGuard connection within the configured
+    /// CIDR prefix (defaults to `fd54:0004::/64`).
+    ///
+    /// The allocation is deterministic based on the WireGuard public key:
+    /// - SHA-256 hash of the public key is computed
+    /// - First 8 bytes of the hash are used as the interface identifier (last 64 bits)
+    /// - This provides 2^64 possible unique /128 addresses within the /64 prefix
+    /// - Same public key always gets the same IPv6 address
+    /// - Different public keys have negligible collision probability
+    ///
+    /// Returns a single IPv6 address (without `/128` suffix) that represents a /128 allocation.
+    ///
+    /// - Parameters:
+    ///   - publicKeyBase64: Base64-encoded WireGuard public key.
+    ///   - cidr: IPv6 CIDR notation string (e.g., `"fd54:0004::/64"`).
+    /// - Returns: IPv6 address string (without `/128` suffix).
+    /// - Throws: `InvalidArgumentError` if inputs are invalid or prefix length > 64.
+    func generateIPv6(publicKeyBase64: String, cidr: String) throws -> String
 }
 
 /// Errors that can occur during IP generation
@@ -148,5 +167,70 @@ class WireguardIPManagerImpl: WireguardIPManager {
     private func generateIPFromHash(_ cidrBlock: CIDRBlock, hashValue: UInt32) -> UInt32 {
         return (cidrBlock.networkAddress & cidrBlock.networkMask) |
                (hashValue & cidrBlock.hostMask)
+    }
+
+    // Ported from Kotlin implementation
+    func generateIPv6(publicKeyBase64: String, cidr: String) throws -> String {
+        // Parse the IPv6 CIDR prefix
+        let parts = cidr.split(separator: "/")
+        guard parts.count == 2 else {
+            throw WireguardIPError.invalidCIDR("Invalid IPv6 CIDR format: \(cidr)")
+        }
+
+        let prefixAddr = String(parts[0])
+        guard let prefixLength = Int(parts[1]) else {
+            throw WireguardIPError.invalidCIDR("Invalid prefix length in IPv6 CIDR: \(cidr)")
+        }
+
+        guard (0...128).contains(prefixLength) else {
+            throw WireguardIPError.invalidCIDR("Invalid IPv6 prefix length: \(prefixLength) (must be 0-128)")
+        }
+
+        guard prefixLength <= 64 else {
+            throw WireguardIPError.invalidCIDR(
+                "WireGuard LAN prefix \(cidr) must be /64 or larger (smaller prefix length) to support unique /128 allocations"
+            )
+        }
+
+        // Decode the base64 public key
+        guard let publicKeyData = Data(base64Encoded: publicKeyBase64) else {
+            throw WireguardIPError.invalidBase64("Failed to decode base64 public key: \(publicKeyBase64)")
+        }
+
+        // Generate SHA-256 hash of the decoded public key
+        let hash = SHA256.hash(data: publicKeyData)
+        let hashBytes = Array(hash)
+
+        // Extract first 8 bytes for the interface identifier
+        let interfaceId = Array(hashBytes[0..<8])
+
+        // Parse the prefix address to binary representation
+        var addr = in6_addr()
+        guard inet_pton(AF_INET6, prefixAddr, &addr) == 1 else {
+            throw WireguardIPError.invalidIPFormat("Failed to parse IPv6 address: \(prefixAddr)")
+        }
+
+        // Get the 16 bytes of the prefix address
+        var ipBytes = withUnsafeBytes(of: &addr) { Array($0) }
+        guard ipBytes.count == 16 else {
+            throw WireguardIPError.invalidIPFormat("Invalid IPv6 address: \(prefixAddr)")
+        }
+
+        // Set the interface identifier (last 64 bits / bytes 8-15) from the hash
+        for i in 0..<8 {
+            ipBytes[8 + i] = interfaceId[i]
+        }
+
+        // Convert back to a human-readable IPv6 address
+        var result = ipBytes.withUnsafeBufferPointer { buffer -> in6_addr in
+            buffer.baseAddress!.withMemoryRebound(to: in6_addr.self, capacity: 1) { $0.pointee }
+        }
+
+        var outputBuffer = [CChar](repeating: 0, count: Int(INET6_ADDRSTRLEN))
+        guard let cString = inet_ntop(AF_INET6, &result, &outputBuffer, socklen_t(INET6_ADDRSTRLEN)) else {
+            throw WireguardIPError.invalidIPFormat("Failed to format IPv6 address")
+        }
+
+        return String(cString: cString)
     }
 }

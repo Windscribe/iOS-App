@@ -624,6 +624,31 @@ class PreferencesImpl: Preferences {
         return sharedDefault?.bool(forKey: SharedKeys.ignorePinIP) ?? false
     }
 
+    // MARK: - IP Stack
+    func saveEgressProtocolPreference(value: String) {
+        setString(value, forKey: SharedKeys.ipStackEgressKey)
+    }
+
+    func getEgressProtocolPreference() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.ipStackEgressKey, type: String.self, defaultValue: DefaultValues.ipv4Only)
+    }
+
+    func getEgressProtocolPreferenceSync() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.ipStackEgressKey) ?? DefaultValues.ipv4Only
+    }
+
+    func saveIngressProtocolPreference(value: String) {
+        setString(value, forKey: SharedKeys.ipStackIngressKey)
+    }
+
+    func getIngressProtocolPreference() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.ipStackIngressKey, type: String.self, defaultValue: DefaultValues.ipv4Only)
+    }
+
+    func getIngressProtocolPreferenceSync() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.ipStackIngressKey) ?? DefaultValues.ipv4Only
+    }
+
     // Unblock WG Params
     func saveUnblockWgParams(param: UnblockWgParams) {
         if let encoded = try? JSONEncoder().encode(param) {

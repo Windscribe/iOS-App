@@ -551,6 +551,7 @@
 		59FC74872C52FCEE00021CD1 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74862C52FCEE00021CD1 /* Router.swift */; };
 		59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74882C530A4100021CD1 /* LoginRouter.swift */; };
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
+		927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		AF018DED21B0866600B225FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018DEC21B0866600B225FF /* AppDelegate.swift */; };
 		AF018DEF21B0866600B225FF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018DEE21B0866600B225FF /* MainViewController.swift */; };
 		AF018DF721B0866800B225FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF018DF521B0866800B225FF /* LaunchScreen.storyboard */; };
@@ -7650,6 +7651,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */,
 				C5A930FB2B45A5F40001CFA0 /* FileLoggerImpl.swift in Sources */,
 				C52DA5242B638EA400E5C571 /* CustomConfig.swift in Sources */,
 				F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */,

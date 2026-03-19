@@ -22,6 +22,7 @@ class WireguardConfigRepositoryTests: XCTestCase {
     var mockAlertManager: MockAlertManager!
     var mockLogger: MockLogger!
     var mockIPManager: MockWireguardIPManager!
+    var mockPreferences: MockPreferences!
 
     // MARK: - Setup and Teardown
 
@@ -34,6 +35,7 @@ class WireguardConfigRepositoryTests: XCTestCase {
         mockAlertManager = MockAlertManager()
         mockLogger = MockLogger()
         mockIPManager = MockWireguardIPManager()
+        mockPreferences = MockPreferences()
 
         // Register mocks
         mockContainer.register(WireguardAPIManager.self) { _ in
@@ -60,6 +62,10 @@ class WireguardConfigRepositoryTests: XCTestCase {
             return self.mockIPManager
         }.inObjectScope(.container)
 
+        mockContainer.register(Preferences.self) { _ in
+            return self.mockPreferences
+        }.inObjectScope(.container)
+
         // Register WireguardConfigRepository
         mockContainer.register(WireguardConfigRepository.self) { r in
             return WireguardConfigRepositoryImpl(
@@ -68,7 +74,8 @@ class WireguardConfigRepositoryTests: XCTestCase {
                 wgCrendentials: r.resolve(WgCredentials.self)!,
                 alertManager: r.resolve(AlertManager.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                ipManager: r.resolve(WireguardIPManager.self)!
+                ipManager: r.resolve(WireguardIPManager.self)!,
+                preferences: r.resolve(Preferences.self)!
             )
         }.inObjectScope(.container)
 
@@ -221,7 +228,8 @@ class WireguardConfigRepositoryTests: XCTestCase {
             wgCrendentials: mockWgCredentials,
             alertManager: nil,
             logger: mockLogger,
-            ipManager: mockIPManager
+            ipManager: mockIPManager,
+            preferences: mockPreferences
         )
 
         mockAPIManager.shouldThrowLimitExceeded = true
@@ -454,13 +462,108 @@ class WireguardConfigRepositoryTests: XCTestCase {
         XCTAssertEqual(mockIPManager.lastCIDR, cidrList[0], "Should use first CIDR from list")
     }
 
+    // MARK: - IPv6 Tests
+
+    func test_getCredentials_withIPv6Support_shouldGenerateIPv6() async throws {
+        // Given - server supports IPv6, egress is Auto, and v6 CIDR is present
+        let mockInitResponse = createMockDynamicWireGuardConfig(
+            hashedCIDRs: ["10.64.0.0/16"],
+            hashedCIDRsV6: ["fd54:0004::/64"],
+            allowedIPsV6: "::/0"
+        )
+        mockAPIManager.wgInitResponseToReturn = mockInitResponse
+        mockIPManager.generatedIPToReturn = "10.64.1.100"
+        mockIPManager.generatedIPv6ToReturn = "fd54:4::abcd:ef01"
+        mockWgCredentials.setNodeToConnect(
+            serverEndPoint: "192.0.2.1",
+            serverHostName: "test-server.example.com",
+            serverPublicKey: "test-server-public-key",
+            port: "443",
+            ipv6: 1
+        )
+        mockPreferences.saveEgressProtocolPreference(value: "Auto")
+
+        // When
+        try await repository.getCredentials()
+
+        // Then
+        XCTAssertTrue(mockIPManager.generateIPCalled, "Should generate IPv4 IP")
+        XCTAssertTrue(mockIPManager.generateIPv6Called, "Should generate IPv6 IP")
+        XCTAssertEqual(mockWgCredentials.addressV6, "fd54:4::abcd:ef01", "Should save generated IPv6 address")
+
+        let savedData = try await mockFileDatabase.readFile(path: FilePaths.wireGuard)
+        let configString = String(data: savedData, encoding: .utf8)!
+        XCTAssertTrue(configString.contains("fd54:4::abcd:ef01"), "Config should contain IPv6 address")
+        XCTAssertTrue(configString.contains("::/0"), "Config should contain IPv6 allowed IPs")
+    }
+
+    func test_getCredentials_withIPv6Support_egressIPv4Only_shouldNotGenerateIPv6() async throws {
+        // Given - server supports IPv6 but egress is IPv4 Only
+        let mockInitResponse = createMockDynamicWireGuardConfig(
+            hashedCIDRs: ["10.64.0.0/16"],
+            hashedCIDRsV6: ["fd54:0004::/64"],
+            allowedIPsV6: "::/0"
+        )
+        mockAPIManager.wgInitResponseToReturn = mockInitResponse
+        mockIPManager.generatedIPToReturn = "10.64.1.100"
+        mockWgCredentials.setNodeToConnect(
+            serverEndPoint: "192.0.2.1",
+            serverHostName: "test-server.example.com",
+            serverPublicKey: "test-server-public-key",
+            port: "443",
+            ipv6: 1
+        )
+        mockPreferences.saveEgressProtocolPreference(value: DefaultValues.ipv4Only)
+
+        // When
+        try await repository.getCredentials()
+
+        // Then
+        XCTAssertTrue(mockIPManager.generateIPCalled, "Should generate IPv4 IP")
+        XCTAssertFalse(mockIPManager.generateIPv6Called, "Should not generate IPv6 IP when egress is IPv4 Only")
+        XCTAssertNil(mockWgCredentials.addressV6, "Should not have IPv6 address")
+    }
+
+    func test_getCredentials_withoutServerIPv6Support_shouldNotGenerateIPv6() async throws {
+        // Given - server does not support IPv6 even though egress is Auto and v6 CIDR present
+        let mockInitResponse = createMockDynamicWireGuardConfig(
+            hashedCIDRs: ["10.64.0.0/16"],
+            hashedCIDRsV6: ["fd54:0004::/64"],
+            allowedIPsV6: "::/0"
+        )
+        mockAPIManager.wgInitResponseToReturn = mockInitResponse
+        mockIPManager.generatedIPToReturn = "10.64.1.100"
+        mockWgCredentials.setNodeToConnect(
+            serverEndPoint: "192.0.2.1",
+            serverHostName: "test-server.example.com",
+            serverPublicKey: "test-server-public-key",
+            port: "443",
+            ipv6: 0
+        )
+        mockPreferences.saveEgressProtocolPreference(value: "Auto")
+
+        // When
+        try await repository.getCredentials()
+
+        // Then
+        XCTAssertTrue(mockIPManager.generateIPCalled, "Should generate IPv4 IP")
+        XCTAssertFalse(mockIPManager.generateIPv6Called, "Should not generate IPv6 IP when server doesn't support it")
+        XCTAssertNil(mockWgCredentials.addressV6, "Should not have IPv6 address")
+    }
+
     // MARK: - Helper Methods
 
-    private func createMockDynamicWireGuardConfig(hashedCIDRs: [String] = ["10.64.0.0/16"]) -> DynamicWireGuardConfig {
+    private func createMockDynamicWireGuardConfig(
+        hashedCIDRs: [String] = ["10.64.0.0/16"],
+        hashedCIDRsV6: [String]? = nil,
+        allowedIPsV6: String? = nil
+    ) -> DynamicWireGuardConfig {
         let response = DynamicWireGuardConfig()
         response.presharedKey = "test-preshared-key"
         response.allowedIPs = "0.0.0.0/0"
+        response.allowedIPsV6 = allowedIPsV6
         response.hashedCIDR = hashedCIDRs
+        response.hashedCIDRv6 = hashedCIDRsV6
         return response
     }
 }

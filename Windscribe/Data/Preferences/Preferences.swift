@@ -42,6 +42,12 @@ protocol Preferences {
     func savePingMethod(method: String)
     func getPingMethod() -> AnyPublisher<String?, Never>
     func getPingMethodSync() -> String
+    func saveEgressProtocolPreference(value: String)
+    func getEgressProtocolPreference() -> AnyPublisher<String?, Never>
+    func getEgressProtocolPreferenceSync() -> String
+    func saveIngressProtocolPreference(value: String)
+    func getIngressProtocolPreference() -> AnyPublisher<String?, Never>
+    func getIngressProtocolPreferenceSync() -> String
 
     // PersistenceManager+UserDefaults
     func getConnectionCount() -> Int?
@@ -213,6 +219,8 @@ protocol Preferences {
     // WireGuard Interface Configuration
     func saveWireGuardAddress(_ address: String?)
     func getWireGuardAddress() -> String?
+    func saveWireGuardAddressV6(_ address: String?)
+    func getWireGuardAddressV6() -> String?
     func saveWireGuardDNS(_ dns: String?)
     func getWireGuardDNS() -> String?
 
@@ -221,8 +229,15 @@ protocol Preferences {
     func getWireGuardPresharedKey() -> String?
     func saveWireGuardAllowedIPs(_ ips: String?)
     func getWireGuardAllowedIPs() -> String?
+    func saveWireGuardAllowedIPsV6(_ ips: String?)
+    func getWireGuardAllowedIPsV6() -> String?
     func saveWireGuardHashedCIDR(_ cidr: [String]?)
     func getWireGuardHashedCIDR() -> [String]?
+    func saveWireGuardHashedCIDRv6(_ cidr: [String]?)
+    func getWireGuardHashedCIDRv6() -> [String]?
+
+    func saveWireGuardServerSupportsIPv6(_ supports: Bool)
+    func getWireGuardServerSupportsIPv6() -> Bool
 
     // WireGuard Server Configuration
     func saveWireGuardServerEndpoint(_ endpoint: String?)

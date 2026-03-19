@@ -34,4 +34,5 @@ enum DefaultValues {
     static let aspectRatio = "Stretch"
     static let pingMethod = "http"
     static let revision: Int64 = 0
+    static let ipv4Only = "IPv4 Only"
 }

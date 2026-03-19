@@ -36,6 +36,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
 
     private var selectedUnblockWgParam = ""
 
+    private var egressProtocol = DefaultValues.ipv4Only
+    private var ingressProtocol = DefaultValues.ipv4Only
+
     // MARK: - Dependencies
     private let preferences: Preferences
     private let protocolManager: ProtocolManagerType
@@ -139,6 +142,23 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             }
             .store(in: &cancellables)
 
+        preferences.getEgressProtocolPreference()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] preference in
+                guard let self = self else { return }
+                self.egressProtocol = preference ?? Fields.Values.ipv4Only
+                self.reloadItems()
+            }
+            .store(in: &cancellables)
+
+        preferences.getIngressProtocolPreference()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] preference in
+                guard let self = self else { return }
+                self.ingressProtocol = preference ?? Fields.Values.ipv4Only
+            }
+            .store(in: &cancellables)
+
         unblockWgParamsRepository.selectedParamTitleSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] title in
@@ -163,6 +183,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
         let portOptions = getPorts(by: currentProtocol)
             .map { MenuOption(title: $0, fieldKey: $0) }
 
+        let ipStackOptions = zip(TextsAsset.ipStackOptions, Fields.ipStackOptions)
+            .map { MenuOption(title: $0, fieldKey: $1) }
+
         entries = [
             .networkOptions,
             .connectionMode(currentOption: connectionMode,
@@ -170,7 +193,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                             protocolSelected: currentProtocol,
                             protocolOptions: protocolOptions,
                             portSelected: currentPort,
-                            portOptions: portOptions)]
+                            portOptions: portOptions),
+            .ipStack(selectedEgressOption: egressProtocol, egressOptions: ipStackOptions, selectedIngressOption: ingressProtocol, ingressOptions: ipStackOptions)
+        ]
         if currentProtocol != TextsAsset.iKEv2 || connectionMode == Fields.Values.auto {
             entries.append(.connectedDns(currentOption: connectedDNS,
                                          customValue: customDNSValue,
@@ -206,7 +231,6 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                 } else if parentId == ConnectionSecondaryEntryIDs.portMenu.id {
                     updatePort(value: currentOption)
                 } else {
-                    updateConnectionMode(value: currentOption)
                     preferences.saveConnectionMode(mode: currentOption)
                 }
             }
@@ -253,6 +277,17 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             }
             if case .multiple(let currentOption, _) = action {
                 print("servepede multiple")
+            }
+        case .ipStack:
+            if case .infoLink = action {
+                openLink(.networkOptions)
+            }
+            if case let .multiple(currentOption, parentId) = action {
+                if parentId == ConnectionSecondaryEntryIDs.ipStackEgressMenu.id {
+                    preferences.saveEgressProtocolPreference(value: currentOption)
+                } else if parentId == ConnectionSecondaryEntryIDs.ipStackIngressMenu.id {
+                    preferences.saveIngressProtocolPreference(value: currentOption)
+                }
             }
         }
     }
