@@ -211,6 +211,7 @@ class SessionManagerImpl: SessionManager {
     func listenForSessionChanges() {
         userSessionRepository.sessionModelSubject
             .compactMap { $0 }
+            .removeDuplicates()
             .dropFirst() // Skip initial session load - only react to actual session changes
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -257,7 +258,7 @@ class SessionManagerImpl: SessionManager {
         try? await credentialsRepo.getUpdatedOpenVPNCrendentials()
         wgCredentials.delete()
     }
-    
+
     @MainActor
     func checkForSessionChange() async {
         logger.logD("SessionManager", "Comparing new session with old session.")
