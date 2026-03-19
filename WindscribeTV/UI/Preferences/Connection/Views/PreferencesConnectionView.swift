@@ -39,7 +39,7 @@ class PreferencesConnectionView: UIView {
         updatePorts()
 
         ingressView.isHidden = true
-        
+
         connectionModeView.populate(with: GeneralViewType.connectionMode.listOption,
                                     title: GeneralViewType.connectionMode.title)
 
