@@ -171,6 +171,9 @@ class LocationsManagerImpl: LocationsManager {
         guard !locationID.isEmpty, locationID != "0", let datacenterId = Int(locationID) else {
             return false
         }
+        guard !locationListRepository.currentServerModels.isEmpty else {
+            return false
+        }
         if locationListRepository.getServers(for: datacenterId).isEmpty {
             if let sisterLocationID = getSisterLocationId(from: datacenterId) {
                 saveLastSelectedLocation(with: "\(sisterLocationID)")
@@ -267,6 +270,10 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func checkLocationValidity() {
+        guard !locationListRepository.currentServerModels.isEmpty else {
+            return
+        }
+
         let locationType = getLocationType() ?? .server
 
         let locationId = getLastSelectedLocation()
