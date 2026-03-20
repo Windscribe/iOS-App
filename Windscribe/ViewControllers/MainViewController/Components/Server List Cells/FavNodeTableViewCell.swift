@@ -33,9 +33,11 @@ class FavNodeTableViewCellModel: DatacenterTableViewCellModel {
                 isUserPro: Bool,
                 isPremium: Bool,
                 isDarkMode: Bool,
-                latency: Int) {
+                latency: Int,
+                countryCode: String?) {
         self.displayingFavGroup = displayingFavGroup
         self.displayingDatacenter = displayingFavGroup?.datacenterModel
+        self.countryCode = countryCode
         self.locationLoad = locationLoad
         self.isSavedHasFav = isSavedHasFav
         self.isUserPro = isUserPro
