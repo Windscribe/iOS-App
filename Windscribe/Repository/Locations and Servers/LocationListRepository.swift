@@ -86,8 +86,8 @@ class LocationListRepositoryImpl: LocationListRepository {
         self.logger = logger
         self.preferences = preferences
 
-        loadInitialLocations()
         loadInitialServers()
+        loadInitialLocations()
         loadInitialFavourites()
 
         // Update datacenter servers when either servers change or datacenters are updated
