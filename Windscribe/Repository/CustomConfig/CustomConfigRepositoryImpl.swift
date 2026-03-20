@@ -101,8 +101,8 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
             }
         } catch {
             logger.logE("CustomConfigRepositoryImpl", "Error when saving custom config file. \(error.localizedDescription)")
+            throw RepositoryError.invalidConfigData
         }
-        throw RepositoryError.invalidConfigData
     }
 
     func saveOpenVPNConfig(url: URL) async throws {
@@ -195,8 +195,8 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
             }
         } catch {
             logger.logE("CustomConfigRepositoryImpl", "Error when saving custom OpenVPN config file. \(error.localizedDescription)")
+            throw RepositoryError.invalidConfigData
         }
-        throw RepositoryError.invalidConfigData
     }
 
     func removeOpenVPNConfig(fileId: String) async {
