@@ -331,9 +331,3 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         print("MainViewController deinit called")
     }
 }
-
-enum ShortcutType {
-    case networkSecurity
-    case notifications
-    case none
-}

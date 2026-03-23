@@ -39,7 +39,7 @@ extension BaseNavigationRouter {
             $0.userJustLoggedIn = true
         }
 
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+        if let window = Assembler.resolve(WindowProvider.self).mainWindow {
             window.rootViewController?.dismiss(animated: false, completion: nil)
 
             UIView.transition(

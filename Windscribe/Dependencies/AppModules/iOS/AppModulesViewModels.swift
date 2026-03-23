@@ -342,7 +342,7 @@ class ViewModels: Assembly {
                               notificationsRepo: r.resolve(NotificationRepository.self)!,
                               credentialsRepository: r.resolve(CredentialsRepository.self)!,
                               connectivity: r.resolve(ConnectivityManager.self)!,
-                              livecycleManager: r.resolve(LivecycleManagerType.self)!,
+                              lifecycleManager: r.resolve(LifecycleManagerType.self)!,
                               locationsManager: r.resolve(LocationsManager.self)!,
                               protocolManager: r.resolve(ProtocolManagerType.self)!,
                               hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
