@@ -258,7 +258,7 @@ class ConnectionStateInfoView: UIView {
 
     private func addViews() {
         pillView.backgroundColor = .whiteWithOpacity(opacity: 0.1)
-        pillView.layer.cornerRadius = 11
+        pillView.layer.cornerRadius = Self.pillSize.height / 2.0
         pillView.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.1).cgColor
         pillView.layer.borderWidth = 1
         pillView.layer.masksToBounds = true
@@ -321,6 +321,8 @@ class ConnectionStateInfoView: UIView {
         addSubview(actionButton)
     }
 
+    private static let pillSize = CGSizeMake(39.0, 19.0)
+    
     private func setLayout() {
         pillView.translatesAutoresizingMaskIntoConstraints = false
         pillLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -342,8 +344,8 @@ class ConnectionStateInfoView: UIView {
             stackView.rightAnchor.constraint(equalTo: rightAnchor),
 
             // pillView
-            pillView.heightAnchor.constraint(equalToConstant: 19),
-            pillView.widthAnchor.constraint(equalToConstant: 39),
+            pillView.heightAnchor.constraint(equalToConstant: Self.pillSize.height),
+            pillView.widthAnchor.constraint(equalToConstant: Self.pillSize.width),
 
             // pillLabel
             pillLabel.centerYAnchor.constraint(equalTo: pillView.centerYAnchor),
