@@ -7,20 +7,15 @@
 //
 
 import BackgroundTasks
-import Combine
 import CoreData
 import NetworkExtension
-import RealmSwift
 import StoreKit
 import Swinject
-import SwiftUI
 import UIKit
 import WidgetKit
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    private lazy var customConfigRepository: CustomConfigRepository = Assembler.resolve(CustomConfigRepository.self)
 
     private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
     private lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
@@ -37,58 +32,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var pushNotificationManager: PushNotificationManager = Assembler.resolve(PushNotificationManager.self)
 
-    private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
-
-    private lazy var lookAndFeelRepository: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
-
-    private lazy var protocolManager: ProtocolManagerType = Assembler.resolve(ProtocolManagerType.self)
+    private lazy var lifecycleManager: LifecycleManagerType = Assembler.resolve(LifecycleManagerType.self)
 
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
-    private lazy var alertManager: AlertManager = Assembler.resolve(AlertManager.self)
-
-    var window: UIWindow?
-    private var splashView: LoadingSplashView?
-
-    var shortcutType = ShortcutType.none
-    private var cancellables = Set<AnyCancellable>()
 
     func application(_: UIApplication,
                      didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         migrationRepository.runMigrations()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
-        livecycleManager.onAppStart()
+        lifecycleManager.onAppStart()
         recordInstallIfFirstLoad()
         resetCountryOverrideForServerList()
         purchaseManager.verifyPendingTransaction()
-        setApplicationWindow()
 
         return true
-    }
-
-    func applicationWillResignActive(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to WillResignActive.")
-    }
-
-    func applicationDidEnterBackground(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to EnterBackground.")
-        preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
-    }
-
-    func applicationWillEnterForeground(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to WillEnterForeground.")
-        protocolManager.resetGoodProtocol()
-    }
-
-    func applicationDidBecomeActive(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to Active.")
-        registerForPushNotifications()
-        livecycleManager.appEnteredForeground()
-    }
-
-    func applicationWillTerminate(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to WillTerminate.")
-        preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
     }
 
     /// Records app install.
@@ -116,83 +74,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-// MARK: Shortcut Actions and User Activity
+// MARK: - Scene Configuration
 
 extension AppDelegate {
 
-    /// Called when app receives connect and disconnect vpn events from siri.
-    func application(_: UIApplication,
-                     continue userActivity: NSUserActivity,
-                     restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        if preferences.userSessionAuth() != nil {
-            if userActivity.activityType == SiriIdentifiers.connect {
-                NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
-            } else if userActivity.activityType == SiriIdentifiers.disconnect {
-                NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
-            }
-        }
-        return true
-    }
-
-    @MainActor
-    private func showCustomConfigTab() async {
-        NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
-    }
-
-    @MainActor
-    private func showCustomConfigError(with error: Error) async {
-        if let error = error as? RepositoryError {
-            await MainActor.run {
-                alertManager.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
-            }
-        }
-    }
-
-    /// Called when url is loaded in to app.
-    func application(_: UIApplication, open url: URL, sourceApplication _: String?, annotation _: Any) -> Bool {
-        if preferences.userSessionAuth() != nil {
-            if url.isFileURL && url.pathExtension == "ovpn" {
-                logger.logI("AppDelegate", "Importing OpenVPN .ovpn file")
-                Task {
-                    do {
-                        try await customConfigRepository.saveOpenVPNConfig(url: url)
-                        await showCustomConfigTab()
-                    } catch {
-                        await showCustomConfigError(with: error)
-                    }
-                }
-            } else if url.isFileURL && url.pathExtension == "conf" {
-                logger.logI("AppDelegate", "Importing WireGuard .conf file")
-                Task {
-                    do {
-                        try await customConfigRepository.saveWgConfig(url: url)
-                        await showCustomConfigTab()
-                    } catch {
-                        await showCustomConfigError(with: error)
-                    }
-                }
-            } else {
-                if url.absoluteString.contains("disconnect") {
-                    NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
-                } else {
-                    NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
-                }
-            }
-        }
-        return true
-    }
-
-    /// Called when app is launched from a shorcut.
-    func application(_: UIApplication,
-                     performActionFor shortcutItem: UIApplicationShortcutItem,
-                     completionHandler _: @escaping (Bool) -> Void) {
-        if preferences.userSessionAuth() != nil {
-            if shortcutItem.type.contains("Notifications") {
-                shortcutType = .notifications
-            } else if shortcutItem.type.contains("NetworkSecurity") {
-                shortcutType = .networkSecurity
-            }
-        }
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: "Default Configuration",
+                                           sessionRole: connectingSceneSession.role)
+        config.delegateClass = SceneDelegate.self
+        return config
     }
 }
 
@@ -260,111 +152,5 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 notificationPayload: PushNotificationPayload(userInfo: userInfo))
         }
         withCompletionHandler()
-    }
-
-    /// Checks for notification permission . if avaialble register for push notification on each app launch to make sure server has updated device token for this device.
-    private func registerForPushNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        pushNotificationManager.isAuthorizedForPushNotifications { result in
-            if result {
-                DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
-            }
-        }
-    }
-}
-
-// MARK: Main Content View
-
-extension AppDelegate {
-
-    /// Setting up main application window
-    /// Checking if there is user session or login should be executed
-    func setApplicationWindow() {
-        bindThemeChange()
-
-        // Create window and splash synchronously so there's no gap after the launch screen
-        let window = UIWindow(frame: UIScreen.main.bounds).then {
-            $0.backgroundColor = UIColor(.from(.actionBackgroundColor, lookAndFeelRepository.isDarkMode))
-        }
-        window.rootViewController = UIViewController()
-        window.makeKeyAndVisible()
-        self.window = window
-
-        // Only show splash for logged-in users where MainViewController has heavy setup to mask
-        if preferences.userSessionAuth() != nil {
-            let splash = LoadingSplashView(frame: window.bounds)
-            window.addSubview(splash)
-            self.splashView = splash
-        }
-
-        DispatchQueue.global(qos: .userInitiated).async {
-            _ = try? Realm() // Ensure Realm is ready before proceeding so it will not block I/O
-
-            DispatchQueue.main.async {
-                let welcomeView = self.setUpWelcomeView()
-                self.presentMainView(with: welcomeView)
-            }
-        }
-    }
-
-    private func bindThemeChange() {
-        lookAndFeelRepository.isDarkModeSubject
-            .receive(on: DispatchQueue.main)
-            .sink { isDark in
-                UINavigationBar.setStyleNavigationBackButton(isDarkMode: isDark)
-            }.store(in: &cancellables)
-    }
-
-    /// Method to present a SwiftUI view on top a window
-    /// - Parameters:
-    ///   - contentView: The main  view that will be presented
-    private func presentMainView<T: View>(with view: T) {
-        guard let window = self.window else { return }
-
-        let rootViewController: UIViewController
-
-        if self.preferences.userSessionAuth() != nil {
-            let mainViewController = Assembler.resolve(MainViewController.self).then {
-                $0.appJustStarted = true
-            }
-            rootViewController = UINavigationController(rootViewController: mainViewController).then {
-                $0.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
-                $0.overrideUserInterfaceStyle = lookAndFeelRepository.isDarkMode ? .dark : .light
-            }
-        } else {
-            // Wrap the RootView in DeviceTypeProvider
-            let rootView = DeviceTypeProvider { view }
-            rootViewController = UIHostingController(rootView: rootView).then {
-                $0.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
-                $0.overrideUserInterfaceStyle = lookAndFeelRepository.isDarkMode ? .dark : .light
-            }
-        }
-
-        window.rootViewController = rootViewController
-
-        // Keep splash on top since changing rootViewController can reorder subviews
-        if let splash = self.splashView {
-            window.bringSubviewToFront(splash)
-        }
-
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
-            self?.hideSplashView()
-        }
-    }
-
-    private func hideSplashView() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.splashView?.layer.opacity = 0
-        }, completion: { _ in
-            self.splashView?.removeFromSuperview()
-            self.splashView = nil
-        })
-    }
-
-    private func setUpWelcomeView() -> any View {
-        return Assembler.resolve(WelcomeView.self)
     }
 }

@@ -161,14 +161,6 @@ class FlagsBackgroundView: UIView {
     var barHeight: CGFloat {
         topNavBarHeader.height
     }
-    var topSpace: CGFloat {
-        if UIScreen.hasTopNotch {
-            return 40
-        } else if UIDevice.current.isIpad {
-            return 20
-        }
-        return 16
-    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -253,7 +245,7 @@ class FlagsBackgroundView: UIView {
             topNavBarHeader.heightAnchor.constraint(equalToConstant: topNavBarHeader.height),
 
             // flagView
-            backgroundImageView.topAnchor.constraint(equalTo: topAnchor, constant: topSpace),
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             flagWidthConstraint,

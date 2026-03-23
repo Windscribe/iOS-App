@@ -23,7 +23,7 @@ class MainViewModelImpl: MainViewModel {
     let pushNotificationsManager: PushNotificationManager!
     let notificationsRepo: NotificationRepository!
     let credentialsRepository: CredentialsRepository
-    let livecycleManager: LivecycleManagerType
+    let lifecycleManager: LifecycleManagerType
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
     let hapticFeedbackManager: HapticFeedbackManager
@@ -85,7 +85,7 @@ class MainViewModelImpl: MainViewModel {
          notificationsRepo: NotificationRepository,
          credentialsRepository: CredentialsRepository,
          connectivity: ConnectivityManager,
-         livecycleManager: LivecycleManagerType,
+         lifecycleManager: LifecycleManagerType,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
          hapticFeedbackManager: HapticFeedbackManager,
@@ -108,7 +108,7 @@ class MainViewModelImpl: MainViewModel {
         self.notificationsRepo = notificationsRepo
         self.credentialsRepository = credentialsRepository
         self.connectivity = connectivity
-        self.livecycleManager = livecycleManager
+        self.lifecycleManager = lifecycleManager
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
         self.hapticFeedbackManager = hapticFeedbackManager
@@ -119,9 +119,9 @@ class MainViewModelImpl: MainViewModel {
         self.alertManager = alertManager
         self.wifiManager = wifiManager
 
-        showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
-        showNotificationsTrigger = livecycleManager.showNotificationsTrigger
-        becameActiveTrigger = livecycleManager.becameActiveTrigger
+        showNetworkSecurityTrigger = lifecycleManager.showNetworkSecurityTrigger
+        showNotificationsTrigger = lifecycleManager.showNotificationsTrigger
+        becameActiveTrigger = lifecycleManager.becameActiveTrigger
 
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
 

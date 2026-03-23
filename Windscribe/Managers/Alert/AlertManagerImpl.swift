@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import Swinject
 
 class AlertManagerImpl: AlertManager {
+    private lazy var windowProvider: WindowProvider = Assembler.resolve(WindowProvider.self)
+
     func showSimpleAlert(title: String, message: String, buttonText: String) {
         showSimpleAlert(viewController: nil,
                         title: title,
@@ -127,15 +130,14 @@ class AlertManagerImpl: AlertManager {
                 continuation.resume(returning: false)
             })
             alert.addAction(negativeAction)
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window, let viewController = window.rootViewController else { return }
+            guard let window = windowProvider.mainWindow, let viewController = window.rootViewController else { return }
             viewController.present(alert, animated: true, completion: nil)
         }
     }
 
     private func presentAlertOnViewController(alert: UIAlertController, viewController: UIViewController? = nil) {
         if viewController == nil {
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                let window = appDelegate.window,
+            guard let window = windowProvider.mainWindow,
                 let viewController = window.activeViewController else {
                     return
             }
@@ -176,7 +178,7 @@ class AlertManagerImpl: AlertManager {
             if let viewController = viewController {
                 presentingController = viewController
             } else {
-                guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window, let viewController = window.rootViewController else { return }
+                guard let window = windowProvider.mainWindow, let viewController = window.rootViewController else { return }
                 presentingController = viewController
             }
             presentingController?.present(alert, animated: true, completion: nil)

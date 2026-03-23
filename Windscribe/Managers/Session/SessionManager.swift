@@ -51,6 +51,7 @@ class SessionManagerImpl: SessionManager {
 
     private let vpnManager: VPNManager
     private let ssoManager: SSOManaging
+    private let windowProvider: WindowProvider
 
     private var cancellables = Set<AnyCancellable>()
     var updateSessionTask: Task<Void, Error>?
@@ -69,7 +70,8 @@ class SessionManagerImpl: SessionManager {
           vpnManager: VPNManager,
           ssoManager: SSOManaging,
           unblockWgParamsRepository: UnblockWgParamsRepository,
-          locationListRepository: LocationListRepository) {
+          locationListRepository: LocationListRepository,
+          windowProvider: WindowProvider) {
         self.wgCredentials = wgCredentials
         self.logger = logger
         self.apiManager = apiManager
@@ -85,6 +87,7 @@ class SessionManagerImpl: SessionManager {
         self.ssoManager = ssoManager
         self.unblockWgParamsRepository = unblockWgParamsRepository
         self.locationListRepository = locationListRepository
+        self.windowProvider = windowProvider
 
         keepSessionUpdated()
     }
@@ -300,7 +303,7 @@ class SessionManagerImpl: SessionManager {
     }
 
     func logoutUser() {
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+        if let window = windowProvider.mainWindow {
             window.rootViewController?.dismiss(animated: false, completion: nil)
 #if os(iOS)
             let welcomeRootView = DeviceTypeProvider { Assembler.resolve(WelcomeView.self) }

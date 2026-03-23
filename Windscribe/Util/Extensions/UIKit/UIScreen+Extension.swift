@@ -15,19 +15,23 @@ extension UIScreen {
     }
 
     class var hasTopNotch: Bool {
-        return UIApplication.shared.delegate?.window??.safeAreaInsets.top ?? 0 > 24
-    }
-}
-
-var topSpace: CGFloat {
-    if UIScreen.hasTopNotch {
-        return 0
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            return false
+        }
+        return window.safeAreaInsets.top > 24
     }
 
-    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-       let statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height {
-        return statusBarHeight
+    class var topSpace: CGFloat {
+        if UIScreen.hasTopNotch {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                return window.safeAreaInsets.top
+            }
+            return 59
+        } else if UIDevice.current.isIpad {
+            return 20
+        }
+        return 16
     }
-
-    return 0
 }

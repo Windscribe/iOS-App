@@ -226,6 +226,34 @@ class Repository: Assembly {
 
 class Managers: Assembly {
     func assemble(container: Container) {
+        container.register(WindowProvider.self) { _ in
+            WindowProviderImpl()
+        }.inObjectScope(.container)
+
+        container.register(WindowSetupService.self) { r in
+            WindowSetupServiceImpl(
+                preferences: r.resolve(Preferences.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+        }.inObjectScope(.container)
+
+        container.register(SceneLifecycleHandler.self) { r in
+            SceneLifecycleHandlerImpl(
+                logger: r.resolve(FileLogger.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                lifecycleManager: r.resolve(LifecycleManagerType.self)!,
+                pushNotificationManager: r.resolve(PushNotificationManager.self)!)
+        }.inObjectScope(.container)
+
+        container.register(SceneActionHandler.self) { r in
+            SceneActionHandlerImpl(
+                preferences: r.resolve(Preferences.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                customConfigRepository: r.resolve(CustomConfigRepository.self)!,
+                alertManager: r.resolve(AlertManager.self)!,
+                windowProvider: r.resolve(WindowProvider.self)!)
+        }.inObjectScope(.container)
+
         container.register(InAppPurchaseManager.self) { r in
             InAppPurchaseManagerImpl(apiManager: r.resolve(APIManager.self)!,
                                      preferences: r.resolve(Preferences.self)!,
@@ -279,7 +307,8 @@ class Managers: Assembly {
                                vpnManager: r.resolve(VPNManager.self)!,
                                ssoManager: r.resolve(SSOManaging.self)!,
                                unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!,
-                               locationListRepository: r.resolve(LocationListRepository.self)!)
+                               locationListRepository: r.resolve(LocationListRepository.self)!,
+                               windowProvider: r.resolve(WindowProvider.self)!)
         }.inObjectScope(.userScope)
         container.register(HapticFeedbackManager.self) { r in
             HapticFeedbackManagerImpl(
@@ -348,8 +377,8 @@ class Managers: Assembly {
                             wifiManager: r.resolve(WifiManager.self)!)
         }.inObjectScope(.userScope)
 
-        container.register(LivecycleManagerType.self) { r in
-            LivecycleManager(logger: r.resolve(FileLogger.self)!,
+        container.register(LifecycleManagerType.self) { r in
+            LifecycleManager(logger: r.resolve(FileLogger.self)!,
                              sessionManager: r.resolve(SessionManager.self)!,
                              preferences: r.resolve(Preferences.self)!,
                              vpnManager: r.resolve(VPNManager.self)!,
@@ -363,7 +392,8 @@ class Managers: Assembly {
                              locationsManager: r.resolve(LocationsManager.self)!,
                              unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!,
                              wifiManager: r.resolve(WifiManager.self)!,
-                             locationListRepository: r.resolve(LocationListRepository.self)!)
+                             locationListRepository: r.resolve(LocationListRepository.self)!,
+                             windowProvider: r.resolve(WindowProvider.self)!)
         }.inObjectScope(.userScope)
 
         container.register(SSOManaging.self) { r in

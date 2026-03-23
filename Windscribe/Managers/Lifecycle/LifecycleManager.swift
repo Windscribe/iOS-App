@@ -1,5 +1,5 @@
 //
-//  LivecycleManager.swift
+//  LifecycleManager.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 08/11/2024.
@@ -10,7 +10,7 @@ import Combine
 import UIKit
 import NetworkExtension
 
-protocol LivecycleManagerType {
+protocol LifecycleManagerType {
     var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }
     var showNotificationsTrigger: PassthroughSubject<Void, Never> { get }
     var becameActiveTrigger: PassthroughSubject<Void, Never> { get }
@@ -19,7 +19,7 @@ protocol LivecycleManagerType {
     func appEnteredForeground()
 }
 
-class LivecycleManager: LivecycleManagerType {
+class LifecycleManager: LifecycleManagerType {
     private let logger: FileLogger
     private var sessionManager: SessionManager
     private let preferences: Preferences
@@ -35,6 +35,7 @@ class LivecycleManager: LivecycleManagerType {
     private let unblockWgParamsRepository: UnblockWgParamsRepository
     private let wifiManager: WifiManager
     private let locationListRepository: LocationListRepository
+    private let windowProvider: WindowProvider
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -59,7 +60,8 @@ class LivecycleManager: LivecycleManagerType {
          locationsManager: LocationsManager,
          unblockWgParamsRepository: UnblockWgParamsRepository,
          wifiManager: WifiManager,
-         locationListRepository: LocationListRepository) {
+         locationListRepository: LocationListRepository,
+         windowProvider: WindowProvider) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences
@@ -75,6 +77,7 @@ class LivecycleManager: LivecycleManagerType {
         self.unblockWgParamsRepository = unblockWgParamsRepository
         self.wifiManager = wifiManager
         self.locationListRepository = locationListRepository
+        self.windowProvider = windowProvider
     }
 
     /// Fresh app launch.
@@ -95,10 +98,10 @@ class LivecycleManager: LivecycleManagerType {
         let info = vpnStateRepository.vpnInfo.value
         if connectivity.internetConnectionAvailable() {
             if info?.killSwitch == true && vpnStateRepository.isDisconnected() && !wifiManager.isConnectedWifiTrusted() {
-                logger.logI("LivecycleManager", "VPN disocnnected, Turning off kill switch.")
+                logger.logI("LifecycleManager", "VPN disocnnected, Turning off kill switch.")
                 vpnManager.simpleDisableConnection()
             } else if vpnStateRepository.isConnected() && testTask == nil {
-                logger.logI("LivecycleManager", "VPN conencted. testing conenctivity.")
+                logger.logI("LifecycleManager", "VPN conencted. testing conenctivity.")
                 testTask = testConnectivity()
             }
         }
@@ -106,7 +109,7 @@ class LivecycleManager: LivecycleManagerType {
 
     private func disconnectToUpdateSession() async {
         if preferences.getDisconnectReason() != .unknown {
-            logger.logI("LivecycleManager", "Disconencting due to disconnect reason. \(preferences.getDisconnectReason())")
+            logger.logI("LifecycleManager", "Disconencting due to disconnect reason. \(preferences.getDisconnectReason())")
             await configManager.reloadManagers()
             await vpnManager.resetProfiles()
             preferences.saveDisconnectReason(reason: DisconnectReason.unknown)
@@ -114,9 +117,9 @@ class LivecycleManager: LivecycleManagerType {
             // Force update session after VPN recovery - cancels any pending updates
             do {
                 try await sessionManager.updateSession(force: true)
-                logger.logI("LivecycleManager", "Force session update completed after VPN recovery.")
+                logger.logI("LifecycleManager", "Force session update completed after VPN recovery.")
             } catch {
-                logger.logE("LivecycleManager", "Force session update failed: \(error)")
+                logger.logE("LifecycleManager", "Force session update failed: \(error)")
             }
         } else {
             sessionManager.keepSessionUpdated()
@@ -125,13 +128,13 @@ class LivecycleManager: LivecycleManagerType {
 
     /// App foreground.
     func appEnteredForeground() {
-        logger.logI("LivecycleManager", "App internet moved to foreground.")
+        logger.logI("LifecycleManager", "App internet moved to foreground.")
         checkForKillSwitch()
         Task {
             await disconnectToUpdateSession()
             becameActiveTrigger.send(())
             if connectivity.internetConnectionAvailable() {
-                logger.logI("LivecycleManager", "Internet availble updating session. \(connectivity.getNetwork())")
+                logger.logI("LifecycleManager", "Internet availble updating session. \(connectivity.getNetwork())")
                 unblockWgParamsRepository.tryRefresh()
                 guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
                     preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
@@ -160,12 +163,12 @@ class LivecycleManager: LivecycleManagerType {
                     do {
                         try await ipRepository.getIp(usePingTest: true)
                         testTask = nil
-                        self.logger.logI("LivecycleManager", "Internet connectivity validated for \(connectivity.getNetwork())!")
+                        self.logger.logI("LifecycleManager", "Internet connectivity validated for \(connectivity.getNetwork())!")
                         return
                     } catch {
                         lastError = error
                         if attempt < 3 {
-                            self.logger.logI("LivecycleManager", "IP fetch attempt \(attempt) failed, retrying...")
+                            self.logger.logI("LifecycleManager", "IP fetch attempt \(attempt) failed, retrying...")
                             try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay between retries
                         }
                     }
@@ -173,7 +176,7 @@ class LivecycleManager: LivecycleManagerType {
                 throw lastError ?? Errors.notDefined
             } catch {
                 testTask = nil
-                self.logger.logE("LivecycleManager", "Connected to VPN but no internet. \(error)")
+                self.logger.logE("LifecycleManager", "Connected to VPN but no internet. \(error)")
                 try await self.validateLocation()
             }
         }
@@ -184,14 +187,14 @@ class LivecycleManager: LivecycleManagerType {
         do {
             let updatedId = try await configManager.validateLocation(lastLocation: id)
             if let updatedId = updatedId, id != updatedId {
-                logger.logI("LivecycleManager", "Location is not valid, updated to \(updatedId)")
+                logger.logI("LifecycleManager", "Location is not valid, updated to \(updatedId)")
                 try await connectToVPN(updatedLocationId: updatedId)
             } else {
-                logger.logI("LivecycleManager", "Location is valid connecting to same network.")
+                logger.logI("LifecycleManager", "Location is valid connecting to same network.")
                 try await connectToVPN(updatedLocationId: id)
             }
         } catch {
-            logger.logE("LivecycleManager", "Error: \(error)")
+            logger.logE("LifecycleManager", "Error: \(error)")
             try await disconenctFromVPN()
         }
     }
@@ -202,10 +205,10 @@ class LivecycleManager: LivecycleManagerType {
                 receiveCompletion: { result in
                     switch result {
                     case .finished:
-                        self.logger.logI("LivecycleManager", "Successfully disconnected from VPN.")
+                        self.logger.logI("LifecycleManager", "Successfully disconnected from VPN.")
                         continuation.resume()
                     case let .failure(error):
-                        self.logger.logE("LivecycleManager", "Error disconnecting from VPN \(error)")
+                        self.logger.logE("LifecycleManager", "Error disconnecting from VPN \(error)")
                         continuation.resume(throwing: error)
                     }
                 },
@@ -232,27 +235,53 @@ class LivecycleManager: LivecycleManagerType {
                 receiveCompletion: { result in
                     switch result {
                     case .finished:
-                        self.logger.logI("LivecycleManager", "Successfully connected to VPN.")
+                        self.logger.logI("LifecycleManager", "Successfully connected to VPN.")
                         continuation.resume()
                     case let .failure(error):
-                        self.logger.logE("LivecycleManager", "Error connecting to VPN \(error)")
+                        self.logger.logE("LifecycleManager", "Error connecting to VPN \(error)")
                         continuation.resume(throwing: error)
                     }
                 },
-                receiveValue: { _ in self.logger.logI("LivecycleManager", "Updated from VPN connection.") }
+                receiveValue: { _ in self.logger.logI("LifecycleManager", "Updated from VPN connection.") }
             )
         }
     }
 
     private func handleShortcutLaunch() {
 #if os(iOS)
-        let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
-        (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
+        let shortcut = windowProvider.shortcutType
+        windowProvider.shortcutType = .none
         if shortcut == .networkSecurity {
             showNetworkSecurityTrigger.send(())
         } else if shortcut == .notifications {
             showNotificationsTrigger.send(())
         }
+
+        if let url = windowProvider.pendingURL {
+            windowProvider.pendingURL = nil
+            handlePendingURL(url)
+        }
+
+        if let activityType = windowProvider.pendingActivityType {
+            windowProvider.pendingActivityType = nil
+            handlePendingActivity(activityType)
+        }
 #endif
+    }
+
+    private func handlePendingURL(_ url: URL) {
+        if url.absoluteString.contains("disconnect") {
+            NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
+        } else {
+            NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
+        }
+    }
+
+    private func handlePendingActivity(_ activityType: String) {
+        if activityType == SiriIdentifiers.connect {
+            NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
+        } else if activityType == SiriIdentifiers.disconnect {
+            NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
+        }
     }
 }

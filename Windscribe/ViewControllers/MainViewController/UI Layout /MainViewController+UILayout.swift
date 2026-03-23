@@ -35,7 +35,7 @@ extension MainViewController {
 
         let isSmaller = UIDevice.current.isIphone5orLess()
 
-        listSelectionViewTopConstraint = listSelectionView.topAnchor.constraint(equalTo: flagBackgroundView.topAnchor, constant: flagBackgroundView.topSpace + 16)
+        listSelectionViewTopConstraint = listSelectionView.topAnchor.constraint(equalTo: flagBackgroundView.topAnchor, constant: UIScreen.topSpace + 16)
         listSelectionViewBottomConstraint = listSelectionView.bottomAnchor.constraint(equalTo: flagBackgroundView.bottomAnchor)
         NSLayoutConstraint.activate([
             // flagBackgroundView
