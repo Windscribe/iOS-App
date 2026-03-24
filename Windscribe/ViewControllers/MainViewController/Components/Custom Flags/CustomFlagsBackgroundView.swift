@@ -152,12 +152,15 @@ class FlagsBackgroundView: UIView {
     }
 
     var backgroundImageView = UIImageView()
+    var backgroundImageViewGradientOverlay = CAGradientLayer()
+
     var topMaskGradient = TopMaskGradientView()
     var topNavBarHeader = TopNavBarHeader()
 
     var flagWidth: CGFloat {
         402
     }
+
     var barHeight: CGFloat {
         topNavBarHeader.height
     }
@@ -172,6 +175,11 @@ class FlagsBackgroundView: UIView {
         setLayout()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        backgroundImageViewGradientOverlay.frame = backgroundImageView.bounds
+    }
+
     func redraw() {
         topNavBarHeader.redrawGradient()
     }
@@ -181,7 +189,7 @@ class FlagsBackgroundView: UIView {
         case .none:
             backgroundImageView.layer.opacity = 0.0
         case .flag:
-            backgroundImageView.layer.opacity = 0.15
+            backgroundImageView.layer.opacity = 0.20
         default:
             backgroundImageView.layer.opacity = 1.0
         }
@@ -218,11 +226,27 @@ class FlagsBackgroundView: UIView {
             .store(in: &cancellables)
     }
 
-    private func addViews() {
+    private func configureBackgroundImageView() {
         backgroundImageView.image = UIImage(named: ImagesAsset.Backgrounds.one)
         backgroundImageView.isUserInteractionEnabled = false
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.setImageColor(color: .white)
+
+        backgroundImageViewGradientOverlay.type = .radial
+        backgroundImageViewGradientOverlay.colors = [
+            UIColor.clear.cgColor,
+            UIColor.clear.cgColor,
+            UIColor.black.cgColor
+        ]
+        backgroundImageViewGradientOverlay.locations = [0.0, 0.6, 1.0]
+        backgroundImageViewGradientOverlay.startPoint = CGPoint(x: 0.5, y: 0.5)
+        backgroundImageViewGradientOverlay.endPoint = CGPoint(x: 1.0, y: 1.0)
+
+        backgroundImageView.layer.addSublayer(backgroundImageViewGradientOverlay)
+    }
+
+    private func addViews() {
+        configureBackgroundImageView()
         addSubview(backgroundImageView)
         addSubview(topMaskGradient)
         addSubview(topNavBarHeader)
@@ -232,12 +256,8 @@ class FlagsBackgroundView: UIView {
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         topMaskGradient.translatesAutoresizingMaskIntoConstraints = false
         topNavBarHeader.translatesAutoresizingMaskIntoConstraints = false
-        let flagWidthConstraint = UIDevice.current.isIpad ?
-        backgroundImageView.widthAnchor.constraint(equalTo: widthAnchor) :
-        backgroundImageView.widthAnchor.constraint(equalToConstant: flagWidth)
 
         NSLayoutConstraint.activate([
-
             // topNavBarLeftImageView
             topNavBarHeader.topAnchor.constraint(equalTo: topAnchor),
             topNavBarHeader.rightAnchor.constraint(equalTo: rightAnchor),
@@ -245,15 +265,15 @@ class FlagsBackgroundView: UIView {
             topNavBarHeader.heightAnchor.constraint(equalToConstant: topNavBarHeader.height),
 
             // flagView
-            backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            backgroundImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            flagWidthConstraint,
+            backgroundImageView.topAnchor.constraint(equalTo: topNavBarHeader.bottomAnchor, constant: -30),
+            backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30),
+            backgroundImageView.leftAnchor.constraint(equalTo: leftAnchor),
+            backgroundImageView.rightAnchor.constraint(equalTo: rightAnchor),
 
             // topMaskGradient
             topMaskGradient.topAnchor.constraint(equalTo: topAnchor),
             topMaskGradient.centerXAnchor.constraint(equalTo: centerXAnchor),
-            topMaskGradient.heightAnchor.constraint(equalTo: backgroundImageView.heightAnchor),
+            topMaskGradient.heightAnchor.constraint(equalTo: heightAnchor),
             topMaskGradient.widthAnchor.constraint(equalTo: widthAnchor)
         ])
     }
