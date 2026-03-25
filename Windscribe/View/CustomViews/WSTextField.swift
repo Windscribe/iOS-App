@@ -16,10 +16,15 @@ class WSTextField: UITextField, UITextFieldDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        bottomBorder = UIView(frame: CGRect(x: 0, y: 54, width: UIScreen.main.bounds.width, height: 2))
+        bottomBorder = UIView(frame: CGRect(x: 0, y: 54, width: bounds.width, height: 2))
         bottomBorder.backgroundColor = UIColor.white
         bottomBorder.layer.opacity = 0.05
         addSubview(bottomBorder)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        bottomBorder.frame = CGRect(x: 0, y: 54, width: bounds.width, height: 2)
     }
 
     @available(*, unavailable)

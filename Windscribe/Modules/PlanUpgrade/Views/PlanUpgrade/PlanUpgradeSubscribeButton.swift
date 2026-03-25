@@ -65,7 +65,7 @@ class PlanUpgradeGradientButton: UIButton {
             $0.width.equalToSuperview().multipliedBy(0.6)
             $0.height.equalToSuperview().multipliedBy(1.5)
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(-UIScreen.main.bounds.width)
+            $0.leading.equalToSuperview().offset(-UIScreen.activeScreen.bounds.width)
         }
     }
 

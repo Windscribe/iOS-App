@@ -82,7 +82,7 @@ public extension UIDevice {
 
 extension UIDevice {
     var iPhoneX: Bool {
-        return UIScreen.main.nativeBounds.height == 2436
+        return UIScreen.activeScreen.nativeBounds.height == 2436
     }
 
     var isiPhone: Bool {
@@ -109,7 +109,7 @@ extension UIDevice {
     }
 
     var screenType: ScreenType {
-        switch UIScreen.main.nativeBounds.height {
+        switch UIScreen.activeScreen.nativeBounds.height {
         case 960:
             return .iPhones4S
         case 1136:
@@ -130,21 +130,21 @@ extension UIDevice {
     }
 
     func isIphone5orLess() -> Bool {
-        if UIScreen.main.nativeBounds.height <= 1136 {
+        if UIScreen.activeScreen.nativeBounds.height <= 1136 {
             return true
         }
         return false
     }
 
     static func isIphone6orLess() -> Bool {
-        if UIScreen.main.nativeBounds.height <= 1334 {
+        if UIScreen.activeScreen.nativeBounds.height <= 1334 {
             return true
         }
         return false
     }
 
     func isIphone6() -> Bool {
-        if UIScreen.main.nativeBounds.height == 1334 {
+        if UIScreen.activeScreen.nativeBounds.height == 1334 {
             return true
         }
         return false

@@ -29,7 +29,7 @@ class TopNavBarHeader: UIView {
     }
 
     func loadPath() {
-        let width = UIScreen.main.bounds.width
+        let width = bounds.width > 0 ? bounds.width : UIScreen.activeScreen.bounds.width
         let startingCurveX = width - 162.0
         let finalCurveY = height - 60.5
 

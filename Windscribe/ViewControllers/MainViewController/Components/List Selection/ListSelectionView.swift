@@ -96,7 +96,7 @@ class ListSelectionView: UIView {
             UIColor.from(.gradientStartColor, isDarkMode).cgColor,
             UIColor.from(.gradientEndColor, isDarkMode).cgColor
         ]
-        gradient.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width + 2, height: viewHeight)
+        gradient.frame = CGRect(x: 0, y: 0, width: bounds.width + 2, height: viewHeight)
         gradientView.layer.addSublayer(gradient)
         gradientView.layer.cornerRadius = 24
         gradientView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]

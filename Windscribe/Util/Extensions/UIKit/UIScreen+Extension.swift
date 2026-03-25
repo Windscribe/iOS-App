@@ -10,8 +10,17 @@ import Foundation
 import UIKit
 
 extension UIScreen {
+    static var activeScreen: UIScreen {
+        guard let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene }).first else {
+            // Blow up loudly -- this would indicate the app didn't boot or didn't setup it's window properly.
+            fatalError("No active UIWindowScene found — ensure SceneDelegate is configured")
+        }
+        return windowScene.screen
+    }
+
     static var isSmallScreen: Bool {
-        return UIScreen.main.bounds.height <= 640
+        return UIScreen.activeScreen.bounds.height <= 640
     }
 
     class var hasTopNotch: Bool {

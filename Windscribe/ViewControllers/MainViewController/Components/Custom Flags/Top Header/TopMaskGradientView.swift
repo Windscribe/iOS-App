@@ -32,16 +32,15 @@ class TopMaskGradientView: UIView {
 
     private func setupGradients() {
         layer.sublayers = []
-        let width = UIScreen.main.bounds.width
 
         gradientDisconnected.colors = [UIColor.nightBlue.cgColor, UIColor.clear.cgColor]
         gradientDisconnected.locations = [0, 0.6]
-        gradientDisconnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
+        gradientDisconnected.frame = CGRect(x: 0, y: 0, width: bounds.width, height: frame.height)
         layer.insertSublayer(gradientDisconnected, at: 0)
 
         gradientConnected.colors = [UIColor.connectedBlue.cgColor, UIColor.clear.cgColor]
         gradientConnected.locations = [0, 1.2]
-        gradientConnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
+        gradientConnected.frame = CGRect(x: 0, y: 0, width: bounds.width, height: frame.height)
         layer.insertSublayer(gradientConnected, at: 1)
 
         gradientDisconnected.opacity = 1
@@ -51,9 +50,8 @@ class TopMaskGradientView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        let width = UIScreen.main.bounds.width
-        gradientDisconnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
-        gradientConnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
+        gradientDisconnected.frame = CGRect(x: 0, y: 0, width: bounds.width, height: frame.height)
+        gradientConnected.frame = CGRect(x: 0, y: 0, width: bounds.width, height: frame.height)
     }
 
     func animateGradientFade() {

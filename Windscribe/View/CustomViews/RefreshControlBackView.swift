@@ -14,7 +14,7 @@ class RefreshControlBackView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor.clear
-        label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+        label = UILabel(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 50))
         label.font = UIFont.bold(size: 12)
         label.textAlignment = .center
         label.backgroundColor = UIColor.clear
@@ -24,7 +24,7 @@ class RefreshControlBackView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
+        label.frame = CGRect(x: 0, y: 0, width: bounds.width, height: 50)
     }
 
     @available(*, unavailable)

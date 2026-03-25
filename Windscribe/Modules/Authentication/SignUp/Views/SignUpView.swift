@@ -524,7 +524,7 @@ extension SignUpView {
         let fieldRect = geometry[anchor]
         let fieldBottomY = fieldRect.maxY
 
-        let screenHeight = UIScreen.main.bounds.height
+        let screenHeight = geometry.size.height
         let keyboardHeight = keyboard.currentHeight
         let buffer: CGFloat = 16
 

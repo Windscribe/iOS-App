@@ -322,7 +322,7 @@ class ConnectionStateInfoView: UIView {
     }
 
     private static let pillSize = CGSizeMake(39.0, 19.0)
-    
+
     private func setLayout() {
         pillView.translatesAutoresizingMaskIntoConstraints = false
         pillLabel.translatesAutoresizingMaskIntoConstraints = false
