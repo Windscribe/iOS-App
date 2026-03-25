@@ -396,7 +396,7 @@ private extension LoginView {
         let fieldRect = geometry[anchor]
         let fieldBottomY = fieldRect.maxY
 
-        let screenHeight = UIScreen.main.bounds.height
+        let screenHeight = geometry.size.height
         let keyboardHeight = keyboard.currentHeight
         let keyboardToolbarHeight: CGFloat = 44
         let buffer: CGFloat = 16

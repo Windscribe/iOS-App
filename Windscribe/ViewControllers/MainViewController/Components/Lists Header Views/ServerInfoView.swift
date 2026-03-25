@@ -121,7 +121,7 @@ class ServerInfoView: UIView {
 
         NSLayoutConstraint.activate([
             // infoView
-            widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
+            widthAnchor.constraint(equalTo: widthAnchor),
             heightAnchor.constraint(equalToConstant: 40),
 
             // infoLabel

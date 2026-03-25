@@ -69,14 +69,15 @@ class WSUIViewController: UIViewController {
                 return
             }
 
-            self.loadingBackgroundView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+            let viewBounds = self.view.bounds
+            self.loadingBackgroundView = UIView(frame: viewBounds)
             self.loadingBackgroundView.backgroundColor = UIColor.black
             self.loadingBackgroundView.layer.opacity = 0.5
 
             self.backgroundLoadingIndicator = UIActivityIndicatorView(style: .large)
             self.backgroundLoadingIndicator.color = .white
             self.backgroundLoadingIndicator.startAnimating()
-            self.backgroundLoadingIndicator.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2 - 25, width: 50, height: 50)
+            self.backgroundLoadingIndicator.frame = CGRect(x: viewBounds.width / 2 - 25, y: viewBounds.height / 2 - 25, width: 50, height: 50)
 
             UIView.transition(with: self.view,
                               duration: 0.25,

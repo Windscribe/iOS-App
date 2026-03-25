@@ -49,7 +49,7 @@ class BlurredLabel: UILabel {
         super.init(frame: frame)
         layer.isOpaque = false
         layer.needsDisplayOnBoundsChange = true
-        layer.contentsScale = UIScreen.main.scale
+        layer.contentsScale = UIScreen.activeScreen.scale
         layer.contentsGravity = .center
         isOpaque = false
         isUserInteractionEnabled = false
