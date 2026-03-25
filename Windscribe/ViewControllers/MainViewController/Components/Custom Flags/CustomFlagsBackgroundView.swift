@@ -68,18 +68,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
             .sink { [weak self] state in
                 guard let self = self else { return }
                 self.isConnected = state == .connected
-                // Only update visual styling (color), NOT fetch new location data
-                if let currentInfo = self.backgroundInfoSubject.value {
-                    let updatedInfo = BackgroundInfoModel(
-                        image: currentInfo.image,
-                        isConnected: self.isConnected,
-                        animates: false,
-                        color: self.isConnected ? .connectedBlue : .nightBlue,
-                        aspectRatioType: currentInfo.aspectRatioType,
-                        effect: currentInfo.effect
-                    )
-                    self.backgroundInfoSubject.send(updatedInfo)
-                }
+                self.updateBackgroundImage(isConnected: self.isConnected)
             }
             .store(in: &cancellables)
     }
@@ -152,7 +141,7 @@ class FlagsBackgroundView: UIView {
     }
 
     var backgroundImageView = UIImageView()
-    var backgroundImageViewGradientOverlay = CAGradientLayer()
+    var backgroundImageViewGradientMask = RadialGradientMask()
 
     var topMaskGradient = TopMaskGradientView()
     var topNavBarHeader = TopNavBarHeader()
@@ -177,7 +166,7 @@ class FlagsBackgroundView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        backgroundImageViewGradientOverlay.frame = backgroundImageView.bounds
+        backgroundImageViewGradientMask.frame = backgroundImageView.bounds
     }
 
     func redraw() {
@@ -231,18 +220,7 @@ class FlagsBackgroundView: UIView {
         backgroundImageView.isUserInteractionEnabled = false
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.setImageColor(color: .white)
-
-        backgroundImageViewGradientOverlay.type = .radial
-        backgroundImageViewGradientOverlay.colors = [
-            UIColor.clear.cgColor,
-            UIColor.clear.cgColor,
-            UIColor.black.cgColor
-        ]
-        backgroundImageViewGradientOverlay.locations = [0.0, 0.6, 1.0]
-        backgroundImageViewGradientOverlay.startPoint = CGPoint(x: 0.5, y: 0.5)
-        backgroundImageViewGradientOverlay.endPoint = CGPoint(x: 1.0, y: 1.0)
-
-        backgroundImageView.layer.addSublayer(backgroundImageViewGradientOverlay)
+        backgroundImageView.mask = backgroundImageViewGradientMask
     }
 
     private func addViews() {
