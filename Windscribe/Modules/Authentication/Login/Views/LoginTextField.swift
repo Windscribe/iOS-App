@@ -26,6 +26,7 @@ struct LoginTextField: View {
 
     var titleTapAction: (() -> Void)?
     var keyboardType: UIKeyboardType = .default
+    var textContentType: UITextContentType?
 
     var trailingView: AnyView?
 
@@ -69,12 +70,14 @@ struct LoginTextField: View {
                             .opacity(isPasswordVisible || !isSecure ? 1 : 0)
                             .disabled(isSecure && !isPasswordVisible)
                             .keyboardType(keyboardType)
+                            .textContentType(textContentType)
                             .tint(.from(.iconColor, isDarkMode))
 
                         SecureField("", text: $text)
                             .opacity(isPasswordVisible || !isSecure ? 0 : 1)
                             .disabled(!(!isPasswordVisible && isSecure))
                             .keyboardType(keyboardType)
+                            .textContentType(textContentType)
                             .tint(.from(.iconColor, isDarkMode))
                     }
                     .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, isDarkMode))
