@@ -14,7 +14,7 @@ import Swinject
 
 extension Assembler {
     static let container = Container()
-    static let assembler: Assembler = .init([App(), Network(), Repository(), Database(), Managers(), Routers(), ViewModels(), ViewControllerModule()], container: container)
+    static let assembler: Assembler = .init([App(), Network(), Repository(), Database(), Managers(), IOSManagers(), Routers(), ViewModels(), ViewControllerModule()], container: container)
 
     /**
      Resolves any previously added dependecy from assembler.

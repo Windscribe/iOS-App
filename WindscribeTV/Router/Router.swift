@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Swinject
 import UIKit
 
 protocol RootRouter {
@@ -15,10 +16,11 @@ protocol RootRouter {
 
 extension RootRouter {
     func presentAsRoot(vc: UIViewController) {
-        vc.modalPresentationStyle = .fullScreen
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+        let windowProvider: WindowProvider = Assembler.resolve(WindowProvider.self)
+        if let window = windowProvider.mainWindow {
             window.rootViewController?.dismiss(animated: false,
                                                completion: nil)
+            vc.modalPresentationStyle = .fullScreen
             UIView.transition(with: window,
                               duration: 0.3,
                               options: .transitionCrossDissolve,

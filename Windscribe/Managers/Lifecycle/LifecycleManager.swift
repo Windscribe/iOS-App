@@ -270,18 +270,22 @@ class LifecycleManager: LifecycleManagerType {
     }
 
     private func handlePendingURL(_ url: URL) {
+#if os(iOS)
         if url.absoluteString.contains("disconnect") {
             NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
         } else {
             NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
         }
+#endif
     }
 
     private func handlePendingActivity(_ activityType: String) {
+#if os(iOS)
         if activityType == SiriIdentifiers.connect {
             NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
         } else if activityType == SiriIdentifiers.disconnect {
             NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
         }
+#endif
     }
 }

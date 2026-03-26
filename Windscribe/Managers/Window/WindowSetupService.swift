@@ -12,10 +12,6 @@ import SwiftUI
 import Swinject
 import UIKit
 
-protocol WindowSetupService {
-    func configureWindow(_ window: UIWindow)
-}
-
 class WindowSetupServiceImpl: WindowSetupService {
     private let preferences: Preferences
     private let lookAndFeelRepository: LookAndFeelRepositoryType

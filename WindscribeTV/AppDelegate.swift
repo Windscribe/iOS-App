@@ -11,13 +11,8 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-
-    private lazy var customConfigRepository: CustomConfigRepository = Assembler.resolve(CustomConfigRepository.self)
 
     private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
-
-    private lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
 
     private lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
 
@@ -29,53 +24,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var purchaseManager: InAppPurchaseManager = Assembler.resolve(InAppPurchaseManager.self)
 
-    private lazy var latencyRepository: LatencyRepository = Assembler.resolve(LatencyRepository.self)
-
-    private lazy var pushNotificationManager: PushNotificationManager = Assembler.resolve(PushNotificationManager.self)
-
-    private lazy var lookAndFeelRepository: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
-
-    private lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)
-
-    private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
-
-    private lazy var protocolManager: ProtocolManagerType = Assembler.resolve(ProtocolManagerType.self)
+    private lazy var lifecycleManager: LifecycleManagerType = Assembler.resolve(LifecycleManagerType.self)
 
     lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         migrationRepository.runMigrations()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
-        connectivity.refreshNetwork()
+        lifecycleManager.onAppStart()
         recordInstallIfFirstLoad()
         resetCountryOverrideForServerList()
         purchaseManager.verifyPendingTransaction()
-        setApplicationWindow()
-        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-        Task { @MainActor [weak self] in
-            guard let self = self else { return }
-
-            do {
-                try await sessionManager.updateSession()
-            } catch {
-                await MainActor.run {
-                    self.logger.logE("AppDelegate", "Failed to get session from server with error \(error).")
-                }
-            }
-        }
-
-        Task.detached { [unowned self] in
-            await latencyRepository.loadCustomConfigLatency()
-        }
 
         return true
     }
 
-    /**
-     Records app install.
-     */
+    /// Records app install.
     private func recordInstallIfFirstLoad() {
         if preferences.getFirstInstall() == false {
             preferences.saveFirstInstall(bool: true)
@@ -92,58 +57,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    /**
-     If vpn state is disconnected on app launch reset country override for the server list.
-     */
+    /// If vpn state is disconnected on app launch reset country override for the server list.
     private func resetCountryOverrideForServerList() {
         if vpnStateRepository.isDisconnected() {
             preferences.saveCountryOverrride(value: nil)
         }
     }
+}
 
-    func applicationWillResignActive(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to WillResignActive")
-    }
+// MARK: - Scene Configuration
 
-    func applicationDidEnterBackground(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to DidEnterBackground")
-    }
+extension AppDelegate {
 
-    func applicationWillEnterForeground(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to WillEnterForeground.")
-        protocolManager.resetGoodProtocol()
-    }
-
-    func applicationDidBecomeActive(_: UIApplication) {
-        logger.logI("AppDelegate", "App state changed to Active.")
-        livecycleManager.appEnteredForeground()
-    }
-
-    /**
-     Prepares application window and launches first view controller
-     */
-    func setApplicationWindow() {
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        guard let window = window else { return }
-        window.backgroundColor = UIColor.black
-        // Authenticated user
-        if preferences.userSessionAuth() != nil {
-            if preferences.getLoginDate() == nil {
-                preferences.saveLoginDate(date: Date())
-            }
-            let mainViewController = Assembler.resolve(MainViewController.self)
-            let viewController = UINavigationController(rootViewController: mainViewController)
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                self.window?.rootViewController = viewController
-            }, completion: nil)
-        } else {
-            let welcomeVC = Assembler.resolve(WelcomeViewController.self)
-            let viewController = UINavigationController(rootViewController: welcomeVC)
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                self.window?.rootViewController = viewController
-            }, completion: nil)
-        }
-//        openPreferences()
-        self.window?.makeKeyAndVisible()
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: "Default Configuration",
+                                           sessionRole: connectingSceneSession.role)
+        config.delegateClass = SceneDelegate.self
+        return config
     }
 }

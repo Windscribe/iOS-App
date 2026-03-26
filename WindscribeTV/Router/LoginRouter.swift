@@ -15,10 +15,9 @@ class LoginRouter: RootRouter {
         switch to {
         case RouteID.home:
             let vc = Assembler.resolve(MainViewController.self)
-            vc.modalPresentationStyle = .fullScreen
-            // vc.appJustStarted = true
-            // vc.userJustLoggedIn = true
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+            let windowProvider: WindowProvider = Assembler.resolve(WindowProvider.self)
+            if let window = windowProvider.mainWindow {
+                vc.modalPresentationStyle = .fullScreen
                 window.rootViewController?.dismiss(animated: false,
                                                    completion: nil)
                 UIView.transition(with: window,

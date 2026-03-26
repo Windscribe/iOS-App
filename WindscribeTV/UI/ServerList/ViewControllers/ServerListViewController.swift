@@ -82,8 +82,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         favTableView.dataSource = self
         favTableView.register(UINib(nibName: "ServerDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "ServerDetailTableViewCell")
         setup()
+        favTableView.removeFromSuperview()
         bindData(isStreaming: false)
-        toggleView(viewToToggle: favTableView, isViewVisible: true)
         serverListCollectionView.contentInsetAdjustmentBehavior = .never
         setupSwipeDownGesture()
         changeEmptyViewVisibility()
@@ -142,10 +142,11 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             .sink { [weak self] results in
                 guard let self else { return }
 
-                let locationSectionsOrdered = viewModel.sortLocationListUsingUserPreferences(ignoreStreaming: false,
-                                                                                             isForStreaming: isStreaming,
-                                                                                             locations: results)
-
+                locationSectionsOrdered = viewModel.sortLocationListUsingUserPreferences(ignoreStreaming: false,
+                                                                                         isForStreaming: isStreaming,
+                                                                                         locations: results)
+                addBestLocation()
+                serverListCollectionView.reloadData()
             }
             .store(in: &cancellables)
 
@@ -168,7 +169,9 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
                 favDatacenters.removeAll()
                 favDatacenters.append(contentsOf: favourites)
-                self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+                if self.favTableView.window != nil {
+                    self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+                }
                 if favourites.count == 0 {
                     self.setNeedsFocusUpdate()
                 } else {
@@ -459,15 +462,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     }
 
     private func setConstraints() {
-        serverListCollectionView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            serverListCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
-            serverListCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
-            serverListCollectionView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100)
-        ])
-
         favTableView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -539,7 +533,6 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
 
         // Add constraints for the label
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
             label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 0),
             label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16)
