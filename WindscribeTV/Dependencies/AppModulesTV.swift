@@ -14,6 +14,17 @@ import UIKit
 
 typealias LocationsManagerType = LocationsManager
 
+// MARK: - TV Manager Overrides
+
+class TVManagerOverrides: Assembly {
+    func assemble(container: Swinject.Container) {
+        container.register(WindowSetupService.self) { r in
+            TVWindowSetupServiceImpl(
+                preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.container)
+    }
+}
+
 // MARK: - ViewModels
 
 class TVViewModels: Assembly {
@@ -131,7 +142,7 @@ class TVViewModels: Assembly {
                               notificationsRepo: r.resolve(NotificationRepository.self)!,
                               credentialsRepository: r.resolve(CredentialsRepository.self)!,
                               connectivity: r.resolve(ConnectivityManager.self)!,
-                              livecycleManager: r.resolve(LivecycleManagerType.self)!,
+                              lifecycleManager: r.resolve(LifecycleManagerType.self)!,
                               locationsManager: r.resolve(LocationsManagerType.self)!,
                               protocolManager: r.resolve(ProtocolManagerType.self)!,
                               hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,

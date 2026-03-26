@@ -230,12 +230,6 @@ class Managers: Assembly {
             WindowProviderImpl()
         }.inObjectScope(.container)
 
-        container.register(WindowSetupService.self) { r in
-            WindowSetupServiceImpl(
-                preferences: r.resolve(Preferences.self)!,
-                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
-        }.inObjectScope(.container)
-
         container.register(SceneLifecycleHandler.self) { r in
             SceneLifecycleHandlerImpl(
                 logger: r.resolve(FileLogger.self)!,
@@ -243,15 +237,6 @@ class Managers: Assembly {
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 lifecycleManager: r.resolve(LifecycleManagerType.self)!,
                 pushNotificationManager: r.resolve(PushNotificationManager.self)!)
-        }.inObjectScope(.container)
-
-        container.register(SceneActionHandler.self) { r in
-            SceneActionHandlerImpl(
-                preferences: r.resolve(Preferences.self)!,
-                logger: r.resolve(FileLogger.self)!,
-                customConfigRepository: r.resolve(CustomConfigRepository.self)!,
-                alertManager: r.resolve(AlertManager.self)!,
-                windowProvider: r.resolve(WindowProvider.self)!)
         }.inObjectScope(.container)
 
         container.register(InAppPurchaseManager.self) { r in

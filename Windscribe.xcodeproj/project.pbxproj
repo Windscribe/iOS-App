@@ -553,6 +553,7 @@
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
 		927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		927CEB5E2F7310CB007AF794 /* RadialGradientMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927CEB5D2F7310CB007AF794 /* RadialGradientMask.swift */; };
+		927CEB5F2F743B20007AF794 /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57BDE3E29B93ED700337E63 /* UIScreen+Extension.swift */; };
 		A1B2C3D401F600000001A002 /* ShortcutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A001 /* ShortcutType.swift */; };
 		A1B2C3D401F600000001A004 /* WindowProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A003 /* WindowProvider.swift */; };
 		A1B2C3D401F600000001A007 /* WindowSetupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A006 /* WindowSetupService.swift */; };
@@ -695,6 +696,14 @@
 		AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA715F21C43A8E00349195 /* ServerCredentials.swift */; };
 		AFFA716421C99B2F00349195 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716321C99B2F00349195 /* Date+Extension.swift */; };
 		AFFA716A21CD4D7C00349195 /* APIDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716921CD4D7C00349195 /* APIDebug.swift */; };
+		B1983A0100000001 /* ShortcutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A001 /* ShortcutType.swift */; };
+		B1983A0100000002 /* WindowProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A003 /* WindowProvider.swift */; };
+		B1983A0100000004 /* SceneLifecycleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A008 /* SceneLifecycleHandler.swift */; };
+		B1983A0100000007 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A0100000006 /* SceneDelegate.swift */; };
+		B1983A0100000009 /* TVWindowSetupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A0100000008 /* TVWindowSetupService.swift */; };
+		B1983A010000000A /* WindowSetupServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000B /* WindowSetupServiceType.swift */; };
+		B1983A010000000C /* WindowSetupServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000B /* WindowSetupServiceType.swift */; };
+		B1983A010000000D /* AppModulesManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000E /* AppModulesManagers.swift */; };
 		C5007D532CAF9E740035AE21 /* PreferencePrivacyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */; };
 		C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */; };
 		C5035A122CBE272B00A46B6D /* ShowLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5035A112CBE272B00A46B6D /* ShowLocation.swift */; };
@@ -1916,6 +1925,10 @@
 		AFFA715F21C43A8E00349195 /* ServerCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCredentials.swift; sourceTree = "<group>"; };
 		AFFA716321C99B2F00349195 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		AFFA716921CD4D7C00349195 /* APIDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDebug.swift; sourceTree = "<group>"; };
+		B1983A0100000006 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		B1983A0100000008 /* TVWindowSetupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVWindowSetupService.swift; sourceTree = "<group>"; };
+		B1983A010000000B /* WindowSetupServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupServiceType.swift; sourceTree = "<group>"; };
+		B1983A010000000E /* AppModulesManagers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModulesManagers.swift; sourceTree = "<group>"; };
 		C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencePrivacyView.xib; sourceTree = "<group>"; };
 		C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencePrivacyView.swift; sourceTree = "<group>"; };
 		C5035A112CBE272B00A46B6D /* ShowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocation.swift; sourceTree = "<group>"; };
@@ -3353,6 +3366,7 @@
 				F40FD26E2E00AF20004245DF /* Util */,
 				F40FD2702E00B001004245DF /* Supporting Files */,
 				592EDBFB2C3C688400351D44 /* AppDelegate.swift */,
+				B1983A0100000006 /* SceneDelegate.swift */,
 				5986AB592C47432D00167023 /* Info.plist */,
 			);
 			path = WindscribeTV;
@@ -3372,6 +3386,7 @@
 			children = (
 				59A218702C3C9E22000D89FA /* AppModulesTV.swift */,
 				59A218742C3CA091000D89FA /* TVAssembler.swift */,
+				B1983A0100000008 /* TVWindowSetupService.swift */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -3447,6 +3462,7 @@
 			children = (
 				A1B2C3D401F600000001A003 /* WindowProvider.swift */,
 				A1B2C3D401F600000001A006 /* WindowSetupService.swift */,
+				B1983A010000000B /* WindowSetupServiceType.swift */,
 				A1B2C3D401F600000001A008 /* SceneLifecycleHandler.swift */,
 				A1B2C3D401F600000001A00A /* SceneActionHandler.swift */,
 			);
@@ -5287,6 +5303,7 @@
 			children = (
 				59A2186D2C3C9D7D000D89FA /* AppModulesViewController.swift */,
 				F48B331B2EC662AF00D0EB32 /* AppModulesViewModels.swift */,
+				B1983A010000000E /* AppModulesManagers.swift */,
 				F48B33222EC662F800D0EB32 /* AppModulesRouters.swift */,
 			);
 			path = iOS;
@@ -6724,6 +6741,7 @@
 				F49E61D02E00A2030087386F /* CustomSoundEffectType.swift in Sources */,
 				59FC73CD2C514A7A00021CD1 /* AppModulesCommon.swift in Sources */,
 				1E2CC46D2F5B3D640077C82E /* Deprecated Servers.swift in Sources */,
+				927CEB5F2F743B20007AF794 /* UIScreen+Extension.swift in Sources */,
 				1EA9D7132C87192A00566A93 /* PrivacyViewModel.swift in Sources */,
 				F40F7E552F1AD4FD00400CC1 /* DiscreetAppIconType.swift in Sources */,
 				1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */,
@@ -6956,6 +6974,12 @@
 				59FC742E2C51569700021CD1 /* Keychain.swift in Sources */,
 				1E9F2C372C66629100607BAA /* UITextView+Extension.swift in Sources */,
 				1ED23F822DBBD37900C7BEE5 /* IPInfoViewModel.swift in Sources */,
+				B1983A0100000001 /* ShortcutType.swift in Sources */,
+				B1983A0100000002 /* WindowProvider.swift in Sources */,
+				B1983A010000000A /* WindowSetupServiceType.swift in Sources */,
+				B1983A0100000004 /* SceneLifecycleHandler.swift in Sources */,
+				B1983A0100000007 /* SceneDelegate.swift in Sources */,
+				B1983A0100000009 /* TVWindowSetupService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7433,6 +7457,7 @@
 				1E6610A32E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */,
 				AF36A1AD237C7FC500BDDCDB /* ShakeForDataScore.swift in Sources */,
 				1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */,
+				B1983A010000000D /* AppModulesManagers.swift in Sources */,
 				F48B33282EC662F800D0EB32 /* AppModulesRouters.swift in Sources */,
 				F4B5457E2E32D17A00135E74 /* MaintananceLocationView.swift in Sources */,
 				F4888E362D931364005EF149 /* NavigationRouterModifier.swift in Sources */,
@@ -7471,6 +7496,7 @@
 				A1B2C3D401F600000001A002 /* ShortcutType.swift in Sources */,
 				A1B2C3D401F600000001A004 /* WindowProvider.swift in Sources */,
 				A1B2C3D401F600000001A007 /* WindowSetupService.swift in Sources */,
+				B1983A010000000C /* WindowSetupServiceType.swift in Sources */,
 				A1B2C3D401F600000001A009 /* SceneLifecycleHandler.swift in Sources */,
 				A1B2C3D401F600000001A00B /* SceneActionHandler.swift in Sources */,
 			);
