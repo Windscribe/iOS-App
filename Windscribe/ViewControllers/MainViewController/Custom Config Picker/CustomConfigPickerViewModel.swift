@@ -87,17 +87,34 @@ extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
                     }
                     if url.isFileURL, url.pathExtension == "ovpn" {
                         Task {
-                            try? await self.customConfigRepository.saveOpenVPNConfig(url: url)
-                            url.stopAccessingSecurityScopedResource()
+                            do {
+                                try await self.customConfigRepository.saveOpenVPNConfig(url: url)
+                                url.stopAccessingSecurityScopedResource()
+                            } catch {
+                                await self.showCustomConfigError(with: error)
+                            }
                         }
                     } else if url.isFileURL, url.pathExtension == "conf" {
                         Task {
-                            try? await self.customConfigRepository.saveWgConfig(url: url)
-                            url.stopAccessingSecurityScopedResource()
+                            do {
+                                try await self.customConfigRepository.saveWgConfig(url: url)
+                                url.stopAccessingSecurityScopedResource()
+                            } catch {
+                                await self.showCustomConfigError(with: error)
+                            }
                         }
                     }
                 }
                 .store(in: &cancellables)
+        }
+    }
+
+    @MainActor
+    private func showCustomConfigError(with error: Error) async {
+        if let error = error as? RepositoryError {
+            await MainActor.run {
+                alertManager.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+            }
         }
     }
 }
