@@ -163,6 +163,7 @@ struct DatacenterModel: Decodable {
         self.p2p = model.p2p
         self.p2p = model.p2p
         self.isPremium = model.isPremium
+        self.wgPubkey = model.wgPubkey
         self.wgEndpoint = model.wgEndpoint
         self.ovpnX509 = model.ovpnX509
         self.linkSpeed = model.linkSpeed
