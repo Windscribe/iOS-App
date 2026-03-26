@@ -196,7 +196,8 @@ private extension LoginView {
             showWarningIcon: showUsernameIcon,
             showFieldErrorText: false,
             text: $viewModel.username,
-            isDarkMode: $viewModel.isDarkMode
+            isDarkMode: $viewModel.isDarkMode,
+            textContentType: .username
         )
         .focused($focusedField, equals: .username)
         .id(Field.username)
@@ -214,7 +215,8 @@ private extension LoginView {
             showWarningIcon: showPasswordIcon,
             showFieldErrorText: false,
             text: $viewModel.password,
-            isDarkMode: $viewModel.isDarkMode
+            isDarkMode: $viewModel.isDarkMode,
+            textContentType: .password
         )
         .focused($focusedField, equals: .password)
         .id(Field.password)
@@ -239,9 +241,9 @@ private extension LoginView {
                             viewModel.show2FAField = false
                         }
                     },
-                    keyboardType: .numberPad
+                    keyboardType: .default,
+                    textContentType: .oneTimeCode
                 )
-                .keyboardType(.numberPad)
                 .focused($focusedField, equals: .twoFactorCode)
                 .id(Field.twoFactorCode)
                 .readingFrame(id: "twoFactorCode-anchor")
