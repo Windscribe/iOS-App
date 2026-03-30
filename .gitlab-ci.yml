@@ -1,0 +1,81 @@
+variables:
+  XCODE_VERSION: "26.3"
+
+default:
+  tags:
+    - mac-m4
+  before_script:
+    - export LANG=en_US.UTF-8
+    - export LC_ALL=en_US.UTF-8
+    - xcodes select $XCODE_VERSION
+
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+# ─── Rules templates ──────────────────────────────────────────────────────────
+
+.on_mr:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+      when: always
+    - when: never
+
+.on_merge_to_main:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never
+
+# ─── Lint ──────────────────────────────────────────────────────────────────────
+
+LintCheck:
+  stage: lint
+  extends: .on_mr
+  script:
+    - fastlane lint
+
+# ─── Test ──────────────────────────────────────────────────────────────────────
+
+UnitTest:
+  stage: test
+  extends: .on_mr
+  script:
+    - fastlane test
+
+# ─── Build (on merge to main) ─────────────────────────────────────────────────
+
+Build-iOS:
+  stage: build
+  extends: .on_merge_to_main
+
+  script:
+    - fastlane iOSBuild
+
+Build-tvOS:
+  stage: build
+  extends: .on_merge_to_main
+
+  script:
+    - fastlane tvBuild
+
+Build-Widget:
+  stage: build
+  extends: .on_merge_to_main
+
+  script:
+    - fastlane widgetBuild
+
+# ─── Deploy (manual) ──────────────────────────────────────────────────────────
+
+Deploy-iOS-TestFlight:
+  stage: deploy
+
+  script:
+    - fastlane iOSTestFlight
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+    - when: never
