@@ -70,7 +70,7 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
         return false
     }
 
-    override var showP2P: Bool { displayingDatacenter?.p2p != 1 }
+    override var showP2P: Bool { displayingDatacenter?.p2p != 1  && isUserPro }
 
     override var serverNetLoad: CGFloat {
         CGFloat(self.displayingDatacenter?.netLoad ?? 0)

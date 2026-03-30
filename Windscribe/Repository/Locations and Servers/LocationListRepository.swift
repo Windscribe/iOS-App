@@ -24,6 +24,7 @@ protocol LocationListRepository {
     func updateLocations() async throws
     func updatedServerList() async throws
     func updateInventory(with inventory: ServerInventoryModel)
+    func updateAll() async throws
 
     func updateRegions(with regions: [ExportedRegion])
 
@@ -210,6 +211,11 @@ class LocationListRepositoryImpl: LocationListRepository {
                 throw error
             }
         }
+    }
+
+    func updateAll() async throws {
+        try await updatedServerList()
+        try await updateLocations()
     }
 
     func updateAllIfEmpty() async throws {

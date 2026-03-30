@@ -199,7 +199,7 @@ class SessionManagerImpl: SessionManager {
             session.sessionAuthHash = auth
         }
         Task {
-            try? await locationListRepository.updatedServerList()
+            try? await locationListRepository.updateAll()
             await updateFrom(session: session)
             if unblockWgParamsRepository.needsRefresh() {
                 unblockWgParamsRepository.refreshParams()
@@ -272,7 +272,7 @@ class SessionManagerImpl: SessionManager {
         }
         if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
             logger.logI("SessionManager", "ALC changes detected. Request to retrieve server list")
-            try? await locationListRepository.updatedServerList()
+            try? await locationListRepository.updateAll()
         }
         let sipCount = staticIPRepo.staticIPs.count
         if sipCount != newSession.getSipCount() {
@@ -283,11 +283,11 @@ class SessionManagerImpl: SessionManager {
         if !newSession.isPremium && oldSession.isPremium {
             logger.logI("SessionManager", "User's pro plan expired.")
             _ = try? await Task.sleep(nanoseconds: 3_000_000_000)
-            try? await locationListRepository.updatedServerList()
+            try? await locationListRepository.updateAll()
             await updateProtocolCredentials()
         }
         if newSession.isPremium && !oldSession.isPremium {
-            try? await locationListRepository.updatedServerList()
+            try? await locationListRepository.updateAll()
             await updateProtocolCredentials()
         }
         if (oldSession.status == 3 && newSession.status == 1) || (oldSession.status == 2 && newSession.status == 1) {
