@@ -12,7 +12,6 @@ import Combine
 @testable import Windscribe
 
 class MockPreferences: Preferences {
-
     var mockConnectionCount = 0
     var mockAdvanceParams: String?
     var mockLastReviewDate: Date?
@@ -792,7 +791,11 @@ class MockPreferences: Preferences {
     func getIngressProtocolPreference() -> AnyPublisher<String?, Never> {
         return Just(DefaultValues.ipv4Only).eraseToAnyPublisher()
     }
-
+    
+    func getIngressProtocolPreferenceSync() -> String {
+        return DefaultValues.ipv4Only
+    }
+    
     func saveLastSelectedPinnedIp(with pinnedIP: String) {
         mockLastSelectedPinnedIp = pinnedIP
     }

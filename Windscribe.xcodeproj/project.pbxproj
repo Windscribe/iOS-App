@@ -2246,8 +2246,6 @@
 		F48B331B2EC662AF00D0EB32 /* AppModulesViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModulesViewModels.swift; sourceTree = "<group>"; };
 		F48B33222EC662F800D0EB32 /* AppModulesRouters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModulesRouters.swift; sourceTree = "<group>"; };
 		F48B332B2EC6666A00D0EB32 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
-		F48B332E2EC66B6900D0EB32 /* .gitlab-ci.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = ".gitlab-ci.yml"; sourceTree = "<group>"; };
-		F48B332F2EC66B7C00D0EB32 /* Fastfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Fastfile; sourceTree = "<group>"; };
 		F48DDC142E85BEA800B66315 /* WireGuardCredentialsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardCredentialsTests.swift; sourceTree = "<group>"; };
 		F48DDC1C2E8C50EB00B66315 /* MockFileDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFileDatabase.swift; sourceTree = "<group>"; };
 		F48DDC1E2E8C9BCC00B66315 /* FileDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDatabaseTests.swift; sourceTree = "<group>"; };
@@ -3484,7 +3482,6 @@
 				AF018DEA21B0866600B225FF /* Products */,
 				5C7E6BA3FBBD49ED5CFC9502 /* Frameworks */,
 				C56615F72C4D883E008AA993 /* libs */,
-				F415335B2E26C39900DA7683 /* CI */,
 				AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */,
 				C553E34D2C25ABE900A2C027 /* LICENCE.md */,
 			);
@@ -4535,15 +4532,6 @@
 				F440F2FA2D8CB492006F1A6D /* ViewModels */,
 			);
 			path = Welcome;
-			sourceTree = "<group>";
-		};
-		F415335B2E26C39900DA7683 /* CI */ = {
-			isa = PBXGroup;
-			children = (
-				F48B332E2EC66B6900D0EB32 /* .gitlab-ci.yml */,
-				F48B332F2EC66B7C00D0EB32 /* Fastfile */,
-			);
-			path = CI;
 			sourceTree = "<group>";
 		};
 		F41AC7A12EA95CAF00673A11 /* Models */ = {

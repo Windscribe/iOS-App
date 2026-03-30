@@ -111,6 +111,10 @@ class MockLocationsManager: LocationsManager {
     func checkLocationValidity() {}
 
     func checkForForceDisconnect() -> Bool { return false }
+    
+    func getIsSelectedLocationPremium() -> Bool {
+        return false
+    }
 
     // MARK: Helper Methods
 
