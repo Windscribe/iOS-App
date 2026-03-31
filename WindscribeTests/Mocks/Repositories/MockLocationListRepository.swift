@@ -50,13 +50,13 @@ class MockLocationListRepository: LocationListRepository {
             throw customError ?? NSError(domain: "MockError", code: -1)
         }
     }
-    
+
     func updateAllIfEmpty() async throws {
         if shouldThrowError {
             throw customError ?? NSError(domain: "MockError", code: -1)
         }
     }
-    
+
 
     func updateInventory(with inventory: ServerInventoryModel) {
         updateInventoryCalled = true
