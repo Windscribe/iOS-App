@@ -185,7 +185,8 @@ class BridgeApiRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "",
-            revisionHash: ""
+            revisionHash: "",
+            amneziawgConfigId: ""
         )
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(
@@ -241,7 +242,8 @@ class BridgeApiRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "",
-            revisionHash: ""
+            revisionHash: "",
+            amneziawgConfigId: ""
         )
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(
@@ -296,7 +298,8 @@ class BridgeApiRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "",
-            revisionHash: ""
+            revisionHash: "",
+            amneziawgConfigId: ""
         )
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(
@@ -382,7 +385,8 @@ class BridgeApiRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "",
-            revisionHash: ""
+            revisionHash: "",
+            amneziawgConfigId: ""
         )
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(
@@ -435,7 +439,8 @@ class BridgeApiRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "",
-            revisionHash: ""
+            revisionHash: "",
+            amneziawgConfigId: ""
         )
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(
@@ -512,7 +517,8 @@ class BridgeApiRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "",
-            revisionHash: ""
+            revisionHash: "",
+            amneziawgConfigId: ""
         )
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(

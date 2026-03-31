@@ -22,6 +22,7 @@ class LocationListRepositoryTests: XCTestCase {
     var mockLogger: MockLogger!
     var mockPreferences: MockPreferences!
     var mockAdvanceRepository: MockAdvanceRepository!
+    var mockAntiCensorshipRepository: MockAntiCensorshipRepository!
     private var cancellables = Set<AnyCancellable>()
 
     override func setUp() {
@@ -33,6 +34,7 @@ class LocationListRepositoryTests: XCTestCase {
         mockPreferences = MockPreferences()
         mockLogger = MockLogger()
         mockAdvanceRepository = MockAdvanceRepository()
+        mockAntiCensorshipRepository = MockAntiCensorshipRepository()
 
         // Register mocks
         mockContainer.register(APIManager.self) { _ in
@@ -59,13 +61,18 @@ class LocationListRepositoryTests: XCTestCase {
             return self.mockAdvanceRepository
         }.inObjectScope(.container)
 
+        mockContainer.register(AntiCensorshipRepository.self) { _ in
+            return self.mockAntiCensorshipRepository
+        }.inObjectScope(.container)
+
         // Register LocationListRepository
         mockContainer.register(LocationListRepository.self) { r in
             return LocationListRepositoryImpl(
                 apiManager: r.resolve(APIManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                preferences: r.resolve(Preferences.self)!
+                antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
+                preferences: r.resolve(Preferences.self)!,
             )
         }.inObjectScope(.container)
 

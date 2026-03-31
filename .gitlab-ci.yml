@@ -3,7 +3,7 @@ variables:
 
 default:
   tags:
-    - mac-m4
+    - arm64
   before_script:
     - export LANG=en_US.UTF-8
     - export LC_ALL=en_US.UTF-8
@@ -19,13 +19,7 @@ stages:
 
 .on_mr:
   rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
-      when: always
-    - when: never
-
-.on_merge_to_main:
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_MERGE_REQUEST_ID'
       when: always
     - when: never
 
@@ -45,37 +39,28 @@ UnitTest:
   script:
     - fastlane test
 
-# ─── Build (on merge to main) ─────────────────────────────────────────────────
+# ─── Build ─────────────────────────────────────────────────────────────────────
 
 Build-iOS:
   stage: build
-  extends: .on_merge_to_main
-
+  extends: .on_mr
   script:
     - fastlane iOSBuild
 
 Build-tvOS:
   stage: build
-  extends: .on_merge_to_main
-
+  extends: .on_mr
   script:
     - fastlane tvBuild
-
-Build-Widget:
-  stage: build
-  extends: .on_merge_to_main
-
-  script:
-    - fastlane widgetBuild
 
 # ─── Deploy (manual) ──────────────────────────────────────────────────────────
 
 Deploy-iOS-TestFlight:
   stage: deploy
-
   script:
     - fastlane iOSTestFlight
+  allow_failure: true
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
-    - when: never
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: never
+    - when: manual
