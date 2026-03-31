@@ -152,10 +152,20 @@ class ViewControllerModule: Assembly {
                     router: r.resolve(ConnectionsNavigationRouter.self)!,
                     protocolManager: r.resolve(ProtocolManagerType.self)!,
                     dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!,
-                    portMapRepository: r.resolve(PortMapRepository.self)!,
-                    unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!
+                    portMapRepository: r.resolve(PortMapRepository.self)!
                 )
            )
+        }.inObjectScope(.transient)
+
+        container.register(AntiCensorshipOptionsView.self) { r in
+            AntiCensorshipOptionsView(
+                viewModel: AntiCensorshipOptionsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                    antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!
+                )
+            )
         }.inObjectScope(.transient)
 
         container.register(NetworkSecurityView.self) { r in

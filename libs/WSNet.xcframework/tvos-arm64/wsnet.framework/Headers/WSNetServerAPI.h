@@ -14,12 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)resetFailover;
 -(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(unsigned int, unsigned int))tryingBackupEndpointCallback;
 -(WSNetCancelableCallback*)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)session:(NSString*)authHash appleId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId invRev:(int64_t)invRev backup:(BOOL)backup callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)session:(NSString*)authHash appleId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId invRev:(int64_t)invRev backup:(int32_t)backup callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)claimVoucherCode:(NSString*)authHash voucherCode:(NSString*)voucherCode callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)deleteSession:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverLocations:(NSString*)language revision:(NSString*)revision isPro:(BOOL)isPro alcList:(NSArray<NSString*>*)alcList callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)getLocations:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)getServers:(NSString*)authHash backup:(BOOL)backup callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)getServers:(NSString*)authHash backup:(int32_t)backup callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverCredentials:(NSString*)authHash isOpenVpnProtocol:(BOOL)isOpenVpnProtocol callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverConfigs:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)portMap:(NSString*)authHash version:(uint32_t)version forceProtocols:(NSArray<NSString*>*)forceProtocols callback:(void(^)(int, NSString*))callback;

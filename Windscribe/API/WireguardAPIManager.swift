@@ -37,8 +37,9 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
             throw Errors.validationFailure
         }
         let revision = preferences.getServerRevision()
+        let useBackup = preferences.getRoutingType().apiValue
         return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
-            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", invRev: revision, backup: false, callback: completion)
+            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", invRev: revision, backup: useBackup, callback: completion)
         }
     }
 }

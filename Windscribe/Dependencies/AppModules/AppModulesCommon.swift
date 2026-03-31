@@ -75,7 +75,8 @@ class Repository: Assembly {
         container.register(UserSessionRepository.self) { r in
             UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!,
                                       localDatabase: r.resolve(LocalDatabase.self)!,
-                                      locationListRepository: r.resolve(LocationListRepository.self)!)
+                                      locationListRepository: r.resolve(LocationListRepository.self)!,
+                                      antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(BridgeApiRepository.self) { r in
@@ -187,7 +188,7 @@ class Repository: Assembly {
                                   credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                   staticIpRepository: r.resolve(StaticIpRepository.self)!,
                                   customConfigRepository: r.resolve(CustomConfigRepository.self)!,
-                                  unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!)
+                                  antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LookAndFeelRepositoryType.self) { r in
@@ -204,12 +205,12 @@ class Repository: Assembly {
             MigrationRepositoryImpl(localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.userScope)
 
-        container.register(UnblockWgParamsRepository.self) { r in
-            UnblockWgParamsRepositoryImpl(
+        container.register(AntiCensorshipRepository.self) { r in
+            AntiCensorshipRepositoryImpl(
                 apiManager: r.resolve(APIManager.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
-                preferences: r.resolve(Preferences.self)!
+                preferences: r.resolve(Preferences.self)!,
             )
         }.inObjectScope(.userScope)
 
@@ -217,6 +218,7 @@ class Repository: Assembly {
             LocationListRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
                                        localDatabase: r.resolve(LocalDatabase.self)!,
                                        logger: r.resolve(FileLogger.self)!,
+                                       antiCensorshipRepository:  r.resolve(AntiCensorshipRepository.self)!,
                                        preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
     }
@@ -291,7 +293,7 @@ class Managers: Assembly {
                                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                vpnManager: r.resolve(VPNManager.self)!,
                                ssoManager: r.resolve(SSOManaging.self)!,
-                               unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!,
+                               antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
                                locationListRepository: r.resolve(LocationListRepository.self)!,
                                windowProvider: r.resolve(WindowProvider.self)!)
         }.inObjectScope(.userScope)
@@ -375,7 +377,7 @@ class Managers: Assembly {
                              configManager: r.resolve(ConfigurationsManager.self)!,
                              connectivityManager: r.resolve(ProtocolManagerType.self)!,
                              locationsManager: r.resolve(LocationsManager.self)!,
-                             unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!,
+                             antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
                              wifiManager: r.resolve(WifiManager.self)!,
                              locationListRepository: r.resolve(LocationListRepository.self)!,
                              windowProvider: r.resolve(WindowProvider.self)!)

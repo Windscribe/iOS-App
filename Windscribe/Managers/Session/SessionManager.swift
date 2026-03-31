@@ -49,7 +49,7 @@ class SessionManagerImpl: SessionManager {
     private let userSessionRepository: UserSessionRepository
     private let locationsManager: LocationsManager
     private let vpnStateRepository: VPNStateRepository
-    private let unblockWgParamsRepository: UnblockWgParamsRepository
+    private let antiCensorshipRepository: AntiCensorshipRepository
     private let locationListRepository: LocationListRepository
 
     private let vpnManager: VPNManager
@@ -72,7 +72,7 @@ class SessionManagerImpl: SessionManager {
           vpnStateRepository: VPNStateRepository,
           vpnManager: VPNManager,
           ssoManager: SSOManaging,
-          unblockWgParamsRepository: UnblockWgParamsRepository,
+          antiCensorshipRepository: AntiCensorshipRepository,
           locationListRepository: LocationListRepository,
           windowProvider: WindowProvider) {
         self.wgCredentials = wgCredentials
@@ -88,11 +88,18 @@ class SessionManagerImpl: SessionManager {
         self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
         self.ssoManager = ssoManager
-        self.unblockWgParamsRepository = unblockWgParamsRepository
+        self.antiCensorshipRepository = antiCensorshipRepository
         self.locationListRepository = locationListRepository
         self.windowProvider = windowProvider
 
         keepSessionUpdated()
+
+        self.antiCensorshipRepository.selecteRoutingTypeSubject
+            .dropFirst()
+            .sink { [weak self] _ in
+                self?.keepSessionUpdated()
+            }
+            .store(in: &cancellables)
     }
 
     func setSessionTimer() {
@@ -207,14 +214,14 @@ class SessionManagerImpl: SessionManager {
         Task {
             try? await locationListRepository.updateAll()
             await updateFrom(session: session)
-            if unblockWgParamsRepository.needsRefresh() {
-                unblockWgParamsRepository.refreshParams()
-            }
         }
     }
 
     func updateFrom(session: SessionModel) async {
         await userSessionRepository.update(session: session)
+        if antiCensorshipRepository.needsRefresh() {
+            antiCensorshipRepository.refreshParams()
+        }
     }
 
     func listenForSessionChanges() {

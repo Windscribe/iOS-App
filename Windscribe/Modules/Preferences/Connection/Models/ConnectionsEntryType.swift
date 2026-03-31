@@ -8,14 +8,13 @@
 
 enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
     case networkOptions,
+         antiCensorshipOptions,
          connectionMode(currentOption: String, options: [MenuOption],
                         protocolSelected: String, protocolOptions: [MenuOption],
                         portSelected: String, portOptions: [MenuOption]),
          alwaysOn(isSelected: Bool),
          connectedDns(currentOption: String, customValue: String, options: [MenuOption]),
          allowLan(isSelected: Bool),
-         circunventCensorship(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption]),
-         serverpede(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption]),
          ipStack(
             selectedEgressOption: String, egressOptions: [MenuOption],
             selectedIngressOption: String, ingressOptions: [MenuOption]
@@ -28,44 +27,40 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .alwaysOn: 3
         case .connectedDns: 4
         case .allowLan: 5
-        case .circunventCensorship: 6
-        case .serverpede: 7
+        case .antiCensorshipOptions: 6
         case .ipStack: 8
         }
     }
     var title: String {
         switch self {
         case .networkOptions: TextsAsset.Connection.networkOptions
+        case .antiCensorshipOptions: TextsAsset.Connection.antiCensorshipOptions
         case .connectionMode: TextsAsset.Connection.connectionMode
         case .alwaysOn: TextsAsset.Connection.killSwitch
         case .connectedDns: TextsAsset.Connection.connectedDNS
         case .allowLan: TextsAsset.Connection.allowLan
-        case .circunventCensorship: TextsAsset.Connection.circumventCensorship
-        case .serverpede: TextsAsset.Connection.useServerpede
         case .ipStack: TextsAsset.Connection.ipStack
         }
     }
     var icon: String {
         switch self {
         case .networkOptions: ""
+        case .antiCensorshipOptions: ""
         case .connectionMode: ImagesAsset.Connection.connectionMode
         case .alwaysOn: ImagesAsset.Connection.killSwitch
         case .connectedDns: ImagesAsset.Connection.connectedDNS
         case .allowLan: ImagesAsset.Connection.allowLan
-        case .circunventCensorship: ImagesAsset.Connection.circumventCensorship
-        case .serverpede: ImagesAsset.Connection.circumventCensorship
         case .ipStack: ImagesAsset.Connection.preferredProtocol
         }
     }
     var message: String? {
         switch self {
         case .networkOptions: nil
+        case .antiCensorshipOptions: nil
         case .connectionMode: nil
         case .alwaysOn: TextsAsset.Connection.killSwitchDescription
         case .connectedDns: nil
         case .allowLan: nil
-        case .circunventCensorship: nil
-        case .serverpede: nil
         case .ipStack: nil
         }
     }
@@ -76,8 +71,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case let .alwaysOn(isSelected): .toggle(isSelected: isSelected, parentId: id)
         case let .connectedDns(currentOption, _, options): .multiple(currentOption: currentOption, options: options, parentId: id)
         case let .allowLan(isSelected): .toggle(isSelected: isSelected, parentId: id)
-        case let .circunventCensorship(isSelected, _, _): .toggle(isSelected: isSelected, parentId: id)
-        case let .serverpede(isSelected, _, _): .toggle(isSelected: isSelected, parentId: id)
+        case .antiCensorshipOptions: .button(title: "", parentId: id)
         case .ipStack: .none(title: "", parentId: id)
         }
     }
@@ -109,19 +103,9 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
             }
         case .allowLan:
             return [.allowLanInfo]
-        case let .circunventCensorship(isSelected, paramSelected, paramOptions):
-            if isSelected {
-                return [.circunventCensorshipInfo, .wgUnlockMenu(currentOption: paramSelected, options: paramOptions)]
-            } else {
-                return [.circunventCensorshipInfo]
-            }
-        case let .serverpede(isSelected, paramSelected, paramOptions):
-            if isSelected {
-                return [.serverpedInfo, .backupMenu(currentOption: paramSelected, options: paramOptions)]
-            } else {
-                return [.serverpedInfo]
-            }
-        case let .ipStack(selectedEgress, egressOptions, selectedIngress, ingressOptions):
+        case .antiCensorshipOptions:
+            return []
+        case let .ipStack(selectedEgress, egressOptions, _, _):
             return [.ipStackInfo, .egressMenu(currentOption: selectedEgress, options: egressOptions)]
 
         default:
@@ -138,10 +122,6 @@ enum ConnectionSecondaryEntryIDs: Int {
          connectedDnsInfo,
          connectedDnsCustom,
          allowLanInfo,
-         circunventCensorshipInfo,
-         wgUnlockMenu,
-         serverpedInfo,
-         backupMenu,
          ipStackInfo,
          ipStackEgressMenu,
          ipStackIngressMenu
@@ -157,10 +137,6 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
          connectedDnsInfo,
          connectedDnsCustom(value: String),
          allowLanInfo,
-         circunventCensorshipInfo,
-         wgUnlockMenu(currentOption: String, options: [MenuOption]),
-         serverpedInfo,
-         backupMenu(currentOption: String, options: [MenuOption]),
          ipStackInfo,
          egressMenu(currentOption: String, options: [MenuOption]),
          ingressMenu(currentOption: String, options: [MenuOption])
@@ -181,14 +157,6 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
             ConnectionSecondaryEntryIDs.connectedDnsCustom.id
         case .allowLanInfo:
             ConnectionSecondaryEntryIDs.allowLanInfo.id
-        case .circunventCensorshipInfo:
-            ConnectionSecondaryEntryIDs.circunventCensorshipInfo.id
-        case .wgUnlockMenu:
-            ConnectionSecondaryEntryIDs.wgUnlockMenu.id
-        case .serverpedInfo:
-            ConnectionSecondaryEntryIDs.serverpedInfo.id
-        case .backupMenu:
-            ConnectionSecondaryEntryIDs.backupMenu.id
         case .ipStackInfo:
             ConnectionSecondaryEntryIDs.ipStackInfo.id
         case .egressMenu:
@@ -201,8 +169,6 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
         switch self {
         case .protocolMenu: TextsAsset.Connection.protocolType
         case .portMenu: TextsAsset.Connection.port
-        case .wgUnlockMenu: TextsAsset.Connection.configuration
-        case .backupMenu: TextsAsset.Connection.backup
         case .egressMenu: TextsAsset.Connection.egress
         case .ingressMenu: TextsAsset.Connection.ingress
         default: ""
@@ -227,14 +193,6 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
                 .field(value: value, placeHolder: TextsAsset.Connection.connectedDNSValueFieldDescription, parentId: id)
         case .allowLanInfo:
                 .infoLink(message: TextsAsset.Connection.allowLanDescription, parentId: id)
-        case .circunventCensorshipInfo:
-                .infoLink(message: TextsAsset.Connection.circumventCensorshipDescription, parentId: id)
-        case let .wgUnlockMenu(currentOption, options):
-                .multiple(currentOption: currentOption, options: options, parentId: id)
-        case .serverpedInfo:
-                .infoLink(message: TextsAsset.Connection.serverpedeDescription, parentId: id)
-        case let .backupMenu(currentOption, options):
-                .multiple(currentOption: currentOption, options: options, parentId: id)
         case .ipStackInfo:
                 .infoLink(message: TextsAsset.Connection.ipStackDescription, parentId: id)
 

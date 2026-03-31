@@ -14,8 +14,9 @@ extension APIManagerImpl {
             throw Errors.validationFailure
         }
         let revision = preferences.getServerRevision()
+        let useBackup = preferences.getRoutingType().apiValue
         return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
-            self.api.session(sessionAuth, appleId: appleID ?? "", gpDeviceId: "", invRev: revision, backup: false, callback: completion)
+            self.api.session(sessionAuth, appleId: appleID ?? "", gpDeviceId: "", invRev: revision, backup: useBackup, callback: completion)
         }
     }
 
@@ -39,8 +40,9 @@ extension APIManagerImpl {
 
     func getSession(sessionAuth: String) async throws -> SessionModel {
         let revision = preferences.getServerRevision()
+        let useBackup = preferences.getRoutingType().apiValue
         return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
-            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", invRev: revision, backup: false, callback: completion)
+            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", invRev: revision, backup: useBackup, callback: completion)
         }
     }
 }

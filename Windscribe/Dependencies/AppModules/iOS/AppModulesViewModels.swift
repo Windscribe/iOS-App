@@ -143,8 +143,16 @@ class ViewModels: Assembly {
                 router: r.resolve(ConnectionsNavigationRouter.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!,
-                portMapRepository: r.resolve(PortMapRepository.self)!,
-                unblockWgParamsRepository: r.resolve(UnblockWgParamsRepository.self)!
+                portMapRepository: r.resolve(PortMapRepository.self)!
+            )
+        }.inObjectScope(.transient)
+
+        container.register((any AntiCensorshipOptionsViewModel).self) { r in
+            AntiCensorshipOptionsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
+                antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!
             )
         }.inObjectScope(.transient)
 

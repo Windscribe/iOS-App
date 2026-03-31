@@ -268,6 +268,6 @@ protocol Preferences {
     // Locations and Servers revision
     func saveServerRevision(revision: Int64)
     func getServerRevision() -> Int64
-    func saveHasIpBackup(backup: Bool)
-    func getHasIpBackup() -> Bool
+    func saveRoutingType(routingType: ServerRoutingType)
+    func getRoutingType() -> ServerRoutingType
 }

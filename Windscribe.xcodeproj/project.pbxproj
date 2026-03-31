@@ -147,11 +147,17 @@
 		1E60E0262CAD69DC00623CD5 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Extension.swift */; };
 		1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF72CAB061800623CD5 /* Disconnect.swift */; };
 		1E60E0282CAD6F5A00623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
-		1E62CEF42F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */; };
-		1E62CEF52F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */; };
 		1E66109F2E0C203B00CCEFD6 /* DescriptionWithLearnMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */; };
 		1E6610A22E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */; };
 		1E6610A32E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */; };
+		1E6ECB5F2F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */; };
+		1E6ECB602F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */; };
+		1E6ECB632F740FD200F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E6ECB642F740FD200F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E6ECB652F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E6ECB662F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E6ECB672F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E6ECB682F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
 		1E743FEE2F1E6EA100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
 		1E743FEF2F1E6EA100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
 		1E743FF02F1E6EB100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
@@ -301,6 +307,9 @@
 		1EE640CA2F6976F600C7FB29 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
+		1EE7AC582F72AC87003BD80A /* AntiCensorshipOptionsEntryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE7AC572F72AC87003BD80A /* AntiCensorshipOptionsEntryType.swift */; };
+		1EE7AC5A2F72AC95003BD80A /* AntiCensorshipOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE7AC592F72AC95003BD80A /* AntiCensorshipOptionsViewModel.swift */; };
+		1EE7AC5C2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE7AC5B2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift */; };
 		1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */; };
 		1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */; };
 		1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */; };
@@ -1564,9 +1573,10 @@
 		1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutProvider.swift; sourceTree = "<group>"; };
 		1E60E0162CAD664300623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
 		1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolvertype.swift; sourceTree = "<group>"; };
-		1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnblockWgParamsRepository.swift; sourceTree = "<group>"; };
 		1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionWithLearnMore.swift; sourceTree = "<group>"; };
 		1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+WillDisappear.swift"; sourceTree = "<group>"; };
+		1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipRepository.swift; sourceTree = "<group>"; };
+		1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRoutingType.swift; sourceTree = "<group>"; };
 		1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewModel.swift; sourceTree = "<group>"; };
 		1E7918C22CDE2FCC00C20723 /* LifecycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifecycleManager.swift; sourceTree = "<group>"; };
@@ -1679,6 +1689,9 @@
 		1EE640C72F687DF100C7FB29 /* ServerMachineList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ServerMachineList.json; sourceTree = "<group>"; };
 		1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepository.swift; sourceTree = "<group>"; };
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
+		1EE7AC572F72AC87003BD80A /* AntiCensorshipOptionsEntryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipOptionsEntryType.swift; sourceTree = "<group>"; };
+		1EE7AC592F72AC95003BD80A /* AntiCensorshipOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipOptionsViewModel.swift; sourceTree = "<group>"; };
+		1EE7AC5B2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipOptionsView.swift; sourceTree = "<group>"; };
 		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
 		1EF11EE72C94791100C3FD64 /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePopViewController.swift; sourceTree = "<group>"; };
@@ -2781,20 +2794,21 @@
 			path = AppIntents;
 			sourceTree = "<group>";
 		};
-		1E62CEF22F30C307003F9A21 /* UnblockWg */ = {
-			isa = PBXGroup;
-			children = (
-				1E62CEF32F30C313003F9A21 /* UnblockWgParamsRepository.swift */,
-			);
-			path = UnblockWg;
-			sourceTree = "<group>";
-		};
 		1E6610A02E0EBFE300CCEFD6 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
 				1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */,
 			);
 			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		1E6ECB612F72C64900F1E620 /* AntiCensorship */ = {
+			isa = PBXGroup;
+			children = (
+				1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */,
+				1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */,
+			);
+			path = AntiCensorship;
 			sourceTree = "<group>";
 		};
 		1E7918C12CDE2FBC00C20723 /* Lifecycle */ = {
@@ -3232,6 +3246,40 @@
 				1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */,
 			);
 			path = ShakeData;
+			sourceTree = "<group>";
+		};
+		1EE7AC512F72A87E003BD80A /* Anti Censorship */ = {
+			isa = PBXGroup;
+			children = (
+				1EE7AC542F72ABB2003BD80A /* Models */,
+				1EE7AC532F72A893003BD80A /* ViewModels */,
+				1EE7AC522F72A88C003BD80A /* Views */,
+			);
+			path = "Anti Censorship";
+			sourceTree = "<group>";
+		};
+		1EE7AC522F72A88C003BD80A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1EE7AC5B2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1EE7AC532F72A893003BD80A /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1EE7AC592F72AC95003BD80A /* AntiCensorshipOptionsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		1EE7AC542F72ABB2003BD80A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1EE7AC572F72AC87003BD80A /* AntiCensorshipOptionsEntryType.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		1EF43D502CF897A500B56C01 /* Locations */ = {
@@ -4268,8 +4316,8 @@
 		C5D983BC2B34C1B10069FF3A /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1E6ECB612F72C64900F1E620 /* AntiCensorship */,
 				1E0492FD2F51EDFE0016B11F /* Locations and Servers */,
-				1E62CEF22F30C307003F9A21 /* UnblockWg */,
 				1EDB2CA02F190BFD00A5966D /* Migration */,
 				1ED836D92F15179A00CE6D12 /* Robert Filters */,
 				1EA80E172EAFE50F0003322D /* BridgeAPI */,
@@ -5453,6 +5501,7 @@
 		F49C45912DCAB5E6007E5EF1 /* Connection */ = {
 			isa = PBXGroup;
 			children = (
+				1EE7AC512F72A87E003BD80A /* Anti Censorship */,
 				1EB67F9E2DE8C24300729052 /* Network Settings */,
 				1ED616822DE61B51006CDC99 /* Network Options */,
 				1ED6167F2DE4904B006CDC99 /* Models */,
@@ -6872,13 +6921,13 @@
 				1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */,
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
 				F49C457F2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
+				1E6ECB632F740FD200F1E620 /* ServerRoutingType.swift in Sources */,
 				F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 				F434A1BE2D84A7160059415F /* HTMLParser.swift in Sources */,
 				59FC74192C51544900021CD1 /* UncompletedTransactions.swift in Sources */,
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
 				1EF7CF142EAB8DB1001AE14E /* LocalPingManager.swift in Sources */,
 				F44A0E692E0F2A52008297CA /* CaptchaViewModel.swift in Sources */,
-				1E62CEF42F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */,
 				59FC742A2C5155DF00021CD1 /* String+ArrayConversion.swift in Sources */,
 				1EB7A3D62E6B1A2D0028EA11 /* PreferencesBaseViewModel.swift in Sources */,
 				1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */,
@@ -6924,6 +6973,7 @@
 				F43791872E95B27700ED6141 /* HapticFeedbackManager.swift in Sources */,
 				1EA9D7002C7754BD00566A93 /* OptionSelectionView.swift in Sources */,
 				1E5553D82DA6AA2A00F16AF0 /* ExportedLocations.swift in Sources */,
+				1E6ECB602F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */,
 				C511EC1E2E43BCF7009D2C12 /* ShakeDataRepository.swift in Sources */,
 				59FC74622C51679000021CD1 /* UserDataRepository.swift in Sources */,
 				1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */,
@@ -7016,7 +7066,6 @@
 				C56FCBF42B2BA50A008DE7D4 /* HomeRouter.swift in Sources */,
 				1E0492F02F51CA3E0016B11F /* LocationModel.swift in Sources */,
 				AF16C98D2225CDAB00997A2A /* ClosestCountry.swift in Sources */,
-				1E62CEF52F30C321003F9A21 /* UnblockWgParamsRepository.swift in Sources */,
 				C50F20782B606B3000266B23 /* WireguardConfigRepository.swift in Sources */,
 				AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */,
 				C5592B852B3940AE00F2F110 /* IPRepository.swift in Sources */,
@@ -7087,6 +7136,7 @@
 				1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */,
 				AF018DED21B0866600B225FF /* AppDelegate.swift in Sources */,
 				F4A1B2C3D4E5F60718293A4C /* SceneDelegate.swift in Sources */,
+				1EE7AC582F72AC87003BD80A /* AntiCensorshipOptionsEntryType.swift in Sources */,
 				AF4B92EC221CA1C50054580D /* UserPreferences.swift in Sources */,
 				1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */,
 				F48705B22DDF9B52007435EB /* AccountSettingsModel.swift in Sources */,
@@ -7106,6 +7156,7 @@
 				AFFA715C21C407E700349195 /* Notice.swift in Sources */,
 				1E0492ED2F51BFEC0016B11F /* ServerMachineModel.swift in Sources */,
 				C580FDFF2B4E5FFC004FA857 /* WifiNetworkRepository.swift in Sources */,
+				1E6ECB642F740FD200F1E620 /* ServerRoutingType.swift in Sources */,
 				F4F51A782D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */,
 				1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */,
 				F43653542DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */,
@@ -7260,6 +7311,7 @@
 				F49C45C22DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift in Sources */,
 				1E5553CC2D96DA0000F16AF0 /* MainViewController+Bindings.swift in Sources */,
 				F43374432E4672CF00333190 /* ProtocolSwitchViewModel.swift in Sources */,
+				1E6ECB5F2F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */,
 				C5D1C2D42BBFE1AD0083B9EC /* AdvanceRepositoryImpl.swift in Sources */,
 				C5A930CB2B42169A0001CFA0 /* APIManagerImpl+Billing.swift in Sources */,
 				C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */,
@@ -7337,6 +7389,7 @@
 				F48B332C2EC6666A00D0EB32 /* MainViewModel.swift in Sources */,
 				C56FCBE82B2B8E40008DE7D4 /* SharedKeys.swift in Sources */,
 				F4888E3B2D946DB9005EF149 /* KeyboardResponder.swift in Sources */,
+				1EE7AC5C2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift in Sources */,
 				F499357F2DAEE82C00108558 /* CustomSoundEffectType.swift in Sources */,
 				C5D983C02B34C23C0069FF3A /* UserSessionRepository.swift in Sources */,
 				F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */,
@@ -7407,6 +7460,7 @@
 				59E63A2E2BD145F1002E566F /* MainViewModelImpl.swift in Sources */,
 				1E2CBFEF2CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */,
 				1E5553D42D9EC1D400F16AF0 /* CustomConfigCell.swift in Sources */,
+				1EE7AC5A2F72AC95003BD80A /* AntiCensorshipOptionsViewModel.swift in Sources */,
 				C5B8DF022C9FD3450072333E /* VPNErrors.swift in Sources */,
 				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
 				1EB67FAB2DE9E29200729052 /* ConnectionsNavigationRouter.swift in Sources */,
@@ -7595,6 +7649,7 @@
 				C50BB0EC2F3CD62800D6283B /* APIError.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
 				1E2CC4672F58907A0077C82E /* DatacenterModel.swift in Sources */,
+				1E6ECB652F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,
 				F49C457A2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				AFD16F1222775EA300E9FAD3 /* Notifications.swift in Sources */,
@@ -7646,6 +7701,7 @@
 				F470F55A2E81B00400F8400D /* UserDefaults+Extension.swift in Sources */,
 				C56FCBEB2B2B8E4E008DE7D4 /* SharedKeys.swift in Sources */,
 				C52DA52B2B63912B00E5C571 /* FileDatabase.swift in Sources */,
+				1E6ECB662F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */,
 				1E0492E62F4F28CC0016B11F /* WSNetBridgeAPIType.swift in Sources */,
 				596E60072B8F77ED00D51E20 /* Language.swift in Sources */,
@@ -7709,6 +7765,7 @@
 				F49C45792DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */,
 				C585F3E42C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
+				1E6ECB672F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				C5A6F07E2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */,
 				C50F20C92B61777B00266B23 /* CoreModule.swift in Sources */,
@@ -7825,6 +7882,7 @@
 				C56FCBE42B2B8DB2008DE7D4 /* PreferencesImpl.swift in Sources */,
 				C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */,
 				1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */,
+				1E6ECB682F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				F470F5502E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
 				C50F20B82B61734600266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,

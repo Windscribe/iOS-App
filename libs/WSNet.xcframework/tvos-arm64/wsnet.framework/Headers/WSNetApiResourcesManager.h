@@ -7,6 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class WSNetCancelableCallback;
 @class WSNetServerAPI;
+@class WSNetServerLocations;
 
 @interface WSNetApiResourcesManager : BridgeObject
 
@@ -26,9 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)checkUpdate:(int)channel appVersion:(NSString*)appVersion appBuild:(NSString*)appBuild osVersion:(NSString*)osVersion osBuild:(NSString*)osBuild;
 -(void)setNotificationPcpid:(NSString*)pcpid;
 -(void)setMobileDeviceId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId;
+-(void)setBackup:(int32_t)backup;
 -(NSString*)sessionStatus;
 -(NSString*)portMap;
--(NSString*)locations;
+-(WSNetServerLocations*)serverLocations;
 -(NSString*)staticIps;
 -(NSString*)serverCredentialsOvpn;
 -(NSString*)serverCredentialsIkev2;

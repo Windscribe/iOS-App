@@ -541,17 +541,19 @@ enum TextsAsset {
         static var killSwitch: String { return "Always on VPN".localized }
         static var connectedDNS: String { return "Connected DNS".localized }
         static var allowLan: String { return "Allow LAN Traffic".localized }
-        static var circumventCensorship: String { return "Circumvent Censorship".localized }
-        static var useServerpede: String { return "Use Serverpede".localized }
         static var autoSecure: String { "Auto-Secure".localized }
         static var autoSecureNew: String { "Auto-Secure New Networks".localized }
         static var protocolType: String { "Protocol".localized }
         static var port: String { "Port".localized }
         static var configuration: String { "Configuration".localized }
-        static var backup: String { "Use Backup IPs".localized }
         static var ipStack: String { "IP Stack".localized }
         static var egress: String { "Egress".localized }
         static var ingress: String { "Ingress".localized }
+        static var antiCensorshipOptions: String { return "Anti-censorship Settings".localized }
+        static var antiCensorshipTitle: String { "Anti-censorship" }
+        static var circumventCensorship: String { return "Circumvent Censorship".localized }
+        static var useServerpede: String { return "Use Serverpede".localized }
+        static var backup: String { "Use Backup IPs".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized
@@ -567,12 +569,6 @@ enum TextsAsset {
         }
         static var allowLanDescription: String {
             return "Allow access to local services and printers while connected to Windscribe.".localized
-        }
-        static var circumventCensorshipDescription: String {
-            return "Connect to the VPN even in hostile environment".localized
-        }
-        static var serverpedeDescription: String {
-            return "Use Serverpede backup ips".localized
         }
         static var networkOptionsDescription: String {
             return "The Network Options feature lets you control how the Windscribe app behaves on different networks.".localized
@@ -591,6 +587,18 @@ enum TextsAsset {
         }
         static var autoSecureSettingsDescription: String {
             return "Windscribe will turn ON automatically if your device connects to this network.".localized
+        }
+
+        static var protocolTweaksDescription: String {
+            return "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols".localized
+        }
+
+        static var serverRoutingDescription: String {
+            return "Increases latency, but improves chances of being able to connect".localized
+        }
+
+        static var antiCensorshipInfoDescription: String {
+            return "These degrade performance, enable only if Windscribe doesn't connect normally.".localized
         }
     }
 

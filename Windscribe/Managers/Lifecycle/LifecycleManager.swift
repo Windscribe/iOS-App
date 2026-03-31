@@ -32,7 +32,7 @@ class LifecycleManager: LifecycleManagerType {
     private let configManager: ConfigurationsManager
     private let connectivityManager: ProtocolManagerType
     private let locationsManager: LocationsManager
-    private let unblockWgParamsRepository: UnblockWgParamsRepository
+    private let antiCensorshipRepository: AntiCensorshipRepository
     private let wifiManager: WifiManager
     private let locationListRepository: LocationListRepository
     private let windowProvider: WindowProvider
@@ -58,7 +58,7 @@ class LifecycleManager: LifecycleManagerType {
          configManager: ConfigurationsManager,
          connectivityManager: ProtocolManagerType,
          locationsManager: LocationsManager,
-         unblockWgParamsRepository: UnblockWgParamsRepository,
+         antiCensorshipRepository: AntiCensorshipRepository,
          wifiManager: WifiManager,
          locationListRepository: LocationListRepository,
          windowProvider: WindowProvider) {
@@ -74,7 +74,7 @@ class LifecycleManager: LifecycleManagerType {
         self.configManager = configManager
         self.connectivityManager = connectivityManager
         self.locationsManager = locationsManager
-        self.unblockWgParamsRepository = unblockWgParamsRepository
+        self.antiCensorshipRepository = antiCensorshipRepository
         self.wifiManager = wifiManager
         self.locationListRepository = locationListRepository
         self.windowProvider = windowProvider
@@ -94,7 +94,7 @@ class LifecycleManager: LifecycleManagerType {
             await disconnectToUpdateSession()
             if preferences.userSessionAuth() != nil && connectivity.internetConnectionAvailable() {
                 await notificationRepo.loadNotifications()
-                unblockWgParamsRepository.refreshParams()
+                antiCensorshipRepository.refreshParams()
             }
             try? await locationListRepository.updateLocations()
             try? await locationListRepository.updatedServerList()
@@ -143,7 +143,7 @@ class LifecycleManager: LifecycleManagerType {
             becameActiveTrigger.send(())
             if connectivity.internetConnectionAvailable() {
                 logger.logI("LifecycleManager", "Internet availble updating session. \(connectivity.getNetwork())")
-                unblockWgParamsRepository.tryRefresh()
+                antiCensorshipRepository.tryRefresh()
                 guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
                     preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
                     return

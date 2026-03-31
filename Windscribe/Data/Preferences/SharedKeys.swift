@@ -137,7 +137,7 @@ enum SharedKeys {
 
     // Locations and Servers revision
     static let serverRevision = "serverRevision"
-    static let hasIpBackup = "hasIpBackup"
+    static let routingType = "routingType"
 
     /// Cached plist dictionary to avoid repeated file I/O
     private static let plistDictionary: [String: Any] = {
