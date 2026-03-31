@@ -92,15 +92,15 @@ class ControlPlane {
 
                 if let wsError = error as? Errors {
                     switch wsError {
-                        case .sessionIsInvalid:
-                            consoleLogger.debug("Session is invalid, stopping tunnel.")
-                            await stopTunnel(reason: .invalidSession)
+                    case .sessionIsInvalid:
+                        consoleLogger.debug("Session is invalid, stopping tunnel.")
+                        await stopTunnel(reason: .invalidSession)
 
-                        case let .apiError(apiError):
-                            consoleLogger.debug("Get Session failed with API error - \(apiError.errorMessage ?? "unknown", privacy: .public)")
+                    case let .apiError(apiError):
+                        consoleLogger.debug("Get Session failed with API error - \(apiError.errorMessage ?? "unknown", privacy: .public)")
 
-                        default:
-                            consoleLogger.debug("Get Session failed with error: \(wsError.unlocalizedDescription, privacy: .public)")
+                    default:
+                        consoleLogger.debug("Get Session failed with error: \(wsError.unlocalizedDescription, privacy: .public)")
                     }
                 }
             }

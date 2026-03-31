@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 @testable import Windscribe
 
 class MockSessionManager: SessionManager {
@@ -16,6 +17,8 @@ class MockSessionManager: SessionManager {
     var updateSessionTask: Task<Void, any Error>?
 
     var session: Session?
+
+    var checkForDiscconectReasonTrigger = PassthroughSubject<Void, Never>()
 
     // Track method calls
     var keepSessionUpdatedCalled = false

@@ -11,6 +11,7 @@ import Combine
 @testable import Windscribe
 
 class MockLocationListRepository: LocationListRepository {
+
     var locationListSubject = CurrentValueSubject<[LocationModel], Never>([])
     var datacenterListSubject = CurrentValueSubject<[DatacenterModel], Never>([])
     var serverListSubject = CurrentValueSubject<[ServerMachineModel], Never>([])
@@ -49,6 +50,11 @@ class MockLocationListRepository: LocationListRepository {
         if shouldThrowError {
             throw customError ?? NSError(domain: "MockError", code: -1)
         }
+    }
+
+    func updateAll() async throws {
+        try await updatedServerList()
+        try await updateLocations()
     }
 
     func updateAllIfEmpty() async throws {

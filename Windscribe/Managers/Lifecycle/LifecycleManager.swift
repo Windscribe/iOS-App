@@ -78,6 +78,14 @@ class LifecycleManager: LifecycleManagerType {
         self.wifiManager = wifiManager
         self.locationListRepository = locationListRepository
         self.windowProvider = windowProvider
+
+        sessionManager.checkForDiscconectReasonTrigger
+            .sink { [weak self] _ in
+                Task {
+                    await self?.disconnectToUpdateSession()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     /// Fresh app launch.
