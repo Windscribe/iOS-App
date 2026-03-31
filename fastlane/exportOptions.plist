@@ -6,8 +6,6 @@
 	<string>app-store-connect</string>
 	<key>teamID</key>
 	<string>GYZJYS7XUG</string>
-	<key>signingStyle</key>
-	<string>automatic</string>
 	<key>destination</key>
 	<string>export</string>
 	<key>compileBitcode</key>

@@ -2,38 +2,72 @@ default_platform(:ios)
 
 require 'base64'
 
-KEYCHAIN_NAME = "fastlane_ci.keychain"
-KEYCHAIN_PASSWORD = "ci_keychain_password"
+APP_IDENTIFIERS = [
+  "com.windscribe",
+  "com.windscribe.PacketTunnel",
+  "com.windscribe.WireGuardTunnel",
+  "com.windscribe.SiriIntents",
+  "com.windscribe.HomeWidget"
+]
 
-lane :setup_ci_keychain do
-  # Create a temporary keychain for CI builds
-  create_keychain(
-    name: KEYCHAIN_NAME,
-    password: KEYCHAIN_PASSWORD,
-    default_keychain: true,
-    unlock: true,
-    timeout: 3600,
-    lock_when_sleeps: false
+def ci_api_key
+  app_store_connect_api_key(
+    key_id: ENV["UPLOAD_KEY_ID"],
+    issuer_id: ENV["UPLOAD_ISSUER_ID"],
+    key_content: Base64.decode64(ENV["UPLOAD_KEY"])
   )
-
-  # Decode and write the .p12 certificate to a temp file
-  cert_path = File.join(Dir.tmpdir, "dist_cert.p12")
-  File.write(cert_path, Base64.decode64(ENV["DIST_CERTIFICATE_P12"]))
-
-  # Import the distribution certificate into the CI keychain
-  import_certificate(
-    certificate_path: cert_path,
-    certificate_password: "",
-    keychain_name: KEYCHAIN_NAME,
-    keychain_password: KEYCHAIN_PASSWORD
-  )
-
-  # Clean up the temp file
-  File.delete(cert_path) if File.exist?(cert_path)
 end
 
-lane :teardown_ci_keychain do
-  delete_keychain(name: KEYCHAIN_NAME) if File.exist?(File.expand_path("~/Library/Keychains/#{KEYCHAIN_NAME}-db"))
+def ci_build(scheme:, sign: false)
+  if sign
+    setup_ci
+
+    match(
+      type: "appstore",
+      app_identifier: APP_IDENTIFIERS,
+      storage_mode: "gitlab_secure_files",
+      readonly: true
+    )
+
+    # Switch to manual signing and assign match profiles to each target
+    target_profiles = {
+      "Windscribe" => "com.windscribe",
+      "PacketTunnel" => "com.windscribe.PacketTunnel",
+      "WireGuardTunnel" => "com.windscribe.WireGuardTunnel",
+      "SiriIntents" => "com.windscribe.SiriIntents",
+      "HomeWidgetExtension" => "com.windscribe.HomeWidget"
+    }
+
+    target_profiles.each do |target, app_id|
+      profile_name = ENV["sigh_#{app_id}_appstore_profile-name"]
+      update_code_signing_settings(
+        use_automatic_signing: false,
+        path: "Windscribe.xcodeproj",
+        team_id: "GYZJYS7XUG",
+        targets: [target],
+        profile_name: profile_name,
+        code_sign_identity: "Apple Distribution"
+      )
+    end
+
+    gym(
+      scheme: scheme,
+      project: "Windscribe.xcodeproj",
+      export_method: "app-store",
+      export_options: "./exportOptions.plist",
+      clean: true,
+      output_directory: "build_logs"
+    )
+  else
+    gym(
+      scheme: scheme,
+      project: "Windscribe.xcodeproj",
+      skip_codesigning: true,
+      skip_archive: true,
+      clean: true,
+      output_directory: "build_logs"
+    )
+  end
 end
 
 desc "Runs linter"
@@ -43,83 +77,41 @@ end
 
 desc "Runs tests"
 lane :test do
-    scan(
-        project: "Windscribe.xcodeproj",
-        device: "iPhone 16 Pro",
-        scheme: "WindscribeTests",
-        clean: true,
-        fail_build: true,
-        build_for_testing: true,
-        output_directory: "test_logs",
-        output_types: "junit"
-        )
+  scan(
+    project: "Windscribe.xcodeproj",
+    device: "iPhone 16 Pro",
+    scheme: "WindscribeTests",
+    clean: true,
+    fail_build: true,
+    build_for_testing: true,
+    output_directory: "test_logs",
+    output_types: "junit"
+  )
 end
 
 desc "Build the iOS app"
 lane :iOSBuild do
-    setup_ci_keychain
-    gym(
-        scheme: "Windscribe-Debug",
-        project: "Windscribe.xcodeproj",
-        export_method: "app-store",
-        export_options: "./exportOptions.plist",
-        clean: true,
-        output_directory: "build_logs"
-    )
-    teardown_ci_keychain
-end
-
-desc "Build the widget"
-lane :widgetBuild do
-    setup_ci_keychain
-    gym(
-        scheme: "HomeWidgetExtension",
-        project: "Windscribe.xcodeproj",
-        export_method: "app-store",
-        export_options: "./exportOptions.plist",
-        clean: true,
-        output_directory: "build_logs"
-    )
-    teardown_ci_keychain
+  ci_build(scheme: "Windscribe-Debug")
 end
 
 desc "Build the tvOS app"
 lane :tvBuild do
-    setup_ci_keychain
-    gym(
-        scheme: "WindscribeTV-Debug",
-        project: "Windscribe.xcodeproj",
-        export_method: "app-store",
-        export_options: "./exportOptions.plist",
-        clean: true,
-        output_directory: "build_logs"
-    )
-    teardown_ci_keychain
+  ci_build(scheme: "WindscribeTV-Debug")
 end
 
 desc "Push release build to TestFlight"
 lane :iOSTestFlight do
-    setup_ci_keychain
+  ci_api_key
 
-    api_key = app_store_connect_api_key(
-        key_id: ENV["UPLOAD_KEY_ID"],
-        issuer_id: ENV["UPLOAD_ISSUER_ID"],
-        key_content: Base64.decode64(ENV["UPLOAD_KEY"])
-    )
+  increment_build_number(
+    build_number: latest_testflight_build_number(app_identifier: "com.windscribe", initial_build_number: 1) + 1,
+    xcodeproj: "Windscribe.xcodeproj"
+  )
 
-    gym(
-        scheme: "Windscribe-Release",
-        project: "Windscribe.xcodeproj",
-        export_method: "app-store",
-        export_options: "./exportOptions.plist",
-        clean: true,
-        output_directory: "build_logs"
-    )
-    upload_to_testflight(
-        api_key: api_key,
-        skip_waiting_for_build_processing: false,
-        distribute_external: false
-    )
-    
-    teardown_ci_keychain
+  ci_build(scheme: "Windscribe-Release", sign: true)
+
+  upload_to_testflight(
+    skip_waiting_for_build_processing: true,
+    distribute_external: false
+  )
 end

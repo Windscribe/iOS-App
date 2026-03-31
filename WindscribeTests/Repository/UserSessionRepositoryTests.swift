@@ -17,6 +17,8 @@ class UserSessionRepositoryTests: XCTestCase {
     var mockPreferences: MockPreferences!
     var mockLocalDatabase: MockLocalDatabase!
     var mockLocationListRepository: MockLocationListRepository!
+    var mockAntiCensorshipRepository: MockAntiCensorshipRepository!
+
     var repository: UserSessionRepository!
 
     override func setUp() {
@@ -25,6 +27,7 @@ class UserSessionRepositoryTests: XCTestCase {
         mockPreferences = MockPreferences()
         mockLocalDatabase = MockLocalDatabase()
         mockLocationListRepository = MockLocationListRepository()
+        mockAntiCensorshipRepository = MockAntiCensorshipRepository()
 
         mockContainer.register(Preferences.self) { _ in
             return self.mockPreferences
@@ -35,11 +38,15 @@ class UserSessionRepositoryTests: XCTestCase {
         mockContainer.register(LocationListRepository.self) { _ in
             return self.mockLocationListRepository
         }
+        mockContainer.register(AntiCensorshipRepository.self) { _ in
+            return self.mockAntiCensorshipRepository
+        }
 
         mockContainer.register(UserSessionRepository.self) { r in
             return UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!,
                                              localDatabase: r.resolve(LocalDatabase.self)!,
-                                             locationListRepository: r.resolve(LocationListRepository.self)!)
+                                             locationListRepository: r.resolve(LocationListRepository.self)!,
+                                             antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!)
         }.inObjectScope(.container)
 
         repository = mockContainer.resolve(UserSessionRepository.self)!
@@ -128,7 +135,8 @@ class UserSessionRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "test-loc-hash",
-            revisionHash: "test-revision"
+            revisionHash: "test-revision",
+            amneziawgConfigId: ""
         )
     }
 
@@ -155,7 +163,8 @@ class UserSessionRepositoryTests: XCTestCase {
             sipCount: 0,
             loc: "",
             locHash: "test-loc-hash-second",
-            revisionHash: "test-revision"
+            revisionHash: "test-revision",
+            amneziawgConfigId: ""
         )
     }
 }

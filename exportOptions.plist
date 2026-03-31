@@ -8,6 +8,8 @@
 	<string>GYZJYS7XUG</string>
 	<key>signingStyle</key>
 	<string>automatic</string>
+	<key>signingCertificate</key>
+	<string>Apple Distribution</string>
 	<key>destination</key>
 	<string>export</string>
 	<key>compileBitcode</key>

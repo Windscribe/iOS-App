@@ -849,4 +849,12 @@ class MockPreferences: Preferences {
     func getHasIpBackup() -> Bool {
         false
     }
+
+    func saveRoutingType(routingType: Windscribe.ServerRoutingType) {
+    }
+
+    func getRoutingType() -> Windscribe.ServerRoutingType {
+        .auto
+    }
+
 }
