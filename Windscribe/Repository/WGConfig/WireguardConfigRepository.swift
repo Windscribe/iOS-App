@@ -22,7 +22,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private let alertManager: AlertManager?
     private let ipManager: WireguardIPManager
     private let preferences: Preferences
-    private var firstConnection = true
+    private var hasConnectedOnceEndpoints: Set<String> = []
 
     init(apiCallManager: WireguardAPIManager, fileDatabase: FileDatabase, wgCrendentials: WgCredentials, alertManager: AlertManager?, logger: FileLogger, ipManager: WireguardIPManager, preferences: Preferences) {
         self.apiCallManager = apiCallManager
@@ -49,10 +49,12 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     }
 
     private func wgInit() async throws {
-        guard !self.wgCrendentials.initialized() || (self.wgCrendentials.initialized() && firstConnection) else {
+        let currentEndpoint = self.wgCrendentials.serverEndPoint ?? ""
+        let isFirstForServer = !hasConnectedOnceEndpoints.contains(currentEndpoint)
+        guard !self.wgCrendentials.initialized() || (self.wgCrendentials.initialized() && isFirstForServer) else {
             return
         }
-        firstConnection = false
+        hasConnectedOnceEndpoints.insert(currentEndpoint)
         let userPublicKey = await self.wgCrendentials.getPublicKey() ?? ""
 
         do {
