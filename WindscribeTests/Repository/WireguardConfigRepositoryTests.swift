@@ -413,6 +413,37 @@ class WireguardConfigRepositoryTests: XCTestCase {
         XCTAssertEqual(thirdCallCount, 1, "Third call should skip initialization")
     }
 
+    func test_getCredentials_differentEndpoint_shouldReinitialize() async throws {
+        // Given - first connection to endpoint A
+        mockWgCredentials.setNodeToConnect(
+            serverEndPoint: "192.0.2.1",
+            serverHostName: "server-a.example.com",
+            serverPublicKey: "test-server-public-key",
+            port: "443",
+            ipv6: 1
+        )
+        let mockInitResponse = createMockDynamicWireGuardConfig()
+        mockAPIManager.wgInitResponseToReturn = mockInitResponse
+        mockIPManager.generatedIPToReturn = "10.64.1.100"
+
+        try await repository.getCredentials()
+        XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 1, "First endpoint should initialize")
+
+        // When - switch to endpoint B and call again
+        mockWgCredentials.setNodeToConnect(
+            serverEndPoint: "192.0.2.2",
+            serverHostName: "server-b.example.com",
+            serverPublicKey: "test-server-public-key",
+            port: "443",
+            ipv6: 0
+        )
+
+        try await repository.getCredentials()
+
+        // Then - should re-initialize for the new endpoint
+        XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 2, "Should reinitialize when endpoint changes")
+    }
+
     func test_getCredentials_withDifferentCIDRFormats_shouldWork() async throws {
         // Test that the repository correctly uses the first CIDR from the response
         // This test verifies with the default CIDR
