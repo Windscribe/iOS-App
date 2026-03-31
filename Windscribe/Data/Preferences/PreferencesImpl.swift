@@ -672,11 +672,12 @@ class PreferencesImpl: Preferences {
         return getInt64(forKey: SharedKeys.serverRevision) ?? DefaultValues.revision
     }
 
-    func saveHasIpBackup(backup: Bool){
-        setBool(backup, forKey: SharedKeys.hasIpBackup)
+    func saveRoutingType(routingType: ServerRoutingType) {
+        setString(routingType.rawValue, forKey: SharedKeys.routingType)
     }
-    func getHasIpBackup() -> Bool {
-        return getBool(key: SharedKeys.hasIpBackup)
+
+    func getRoutingType() -> ServerRoutingType {
+        ServerRoutingType.init(rawValue: getString(forKey: SharedKeys.routingType) ?? "") ?? ServerRoutingType.auto
     }
 }
 

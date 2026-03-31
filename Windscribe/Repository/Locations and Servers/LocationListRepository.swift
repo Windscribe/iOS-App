@@ -56,6 +56,7 @@ class LocationListRepositoryImpl: LocationListRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
+    private let antiCensorshipRepository: AntiCensorshipRepository
     private let preferences: Preferences
 
     private var cancellables = Set<AnyCancellable>()
@@ -80,11 +81,13 @@ class LocationListRepositoryImpl: LocationListRepository {
     init(apiManager: APIManager,
          localDatabase: LocalDatabase,
          logger: FileLogger,
+         antiCensorshipRepository: AntiCensorshipRepository,
          preferences: Preferences) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
         self.preferences = preferences
+        self.antiCensorshipRepository = antiCensorshipRepository
 
         loadInitialServers()
         loadInitialLocations()
@@ -108,6 +111,15 @@ class LocationListRepositoryImpl: LocationListRepository {
 
                 self.datacenterListSubject.send(updatedDatacenterList)
                 self.populateLocations(from: updatedDatacenterList)
+            }
+            .store(in: &cancellables)
+
+        self.antiCensorshipRepository.selecteRoutingTypeSubject
+            .dropFirst()
+            .sink { [weak self] _ in
+                Task {
+                    try? await self?.updatedServerList()
+                }
             }
             .store(in: &cancellables)
     }
@@ -235,7 +247,6 @@ class LocationListRepositoryImpl: LocationListRepository {
 
     private func updateCurrentServers(with servers: [ServerMachineModel], revision: Int64, hasBackup: Bool) {
         preferences.saveServerRevision(revision: revision)
-        preferences.saveHasIpBackup(backup: hasBackup)
         serverListSubject.send(servers)
         let serverObjects = servers.map { ServerMachineObject(from: $0) }
         localDatabase.saveServerMachines(serverMachines: serverObjects)

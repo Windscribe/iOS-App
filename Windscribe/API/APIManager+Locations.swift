@@ -21,8 +21,9 @@ extension APIManagerImpl {
         guard let sessionAuth = userSessionRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
+        let useBackup = preferences.getRoutingType().apiValue
         return try await apiUtil.makeApiCall(modalType: ServerMachinesListModel.self) { completion in
-            self.api.getServers(sessionAuth, backup: false, callback: completion)
+            self.api.getServers(sessionAuth, backup: useBackup, callback: completion)
         }
     }
 }

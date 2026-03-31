@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class WSNetEmergencyConnect;
 @class WSNetPingManager;
 @class WSNetAdvancedParameters;
+@class WSNetServerLocations;
 @class WSNetApiResourcesManager;
 @class WSNetDecoyTraffic;
 @class WSNetUtils;

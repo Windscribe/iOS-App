@@ -28,6 +28,7 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     private let preferences: Preferences
     private let localDatabase: LocalDatabase
     private let locationListRepository: LocationListRepository
+    private let antiCensorshipRepository: AntiCensorshipRepository
 
     var sessionModel: SessionModel?
     var oldSessionModel: SessionModel?
@@ -41,15 +42,18 @@ class UserSessionRepositoryImpl: UserSessionRepository {
 
     init(preferences: Preferences,
          localDatabase: LocalDatabase,
-         locationListRepository: LocationListRepository) {
+         locationListRepository: LocationListRepository,
+         antiCensorshipRepository: AntiCensorshipRepository) {
         self.preferences = preferences
         self.localDatabase = localDatabase
         self.locationListRepository = locationListRepository
+        self.antiCensorshipRepository = antiCensorshipRepository
     }
 
     func update(session: SessionModel) async {
         localDatabase.saveOldSession()
         localDatabase.saveSession(session: Session(sessionModel: session))
+        antiCensorshipRepository.setSessionWgParameter(withId: session.amneziawgConfigId)
 
         try? await locationListRepository.updateAllIfEmpty()
 

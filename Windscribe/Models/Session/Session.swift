@@ -33,6 +33,7 @@ struct DataLeftModel {
     dynamic var lastReset: String = ""
     dynamic var locRev: Int = 0
     dynamic var locHash: String = ""
+    dynamic var amneziawgConfigId: String = ""
 
     var alc = List<String>()
     var sipCount = List<SipCount>()
@@ -58,6 +59,7 @@ struct DataLeftModel {
         lastReset = sessionModel.lastReset
         locRev = sessionModel.locRev
         locHash = sessionModel.locHash
+        amneziawgConfigId = sessionModel.amneziawgConfigId
         setALC(array: sessionModel.alc)
         setSip(array: sessionModel.sipCount.map { SipCount(model: $0)})
     }
@@ -96,6 +98,7 @@ class OldSession: Session {
         sipCount = session.sipCount
         locHash = session.locHash
         sessionAuthHash = session.sessionAuthHash
+        amneziawgConfigId = session.amneziawgConfigId
     }
 }
 
@@ -168,6 +171,7 @@ struct SessionModel: Decodable, Equatable {
     let lastReset: String
     let locRev: Int
     let locHash: String
+    let amneziawgConfigId: String
 
     let alc: [String]
     let sipCount: [SipCountModel]
@@ -235,6 +239,7 @@ struct SessionModel: Decodable, Equatable {
         case alc
         case sip
         case inventory = "server_inventory"
+        case amneziawgConfigId = "amneziawg_config_id"
     }
 
     init(from decoder: Decoder) throws {
@@ -270,6 +275,7 @@ struct SessionModel: Decodable, Equatable {
         }
 
         inventory = try? data.decodeIfPresent(ServerInventoryModel.self, forKey: .inventory)
+        amneziawgConfigId = try data.decodeIfPresent(String.self, forKey: .amneziawgConfigId) ?? ""
     }
 
     init(from: Session) {
@@ -288,6 +294,7 @@ struct SessionModel: Decodable, Equatable {
         lastReset = from.lastReset
         locRev = from.locRev
         locHash = from.locHash
+        amneziawgConfigId = from.amneziawgConfigId
 
         alc = Array(from.alc)
         sipCount = Array(from.sipCount.map { SipCountModel(countNumber: $0.countNumber)})
@@ -318,7 +325,8 @@ struct SessionModel: Decodable, Equatable {
          sipCount: Int,
          loc: String,
          locHash: String,
-         revisionHash: String) {
+         revisionHash: String,
+         amneziawgConfigId: String) {
         self.sessionAuthHash = sessionAuthHash
         self.username = username
         self.userId = userId
@@ -337,6 +345,7 @@ struct SessionModel: Decodable, Equatable {
         self.alc = alc
         self.sipCount = [SipCountModel(countNumber: sipCount)]
         self.inventory = nil
+        self.amneziawgConfigId = amneziawgConfigId
     }
 
     func getIsPremium() -> Int {

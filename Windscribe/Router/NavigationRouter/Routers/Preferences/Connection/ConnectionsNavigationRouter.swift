@@ -22,6 +22,8 @@ class ConnectionsNavigationRouter: BaseNavigationRouter {
         case .networkSettings(network: let network):
             return AnyView(Assembler.resolve(NetworkSettingsView.self)
                 .environmentObject(NetworkFlowContext(displayNetwork: network)))
+        case .antiCensorshipOptions:
+            return AnyView(Assembler.resolve(AntiCensorshipOptionsView.self))
         }
     }
 

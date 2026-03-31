@@ -11,11 +11,13 @@ import SwiftUI
 enum ConnectionsRouteID: BaseRouteID {
     case networkOptions
     case networkSettings(network: WifiNetworkModel)
+    case antiCensorshipOptions
 
     var id: Int {
         switch self {
         case .networkOptions: 1
         case .networkSettings: 2
+        case .antiCensorshipOptions: 3
         }
     }
 }

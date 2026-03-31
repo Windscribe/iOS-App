@@ -28,13 +28,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     private var currentPort = DefaultValues.port
     private var killSwitchSelected = DefaultValues.killSwitch
     private var allowLanSelected = DefaultValues.allowLANMode
-    private var circumventCensorshipSelected = DefaultValues.circumventCensorship
-    private var serverpedeSelected = DefaultValues.serverpede
 
     private var connectionMode = DefaultValues.connectionMode
     private var connectedDNS = DefaultValues.connectedDNS
-
-    private var selectedUnblockWgParam = ""
 
     private var egressProtocol = DefaultValues.ipv4Only
     private var ingressProtocol = DefaultValues.ipv4Only
@@ -44,7 +40,6 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     private let protocolManager: ProtocolManagerType
     private let dnsSettingsManager: DNSSettingsManagerType
     private let portMapRepository: PortMapRepository
-    private let unblockWgParamsRepository: UnblockWgParamsRepository
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
@@ -53,14 +48,12 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
          router: ConnectionsNavigationRouter,
          protocolManager: ProtocolManagerType,
          dnsSettingsManager: DNSSettingsManagerType,
-         portMapRepository: PortMapRepository,
-         unblockWgParamsRepository: UnblockWgParamsRepository) {
+         portMapRepository: PortMapRepository) {
         self.preferences = preferences
         self.router = router
         self.protocolManager = protocolManager
         self.dnsSettingsManager = dnsSettingsManager
         self.portMapRepository = portMapRepository
-        self.unblockWgParamsRepository = unblockWgParamsRepository
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -106,24 +99,6 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             }
             .store(in: &cancellables)
 
-        preferences.getCircumventCensorshipEnabled()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] enabled in
-                guard let self = self else { return }
-                self.circumventCensorshipSelected = enabled
-                self.reloadItems()
-            }
-            .store(in: &cancellables)
-
-        preferences.getServerpedeEnabled()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] enabled in
-                guard let self = self else { return }
-                self.serverpedeSelected = enabled
-                self.reloadItems()
-            }
-            .store(in: &cancellables)
-
         preferences.getConnectionMode()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] mode in
@@ -158,15 +133,6 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                 self.ingressProtocol = preference ?? Fields.Values.ipv4Only
             }
             .store(in: &cancellables)
-
-        unblockWgParamsRepository.selectedParamTitleSubject
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] title in
-                guard let self = self else { return }
-                selectedUnblockWgParam = title ?? ""
-                self.reloadItems()
-            }
-            .store(in: &cancellables)
     }
 
     override func reloadItems() {
@@ -188,6 +154,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
 
         entries = [
             .networkOptions,
+            .antiCensorshipOptions,
             .connectionMode(currentOption: connectionMode,
                             options: connectionModes,
                             protocolSelected: currentProtocol,
@@ -201,15 +168,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                                          customValue: customDNSValue,
                                          options: connectedDNSOptions))
         }
-        let paramOptions = unblockWgParamsRepository.unlockParams.map { MenuOption(title: $0.title, fieldKey: $0.title) }
 
-        let serverpedeOptions = [MenuOption(title: "nope", fieldKey: "nope"),
-                                 MenuOption(title: "yep", fieldKey: "yep")]
         entries.append(contentsOf: [.alwaysOn(isSelected: killSwitchSelected),
-                                    .allowLan(isSelected: allowLanSelected),
-                                    .circunventCensorship(isSelected: circumventCensorshipSelected
-                                                          ,paramSelected: selectedUnblockWgParam,
-                                                          paramOptions: paramOptions)
+                                    .allowLan(isSelected: allowLanSelected)
         ])
     }
 
@@ -258,25 +219,9 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             if case .infoLink = action {
                 openLink(.allowLan)
             }
-        case .circunventCensorship:
-            if case .toggle(let isSelected, _) = action {
-                preferences.saveCircumventCensorshipStatus(status: isSelected)
-            }
-            if case .infoLink = action {
-                openLink(.circumventCensorship)
-            }
-            if case .multiple(let currentOption, _) = action {
-                unblockWgParamsRepository.selectParamTitle(with: currentOption)
-            }
-        case .serverpede:
-            if case .toggle(let isSelected, _) = action {
-                preferences.saveServerpedeEnable(status: isSelected)
-            }
-            if case .infoLink = action {
-                openLink(.circumventCensorship)
-            }
-            if case .multiple(let currentOption, _) = action {
-                print("servepede multiple")
+        case .antiCensorshipOptions:
+            if case .button = action {
+                antiCensorshipOptionsSelected()
             }
         case .ipStack:
             if case .infoLink = action {
@@ -294,6 +239,10 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
 
     private func networkOptionsSelected() {
         router.navigate(to: .networkOptions)
+    }
+
+    private func antiCensorshipOptionsSelected() {
+        router.navigate(to: .antiCensorshipOptions)
     }
 
     private func openLink(_ linkType: FeatureExplainer) {

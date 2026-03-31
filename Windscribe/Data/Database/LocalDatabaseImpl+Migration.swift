@@ -14,7 +14,7 @@ extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 62,
+            schemaVersion: 63,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -295,6 +295,10 @@ extension LocalDatabaseImpl {
                     migration.enumerateObjects(ofType: LocationObject.className()) { _, _ in }
                     migration.enumerateObjects(ofType: DatacenterObject.className()) { _, _ in }
                     migration.enumerateObjects(ofType: ServerMachineObject.className()) { _, _ in }
+                } else if oldSchemaVersion < 63 {
+                    // Add/update UnblockWgParamsObj schema
+                    // Remove duplicates by deleting all and letting them be re-fetched from API
+                    migration.deleteData(forType: UnblockWgParamsObj.className())
                 }
             }, deleteRealmIfMigrationNeeded: false
         )

@@ -30,6 +30,7 @@ struct UnblockWgResponse: Decodable {
 }
 
 struct UnblockWgParams: Codable {
+    let id: String
     let title: String
     let countries: [String]
     let jc: Int?
@@ -50,6 +51,7 @@ struct UnblockWgParams: Codable {
     let i5: String?
 
     enum CodingKeys: String, CodingKey {
+        case id
         case title
         case countries
         case jc = "Jc"
@@ -71,6 +73,7 @@ struct UnblockWgParams: Codable {
     }
 
     init(from: UnblockWgParamsObj) {
+        id = from.id
         title = from.title
         countries = Array(from.countries)
         jc = from.jc
@@ -150,7 +153,8 @@ struct UnblockWgParams: Codable {
 }
 
 @objcMembers class UnblockWgParamsObj: Object {
-    @Persisted(primaryKey: true) dynamic var title: String = ""
+    @Persisted(primaryKey: true) dynamic var id: String = ""
+    dynamic var title: String = ""
     dynamic var countries = List<String>()
     dynamic var jc: Int?
     dynamic var jMin: Int?
@@ -172,6 +176,7 @@ struct UnblockWgParams: Codable {
     required convenience init(from: UnblockWgParams) {
         self.init()
 
+        id = from.id
         title = from.title
         setCountries(array: from.countries)
         jc = from.jc
