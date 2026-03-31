@@ -26,6 +26,7 @@ protocol SessionManager {
     func keepSessionUpdated()
     var sessionFetchInProgress: Bool { get set }
     var updateSessionTask: Task<Void, Error>? { get set }
+    var checkForDiscconectReasonTrigger: PassthroughSubject<Void, Never> { get }
 }
 
 class SessionManagerImpl: SessionManager {
@@ -33,6 +34,8 @@ class SessionManagerImpl: SessionManager {
     var sessionTimer: Timer?
     var sessionFetchInProgress = false
     var lastCheckForServerConfig = Date()
+
+    let  checkForDiscconectReasonTrigger = PassthroughSubject<Void, Never>()
 
     // Not circular dependencies
     private let wgCredentials: WgCredentials
@@ -128,7 +131,7 @@ class SessionManagerImpl: SessionManager {
                 try await self.updateSession()
             } catch let error {
                 if let errors = error as? Errors {
-                    if (errors == .sessionIsInvalid  || errors == .validationFailure) {
+                    if errors == .sessionIsInvalid  || errors == .validationFailure {
                         self.logoutUser()
                     }
                 } else {
@@ -180,11 +183,14 @@ class SessionManagerImpl: SessionManager {
                 self.sessionFetchInProgress = false
                 self.updateSessionTask = nil
             }
-
-            let session = try await self.apiManager.getSession(token)
-            self.logger.logI("SessionManager", "Session updated for \(session.username)")
-
-            await self.updateFrom(session: session)
+            do {
+                let session = try await self.apiManager.getSession(token)
+                self.logger.logI("SessionManager", "Session updated for \(session.username)")
+                await self.updateFrom(session: session)
+            } catch {
+                checkForDiscconectReasonTrigger.send(())
+                throw error
+            }
         }
 
         updateSessionTask = task
