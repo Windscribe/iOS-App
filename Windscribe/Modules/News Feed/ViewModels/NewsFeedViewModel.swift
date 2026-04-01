@@ -29,6 +29,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     private let router: AccountRouter
     private let htmlParser: HTMLParsing
     private let notificationRepository: NotificationRepository
+    private let vpnStateRepository: VPNStateRepository
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -37,13 +38,15 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
          logger: FileLogger,
          router: AccountRouter,
          htmlParser: HTMLParsing,
-         notificationRepository: NotificationRepository) {
+         notificationRepository: NotificationRepository,
+         vpnStateRepository: VPNStateRepository) {
         self.sessionManager = sessionManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
         self.router = router
         self.htmlParser = htmlParser
         self.notificationRepository = notificationRepository
+        self.vpnStateRepository = vpnStateRepository
 
         bind()
     }
@@ -53,6 +56,15 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isDark in
                 self?.isDarkMode = isDark
+            }
+            .store(in: &cancellables)
+
+        // Keep reactive subscription for future updates
+        notificationRepository.readNotices
+            .receive(on: DispatchQueue.main)
+            .sink { readNotificationIds in
+                // Merge with existing instead of replacing to avoid race conditions
+                self.readStatus.formUnion(Set(readNotificationIds))
             }
             .store(in: &cancellables)
     }
@@ -65,18 +77,26 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
 
         // Load read status FIRST (synchronously) to ensure it's available during mapping
         loadReadStatus()
-
-        do {
-            let notifications = try await notificationRepository.getUpdatedNotifications()
-            let validated = try validateNotifications(notifications)
-            let sorted = sortNotifications(validated)
-            let mapped = mapToNewsFeedDataModels(sorted)
-
-            self.newsFeedData = Array(mapped)
-            self.loadState = .loaded
-        } catch {
-            self.loadState = .error("\(TextsAsset.failedToLoadData): \(error.localizedDescription)")
-            self.logger.logE("Newsfeed", "Data Load Error: \(error)")
+        
+        for _ in 0..<3 {
+            do {
+                let notifications = try await notificationRepository.getUpdatedNotifications()
+                let validated = try validateNotifications(notifications)
+                let sorted = sortNotifications(validated)
+                let mapped = mapToNewsFeedDataModels(sorted)
+                
+                self.newsFeedData = Array(mapped)
+                self.loadState = .loaded
+                return
+            } catch {
+                if vpnStateRepository.configurationState != .initial {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                } else {
+                    self.loadState = .error("\(TextsAsset.failedToLoadData): \(error.localizedDescription)")
+                    self.logger.logE("Newsfeed", "Data Load Error: \(error)")
+                    return
+                }
+            }
         }
     }
 
@@ -183,17 +203,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
 
     private func loadReadStatus() {
         // Get initial value synchronously
-
         self.readStatus = Set(notificationRepository.readNotices.value)
-
-        // Keep reactive subscription for future updates
-        notificationRepository.readNotices
-            .receive(on: DispatchQueue.main)
-            .sink { readNotificationIds in
-                // Merge with existing instead of replacing to avoid race conditions
-                self.readStatus.formUnion(Set(readNotificationIds))
-            }
-            .store(in: &cancellables)
     }
 
     // MARK: Action Handling
