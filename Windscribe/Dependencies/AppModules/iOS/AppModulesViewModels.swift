@@ -321,7 +321,9 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 router: r.resolve(AccountRouter.self)!,
                 htmlParser: r.resolve(HTMLParsing.self)!,
-                notificationRepository: r.resolve(NotificationRepository.self)!)
+                notificationRepository: r.resolve(NotificationRepository.self)!,
+                vpnStateRepository: r.resolve(VPNStateRepository.self)!
+            )
         }.inObjectScope(.transient)
 
         container.register(PrivacyStateManaging.self) { r in
