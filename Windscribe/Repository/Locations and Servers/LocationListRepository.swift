@@ -61,7 +61,6 @@ class LocationListRepositoryImpl: LocationListRepository {
     private let preferences: Preferences
 
     private var cancellables = Set<AnyCancellable>()
-    private let datacentersUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     var currentLocationModels: [LocationModel] {
         locationListSubject.value
@@ -90,28 +89,14 @@ class LocationListRepositoryImpl: LocationListRepository {
         self.preferences = preferences
         self.antiCensorshipRepository = antiCensorshipRepository
 
-        loadInitialServers()
-        loadInitialLocations()
-        loadInitialFavourites()
-
-        // Update datacenter servers when either servers change or datacenters are updated
-        Publishers.CombineLatest(serverListSubject, datacentersUpdatedTrigger)
-            .sink { [weak self] (serverList, _) in
+        serverListSubject
+            .sink { [weak self] serverList in
                 guard let self = self else { return }
 
-                var serversByDatacenter: [Int: [ServerMachineModel]] = [:]
-                serverList.forEach { server in
-                    serversByDatacenter[server.datacenterId, default: []].append(server)
-                }
+                let datacenterList = self.currentDatacenterModels
+                guard !datacenterList.isEmpty else { return }
 
-                let updatedDatacenterList = self.currentDatacenterModels.map { datacenter in
-                    var updatedDatacenter = datacenter
-                    updatedDatacenter.servers = serversByDatacenter[datacenter.id] ?? []
-                    return updatedDatacenter
-                }
-
-                self.datacenterListSubject.send(updatedDatacenterList)
-                self.populateLocations(from: updatedDatacenterList)
+                self.populateDatacenters(from: datacenterList, with: serverList)
             }
             .store(in: &cancellables)
 
@@ -123,6 +108,28 @@ class LocationListRepositoryImpl: LocationListRepository {
                 }
             }
             .store(in: &cancellables)
+
+        loadInitialServers()
+        loadInitialLocations()
+        loadInitialFavourites()
+    }
+
+    private func populateDatacenters(from datacenterList: [DatacenterModel],
+                                     with serverList: [ServerMachineModel]) {
+
+        var serversByDatacenter: [Int: [ServerMachineModel]] = [:]
+        serverList.forEach { server in
+            serversByDatacenter[server.datacenterId, default: []].append(server)
+        }
+
+        let updatedDatacenterList = datacenterList.map { datacenter in
+            var updatedDatacenter = datacenter
+            updatedDatacenter.servers = serversByDatacenter[datacenter.id] ?? []
+            return updatedDatacenter
+        }
+
+        datacenterListSubject.send(updatedDatacenterList)
+        populateLocations(from: updatedDatacenterList)
     }
 
     private func populateLocations(from datacenterList: [DatacenterModel]) {
@@ -140,13 +147,10 @@ class LocationListRepositoryImpl: LocationListRepository {
         self.locationListSubject.send(updatedLocationList)
     }
 
-    private func updateDatacenterList(from locations: [LocationModel], shouldTrigger: Bool = true) {
+    private func updateDatacenterList(from locations: [LocationModel]) {
         let allDatacenters = locations.flatMap { $0.datacenters }
-        datacenterListSubject.send(allDatacenters)
-        if shouldTrigger {
-            datacentersUpdatedTrigger.send(())
-        }
         logger.logI("LocationListRepositoryImpl", "Successfully updated \(allDatacenters.count) datacenters")
+        populateDatacenters(from: allDatacenters, with: currentServerModels)
     }
 
     private func loadInitialLocations() {
@@ -375,7 +379,7 @@ class LocationListRepositoryImpl: LocationListRepository {
         if mergedModels.count == locationList.count {
             logger.logI("ServerRepositoryImpl", "Merge of local and external servers successful")
             locationListSubject.send(mergedModels)
-            updateDatacenterList(from: mergedModels, shouldTrigger: false)
+            updateDatacenterList(from: mergedModels)
             return
         }
     }
