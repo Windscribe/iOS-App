@@ -596,3 +596,10 @@
 
 "Complete CAPTCHA" = "完成 CAPTCHA";
 "Slide the left image into the hole on the right" = "将左侧图片滑入右侧的孔位";
+
+"These degrade performance, enable only if Windscribe doesn't connect normally." = "这些会降低性能，仅在 Windscribe 无法正常连接时启用。";
+"Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "对 WireGuard、OpenVPN 和 Stealth 协议进行了协议级更改";
+"Use Backup IPs" = "使用备用 IP";
+"Increases latency, but improves chances of being able to connect" = "会增加延迟，但提高连接成功的可能性";
+"Anti-censorship Settings" = "反审查设置";
+"Anti-censorship" = "反审查";

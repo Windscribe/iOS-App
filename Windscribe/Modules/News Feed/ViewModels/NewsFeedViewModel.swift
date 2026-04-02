@@ -77,14 +77,14 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
 
         // Load read status FIRST (synchronously) to ensure it's available during mapping
         loadReadStatus()
-        
+
         for _ in 0..<3 {
             do {
                 let notifications = try await notificationRepository.getUpdatedNotifications()
                 let validated = try validateNotifications(notifications)
                 let sorted = sortNotifications(validated)
                 let mapped = mapToNewsFeedDataModels(sorted)
-                
+
                 self.newsFeedData = Array(mapped)
                 self.loadState = .loaded
                 return

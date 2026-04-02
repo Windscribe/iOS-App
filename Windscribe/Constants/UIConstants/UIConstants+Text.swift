@@ -550,7 +550,7 @@ enum TextsAsset {
         static var egress: String { "Egress".localized }
         static var ingress: String { "Ingress".localized }
         static var antiCensorshipOptions: String { return "Anti-censorship Settings".localized }
-        static var antiCensorshipTitle: String { "Anti-censorship" }
+        static var antiCensorshipTitle: String { "Anti-censorship".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
         static var useServerpede: String { return "Use Serverpede".localized }
         static var backup: String { "Use Backup IPs".localized }
