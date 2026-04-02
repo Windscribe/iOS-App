@@ -612,3 +612,10 @@
 
 "Complete CAPTCHA" = "CAPTCHA abschließen";
 "Slide the left image into the hole on the right" = "Schieben Sie das linke Bild in die Öffnung rechts";
+
+"These degrade performance, enable only if Windscribe doesn't connect normally." = "Diese beeinträchtigen die Leistung. Nur aktivieren, wenn Windscribe keine normale Verbindung herstellt.";
+"Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "Protokollebene-Änderungen an den Protokollen WireGuard, OpenVPN und Stealth vorgenommen.";
+"Use Backup IPs" = "Backup-IPs verwenden";
+"Increases latency, but improves chances of being able to connect" = "Erhöht die Latenz, verbessert jedoch die Verbindungswahrscheinlichkeit";
+"Anti-censorship Settings" = "Antizensur-Einstellungen";
+"Anti-censorship" = "Antizensur";

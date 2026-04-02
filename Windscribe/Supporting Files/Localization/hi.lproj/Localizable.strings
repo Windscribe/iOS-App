@@ -620,3 +620,10 @@
 
 "Complete CAPTCHA" = "CAPTCHA पूरा करें";
 "Slide the left image into the hole on the right" = "बाईं ओर की छवि को दाईं ओर के छेद में स्लाइड करें";
+
+"These degrade performance, enable only if Windscribe doesn't connect normally." = "ये प्रदर्शन को कम करते हैं, केवल तभी सक्षम करें जब Windscribe सामान्य रूप से कनेक्ट न हो।";
+"Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "WireGuard, OpenVPN और Stealth प्रोटोकॉल में प्रोटोकॉल-स्तर के परिवर्तन किए गए हैं";
+"Use Backup IPs" = "बैकअप IP का उपयोग करें";
+"Increases latency, but improves chances of being able to connect" = "यह विलंबता बढ़ाता है, लेकिन कनेक्ट होने की संभावना को बढ़ाता है";
+"Anti-censorship Settings" = "सेंसरशिप-विरोधी सेटिंग्स";
+"Anti-censorship" = "सेंसरशिप विरोधी";
