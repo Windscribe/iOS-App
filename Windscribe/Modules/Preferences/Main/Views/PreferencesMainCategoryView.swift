@@ -74,7 +74,7 @@ struct PreferencesMainCategoryView: View {
                 .padding(.bottom, 32)
             }
         }
-        .overlay(routeLink)
+        .background(routeLink)
         .edgesIgnoringSafeArea(.bottom)
         .dynamicTypeSize(dynamicTypeRange)
         .withRouter(router)
@@ -139,6 +139,7 @@ struct PreferencesMainCategoryView: View {
             EmptyView()
         }
         .hidden()
+        .allowsHitTesting(false)
     }
 
     @ViewBuilder
