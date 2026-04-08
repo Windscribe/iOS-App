@@ -221,9 +221,13 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func checkForInternetConnection() {
-        guard vpnConnectionViewModel.isConnected() else { return }
+        func canCheckInternetConnection() -> Bool {
+            vpnConnectionViewModel.isConnected() && !vpnConnectionViewModel.isProtocolSwitchInProgress()
+        }
+        guard canCheckInternetConnection() else { return }
         Task {
             try? await Task.sleep(nanoseconds: 500_000_000)
+            guard canCheckInternetConnection() else { return }
             let isOnline: Bool = viewModel.appNetwork.value.status == .connected
             if !isOnline {
                 logger.logI("MainViewController", "No internet connection available.")
@@ -232,7 +236,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-
+    
     func showNotificationsViewController() {
         popupRouter?.routeTo(to: RouteID.newsFeedPopup, from: self)
     }

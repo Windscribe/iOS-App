@@ -41,6 +41,7 @@ protocol ConnectionViewModelType {
     func isDisconnected() -> Bool
     func isDisconnecting() -> Bool
     func isInvalid() -> Bool
+    func isProtocolSwitchInProgress() -> Bool
 
     // Actions
     func setOutOfData()
@@ -265,6 +266,12 @@ extension ConnectionViewModel {
 
     func isInvalid() -> Bool {
         connectedState.value.state == .invalid
+    }
+
+    func isProtocolSwitchInProgress() -> Bool {
+        vpnStateRepository.isFromProtocolChange ||
+        vpnStateRepository.isFromProtocolFailover ||
+        vpnStateRepository.configurationState == .configuring
     }
 
     func isCustomConfigSelected() -> Bool {
