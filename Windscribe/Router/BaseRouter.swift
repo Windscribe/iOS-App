@@ -39,6 +39,12 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
             viewController?.changeNavigationBarStyle(isHidden: true)
         }
 
+        // Sync navigation controller background with the incoming view before push to prevent
+        // white flash at edges during transition (especially on iPad multitasking)
+        if let navView = viewController.navigationController?.view {
+            navView.backgroundColor = hostingController.view.backgroundColor
+        }
+
         viewController.navigationController?.pushViewController(hostingController, animated: true)
 
         viewController.changeNavigationBarStyle(isHidden: false)
