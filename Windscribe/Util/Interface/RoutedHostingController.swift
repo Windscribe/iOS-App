@@ -22,6 +22,7 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
         // Set background immediately to prevent white flash during push animation
         let backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
         view.backgroundColor = backgroundColor
+        view.insetsLayoutMarginsFromSafeArea = false
     }
 
     @MainActor required dynamic init?(coder aDecoder: NSCoder) {
@@ -31,8 +32,10 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
-        navigationController?.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        let bgColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        view.backgroundColor = bgColor
+        navigationController?.view.backgroundColor = bgColor
+        view.window?.backgroundColor = bgColor
 
         lookAndFeelRepository.isDarkModeSubject
             .receive(on: DispatchQueue.main)
@@ -45,6 +48,7 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
                 let backgroundColor = UIColor(.from(.screenBackgroundColor, isDarkMode))
                 self.view.backgroundColor = backgroundColor
                 self.navigationController?.view.backgroundColor = backgroundColor
+                self.view.window?.backgroundColor = backgroundColor
 
                 let appearance = UINavigationBarAppearance().then {
                     $0.configureWithOpaqueBackground()
@@ -96,7 +100,23 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
         navigationController?.interactivePopGestureRecognizer?.delegate = self
 
         // Ensure navigation controller background matches dark mode
-        navigationController?.view.backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        let backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        navigationController?.view.backgroundColor = backgroundColor
+
+        // Set window background to prevent white flash at edges during transitions on iPad
+        view.window?.backgroundColor = backgroundColor
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        // During size transitions (Split View, Stage Manager, rotation), ensure backgrounds
+        // are updated immediately to prevent white bands on the trailing edge
+        let backgroundColor = UIColor(.from(.screenBackgroundColor, lookAndFeelRepository.isDarkMode))
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.view.backgroundColor = backgroundColor
+            self?.navigationController?.view.backgroundColor = backgroundColor
+        })
     }
 
     override func viewWillDisappear(_ animated: Bool) {
