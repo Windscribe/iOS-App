@@ -18,6 +18,10 @@ class TopNavBarHeader: UIView {
         return 80
     }
 
+    /// Tracks the last width used to draw the header path so we only
+    /// redraw when the view actually changes size (e.g. iPad window mode transitions).
+    private var lastDrawnWidth: CGFloat = 0
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -28,8 +32,16 @@ class TopNavBarHeader: UIView {
         loadPath()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if bounds.width > 0 && bounds.width != lastDrawnWidth {
+            redrawGradient()
+        }
+    }
+
     func loadPath() {
         let width = bounds.width > 0 ? bounds.width : UIScreen.activeScreen.bounds.width
+        lastDrawnWidth = width
         let startingCurveX = width - 162.0
         let finalCurveY = height - 60.5
 
