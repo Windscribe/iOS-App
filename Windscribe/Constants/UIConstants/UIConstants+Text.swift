@@ -553,7 +553,7 @@ enum TextsAsset {
         static var antiCensorshipTitle: String { "Anti-censorship".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
         static var useServerpede: String { return "Use Serverpede".localized }
-        static var backup: String { "Use Backup IPs".localized }
+        static var serverRouting: String { "Server Routing".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized

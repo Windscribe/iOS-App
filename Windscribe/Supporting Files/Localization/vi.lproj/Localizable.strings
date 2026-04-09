@@ -611,7 +611,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Những tùy chọn này làm giảm hiệu suất, chỉ bật khi Windscribe không kết nối bình thường.";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "Đã thực hiện các thay đổi ở cấp độ giao thức đối với các giao thức WireGuard, OpenVPN và Stealth";
-"Use Backup IPs" = "Sử dụng IP dự phòng";
+"Server Routing" = "Định tuyến máy chủ";
 "Increases latency, but improves chances of being able to connect" = "Tăng độ trễ nhưng cải thiện khả năng kết nối";
 "Anti-censorship Settings" = "Cài đặt chống kiểm duyệt";
 "Anti-censorship" = "Chống kiểm duyệt";

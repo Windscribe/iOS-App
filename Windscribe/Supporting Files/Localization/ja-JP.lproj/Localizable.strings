@@ -604,7 +604,7 @@
 
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "これらはパフォーマンスを低下させます。Windscribe が正常に接続しない場合のみ有効にしてください。";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "WireGuard、OpenVPN、および Stealth プロトコルに対してプロトコルレベルの変更が行われました。";
-"Use Backup IPs" = "バックアップIPを使用する";
+"Server Routing" = "サーバールーティング";
 "Increases latency, but improves chances of being able to connect" = "レイテンシは増加しますが、接続できる可能性が高まります";
 "Anti-censorship Settings" = "検閲対策設定";
 "Anti-censorship" = "反検閲";

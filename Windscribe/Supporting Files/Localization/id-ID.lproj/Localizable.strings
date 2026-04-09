@@ -599,7 +599,7 @@
 
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Ini menurunkan performa, aktifkan hanya jika Windscribe tidak terhubung secara normal.";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "Perubahan tingkat protokol yang dilakukan pada protokol WireGuard, OpenVPN, dan Stealth";
-"Use Backup IPs" = "Gunakan IP cadangan";
+"Server Routing" = "Perutean Server";
 "Increases latency, but improves chances of being able to connect" = "Meningkatkan latensi, tetapi meningkatkan peluang untuk dapat terhubung";
 "Anti-censorship Settings" = "Pengaturan Anti-Sensor";
 "Anti-censorship" = "Anti-sensor";

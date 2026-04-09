@@ -599,7 +599,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Cela dégrade les performances, activez uniquement si Windscribe ne se connecte pas normalement.";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "Modifications au niveau du protocole apportées aux protocoles WireGuard, OpenVPN et Stealth.";
-"Use Backup IPs" = "Utiliser des IP de secours";
+"Server Routing" = "Routage des serveurs";
 "Increases latency, but improves chances of being able to connect" = "Augmente la latence, mais améliore les chances de connexion";
 "Anti-censorship Settings" = "Paramètres anti-censure";
 "Anti-censorship" = "Lutte contre la censure";
