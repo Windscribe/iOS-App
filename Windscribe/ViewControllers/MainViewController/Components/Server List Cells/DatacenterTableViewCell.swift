@@ -63,14 +63,10 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
     override var isSignalVisible: Bool { !isDisabled }
     override var isDisabled: Bool {
         guard let displayingDatacenter else { return true }
-        if displayingDatacenter.isActive == false {
-            if !isUserPro && displayingDatacenter.isPremiumOnly == true { return false }
-            return true
-        }
-        return false
+        return displayingDatacenter.isUnderMantainance
     }
 
-    override var showP2P: Bool { displayingDatacenter?.p2p != 1  && isUserPro }
+    override var showP2P: Bool { displayingDatacenter?.p2p != 1 }
 
     override var serverNetLoad: CGFloat {
         CGFloat(self.displayingDatacenter?.netLoad ?? 0)

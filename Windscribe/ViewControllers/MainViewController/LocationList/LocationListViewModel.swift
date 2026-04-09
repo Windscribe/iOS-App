@@ -92,17 +92,11 @@ extension LocationListViewModel {
     /// true: under maintenance
     /// false: not
     private func checkMaintenanceLocation(location: LocationModel, datacenter: DatacenterModel) -> Bool {
-        if datacenter.status == 0 {
-            return true
-        }
+        if datacenter.statusValue == .available { return true }
 
-        if !datacenter.isActive {
-            if !datacenter.isPremiumOnly {
-                return true
-            } else if datacenter.isPremiumOnly &&
-                        userSessionRepository.sessionModel?.isPremium == true {
-                return true
-            }
+        if datacenter.statusValue == .isPro,
+           userSessionRepository.sessionModel?.isPremium == true {
+            return true
         }
         return false
     }

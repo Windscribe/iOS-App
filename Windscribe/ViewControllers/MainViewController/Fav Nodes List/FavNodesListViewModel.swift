@@ -94,7 +94,7 @@ extension FavouriteListViewModel {
         let datacenter = locationInfo.1
 
         // Check if server is disabled
-        if datacenter.status == 0 {
+        if datacenter.statusValue == .available {
             logger.logD("FavouriteListViewModel", "Server \(location.name) is disabled (status=false)")
             return true
         }
