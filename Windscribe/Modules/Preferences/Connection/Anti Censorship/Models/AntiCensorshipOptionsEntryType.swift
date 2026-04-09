@@ -23,7 +23,7 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
         switch self {
         case .info: ""
         case .protocolTweaks: TextsAsset.Connection.circumventCensorship
-        case .routingType: TextsAsset.Connection.backup
+        case .routingType: TextsAsset.Connection.serverRouting
         }
     }
 

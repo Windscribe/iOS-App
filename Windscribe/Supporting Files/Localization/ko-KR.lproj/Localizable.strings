@@ -599,7 +599,7 @@
 
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "이 설정은 성능을 저하시킵니다. Windscribe가 정상적으로 연결되지 않을 때만 활성화하세요.";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "WireGuard, OpenVPN 및 Stealth 프로토콜에 프로토콜 수준의 변경이 적용되었습니다.";
-"Use Backup IPs" = "백업 IP 사용";
+"Server Routing" = "서버 라우팅";
 "Increases latency, but improves chances of being able to connect" = "지연 시간은 증가하지만 연결 가능성은 높아집니다";
 "Anti-censorship Settings" = "검열 방지 설정";
 "Anti-censorship" = "검열 반대";

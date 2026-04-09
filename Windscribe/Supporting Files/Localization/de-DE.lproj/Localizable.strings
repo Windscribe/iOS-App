@@ -615,7 +615,7 @@
 
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Diese beeinträchtigen die Leistung. Nur aktivieren, wenn Windscribe keine normale Verbindung herstellt.";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "Protokollebene-Änderungen an den Protokollen WireGuard, OpenVPN und Stealth vorgenommen.";
-"Use Backup IPs" = "Backup-IPs verwenden";
+"Server Routing" = "Server-Routing";
 "Increases latency, but improves chances of being able to connect" = "Erhöht die Latenz, verbessert jedoch die Verbindungswahrscheinlichkeit";
 "Anti-censorship Settings" = "Antizensur-Einstellungen";
 "Anti-censorship" = "Antizensur";

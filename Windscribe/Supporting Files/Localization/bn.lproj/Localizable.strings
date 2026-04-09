@@ -631,7 +631,7 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "এগুলো কর্মক্ষমতা কমায়, Windscribe স্বাভাবিকভাবে সংযোগ না করলে তবেই সক্রিয় করুন।.";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "WireGuard, OpenVPN এবং Stealth প্রোটোকলে প্রোটোকল-স্তরের পরিবর্তন করা হয়েছে।";
-"Use Backup IPs" = "ব্যাকআপ IP ব্যবহার করুন";
+"Server Routing" = "সার্ভার রাউটিং";
 "Increases latency, but improves chances of being able to connect" = "এটি ল্যাটেন্সি বাড়ায়, তবে সংযোগ স্থাপনের সম্ভাবনা বাড়ায়";
 "Anti-censorship Settings" = "সেন্সরশিপ-বিরোধী সেটিংস";
 "Anti-censorship" = "সেন্সরশিপ-বিরোধী";
