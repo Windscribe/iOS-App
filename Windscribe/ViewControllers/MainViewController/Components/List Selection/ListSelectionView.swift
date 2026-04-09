@@ -79,13 +79,24 @@ class ListSelectionView: UIView {
         super.init(frame: .zero)
     }
 
+    /// Tracks the last width used for the gradient so we only redraw on actual size changes.
+    private var lastGradientWidth: CGFloat = 0
+
     func loadView() {
         addViews()
         addViewConstraints()
         bindView()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if bounds.width > 0 && bounds.width != lastGradientWidth {
+            redrawGradientView()
+        }
+    }
+
     func redrawGradientView() {
+        lastGradientWidth = bounds.width
         gradientView.layer.sublayers = []
         drawGradientView(with: getIsDarkMode())
     }

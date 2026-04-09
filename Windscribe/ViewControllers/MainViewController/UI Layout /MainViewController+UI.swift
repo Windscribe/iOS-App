@@ -20,6 +20,25 @@ extension MainViewController {
         }
         flagBackgroundView.redraw()
         listSelectionView.redrawGradientView()
+
+        // After the transition completes, force a full layout pass so all
+        // subviews (header, gradient, flags) pick up the new window bounds.
+        // This fixes stale layouts when switching between floating and
+        // full-screen window modes on iPadOS.
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.view.layoutIfNeeded()
+        }, completion: { [weak self] _ in
+            guard let self = self else { return }
+            // Re-assert dark mode on the window to prevent mixed style after
+            // iPad floating ↔ full-screen transitions.
+            self.overrideUserInterfaceStyle = .dark
+            self.navigationController?.overrideUserInterfaceStyle = .dark
+            self.view.window?.overrideUserInterfaceStyle = .dark
+            self.flagBackgroundView.redraw()
+            self.listSelectionView.redrawGradientView()
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+        })
     }
 
     func addDataSources() {
