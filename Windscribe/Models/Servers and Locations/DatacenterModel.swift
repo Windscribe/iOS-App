@@ -10,11 +10,17 @@ import Foundation
 import RealmSwift
 
 struct DatacenterModel: Decodable {
+    enum DatacenterStatus: Int {
+        case available = 0
+        case isPro = 1
+        case underMantainance = 2
+    }
+
     let id: Int
     let city: String
     let nick: String
     let iata: String
-    let status: Int
+    fileprivate let status: Int
     let gps: String
     let tz: String
     let p2p: Int
@@ -41,11 +47,26 @@ struct DatacenterModel: Decodable {
     private(set) var pingServer: ServerMachineModel?
 
     var isPremiumOnly: Bool {
-        return isPremium == 1 && servers.isEmpty
+        return statusValue == .isPro
     }
 
-    var isActive: Bool {
-        !servers.isEmpty
+    var isUnderMantainance: Bool {
+        statusValue == .underMantainance
+    }
+
+    var statusValue: DatacenterStatus {
+        let hasServers = servers.count > 0
+
+        if status == 2 && !hasServers {
+            // Under maintenance: status 2 with no servers
+            return .underMantainance
+        } else if status == 1 && !hasServers {
+            // Pro required: enabled but no servers available
+            return .isPro
+        } else {
+            // Available: has servers
+            return .available
+        }
     }
 
     enum CodingKeys: String, CodingKey {
