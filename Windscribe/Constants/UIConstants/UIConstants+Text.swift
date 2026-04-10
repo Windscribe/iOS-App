@@ -20,28 +20,12 @@ enum TextsAsset {
         return "Get Started".localized
     }
 
-    static var loading: String {
-        return "Loading".localized
-    }
-
     static var login: String {
         return "Login".localized
     }
 
     static var get10GbAMonth: String {
         return "Get 10GB/Mo".localized
-    }
-
-    static var tenGbAMonth: String {
-        return "10GB/Mo".localized
-    }
-
-    static var continueWithoutAccount: String {
-        return "Continue without account".localized
-    }
-
-    static var ghostAccountInfoLabel: String {
-        return "Limited to 2GB/Mo".localized
     }
 
     static var `continue`: String {
@@ -56,24 +40,8 @@ enum TextsAsset {
         return "Sign up".localized
     }
 
-    static var signUpFree: String {
-        return "Sign up free".localized
-    }
-
-    static var createAccount: String {
-        return "Create Account".localized
-    }
-
     static var accountSetupTitle: String {
         return "Account setup".localized
-    }
-
-    static var accountSetupMessage: String {
-        return "Safeguard your Pro account and access it from any device.".localized
-    }
-
-    static var signUpInfo: String {
-        return "Safeguard your account, access your settings from any device and get more data.".localized
     }
 
     static var optional: String {
@@ -108,24 +76,12 @@ enum TextsAsset {
         return "For password recovery, updates & promo only. No spam".localized
     }
 
-    static var enterYourEmail: String {
-        return "Enter your email".localized
-    }
-
-    static var verifyYourPassword: String {
-        return "Verify your password".localized
-    }
-
     static var chooseUsername: String {
         return "Choose Username".localized
     }
 
     static var choosePassword: String {
         return "Choose Password".localized
-    }
-
-    static var confirmPassword: String {
-        return "Confirm password".localized
     }
 
     static var referredBySomeone: String {
@@ -156,40 +112,12 @@ enum TextsAsset {
         return "Error".localized
     }
 
-    static var loginFailed: String {
-        return "The username and password combination is wrong.".localized
-    }
-
-    static var pleaseDisconnectFirst: String {
-        return "You can't make changes while connected to a VPN.".localized
-    }
-
     static var youWillBothGetTenGb: String {
         return "You will both get an additional 1GB per month when you sign up.".localized
     }
 
     static var ifYouGoPro: String {
         return "If you go Pro, they’ll go Pro too!".localized
-    }
-
-    static var signInProgress: [String] {
-        return ["Getting Server List".localized,
-                "Getting IKEv2 Server Credentials".localized,
-                "Getting OpenVPN Server Credentials".localized,
-                "Getting Static IPs".localized,
-                "Getting Port Maps".localized,
-                "Getting Mobile Plans".localized,
-                "Getting Configurations".localized,
-                "Getting Notifications".localized,
-                "Preparing Your Dashboard".localized]
-    }
-
-    static var passwordsDontMatch: String {
-        return "The passwords don't match.".localized
-    }
-
-    static var cannotRegister: String {
-        return "Registration failed, please contact support.".localized
     }
 
     static var pleaseContactSupport: String {
@@ -224,10 +152,6 @@ enum TextsAsset {
         return "Enter a valid email.".localized
     }
 
-    static var ghostModeError: String {
-        return "Unfortunately you cannot use Windscribe without an account as we detected potential abuse. Please make one, it's really easy.".localized
-    }
-
     static var pleaseEnterEmailFirst: String {
         return "Please provide an email first".localized
     }
@@ -242,10 +166,6 @@ enum TextsAsset {
 
     static var send: String {
         return "Send".localized
-    }
-
-    static var submit: String {
-        return "Submit".localized
     }
 
     static var confirm: String {
@@ -325,10 +245,6 @@ enum TextsAsset {
     }
 
     enum Permission {
-        static var locationDescription: String {
-            return "Location permission is denied . Settings > Privacy > Location services > Windscribe > check while in use and presise location.".localized
-        }
-
         static var locationPermissionLabel: String {
             return "Locations".localized
         }
@@ -380,13 +296,6 @@ enum TextsAsset {
     }
 
     enum AutomaticModeFailedAlert {
-        static var title: String {
-            return "Sorry! We tried our best and couldn't connect you.".localized
-        }
-
-        static var message: String {
-            return "Well, we gave it our best shot, but we couldn't connect you on this network. Please send us a debug log via the button below and open a support ticket on Windscribe.com".localized
-        }
     }
 
     enum UnableToConnect {
@@ -427,29 +336,13 @@ enum TextsAsset {
         }
     }
 
-    static var SubmitEmailFailAlertMessage: String {
-        return "Please make sure you have entered a correct password and a valid email.".localized
-    }
-
     enum PurchaseRestoredAlert {
-        static var title: String {
-            return "Purchases Restored".localized
-        }
-
-        static var message: String {
-            return "All purchases restored.".localized
-        }
-
         static var error: String {
             return "No valid transaction found to restore."
         }
     }
 
     enum Status {
-        static var connectedTo: String {
-            return "CONNECTED".localized
-        }
-
         static var connecting: String {
             return "CONNECTING".localized
         }
@@ -466,10 +359,6 @@ enum TextsAsset {
             return "CONNECTIVITY TEST".localized
         }
 
-        static var lowWifiSignal: String {
-            return "LOW WIFI SIGNAL".localized
-        }
-
         static var failed: String {
             return "FAILED".localized
         }
@@ -481,14 +370,6 @@ enum TextsAsset {
         static var off: String {
             return "OFF".localized
         }
-    }
-
-    static var yourIP: String {
-        return "Your IP".localized
-    }
-
-    static var trusted: String {
-        return "Trusted".localized
     }
 
     static var upgrade: String {
@@ -511,10 +392,6 @@ enum TextsAsset {
         return "No Static IP's".localized
     }
 
-    static var noConfiguredLocations: String {
-        return "No Custom Configs".localized
-    }
-
     enum Preferences {
         static var title: String { return "Preferences".localized }
         static var general: String { return "General".localized }
@@ -522,7 +399,6 @@ enum TextsAsset {
         static var robert: String { return "R.O.B.E.R.T.".localized }
         static var lookFeel: String { return "Look & Feel".localized }
         static var connection: String { return "Connection".localized }
-        static var debug: String { return "Debug".localized }
         static var logout: String { return "Log Out".localized }
         static var helpMe: String { return "Help Me!".localized }
         static var leaderboard: String { return "Leaderboard".localized }
@@ -531,7 +407,6 @@ enum TextsAsset {
         static var logOutAlert: String { return "Are you sure you want to log out of Windscribe?".localized }
         static var referForData: String { return "Refer for Data".localized }
         static var advanceParameters: String { return "Advanced Parameters".localized }
-        static var networkSecurity: String { return "Network Options".localized }
     }
 
     enum Connection {
@@ -552,7 +427,6 @@ enum TextsAsset {
         static var antiCensorshipOptions: String { return "Anti-censorship Settings".localized }
         static var antiCensorshipTitle: String { "Anti-censorship".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
-        static var useServerpede: String { return "Use Serverpede".localized }
         static var serverRouting: String { "Server Routing".localized }
 
         static var connectionModeDescription: String {
@@ -575,12 +449,6 @@ enum TextsAsset {
         }
         static var connectedDNSValueFieldDescription: String {
             return "IP/DNS-over-HTTPS/TLS".localized
-        }
-        static var connectedDNSInvalidAlertTitle: String {
-            return "Invalid DNS server".localized
-        }
-        static var connectedDNSInvalidAlertBody: String {
-            return "Something went wrong. Please make sure you have entered a valid DNS server.".localized
         }
         static var autoSecureNewDescription: String {
             return "Windscribe will mark every new network as “Secured” and your VPN will remain connected when your device connects to them.".localized
@@ -631,9 +499,6 @@ enum TextsAsset {
             return "Failed to get Robert Filters.".localized
         }
 
-        static var unableToLoadRules: String {
-            return "Unable to load robert rules. Check your network connection.".localized
-        }
     }
 
     static var unlimited: String {
@@ -641,10 +506,6 @@ enum TextsAsset {
     }
 
     static var pro: String {
-        return "Pro".localized
-    }
-
-    static var proSubscription: String {
         return "Pro".localized
     }
 
@@ -681,7 +542,6 @@ enum TextsAsset {
         static var showServerNetLoad: String { "Location Load".localized }
         static var enabled: String { "Enabled".localized }
         static var disabled: String { "Disabled".localized }
-        static var customBackground: String { "Custom Background".localized }
         static var ipv4Only: String { "IPv4 Only".localized }
 
         static func getValue(displayText: String) -> String? {
@@ -711,10 +571,6 @@ enum TextsAsset {
     }
 
     enum CustomLocationNames {
-        static var exportLocations: String { "Export Locations".localized }
-        static var importLocations: String { "Import Custom Locations".localized }
-        static var exportLocationsDesc: String { "Export your server location list to a local file in JSON that you can edit to change the locations names into your own custom ones".localized }
-        static var importLocationsDesc: String { "Import a custom name server location names list from a local JSON file".localized }
         static var failedImporting: String { "Failed to import custom location names list".localized }
         static var successfullyImported: String { "Successfully imported custom location names list".localized }
         static var failedExporting: String { "Failed to export custom location names list".localized }
@@ -736,13 +592,10 @@ enum TextsAsset {
 
     enum PreferencesDescription {
         static var locationOrder: String { return "Arrange locations alphabetically, geographically, or by latency.".localized }
-        static var displayLatency: String { return "Display latency as signal strength bars or in milliseconds.".localized }
         static var language: String { return "Localize Windscribe to supported languages.".localized }
-        static var background: String { return "Customize the background of the main app screen.".localized }
         static var notificationStats: String { return "Set up push notifications to receive connection updates in case of an interruption".localized }
         static var locationLoad: String { return "Display a location’s load. Smaller circle arc mean lesser load (usage).".localized }
         static var hapticFeedback: String { return "Vibrate the device based on user actions.".localized }
-        static var customBackground: String { return "Use the app custom background instead of the locations flag.".localized }
     }
 
     enum LookFeel {
@@ -796,10 +649,6 @@ enum TextsAsset {
 
         static var disconnectedActionTitle: String {
             "When Disconnected".localized
-        }
-
-        static var noSelectedActionTitle: String {
-            "no selected".localized
         }
 
         static var renameLocationsTitle: String {
@@ -859,20 +708,8 @@ enum TextsAsset {
             return "ACCOUNT INFO".localized
         }
 
-        static var editAccount: String {
-            return "Edit Account".localized
-        }
-
-        static var managerAccount: String {
-            return "Manage Account".localized
-        }
-
         static var resetPasswordActionTitle: String {
             return "Reset Password".localized
-        }
-
-        static var resetPasswordTitle: String {
-            return "Password Reset".localized
         }
 
         static var resetPasswordSuccess: String {
@@ -921,18 +758,6 @@ enum TextsAsset {
 
         static var other: String {
             return "Other".localized
-        }
-
-        static var enterCode: String {
-            return "Enter Code".localized
-        }
-
-        static var enterCodeHere: String {
-            return "Enter code here".localized
-        }
-
-        static var enter: String {
-            return "Enter".localized
         }
 
         static var lazyLogin: String {
@@ -1014,20 +839,12 @@ enum TextsAsset {
             return "Network Security".localized
         }
 
-        static var header: String {
-            return "Windscribe will auto-disconnect when you join a network tagged \"Unsecured\".".localized
-        }
-
         static var trusted: String {
             return "Secured".localized
         }
 
         static var untrusted: String {
             return "Unsecured".localized
-        }
-
-        static var forget: String {
-            return "Forget".localized
         }
 
         static var currentNetwork: String {
@@ -1081,17 +898,6 @@ enum TextsAsset {
         return "Cellular".localized
     }
 
-    static var wifi: String {
-        return "Wi-fi".localized
-    }
-
-    static var noNetworkDetected: String {
-        return "No Network Detected".localized
-    }
-    static var noInternetConnection: String {
-        return "No Internet".localized
-    }
-
     static var unknownNetworkName: String {
         return "unknown".localized
     }
@@ -1103,25 +909,10 @@ enum TextsAsset {
     }
 
     enum EnterEmail {
-        static var headline: String {
-            return "One last thing!".localized
-        }
-
         static var description: String {
             return "Add your email address in case you forget your password. We’ll even give you 10GB for it.".localized
         }
 
-        static var acceptButton: String {
-            return "Add".localized
-        }
-
-        static var declineButton: String {
-            return "No Thanks".localized
-        }
-
-        static var secureYourAccount: String {
-            return "Secure your account".localized
-        }
     }
 
     enum OutOfData {
@@ -1221,20 +1012,8 @@ enum TextsAsset {
     }
 
     enum UpgradeView {
-        static var title: String {
-            return "Plans".localized
-        }
-
         static var pricing: String {
             return "Pricing".localized
-        }
-
-        static var benefits: String {
-            return "Benefits".localized
-        }
-
-        static var continueFree10GB: String {
-            return "Free 10GB/Mo".localized
         }
 
         static var unlimitedData: String {
@@ -1258,10 +1037,6 @@ enum TextsAsset {
             return "Best malware and ad-blocker you will ever use. Seriously.".localized
         }
 
-        static var choosePlan: String {
-            return "Choose Plan".localized
-        }
-
         static var year: String {
             return "Year".localized
         }
@@ -1282,28 +1057,12 @@ enum TextsAsset {
             return "1 Year Pro Subscription".localized
         }
 
-        static var iAPDescription: String {
-            return "Subscriptions will automatically renew unless canceled within 24-hours before the end of the current period. You can cancel anytime with your iTunes account settings. Any unused portion of a free trial will be forfeited if you purchase a subscription".localized
-        }
-
         static var termsOfUse: String {
             return "Terms of Use".localized
         }
 
         static var privacyPolicy: String {
             return "Privacy Policy".localized
-        }
-
-        static var restorePurchases: String {
-            return "Restore Purchases".localized
-        }
-
-        static var networkError: String {
-            return "Error network.".localized
-        }
-
-        static var promoNotValid: String {
-            return "Promo is not valid anymore.".localized
         }
 
         static var yearly: String {
@@ -1456,9 +1215,6 @@ enum TextsAsset {
             return "Disconnect VPN".localized
         }
 
-        static var showMyLocation: String {
-            return "Show My Location".localized
-        }
     }
 
     enum RateUs {
@@ -1530,21 +1286,6 @@ enum TextsAsset {
     }
 
     enum TrustedNetworkPopup {
-        static var title: String {
-            return "This network is unsecured".localized
-        }
-
-        static var message: String {
-            return "is unsecured, meaning you don't wish to use Windscribe while on this network".localized
-        }
-
-        static var action: String {
-            return "Connect Anyway".localized
-        }
-
-        static var cancel: String {
-            return "Cancel".localized
-        }
     }
 
     static var remove: String {
@@ -1556,33 +1297,10 @@ enum TextsAsset {
     }
 
     enum RestartAppAlert {
-        static var title: String {
-            return "This action requires a restart".localized
-        }
-
-        static var message: String {
-            return "Please restart Windscribe to continue using in the preferred language.".localized
-        }
-
-        static var action: String {
-            return "Close App".localized
-        }
     }
 
     static var refreshLatency: String {
         return "Refresh latency".localized
-    }
-
-    static var disconnectToRefreshLatency: String {
-        return "Disconnect to refresh latency".localized
-    }
-
-    static var iKEv2RemoteIDTest: String {
-        return "IKEv2 RemoteID Test".localized
-    }
-
-    static var iKEv2RemoteIDTestDescription: String {
-        return "Only enable this for testing.".localized
     }
 
     static var disconnecting: String {
@@ -1644,27 +1362,9 @@ enum TextsAsset {
     }
 
     enum FileNotInCorrectFormat {
-        static var title: String {
-            return "Incorrect File Format".localized
-        }
-
-        static var message: String {
-            return "Something went wrong. Please make sure you have the correct OpenVPN configurations.".localized
-        }
     }
 
     enum ConfigFileNotSupported {
-        static var title: String {
-            return "Config file is not supported".localized
-        }
-
-        static var message: String {
-            return "Your configuration contains unsupported directives.".localized
-        }
-    }
-
-    static var delete: String {
-        return "Delete".localized
     }
 
     enum PrivacyView {
@@ -1708,28 +1408,12 @@ enum TextsAsset {
     }
 
     enum AskToRetryPopup {
-        static var title: String {
-            return "Unable to connect".localized
-        }
-
-        static var message: String {
-            return "We're unable to connect you via $proto_name protocol. Your network may have unstable Internet connectivity or is blocking VPNs. Let's try another protocol.".localized
-        }
-
         static func messageWithProtocol(protocolType: String) -> String {
             return "We're unable to connect you via \(protocolType) protocol. Your network may have unstable Internet connectivity or is blocking VPNs. Let's try another protocol.".localized
         }
     }
 
     enum AutoModeFailedToConnectPopup {
-        static var title: String {
-            return "This network hates us".localized
-        }
-
-        static var message: String {
-            return "Well we gave it our best shot, we just couldn’t connect you on this network for some reason.".localized
-        }
-
         static var sendDebugLog: String {
             return "Send Debug Log".localized
         }
@@ -1741,13 +1425,6 @@ enum TextsAsset {
 
     // swiftlint:disable inclusive_language
     enum Whitelist {
-        static var title: String {
-            return "Auto-Secure".localized
-        }
-
-        static var description: String {
-            return "When you connect to this network, Windscribe will auto-connect to the last chosen location.".localized
-        }
     }
 
     // swiftlint:enable inclusive_language
@@ -1755,10 +1432,6 @@ enum TextsAsset {
     enum PreferredProtocol {
         static var title: String {
             return "Preferred Protocol".localized
-        }
-
-        static var description: String {
-            return "Choose the best protocol for this network. This overrides all global connection settings.".localized
         }
 
         static var newDescription: String {
@@ -1781,20 +1454,8 @@ enum TextsAsset {
             return "\(firstPart) \(protocolType) \(lastPart)"
         }
 
-        static var message: String {
-            return "Windscribe will keep using the chosen protocol on this network, regardless of your global connection settings.".localized
-        }
-
         static var action: String {
             return "Set as Preferred".localized
-        }
-
-        static var cancel: String {
-            return "Keep it automatic".localized
-        }
-
-        static var dontAskAgain: String {
-            return "Don't ask again".localized
         }
 
         static var changeMessage: String {
@@ -1821,9 +1482,6 @@ enum TextsAsset {
             return "Switch to Auto".localized
         }
 
-        static var cancel: String {
-            return "Cancel".localized
-        }
     }
 
     static var back: String {
@@ -1847,24 +1505,12 @@ enum TextsAsset {
             return "Leave".localized
         }
 
-        static var claimPrize: String {
-            return "Claim Prize".localized
-        }
-
         static var tryAgain: String {
             return "Try Again".localized
         }
 
         static var notBad: String {
             return "Not Bad!".localized
-        }
-
-        static var lowerThanHighScoreMessage: String {
-            return "Not Bad!".localized
-        }
-
-        static var popupTitle: String {
-            return "Shake for Data!".localized
         }
 
         static var popupDescription: String {
@@ -1883,42 +1529,15 @@ enum TextsAsset {
             return "View Leaderboard".localized
         }
 
-        static var highScore: String {
-            return "High Score:".localized
-        }
-
         static var newHighScore: String {
             return "New High Score!".localized
         }
 
-        static var leaveAlertTitle: String {
-            return "Unlock Shake For Data".localized
-        }
-
-        static var leaveAlertDescription: String {
-            return "Unlock access to this feature? It will show up in Preferences.".localized
-        }
-
-        static var leaveAlertUnlock: String {
-            return "Unlock".localized
-        }
-
-        static var leaveAlertLeave: String {
-            return "Just Leave".localized
-        }
-
-        static var play: String {
-            return "Play".localized
-        }
     }
 
     enum NoEmailPrompt {
         static var title: String {
             return "Without an email, your free account will be limited to 2GB/Mo and you won’t be able to reset your password.".localized
-        }
-
-        static var titlePro: String {
-            return "You won’t be able to reset a password without an email or receive any service updates from us.".localized
         }
 
         static var action: String {
@@ -1927,31 +1546,9 @@ enum TextsAsset {
     }
 
     enum SetupLaterPrompt {
-        static var title: String {
-            return "Failure to setup account will prevent access in case you’re logged out.".localized
-        }
-
-        static var action: String {
-            return "Setup later".localized
-        }
     }
 
     enum Powers {
-        static var first: String {
-            return "Servers in over 100 locations".localized
-        }
-
-        static var second: String {
-            return "Automatically secure any network".localized
-        }
-
-        static var third: String {
-            return "Strict No-Logging Policy".localized
-        }
-
-        static var fourth: String {
-            return "Works with Siri, Shortcuts & Widgets".localized
-        }
     }
 
     static var searchLocations: String {
@@ -2004,18 +1601,6 @@ enum TextsAsset {
         return "Login code expired. Please try again.".localized
     }
 
-    static var cantGetConnectedWifi: String {
-        return "Problem occured while detecting the connected network on your device.".localized
-    }
-
-    static var restartApp: String {
-        return "Restart App".localized
-    }
-
-    static var tryAgain: String {
-        return "Try Again".localized
-    }
-
     enum Refer {
         static var shareWindscribeWithFriend: String {
             return "Share Windscribe with a friend!".localized
@@ -2044,10 +1629,6 @@ enum TextsAsset {
         static var usernamePlaceholder: String {
             return "User".localized
         }
-    }
-
-    static var emergencyConnect: String {
-        return "Emergency Connect".localized
     }
 
     static var eConnectDescription: String {
@@ -2217,14 +1798,6 @@ enum TextsAsset {
             return "Tell us what’s wrong".localized
         }
 
-        static var message: String {
-            return "Message".localized
-        }
-
-        static var `continue`: String {
-            return "Continue".localized
-        }
-
         static var acount: String {
             return "Account".localized
         }
@@ -2287,9 +1860,6 @@ enum TextsAsset {
             return "Emergency Connect On".localized
         }
 
-        static var continueWithGoogle: String {
-            return "Continue with Google".localized
-        }
         static var continueWithApple: String {
             return "Continue with Apple".localized
 
@@ -2342,10 +1912,6 @@ enum TextsAsset {
 
         static var appleLoginCanceled: String {
             return "Apple login canceled".localized
-        }
-
-        static var appleLoginFailed: String {
-            return "Unable to obtain Apple identity token.".localized
         }
 
         static var captchaDescription: String {
@@ -2414,10 +1980,6 @@ extension TextsAsset {
 
         static var staticIPTitle: String {
             return "Static IP".localized
-        }
-
-        static var allTitle: String {
-            return "All".localized
         }
 
         static var welcomeDescription: String {
