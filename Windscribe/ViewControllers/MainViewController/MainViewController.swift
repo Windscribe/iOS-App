@@ -236,7 +236,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-    
+
     func showNotificationsViewController() {
         popupRouter?.routeTo(to: RouteID.newsFeedPopup, from: self)
     }

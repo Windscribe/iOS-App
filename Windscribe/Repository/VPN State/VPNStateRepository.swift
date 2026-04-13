@@ -28,12 +28,16 @@ protocol VPNStateRepository {
     var untrustedOneTimeOnlySSID: String { get }
     var lastConnectionStatus: NEVPNStatus { get }
 
+    var lastConnectionType: ConnectionType { get }
+    var isEmergencyConnection: Bool { get }
+
     // Set Methods
     func setUntrustedOneTimeOnlySSID(_ value: String)
     func setIsFromProtocolFailover(_ value: Bool)
     func setIsFromProtocolChange(_ value: Bool)
     func setLastConnectionStatus(_ value: NEVPNStatus)
     func setConfigurationState(_ value: ConfigurationState)
+    func setLastConnectionType(_ value: ConnectionType)
 
     // Check Status Methods
     func isDisconnected() -> Bool
@@ -65,6 +69,8 @@ class VPNStateRepositoryImpl: VPNStateRepository {
         }
     }
 
+    var lastConnectionType: ConnectionType = .user
+
     var configurationStateUpdatedTrigger = PassthroughSubject<Void, Never>()
     var connectionStateUpdatedTrigger = PassthroughSubject<Void, Never>()
     var vpnInfo = CurrentValueSubject<VPNConnectionInfo?, Never>(nil)
@@ -75,6 +81,10 @@ class VPNStateRepositoryImpl: VPNStateRepository {
     var isFromProtocolChange: Bool = false
 
     var untrustedOneTimeOnlySSID: String = ""
+
+    var isEmergencyConnection: Bool {
+        return isConnected() && lastConnectionType == .emergency
+    }
 
     init(logger: FileLogger) {
         self.logger = logger
@@ -113,6 +123,10 @@ class VPNStateRepositoryImpl: VPNStateRepository {
 
     func connectionStatus() -> NEVPNStatus {
         return vpnInfo.value?.status ?? NEVPNStatus.disconnected
+    }
+
+    func setLastConnectionType(_ value: ConnectionType) {
+        lastConnectionType = value
     }
 
     /// Returns an observable that emits the VPN status with a debounce and custom mapping logic.

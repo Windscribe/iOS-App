@@ -13,6 +13,7 @@ import NetworkExtension
 @testable import Windscribe
 
 class MockVPNStateRepository: VPNStateRepository {
+
     // Mock vars
     var mockStatus: NEVPNStatus = .disconnected
     private let statusSubject = CurrentValueSubject<NEVPNStatus, Never>(.disconnected)
@@ -26,6 +27,8 @@ class MockVPNStateRepository: VPNStateRepository {
     var isFromProtocolChange: Bool = false
     var untrustedOneTimeOnlySSID: String = ""
     var lastConnectionStatus: NEVPNStatus = .disconnected
+    var lastConnectionType: Windscribe.ConnectionType = .user
+    var isEmergencyConnection: Bool = false
 
     // VPNStateRepository protocol methods
     func setUntrustedOneTimeOnlySSID(_ value: String) {
@@ -63,6 +66,10 @@ class MockVPNStateRepository: VPNStateRepository {
 
     func getStatus() -> AnyPublisher<NEVPNStatus, Never> {
         statusSubject.eraseToAnyPublisher()
+    }
+
+    func setLastConnectionType(_ value: Windscribe.ConnectionType) {
+        lastConnectionType = value
     }
 
     // MARK: - Test Helper Methods

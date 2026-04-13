@@ -60,7 +60,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     func isConnected() -> Bool {
-        return vpnStateRepository.isConnected()
+        vpnStateRepository.isEmergencyConnection
     }
 
     func cleansEmergencyConfigs() {
@@ -88,6 +88,8 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                 locationsManager.saveBestLocation(with: String(bestLocation))
             }
         }
+
+        vpnStateRepository.setLastConnectionType(.user)
 
         // Finally, refresh protocols asynchronously
         Task {

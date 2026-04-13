@@ -316,6 +316,9 @@ class SessionManagerImpl: SessionManager {
     }
 
     func logoutUser() {
+        // Disconnect VPN
+        vpnManager.simpleDisableConnection()
+
         if let window = windowProvider.mainWindow {
             window.rootViewController?.dismiss(animated: false, completion: nil)
 #if os(iOS)
@@ -340,9 +343,6 @@ class SessionManagerImpl: SessionManager {
             }
 #endif
         }
-
-        // Disconnect VPN
-        NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
 
         // Reset VPN Profiles
         Task { @MainActor in
