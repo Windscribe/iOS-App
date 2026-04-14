@@ -392,6 +392,8 @@ class SessionManagerImpl: SessionManager {
         preferences.clearFavourites()
         preferences.saveUserSessionAuth(sessionAuth: nil)
         preferences.clearSelectedLocations()
+        preferences.saveLastUpdateCheckTimestamp(timeStamp: nil)
+        preferences.saveLastUpdatePromptTimestamp(timeStamp: nil)
 
         Assembler.container.resetObjectScope(.userScope)
     }}

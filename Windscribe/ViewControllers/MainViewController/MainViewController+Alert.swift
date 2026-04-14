@@ -48,6 +48,24 @@ extension MainViewController {
         }
     }
 
+    func showUpdateAvailableAlert(model: CheckUpdateModel) {
+        let updateAction = UIAlertAction(title: TextsAsset.UpdateAlert.updateNow, style: .default) { _ in
+            if let url = URL(string: Links.itmsLink),
+               UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            }
+        }
+        let laterAction = UIAlertAction(title: TextsAsset.UpdateAlert.updateLater, style: .cancel, handler: nil)
+        let version = model.latestVersion ?? ""
+        let message = version.isEmpty
+            ? TextsAsset.UpdateAlert.message
+            : String(format: TextsAsset.UpdateAlert.messageWithVersion, version)
+        viewModel.showAlert(
+            title: TextsAsset.UpdateAlert.title,
+            message: message,
+            actions: [updateAction, laterAction])
+    }
+
     func displayReviewConfirmationAlert() {
         let cancelAction = UIAlertAction(title: TextsAsset.RateUs.maybeLater, style: .cancel, handler: nil)
 

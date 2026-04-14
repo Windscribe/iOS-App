@@ -233,11 +233,8 @@ extension AppReviewManager {
      }
 
     func openAppStoreForReview() {
-        let appID = DefaultValues.appID
-        let urlString = "itms-apps://itunes.apple.com/app/id\(appID)?action=write-review"
-
         // Open the App Store review page if the URL is valid and can be opened
-        if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+        if let url = URL(string: Links.itmsLink), UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }

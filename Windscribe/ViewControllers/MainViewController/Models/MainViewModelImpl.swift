@@ -33,6 +33,7 @@ class MainViewModelImpl: MainViewModel {
     private let customConfigRepository: CustomConfigRepository
     private let alertManager: AlertManager
     private let wifiManager: WifiManager
+    private let checkUpdateRepository: CheckUpdateRepository
 
     let serverList = CurrentValueSubject<[ServerMachineModel], Never>([])
     let locationsList = CurrentValueSubject<[LocationModel], Never>([])
@@ -43,6 +44,7 @@ class MainViewModelImpl: MainViewModel {
     let latencies = CurrentValueSubject<[PingDataModel], Never>([])
     var notices = CurrentValueSubject<[NoticeModel], Never>([])
     private var isFirstNotificationCheck = true  // Skip auto-show on first check (stale database data)
+    private var didAutoShowNotifications = false
     var selectedProtocol = CurrentValueSubject<String, Never>(DefaultValues.protocol)
     var selectedPort = CurrentValueSubject<String, Never>(DefaultValues.port)
     var connectionMode = CurrentValueSubject<String, Never>(DefaultValues.connectionMode)
@@ -60,6 +62,7 @@ class MainViewModelImpl: MainViewModel {
     let showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
     let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
     let showNoInternetBeforeFailoverTrigger = PassthroughSubject<Void, Never>()
+    let showUpdateAvailableTrigger = PassthroughSubject<CheckUpdateModel, Never>()
     var showConnectionModeTriggeer = PassthroughSubject<Void, Never>()
     var disconnectConnectionTrigger = PassthroughSubject<Void, Never>()
 
@@ -94,7 +97,8 @@ class MainViewModelImpl: MainViewModel {
          sessionManager: SessionManager,
          customConfigRepository: CustomConfigRepository,
          alertManager: AlertManager,
-         wifiManager: WifiManager) {
+         wifiManager: WifiManager,
+         checkUpdateRepository: CheckUpdateRepository) {
 
         self.vpnManager = vpnManager
         self.logger = logger
@@ -118,6 +122,7 @@ class MainViewModelImpl: MainViewModel {
         self.customConfigRepository = customConfigRepository
         self.alertManager = alertManager
         self.wifiManager = wifiManager
+        self.checkUpdateRepository = checkUpdateRepository
 
         showNetworkSecurityTrigger = lifecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = lifecycleManager.showNotificationsTrigger
@@ -145,6 +150,7 @@ class MainViewModelImpl: MainViewModel {
             .store(in: &cancellables)
         loadLatencies()
         getNotices()
+        observeUpdateAvailable()
         preferences.getSelectedProtocol()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
@@ -437,6 +443,27 @@ class MainViewModelImpl: MainViewModel {
         .store(in: &cancellables)
     }
 
+    private func observeUpdateAvailable() {
+        checkUpdateRepository.updateAvailable
+            .compactMap { $0 }
+            .filter { $0.updateAvailable }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] model in
+                guard let self = self else { return }
+                if !self.didAutoShowNotifications && self.shouldShowUpdatePrompt() {
+                    self.preferences.saveLastUpdatePromptTimestamp(timeStamp: Date().timeIntervalSince1970)
+                    self.showUpdateAvailableTrigger.send(model)
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func shouldShowUpdatePrompt() -> Bool {
+        guard let lastPrompt = preferences.getLastUpdatePromptTimestamp() else { return true }
+        let oneWeek: Double = 7 * 24 * 3600
+        return Date().timeIntervalSince1970 - lastPrompt >= oneWeek
+    }
+
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void) {
         logger.logD("MainViewController", "Checking for unread notifications.")
         DispatchQueue.main.async {
@@ -449,6 +476,7 @@ class MainViewModelImpl: MainViewModel {
             // Only auto-show on fresh API data (skip first check with stale database data)
             if !self.isFirstNotificationCheck && notice.popup && !readNoticeIds.contains(notice.id) {
                 self.logger.logD("MainViewController", "New notification to read with popup.")
+                self.didAutoShowNotifications = true
                 completion(true, 0)
                 return
             }

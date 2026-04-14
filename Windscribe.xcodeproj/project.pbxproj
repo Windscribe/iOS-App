@@ -578,6 +578,12 @@
 		92890E182F7D8ADF002EAB44 /* HashedSignUpContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E152F7D8ADF002EAB44 /* HashedSignUpContentView.swift */; };
 		92890E1A2F7D8D82002EAB44 /* AuthTabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E192F7D8D82002EAB44 /* AuthTabPicker.swift */; };
 		92890E1F2F7EF191002EAB44 /* HashAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E1E2F7EF191002EAB44 /* HashAuthManager.swift */; };
+		92B7B55E2F8D591A006B69DF /* CheckUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B55D2F8D591A006B69DF /* CheckUpdateModel.swift */; };
+		92B7B55F2F8D591A006B69DF /* CheckUpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B55D2F8D591A006B69DF /* CheckUpdateModel.swift */; };
+		92B7B5692F8D5952006B69DF /* CheckUpdateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B5682F8D5952006B69DF /* CheckUpdateRepository.swift */; };
+		92B7B56A2F8D5952006B69DF /* CheckUpdateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B5682F8D5952006B69DF /* CheckUpdateRepository.swift */; };
+		92B7B56C2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B56B2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift */; };
+		92B7B56D2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B56B2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift */; };
 		A1B2C3D401F600000001A002 /* ShortcutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A001 /* ShortcutType.swift */; };
 		A1B2C3D401F600000001A004 /* WindowProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A003 /* WindowProvider.swift */; };
 		A1B2C3D401F600000001A007 /* WindowSetupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A006 /* WindowSetupService.swift */; };
@@ -1806,6 +1812,9 @@
 		92890E162F7D8ADF002EAB44 /* StandardSignUpContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardSignUpContentView.swift; sourceTree = "<group>"; };
 		92890E192F7D8D82002EAB44 /* AuthTabPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTabPicker.swift; sourceTree = "<group>"; };
 		92890E1E2F7EF191002EAB44 /* HashAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashAuthManager.swift; sourceTree = "<group>"; };
+		92B7B55D2F8D591A006B69DF /* CheckUpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateModel.swift; sourceTree = "<group>"; };
+		92B7B5682F8D5952006B69DF /* CheckUpdateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateRepository.swift; sourceTree = "<group>"; };
+		92B7B56B2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateRepositoryImpl.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A001 /* ShortcutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutType.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A003 /* WindowProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowProvider.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A006 /* WindowSetupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupService.swift; sourceTree = "<group>"; };
@@ -3542,6 +3551,15 @@
 			path = HashAuth;
 			sourceTree = "<group>";
 		};
+		92B7B5672F8D594E006B69DF /* CheckUpdate */ = {
+			isa = PBXGroup;
+			children = (
+				92B7B5682F8D5952006B69DF /* CheckUpdateRepository.swift */,
+				92B7B56B2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift */,
+			);
+			path = CheckUpdate;
+			sourceTree = "<group>";
+		};
 		A1B2C3D401F600000001A005 /* Window */ = {
 			isa = PBXGroup;
 			children = (
@@ -4377,6 +4395,7 @@
 				C5A930CE2B43C5570001CFA0 /* MobilePlan */,
 				C5592B872B394A7600F2F110 /* User */,
 				C5592B812B39406400F2F110 /* IP */,
+				92B7B5672F8D594E006B69DF /* CheckUpdate */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -4888,6 +4907,7 @@
 				AF36A1FC237DC02200BDDCDB /* APIMessage.swift */,
 				AF914A7323CE2011002D3041 /* Token.swift */,
 				9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */,
+				92B7B55D2F8D591A006B69DF /* CheckUpdateModel.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -6854,6 +6874,7 @@
 				59FC73DA2C514B9000021CD1 /* WgErrorCodes.swift in Sources */,
 				59FC73EA2C5150C700021CD1 /* APIUtil.swift in Sources */,
 				59FC73EB2C5150D300021CD1 /* String+Extension.swift in Sources */,
+				92B7B55F2F8D591A006B69DF /* CheckUpdateModel.swift in Sources */,
 				59A218712C3C9E22000D89FA /* AppModulesTV.swift in Sources */,
 				1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailAction.swift in Sources */,
 				59FC74702C51699100021CD1 /* ConnectionStateInfo.swift in Sources */,
@@ -6941,6 +6962,7 @@
 				59FC73E32C51504B00021CD1 /* APIManagerImpl.swift in Sources */,
 				1E0D9D7D2C612D32008AFF2D /* PreferencesAccountView.swift in Sources */,
 				C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */,
+				92B7B56D2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift in Sources */,
 				F440BCFE2DE78FA90057A01F /* AuthenticationTokenResponse.swift in Sources */,
 				F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */,
 				59DA7FB92C3D898A00042E57 /* FileDatabase.swift in Sources */,
@@ -7014,6 +7036,7 @@
 				59FC73F72C51535B00021CD1 /* WebSession.swift in Sources */,
 				5986AB602C485A2300167023 /* SignUpViewController.swift in Sources */,
 				59FC73E82C51507300021CD1 /* APIManagerImpl+VPN.swift in Sources */,
+				92B7B5692F8D5952006B69DF /* CheckUpdateRepository.swift in Sources */,
 				59FC74732C516DC400021CD1 /* InAppPurchaseManagerDelegate.swift in Sources */,
 				59FC74082C5153D700021CD1 /* ClosestCountry.swift in Sources */,
 				1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */,
@@ -7129,6 +7152,7 @@
 				F499352C2DA71F0800108558 /* GhostAccountView.swift in Sources */,
 				1E04929D2F3F5CC80016B11F /* WSNetEmergencyConnectType.swift in Sources */,
 				F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */,
+				92B7B55E2F8D591A006B69DF /* CheckUpdateModel.swift in Sources */,
 				C59C074429424CF300D6C3C1 /* Proxy.swift in Sources */,
 				AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */,
 				F47EC53F2DEA27A400AF5089 /* HelpNavigationRouter.swift in Sources */,
@@ -7246,6 +7270,7 @@
 				1E0492F92F51CDC40016B11F /* APIManager+Locations.swift in Sources */,
 				C5A930F92B45A57B0001CFA0 /* FileLoggerImpl.swift in Sources */,
 				C580FE1A2B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift in Sources */,
+				92B7B56A2F8D5952006B69DF /* CheckUpdateRepository.swift in Sources */,
 				59C311612BC73990004B16B3 /* ProtocolSwitchRouter.swift in Sources */,
 				1EAEF7552E29332800F3C51F /* ShakeForDataRouteID.swift in Sources */,
 				C57668E42B2790AA004EA3D7 /* APIResult.swift in Sources */,
@@ -7537,6 +7562,7 @@
 				AF7F3088237B38670097C6D6 /* UIImageView+Extension.swift in Sources */,
 				E9425BA52743707B008B8786 /* URLs.swift in Sources */,
 				1E5553AD2D89AAC400F16AF0 /* BaseNodeCell.swift in Sources */,
+				92B7B56C2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift in Sources */,
 				E9425BA227437064008B8786 /* FilePaths.swift in Sources */,
 				F47EC5432DEA47B100AF5089 /* Task+Extension.swift in Sources */,
 				C5A930DA2B43EF0D0001CFA0 /* StaticIpRepository.swift in Sources */,

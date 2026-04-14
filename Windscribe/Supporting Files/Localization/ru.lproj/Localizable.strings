@@ -470,3 +470,8 @@
 "You’re out of data" = "У вас закончились данные";
 "You’ve been banned" = "Вы забанены";
 "You’ve been downgraded to free for now" = "Уровень вашего аккаунта понижен до бесплатного";
+"Update Available" = "Доступно обновление";
+"A new version of Windscribe is available." = "Доступна новая версия Windscribe.";
+"Windscribe version %@ is now available." = "Windscribe версии %@ уже доступен.";
+"Update Now" = "Обновить сейчас";
+"Update Later" = "Обновить позже";

@@ -470,3 +470,8 @@
 "You’re out of data" = "Доступний обсяг даних вичерпано";
 "You’ve been banned" = "Вас заблоковано";
 "You’ve been downgraded to free for now" = "Ваш план понижено до безкоштовного";
+"Update Available" = "Доступне оновлення";
+"A new version of Windscribe is available." = "Доступна нова версія Windscribe.";
+"Windscribe version %@ is now available." = "Windscribe версії %@ вже доступний.";
+"Update Now" = "Оновити зараз";
+"Update Later" = "Оновити пізніше";

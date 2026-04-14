@@ -470,3 +470,8 @@
 "You’re out of data" = "Vous n’avez plus de données";
 "You’ve been banned" = "Vous avez été banni";
 "You’ve been downgraded to free for now" = "Vous utilisez désormais une version gratuite";
+"Update Available" = "Mise à jour disponible";
+"A new version of Windscribe is available." = "Une nouvelle version de Windscribe est disponible.";
+"Windscribe version %@ is now available." = "Windscribe version %@ est maintenant disponible.";
+"Update Now" = "Mettre à jour";
+"Update Later" = "Plus tard";

@@ -73,6 +73,7 @@ protocol APIManager {
     func syncRobertFilters() async throws -> APIMessage
 
     // Other
+    func checkUpdate(appVersion: String, appBuild: String, osVersion: String) async throws -> CheckUpdateModel
     func recordInstall(platform: String) async throws -> APIMessage
     func getNotifications(pcpid: String) async throws -> NoticeList
     func getIp(usePingTest: Bool) async throws -> String

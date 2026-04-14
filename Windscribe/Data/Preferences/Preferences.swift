@@ -92,6 +92,10 @@ protocol Preferences {
     func getAppleLanguage() -> String?
     func saveLastNotificationTimestamp(timeStamp: Double?)
     func getLastNotificationTimestamp() -> Double?
+    func saveLastUpdatePromptTimestamp(timeStamp: Double?)
+    func getLastUpdatePromptTimestamp() -> Double?
+    func saveLastUpdateCheckTimestamp(timeStamp: Double?)
+    func getLastUpdateCheckTimestamp() -> Double?
     func saveSessionAuthHash(sessionAuth: String)
     func getSessionAuthHash() -> String?
     func saveCountryOverrride(value: String?)

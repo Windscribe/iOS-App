@@ -205,6 +205,13 @@ extension MainViewController {
                 self.checkAndShowShareDialogIfNeed()
             }.store(in: &cancellables)
 
+        viewModel.showUpdateAvailableTrigger
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] model in
+                guard let self = self else { return }
+                self.showUpdateAvailableAlert(model: model)
+            }.store(in: &cancellables)
+
         vpnConnectionViewModel.reloadLocationsTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] id in

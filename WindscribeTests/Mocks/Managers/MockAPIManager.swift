@@ -448,6 +448,10 @@ class MockAPIManager: APIManager {
 
     // MARK: - Other Methods
 
+    func checkUpdate(appVersion: String, appBuild: String, osVersion: String) async throws -> CheckUpdateModel {
+        fatalError("Not implemented")
+    }
+
     func recordInstall(platform: String) async throws -> APIMessage {
         throw Errors.notDefined
     }
