@@ -29,7 +29,8 @@ class ViewModels: Assembly {
                 connectivity: r.resolve(ConnectivityManager.self)!,
                 wifiManager: r.resolve(WifiManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                logger: r.resolve(FileLogger.self)!)
+                logger: r.resolve(FileLogger.self)!,
+                hashAuthManager: r.resolve(HashAuthManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any SignUpViewModel).self) { r in
@@ -45,7 +46,8 @@ class ViewModels: Assembly {
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                sessionManager: r.resolve(SessionManager.self)!)
+                sessionManager: r.resolve(SessionManager.self)!,
+                hashAuthManager: r.resolve(HashAuthManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any WelcomeViewModel).self) { r in

@@ -10,8 +10,13 @@ import Foundation
 import Combine
 import UIKit
 
+enum AuthTab: String, CaseIterable {
+    case standard = "Standard"
+    case hashed = "Hashed"
+}
+
 enum SignUpErrorState: Equatable {
-    case username(String), password(String), email(String), api(String), network(String), none
+    case username(String), password(String), confirmPassword(String), email(String), api(String), network(String), none
 }
 
 enum SignupRoutes {
@@ -22,20 +27,34 @@ enum SignupRoutes {
 protocol SignUpViewModel: ObservableObject {
     var username: String { get set }
     var password: String { get set }
+    var confirmPassword: String { get set }
     var email: String { get set }
     var voucherCode: String { get set }
     var referralUsername: String { get set }
     var isDarkMode: Bool { get set }
+    var selectedTab: AuthTab { get set }
     var isReferralVisible: Bool { get set }
+    var isVoucherVisible: Bool { get set }
     var isContinueButtonEnabled: Bool { get }
     var showLoadingView: Bool { get set }
     var failedState: SignUpErrorState { get set }
     var isPremiumUser: Bool { get }
+    var hasBackedUpHash: Bool { get set }
+    var accountHash: String { get set }
+    var showFileExporter: Bool { get set }
+    var showFileImporter: Bool { get set }
+    var preImageData: Data { get }
 
     var routeTo: PassthroughSubject<SignupRoutes, Never> { get }
 
     func continueButtonTapped(ignoreEmailCheck: Bool, claimAccount: Bool)
     func referralViewTapped()
+    func voucherViewTapped()
+    func generateUsername()
+    func generatePassword()
+    func regenerateHash()
+    func copyHash()
+    func loadHashFromFile(_ data: Data)
 }
 
 class SignUpViewModelImpl: SignUpViewModel {
@@ -43,20 +62,31 @@ class SignUpViewModelImpl: SignUpViewModel {
     // Form Fields
     @Published var username: String = ""
     @Published var password: String = ""
+    @Published var confirmPassword: String = ""
     @Published var email: String = ""
     @Published var voucherCode: String = ""
     @Published var referralUsername: String = ""
 
     @Published var isDarkMode: Bool = false
     @Published var isPremiumUser: Bool = false
+    @Published var selectedTab: AuthTab = .standard
     @Published var isReferralVisible: Bool = false
+    @Published var isVoucherVisible: Bool = false
     @Published var showLoadingView: Bool = false
     @Published var failedState: SignUpErrorState = .none
+    @Published var hasBackedUpHash: Bool = false
+    @Published var accountHash: String = ""
+    @Published var showFileExporter: Bool = false
+    @Published var showFileImporter: Bool = false
 
     @Published var showCaptchaPopup: Bool = false
     @Published var captchaData: CaptchaPopupModel?
 
+    private static let generateCooldownInterval: TimeInterval = 1.0
+
     private var secureToken: String = ""
+    private var lastUsernameGenerateTime: Date = .distantPast
+    private var lastPasswordGenerateTime: Date = .distantPast
 
     // Routing
     let routeTo = PassthroughSubject<SignupRoutes, Never>()
@@ -64,8 +94,15 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     //  Derived States
     var isContinueButtonEnabled: Bool {
-        username.count >= 3 && password.count >= 3
+        switch selectedTab {
+        case .standard:
+            return username.count >= 3 && password.count >= 3 && confirmPassword == password
+        case .hashed:
+            return hasBackedUpHash && !accountHash.isEmpty
+        }
     }
+
+    var preImageData: Data { hashAuthManager.preImageData }
 
     // Dependencies
     private let apiCallManager: APIManager
@@ -80,6 +117,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
     private let sessionManager: SessionManager
+    private let hashAuthManager: HashAuthManager
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -94,7 +132,8 @@ class SignUpViewModelImpl: SignUpViewModel {
          emergencyConnectRepository: EmergencyRepository,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger,
-         sessionManager: SessionManager) {
+         sessionManager: SessionManager,
+         hashAuthManager: HashAuthManager) {
 
         self.apiCallManager = apiCallManager
         self.userSessionRepository = userSessionRepository
@@ -108,10 +147,12 @@ class SignUpViewModelImpl: SignUpViewModel {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
         self.sessionManager = sessionManager
+        self.hashAuthManager = hashAuthManager
 
         bind()
         registerNetworkEventListener()
         checkUserStatus()
+        regenerateHash()
     }
 
     private func bind() {
@@ -121,12 +162,21 @@ class SignUpViewModelImpl: SignUpViewModel {
                 self?.isDarkMode = isDark
             }
             .store(in: &cancellables)
+
+        hashAuthManager.accountHashPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$accountHash)
     }
 
     // MARK: Actions
 
     func continueButtonTapped(ignoreEmailCheck: Bool, claimAccount: Bool) {
-        // Validation
+        if selectedTab == .hashed {
+            signUpWithHash()
+            return
+        }
+
+        // Standard validation
         if !isUsernameValid(username) {
             showLoadingView = false
             failedState = .username(TextsAsset.usernameValidationError)
@@ -136,6 +186,12 @@ class SignUpViewModelImpl: SignUpViewModel {
         if password.count < 8 {
             showLoadingView = false
             failedState = .password(TextsAsset.passwordValidationError)
+            return
+        }
+
+        if confirmPassword != password {
+            showLoadingView = false
+            failedState = .confirmPassword(TextsAsset.passwordsDoNotMatch)
             return
         }
 
@@ -161,8 +217,99 @@ class SignUpViewModelImpl: SignUpViewModel {
         }
     }
 
+    private func signUpWithHash() {
+        guard !accountHash.isEmpty else { return }
+        failedState = .none
+        showLoadingView = true
+
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let tokenResponse = try await self.apiCallManager.authTokenSignup(username: self.accountHash, useAsciiCaptcha: false)
+
+                await MainActor.run {
+                    self.secureToken = tokenResponse.data.token
+
+                    if let captcha = tokenResponse.data.captcha {
+                        if let popupModel = CaptchaPopupModel(from: captcha) {
+                            self.captchaData = popupModel
+                            self.showCaptchaPopup = true
+                        } else {
+                            self.failedState = .network(TextsAsset.Authentication.captchaImageDecodingFailed)
+                        }
+                        self.showLoadingView = false
+                        return
+                    }
+
+                    self.signUpWithCredentials(
+                        username: self.accountHash,
+                        password: self.accountHash,
+                        referringUsername: "",
+                        email: "",
+                        voucherCode: self.voucherCode,
+                        secureToken: self.secureToken)
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("SignUpViewModel", "Hashed signup token failed: \(error)")
+                    self.failedState = .network("\(TextsAsset.Authentication.tokenRetrievalFailed) \(error)")
+                    self.showLoadingView = false
+                }
+            }
+        }
+    }
+
     func referralViewTapped() {
         isReferralVisible.toggle()
+    }
+
+    func voucherViewTapped() {
+        isVoucherVisible.toggle()
+    }
+
+    func generateUsername() {
+        let now = Date()
+        guard now.timeIntervalSince(lastUsernameGenerateTime) >= Self.generateCooldownInterval else { return }
+        lastUsernameGenerateTime = now
+
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            do {
+                let result = try await self.apiCallManager.generateRandomUsername()
+                self.username = result.value
+            } catch {
+                self.logger.logE("SignUpViewModel", "Failed to generate username: \(error)")
+            }
+        }
+    }
+
+    func generatePassword() {
+        let now = Date()
+        guard now.timeIntervalSince(lastPasswordGenerateTime) >= Self.generateCooldownInterval else { return }
+        lastPasswordGenerateTime = now
+
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            do {
+                let result = try await self.apiCallManager.generateRandomPassword()
+                self.password = result.value
+                self.confirmPassword = ""
+            } catch {
+                self.logger.logE("SignUpViewModel", "Failed to generate password: \(error)")
+            }
+        }
+    }
+
+    func regenerateHash() {
+        hashAuthManager.regenerate()
+    }
+
+    func copyHash() {
+        hashAuthManager.copyHash()
+    }
+
+    func loadHashFromFile(_ data: Data) {
+        hashAuthManager.loadFromFile(data)
     }
 
     // MARK: Networking

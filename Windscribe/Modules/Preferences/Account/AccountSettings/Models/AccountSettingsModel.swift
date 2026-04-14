@@ -34,6 +34,13 @@ struct AccountRowModel: Identifiable, Hashable {
 
     let type: AccountRowType
     let action: AccountRowAction?
+    let isCopyable: Bool
+
+    init(type: AccountRowType, action: AccountRowAction?, copyable: Bool = false) {
+        self.type = type
+        self.action = action
+        self.isCopyable = copyable
+    }
 
     var title: String {
         switch type {

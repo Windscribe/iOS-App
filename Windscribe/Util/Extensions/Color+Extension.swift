@@ -124,9 +124,18 @@ extension Color {
     static let welcomeEmergencyButtonColor = Color(red: 97 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
 
     // Login - Register
+    static let textFieldIconColor = Color(red: 137 / 255.0, green: 143 / 255.0, blue: 157 / 255.0)
     static let loginRegisterFailedField = Color(red: 249 / 255.0, green: 76 / 255.0, blue: 67 / 255.0)
     static let loginRegisterEnabledButtonColor = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
     static let loginRegisterBackgroundColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
+    static let loginRegisterStrokeColor = Color.white.opacity(0.1)
+    static let authButtonDisabledBackground = Color.white.opacity(0.05)
+    static let authButtonDisabledText = Color.white.opacity(0.25)
+    static let authButtonEnabledText = Color(red: 7 / 255.0, green: 39 / 255.0, blue: 17 / 255.0)
+    static let authButtonGradientStart = Color.white
+    static let authButtonGradientEnd = Color(red: 165 / 255.0, green: 177 / 255.0, blue: 198 / 255.0)
+    static let authTabUnselectedText = Color(red: 137 / 255.0, green: 143 / 255.0, blue: 157 / 255.0)
+    static let authTabSelectedGradientBase = Color(red: 197 / 255.0, green: 206 / 255.0, blue: 224 / 255.0)
 
     // General Usage Colors
     static let lightMidnight = Color(red: 20 / 255.0, green: 27 / 255.0, blue: 35 / 255.0)

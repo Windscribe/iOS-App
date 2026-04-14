@@ -111,6 +111,14 @@ enum ImagesAsset {
     static let customConfigWG = "custom-config-wg"
     static let learnMoreIcon = "learn-more-ic"
     static let editPencil = "edit-pencil"
+    static let arrowRefresh = "arrow-refresh"
+    static let arrowUpload = "arrow-upload"
+    static let arrowDownload = "arrow-download"
+    static let copyClipboard = "copy-clipboard"
+    static let chevronDown = "chevron-down"
+    static let chevronUp = "chevron-up"
+    static let eye = "eye"
+    static let eyeOff = "eye-off"
 
     enum IPMenu {
         static let open = "ip-menu-open"
@@ -333,4 +341,5 @@ enum ImagesAsset {
     enum Backgrounds {
         static let one = "windscribe-background"
     }
+
 }

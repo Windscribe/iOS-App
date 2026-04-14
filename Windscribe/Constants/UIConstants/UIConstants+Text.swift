@@ -88,6 +88,50 @@ enum TextsAsset {
         return "Referred by someone?".localized
     }
 
+    static var passwordsDoNotMatch: String {
+        return "Passwords do not match".localized
+    }
+
+    static var gotVoucherCode: String {
+        return "Got Voucher Code?".localized
+    }
+
+    static var hashedTabExplanation: String {
+        return "This is your unique account hash, save it somewhere safe, you'll need it to login.".localized
+    }
+
+    static var hashedBackupConfirmation: String {
+        return "I have backed up my account hash securely and understand that Windscribe will not be able to help me recover my account if I lose it.".localized
+    }
+
+    static var alreadyHaveAccount: String {
+        return "Already have an account?".localized
+    }
+
+    static var accountHash: String {
+        return "Account Hash".localized
+    }
+
+    static var enterAccountHashOrUpload: String {
+        return "Enter Account Hash or Upload".localized
+    }
+
+    static var twoFATitle: String {
+        return "2FA".localized
+    }
+
+    static var addTwoFA: String {
+        return "Add 2FA".localized
+    }
+
+    static var twoFADescription: String {
+        return "Check your preferred one-time password application for a code.".localized
+    }
+
+    static var enterTwoFACode: String {
+        return "Enter 2FA Code".localized
+    }
+
     static var mustConfirmEmail: String {
         return "You must confirm your email in order for the benefits above to apply to you and the referrer.".localized
     }
@@ -186,6 +230,10 @@ enum TextsAsset {
 
     static var favoriteNodes: String {
         return "Favorite Locations".localized
+    }
+
+    static var copied: String {
+        return "Copied!".localized
     }
 
     enum SignInError {
@@ -1872,6 +1920,10 @@ enum TextsAsset {
     enum Authentication {
         static var username: String {
             return "Username".localized
+        }
+
+        static var hash: String {
+            return "Hash".localized
         }
 
         static var enterUsername: String {

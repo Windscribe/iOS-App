@@ -38,7 +38,7 @@ struct NewsFeedDetailView: View {
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
 
-                        Image(systemName: "chevron.down")
+                        Image(ImagesAsset.chevronDown)
                             .foregroundColor(item.expanded ? .from(.iconColor, isDarkMode) : .gray.opacity(0.8))
                             .rotationEffect(.degrees(showRotation ? 180 : 0))
                             .animation(.easeInOut(duration: 0.3), value: showRotation)

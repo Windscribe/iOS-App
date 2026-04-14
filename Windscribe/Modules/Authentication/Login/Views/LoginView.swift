@@ -11,7 +11,7 @@ import SwiftUI
 struct LoginView: View {
 
     enum Field {
-        case username, password, twoFactorCode
+        case username, password, twoFactorCode, accountHash
     }
 
     @Environment(\.presentationMode) var presentationMode
@@ -73,11 +73,15 @@ struct LoginView: View {
         if case .twoFactor = viewModel.failedState {
             return true
         }
-
         return false
     }
 
-    private var showTwoFaIcon: Bool { isTwoFaError }
+    private var isHashError: Bool {
+        if case .api = viewModel.failedState {
+            return true
+        }
+        return false
+    }
 
     init(viewModel: any LoginViewModel, router: AuthenticationNavigationRouter) {
         guard let model = viewModel as? LoginViewModelImpl else {
@@ -93,18 +97,11 @@ struct LoginView: View {
             GeometryReader { geometry in
                 PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
                     ScrollView {
-                        VStack(spacing: 20) {
-                            usernameField()
-                            passwordField()
-                            twoFactorView()
-                            twoFaAndForgotFooter()
-                            errorDisplayView()
-                            continueButton()
-                        }
-                        .padding()
-                        .padding(.bottom, keyboard.currentHeight + 16)
-                        .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
-                        .background(attachPreferenceReader())
+                        tabContent
+                            .padding()
+                            .padding(.bottom, keyboard.currentHeight + 16)
+                            .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
+                            .background(attachPreferenceReader())
                     }
                     .onChange(of: focusedField) { field in
                         guard let field = field else { return }
@@ -132,6 +129,19 @@ struct LoginView: View {
             .toolbar { loginToolbar() }
             .sheet(item: $safariURL) { url in
                 SafariView(url: url, isDarkMode: viewModel.isDarkMode)
+            }
+            .fileImporter(
+                isPresented: $viewModel.showFileImporter,
+                allowedContentTypes: [.data, .item],
+                allowsMultipleSelection: false
+            ) { result in
+                if case .success(let urls) = result, let url = urls.first {
+                    guard url.startAccessingSecurityScopedResource() else { return }
+                    defer { url.stopAccessingSecurityScopedResource() }
+                    if let data = try? Data(contentsOf: url) {
+                        viewModel.loadHashFromFile(data)
+                    }
+                }
             }
             .fullScreenCover(
                 isPresented: $router.shouldNavigateToRestrictiveNetwork,
@@ -185,9 +195,46 @@ struct LoginView: View {
     }
 }
 
+// MARK: - Tab Content
+
 private extension LoginView {
+
     @ViewBuilder
-    func usernameField() -> some View {
+    var tabContent: some View {
+        switch viewModel.selectedTab {
+        case .standard:
+            standardContent
+        case .hashed:
+            hashedContent
+        }
+    }
+
+    var standardContent: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            usernameField
+            passwordField
+            twoFactorToggle
+            twoFactorField
+            errorDisplayView
+            continueButton
+        }
+    }
+
+    var hashedContent: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            hashField
+            errorDisplayView
+            continueButton
+        }
+    }
+}
+
+// MARK: - Standard Fields
+
+private extension LoginView {
+
+    @ViewBuilder
+    var usernameField: some View {
         LoginTextField(
             title: TextsAsset.Authentication.username,
             placeholder: TextsAsset.Authentication.enterUsername,
@@ -205,9 +252,10 @@ private extension LoginView {
     }
 
     @ViewBuilder
-    func passwordField() -> some View {
+    var passwordField: some View {
         LoginTextField(
             title: TextsAsset.Authentication.password,
+            secondaryTitle: TextsAsset.Authentication.forgotPassword,
             placeholder: TextsAsset.Authentication.enterPassword,
             isSecure: true,
             showError: isPasswordError,
@@ -216,6 +264,9 @@ private extension LoginView {
             showFieldErrorText: false,
             text: $viewModel.password,
             isDarkMode: $viewModel.isDarkMode,
+            titleTapAction: {
+                safariURL = URL(string: Links.forgotPassword)
+            },
             textContentType: .password
         )
         .focused($focusedField, equals: .password)
@@ -224,71 +275,100 @@ private extension LoginView {
     }
 
     @ViewBuilder
-    func twoFactorView() -> some View {
-        if viewModel.show2FAField {
-            VStack(alignment: .leading, spacing: 8) {
-                LoginTextField(
-                    title: TextsAsset.Authentication.twoFactorCode,
-                    placeholder: "",
-                    showError: isTwoFaError,
-                    showWarningIcon: showTwoFaIcon,
-                    showFieldErrorText: false,
-                    text: $viewModel.twoFactorCode,
-                    isDarkMode: $viewModel.isDarkMode,
-                    titleTapAction: {
-                        withAnimation {
-                            viewModel.twoFactorCode = ""
-                            viewModel.show2FAField = false
-                        }
-                    },
-                    keyboardType: .default,
-                    textContentType: .oneTimeCode
-                )
-                .focused($focusedField, equals: .twoFactorCode)
-                .id(Field.twoFactorCode)
-                .readingFrame(id: "twoFactorCode-anchor")
-
-                Text(TextsAsset.Authentication.twoFactorDescription)
-                    .font(.regular(.footnote))
-                    .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
+    var twoFactorToggle: some View {
+        Button(action: {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                viewModel.show2FAField.toggle()
+                if !viewModel.show2FAField {
+                    viewModel.twoFactorCode = ""
+                }
             }
+        }) {
+            HStack {
+                Text(TextsAsset.addTwoFA)
+                    .font(.medium(.callout))
+                    .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+
+                Spacer()
+
+                OptionalPill(isDarkMode: $viewModel.isDarkMode)
+
+                Image(systemName: "chevron.down")
+                    .font(.caption)
+                    .rotationEffect(.degrees(viewModel.show2FAField ? 180 : 0))
+                    .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
+                    .animation(.easeInOut(duration: 0.25), value: viewModel.show2FAField)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    var twoFactorField: some View {
+        if viewModel.show2FAField {
+            LoginTextField(
+                title: "",
+                placeholder: TextsAsset.enterTwoFACode,
+                showError: isTwoFaError,
+                showFieldErrorText: false,
+                text: $viewModel.twoFactorCode,
+                isDarkMode: $viewModel.isDarkMode,
+                keyboardType: .default,
+                textContentType: .oneTimeCode,
+                trailingView: AnyView(
+                    InfoAlertButton(
+                        title: TextsAsset.addTwoFA,
+                        message: TextsAsset.twoFADescription,
+                        isDarkMode: $viewModel.isDarkMode
+                    )
+                )
+            )
+            .focused($focusedField, equals: .twoFactorCode)
+            .id(Field.twoFactorCode)
+            .readingFrame(id: "twoFactorCode-anchor")
             .transition(.opacity)
             .animation(.easeInOut(duration: 0.25), value: viewModel.show2FAField)
         }
     }
+}
+
+// MARK: - Hashed Fields
+
+private extension LoginView {
 
     @ViewBuilder
-    func twoFaAndForgotFooter() -> some View {
-        HStack {
-            if !viewModel.show2FAField {
-                Button(TextsAsset.Authentication.twoFactorCode) {
-                    withAnimation {
-                        viewModel.show2FAField.toggle()
-                        if !viewModel.show2FAField {
-                            viewModel.twoFactorCode = ""
-                        }
-                    }
+    var hashField: some View {
+        LoginTextField(
+            title: TextsAsset.accountHash,
+            placeholder: TextsAsset.enterAccountHashOrUpload,
+            showError: isHashError,
+            showFieldErrorText: false,
+            text: $viewModel.accountHash,
+            isDarkMode: $viewModel.isDarkMode,
+            trailingView: AnyView(
+                Button(action: {
+                    viewModel.showFileImporter = true
+                }) {
+                    Image(ImagesAsset.arrowUpload)
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
                 }
-                .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
-                .font(.medium(.callout))
-            }
-
-            Spacer()
-
-            Button(TextsAsset.Authentication.forgotPassword) {
-                safariURL = URL(string: Links.forgotPassword)
-            }
-            .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
-            .font(.medium(.callout))
-        }
-        .transition(.opacity)
-        .animation(.easeInOut(duration: 0.25), value: viewModel.show2FAField)
+                .buttonStyle(.plain)
+            )
+        )
+        .focused($focusedField, equals: .accountHash)
+        .id(Field.accountHash)
+        .readingFrame(id: "accountHash-anchor")
     }
+}
+
+// MARK: - Shared
+
+private extension LoginView {
 
     @ViewBuilder
-    func errorDisplayView() -> some View {
+    var errorDisplayView: some View {
         if let error = viewModel.failedState {
-            Text(errorMessage(for: error))
+            Text(error.displayMessage)
                 .foregroundColor(.loginRegisterFailedField)
                 .font(.regular(.footnote))
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -296,32 +376,19 @@ private extension LoginView {
     }
 
     @ViewBuilder
-    func continueButton() -> some View {
-        Button {
+    var continueButton: some View {
+        AuthActionButton(
+            title: TextsAsset.continue,
+            isEnabled: viewModel.isContinueButtonEnabled,
+            isLoading: viewModel.showLoadingView
+        ) {
             focusedField = nil
             viewModel.continueButtonTapped()
-        } label: {
-            ZStack {
-                if viewModel.showLoadingView {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
-                } else {
-                    Text(TextsAsset.continue)
-                        .font(.bold(.body))
-                        .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity)
-            .background(viewModel.isContinueButtonEnabled
-                        ? Color.loginRegisterEnabledButtonColor
-                        : .from(.iconColor, viewModel.isDarkMode))
-            .clipShape(Capsule())
         }
-        .disabled(!viewModel.isContinueButtonEnabled || viewModel.showLoadingView)
     }
 }
+
+// MARK: - Helpers
 
 private extension LoginView {
     func attachPreferenceReader() -> some View {
@@ -334,23 +401,31 @@ private extension LoginView {
     }
 }
 
+// MARK: - Toolbar
+
 private extension LoginView {
     @ToolbarContentBuilder
     func loginToolbar() -> some ToolbarContent {
+        AuthTabPickerToolbarItem(
+            selectedTab: $viewModel.selectedTab,
+            isDarkMode: $viewModel.isDarkMode
+        )
         ToolbarItemGroup(placement: .keyboard) {
             Button(action: {
                 moveFocus(up: true)
             }, label: {
                 Image(systemName: "chevron.up")
             })
-            .disabled(focusedField == .username)
+            .disabled(focusedField == .username || focusedField == .accountHash)
 
             Button(action: {
                 moveFocus(up: false)
             }, label: {
-                Image(systemName: "chevron.down")
+                Image(ImagesAsset.chevronDown)
             })
-            .disabled(focusedField == .twoFactorCode || (!viewModel.show2FAField && focusedField == .password))
+            .disabled(focusedField == .accountHash
+                      || (viewModel.show2FAField && focusedField == .twoFactorCode)
+                      || (!viewModel.show2FAField && focusedField == .password))
 
             Spacer()
 
@@ -361,25 +436,22 @@ private extension LoginView {
     }
 }
 
-private extension LoginView {
-    /// Error Mapping
-    /// - Parameter state: for error state
-    /// - Returns: return what needs to be shown on screen
-    private func errorMessage(for state: LoginErrorState) -> String {
-        switch state {
-        case .username(let error): return error
-        case .network(let error): return error
-        case .twoFactor(let error): return error
-        case .api(let error): return error
-        case .loginCode(let error): return error
-        }
-    }
+// MARK: - Focus & Scroll
 
-    private func moveFocus(up: Bool) {
+private extension LoginView {
+    func moveFocus(up: Bool) {
         guard let current = focusedField else { return }
-        let allFields: [Field] = viewModel.show2FAField
-            ? [.username, .password, .twoFactorCode]
-            : [.username, .password]
+
+        let allFields: [Field] = {
+            switch viewModel.selectedTab {
+            case .standard:
+                var fields: [Field] = [.username, .password]
+                if viewModel.show2FAField { fields.append(.twoFactorCode) }
+                return fields
+            case .hashed:
+                return [.accountHash]
+            }
+        }()
 
         guard let currentIndex = allFields.firstIndex(of: current) else { return }
 
@@ -390,7 +462,7 @@ private extension LoginView {
         focusedField = allFields[nextIndex]
     }
 
-    private func scrollToField(_ field: Field, proxy: ScrollViewProxy, geometry: GeometryProxy) {
+    func scrollToField(_ field: Field, proxy: ScrollViewProxy, geometry: GeometryProxy) {
         let anchorId = "\(field)-anchor"
 
         guard let anchor = fieldPositions[anchorId] else { return }

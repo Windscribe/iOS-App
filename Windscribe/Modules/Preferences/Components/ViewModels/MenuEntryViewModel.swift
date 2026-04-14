@@ -35,7 +35,7 @@ struct DocumentFormatInfo: Hashable {
 
 #if !os(tvOS)
 struct MultiFormatDocument: FileDocument {
-    static var readableContentTypes: [UTType] = [.plainText, .json]
+    static var readableContentTypes: [UTType] = [.plainText, .json, .data]
 
     let documentInfo: DocumentFormatInfo
 

@@ -207,6 +207,10 @@ struct SessionModel: Decodable, Equatable {
         return username == ""
     }
 
+    var isHashAuth: Bool {
+        username.hasPrefix("0x") && username.count == 34
+    }
+
     var isEnabled: Bool {
         status == 1
     }
