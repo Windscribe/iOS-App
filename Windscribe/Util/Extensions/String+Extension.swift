@@ -132,6 +132,12 @@ extension String {
         }
         return result
     }
+
+    func areSubdomainsEqual(other hostName: String) -> Bool {
+        guard let firstSubDomain = self.split(separator: ".").dropLast().first else { return false }
+        guard let secondSubDomain = hostName.split(separator: ".").dropLast().first else { return false }
+        return firstSubDomain == secondSubDomain
+    }
 }
 
 extension StringProtocol {

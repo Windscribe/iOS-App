@@ -144,7 +144,7 @@ class IPInfoViewModel: IPInfoViewModelType {
                 logger.logI("IPInfoViewModel", "Pin IP request successful")
                 let nodeIp = preferences.getLastNodeIP()
                 locationListRepository.saveFavorite(for: FavouriteModel(id: groupId,
-                                                                  pinnedIp: pinnedIp, pinnedNodeIp: nodeIp))
+                                                                  pinnedIp: pinnedIp, pinnedNodeHostname: nodeIp))
             } catch {
                 logger.logE("IPInfoViewModel", "Pin IP request failed: \(error)")
                 actionFailedSubject.send(.pinIp)

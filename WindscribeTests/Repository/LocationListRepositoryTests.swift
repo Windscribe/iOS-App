@@ -291,15 +291,15 @@ class LocationListRepositoryTests: XCTestCase {
 
     func testLocationPinned() async {
         // Given
-        let mockFavorite1 = FavouriteModel(id: "1", pinnedIp: "1:1:1:1", pinnedNodeIp: "11:11:11:11")
+        let mockFavorite1 = FavouriteModel(id: "1", pinnedIp: "1:1:1:1", pinnedNodeHostname: "11:11:11:11")
         let mockFavorite2 = FavouriteModel(id: "2")
 
         repository.saveFavorite(for: mockFavorite1)
         repository.saveFavorite(for: mockFavorite2)
 
         // Then
-        XCTAssertEqual(repository.getDatacenterPinnedIp(for: 1), mockFavorite1.pinnedNodeIp)
-        XCTAssertEqual(repository.getDatacenterPinnedIp(for: 2), nil)
+        XCTAssertEqual(repository.getDatacenterPinnedHotname(for: 1), mockFavorite1.pinnedNodeHostname)
+        XCTAssertEqual(repository.getDatacenterPinnedHotname(for: 2), nil)
     }
 }
 

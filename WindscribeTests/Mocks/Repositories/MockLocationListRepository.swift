@@ -113,8 +113,8 @@ class MockLocationListRepository: LocationListRepository {
         }
     }
 
-    func getDatacenterPinnedIp(for datacenterId: Int) -> String? {
-        favourites.first { $0.id == "\(datacenterId)" }?.pinnedNodeIp
+    func getDatacenterPinnedHotname(for datacenterId: Int) -> String? {
+        favourites.first { $0.id == "\(datacenterId)" }?.pinnedNodeHostname
     }
 
     func saveLastConnectedHost(for hostName: String, with locationId: Int) {
