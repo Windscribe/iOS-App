@@ -43,6 +43,8 @@ class IPInfoView: UIView {
     private var isFirstIPUpdate = true
     private var rollingTask: DispatchWorkItem?
     private var currentIPText: String = ""
+    private var isShowingCopiedFeedback = false
+    private var pendingSingleTap: DispatchWorkItem?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -57,6 +59,7 @@ class IPInfoView: UIView {
 
     private func showSecureIPAddressState(ipAddress: String) {
         DispatchQueue.main.async {
+            guard !self.isShowingCopiedFeedback else { return }
             let formattedIP = ipAddress.formatIpAddress().maxLength(length: 15)
             let displayIP = formattedIP.isEmpty ? "---.---.---.---" : formattedIP
 
@@ -77,8 +80,32 @@ class IPInfoView: UIView {
     }
 
     @objc private func handleDoubleTap() {
+        pendingSingleTap?.cancel()
+        pendingSingleTap = nil
         viewModel.markBlurStaticIpAddress(isBlured: !viewModel.isBlurStaticIpAddress)
         ipLabel.isBlurring = viewModel.isBlurStaticIpAddress
+    }
+
+    @objc private func handleSingleTap() {
+        guard !currentIPText.isEmpty, !currentIPText.contains("-") else { return }
+        let task = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            UIPasteboard.general.string = self.currentIPText
+            self.showCopiedFeedback()
+        }
+        pendingSingleTap = task
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: task)
+    }
+
+    private func showCopiedFeedback() {
+        isShowingCopiedFeedback = true
+        ipLabel.setText(TextsAsset.copied, animated: false)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: { [weak self] in
+            guard let self = self else { return }
+            self.isShowingCopiedFeedback = false
+            self.ipLabel.setText(self.currentIPText, animated: false)
+        })
     }
 
     private func bindViewModel() {
@@ -132,10 +159,16 @@ class IPInfoView: UIView {
             }
             .store(in: &cancellables)
 
-        // Add double-tap gesture recognizer
+        // Double-tap toggles blur, single-tap copies IP.
+        // Single-tap uses a delayed dispatch instead of require(toFail:)
+        // to avoid gesture recognizer state issues after blur toggles.
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
         doubleTapGesture.numberOfTapsRequired = 2
         ipLabel.addGestureRecognizer(doubleTapGesture)
+
+        let singleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSingleTap))
+        singleTapGesture.numberOfTapsRequired = 1
+        ipLabel.addGestureRecognizer(singleTapGesture)
 
         viewModel.isFavouritedSubject
             .receive(on: DispatchQueue.main)

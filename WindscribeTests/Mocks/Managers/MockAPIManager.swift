@@ -160,11 +160,11 @@ class MockAPIManager: APIManager {
     }
 
     func getWebSession() async throws -> WebSession {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func deleteSession() async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func getSession(sessionAuth: String) async throws -> SessionModel {
@@ -205,16 +205,26 @@ class MockAPIManager: APIManager {
         return session
     }
 
+    var authTokenLoginCalled = false
+    var authTokenSignupCalled = false
+    var lastAuthTokenUsername: String?
+
     func authTokenLogin(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
-        fatalError("Not implemented")
+        authTokenLoginCalled = true
+        lastAuthTokenUsername = username
+        if shouldThrowError { throw customError }
+        throw Errors.notDefined
     }
 
     func authTokenSignup(username: String, useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
-        fatalError("Not implemented")
+        authTokenSignupCalled = true
+        lastAuthTokenUsername = username
+        if shouldThrowError { throw customError }
+        throw Errors.notDefined
     }
 
     func regToken() async throws -> Token {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func signUpUsingToken(token: String) async throws -> SessionModel {
@@ -230,17 +240,17 @@ class MockAPIManager: APIManager {
     }
 
     func ssoSession(token: String) async throws -> SSOSession {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     // MARK: - Account Methods
 
     func addEmail(email: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func confirmEmail() async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func resetPassword(email: String) async throws -> APIMessage {
@@ -248,27 +258,27 @@ class MockAPIManager: APIManager {
     }
 
     func claimAccount(username: String, password: String, email: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func getXpressLoginCode() async throws -> XPressLoginCodeResponse {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func verifyXPressLoginCode(code: String, sig: String) async throws -> XPressLoginVerifyResponse {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func cancelAccount(password: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func verifyTvLoginCode(code: String) async throws -> XPressLoginVerifyResponse {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func claimVoucherCode(code: String) async throws -> ClaimVoucherCodeResponse {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     // MARK: - VPN Methods
@@ -383,11 +393,11 @@ class MockAPIManager: APIManager {
     }
 
     func postBillingCpID(pcpID: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func verifyApplePayment(appleID: String, appleData: String, appleSIG: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     // MARK: - Robert Methods
@@ -439,7 +449,7 @@ class MockAPIManager: APIManager {
     // MARK: - Other Methods
 
     func recordInstall(platform: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func getNotifications(pcpid: String) async throws -> NoticeList {
@@ -477,11 +487,11 @@ class MockAPIManager: APIManager {
     }
 
     func sendDebugLog(username: String, log: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) async throws -> APIMessage {
-        fatalError("Not implemented")
+        throw Errors.notDefined
     }
 
     // MARK: - Bridge API Methods
@@ -520,5 +530,28 @@ class MockAPIManager: APIManager {
         }
 
         return response
+    }
+
+    // MARK: - Generate Random Credentials
+
+    var generateUsernameCalled = false
+    var generatePasswordCalled = false
+    var mockGeneratedUsername = "testuser123"
+    var mockGeneratedPassword = "testpass456"
+
+    func generateRandomUsername() async throws -> GeneratedCredential {
+        generateUsernameCalled = true
+        if shouldThrowError { throw customError }
+        return try JSONDecoder().decode(GeneratedCredential.self, from: """
+            {"data": {"username": "\(mockGeneratedUsername)"}}
+            """.data(using: .utf8)!)
+    }
+
+    func generateRandomPassword() async throws -> GeneratedCredential {
+        generatePasswordCalled = true
+        if shouldThrowError { throw customError }
+        return try JSONDecoder().decode(GeneratedCredential.self, from: """
+            {"data": {"password": "\(mockGeneratedPassword)"}}
+            """.data(using: .utf8)!)
     }
 }

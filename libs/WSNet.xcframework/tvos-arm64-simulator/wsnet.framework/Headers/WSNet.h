@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(BOOL)isValid;
 -(void)setConnectivityState:(BOOL)isOnline;
 -(void)setIsConnectedToVpnState:(BOOL)isConnected;
+-(void)setLanguage:(NSString*)language;
 -(NSString*)currentPersistentSettings;
 -(WSNetDnsResolver*)dnsResolver;
 -(WSNetHttpNetworkManager*)httpNetworkManager;

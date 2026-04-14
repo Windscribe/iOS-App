@@ -10,6 +10,10 @@ import Swinject
 
 class IOSManagers: Assembly {
     func assemble(container: Container) {
+        container.register(HashAuthManager.self) { r in
+            HashAuthManagerImpl(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
         container.register(WindowSetupService.self) { r in
             WindowSetupServiceImpl(
                 preferences: r.resolve(Preferences.self)!,

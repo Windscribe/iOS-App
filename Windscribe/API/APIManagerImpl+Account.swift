@@ -140,6 +140,18 @@ extension APIManagerImpl {
         }
     }
 
+    func generateRandomUsername() async throws -> GeneratedCredential {
+        return try await apiUtil.makeApiCall(modalType: GeneratedCredential.self) { [weak self] completion in
+            self?.api.generateRandomUsername(completion)
+        }
+    }
+
+    func generateRandomPassword() async throws -> GeneratedCredential {
+        return try await apiUtil.makeApiCall(modalType: GeneratedCredential.self) { [weak self] completion in
+            self?.api.generateRandomPassword(completion)
+        }
+    }
+
     func getXpressLoginCode() async throws -> XPressLoginCodeResponse {
         return try await apiUtil.makeApiCall(modalType: XPressLoginCodeResponse.self) { completion in
             self.api.getXpressLoginCode(completion)

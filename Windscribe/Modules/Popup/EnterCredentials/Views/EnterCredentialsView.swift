@@ -289,7 +289,7 @@ private extension EnterCredentialsView {
             Button(action: {
                 moveFocus(up: false)
             }, label: {
-                Image(systemName: "chevron.down")
+                Image(ImagesAsset.chevronDown)
             })
             .disabled(focusedField == .password)
 

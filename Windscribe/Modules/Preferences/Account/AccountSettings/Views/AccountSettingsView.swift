@@ -416,6 +416,8 @@ struct AccountRowView: View {
     let accountStatus: AccountEmailStatusType
     let actionHandler: (AccountRowAction) -> Void
 
+    @State private var showCopied = false
+
     var body: some View {
         VStack(spacing: 0) {
             HStack(alignment: .top) {
@@ -428,22 +430,39 @@ struct AccountRowView: View {
                     Text(row.title)
                         .foregroundColor(.from(.titleColor, isDarkMode))
                         .font(.medium(.callout))
-                }
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
+                    if let message = row.message, section != .other {
+                        Text(message)
+                            .foregroundColor(section == .plan
+                                             ? (message == TextsAsset.pro ? .actionGreen : (message == TextsAsset.Account.freeAccountDescription) ? .from(.titleColor, isDarkMode) : .infoGrey)
+                                             : .from(.infoColor, isDarkMode))
+                            .font(.regular(.callout))
+                            .multilineTextAlignment(.trailing)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .opacity(showCopied ? 0.2 : 1)
+                            .overlay {
+                                if showCopied {
+                                    Text(TextsAsset.copied)
+                                        .font(.regular(.callout))
+                                        .foregroundColor(.from(.titleColor, isDarkMode))
+                                        .transition(.opacity)
+                                }
+                            }
+                            .onTapGesture {
+                                guard row.isCopyable else { return }
+                                UIPasteboard.general.string = message
+                                withAnimation { showCopied = true }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                    withAnimation { showCopied = false }
+                                }
+                            }
+                    }
 
-                if let message = row.message, section != .other {
-                    Text(message)
-                        .foregroundColor(section == .plan
-                                         ? (message == TextsAsset.pro ? .actionGreen : (message == TextsAsset.Account.freeAccountDescription) ? .from(.titleColor, isDarkMode) : .infoGrey)
-                                         : .from(.infoColor, isDarkMode))
-                        .font(.regular(.callout))
-
-                }
-
-                if row.action != nil {
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.from(.infoColor, isDarkMode))
+                    if row.action != nil {
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.from(.infoColor, isDarkMode))
+                    }
                 }
             }
             .padding(.horizontal, 16)

@@ -12,12 +12,22 @@ import UIKit
 
 enum LoginErrorState: Equatable {
     case username(String), network(String), twoFactor(String), api(String), loginCode(String)
+
+    var displayMessage: String {
+        switch self {
+        case .username(let msg), .network(let msg), .twoFactor(let msg), .api(let msg), .loginCode(let msg):
+            return msg
+        }
+    }
 }
 
 protocol LoginViewModel: ObservableObject {
     var username: String { get set }
     var password: String { get set }
     var twoFactorCode: String { get set }
+    var accountHash: String { get set }
+    var showFileImporter: Bool { get set }
+    var selectedTab: AuthTab { get set }
     var isDarkMode: Bool { get set }
     var showLoadingView: Bool { get set }
     var failedState: LoginErrorState? { get set }
@@ -25,7 +35,9 @@ protocol LoginViewModel: ObservableObject {
     var isContinueButtonEnabled: Bool { get }
 
     func continueButtonTapped()
+    func submitTwoFactorCode(_ code: String)
     func generateCodeTapped()
+    func loadHashFromFile(_ data: Data)
 }
 
 class LoginViewModelImpl: LoginViewModel {
@@ -34,6 +46,9 @@ class LoginViewModelImpl: LoginViewModel {
     @Published var username = ""
     @Published var password = ""
     @Published var twoFactorCode = ""
+    @Published var accountHash = ""
+    @Published var showFileImporter: Bool = false
+    @Published var selectedTab: AuthTab = .standard
 
     @Published var isDarkMode: Bool = false
     @Published var showLoadingView = false
@@ -46,7 +61,12 @@ class LoginViewModelImpl: LoginViewModel {
     private var secureToken: String = ""
 
     var isContinueButtonEnabled: Bool {
-        username.count > 2 && password.count > 2
+        switch selectedTab {
+        case .standard:
+            return username.count > 2 && password.count > 2
+        case .hashed:
+            return !accountHash.isEmpty
+        }
     }
 
     // Dependencies
@@ -63,6 +83,7 @@ class LoginViewModelImpl: LoginViewModel {
     private let wifiManager: WifiManager
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
+    private let hashAuthManager: HashAuthManager
 
     private var cancellables = Set<AnyCancellable>()
     private var timerCancellable: AnyCancellable?
@@ -84,7 +105,8 @@ class LoginViewModelImpl: LoginViewModel {
          connectivity: ConnectivityManager,
          wifiManager: WifiManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
-         logger: FileLogger) {
+         logger: FileLogger,
+         hashAuthManager: HashAuthManager) {
 
         self.apiCallManager = apiCallManager
         self.userSessionRepository = userSessionRepository
@@ -99,6 +121,7 @@ class LoginViewModelImpl: LoginViewModel {
         self.wifiManager = wifiManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
+        self.hashAuthManager = hashAuthManager
 
         bind()
         registerNetworkEventListener()
@@ -113,20 +136,51 @@ class LoginViewModelImpl: LoginViewModel {
             .store(in: &cancellables)
     }
 
+    func submitTwoFactorCode(_ code: String) {
+        twoFactorCode = code
+        showLoadingView = true
+        failedState = nil
+
+        let loginUsername = selectedTab == .hashed ? accountHash : username
+        let loginPassword = selectedTab == .hashed ? accountHash : password
+
+        loginWithCredentials(
+            username: loginUsername,
+            password: loginPassword,
+            code2fa: code,
+            secureToken: secureToken
+        )
+    }
+
+    func loadHashFromFile(_ data: Data) {
+        accountHash = hashAuthManager.hash(from: data)
+    }
+
     func continueButtonTapped() {
-        if username.contains("@") {
-            failedState = .username(TextsAsset.SignInError.usernameExpectedEmailProvided)
-            return
+        let loginUsername: String
+        let loginPassword: String
+
+        switch selectedTab {
+        case .standard:
+            if username.contains("@") {
+                failedState = .username(TextsAsset.SignInError.usernameExpectedEmailProvided)
+                return
+            }
+            loginUsername = username
+            loginPassword = password
+        case .hashed:
+            guard !accountHash.isEmpty else { return }
+            loginUsername = accountHash
+            loginPassword = accountHash
         }
 
         failedState = nil
         showLoadingView = true
 
-        // iOS - iPadOS is using captcha with puzzle
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                let tokenResponse = try await apiCallManager.authTokenLogin(username: username, useAsciiCaptcha: false)
+                let tokenResponse = try await apiCallManager.authTokenLogin(username: loginUsername, useAsciiCaptcha: false)
                 await MainActor.run {
                     self.logger.logI("LoginViewModel", "Token received: \(tokenResponse.data.token)")
                     self.secureToken = tokenResponse.data.token
@@ -148,8 +202,8 @@ class LoginViewModelImpl: LoginViewModel {
                     // No captcha → proceed to login
                     let code2fa = self.show2FAField && !self.twoFactorCode.isEmpty ? self.twoFactorCode : ""
                     self.loginWithCredentials(
-                        username: self.username,
-                        password: self.password,
+                        username: loginUsername,
+                        password: loginPassword,
                         code2fa: code2fa,
                         secureToken: self.secureToken)
                 }

@@ -561,9 +561,23 @@
 		59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74882C530A4100021CD1 /* LoginRouter.swift */; };
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
 		927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
+		9279914B2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
+		9279914C2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
+		9279914E2F86C638000BB9D0 /* AuthActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914D2F86C638000BB9D0 /* AuthActionButton.swift */; };
+		927991502F86C74F000BB9D0 /* MockHashAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914F2F86C74F000BB9D0 /* MockHashAuthManager.swift */; };
+		927991522F86C766000BB9D0 /* HashAuthManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927991512F86C766000BB9D0 /* HashAuthManagerTests.swift */; };
+		927991542F86C7DD000BB9D0 /* SignUpViewModelHashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927991532F86C7DD000BB9D0 /* SignUpViewModelHashTests.swift */; };
+		927991562F86C7EB000BB9D0 /* LoginViewModelHashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927991552F86C7EB000BB9D0 /* LoginViewModelHashTests.swift */; };
+		927991582F86C92C000BB9D0 /* AuthTestStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927991572F86C92C000BB9D0 /* AuthTestStubs.swift */; };
+		9279915A2F89573A000BB9D0 /* OptionalPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927991592F89573A000BB9D0 /* OptionalPill.swift */; };
+		9279915C2F8975CE000BB9D0 /* InfoAlertButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279915B2F8975CE000BB9D0 /* InfoAlertButton.swift */; };
 		927CEB5E2F7310CB007AF794 /* RadialGradientMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927CEB5D2F7310CB007AF794 /* RadialGradientMask.swift */; };
 		927CEB5F2F743B20007AF794 /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57BDE3E29B93ED700337E63 /* UIScreen+Extension.swift */; };
 		92890E142F7C4917002EAB44 /* MockAntiCensorshipRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E132F7C4911002EAB44 /* MockAntiCensorshipRepository.swift */; };
+		92890E172F7D8ADF002EAB44 /* StandardSignUpContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E162F7D8ADF002EAB44 /* StandardSignUpContentView.swift */; };
+		92890E182F7D8ADF002EAB44 /* HashedSignUpContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E152F7D8ADF002EAB44 /* HashedSignUpContentView.swift */; };
+		92890E1A2F7D8D82002EAB44 /* AuthTabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E192F7D8D82002EAB44 /* AuthTabPicker.swift */; };
+		92890E1F2F7EF191002EAB44 /* HashAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92890E1E2F7EF191002EAB44 /* HashAuthManager.swift */; };
 		A1B2C3D401F600000001A002 /* ShortcutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A001 /* ShortcutType.swift */; };
 		A1B2C3D401F600000001A004 /* WindowProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A003 /* WindowProvider.swift */; };
 		A1B2C3D401F600000001A007 /* WindowSetupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A006 /* WindowSetupService.swift */; };
@@ -1777,8 +1791,21 @@
 		59FC74862C52FCEE00021CD1 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		59FC74882C530A4100021CD1 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPressLoginCodeResponse.swift; sourceTree = "<group>"; };
+		9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedCredential.swift; sourceTree = "<group>"; };
+		9279914D2F86C638000BB9D0 /* AuthActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthActionButton.swift; sourceTree = "<group>"; };
+		9279914F2F86C74F000BB9D0 /* MockHashAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHashAuthManager.swift; sourceTree = "<group>"; };
+		927991512F86C766000BB9D0 /* HashAuthManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashAuthManagerTests.swift; sourceTree = "<group>"; };
+		927991532F86C7DD000BB9D0 /* SignUpViewModelHashTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModelHashTests.swift; sourceTree = "<group>"; };
+		927991552F86C7EB000BB9D0 /* LoginViewModelHashTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelHashTests.swift; sourceTree = "<group>"; };
+		927991572F86C92C000BB9D0 /* AuthTestStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTestStubs.swift; sourceTree = "<group>"; };
+		927991592F89573A000BB9D0 /* OptionalPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalPill.swift; sourceTree = "<group>"; };
+		9279915B2F8975CE000BB9D0 /* InfoAlertButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoAlertButton.swift; sourceTree = "<group>"; };
 		927CEB5D2F7310CB007AF794 /* RadialGradientMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadialGradientMask.swift; sourceTree = "<group>"; };
 		92890E132F7C4911002EAB44 /* MockAntiCensorshipRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAntiCensorshipRepository.swift; sourceTree = "<group>"; };
+		92890E152F7D8ADF002EAB44 /* HashedSignUpContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashedSignUpContentView.swift; sourceTree = "<group>"; };
+		92890E162F7D8ADF002EAB44 /* StandardSignUpContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardSignUpContentView.swift; sourceTree = "<group>"; };
+		92890E192F7D8D82002EAB44 /* AuthTabPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTabPicker.swift; sourceTree = "<group>"; };
+		92890E1E2F7EF191002EAB44 /* HashAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashAuthManager.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A001 /* ShortcutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutType.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A003 /* WindowProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowProvider.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A006 /* WindowSetupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupService.swift; sourceTree = "<group>"; };
@@ -3369,6 +3396,7 @@
 				F4B4C1E82EA022320024D824 /* MockPushNotificationManager.swift */,
 				F45E4F9C2F105BB200C9F0DB /* MockLocationsManager.swift */,
 				F45E4FA32F10638C00C9F0DB /* MockProtocolManager.swift */,
+				9279914F2F86C74F000BB9D0 /* MockHashAuthManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -3506,6 +3534,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		92890E1D2F7EF189002EAB44 /* HashAuth */ = {
+			isa = PBXGroup;
+			children = (
+				92890E1E2F7EF191002EAB44 /* HashAuthManager.swift */,
+			);
+			path = HashAuth;
+			sourceTree = "<group>";
+		};
 		A1B2C3D401F600000001A005 /* Window */ = {
 			isa = PBXGroup;
 			children = (
@@ -3631,6 +3667,7 @@
 				F43184BB2E1D9EE8007C96E3 /* LocationPermission */,
 				F484B7A52E317D3A00BABA98 /* PrivacyState */,
 				A1B2C3D401F600000001A005 /* Window */,
+				92890E1D2F7EF189002EAB44 /* HashAuth */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -4405,6 +4442,7 @@
 				F465A6362D5D37EF00579B5F /* AppReviewManagerTests.swift */,
 				F40419442D8232460005EF97 /* HTMLParserTests.swift */,
 				F49935422DA9987800108558 /* SoundManagerTests.swift */,
+				927991512F86C766000BB9D0 /* HashAuthManagerTests.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -4849,6 +4887,7 @@
 				AFFA716921CD4D7C00349195 /* APIDebug.swift */,
 				AF36A1FC237DC02200BDDCDB /* APIMessage.swift */,
 				AF914A7323CE2011002D3041 /* Token.swift */,
+				9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -4998,6 +5037,8 @@
 			isa = PBXGroup;
 			children = (
 				F45E4FA02F105C8900C9F0DB /* FavouriteListViewModelTests.swift */,
+				927991532F86C7DD000BB9D0 /* SignUpViewModelHashTests.swift */,
+				927991552F86C7EB000BB9D0 /* LoginViewModelHashTests.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5289,6 +5330,9 @@
 		F4888E3D2D949DED005EF149 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				92890E152F7D8ADF002EAB44 /* HashedSignUpContentView.swift */,
+				92890E162F7D8ADF002EAB44 /* StandardSignUpContentView.swift */,
+				92890E192F7D8D82002EAB44 /* AuthTabPicker.swift */,
 				F4888E432D959DDE005EF149 /* SignUpView.swift */,
 				F4F51A682D9B176300407DE7 /* SignupWarningView.swift */,
 			);
@@ -5855,6 +5899,9 @@
 			isa = PBXGroup;
 			children = (
 				F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */,
+				9279914D2F86C638000BB9D0 /* AuthActionButton.swift */,
+				927991592F89573A000BB9D0 /* OptionalPill.swift */,
+				9279915B2F8975CE000BB9D0 /* InfoAlertButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -5958,6 +6005,7 @@
 				1EFFD0412E99384F005603FB /* Data */,
 				1EFFD0402E99383D005603FB /* Repositories */,
 				1EFFD03F2E99382D005603FB /* Managers */,
+				927991572F86C92C000BB9D0 /* AuthTestStubs.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -6711,6 +6759,7 @@
 				1E79CA5B2C63D2BB006D4DE7 /* AccountViewData.swift in Sources */,
 				59FC74182C51544200021CD1 /* MyIP.swift in Sources */,
 				C5387E992CD46C18008A26EE /* VPNManager+Connect.swift in Sources */,
+				9279914C2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */,
 				59E4A7D02C73D84300987F99 /* ServerDetailTableViewCell.swift in Sources */,
 				599BA2B02C63EA8B00F0D1E4 /* HomeButton.swift in Sources */,
 				59FC74822C52D7D500021CD1 /* WelcomeRouter.swift in Sources */,
@@ -7098,6 +7147,7 @@
 				591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */,
 				E94E34F728B2817000E76D14 /* FeatureExplainer.swift in Sources */,
 				AF54C6C8228B378B00DAAB07 /* AutomaticMode.swift in Sources */,
+				9279914B2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */,
 				F431AB992E26CD350072A1B4 /* EnterCredentialsViewModel.swift in Sources */,
 				F49C45B42DCD290D007E5EF1 /* AccountSettingsViewModel.swift in Sources */,
 				F40B8AF02E54FB8500609902 /* ScreenTestRouteID.swift in Sources */,
@@ -7292,6 +7342,7 @@
 				F49C45A82DCAD00F007E5EF1 /* PreferencesRouteID.swift in Sources */,
 				E9816B7027D90F0D0059D275 /* DynamicWireGuardConfig.swift in Sources */,
 				1E87592D2F20F12000D7767F /* UIControl+Combine.swift in Sources */,
+				9279914E2F86C638000BB9D0 /* AuthActionButton.swift in Sources */,
 				F44F275F2D84B87500A47E37 /* NewsFeedView.swift in Sources */,
 				1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */,
 				C57BDE3F29B93ED700337E63 /* UIScreen+Extension.swift in Sources */,
@@ -7300,6 +7351,7 @@
 				599BA2AB2C5D21E100F0D1E4 /* XPressLoginCodeResponse.swift in Sources */,
 				F40419382D822ECF0005EF97 /* AppReviewManaging.swift in Sources */,
 				C56FCBCE2B2A41BB008DE7D4 /* Routers.swift in Sources */,
+				9279915A2F89573A000BB9D0 /* OptionalPill.swift in Sources */,
 				F49C458D2DC96AF7007E5EF1 /* MenuCategoryRow.swift in Sources */,
 				F440F3022D8DECE6006F1A6D /* LoginView.swift in Sources */,
 				F45BA59A2D53FE9100CFDB82 /* UpgradeSuccessViewController.swift in Sources */,
@@ -7322,6 +7374,7 @@
 				599BA2AC2C5D21F200F0D1E4 /* XPressLoginVerifyResponse.swift in Sources */,
 				1ED6164A2DCA7132006CDC99 /* MenuEntryView.swift in Sources */,
 				1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */,
+				9279915C2F8975CE000BB9D0 /* InfoAlertButton.swift in Sources */,
 				F440F3042D8DF088006F1A6D /* LoginTextField.swift in Sources */,
 				E97ABD4328C822C300B38587 /* ThemeUtils.swift in Sources */,
 				C5592B762B37F3F200F2F110 /* WSNetErrors.swift in Sources */,
@@ -7407,6 +7460,7 @@
 				1EAEF7532E2932FD00F3C51F /* ShakeForDataNavigationRouter.swift in Sources */,
 				F40F7E592F1AEA0500400CC1 /* DiscreetAppIconSelectionViewModel.swift in Sources */,
 				1EAEF7572E2933DE00F3C51F /* LocationPermissionManager.swift in Sources */,
+				92890E1A2F7D8D82002EAB44 /* AuthTabPicker.swift in Sources */,
 				C52DA5272B63901400E5C571 /* CustomConfigRepository.swift in Sources */,
 				AF16CA122226F53F00997A2A /* WSUIViewController.swift in Sources */,
 				F49C457E2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
@@ -7439,6 +7493,7 @@
 				C5D0E40B29BB8BE70091FB14 /* Keychain.swift in Sources */,
 				F4F51A7B2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */,
 				C580FE202B507B60004FA857 /* InAppPurchaseManager.swift in Sources */,
+				92890E1F2F7EF191002EAB44 /* HashAuthManager.swift in Sources */,
 				F469F0E02D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				F46C286C2D4C0AB30073207E /* PlanUpgradeDataModels.swift in Sources */,
 				1EA80E192EAFE5440003322D /* BridgeApiRepository.swift in Sources */,
@@ -7473,6 +7528,8 @@
 				1EA80E1F2EBA604D0003322D /* BridgeApiFailedView.swift in Sources */,
 				AF21995E2270B147009B42E5 /* yudpsocket.c in Sources */,
 				1EF7CF132EAB8DB1001AE14E /* LocalPingManager.swift in Sources */,
+				92890E172F7D8ADF002EAB44 /* StandardSignUpContentView.swift in Sources */,
+				92890E182F7D8ADF002EAB44 /* HashedSignUpContentView.swift in Sources */,
 				E93AE6692744BA060097843B /* VPNManager+Selector.swift in Sources */,
 				5947B4AE2A214E7C00C95CF2 /* Latency.swift in Sources */,
 				AF04982B21FA22530046D33B /* UIView+Extension.swift in Sources */,
@@ -7582,11 +7639,14 @@
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
 				F4B4C1F42EA169920024D824 /* SampleDataStaticIP.swift in Sources */,
 				1EFFD03E2E99374C005603FB /* LocationListRepositoryTests.swift in Sources */,
+				927991502F86C74F000BB9D0 /* MockHashAuthManager.swift in Sources */,
 				F4B4C1FD2EA6B5000024D824 /* MobilePlanRepositoryTests.swift in Sources */,
 				F4B4C1FB2EA6AED20024D824 /* SampleDataMobilePlan.swift in Sources */,
 				1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */,
+				927991522F86C766000BB9D0 /* HashAuthManagerTests.swift in Sources */,
 				1E0492E22F48BD950016B11F /* MigrationRepositoryTests.swift in Sources */,
 				1E0492AC2F45F32E0016B11F /* WireguardConfigRepositoryTests.swift in Sources */,
+				927991542F86C7DD000BB9D0 /* SignUpViewModelHashTests.swift in Sources */,
 				F425B0A62F33C80C0046D5E1 /* LatencyRepositoryTests.swift in Sources */,
 				1E0492AE2F4629B50016B11F /* MockAlertManager.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
@@ -7607,6 +7667,7 @@
 				F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */,
 				1E0492932F3F52120016B11F /* MockProtocolManagerType.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
+				927991562F86C7EB000BB9D0 /* LoginViewModelHashTests.swift in Sources */,
 				1E0492B22F462A1F0016B11F /* MockWireguardAPIManager.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
 				1E0492A42F4353350016B11F /* MockWifiManager.swift in Sources */,
@@ -7616,6 +7677,7 @@
 				1E04929A2F3F5C910016B11F /* MockWSNetEmergencyConnect.swift in Sources */,
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				1E0492B42F4749D10016B11F /* UserDataRepositoryTests.swift in Sources */,
+				927991582F86C92C000BB9D0 /* AuthTestStubs.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,
 				F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */,

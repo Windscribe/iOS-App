@@ -13,6 +13,7 @@ struct LoginTextField: View {
     @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     var title: String
+    var secondaryTitle: String?
     var placeholder: String
     var isSecure: Bool = false
     var showError: Bool = false
@@ -22,7 +23,9 @@ struct LoginTextField: View {
 
     @Binding var text: String
     @Binding var isDarkMode: Bool
+    var passwordVisible: Binding<Bool>?
     @State private var isPasswordVisible: Bool = false
+    @FocusState private var isFocused: Bool
 
     var titleTapAction: (() -> Void)?
     var keyboardType: UIKeyboardType = .default
@@ -30,29 +33,21 @@ struct LoginTextField: View {
 
     var trailingView: AnyView?
 
+    private var strokeColor: Color {
+        if showError {
+            return .loginRegisterFailedField
+        } else if isFocused {
+            return .from(.titleColor, isDarkMode)
+        }
+        return .loginRegisterStrokeColor
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             // Title with right-aligned warning icon
             HStack {
-                if let titleTapAction = titleTapAction {
-                    Button(action: {
-                        titleTapAction()
-                    }, label: {
-                        Text(title)
-                            .font(.medium(.callout))
-                            .foregroundColor(showError
-                                             ? .loginRegisterFailedField
-                                             : .from(.titleColor, isDarkMode))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    })
-                    .buttonStyle(.plain)
-                } else {
-                    Text(title)
-                        .font(.medium(.callout))
-                        .foregroundColor(showError
-                                         ? .loginRegisterFailedField
-                                         : .from(.titleColor, isDarkMode))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                if !title.isEmpty {
+                    titleRow
                 }
 
                 if showWarningIcon {
@@ -72,6 +67,7 @@ struct LoginTextField: View {
                             .keyboardType(keyboardType)
                             .textContentType(textContentType)
                             .tint(.from(.iconColor, isDarkMode))
+                            .focused($isFocused)
 
                         SecureField("", text: $text)
                             .opacity(isPasswordVisible || !isSecure ? 0 : 1)
@@ -79,9 +75,10 @@ struct LoginTextField: View {
                             .keyboardType(keyboardType)
                             .textContentType(textContentType)
                             .tint(.from(.iconColor, isDarkMode))
+                            .focused($isFocused)
                     }
                     .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, isDarkMode))
-                    .modifier(LoginTextFieldModifiers(placeholder: placeholder, text: text, isDarkMode: isDarkMode))
+                    .modifier(LoginTextFieldModifiers(placeholder: placeholder, text: text, isDarkMode: isDarkMode, showError: showError))
 
                     if isSecure {
                         Button(action: {
@@ -89,10 +86,15 @@ struct LoginTextField: View {
                                 isPasswordVisible.toggle()
                             }
                         }, label: {
-                            Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
-                                .foregroundColor(.gray)
+                            Image(isPasswordVisible ? ImagesAsset.eyeOff : ImagesAsset.eye)
+                                .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5))
                         })
-                    } else if let trailingView = trailingView {
+
+                        Spacer()
+                            .frame(width: 12)
+                    }
+
+                    if let trailingView = trailingView {
                         trailingView
                     }
                 }
@@ -101,7 +103,7 @@ struct LoginTextField: View {
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(showError ? Color.loginRegisterFailedField : Color.clear, lineWidth: 1)
+                        .stroke(strokeColor, lineWidth: 1)
                 )
             }
 
@@ -114,6 +116,73 @@ struct LoginTextField: View {
             }
         }
         .dynamicTypeSize(dynamicTypeRange)
+        .onChange(of: passwordVisible?.wrappedValue) { newValue in
+            if let newValue = newValue {
+                isPasswordVisible = newValue
+            }
+        }
+        .onChange(of: isPasswordVisible) { newValue in
+            passwordVisible?.wrappedValue = newValue
+        }
+    }
+}
+
+// MARK: - Title Row
+
+private extension LoginTextField {
+
+    @ViewBuilder
+    var titleRow: some View {
+        if let titleTapAction = titleTapAction, let secondary = secondaryTitle {
+            // Title on left, tappable secondary on right
+            HStack {
+                Text(title)
+                    .font(.medium(.callout))
+                    .foregroundColor(showError
+                                     ? .loginRegisterFailedField
+                                     : .from(.titleColor, isDarkMode))
+
+                Spacer()
+
+                Button(action: titleTapAction) {
+                    Text(secondary)
+                        .font(.regular(.callout))
+                        .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5))
+                        .underline()
+                }
+                .buttonStyle(.plain)
+            }
+        } else if let secondary = secondaryTitle {
+            // Inline secondary text (no tap action)
+            (Text(title)
+                .font(.medium(.callout))
+                .foregroundColor(showError
+                                 ? .loginRegisterFailedField
+                                 : .from(.titleColor, isDarkMode))
+            + Text(" \(secondary)")
+                .font(.regular(.callout))
+                .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5)))
+            .frame(maxWidth: .infinity, alignment: .leading)
+        } else if let titleTapAction = titleTapAction {
+            // Whole title is tappable
+            Button(action: titleTapAction) {
+                Text(title)
+                    .font(.medium(.callout))
+                    .foregroundColor(showError
+                                     ? .loginRegisterFailedField
+                                     : .from(.titleColor, isDarkMode))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .buttonStyle(.plain)
+        } else {
+            // Plain title
+            Text(title)
+                .font(.medium(.callout))
+                .foregroundColor(showError
+                                 ? .loginRegisterFailedField
+                                 : .from(.titleColor, isDarkMode))
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
 
@@ -123,6 +192,7 @@ private struct LoginTextFieldModifiers: ViewModifier {
     var placeholder: String
     var text: String
     var isDarkMode: Bool
+    var showError: Bool
 
     func body(content: Content) -> some View {
         content
@@ -131,7 +201,7 @@ private struct LoginTextFieldModifiers: ViewModifier {
             .submitLabel(.return)
             .placeholder(when: text.isEmpty) {
                 Text(placeholder)
-                    .foregroundColor(.from(.titleColor, isDarkMode).opacity(0.5))
+                    .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, isDarkMode).opacity(0.5))
             }
     }
 }

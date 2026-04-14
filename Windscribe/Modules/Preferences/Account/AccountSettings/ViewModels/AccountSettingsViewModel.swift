@@ -47,7 +47,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         guard let session = userSessionRepository.sessionModel else {
             return false
         }
-        return session.email.isEmpty == true
+        return session.email.isEmpty == true && !session.isHashAuth
     }
 
     // MARK: - Plan Action Buttons - Individual Logic
@@ -131,22 +131,25 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         }
     }
 
-    private func buildSections(from session: SessionModel) {
+    private func infoRows(from session: SessionModel) -> [AccountRowModel] {
         var infoRows: [AccountRowModel] = [
             .init(
                 type: .textRow(
-                    title: TextsAsset.Authentication.username,
-                    value: session.username
+                    title: session.isHashAuth ? TextsAsset.Authentication.hash : TextsAsset.Authentication.username,
+                    value: session.username,
                 ),
-                action: nil
+                action: nil,
+                copyable: true
             )
         ]
+
+        guard !session.isHashAuth else { return infoRows }
 
         if session.email.isEmpty {
             infoRows.append(.init(
                 type: .textRow(
                     title: TextsAsset.email,
-                    value: TextsAsset.General.none
+                    value: TextsAsset.General.none,
                 ),
                 action: nil
             ))
@@ -168,6 +171,10 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
             ))
         }
 
+        return infoRows
+    }
+
+    private func planRows(from session: SessionModel) -> [AccountRowModel] {
         var planRows: [AccountRowModel] = []
 
         planRows.append(.init(
@@ -195,6 +202,10 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
             ))
         }
 
+        return planRows
+    }
+
+    private func otherRows(from session: SessionModel) -> [AccountRowModel] {
         let otherRows: [AccountRowModel] = [
             .init(type: .navigation(title: TextsAsset.voucherCode,
                                     subtitle: TextsAsset.Account.voucherCodeDescription),
@@ -203,13 +214,15 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
                                     subtitle: TextsAsset.Account.lazyLoginDescription),
                   action: .openLazyLogin)
         ]
+        return otherRows
+    }
 
+    private func buildSections(from session: SessionModel) {
         sections = [
-            .init(type: .info, items: infoRows)
+            .init(type: .info, items: infoRows(from: session)),
+            .init(type: .plan, items: planRows(from: session)),
+            .init(type: .other, items: otherRows(from: session))
         ]
-
-        sections.append(.init(type: .plan, items: planRows))
-        sections.append(.init(type: .other, items: otherRows))
 
         // Check if user logged in via SSO and has verified email for Reset Password button
         let ssoProvider = preferences.getSSOProvider()

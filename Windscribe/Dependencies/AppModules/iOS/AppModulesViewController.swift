@@ -43,7 +43,8 @@ class ViewControllerModule: Assembly {
                     connectivity: r.resolve(ConnectivityManager.self)!,
                     wifiManager: r.resolve(WifiManager.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                    logger: r.resolve(FileLogger.self)!
+                    logger: r.resolve(FileLogger.self)!,
+                    hashAuthManager: r.resolve(HashAuthManager.self)!
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
@@ -60,7 +61,8 @@ class ViewControllerModule: Assembly {
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                sessionManager: r.resolve(SessionManager.self)!
+                sessionManager: r.resolve(SessionManager.self)!,
+                hashAuthManager: r.resolve(HashAuthManager.self)!
             ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
