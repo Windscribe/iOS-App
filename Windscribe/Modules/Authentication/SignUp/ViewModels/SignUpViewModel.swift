@@ -293,7 +293,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             do {
                 let result = try await self.apiCallManager.generateRandomPassword()
                 self.password = result.value
-                self.confirmPassword = ""
+                self.confirmPassword = result.value
             } catch {
                 self.logger.logE("SignUpViewModel", "Failed to generate password: \(error)")
             }

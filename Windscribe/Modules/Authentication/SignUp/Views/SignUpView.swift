@@ -69,6 +69,9 @@ struct SignUpView: View {
                             viewModel.failedState = .none
                         }
                     }
+                    .onChange(of: viewModel.selectedTab) { _ in
+                        viewModel.failedState = .none
+                    }
                     .onChange(of: focusedField) { field in
                         if field != nil {
                             viewModel.failedState = .none

@@ -156,6 +156,10 @@ enum TextsAsset {
         return "OK".localized
     }
 
+    static var copiedToClipboard: String {
+        return "Copied to Clipboard!".localized
+    }
+
     static var error: String {
         return "Error".localized
     }
