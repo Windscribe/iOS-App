@@ -229,9 +229,9 @@ extension TunnelConfiguration {
             if let endpoint = peer.endpoint {
                 output.append("Endpoint = \(endpoint.stringRepresentation)\n")
             }
-            if let persistentKeepAlive = peer.persistentKeepAlive {
-                output.append("PersistentKeepalive = \(persistentKeepAlive)\n")
-            }
+            // Set persistentKeepAlive as 25 per default issue #1017
+            let persistentKeepAlive = peer.persistentKeepAlive ?? 25
+            output.append("PersistentKeepalive = \(persistentKeepAlive)\n")
         }
 
         return output
