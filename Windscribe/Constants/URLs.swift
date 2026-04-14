@@ -35,4 +35,5 @@ enum Links {
     static let youtube = "https://www.youtube.com/c/windscribe"
     static let twitterX = "https://x.com/windscribecom"
     static let learnMoreHashedLogin = base + "knowledge-base/articles/hashed-login/"
+    static let itmsLink = "itms-apps://itunes.apple.com/app/id\(DefaultValues.appID)"
 }

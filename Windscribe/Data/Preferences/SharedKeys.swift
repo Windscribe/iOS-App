@@ -71,6 +71,8 @@ enum SharedKeys {
 
     static let activeSessionAuthHash = "activeSessionAuthHash"
     static let notificationRetriavalTimestamp = "notificationRetriavalTimestamp"
+    static let lastUpdatePromptTimestamp = "lastUpdatePromptTimestamp"
+    static let lastUpdateCheckTimestamp = "lastUpdateCheckTimestamp"
 
     static let activeAppleID = "active-apple-id"
     static let activeAppleData = "active-apple-data"

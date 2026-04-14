@@ -139,7 +139,7 @@ final class SignUpViewModelHashTests: XCTestCase {
 
         XCTAssertFalse(sut.showLoadingView)
     }
-    
+
     // MARK: - Hash delegation
 
     func test_regenerateHash_delegatesToManager() {

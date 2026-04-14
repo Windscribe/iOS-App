@@ -9,6 +9,17 @@
 import Foundation
 
 extension APIManagerImpl {
+    func checkUpdate(appVersion: String, appBuild: String, osVersion: String) async throws -> CheckUpdateModel {
+        return try await apiUtil.makeApiCall(modalType: CheckUpdateModel.self) { completion in
+            self.api.checkUpdate(0,
+                                 appVersion: appVersion,
+                                 appBuild: appBuild,
+                                 osVersion: osVersion,
+                                 osBuild: "",
+                                 callback: completion)
+        }
+    }
+
     func sendDebugLog(username: String, log: String) async throws -> APIMessage {
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.debugLog(username, strLog: log, callback: completion)

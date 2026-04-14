@@ -110,6 +110,9 @@ class Repository: Assembly {
         container.register(NotificationRepository.self) { r in
             NotificationRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger, pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
         }.inObjectScope(.userScope)
+        container.register(CheckUpdateRepository.self) { r in
+            CheckUpdateRepositoryImpl(apiManager: r.resolve(APIManager.self)!, logger: logger)
+        }.inObjectScope(.userScope)
         container.register(StaticIpRepository.self) { r in
             StaticIpRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
         }.inObjectScope(.userScope)
@@ -380,7 +383,8 @@ class Managers: Assembly {
                              antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
                              wifiManager: r.resolve(WifiManager.self)!,
                              locationListRepository: r.resolve(LocationListRepository.self)!,
-                             windowProvider: r.resolve(WindowProvider.self)!)
+                             windowProvider: r.resolve(WindowProvider.self)!,
+                             checkUpdateRepository: r.resolve(CheckUpdateRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(SSOManaging.self) { r in

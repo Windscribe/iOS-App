@@ -88,6 +88,10 @@ enum TextsAsset {
         return "Referred by someone?".localized
     }
 
+    static var confirmPassword: String {
+        return "Confirm Password".localized
+    }
+
     static var passwordsDoNotMatch: String {
         return "Passwords do not match".localized
     }
@@ -340,6 +344,28 @@ enum TextsAsset {
 
         static var message: String {
             return "Your device is currently offline. Please enable WiFi or cellular connection.".localized
+        }
+    }
+
+    enum UpdateAlert {
+        static var title: String {
+            return "Update Available".localized
+        }
+
+        static var message: String {
+            return "A new version of Windscribe is available.".localized
+        }
+
+        static var messageWithVersion: String {
+            return "Windscribe version %@ is now available.".localized
+        }
+
+        static var updateNow: String {
+            return "Update Now".localized
+        }
+
+        static var updateLater: String {
+            return "Update Later".localized
         }
     }
 

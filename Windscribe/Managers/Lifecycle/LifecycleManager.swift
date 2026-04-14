@@ -36,6 +36,7 @@ class LifecycleManager: LifecycleManagerType {
     private let wifiManager: WifiManager
     private let locationListRepository: LocationListRepository
     private let windowProvider: WindowProvider
+    private let checkUpdateRepository: CheckUpdateRepository
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -61,7 +62,8 @@ class LifecycleManager: LifecycleManagerType {
          antiCensorshipRepository: AntiCensorshipRepository,
          wifiManager: WifiManager,
          locationListRepository: LocationListRepository,
-         windowProvider: WindowProvider) {
+         windowProvider: WindowProvider,
+         checkUpdateRepository: CheckUpdateRepository) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences
@@ -78,6 +80,7 @@ class LifecycleManager: LifecycleManagerType {
         self.wifiManager = wifiManager
         self.locationListRepository = locationListRepository
         self.windowProvider = windowProvider
+        self.checkUpdateRepository = checkUpdateRepository
 
         sessionManager.checkForDiscconectReasonTrigger
             .sink { [weak self] _ in
@@ -92,13 +95,24 @@ class LifecycleManager: LifecycleManagerType {
     func onAppStart() {
         Task {
             await disconnectToUpdateSession()
+            try? await connectivity.awaitNetwork(maxTime: 1.0)
             if preferences.userSessionAuth() != nil && connectivity.internetConnectionAvailable() {
                 await notificationRepo.loadNotifications()
                 antiCensorshipRepository.refreshParams()
+                if shouldCheckForUpdate() {
+                    preferences.saveLastUpdateCheckTimestamp(timeStamp: Date().timeIntervalSince1970)
+                    checkUpdateRepository.checkForUpdate()
+                }
             }
             try? await locationListRepository.updateLocations()
             try? await locationListRepository.updatedServerList()
         }
+    }
+
+    private func shouldCheckForUpdate() -> Bool {
+        guard let lastCheck = preferences.getLastUpdateCheckTimestamp() else { return true }
+        let oneDay: Double = 24 * 3600
+        return Date().timeIntervalSince1970 - lastCheck >= oneDay
     }
 
     private func checkForKillSwitch() {

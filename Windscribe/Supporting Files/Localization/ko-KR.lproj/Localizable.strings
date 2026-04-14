@@ -470,3 +470,8 @@
 "You’re out of data" = "데이터를 모두 사용했습니다";
 "You’ve been banned" = "차단되었습니다";
 "You’ve been downgraded to free for now" = "현재 무료 버전으로 다운그레이드되었습니다";
+"Update Available" = "업데이트 가능";
+"A new version of Windscribe is available." = "Windscribe의 새 버전을 사용할 수 있습니다.";
+"Windscribe version %@ is now available." = "Windscribe 버전 %@을 사용할 수 있습니다.";
+"Update Now" = "지금 업데이트";
+"Update Later" = "나중에 업데이트";

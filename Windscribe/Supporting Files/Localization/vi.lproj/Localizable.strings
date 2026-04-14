@@ -470,3 +470,8 @@
 "You’re out of data" = "Bạn đã hết dữ liệu";
 "You’ve been banned" = "Bạn đã bị cấm";
 "You’ve been downgraded to free for now" = "Hiện bạn đã bị hạ cấp xuống miễn phí";
+"Update Available" = "Có bản cập nhật";
+"A new version of Windscribe is available." = "Đã có phiên bản mới của Windscribe.";
+"Windscribe version %@ is now available." = "Windscribe phiên bản %@ hiện đã có sẵn.";
+"Update Now" = "Cập nhật ngay";
+"Update Later" = "Cập nhật sau";

@@ -363,7 +363,8 @@ class ViewModels: Assembly {
                               sessionManager: r.resolve(SessionManager.self)!,
                               customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                               alertManager: r.resolve(AlertManager.self)!,
-                              wifiManager: r.resolve(WifiManager.self)!)
+                              wifiManager: r.resolve(WifiManager.self)!,
+                              checkUpdateRepository: r.resolve(CheckUpdateRepository.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,

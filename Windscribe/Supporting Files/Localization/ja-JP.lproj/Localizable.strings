@@ -470,3 +470,8 @@
 "You’re out of data" = "データ容量がなくなりました";
 "You’ve been banned" = "あなたは禁止されました";
 "You’ve been downgraded to free for now" = "現在、無料版にダウングレードされています";
+"Update Available" = "アップデートがあります";
+"A new version of Windscribe is available." = "Windscribeの新しいバージョンが利用可能です。";
+"Windscribe version %@ is now available." = "Windscribe バージョン %@ が利用可能です。";
+"Update Now" = "今すぐアップデート";
+"Update Later" = "後でアップデート";

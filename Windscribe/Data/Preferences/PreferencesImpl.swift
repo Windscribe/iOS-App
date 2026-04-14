@@ -213,6 +213,22 @@ class PreferencesImpl: Preferences {
         return getDouble(forKey: SharedKeys.notificationRetriavalTimestamp)
     }
 
+    func saveLastUpdatePromptTimestamp(timeStamp: Double?) {
+        setDouble(timeStamp, forKey: SharedKeys.lastUpdatePromptTimestamp)
+    }
+
+    func getLastUpdatePromptTimestamp() -> Double? {
+        return getDouble(forKey: SharedKeys.lastUpdatePromptTimestamp)
+    }
+
+    func saveLastUpdateCheckTimestamp(timeStamp: Double?) {
+        setDouble(timeStamp, forKey: SharedKeys.lastUpdateCheckTimestamp)
+    }
+
+    func getLastUpdateCheckTimestamp() -> Double? {
+        return getDouble(forKey: SharedKeys.lastUpdateCheckTimestamp)
+    }
+
     func saveSessionAuthHash(sessionAuth: String) {
         setString(sessionAuth, forKey: SharedKeys.activeSessionAuthHash)
     }

@@ -470,3 +470,8 @@
 "You’re out of data" = "Kulanım Limitiniz Doldu";
 "You’ve been banned" = "Erişime Yasaklandınız";
 "You’ve been downgraded to free for now" = "Şimdilik ücretsiz plana geçtiniz";
+"Update Available" = "Güncelleme Mevcut";
+"A new version of Windscribe is available." = "Windscribe'ın yeni bir sürümü mevcut.";
+"Windscribe version %@ is now available." = "Windscribe sürüm %@ şimdi mevcut.";
+"Update Now" = "Şimdi Güncelle";
+"Update Later" = "Daha Sonra Güncelle";

@@ -343,6 +343,18 @@ class MockPreferences: Preferences {
         return nil
     }
 
+    func saveLastUpdatePromptTimestamp(timeStamp: Double?) {}
+
+    func getLastUpdatePromptTimestamp() -> Double? {
+        return nil
+    }
+
+    func saveLastUpdateCheckTimestamp(timeStamp: Double?) {}
+
+    func getLastUpdateCheckTimestamp() -> Double? {
+        return nil
+    }
+
     func saveSessionAuthHash(sessionAuth: String) {
         sessionAuthToReturn = sessionAuth
     }

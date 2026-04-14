@@ -470,3 +470,8 @@
 "You’re out of data" = "你沒有數據流量了";
 "You’ve been banned" = "你已被封號";
 "You’ve been downgraded to free for now" = "你被降級到暫時免費";
+"Update Available" = "有可用更新";
+"A new version of Windscribe is available." = "Windscribe 有新版本可用。";
+"Windscribe version %@ is now available." = "Windscribe 版本 %@ 現已可用。";
+"Update Now" = "立即更新";
+"Update Later" = "稍後更新";

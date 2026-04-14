@@ -39,6 +39,7 @@ protocol MainViewModel {
     var showProtocolSwitchTrigger: PassthroughSubject<Void, Never> { get }
     var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
     var showNoInternetBeforeFailoverTrigger: PassthroughSubject<Void, Never> { get }
+    var showUpdateAvailableTrigger: PassthroughSubject<CheckUpdateModel, Never> { get }
 
     var didShowBannedProfilePopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }

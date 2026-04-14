@@ -470,3 +470,8 @@
 "You’re out of data" = "Data Anda habis";
 "You’ve been banned" = "Anda telah diblokir";
 "You’ve been downgraded to free for now" = "Versi Anda diturunkan ke gratis untuk saat ini";
+"Update Available" = "Pembaruan Tersedia";
+"A new version of Windscribe is available." = "Versi baru Windscribe tersedia.";
+"Windscribe version %@ is now available." = "Windscribe versi %@ sekarang tersedia.";
+"Update Now" = "Perbarui Sekarang";
+"Update Later" = "Perbarui Nanti";

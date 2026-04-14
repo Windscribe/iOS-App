@@ -99,8 +99,9 @@ lane :tvBuild do
   ci_build(scheme: "WindscribeTV-Debug")
 end
 
-desc "Push release build to TestFlight"
+desc "Push build to TestFlight (scheme controlled by BUILD_SCHEME env var)"
 lane :iOSTestFlight do
+  scheme = ENV["BUILD_SCHEME"] || "Windscribe-Release"
   ci_api_key
 
   increment_build_number(
@@ -108,7 +109,7 @@ lane :iOSTestFlight do
     xcodeproj: "Windscribe.xcodeproj"
   )
 
-  ci_build(scheme: "Windscribe-Release", sign: true)
+  ci_build(scheme: scheme, sign: true)
 
   upload_to_testflight(
     skip_waiting_for_build_processing: true,

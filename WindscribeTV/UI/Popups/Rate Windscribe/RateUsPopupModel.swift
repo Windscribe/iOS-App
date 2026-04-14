@@ -42,7 +42,7 @@ class RateUsPopupModel: RateUsPopupModelType {
     }
 
     func openAppStoreRattingView() {
-        let url = "itms-apps://apps.apple.com/app/id1129435228?action=write-review"
+        let url = "\(Links.itmsLink)?action=write-review"
         guard let writeReviewURL = URL(string: url) else {
             return
         }

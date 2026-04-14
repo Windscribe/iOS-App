@@ -470,3 +470,8 @@
 "You’re out of data" = "আপনি ডেটা শেষ করে ফেলেছেন";
 "You’ve been banned" = "আপনাকে নিষিদ্ধ করা হয়েছে";
 "You’ve been downgraded to free for now" = "আপনার প্ল্যান বিনামূল্য প্ল্যান এ অবনত করা হয়েছে ";
+"Update Available" = "আপডেট উপলব্ধ";
+"A new version of Windscribe is available." = "Windscribe-এর একটি নতুন সংস্করণ উপলব্ধ।";
+"Windscribe version %@ is now available." = "Windscribe সংস্করণ %@ এখন উপলব্ধ।";
+"Update Now" = "এখনই আপডেট করুন";
+"Update Later" = "পরে আপডেট করুন";

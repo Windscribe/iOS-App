@@ -55,7 +55,7 @@ Build-tvOS:
 
 # ─── Deploy (manual) ──────────────────────────────────────────────────────────
 
-Deploy-iOS-TestFlight:
+.deploy-ios-base:
   stage: deploy
   script:
     - fastlane iOSTestFlight
@@ -64,3 +64,13 @@ Deploy-iOS-TestFlight:
     - if: '$CI_MERGE_REQUEST_ID'
       when: never
     - when: manual
+
+Deploy-iOS-Release:
+  extends: .deploy-ios-base
+  variables:
+    BUILD_SCHEME: "Windscribe-Release"
+
+Deploy-iOS-Staging:
+  extends: .deploy-ios-base
+  variables:
+    BUILD_SCHEME: "Windscribe-Staging"
