@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Swinject
 
 struct StandardSignUpContentView: View {
 
@@ -49,25 +50,21 @@ private extension StandardSignUpContentView {
 
     var isUsernameError: Bool {
         if case .username = viewModel.failedState { return true }
-        if case .api = viewModel.failedState { return true }
         return false
     }
 
     var usernameErrorMessage: String? {
         if case .username(let msg) = viewModel.failedState { return msg }
-        if case .api(let msg) = viewModel.failedState { return msg }
         return nil
     }
 
     var isPasswordError: Bool {
         if case .password = viewModel.failedState { return true }
-        if case .api = viewModel.failedState { return true }
         return false
     }
 
     var passwordErrorMessage: String? {
         if case .password(let msg) = viewModel.failedState { return msg }
-        if case .api(let msg) = viewModel.failedState { return msg }
         return nil
     }
 
@@ -83,13 +80,11 @@ private extension StandardSignUpContentView {
 
     var isEmailError: Bool {
         if case .email = viewModel.failedState { return true }
-        if case .api = viewModel.failedState { return true }
         return false
     }
 
     var emailErrorMessage: String? {
         if case .email(let msg) = viewModel.failedState { return msg }
-        if case .api(let msg) = viewModel.failedState { return msg }
         return nil
     }
 
@@ -171,6 +166,11 @@ private extension StandardSignUpContentView {
             trailingView: AnyView(
                 Button(action: {
                     UIPasteboard.general.string = viewModel.password
+                    Assembler.resolve(AlertManager.self).showSimpleAlert(
+                        title: "",
+                        message: TextsAsset.copiedToClipboard,
+                        buttonText: TextsAsset.okay
+                    )
                 }) {
                     Image(ImagesAsset.copyClipboard)
                         .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
