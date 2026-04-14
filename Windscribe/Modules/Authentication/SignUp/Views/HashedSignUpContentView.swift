@@ -24,6 +24,7 @@ struct HashedSignUpContentView: View {
             voucherToggle
             voucherSection
             backupCheckbox
+            apiOrNetworkErrorLabel
             signUpButton
             Spacer()
         }
@@ -213,6 +214,19 @@ private extension HashedSignUpContentView {
             .cornerRadius(8)
         }
         .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    var apiOrNetworkErrorLabel: some View {
+        switch viewModel.failedState {
+        case .api(let msg), .network(let msg):
+            Text(msg)
+                .font(.regular(.footnote))
+                .foregroundColor(.loginRegisterFailedField)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        default:
+            EmptyView()
+        }
     }
 
     @ViewBuilder

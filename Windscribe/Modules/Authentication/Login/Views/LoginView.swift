@@ -30,9 +30,6 @@ struct LoginView: View {
         if case .username = viewModel.failedState {
             return true
         }
-        if case .api = viewModel.failedState {
-            return true
-        }
         return false
     }
 
@@ -40,29 +37,17 @@ struct LoginView: View {
         if case .username(let msg) = viewModel.failedState {
             return msg
         }
-        if case .api(let msg) = viewModel.failedState {
-            return msg
-        }
-
         return nil
     }
 
     private var showUsernameIcon: Bool { isUsernameError }
 
     private var isPasswordError: Bool {
-        if case .api = viewModel.failedState {
-            return true
-        }
-
-        return false
+        false
     }
 
     private var passwordErrorMessage: String? {
-        if case .api(let msg) = viewModel.failedState {
-            return msg
-        }
-
-        return nil
+        nil
     }
 
     private var showPasswordIcon: Bool {
@@ -102,6 +87,9 @@ struct LoginView: View {
                             .padding(.bottom, keyboard.currentHeight + 16)
                             .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
                             .background(attachPreferenceReader())
+                    }
+                    .onChange(of: viewModel.selectedTab) { _ in
+                        viewModel.failedState = nil
                     }
                     .onChange(of: focusedField) { field in
                         guard let field = field else { return }
