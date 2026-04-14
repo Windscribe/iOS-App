@@ -80,40 +80,10 @@ class FavouriteListViewModel: FavouriteListViewModelType {
 
 extension FavouriteListViewModel {
     /// Checks if the selected favourite location is under maintenance or has disabled status.
-    /// - Parameter favourite: The GroupModel representing the selected favourite location
+    /// - Parameter favourite: The DatacenterModel representing the selected favourite location
     /// - Returns: true if location is under maintenance or disabled, false otherwise
     private func checkMaintenanceLocation(favourite: DatacenterModel) -> Bool {
-        // Get the parent server to check status
-        guard let locationInfo = try? locationsManager.getLocation(from: favourite.id) else {
-            // Location not found in server list - treat as maintenance
-            logger.logD("FavouriteListViewModel", "Location not found for favourite \(favourite.id), treating as maintenance")
-            return true
-        }
-
-        let location = locationInfo.0
-        let datacenter = locationInfo.1
-
-        // Check if server is disabled
-        if datacenter.statusValue == .available {
-            logger.logD("FavouriteListViewModel", "Server \(location.name) is disabled (status=false)")
-            return true
-        }
-
-        let servers = locationListRepository.getServers(for: favourite.id)
-
-        // Check if no nodes available for non-premium locations
-        if servers.isEmpty && !datacenter.isPremiumOnly {
-            logger.logD("FavouriteListViewModel", "No nodes available for non-premium location \(datacenter.city)")
-            return true
-        }
-
-        // Check if no nodes available for premium locations (when user is premium)
-        if servers.isEmpty && datacenter.isPremiumOnly &&
-            userSessionRepository.sessionModel?.isPremium == true {
-            logger.logD("FavouriteListViewModel", "No nodes available for premium location \(datacenter.city)")
-            return true
-        }
-
+        if favourite.statusValue == .underMantainance { return true }
         return false
     }
 }
