@@ -296,7 +296,6 @@ class MainViewModelImpl: MainViewModel {
         default:
             locationSectionsOrdered = locationSections
         }
-        locationSectionsOrdered = sortLocationDatacenters(locationSectionsList: locationSectionsOrdered, orderBy: orderBy)
         return locationSectionsOrdered
     }
 
@@ -322,6 +321,9 @@ class MainViewModelImpl: MainViewModel {
         }
 
         mappedLocations.sort {
+            if $0.1 == -1 {
+                return false
+            }
             if $1.1 == -1 {
                 return true
             }
@@ -329,31 +331,6 @@ class MainViewModelImpl: MainViewModel {
         }
 
         return mappedLocations.map { $0.0 }
-    }
-
-    private func sortLocationDatacenters(locationSectionsList: [LocationSection], orderBy: String) -> [LocationSection] {
-        guard orderBy != Fields.Values.geography else { return locationSectionsList }
-        return locationSectionsList.map {
-            guard let locationModel = $0.location else { return $0 }
-            var sortedDatacenters = [DatacenterModel]()
-            switch orderBy {
-            case Fields.Values.latency:
-                sortedDatacenters = locationModel.datacenters.sorted {
-                    guard let ping0 = self.latencyRepo.getPingData(ip: $0.pingServer?.ip ?? "")?.latency, ping0 != -1 else { return false }
-                    guard let ping1 = self.latencyRepo.getPingData(ip: $1.pingServer?.ip ?? "")?.latency, ping1 != -1 else { return true }
-                    return ping0 < ping1
-                }
-            default:
-                sortedDatacenters = locationModel.datacenters.sorted {
-                    if $0.city == $1.city {
-                        return $0.nick < $1.nick
-                    }
-                    return $0.city < $1.city
-                }
-            }
-            let sortedServerModel = locationModel.copyModelWith(datacenters: sortedDatacenters)
-            return LocationSection(location: locationModel, collapsed: $0.collapsed)
-        }
     }
 
     func loadPortMap() {
