@@ -370,17 +370,17 @@ extension ConfigurationsManager {
         } else {
             // Check if we have a forced node
             let forceHostname = advanceRepository.getForcedServer()
-            if let forceHostname = forceHostname, let server = servers.first(where: { $0.hostname == forceHostname }) {
+            if let forceHostname = forceHostname, let server = servers.first(where: { $0.hostname.areSubdomainsEqual(other: forceHostname) }) {
                 logger.logI("ConfigurationsManager", "getNodeFrom returns node: \(server)")
                 return server
             }
 
             // Check if we have a pinned ip for this location
-            let pinnedNodeIp = locationListRepository.getDatacenterPinnedIp(for: datacenterId)
-            if let pinnedNodeIp = pinnedNodeIp,
-               let pinnedNode = servers.first(where: { $0.hostname == pinnedNodeIp }) {
+            let pinnedHostName = locationListRepository.getDatacenterPinnedHotname(for: datacenterId)
+            if let pinnedHostName = pinnedHostName,
+               let pinnedNode = servers.first(where: { $0.hostname.areSubdomainsEqual(other: pinnedHostName)  }) {
                 if !preferences.getIgnorePinIP() {
-                    logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedNode)")
+                    logger.logI("ConfigurationsManager", "getNodeFrom returns pinned node: \(pinnedHostName)")
                     return pinnedNode
                 } else {
                     logger.logI("ConfigurationsManager", "Ignoring pinned IP preference, will select random node")

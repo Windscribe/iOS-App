@@ -40,7 +40,7 @@ protocol LocationListRepository {
     func removeFavorite(with datacenterId: Int)
     func saveFavorite(for favourite: FavouriteModel)
 
-    func getDatacenterPinnedIp(for datacenterId: Int) -> String?
+    func getDatacenterPinnedHotname(for datacenterId: Int) -> String?
     func saveLastConnectedHost(for hostName: String, with locationId: Int)
 
     func updateAllIfEmpty() async throws
@@ -318,8 +318,8 @@ class LocationListRepositoryImpl: LocationListRepository {
         hasPinnedNodeMismatch = false
 
         if let favorite = getFavorite(from: String(locationId)),
-           favorite.pinnedNodeIp != nil {
-            if favorite.pinnedNodeIp == hostName {
+           favorite.pinnedNodeHostname != nil {
+            if favorite.pinnedNodeHostname == hostName {
                 if let pinnedIp = favorite.pinnedIp {
                     preferences.saveLastSelectedPinnedIp(with: pinnedIp)
                     return
@@ -331,7 +331,7 @@ class LocationListRepositoryImpl: LocationListRepository {
         preferences.saveLastSelectedPinnedIp(with: "")
     }
 
-    func getDatacenterPinnedIp(for datacenterId: Int) -> String? {
+    func getDatacenterPinnedHotname(for datacenterId: Int) -> String? {
         localDatabase.getFavouriteList().first {
             $0.id == String(datacenterId) && $0.pinnedNodeIp != nil
         }?.pinnedNodeIp

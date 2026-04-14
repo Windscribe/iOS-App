@@ -275,7 +275,7 @@ extension LocalDatabaseImpl {
                 } else if oldSchemaVersion < 56 {
                     migration.enumerateObjects(ofType: Favourite.className()) { _, newObject in
                         newObject?["pinnedIp"] = nil
-                        newObject?["pinnedNodeIp"] = nil
+                        newObject?["pinnedNodeHostname"] = nil
                     }
                 } else if oldSchemaVersion < 57 {
                     migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in }
