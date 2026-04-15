@@ -84,6 +84,7 @@ class ViewModels: Assembly {
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 emergencyRepository: r.resolve(EmergencyRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                alertManager: r.resolve(AlertManager.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
