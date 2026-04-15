@@ -186,13 +186,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             .sink { [weak self] _ in self?.enableVPNConnection() }
             .store(in: &cancellables)
 
-        pushNotificationManager?.notification
-            .compactMap { $0 }
-            .sink { [weak self] in
-                self?.pushNotificationReceived(payload: $0)
-            }
-            .store(in: &cancellables)
-
         // Debounced table reload: coalesces multiple rapid reload calls into single reload
         reloadTableViewsTrigger
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
@@ -200,24 +193,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 self?.performTableReload()
             }
             .store(in: &cancellables)
-
-        if let payload = pushNotificationManager?.notification.value {
-            if payload.type == "promo" {
-                launchPromoView(payload: payload)
-            }
-        }
-    }
-
-    func launchPromoView(payload: PushNotificationPayload) {
-        router?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode!, pcpID: payload.pcpid), from: self)
-    }
-
-    func pushNotificationReceived(payload: PushNotificationPayload) {
-        if payload.type == "promo" {
-            logger.logD("MainViewController", "Push notification type was promo now launching promo view. \(payload)")
-
-            launchPromoView(payload: payload)
-        }
     }
 
     func checkForInternetConnection() {
