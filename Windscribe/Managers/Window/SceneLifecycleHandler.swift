@@ -61,8 +61,6 @@ class SceneLifecycleHandlerImpl: SceneLifecycleHandler {
     }
 
     private func registerForPushNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = UIApplication.shared.delegate as? UNUserNotificationCenterDelegate
         pushNotificationManager.isAuthorizedForPushNotifications { result in
             if result {
                 DispatchQueue.main.async {

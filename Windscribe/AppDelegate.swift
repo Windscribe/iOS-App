@@ -90,7 +90,7 @@ extension AppDelegate {
 
 // MARK: - Push notifications
 
-extension AppDelegate: UNUserNotificationCenterDelegate {
+extension AppDelegate {
 
     func application(_: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -127,30 +127,5 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     /// Called when registerForRemoteNotification calls fails. App will retry on next app launch.
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         logger.logE("app", "Fail to register for remote notifications. \(error.localizedDescription)")
-    }
-
-    /// Called if a new push notification is received while app was in foreground.
-    func userNotificationCenter(_: UNUserNotificationCenter,
-                                willPresent response: UNNotification,
-                                withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        logger.logI("AppDelegate", "Push notification received [willPresent].")
-        if let userInfo = response.request.content.userInfo as? [String: AnyObject] {
-            logger.logD("AppDelegate", "Push notification received while app was in background now handling silent actions: \(userInfo)")
-            pushNotificationManager.handleSilentPushNotificationActions(
-                payload: PushNotificationPayload(userInfo: userInfo))
-        }
-        withCompletionHandler([.banner, .list, .sound, .badge])
-    }
-
-    /// Called when user clicks on push notification. Save its payload in memory for later use.
-    func userNotificationCenter(_: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler: @escaping () -> Void) {
-        logger.logI("AppDelegate", "Push notification received [didReiceive].")
-        if let userInfo = response.notification.request.content.userInfo as? [String: AnyObject] {
-            pushNotificationManager.addPushNotification(
-                notificationPayload: PushNotificationPayload(userInfo: userInfo))
-        }
-        withCompletionHandler()
     }
 }
