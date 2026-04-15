@@ -79,20 +79,20 @@ class AppReviewManager: AppReviewManaging {
     }
 
     /// Step 1
-    /// Time elapsed since last dialog appeared is more than 180 days
-    /// - Returns: If user prompted with review more than 180 days ago
+    /// Time elapsed since last dialog appeared is more than 90 days
+    /// - Returns: If user prompted with review more than 90 days ago
     private func checkTimeElapseStatus() -> Bool {
         guard !hasReviewRequestedBefore() else {
-            // Review has requested before check if it is more than 180 days
-            logger.logD("AppReviewManager", "Rate Dialog: The dialog has been shown before, lets check if it was more than 180 days ago.")
+            // Review has requested before check if it is more than 90 days
+            logger.logD("AppReviewManager", "Rate Dialog: The dialog has been shown before, lets check if it was more than 90 days ago.")
 
             guard let dateLastShown = preferences.getWhenRateUsPopupDisplayed() else {
                 logger.logD("AppReviewManager", "Rate Dialog: We don't have a date for last show, but we have the information that is was shown, let's try showing again.")
                 return true
             }
 
-            guard daysSinceLastReviewRequest(dateLastShown: dateLastShown) > 180 else {
-                logger.logD("AppReviewManager", "Rate Dialog: Do not show! Rate dialog was shown less than 180 days ago.")
+            guard daysSinceLastReviewRequest(dateLastShown: dateLastShown) > 90 else {
+                logger.logD("AppReviewManager", "Rate Dialog: Do not show! Rate dialog was shown less than 90 days ago.")
                 return false
             }
 
@@ -104,10 +104,10 @@ class AppReviewManager: AppReviewManaging {
     }
 
     /// Step 2
-    /// User used at least 1 gb
-    /// - Returns: If user used soem amount of data that will be enough for rating
+    /// User used at least 50 MB
+    /// - Returns: If user used some amount of data that will be enough for rating
     private func checkUsageBandwithStatus(session: SessionModel) -> Bool {
-        guard session.getDataUsedInMB() >= 1024 else {
+        guard session.getDataUsedInMB() >= 50 else {
             return false
         }
 
@@ -115,11 +115,11 @@ class AppReviewManager: AppReviewManaging {
     }
 
     /// Step 3
-    /// User first time logged in more than 2 days ago (not registered)
-    /// - Returns: If user is older than 2 days old
+    /// User first time logged in more than 1 day ago (not registered)
+    /// - Returns: If user is older than 1 day old
     private func checkLoggedStatus() -> Bool {
-        guard daysSinceLogin() >= 2 else {
-            logger.logD("AppReviewManager", "Rate Dialog: Do not show! It has been less than 2 days since first time login")
+        guard daysSinceLogin() >= 1 else {
+            logger.logD("AppReviewManager", "Rate Dialog: Do not show! It has been less than 1 day since first time login")
             return false
         }
 
