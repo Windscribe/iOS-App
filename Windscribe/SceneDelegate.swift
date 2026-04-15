@@ -9,7 +9,7 @@
 import Swinject
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
@@ -17,6 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var windowSetupService: WindowSetupService = Assembler.resolve(WindowSetupService.self)
     private lazy var lifecycleHandler: SceneLifecycleHandler = Assembler.resolve(SceneLifecycleHandler.self)
     private lazy var actionHandler: SceneActionHandler = Assembler.resolve(SceneActionHandler.self)
+    private lazy var pushNotificationManager: PushNotificationManager = Assembler.resolve(PushNotificationManager.self)
+    private lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
 
     func scene(_ scene: UIScene,
                willConnectTo session: UISceneSession,
@@ -40,6 +42,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         windowProvider.sceneWindow = window
         windowSetupService.configureWindow(window)
+        UNUserNotificationCenter.current().delegate = self
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -76,5 +79,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                      completionHandler: @escaping (Bool) -> Void) {
         actionHandler.handleShortcutItem(shortcutItem)
         completionHandler(true)
+    }
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        logger.logI("SceneDelegate", "Push notification tapped [didReceive].")
+        if let userInfo = response.notification.request.content.userInfo as? [String: AnyObject] {
+            logger.logD("SceneDelegate", "Processing tapped notification payload: \(userInfo)")
+            pushNotificationManager.addPushNotification(
+                notificationPayload: PushNotificationPayload(userInfo: userInfo))
+        }
+        completionHandler()
+    }
+
+    func userNotificationCenter(_: UNUserNotificationCenter,
+                                willPresent response: UNNotification,
+                                withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        logger.logI("SceneDelegate", "Push notification received [willPresent].")
+        if let userInfo = response.request.content.userInfo as? [String: AnyObject] {
+            logger.logD("SceneDelegate", "Push notification received in foreground, handling silent actions: \(userInfo)")
+            pushNotificationManager.handleSilentPushNotificationActions(
+                payload: PushNotificationPayload(userInfo: userInfo))
+        }
+        withCompletionHandler([.banner, .list, .sound, .badge])
     }
 }

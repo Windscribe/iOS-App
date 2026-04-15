@@ -164,9 +164,10 @@ extension MainViewController {
             .store(in: &cancellables)
 
         viewModel.promoPayload
-            .removeDuplicates()
+            .compactMap { $0 }
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
             .sink { [weak self] payload in
-                guard let self = self, let payload = payload else { return }
+                guard let self = self else { return }
                 self.logger.logD("MainViewController", "Showing upgrade view with payload: \(payload.description)")
                 self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
             }
