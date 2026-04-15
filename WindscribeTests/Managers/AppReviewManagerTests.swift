@@ -66,7 +66,7 @@ class AppReviewManagerTests: XCTestCase {
         let mockSession = MockSession()
         mockSession.configureLists()
         mockSession.status = 1
-        mockSession.trafficUsed = 500 * 1024 * 1024 // 500MB in bytes
+        mockSession.trafficUsed = 30 * 1024 * 1024 // 30MB in bytes (below 50MB threshold)
 
         mockPreferences.mockLoginDate = Date().addingTimeInterval(-3 * 24 * 60 * 60)
         mockPreferences.mockLastReviewDate = Date().addingTimeInterval(-190 * 24 * 60 * 60)
