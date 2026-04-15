@@ -29,6 +29,7 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
     private let vpnStateRepository: VPNStateRepository
     private let emergencyRepository: EmergencyRepository
     private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let alertManager: AlertManager
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
     private var ovpnInfoList: [OpenVPNConnectionInfo] = []
@@ -36,11 +37,13 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
     init(vpnStateRepository: VPNStateRepository,
          emergencyRepository: EmergencyRepository,
          lookAndFeelRepository: LookAndFeelRepositoryType,
+         alertManager: AlertManager,
          logger: FileLogger) {
         self.vpnStateRepository = vpnStateRepository
         self.emergencyRepository = emergencyRepository
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
+        self.alertManager = alertManager
 
         bind()
         observeVPNStateChanges()
@@ -82,6 +85,11 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
     }
 
     func connectButtonTapped() {
+
+#if STAGING
+        alertManager.showSimpleAlert(
+            viewController: nil, title: "Staging", message: "No Emergency Connect in Staging", buttonText: TextsAsset.okay)
+#else
         guard connectionState != .disconnecting else { return }
 
         if connectionState == .connected || connectionState == .connecting {
@@ -99,6 +107,7 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
                 self.connect(using: config)
             }
         }
+#endif
     }
 
     private func connect(using ovpnInfoList: [OpenVPNConnectionInfo]) {
