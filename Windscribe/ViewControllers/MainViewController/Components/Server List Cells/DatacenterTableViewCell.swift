@@ -60,7 +60,7 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
         self.countryCode = countryCode
     }
 
-    override var isSignalVisible: Bool { !isDisabled }
+    override var isSignalVisible: Bool { !(isDisabled || displayingDatacenter?.servers.count == 0) }
     override var isDisabled: Bool {
         guard let displayingDatacenter else { return true }
         return displayingDatacenter.isUnderMantainance
