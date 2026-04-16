@@ -21,7 +21,7 @@ enum TextsAsset {
     }
 
     static var login: String {
-        return "Login".localized
+        return "Log In".localized
     }
 
     static var get10GbAMonth: String {
@@ -1927,7 +1927,7 @@ enum TextsAsset {
         }
 
         static var login: String {
-            return "Login".localized
+            return "Log In".localized
         }
 
         static var connectionFault: String {

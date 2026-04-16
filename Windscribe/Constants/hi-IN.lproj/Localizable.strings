@@ -96,7 +96,7 @@
 "The username and password combination is wrong." = "उपयोगकर्ता नाम और पासवर्ड का संयोजन गलत है।";
 "Please login with your username, not your email" = "अपने ईमेल के बजाय अपने उपयोगकर्ता नाम के साथ लॉग इन करें";
 "Loading" = "लोड हो रहा है";
-"Login" = "लॉग इन करें";
+"Log In" = "लॉग इन करें";
 "Get 10GB/ Mo" = "10 जीबी / महीना प्राप्त करें";
 "10GB/ Mo" = "10 जीबी / महीना";
 "Continue without account" = "बिना खाते के जारी रखें";
