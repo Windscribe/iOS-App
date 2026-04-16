@@ -15,7 +15,7 @@ enum Links {
     static let portForwarding = "myaccount#portforwards"
     static let staticIPs = "staticips"
     static let terms = "terms"
-    static let knowledge = "support/knowledgebase"
+    static let knowledge = "knowledge-base"
     static let garry = "support?garry=1"
     static let reddit = "https://www.reddit.com/r/Windscribe/"
     static let discord = "https://discord.com/invite/vpn"
