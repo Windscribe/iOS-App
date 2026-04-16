@@ -211,6 +211,8 @@ private extension LoginView {
     var hashedContent: some View {
         VStack(alignment: .leading, spacing: 20) {
             hashField
+            twoFactorToggle
+            twoFactorField
             errorDisplayView
             continueButton
         }
@@ -411,9 +413,9 @@ private extension LoginView {
             }, label: {
                 Image(ImagesAsset.chevronDown)
             })
-            .disabled(focusedField == .accountHash
-                      || (viewModel.show2FAField && focusedField == .twoFactorCode)
-                      || (!viewModel.show2FAField && focusedField == .password))
+            .disabled((!viewModel.show2FAField && focusedField == .accountHash)
+                      || (!viewModel.show2FAField && focusedField == .password)
+                      || (viewModel.show2FAField && focusedField == .twoFactorCode))
 
             Spacer()
 
@@ -437,7 +439,9 @@ private extension LoginView {
                 if viewModel.show2FAField { fields.append(.twoFactorCode) }
                 return fields
             case .hashed:
-                return [.accountHash]
+                var fields: [Field] = [.accountHash]
+                if viewModel.show2FAField { fields.append(.twoFactorCode) }
+                return fields
             }
         }()
 
