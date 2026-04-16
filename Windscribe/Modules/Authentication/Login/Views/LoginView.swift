@@ -368,7 +368,7 @@ private extension LoginView {
     @ViewBuilder
     var continueButton: some View {
         AuthActionButton(
-            title: TextsAsset.continue,
+            title: TextsAsset.login,
             isEnabled: viewModel.isContinueButtonEnabled,
             isLoading: viewModel.showLoadingView
         ) {
