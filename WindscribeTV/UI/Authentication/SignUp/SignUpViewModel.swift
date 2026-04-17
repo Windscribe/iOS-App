@@ -349,8 +349,9 @@ class SignUpViewModelImpl: SignUpViewModel {
                 try await userDataRepository.prepareUserData()
 
                 logger.logD("SignUpViewModelImpl", "User data is ready")
+                let wasEmergencyConnected = emergencyConnectRepository.isConnected()
                 emergencyConnectRepository.cleansEmergencyConfigs()
-                if emergencyConnectRepository.isConnected() == true {
+                if wasEmergencyConnected {
                     disconnectFromEmergencyConnect()
                 } else {
                     showLoadingView.send(false)
