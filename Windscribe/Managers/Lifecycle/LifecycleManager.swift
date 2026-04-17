@@ -130,7 +130,8 @@ class LifecycleManager: LifecycleManagerType {
     }
 
     private func disconnectToUpdateSession() async {
-        if preferences.getDisconnectReason() != .unknown {
+        let error = await configManager.getGeneralConnectError()
+        if preferences.getDisconnectReason() != .unknown || error == .authFailure {
             logger.logI("LifecycleManager", "Disconencting due to disconnect reason. \(preferences.getDisconnectReason())")
             await configManager.reloadManagers()
             await vpnManager.resetProfiles()
