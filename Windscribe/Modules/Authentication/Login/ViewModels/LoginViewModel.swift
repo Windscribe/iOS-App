@@ -429,9 +429,10 @@ class LoginViewModelImpl: LoginViewModel {
                 try await userDataRepository.prepareUserData()
 
                 logger.logI("LoginViewModel", "User data is ready")
+                let wasEmergencyConnected = emergencyConnectRepository.isConnected()
                 emergencyConnectRepository.cleansEmergencyConfigs()
 
-                if emergencyConnectRepository.isConnected() == true {
+                if wasEmergencyConnected {
                     logger.logI("LoginViewModel", "Disconnecting emergency connect.")
                     disconnectFromEmergencyConnect()
                 } else {

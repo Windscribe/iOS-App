@@ -485,9 +485,10 @@ class SignUpViewModelImpl: SignUpViewModel {
             do {
                 try await userDataRepository.prepareUserData()
 
+                let wasEmergencyConnected = emergencyConnectRepository.isConnected()
                 self.emergencyConnectRepository.cleansEmergencyConfigs()
 
-                if emergencyConnectRepository.isConnected() == true {
+                if wasEmergencyConnected {
                     disconnectFromEmergencyConnect()
                 } else {
                     routeTo.send(.main)
