@@ -626,7 +626,7 @@ extension ConnectionViewModel {
         }
 
         if connectedState.value.state != state {
-            playSound(for: state)
+            playSound(for: state, previousState: connectedState.value.state)
         }
 
         connectedState.send(ConnectionStateInfo(state: state,
@@ -650,8 +650,9 @@ extension ConnectionViewModel {
         return connectedState.value.state == .connected
     }
 
-    private func playSound(for state: ConnectionState) {
-        if state == .connected {
+    private func playSound(for state: ConnectionState, previousState: ConnectionState? = nil) {
+        // checking if previous state is testing or connecting helps distinction from connected state on app launch
+        if state == .connected, let previousState = previousState, previousState == .testing ||  previousState == .connecting {
             customSoundPlaybackManager.playSound(for: .connect)
         } else if state == .disconnected {
             customSoundPlaybackManager.playSound(for: .disconnect)
