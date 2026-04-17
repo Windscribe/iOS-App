@@ -25,8 +25,14 @@ class ConnectivityManagerImpl: ConnectivityManager {
     let network = CurrentValueSubject<AppNetwork, Never>(AppNetwork(.disconnected))
     private let monitor = NWPathMonitor()
     private var lastEvent: AppNetwork?
-    private var debounceTimer: Timer?
     private var lastValidNetworkName: String?
+
+    /// Debounces the connected → not-connected edge to absorb the brief
+    /// `.unsatisfied` gap that iOS reports during a Wi-Fi SSID handoff.
+    /// A real disconnect still propagates once the timer fires; a transient
+    /// blip is superseded by the next emit and never reaches downstream.
+    private static let connectedToNotConnectedDebounce: TimeInterval = 1.5
+    private var pendingEmit: DispatchWorkItem?
 
     init(logger: FileLogger,
          bridgeAPI: WSNetBridgeAPIType) {
@@ -77,17 +83,43 @@ class ConnectivityManagerImpl: ConnectivityManager {
                 name: networkName,
                 isVPN: self.isVPN(path: path)
             )
-            if lastEvent != appNetwork {
-                await MainActor.run {
-                    logger.logD("Connectivity",  appNetwork.description)
-                    network.send(appNetwork)
-                    let isConnected = appNetwork.status == .connected
-                    WSNet.instance().setConnectivityState(isConnected)
-                    NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
-                }
+            await MainActor.run {
+                self.scheduleEmit(appNetwork)
             }
-            lastEvent = appNetwork
         }
+    }
+
+    @MainActor
+    private func scheduleEmit(_ appNetwork: AppNetwork) {
+        pendingEmit?.cancel()
+        pendingEmit = nil
+        guard lastEvent != appNetwork else { return }
+
+        let wasConnected = lastEvent?.status == .connected
+        if appNetwork.status == .connected || !wasConnected {
+            emit(appNetwork)
+            return
+        }
+
+        let work = DispatchWorkItem { [weak self] in
+            self?.emit(appNetwork)
+        }
+        pendingEmit = work
+        
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + Self.connectedToNotConnectedDebounce,
+            execute: work
+        )
+    }
+
+    @MainActor
+    private func emit(_ appNetwork: AppNetwork) {
+        guard lastEvent != appNetwork else { return }
+        lastEvent = appNetwork
+        logger.logD("Connectivity", appNetwork.description)
+        network.send(appNetwork)
+        WSNet.instance().setConnectivityState(appNetwork.status == .connected)
+        NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
     }
 
     func awaitNetwork(maxTime: Double) async throws {
