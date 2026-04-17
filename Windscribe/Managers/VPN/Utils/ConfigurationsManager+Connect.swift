@@ -222,6 +222,20 @@ extension ConfigurationsManager {
         }
     }
 
+    func getGeneralConnectError() async -> VPNConfigurationErrors? {
+        do {
+            guard let allManagers = try? await getAllManagers() else { return nil }
+            for manager in allManagers {
+                try await getConnectError(manager: manager)
+            }
+        } catch {
+            if let nsError = error as? VPNConfigurationErrors {
+            return nsError
+            }
+        }
+        return nil
+    }
+
     private func getConnectError(manager: NEVPNManager) async throws {
         if #available(iOS 16.0, *) {
             do {
