@@ -50,12 +50,12 @@ extension VPNManagerImpl {
     func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType) -> AnyPublisher<VPNConnectionState, Error> {
         logger.logI("VPNConfiguration", "Connecting from ViewModel")
         connectionTaskPublisher?.cancel()
-        self.vpnStateRepository.setLastConnectionType(connectionType)
-        self.vpnStateRepository.vpnInfo.send(VPNConnectionInfo(selectedProtocol: proto.protocolName,
-                                                               selectedPort: proto.portName,
-                                                               status: .connecting,
-                                                               killSwitch: self.vpnStateRepository.vpnInfo.value?.killSwitch ?? false,
-                                                               onDemand: false))
+        vpnStateRepository.setLastConnectionType(connectionType)
+        vpnStateRepository.vpnInfo.send(VPNConnectionInfo(selectedProtocol: proto.protocolName,
+                                                          selectedPort: proto.portName,
+                                                          status: vpnStateRepository.vpnInfo.value?.status ?? .disconnected,
+                                                          killSwitch: self.vpnStateRepository.vpnInfo.value?.killSwitch ?? false,
+                                                          onDemand: false))
 
         return disableKillSwitchIfRequired()
             .flatMap { _ in
