@@ -437,6 +437,7 @@
 		59FC73CF2C514AC300021CD1 /* UserScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = C571C6732C135C3600786DA5 /* UserScope.swift */; };
 		59FC73D12C514AD600021CD1 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */; };
 		59FC73D32C514B0500021CD1 /* AlertManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E927021F26A1400A3F584 /* AlertManagerImpl.swift */; };
+		3FF4243D140342EA94E36948 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		59FC73D42C514B1300021CD1 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
@@ -7867,6 +7868,7 @@
 				C50BB0FC2F3CDEA400D6283B /* ControlPlane.swift in Sources */,
 				C50BB0F22F3CDC4B00D6283B /* TunnelCredentialsManaging.swift in Sources */,
 				F443EA572E0B1F5F00FFC75E /* UIConstants+ErrorTexts.swift in Sources */,
+				3FF4243D140342EA94E36948 /* UIConstants+Text.swift in Sources */,
 				596E60082B8F77EF00D51E20 /* Language.swift in Sources */,
 				1EE640CA2F6976F600C7FB29 /* UIConstants+Fields.swift in Sources */,
 				C50F20832B60B79600266B23 /* APIUtil.swift in Sources */,

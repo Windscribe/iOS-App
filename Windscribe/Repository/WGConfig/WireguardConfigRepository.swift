@@ -66,7 +66,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                 self.wgCrendentials.saveInitResponse(config: config)
                 return
             }
-            let accept = await alertManager.askUser(message: error.description)
+            let accept = await alertManager.askUser(message: error.description, title: TextsAsset.note)
             guard accept else { throw Errors.handled }
 
             let config = try await self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)

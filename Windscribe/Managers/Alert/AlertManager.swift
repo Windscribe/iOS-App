@@ -27,7 +27,7 @@ protocol AlertManager {
                    preferredAction: UIAlertAction) -> UIAlertController?
     func showAlert(title: String, message: String, actions: [UIAlertAction])
     func showAlert(viewController: UIViewController, title: String, message: String, actions: [UIAlertAction])
-    func askUser(message: String) async -> Bool
+    func askUser(message: String, title: String) async -> Bool
     func askPasswordToDeleteAccount() async -> String?
     func askPasswordToDeleteAccount(viewController: UIViewController) async -> String?
 }
