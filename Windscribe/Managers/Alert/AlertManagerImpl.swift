@@ -119,9 +119,9 @@ class AlertManagerImpl: AlertManager {
     }
 
     @MainActor
-    func askUser(message: String) async -> Bool {
+    func askUser(message: String, title: String = TextsAsset.error) async -> Bool {
         return await withCheckedContinuation { continuation in
-            let alert = UIAlertController(title: TextsAsset.error, message: message, preferredStyle: .alert)
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             let positiveAction = UIAlertAction(title: TextsAsset.okay, style: .default, handler: { _ in
                 continuation.resume(returning: true)
             })

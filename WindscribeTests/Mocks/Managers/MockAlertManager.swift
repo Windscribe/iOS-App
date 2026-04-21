@@ -14,7 +14,7 @@ class MockAlertManager: AlertManager {
     var lastMessage: String?
     var userResponse = false
 
-    func askUser(message: String) async -> Bool {
+    func askUser(message: String, title: String = TextsAsset.error) async -> Bool {
         askUserCalled = true
         lastMessage = message
         return userResponse

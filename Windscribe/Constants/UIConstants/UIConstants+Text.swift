@@ -164,6 +164,10 @@ enum TextsAsset {
         return "Error".localized
     }
 
+    static var note: String {
+        return "Note".localized
+    }
+
     static var youWillBothGetTenGb: String {
         return "You will both get an additional 1GB per month when you sign up.".localized
     }
