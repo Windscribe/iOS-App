@@ -105,7 +105,7 @@ class ConnectivityManagerImpl: ConnectivityManager {
             self?.emit(appNetwork)
         }
         pendingEmit = work
-        
+
         DispatchQueue.main.asyncAfter(
             deadline: .now() + Self.connectedToNotConnectedDebounce,
             execute: work
