@@ -209,14 +209,20 @@ extension ConfigurationsManager {
             }
 
             cancelableTask = Task {
-                let config = try? await self.buildConfig(location: locationID,
-                                                         proto: proto,
-                                                         port: port,
-                                                         userSettings: vpnSettings)
-                if !hasResumed {
-                    hasResumed = true
-                    timeoutTask.cancel()
-                    continuation.resume(returning: config)
+                do {
+                    let config = try await self.buildConfig(location: locationID,
+                                                             proto: proto,
+                                                             port: port,
+                                                             userSettings: vpnSettings)
+                    if !hasResumed {
+                        hasResumed = true
+                        timeoutTask.cancel()
+                        continuation.resume(returning: config)
+                    }
+                } catch {
+                    if let error = error as? Errors {
+                        continuation.resume(throwing: error)
+                    }
                 }
             }
         }
