@@ -291,7 +291,7 @@
 "OR" = "أو";
 "Other" = "أخرى";
 "Password" = "كلمة المرور";
-"PLAN" = "الخطة";
+"Plan" = "الخطة";
 "Please check your inbox and junk/spam folder." = "يرجى التحقق من صندوق الوارد الخاص بك ومجلد الرسائل غير المرغوب فيها/ الرسائل المزعجة.";
 "Please confirm your email" = "يُرجى تأكيد بريدك الإلكتروني";
 "Please confirm your email to get 10GB/Mo" = "يرجى تأكيد بريدك الإلكتروني للحصول على 10 جيجابايت/شهر.";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "الإصدار %@ من Windscribe متاح الآن.";
 "Update Now" = "تحديث الآن";
 "Update Later" = "تحديث لاحقاً";
-
 "Copied to Clipboard!" = "تم النسخ إلى الحافظة!";
+"PLAN INFO" = "معلومات الخطة";

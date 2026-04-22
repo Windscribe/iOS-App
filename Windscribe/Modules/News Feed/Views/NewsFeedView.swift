@@ -121,11 +121,7 @@ struct NewsFeedListItem: View {
         )
         .background(
             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(
-                    item.expanded
-                    ? isDarkMode ? Color.newsFeedDetailExpandedBackgroundColor : Color.newsFeedDetailExpandBackgroundColorLight
-                    : isDarkMode ? Color.newsFeedDetailBackgroundColor : Color.newsFeedDetailBackgroundColorLight
-                )
+                .fill(Color.from(.newsFeedBackgroundColor, isDarkMode))
         )
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }

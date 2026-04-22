@@ -291,7 +291,7 @@
 "OR" = "또는";
 "Other" = "기타";
 "Password" = "비밀번호";
-"PLAN" = "플랜";
+"Plan" = "플랜";
 "Please check your inbox and junk/spam folder." = "받은 메일함과 정크/스팸 폴더를 확인하세요.";
 "Please confirm your email" = "이메일을 확인하세요";
 "Please confirm your email to get 10GB/Mo" = "월 10GB를 받으려면 이메일을 확인하세요.";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe 버전 %@을 사용할 수 있습니다.";
 "Update Now" = "지금 업데이트";
 "Update Later" = "나중에 업데이트";
-
+"PLAN INFO" = "요금제 정보";
 "Copied to Clipboard!" = "클립보드에 복사됨!";

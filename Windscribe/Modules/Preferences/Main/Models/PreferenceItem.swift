@@ -92,8 +92,15 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
 
     func tintColor(_ isDarkMode: Bool) -> Color {
         switch self {
-        case .logout: .orangeYellow
+        case .logout: .deepOrange
         default: .from(.titleColor, isDarkMode)
+        }
+    }
+
+    func backgroundTintColor(_ isDarkMode: Bool) -> Color {
+        switch self {
+        case .logout:  tintColor(isDarkMode).opacity(0.15)
+        default: .from(.preferencesBackgroundColor, isDarkMode)
         }
     }
 }

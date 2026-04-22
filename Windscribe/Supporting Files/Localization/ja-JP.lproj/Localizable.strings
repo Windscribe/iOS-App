@@ -291,7 +291,7 @@
 "OR" = "又は";
 "Other" = "その他";
 "Password" = "パスワード";
-"PLAN" = "プラン";
+"Plan" = "プラン";
 "Please check your inbox and junk/spam folder." = "受信トレイと迷惑メール/スパムフォルダをご確認ください。";
 "Please confirm your email" = "メールアドレスを確認してください";
 "Please confirm your email to get 10GB/Mo" = "10GB/月を取得するにはメールアドレスを確認してください。";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe バージョン %@ が利用可能です。";
 "Update Now" = "今すぐアップデート";
 "Update Later" = "後でアップデート";
-
+"PLAN INFO" = "プラン情報";
 "Copied to Clipboard!" = "クリップボードにコピーしました！";

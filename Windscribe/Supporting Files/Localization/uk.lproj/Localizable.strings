@@ -291,7 +291,7 @@
 "OR" = "АБО";
 "Other" = "Інше";
 "Password" = "Пароль";
-"PLAN" = "ПЛАН";
+"Plan" = "План";
 "Please check your inbox and junk/spam folder." = "Перевірте вхідні та папку спаму.";
 "Please confirm your email" = "Підтвердьте свою електронну адресу";
 "Please confirm your email to get 10GB/Mo" = "Підтвердьте електронну пошту, щоб отримати 10 ГБ/міс.";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe версії %@ вже доступний.";
 "Update Now" = "Оновити зараз";
 "Update Later" = "Оновити пізніше";
-
+"PLAN INFO" = "ІНФОРМАЦІЯ ПРО ПЛАН";
 "Copied to Clipboard!" = "Скопійовано до буфера обміну!";

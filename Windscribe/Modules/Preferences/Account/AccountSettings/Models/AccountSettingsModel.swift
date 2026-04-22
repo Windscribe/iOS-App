@@ -10,6 +10,7 @@ import Foundation
 
 enum AccountRowType: Hashable {
     case textRow(title: String, value: String)
+    case textImageRow(title: String, imageName: String)
     case confirmEmail(email: String)
     case button(title: String)
     case navigation(title: String, subtitle: String?)
@@ -23,7 +24,7 @@ enum AccountSectionType: String {
     var title: String {
         switch self {
         case .info: return TextsAsset.Account.info
-        case .plan: return TextsAsset.Account.plan
+        case .plan: return TextsAsset.Account.planInfo
         case .other: return TextsAsset.Account.other
         }
     }
@@ -52,6 +53,8 @@ struct AccountRowModel: Identifiable, Hashable {
             return title
         case .navigation(let title, _):
             return title
+        case .textImageRow(title: let title, _):
+            return title
         }
     }
 
@@ -63,6 +66,14 @@ struct AccountRowModel: Identifiable, Hashable {
             return email
         case .navigation(_, let subtitle):
             return subtitle
+        default: return nil
+        }
+    }
+
+    var image: String? {
+        switch type {
+        case .textImageRow(_, imageName: let image):
+            return image
         default: return nil
         }
     }

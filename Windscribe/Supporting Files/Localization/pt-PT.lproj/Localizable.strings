@@ -291,7 +291,7 @@
 "OR" = "OU";
 "Other" = "Outro";
 "Password" = "Palavra-passe";
-"PLAN" = "PLANO";
+"Plan" = "Plano";
 "Please check your inbox and junk/spam folder." = "Veja na sua caixa de entrada e na pasta de lixo/spam.";
 "Please confirm your email" = "Confirme o seu e-mail";
 "Please confirm your email to get 10GB/Mo" = "Por favor, confirme o seu e-mail para obter 10GB/mês.";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe versão %@ já está disponível.";
 "Update Now" = "Atualizar agora";
 "Update Later" = "Atualizar depois";
-
+"PLAN INFO" = "INFORMAÇÕES DO PLANO";
 "Copied to Clipboard!" = "Copiado para a área de transferência!";

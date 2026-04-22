@@ -291,7 +291,7 @@
 "OR" = "VEYA";
 "Other" = "Diğer";
 "Password" = "Şifre";
-"PLAN" = "PLAN";
+"Plan" = "Plan";
 "Please check your inbox and junk/spam folder." = "Lütfen gelen kutunuzu ve junk/spam klasörünü kontrol edin.";
 "Please confirm your email" = "Lütfen emaili doğrulayın";
 "Please confirm your email to get 10GB/Mo" = "Aylık 10GB almak için lütfen e-postanızı onaylayın.";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe sürüm %@ şimdi mevcut.";
 "Update Now" = "Şimdi Güncelle";
 "Update Later" = "Daha Sonra Güncelle";
-
+"PLAN INFO" = "PLAN BİLGİSİ";
 "Copied to Clipboard!" = "Panoya kopyalandı!";

@@ -34,25 +34,25 @@ struct NewsFeedDetailView: View {
                     HStack(spacing: 16) {
                         Text(item.title)
                             .font(.medium(.callout))
-                            .foregroundColor(.from(.titleColor, isDarkMode).opacity(item.expanded ? 1 : 0.8))
+                            .foregroundColor(.from(.titleColor, isDarkMode))
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                         Image(ImagesAsset.chevronDown)
-                            .foregroundColor(item.expanded ? .from(.iconColor, isDarkMode) : .gray.opacity(0.8))
+                            .foregroundColor(.from(.iconColor, isDarkMode).opacity(item.expanded ? 1 : 0.3))
                             .rotationEffect(.degrees(showRotation ? 180 : 0))
                             .animation(.easeInOut(duration: 0.3), value: showRotation)
                     }
 
                     Text(DateFormatter.customNoticeFormat.string(from: item.date))
                         .font(.regular(.footnote))
-                        .foregroundColor(.gray.opacity(0.8))
+                        .foregroundColor(.from(.timeColor, isDarkMode))
 
                     // Description (Hidden for Collapsed State)
                     if item.expanded {
                         Text(item.description)
                             .font(.regular(.callout))
-                            .foregroundColor(.from(.titleColor, isDarkMode).opacity(item.expanded ? 1 : 0.8))
+                            .foregroundColor(.from(.titleColor, isDarkMode))
                             .padding(.top, 4)
                     }
 
@@ -62,12 +62,12 @@ struct NewsFeedDetailView: View {
                                 didTapAction(actionLink)
                             }, label: {
                                 Text(actionLink.actionText)
-                                    .foregroundColor(isDarkMode ? .newsFeedButtonActionColor : .green)
-                                    .font(.regular(.footnote))
+                                    .foregroundColor(Color.newsFeedButtonActionColor)
+                                    .font(.medium(.footnote))
                                     .frame(maxWidth: .infinity)
                                     .padding()
                                     .background(
-                                        Color.newsFeedButtonActionColor.opacity(isDarkMode ? 0.05: 0.35)
+                                        Color.newsFeedButtonActionBackgroundColor.opacity(0.15)
                                     )
                                     .clipShape(Capsule())
                             }

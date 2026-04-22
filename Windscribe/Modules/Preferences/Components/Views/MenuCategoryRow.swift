@@ -36,16 +36,18 @@ struct MenuCategoryRow: View {
                 if let actionImageName = item.actionImageName {
                     Text(title)
                         .foregroundColor(item.tintColor(isDarkMode))
-                        .font(.regular(.callout))
+                        .font(.medium(.callout))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Image(actionImageName)
+                        .resizable()
                         .renderingMode(.template)
-                        .frame(width: 16, height: 16)
-                        .foregroundColor(item.tintColor(isDarkMode).opacity(0.4))
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 13, height: 13)
+                        .foregroundColor(item.actionTintColor(isDarkMode))
                 } else {
                     Text(title)
                         .foregroundColor(item.tintColor(isDarkMode))
-                        .font(.regular(.callout))
+                        .font(.medium(.callout))
                 }
             }
             .padding(.horizontal, 14)

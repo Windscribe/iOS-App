@@ -15,11 +15,17 @@ protocol MenuCategoryRowType: Hashable {
     var actionImageName: String? { get }
 
     func tintColor(_ isDarkMode: Bool) -> Color
+    func backgroundTintColor(_ isDarkMode: Bool) -> Color
+    func actionTintColor(_ isDarkMode: Bool) -> Color
 }
 
 extension MenuCategoryRowType {
     func backgroundTintColor(_ isDarkMode: Bool) -> Color {
         tintColor(isDarkMode).opacity( isDarkMode ? 0.05 : 0.1)
+    }
+
+    func actionTintColor(_ isDarkMode: Bool) -> Color {
+        tintColor(isDarkMode).opacity(0.3)
     }
 }
 

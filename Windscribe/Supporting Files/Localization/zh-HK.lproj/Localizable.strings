@@ -291,7 +291,7 @@
 "OR" = "或";
 "Other" = "其他";
 "Password" = "密碼";
-"PLAN" = "計劃";
+"Plan" = "計劃";
 "Please check your inbox and junk/spam folder." = "請檢查收件箱和垃圾郵件資料夾。";
 "Please confirm your email" = "請確認你的電郵";
 "Please confirm your email to get 10GB/Mo" = "請確認您的電郵地址以獲取每月 10GB。";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe 版本 %@ 現已可用。";
 "Update Now" = "立即更新";
 "Update Later" = "稍後更新";
-
+"PLAN INFO" = "套餐資訊";
 "Copied to Clipboard!" = "已複製到剪貼簿！";

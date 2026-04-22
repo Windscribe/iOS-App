@@ -177,15 +177,23 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     private func planRows(from session: SessionModel) -> [AccountRowModel] {
         var planRows: [AccountRowModel] = []
 
-        planRows.append(.init(
-            type: .textRow(
-                title: session.isUserPro
-                    ? TextsAsset.UpgradeView.unlimitedData
-                    : "\(session.getDataMax())/\(TextsAsset.UpgradeView.month)",
-                value: getUserTypeDisplayText(from: session)
-            ),
-            action: nil
-        ))
+        if session.isUserPro {
+            planRows.append(.init(
+                type: .textImageRow(
+                    title: TextsAsset.Account.plan,
+                    imageName: ImagesAsset.proUserIcon
+                ),
+                action: nil
+            ))
+        } else {
+            planRows.append(.init(
+                type: .textRow(
+                    title: TextsAsset.Account.plan,
+                    value: getUserTypeDisplayText(from: session)
+                ),
+                action: nil
+            ))
+        }
 
         planRows.append(.init(
             type: .textRow(
@@ -197,7 +205,10 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
 
         if !session.isUserPro {
             planRows.append(.init(
-                type: .textRow(title: TextsAsset.Account.dataLeft, value: session.getDataLeft()),
+                type: .textRow(
+                    title: TextsAsset.Account.dataLeft,
+                    value: "\(session.getDataLeft())/\(session.getDataMax())"
+                ),
                 action: nil
             ))
         }

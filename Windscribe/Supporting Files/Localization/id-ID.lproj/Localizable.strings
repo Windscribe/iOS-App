@@ -291,7 +291,7 @@
 "OR" = "ATAU";
 "Other" = "Lainnya";
 "Password" = "Kata sandi";
-"PLAN" = "PAKET";
+"Plan" = "Paket";
 "Please check your inbox and junk/spam folder." = "Periksa kotak masuk Anda serta folder sampah/spam.";
 "Please confirm your email" = "Harap konfirmasikan email Anda";
 "Please confirm your email to get 10GB/Mo" = "Silakan konfirmasi email Anda untuk mendapatkan 10GB/Bulan.";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe versi %@ sekarang tersedia.";
 "Update Now" = "Perbarui Sekarang";
 "Update Later" = "Perbarui Nanti";
-
+"PLAN INFO" = "INFO PAKET";
 "Copied to Clipboard!" = "Disalin ke Papan Klip!";

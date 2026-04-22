@@ -771,7 +771,7 @@ enum TextsAsset {
         }
 
         static var plan: String {
-            return "PLAN".localized
+            return "Plan".localized
         }
 
         static var expiryDate: String {
@@ -788,6 +788,10 @@ enum TextsAsset {
 
         static var info: String {
             return "ACCOUNT INFO".localized
+        }
+
+        static var planInfo: String {
+            return "PLAN INFO".localized
         }
 
         static var resetPasswordActionTitle: String {

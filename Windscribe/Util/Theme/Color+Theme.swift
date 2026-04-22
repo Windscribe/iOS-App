@@ -25,6 +25,9 @@ enum MenuColorsType {
     case dismissButtonTextColor
     case actionButtonBackgroundColor
     case actionButtonTextColor
+    case preferencesBackgroundColor
+    case newsFeedBackgroundColor
+    case timeColor
 }
 
 enum MainColorsType {
@@ -45,10 +48,10 @@ extension Color {
     static func from(_ colorType: MenuColorsType,_ isDarkMode: Bool) -> Color {
         switch colorType {
         case .backgroundColor:
-            return isDarkMode ? .white.opacity(0.05) : .nightBlue.opacity(0.1)
+            return (isDarkMode ? Color.white : Color.backgroundBlue).opacity(0.05)
         case .iconColor,
                 .titleColor:
-            return isDarkMode ? .white : .nightBlue
+            return isDarkMode ? .white : .black
         case .separatorColor,
                 .screenBackgroundColor,
                 .actionBackgroundColor:
@@ -77,6 +80,12 @@ extension Color {
             return .loginRegisterEnabledButtonColor
         case .actionButtonTextColor:
             return .black
+        case .preferencesBackgroundColor:
+            return (isDarkMode ? Color.white : Color.backgroundBlue).opacity(0.05)
+        case .newsFeedBackgroundColor:
+            return (isDarkMode ? Color.white : Color.black).opacity(0.05)
+        case .timeColor:
+            return (isDarkMode ? Color.infoGrey : Color.black.opacity(0.6))
         }
     }
 }

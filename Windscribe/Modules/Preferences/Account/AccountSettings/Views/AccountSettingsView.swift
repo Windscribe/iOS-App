@@ -211,11 +211,11 @@ struct AccountSettingsView: View {
                     showUpgradeModal = true
                 }, label: {
                     Text(TextsAsset.Account.upgradeToProActionTitle)
-                        .foregroundColor(.actionGreen)
+                        .foregroundColor(.actionBlue)
                         .font(.medium(.callout))
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(14)
-                        .background(Color.actionGreen.opacity(0.20))
+                        .background(Color.actionBlue.opacity(0.15))
                         .cornerRadius(12)
                         .padding(.horizontal, 16)
                 })
@@ -338,8 +338,8 @@ struct AccountSectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(section.type.title.uppercased())
-                .font(.caption)
-                .foregroundColor(.from(.infoColor, isDarkMode))
+                .font(.semiBold(.caption1))
+                .foregroundColor(.from(.timeColor, isDarkMode))
                 .padding(.horizontal, 16)
                 .padding(.bottom, 8)
 
@@ -376,6 +376,22 @@ struct AccountSectionView: View {
                 .background(Color.from(.backgroundColor, isDarkMode))
                 .cornerRadius(12)
                 .padding(.horizontal, 16)
+            }
+
+            if accountStatus == .unverified {
+                Button(action: {
+                    handleRowAction(.resendEmail)
+                }, label: {
+                    Text(TextsAsset.EmailView.resendEmail)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
+                        .font(.medium(.callout))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(14)
+                        .background(Color.from(.backgroundColor, isDarkMode))
+                        .cornerRadius(12)
+                        .padding(.horizontal, 16)
+                })
+                .buttonStyle(PlainButtonStyle())
             }
         }
     }
@@ -464,6 +480,11 @@ struct AccountRowView: View {
                             .foregroundColor(.from(.infoColor, isDarkMode))
                     }
                 }
+
+                if let image = row.image {
+                    Image(image)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
+                }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
@@ -483,39 +504,21 @@ struct AccountRowView: View {
                     .foregroundColor(.from(.infoColor, isDarkMode))
                     .font(.regular(.footnote))
                     .padding(12)
-                    .background(Color.from(.backgroundColor, isDarkMode))
-                    .cornerRadius(10)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .padding(.bottom, 8)
             }
 
             if row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) {
-                Button(action: {
-                    actionHandler(.resendEmail)
-                }, label: {
-                    HStack {
-                        Text(TextsAsset.EmailView.infoPro)
-                            .foregroundColor(.from(.dark, isDarkMode))
-                            .font(.medium(.footnote))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                        Text(TextsAsset.Account.resend)
-                            .font(.bold(.footnote))
-                            .foregroundColor(.from(.dark, isDarkMode))
-                    }
-                    .padding(12)
-                    .background(Color.orangeYellow)
-                    .cornerRadius(8)
-                    .padding(.horizontal, 8)
-                    .padding(.bottom, 12)
-                })
-                .buttonStyle(PlainButtonStyle())
+                Text(TextsAsset.EmailView.infoPro)
+                    .foregroundColor(Color.orangeYellow)
+                    .font(.medium(.footnote))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
             }
 
             if showDivider {
-                Divider()
-                    .background(Color.from(.separatorColor, isDarkMode))
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(Color.from(.screenBackgroundColor, isDarkMode))
             }
         }
         .contentShape(Rectangle())

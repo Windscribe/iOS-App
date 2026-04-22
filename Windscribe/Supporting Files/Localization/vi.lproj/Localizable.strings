@@ -291,7 +291,7 @@
 "OR" = "HOẶC";
 "Other" = "Khác";
 "Password" = "Mật khẩu";
-"PLAN" = "GÓI";
+"Plan" = "Gói";
 "Please check your inbox and junk/spam folder." = "Vui lòng kiểm tra hộp thư đến và thư mục rác/thư rác.";
 "Please confirm your email" = "Vui lòng xác nhận email của bạn";
 "Please confirm your email to get 10GB/Mo" = "Vui lòng xác nhận email để nhận 10GB/tháng.";
@@ -475,5 +475,5 @@
 "Windscribe version %@ is now available." = "Windscribe phiên bản %@ hiện đã có sẵn.";
 "Update Now" = "Cập nhật ngay";
 "Update Later" = "Cập nhật sau";
-
+"PLAN INFO" = "THÔNG TIN GÓI";
 "Copied to Clipboard!" = "Đã sao chép vào bộ nhớ tạm!";

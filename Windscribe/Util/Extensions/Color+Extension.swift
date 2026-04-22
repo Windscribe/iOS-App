@@ -112,12 +112,8 @@ extension UIColor {
 
 extension Color {
     // News Feed
-    static let newsFeedButtonActionColor = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
-    static let newsFeedDetailExpandedBackgroundColor = Color(red: 32 / 255.0, green: 34 / 255.0, blue: 40 / 255.0)
-    static let newsFeedDetailBackgroundColor = Color(red: 24 / 255.0, green: 27 / 255.0, blue: 33 / 255.0)
-    static let newsFeedDetailBackgroundColorLight = Color(red: 245 / 255.0, green: 246 / 255.0, blue: 250 / 255.0)
-    static let newsFeedDetailExpandBackgroundColorLight = Color(red: 232 / 255.0, green: 233 / 255.0, blue: 238 / 255.0)
-    static let newsFeedSeperatorColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
+    static let newsFeedButtonActionColor = Color(red: 0 / 255.0, green: 173 / 255.0, blue: 54 / 255.0)
+    static let newsFeedButtonActionBackgroundColor = Color(red: 0 / 255.0, green: 154 / 255.0, blue: 48 / 255.0)
 
     // Welcome
     static let welcomeButtonTextColor = Color(red: 131 / 255.0, green: 141 / 255.0, blue: 155 / 255.0)
@@ -149,14 +145,17 @@ extension Color {
     static let infoGrey = Color(red: 114 / 255.0, green: 121 / 255.0, blue: 129 / 255.0)
     static let eletricBlue = Color(red: 59 / 255.0, green: 255 / 255.0, blue: 239 / 255.0)
     static let learnBlue = Color(red: 93 / 255.0, green: 135 / 255.0, blue: 208 / 255.0)
-    static let orangeYellow = Color(red: 254 / 255.0, green: 188 / 255.0, blue: 46 / 255.0)
+    static let orangeYellow = Color(red: 227 / 255.0, green: 144 / 255.0, blue: 0 / 255.0)
     static let actionGreen = Color(red: 59 / 255, green: 255 / 255, blue: 239 / 255)
+    static let actionBlue = Color(red: 0 / 255, green: 186 / 255, blue: 203 / 255)
     static let positiveGreen = Color(red: 28 / 255, green: 223 / 255, blue: 142 / 255)
     static let darkInfoColor = Color(red: 0.50, green: 0.53, blue: 0.56)
     static let grayishDarkColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
     static let alertDarkBackground = Color(red: 8 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
     static let deepSlate = Color(red: 15 / 255.0, green: 18 / 255.0, blue: 26 / 255.0)
     static let brightBlue = Color(red: 0 / 255.0, green: 106 / 255.0, blue: 255 / 255.0)
+    static let deepOrange = Color(red: 232 / 255.0,  green: 147 / 255.0, blue: 0 / 255.0)
+    static let backgroundBlue = Color(red: 0 / 255.0,  green: 41 / 255.0, blue: 67 / 255.0)
 }
 
 // New Memefication Colors
