@@ -106,3 +106,5 @@ iOSInjectionProject/
 # End of https://www.gitignore.io/api/xcode,swift
 
 .claude/settings.local.json
+!libs/**
+libs/.DS_Store
