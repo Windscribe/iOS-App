@@ -59,7 +59,7 @@ struct DataLeftModel {
         lastReset = sessionModel.lastReset
         locRev = sessionModel.locRev
         locHash = sessionModel.locHash
-        amneziawgConfigId = sessionModel.amneziawgConfigId
+        amneziawgConfigId = sessionModel.inventory?.amneziawgConfigId ?? ""
         setALC(array: sessionModel.alc)
         setSip(array: sessionModel.sipCount.map { SipCount(model: $0)})
     }
@@ -134,6 +134,7 @@ struct ServerInventoryModel: Decodable, Equatable {
     let disabled: [DisabledServerModel]
     let revision: Int64
     let backup: Int
+    let amneziawgConfigId: String
 
     var hasBakcup: Bool { backup == 1 }
 
@@ -143,6 +144,7 @@ struct ServerInventoryModel: Decodable, Equatable {
         case disabled
         case revision
         case backup
+        case amneziawgConfigId = "amneziawg_config_id"
     }
 
     init(from decoder: Decoder) throws {
@@ -152,6 +154,16 @@ struct ServerInventoryModel: Decodable, Equatable {
         disabled = try container.decodeIfPresent([DisabledServerModel].self, forKey: .disabled) ?? []
         revision = try container.decodeIfPresent(Int64.self, forKey: .revision) ?? 0
         backup = (try? container.decodeIfPresent(Int.self, forKey: .backup)) ?? 0
+        amneziawgConfigId = try container.decodeIfPresent(String.self, forKey: .amneziawgConfigId) ?? ""
+    }
+
+    init(amneziawgConfigId: String) {
+        action = ""
+        enabled = []
+        disabled = []
+        revision = 0
+        backup = 1
+        self.amneziawgConfigId = amneziawgConfigId
     }
 }
 
@@ -171,7 +183,6 @@ struct SessionModel: Decodable, Equatable {
     let lastReset: String
     let locRev: Int
     let locHash: String
-    let amneziawgConfigId: String
 
     let alc: [String]
     let sipCount: [SipCountModel]
@@ -243,7 +254,6 @@ struct SessionModel: Decodable, Equatable {
         case alc
         case sip
         case inventory = "server_inventory"
-        case amneziawgConfigId = "amneziawg_config_id"
     }
 
     init(from decoder: Decoder) throws {
@@ -279,7 +289,6 @@ struct SessionModel: Decodable, Equatable {
         }
 
         inventory = try? data.decodeIfPresent(ServerInventoryModel.self, forKey: .inventory)
-        amneziawgConfigId = try data.decodeIfPresent(String.self, forKey: .amneziawgConfigId) ?? ""
     }
 
     init(from: Session) {
@@ -298,12 +307,11 @@ struct SessionModel: Decodable, Equatable {
         lastReset = from.lastReset
         locRev = from.locRev
         locHash = from.locHash
-        amneziawgConfigId = from.amneziawgConfigId
 
         alc = Array(from.alc)
         sipCount = Array(from.sipCount.map { SipCountModel(countNumber: $0.countNumber)})
 
-        inventory = nil
+        inventory = ServerInventoryModel(amneziawgConfigId: from.amneziawgConfigId)
 
         planType = isUserPro ? "1" : "0"
     }
@@ -348,8 +356,7 @@ struct SessionModel: Decodable, Equatable {
         self.locHash = locHash
         self.alc = alc
         self.sipCount = [SipCountModel(countNumber: sipCount)]
-        self.inventory = nil
-        self.amneziawgConfigId = amneziawgConfigId
+        inventory = ServerInventoryModel(amneziawgConfigId: amneziawgConfigId)
     }
 
     func getIsPremium() -> Int {

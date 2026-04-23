@@ -53,7 +53,7 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     func update(session: SessionModel) async {
         localDatabase.saveOldSession()
         localDatabase.saveSession(session: Session(sessionModel: session))
-        antiCensorshipRepository.setSessionWgParameter(withId: session.amneziawgConfigId)
+        antiCensorshipRepository.setSessionWgParameter(withId: session.inventory?.amneziawgConfigId ?? "")
 
         try? await locationListRepository.updateAllIfEmpty()
 
