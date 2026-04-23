@@ -218,9 +218,6 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
 
     private func otherRows(from session: SessionModel) -> [AccountRowModel] {
         let otherRows: [AccountRowModel] = [
-            .init(type: .navigation(title: TextsAsset.voucherCode,
-                                    subtitle: TextsAsset.Account.voucherCodeDescription),
-                  action: .openVoucher),
             .init(type: .navigation(title: TextsAsset.Account.lazyLogin,
                                     subtitle: TextsAsset.Account.lazyLoginDescription),
                   action: .openLazyLogin)
@@ -317,62 +314,6 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
                     self.loadingState = .error(error.localizedDescription)
                     self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.error,
-                        message: self.fetchErrorMessage(from: error),
-                        buttonText: TextsAsset.okay)
-                }
-            }
-        }
-    }
-
-    func verifyVoucher(code: String) {
-        loadingState = .loading(isFullScreen: false)
-
-        Task { [weak self] in
-            guard let self = self else { return }
-            do {
-                let response = try await apiManager.claimVoucherCode(code: code)
-                await MainActor.run {
-                    self.loadingState = .success
-                    if response.isClaimed {
-                        if response.isDiscountCode {
-                            // Discount code - open upgrade view directly
-                            self.showUpgradeWithPromo = code
-                        } else if response.isDirectPlanActivation {
-                            // Direct plan activation - show success and update session
-                            self.alertMessage = AccountSettingsAlertContent(
-                                title: TextsAsset.voucherCode,
-                                message: TextsAsset.Account.voucherCodeSuccessful,
-                                buttonText: TextsAsset.okay)
-                            self.loadSession()
-                        } else {
-                            // Unexpected case: claimed but no discount or plan
-                            self.alertMessage = AccountSettingsAlertContent(
-                                title: TextsAsset.voucherCode,
-                                message: TextsAsset.Account.voucherCodeSuccessful,
-                                buttonText: TextsAsset.okay)
-                        }
-                    } else if response.emailRequired == true {
-                        self.alertMessage = AccountSettingsAlertContent(
-                            title: TextsAsset.voucherCode,
-                            message: TextsAsset.Account.emailRequired,
-                            buttonText: TextsAsset.okay)
-                    } else if response.isUsed {
-                        self.alertMessage = AccountSettingsAlertContent(
-                            title: TextsAsset.voucherCode,
-                            message: TextsAsset.Account.voucherAlreadyMessage,
-                            buttonText: TextsAsset.okay)
-                    } else {
-                        self.alertMessage = AccountSettingsAlertContent(
-                            title: TextsAsset.voucherCode,
-                            message: TextsAsset.Account.invalidVoucherCode,
-                            buttonText: TextsAsset.okay)
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    self.loadingState = .error(error.localizedDescription)
-                    self.alertMessage = AccountSettingsAlertContent(
-                        title: TextsAsset.voucherCode,
                         message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
                 }

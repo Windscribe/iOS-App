@@ -103,14 +103,12 @@ struct AccountSectionModel: Identifiable, Hashable {
 enum AccountRowAction: Hashable {
     case resendEmail
     case cancelAccount
-    case openVoucher
     case openLazyLogin
     case upgradeToPro
 }
 
 enum AccountDialogType: String, Identifiable, CaseIterable {
     case enterPassword
-    case enterVoucher
     case enterLazyLogin
 
     var id: String { rawValue }
@@ -131,7 +129,6 @@ struct AccountSettingsAlertContent: Identifiable {
 }
 
 enum AccountInputDialog: String, Identifiable, CaseIterable {
-    case voucher
     case password
     case lazyLogin
 

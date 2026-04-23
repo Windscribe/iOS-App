@@ -257,8 +257,6 @@ struct AccountSettingsView: View {
 
     private func handleConfirm(dialog selectedDialog: AccountInputDialog?, input: String) {
         switch selectedDialog {
-        case .voucher:
-            viewModel.verifyVoucher(code: input)
         case .password:
             viewModel.confirmCancelAccount(password: input)
         case .lazyLogin:
@@ -277,8 +275,6 @@ struct AccountSettingsView: View {
         }
 
         switch dialog {
-        case .voucher:
-            return TextsAsset.Account.voucherCodeTitle
         case .password:
             return TextsAsset.Account.cancelAccount
         case .lazyLogin:
@@ -292,8 +288,6 @@ struct AccountSettingsView: View {
         }
 
         switch dialog {
-        case .voucher:
-            return TextsAsset.Account.voucherCodeDescription
         case .password:
             return TextsAsset.Account.deleteAccountMessage
         case .lazyLogin:
@@ -307,8 +301,6 @@ struct AccountSettingsView: View {
         }
 
         switch dialog {
-        case .voucher:
-            return TextsAsset.Account.voucherCodeTitle
         case .password:
             return TextsAsset.Account.accountPasswordTitle
         case .lazyLogin:
@@ -410,8 +402,6 @@ struct AccountSectionView: View {
                 accountStatus: accountStatus
             ) { action in
                 switch action {
-                case .openVoucher:
-                    presentDialog(.voucher)
                 case .openLazyLogin:
                     presentDialog(.lazyLogin)
                 case .cancelAccount:
