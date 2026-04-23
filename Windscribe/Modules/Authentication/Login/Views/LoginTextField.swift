@@ -16,6 +16,7 @@ struct LoginTextField: View {
     var secondaryTitle: String?
     var placeholder: String
     var isSecure: Bool = false
+    var showPasswordToggle: Bool = true
     var showError: Bool = false
     var errorMessage: String?
     var showWarningIcon: Bool = false
@@ -80,7 +81,7 @@ struct LoginTextField: View {
                     .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, isDarkMode))
                     .modifier(LoginTextFieldModifiers(placeholder: placeholder, text: text, isDarkMode: isDarkMode, showError: showError))
 
-                    if isSecure {
+                    if isSecure && showPasswordToggle {
                         Button(action: {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 isPasswordVisible.toggle()
