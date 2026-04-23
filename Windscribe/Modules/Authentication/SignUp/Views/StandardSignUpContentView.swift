@@ -157,12 +157,14 @@ private extension StandardSignUpContentView {
         LoginTextField(
             title: "",
             placeholder: TextsAsset.confirmPassword,
-            isSecure: false,
+            isSecure: true,
+            showPasswordToggle: false,
             showError: isConfirmPasswordError,
             errorMessage: confirmPasswordErrorMessage,
             showWarningIcon: isConfirmPasswordError,
             text: $viewModel.confirmPassword,
             isDarkMode: $viewModel.isDarkMode,
+            passwordVisible: $forcePasswordVisible,
             trailingView: AnyView(
                 Button(action: {
                     UIPasteboard.general.string = viewModel.password
