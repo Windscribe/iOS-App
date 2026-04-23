@@ -63,6 +63,7 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
     override var isSignalVisible: Bool { !(isDisabled || displayingDatacenter?.servers.count == 0) }
     override var isDisabled: Bool {
         guard let displayingDatacenter else { return true }
+        guard !isProLocked else { return false }
         return displayingDatacenter.isUnderMantainance
     }
 
