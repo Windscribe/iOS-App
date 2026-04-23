@@ -47,7 +47,7 @@ struct DatacenterModel: Decodable {
     private(set) var pingServer: ServerMachineModel?
 
     var isPremiumOnly: Bool {
-        return statusValue == .isPro
+        return statusValue == .isPro || isPremium == 1
     }
 
     var isUnderMantainance: Bool {
