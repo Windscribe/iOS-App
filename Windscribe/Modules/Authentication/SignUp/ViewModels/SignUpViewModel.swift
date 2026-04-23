@@ -67,7 +67,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     @Published var voucherCode: String = ""
     @Published var referralUsername: String = ""
 
-    @Published var isDarkMode: Bool = false
+    @Published var isDarkMode: Bool = true
     @Published var isPremiumUser: Bool = false
     @Published var selectedTab: AuthTab = .standard
     @Published var isReferralVisible: Bool = false
@@ -156,12 +156,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func bind() {
-        lookAndFeelRepository.isDarkModeSubject
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isDark in
-                self?.isDarkMode = isDark
-            }
-            .store(in: &cancellables)
+        // Auth screens are locked to dark mode.
 
         hashAuthManager.accountHashPublisher
             .receive(on: DispatchQueue.main)

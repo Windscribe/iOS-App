@@ -50,7 +50,7 @@ class LoginViewModelImpl: LoginViewModel {
     @Published var showFileImporter: Bool = false
     @Published var selectedTab: AuthTab = .standard
 
-    @Published var isDarkMode: Bool = false
+    @Published var isDarkMode: Bool = true
     @Published var showLoadingView = false
     @Published var failedState: LoginErrorState?
     @Published var show2FAField = false
@@ -128,12 +128,7 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     private func bind() {
-        lookAndFeelRepository.isDarkModeSubject
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isDark in
-                self?.isDarkMode = isDark
-            }
-            .store(in: &cancellables)
+        // Auth screens are locked to dark mode.
     }
 
     func submitTwoFactorCode(_ code: String) {
