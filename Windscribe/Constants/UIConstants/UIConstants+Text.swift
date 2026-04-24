@@ -851,7 +851,7 @@ enum TextsAsset {
         }
 
         static var lazyLoginDescription: String {
-            return "Enter the code show on your tv screen to Log into Windscribe’s TV app".localized
+            return "Enter the code shown on your tv screen to Log into Windscribe’s TV app".localized
         }
 
         static var lazyLoginSuccess: String {
