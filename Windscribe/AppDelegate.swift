@@ -114,7 +114,7 @@ extension AppDelegate {
             guard let self = self else { return }
             do {
                 try await sessionManager.updateSession(token)
-                self.logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
+                self.logger.logI("AppDelegate", "Remote notification token registered with server. \(token.redacted)")
                 self.preferences.saveRegisteredForPushNotifications(bool: true)
             } catch {
                 await MainActor.run {

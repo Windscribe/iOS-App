@@ -177,7 +177,7 @@ class LoginViewModelImpl: LoginViewModel {
             do {
                 let tokenResponse = try await apiCallManager.authTokenLogin(username: loginUsername, useAsciiCaptcha: false)
                 await MainActor.run {
-                    self.logger.logI("LoginViewModel", "Token received: \(tokenResponse.data.token)")
+                    self.logger.logI("LoginViewModel", "Token received: \(tokenResponse.data.token.redacted)")
                     self.secureToken = tokenResponse.data.token
 
                     // If CAPTCHA required
