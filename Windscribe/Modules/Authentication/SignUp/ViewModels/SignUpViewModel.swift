@@ -320,7 +320,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 let tokenResponse = try await self.apiCallManager.authTokenSignup(username: username, useAsciiCaptcha: false)
 
                 await MainActor.run {
-                    self.logger.logD("SignUpViewModel", "Token received: \(tokenResponse.data.token)")
+                    self.logger.logD("SignUpViewModel", "Token received: \(tokenResponse.data.token.redacted)")
                     self.secureToken = tokenResponse.data.token
 
                     // CAPTCHA required

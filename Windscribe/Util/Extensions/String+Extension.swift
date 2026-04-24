@@ -138,6 +138,39 @@ extension String {
         guard let secondSubDomain = hostName.split(separator: ".").dropLast().first else { return false }
         return firstSubDomain == secondSubDomain
     }
+
+    /// Returns a redacted copy of the string with the middle portion replaced by asterisks.
+    ///
+    /// The prefix and suffix each show up to 5 characters (always equal length),
+    /// and the redacted middle uses up to 5 `*` characters regardless of actual hidden length.
+    ///
+    /// Edge cases:
+    /// - Length 0: returns `""`
+    /// - Length 1: returns `"*"`
+    /// - Length 2: returns first char + `"*"`
+    /// - Length 3: returns first char + `"*"` + last char
+    var redacted: String {
+        let length = count
+
+        guard length > 0 else { return "" }
+        guard length > 1 else { return "*" }
+        guard length > 2 else { return String(first!) + "*" }
+        guard length > 3 else { return String(first!) + "*" + String(last!) }
+
+        // For strings longer than 3 characters:
+        // Show up to 5 prefix chars and up to 5 suffix chars (equal length),
+        // with up to 5 asterisks in the middle.
+        let maxReveal = 5
+        // Each side can show at most half the non-middle portion, capped at maxReveal
+        let sideLength = min(maxReveal, (length - 1) / 2)
+        let hiddenLength = length - (sideLength * 2)
+        let asterisks = String(repeating: "*", count: min(hiddenLength, 5))
+
+        let prefixStr = String(prefix(sideLength))
+        let suffixStr = String(suffix(sideLength))
+
+        return prefixStr + asterisks + suffixStr
+    }
 }
 
 extension StringProtocol {
