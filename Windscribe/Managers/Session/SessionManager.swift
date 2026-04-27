@@ -24,6 +24,7 @@ protocol SessionManager {
     func login(auth: String) async throws
     func updateFrom(session: SessionModel) async
     func keepSessionUpdated()
+    func updateAfterLoginIn() async
     var sessionFetchInProgress: Bool { get set }
     var updateSessionTask: Task<Void, Error>? { get set }
     var checkForDiscconectReasonTrigger: PassthroughSubject<Void, Never> { get }
@@ -215,6 +216,11 @@ class SessionManagerImpl: SessionManager {
             try? await locationListRepository.updateAll()
             await updateFrom(session: session)
         }
+    }
+
+    func updateAfterLoginIn() async {
+        try? await locationListRepository.updateAll()
+        try? await updateSession()
     }
 
     func updateFrom(session: SessionModel) async {

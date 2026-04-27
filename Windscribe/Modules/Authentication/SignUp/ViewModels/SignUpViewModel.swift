@@ -414,6 +414,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                         // Create unmanaged Session from model (safe to use on any thread)
                         await self.sessionManager.updateFrom(session: session)
                         self.prepareUserData()
+                        await self.sessionManager.updateAfterLoginIn()
                     }
                 } catch {
                     await MainActor.run {
