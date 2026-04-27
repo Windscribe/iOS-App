@@ -249,6 +249,7 @@ class LoginViewModelImpl: LoginViewModel {
         Task {
             // Store authenticated session
             await sessionManager.updateFrom(session: session)
+            await sessionManager.updateAfterLoginIn()
 
             // Log the success with the username
             logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")

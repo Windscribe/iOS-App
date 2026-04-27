@@ -93,4 +93,5 @@ class MockSessionManager: SessionManager {
     func updateFrom(session: Windscribe.SessionModel) async {
         updateFromCalled = true
     }
+    func updateAfterLoginIn() async {}
 }
