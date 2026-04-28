@@ -97,12 +97,12 @@ class LifecycleManager: LifecycleManagerType {
             await disconnectToUpdateSession()
             try? await connectivity.awaitNetwork(maxTime: 1.0)
             if preferences.userSessionAuth() != nil && connectivity.internetConnectionAvailable() {
-                await notificationRepo.loadNotifications()
                 antiCensorshipRepository.refreshParams()
                 if shouldCheckForUpdate() {
                     preferences.saveLastUpdateCheckTimestamp(timeStamp: Date().timeIntervalSince1970)
                     checkUpdateRepository.checkForUpdate()
                 }
+                await notificationRepo.loadNotifications()
             }
             try? await locationListRepository.updateLocations()
             try? await locationListRepository.updatedServerList()

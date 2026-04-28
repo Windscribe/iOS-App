@@ -153,7 +153,7 @@ struct UnblockWgParams: Codable {
 }
 
 @objcMembers class UnblockWgParamsObj: Object {
-    @Persisted(primaryKey: true) dynamic var id: String = ""
+    dynamic var id: String = ""
     dynamic var title: String = ""
     dynamic var countries = List<String>()
     dynamic var jc: Int?
@@ -172,6 +172,10 @@ struct UnblockWgParams: Codable {
     dynamic var i3: String?
     dynamic var i4: String?
     dynamic var i5: String?
+
+    override static func primaryKey() -> String? {
+        return "id"
+    }
 
     required convenience init(from: UnblockWgParams) {
         self.init()
