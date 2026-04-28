@@ -295,7 +295,20 @@ extension LocalDatabaseImpl {
                     migration.enumerateObjects(ofType: LocationObject.className()) { _, _ in }
                     migration.enumerateObjects(ofType: DatacenterObject.className()) { _, _ in }
                     migration.enumerateObjects(ofType: ServerMachineObject.className()) { _, _ in }
-                    // Add/update UnblockWgParamsObj schema
+                    // Add/update UnblockWgParamsObj schema with new properties
+                    migration.enumerateObjects(ofType: UnblockWgParamsObj.className()) { _, newObject in
+                        // Add new properties with default values if they don't exist
+                        newObject!["title"] = ""
+                        newObject!["h1"] = nil
+                        newObject!["h2"] = nil
+                        newObject!["h3"] = nil
+                        newObject!["h4"] = nil
+                        newObject!["i1"] = nil
+                        newObject!["i2"] = nil
+                        newObject!["i3"] = nil
+                        newObject!["i4"] = nil
+                        newObject!["i5"] = nil
+                    }
                     // Remove duplicates by deleting all and letting them be re-fetched from API
                     migration.deleteData(forType: UnblockWgParamsObj.className())
                 }

@@ -61,10 +61,6 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
         }
 
         selectedWgParamSubject.send(preferences.getUnblockWgParams())
-        if selectedWgParamSubject.value == nil, !unlockParams.isEmpty {
-            selectParam(with: unlockParams[0])
-        }
-
         useProtocolTweaksSubject.send(preferences.isCircumventCensorshipEnabled())
         selecteRoutingTypeSubject.send(preferences.getRoutingType())
     }
@@ -74,8 +70,20 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
         preferences.saveCircumventCensorshipStatus(status: value)
         useProtocolTweaksSubject.send(value)
 
-        if value, selectedWgParamSubject.value == nil, let first = unlockParams.first {
-            selectParam(with: first)
+        if value {
+            updateSelectedWgParam()
+        } else {
+            selectedWgParamSubject.send(nil)
+        }
+    }
+
+    private func updateSelectedWgParam() {
+        if selectedWgParamSubject.value == nil {
+            if let sessionWgParameterKey = sessionWgParameterKey {
+                setWgParameter(withId: sessionWgParameterKey)
+            } else if let first = unlockParams.first {
+                selectParam(with: first)
+            }
         }
     }
 
@@ -92,18 +100,20 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
 
             if useProtocolTweaksSubject.value == false {
                 setUseProtocolTweaks(true)
-                setWgParameter(withId: id)
             }
+            setWgParameter(withId: id)
         }
     }
 
     func setWgParameter(withId id: String) {
+        guard useProtocolTweaksSubject.value else { return }
         if let first = unlockParams.first(where: { $0.id == id }) {
             selectParam(with: first)
         }
     }
 
     private func selectParam(with param: UnblockWgParams) {
+        guard useProtocolTweaksSubject.value else { return }
         selectedWgParamSubject.send(param)
         preferences.saveUnblockWgParams(param: param)
     }
@@ -129,10 +139,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
                 unlockParams = try await apiManager.wgUnlockParams().params
                 localDatabase.saveUnblockWgParams(params: unlockParams.map {$0.getObject()})
 
-                if selectedWgParamSubject.value == nil, !unlockParams.isEmpty {
-                    selectParam(with: unlockParams[0])
-                }
-
+                updateSelectedWgParam()
             } catch {
                 logger.logI("UnblockWgParamsRepository", "Failed Refreshing wg unblock params with error: \(error)")
             }
