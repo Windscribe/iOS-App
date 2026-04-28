@@ -1,115 +1,112 @@
 ## Windscribe for iOS and tvOS
 
-Windscribe for iOS and tvOS are native apps written in Swift. Features include support for multiple VPN protocols, per-network configuration, and On-Demand mode.
+Native Swift apps for iPhone, iPad, and Apple TV. Supports multiple VPN protocols (WireGuard, AmneziaWG, OpenVPN, IKEv2, Stealth, WStunnel), per-Wi-Fi configuration, On-Demand mode, Siri/Shortcuts integration, and a home-screen widget.
 
-- [Download and install](#download-and-install)
-- [Acknowledgements](#acknowledgements)
+- [Install from the App Store](#install-from-the-app-store)
 - [Build from source](#build-from-source)
     - [Requirements](#requirements)
-    - [Development dependencies](#development-dependencies)
-    - [Project dependencies](#project-dependencies)
-    - [Build](#build)
-    - [Troubleshoot](#troubleshoot)
-- [Pull request](#pull-request)
+    - [First-time setup](#first-time-setup)
+    - [Build & run](#build--run)
+    - [Schemes](#schemes)
+    - [Troubleshooting](#troubleshooting)
+- [Testing](#testing)
+- [Linting](#linting)
+- [Contributing](#contributing)
 - [Versioning](#versioning)
+- [Acknowledgements](#acknowledgements)
 
-### Download and install
+### Install from the App Store
 
-Windscribe iOS and tvOS app can be downloaded from the App Store:  
-[Link](https://apps.apple.com/us/app/windscribe-vpn/id1129435228)
-
-### Acknowledgements
-
-Check our [Acknowledgements file](ACKNOWLEDGEMENTS.md) for a list of third-party libraries used in this project.
+[apps.apple.com/us/app/windscribe-vpn/id1129435228](https://apps.apple.com/us/app/windscribe-vpn/id1129435228)
 
 ### Build from source
 
 #### Requirements
 
-- iOS 15.0+
-- tvOS 17.0+
-- Xcode 15.0+
-- Swift 5.9+
-- Go 1.16+
+| Tool | Version |
+| --- | --- |
+| Xcode | 26.3 (pinned in CI) |
+| iOS deployment target | 15.0 (iOS 18 minimum coming in the next major rebuild) |
+| tvOS deployment target | 17.5 |
+| Swift | 5.0 / 6.0 (mixed — targets are migrating) |
+| Go | 1.22+ (for the WireGuard-go bridge) |
+| Ruby | for `fastlane` (see `Gemfile`) |
+| swiftlint | for lint checks |
 
-#### Development dependencies
+Physical iOS/tvOS hardware is required to actually run a tunnel. Simulators build and launch, but cannot bring up a Network Extension.
 
-- swiftlint
-- go
+#### First-time setup
 
-#### Project dependencies
-
-- [CocoaLumberjack/Swift](https://github.com/CocoaLumberjack/CocoaLumberjack)
-- [Realm](https://github.com/realm/realm-swift)
-- [RealmSwift](https://github.com/realm/realm-swift)
-- [IQKeyboardManagerSwift](https://github.com/hackiftekhar/IQKeyboardManager)
-- [ExpyTableView](https://github.com/okhanokbay/ExpyTableView)
-- [SwipeCellKit](https://github.com/SwipeCellKit/SwipeCellKit)
-- [AES256Encrypter](https://github.com/dhilowitz/AES256Encrypter)
-- [OpenVPNAdapter](https://github.com/ss-abramchuk/OpenVPNAdapter)
-- [RxSwift](https://github.com/ReactiveX/RxSwift)
-- [RxGesture](https://github.com/RxSwiftCommunity/RxGesture)
-- [RxDataSources](https://github.com/RxSwiftCommunity/RxDataSources)
-- [Swinject](https://github.com/Swinject/Swinject)
-- [RxRealm](https://github.com/RxSwiftCommunity/RxRealm)
-- [SnapKit](https://github.com/SnapKit/SnapKit)
-
-#### Build
-
-1. Clone this repository
+1. Clone and open the project:
     ```sh
-    git clone <repo-url>
-    cd Windscribe
-    ```
-
-2. Open the project in Xcode
-    ```sh
+    git clone <repo-url> iosapp
+    cd iosapp
     open Windscribe.xcodeproj
     ```
 
-3. In Xcode, go to **File > Packages > Add Package Dependencies** and ensure all required Swift packages are properly resolved.
-
-4. Choose the correct scheme from the available options:
-   - `Windscribe-Default` (release configuration with debug flags enabled)
-   - `Windscribe-Release`
-   - `Windscribe-Staging`
-   - `Windscribe-tvOS` (for building and running on Apple TV devices)
-
-5. Navigate to `Windscribe/Environments/Config.xcconfig` and set your:
-    - `Team ID`
-    - `App Bundle ID`
-
-6. Set up code signing under `Targets > Signing & Capabilities` using your Apple Developer account.
-
-7. Clean the project:
-    - `Product > Clean Build Folder` (Cmd + Shift + K)
-
-8. Resolve all packages:
-    - `File > Packages > Resolve Package Versions`
-
-9. Connect a real device (iPhone/iPad for iOS or Apple TV for tvOS) and run the app.
-    > Simulators are supported, but VPN connections require physical hardware.
-
-#### Troubleshoot
-
-- If build fails or dependencies don't resolve:
-    - Clear Derived Data: `Xcode > Settings > Locations > Derived Data`
-    - Reopen the project and resolve packages again
-
-### Pull request
-
-- Fork this repository
-- Create an issue first and describe your proposed changes or bug fix
-- Submit a pull request referencing the issue number
-- Ensure the code builds successfully and passes linting:
-    ```sh
-    swiftlint lint
+2. Override `Windscribe/Environments/Config.xcconfig` with your own signing values. The default file points at Windscribe's team / bundle IDs:
     ```
+    APP_TEAM_ID = <your Apple Developer team ID>
+    APP_BUNDLE_ID = <your reverse-DNS bundle ID>
+    ```
+    The extension bundle IDs (`PacketTunnel`, `WireGuardTunnel`, `SiriIntents`, `HomeWidget`) are derived from `APP_BUNDLE_ID` automatically.
+
+3. In each target's **Signing & Capabilities** tab, select your Apple Developer team. All five app-group-sharing targets must be signed with the same team.
+
+4. Let Xcode resolve Swift packages (**File → Packages → Resolve Package Versions**).
+
+#### Build & run
+
+Pick a scheme, pick a device, hit ⌘R. The `build_wireguard_go_bridge.sh` run script builds the WireGuard-Go bridge the first time you build (and re-runs when the SDK root changes). It needs `go` on your `PATH` or it will download a toolchain to a temp dir.
+
+#### Schemes
+
+| Scheme | Purpose |
+| --- | --- |
+| `Windscribe-Debug` | Day-to-day development, points at production API |
+| `Windscribe-Staging` | Staging API endpoints |
+| `Windscribe-Release` | Release build, production API |
+| `WindscribeTV-Debug` / `-Staging` / `-Release` | tvOS equivalents |
+| `WindscribeTests` | Unit test target (runs on `iPhone 16 Pro` in CI) |
+| `HomeWidgetExtension` | Build just the widget extension |
+
+#### Troubleshooting
+
+- **Packages fail to resolve** → Xcode → Settings → Locations → Derived Data → delete, then **File → Packages → Reset Package Caches**.
+- **WireGuard-go build fails** → install Go (`brew install go`) and rebuild. The script caches by SDK root, so `Product → Clean Build Folder` also clears it.
+- **Code signing errors on extensions** → make sure every target uses the same team and that your provisioning profiles include the Network Extensions entitlement.
+- **Realm migration errors on first run after pulling main** → delete the app from the device; schema migrations are handled at launch but only for versions we've shipped.
+
+### Testing
+
+```sh
+fastlane test           # runs WindscribeTests on iPhone 16 Pro
+```
+
+Or from Xcode: select the `WindscribeTests` scheme and ⌘U.
+
+### Linting
+
+```sh
+swiftlint lint          # or: fastlane lint
+```
+
+Config lives in `.swiftlint.yml`. Pull/merge requests are gated on lint passing.
+
+### Contributing
+
+1. Fork the repo and open an issue describing the change.
+2. Branch off `main` (`feature/<slug>` or `fix/<slug>`).
+3. Keep commits focused; ensure lint + tests pass locally.
+4. Open a pull request (or merge request, if working on the GitLab source) referencing the issue.
+
+New code follows the patterns in [`AGENTS.md`](AGENTS.md). In short: SwiftUI + `@Observable` + async/await for anything new; existing UIKit/Combine/Swinject/Realm stays until it's rewritten.
 
 ### Versioning
 
-This project uses [Semantic Versioning](https://semver.org):
+Semantic Versioning — `Major.Minor.Patch (BuildNumber)`, e.g. `3.10.1 (22)` on TestFlight.
 
-`Major.Minor.Patch (BuildNumber)`
+### Acknowledgements
 
-Example: `3.8.5 (22)` on TestFlight
+Third-party licenses: [`ACKNOWLEDGEMENTS.md`](ACKNOWLEDGEMENTS.md).
+License: [`LICENCE.md`](LICENCE.md).
