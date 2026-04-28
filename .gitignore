@@ -108,3 +108,4 @@ iOSInjectionProject/
 .claude/settings.local.json
 !libs/**
 libs/.DS_Store
+libs/**/.DS_Store
