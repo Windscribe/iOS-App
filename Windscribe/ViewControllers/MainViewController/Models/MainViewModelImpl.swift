@@ -468,20 +468,16 @@ class MainViewModelImpl: MainViewModel {
         logger.logD("MainViewController", "Checking for unread notifications.")
         DispatchQueue.main.async {
             let notices = self.retrieveNotifications()
-            guard let notice = notices.first else { return }
+            guard let notice = notices.first else {
+                self.pushNotificationsManager.setNotificationCount(count: 0)
+                completion(false, 0)
+                return
+            }
 
             let readNoticeIds = self.notificationsRepo.readNotices.value
             let noticeIds = Set(notices.compactMap { $0.id })
 
-            // Only auto-show on fresh API data (skip first check with stale database data)
-            if !self.isFirstNotificationCheck && notice.popup && !readNoticeIds.contains(notice.id) {
-                self.logger.logD("MainViewController", "New notification to read with popup.")
-                self.didAutoShowNotifications = true
-                completion(true, 0)
-                return
-            }
-
-            // Always update badge count (even on first check)
+            // Always calculate badge count
             let readNoticeDifferentCount = noticeIds.reduce(0) {
                 $0 + (!readNoticeIds.contains($1) ? 1 : 0)
             }
@@ -490,6 +486,15 @@ class MainViewModelImpl: MainViewModel {
                 self.pushNotificationsManager.setNotificationCount(count: readNoticeDifferentCount)
             } else {
                 self.pushNotificationsManager.setNotificationCount(count: 0)
+            }
+
+            // Only auto-show on fresh API data (skip first check with stale database data)
+            if !self.isFirstNotificationCheck && notice.popup && !readNoticeIds.contains(notice.id) {
+                self.logger.logD("MainViewController", "New notification to read with popup.")
+                self.didAutoShowNotifications = true
+                self.isFirstNotificationCheck = false
+                completion(true, readNoticeDifferentCount)
+                return
             }
 
             // Mark first check as complete
