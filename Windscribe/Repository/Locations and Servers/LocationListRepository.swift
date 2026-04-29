@@ -153,9 +153,13 @@ class LocationListRepositoryImpl: LocationListRepository {
         populateDatacenters(from: allDatacenters, with: currentServerModels)
     }
 
-    private func loadInitialLocations() {
+    private func loadInitialLocations(skipCustomNames: Bool = false) {
         if let locationObjects = localDatabase.getLocations(), !locationObjects.isEmpty {
             let locations = locationObjects.map { LocationModel(from: $0) }
+            guard skipCustomNames else {
+                updateLocationModels(locations)
+                return
+            }
             locationListSubject.send(locations)
             updateDatacenterList(from: locations)
         } else if let deprecatedList = self.localDatabase.getServers(), !deprecatedList.isEmpty {
@@ -171,15 +175,19 @@ class LocationListRepositoryImpl: LocationListRepository {
         }
     }
 
-    private func saveLocationList(with locations: [LocationModel]) {
-        locationListSubject.send(locations)
-        // Convert models to Realm objects and save to local database
+    private func saveLocationList(with locations: [LocationModel], skipCustomNames: Bool = false) {
+        // Save original locations to Realm before applying custom names
         let locationObjects = locations.map { LocationObject(from: $0) }
         localDatabase.saveLocations(locations: locationObjects)
 
         logger.logI("LocationListRepositoryImpl", "Successfully updated \(locations.count) locations")
 
-        // Extract and save all datacenters separately for easier querying
+        // Apply custom names (if any) and update subjects
+        guard skipCustomNames else {
+            updateLocationModels(locations)
+            return
+        }
+        locationListSubject.send(locations)
         updateDatacenterList(from: locations)
     }
 
@@ -194,8 +202,7 @@ class LocationListRepositoryImpl: LocationListRepository {
             // Try to load from local database as fallback
             if let locationObjects = localDatabase.getLocations() {
                 let locations = locationObjects.map { LocationModel(from: $0) }
-                locationListSubject.send(locations)
-                updateDatacenterList(from: locations)
+                updateLocationModels(locations)
                 return
             } else {
                 throw error
@@ -350,7 +357,7 @@ class LocationListRepositoryImpl: LocationListRepository {
         logger.logI("LocationListRepository", "Stating merge of local and external servers")
         let regions = preferences.getCustomLocationsNames()
         if regions.isEmpty {
-            locationListSubject.send(locationList)
+            loadInitialLocations(skipCustomNames: true)
             return
         }
 
