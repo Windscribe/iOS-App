@@ -30,8 +30,8 @@ enum AccountSectionType: String {
     }
 }
 
-struct AccountRowModel: Identifiable, Hashable {
-    var id = UUID()
+struct AccountRowModel: Identifiable, Equatable {
+    let id = UUID()
 
     let type: AccountRowType
     let action: AccountRowAction?
@@ -94,7 +94,7 @@ struct AccountRowModel: Identifiable, Hashable {
     }
 }
 
-struct AccountSectionModel: Identifiable, Hashable {
+struct AccountSectionModel: Identifiable, Equatable {
     let id = UUID()
     let type: AccountSectionType
     let items: [AccountRowModel]
