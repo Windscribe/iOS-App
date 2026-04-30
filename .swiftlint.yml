@@ -32,9 +32,68 @@ identifier_name:
     min_length:
         warning: 1
 function_body_length: 600
-# custom_rules:
-#     empty_line_before_closing_brace: 
-#     name: "Empty Line before closing brace"
-#     regex: '(^[ a-zA-Z ]*(?:protocol|extension|class|struct) (?!(?:var|let))[ a-zA-Z:]*\{\n *\S+)'
-#     message: "There should be an empty line after a declaration"
-#     severity: error
+# Project Neo — enforcement of "Hard rules for new code" inside Features/ paths.
+# Scope: Windscribe/Features/** and WindscribeTV/Features/**.
+# Legacy code outside these paths is unaffected — see docs/PROJECT_NEO.md and
+# docs/neo/DECISIONS.md (ND-004).
+custom_rules:
+  neo_no_swinject:
+    name: "Neo: no Swinject in Features/"
+    regex: '^\s*import\s+Swinject\b'
+    message: "New Neo code must use constructor injection + @Environment(@Entry), not Swinject. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_snapkit:
+    name: "Neo: no SnapKit in Features/"
+    regex: '^\s*import\s+SnapKit\b'
+    message: "New Neo code is SwiftUI; do not use SnapKit. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_realmswift:
+    name: "Neo: no RealmSwift in Features/"
+    regex: '^\s*import\s+RealmSwift\b'
+    message: "Persistence in Neo flows through protocol-defined stores backed by GRDB, not Realm directly. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_combine:
+    name: "Neo: no Combine in Features/"
+    regex: '^\s*import\s+Combine\b'
+    message: "Use async/await + AsyncStream. Convert at Apple-API boundaries with .values. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_observableobject:
+    name: "Neo: no ObservableObject in Features/"
+    regex: '\bObservableObject\b'
+    message: "Use the @Observable macro instead of ObservableObject. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_published:
+    name: "Neo: no @Published in Features/"
+    regex: '@Published\b'
+    message: "@Published belongs to ObservableObject; use @Observable + plain stored properties. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_stateobject:
+    name: "Neo: no @StateObject in Features/"
+    regex: '@StateObject\b'
+    message: "Use @State with an @Observable type instead of @StateObject. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_observedobject:
+    name: "Neo: no @ObservedObject in Features/"
+    regex: '@ObservedObject\b'
+    message: "Use @Bindable with an @Observable type instead of @ObservedObject. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_static_shared:
+    name: "Neo: no static let shared in Features/"
+    regex: '\bstatic\s+(let|var)\s+shared\b'
+    message: "App-wide services flow through @Environment, not singletons. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_uiviewcontroller_subclass:
+    name: "Neo: no UIViewController subclasses in Features/"
+    regex: 'class\s+\w+[^{]*?:\s*[^{]*?\bUIViewController\b'
+    message: "New Neo screens are SwiftUI views, not UIKit view controllers. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'

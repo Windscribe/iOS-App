@@ -38,16 +38,16 @@ M0 is intentionally split across multiple PRs. Land them in order; each is indep
 
 ### Lint enforcement (PR 2)
 
-- [ ] **T0.6** Add `custom_rules:` blocks to `.swiftlint.yml` scoped to `Windscribe/Features/**` and `WindscribeTV/Features/**`. Forbid:
-  - `import Swinject`
-  - `import SnapKit` (allowlist legacy paths: `Modules/PlanUpgrade/**`, `WindscribeTV/UI/**` — narrowed to exclude `WindscribeTV/Features/**`)
-  - `ObservableObject`, `@Published`, `@StateObject`, `@ObservedObject`
-  - `import RealmSwift` (allowlist: `Windscribe/Data/Database/**`)
-  - `static let shared`
-  - `import Combine`
-  - `class.*: UIViewController`
+- [x] **T0.6** Add `custom_rules:` blocks to `.swiftlint.yml` scoped to `Windscribe/Features/**` and `WindscribeTV/Features/**`. Forbid:
+  - `import Swinject` ✓
+  - `import SnapKit` ✓ (legacy paths outside Features/ are unaffected by virtue of `included:` scoping)
+  - `ObservableObject`, `@Published`, `@StateObject`, `@ObservedObject` ✓
+  - `import RealmSwift` ✓ (`Data/Database/**` is unaffected by virtue of `included:` scoping)
+  - `static let shared` (also matches `static var shared`) ✓
+  - `import Combine` ✓
+  - `class X: UIViewController` (subclass declarations) ✓
 
-  Verify rules don't fire on existing legacy code.
+  Verified rules don't fire on existing legacy code (0 violations across the tree). Verified all 10 rules trigger on a probe file under `Windscribe/Features/__SmokeTest__/` (probe deleted; not committed).
 
 ### Reference module (PR 3)
 
@@ -75,3 +75,5 @@ M0 is intentionally split across multiple PRs. Land them in order; each is indep
 Append-only — each commit/merge gets one line. Format: `YYYY-MM-DD — branch — sha7 — summary; next: <what>`.
 
 - 2026-04-30 — `aw/neo-m0-shared-context` — `9dfa0829` — PR 1 (T0.1–T0.5) opened as MR !1334 against `main`. Next: review + merge, then PR 2 (SwiftLint custom rules, T0.6).
+- 2026-04-30 — `main` — `0f133586` — PR 1 merged.
+- 2026-04-30 — `aw/neo-m0-swiftlint-rules` — `9aab3dc3` — PR 2 (T0.6) opened as MR !1335 against `main`. Next: review + merge, then PR 3 (LookAndFeel reference module).
