@@ -8,6 +8,18 @@ Windscribe iOS/tvOS VPN client. Multi-target Xcode project (no workspace, no Tui
 
 Do not mass-migrate existing screens. The UI is being rebuilt screen-by-screen; out-of-band rewrites create merge pain.
 
+## Project Neo / v5.0 — AI agent onramp
+
+If you're picking up Project Neo work, **read these in order before doing anything else**:
+
+1. [`docs/PROJECT_NEO.md`](docs/PROJECT_NEO.md) — the rule sheet (non-negotiable rules for new code, branching strategy, "adding a new feature" walkthrough).
+2. [`docs/neo/DECISIONS.md`](docs/neo/DECISIONS.md) — the architectural decision log. Every decision the team has settled on, with rationale.
+3. [`docs/neo/STATE.md`](docs/neo/STATE.md) — the execution log. Read from the bottom to answer "where are we right now?".
+4. [`docs/neo/plans/00-roadmap.md`](docs/neo/plans/00-roadmap.md) — the umbrella roadmap (M0–M10).
+5. The relevant per-issue plan in [`docs/neo/plans/M<N>-*.md`](docs/neo/plans/) for the issue you're touching.
+
+**Decisions and per-issue plans belong in tree, not in any agent's private memory.** Project Neo is multi-contributor and multi-agent; each teammate runs their own AI assistant with its own private memory. The only context every agent shares is what's in the repo. If you settled an architectural question or shipped a milestone, write it down in `DECISIONS.md` / `STATE.md` as part of the same PR — not in chat history, not in agent memory.
+
 ## Repository layout
 
 ```
