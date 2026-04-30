@@ -118,7 +118,7 @@ extension ConfigurationsManager {
             logger.logE("ConfigurationsManager", "Error when saving vpn preferences \(error.description).")
             throw error
         }
-        logger.logD("ConfigurationsManager", "VPN configuration successful. Username: \(username)")
+        logger.logD("ConfigurationsManager", "VPN configuration successful. Username: \(username.redacted)")
         logger.logD("ConfigurationsManager", "KillSwitch option set by user is \(userSettings.killSwitch)")
         logger.logD("ConfigurationsManager", "Allow lan option set by user is \(userSettings.allowLane)")
         #if os(iOS)

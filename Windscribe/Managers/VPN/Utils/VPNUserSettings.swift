@@ -27,7 +27,7 @@ struct IKEv2VPNConfiguration: VPNConfiguration {
     let hostname: String
     let ip: String
     var description: String {
-        return "IKEv2: [username: \(username) ip: \(ip) hostname: \(hostname)] auth: \(auth)"
+        return "IKEv2: [username: \(username.redacted) ip: \(ip) hostname: \(hostname)]"
     }
 
     func buildProtocol(settings: VPNUserSettings, manager: NEVPNManager) {
@@ -84,7 +84,7 @@ struct OpenVPNConfiguration: VPNConfiguration {
     let path: String
     let data: Data
     var description: String {
-        return "OpenVPN: [proto: \(proto) ip: \(ip)  username: \(username ?? "N/A") password: \(password ?? "N/A") path: \(path) data: \(data)]"
+        return "OpenVPN: [proto: \(proto) ip: \(ip) path: \(path)]"
     }
 
     func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws {
@@ -115,7 +115,35 @@ struct OpenVPNConfiguration: VPNConfiguration {
 struct WireguardVPNConfiguration: VPNConfiguration {
     let content: TunnelConfiguration
     var description: String {
-        return "Wireguard: [content: \(content.asWgQuickConfig())"
+        var parts = [String]()
+        let iface = content.interface
+        if !iface.addresses.isEmpty {
+            parts.append("addresses: \(iface.addresses.map { $0.stringRepresentation }.joined(separator: ", "))")
+        }
+        if !iface.dns.isEmpty {
+            parts.append("dns: \(iface.dns.map { $0.stringRepresentation }.joined(separator: ", "))")
+        }
+        if let mtu = iface.mtu {
+            parts.append("mtu: \(mtu)")
+        }
+        if let listenPort = iface.listenPort {
+            parts.append("listenPort: \(listenPort)")
+        }
+        for peer in content.peers {
+            var peerParts = [String]()
+            peerParts.append("publicKey: \(peer.publicKey.base64Key.redacted)")
+            if !peer.allowedIPs.isEmpty {
+                peerParts.append("allowedIPs: \(peer.allowedIPs.map { $0.stringRepresentation }.joined(separator: ", "))")
+            }
+            if let endpoint = peer.endpoint {
+                peerParts.append("endpoint: \(endpoint.stringRepresentation)")
+            }
+            if let keepAlive = peer.persistentKeepAlive {
+                peerParts.append("keepalive: \(keepAlive)")
+            }
+            parts.append("peer: [\(peerParts.joined(separator: ", "))]")
+        }
+        return "Wireguard: [\(parts.joined(separator: ", "))]"
     }
 
     func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws {
