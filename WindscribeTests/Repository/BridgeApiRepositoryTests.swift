@@ -60,10 +60,13 @@ class BridgeApiRepositoryTests: XCTestCase {
 
     // MARK: - Initialization Tests
 
-    func testInitialization() {
+    func testInitialization() async throws {
         XCTAssertNotNil(repository, "Repository should be initialized")
         XCTAssertFalse(repository.isReady, "Should not be ready initially")
-        XCTAssertTrue(mockBridgeAPI.setApiAvailableCallbackCalled, "Should set API available callback")
+        // setApiAvailableCallback is registered on a background queue (see
+        // BridgeApiRepositoryImpl.observeBridgeApi), so this isn't synchronous
+        // with init. waitForApiAvailableCallbackRegistration polls + asserts.
+        try await waitForApiAvailableCallbackRegistration()
     }
 
     // MARK: - VPN Connection State Tests
@@ -196,22 +199,25 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
-        // When
-        mockBridgeAPI.simulateApiAvailable(true)
+        // `BridgeApiRepositoryImpl.observeBridgeApi` registers
+        // `setApiAvailableCallback` on a background queue, so the callback isn't
+        // necessarily wired by the time setUp() returns. Wait for it to be
+        // registered before we trigger via the mock — otherwise
+        // `simulateApiAvailable` is a no-op and the test times out.
+        try await waitForApiAvailableCallbackRegistration()
 
-        // Wait for observation
-        try await Task.sleep(nanoseconds: 100_000_000)
-
-        // Then
+        // Then — subscribe before triggering so we observe the rising edge.
         repository.bridgeIsAvailable
             .sink { isAvailable in
                 if isAvailable {
-                    XCTAssertTrue(isAvailable, "Bridge API should be available for pro user")
                     XCTAssertTrue(self.repository.isReady, "Repository should be ready")
                     expectation.fulfill()
                 }
             }
             .store(in: &cancellables)
+
+        // When
+        mockBridgeAPI.simulateApiAvailable(true)
 
         await fulfillment(of: [expectation], timeout: 1.0)
     }
@@ -253,23 +259,41 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
-        // When
-        mockBridgeAPI.simulateApiAvailable(true)
+        try await waitForApiAvailableCallbackRegistration()
 
-        // Wait for observation
-        try await Task.sleep(nanoseconds: 100_000_000)
-
-        // Then
+        // Then — subscribe before triggering so we observe the rising edge.
         repository.bridgeIsAvailable
             .sink { isAvailable in
                 if isAvailable {
-                    XCTAssertTrue(isAvailable, "Bridge API should be available for ALC location")
                     expectation.fulfill()
                 }
             }
             .store(in: &cancellables)
 
+        // When
+        mockBridgeAPI.simulateApiAvailable(true)
+
         await fulfillment(of: [expectation], timeout: 1.0)
+    }
+
+    // MARK: - Helpers
+
+    /// Polls `mockBridgeAPI.setApiAvailableCallbackCalled` until the
+    /// background-dispatched callback registration has completed (or fails the
+    /// test if it doesn't within `timeout`). Without this, tests that drive
+    /// the repository via `simulateApiAvailable` race with the registration
+    /// and silently no-op.
+    private func waitForApiAvailableCallbackRegistration(
+        timeout: TimeInterval = 0.5
+    ) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !mockBridgeAPI.setApiAvailableCallbackCalled, Date() < deadline {
+            try await Task.sleep(nanoseconds: 5_000_000) // 5 ms
+        }
+        XCTAssertTrue(
+            mockBridgeAPI.setApiAvailableCallbackCalled,
+            "setApiAvailableCallback was not registered within \(timeout)s"
+        )
     }
 
     func testApiNotAvailableWithFreeUserAndNonALCLocation() async throws {
@@ -528,13 +552,14 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
+        // setApiAvailableCallback registers async — wait before triggering.
+        try await waitForApiAvailableCallbackRegistration()
+
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        // Wait for state to update
-        try await Task.sleep(nanoseconds: 200_000_000)
-
-        // Then
+        // Then — checkAndEmitApiAvailability runs synchronously inside the
+        // callback, so isReady is updated by the time simulate returns.
         XCTAssertTrue(repository.isReady, "Should be ready after API becomes available")
     }
 }

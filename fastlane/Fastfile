@@ -83,7 +83,6 @@ lane :test do
     scheme: "WindscribeTests",
     clean: true,
     fail_build: true,
-    build_for_testing: true,
     output_directory: "test_logs",
     output_types: "junit"
   )

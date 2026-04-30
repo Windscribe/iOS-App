@@ -55,95 +55,107 @@ final class FavouriteListViewModelTests: XCTestCase {
     }
 
     // MARK: Maintenance Check Tests
+    //
+    // `FavouriteListViewModel.setSelectedFav` was simplified in commit
+    // 06b1346f ("Fix status of locations, check under mantainace") so that
+    // the maintenance popup fires for one and only one condition:
+    // `favourite.statusValue == .underMantainance`. The earlier
+    // location-lookup / no-servers / premium special cases were intentionally
+    // removed; tests below mirror that contract.
+    //
+    // `DatacenterModel.statusValue` returns `.underMantainance` when
+    // `status == 2 && servers.isEmpty` — so that's how we provoke a
+    // maintenance datacenter in fixtures.
 
-    func testDisabledServerShowsMaintenancePopup() {
+    func testUnderMaintenanceDatacenterShowsMaintenancePopup() {
+        // Given — datacenter with status=2 and no servers maps to
+        // statusValue == .underMantainance.
         let (location, datacenter) = createMockLocationWithDatacenter(
             locationId: 1,
-            locationName: "Test Location",
+            locationName: "Maintenance Location",
             datacenterId: 123,
             city: "New York",
-            status: 0  // Disabled
+            status: 2,
+            hasServers: false
         )
         var maintenanceTriggered = false
 
         mockLocationListRepository.locationListSubject.send([location])
         mockLocationListRepository.datacenterListSubject.send([datacenter])
-        mockLocationsManager.mockLocation = (location, datacenter)
 
         viewModel.showMaintenanceLocationTrigger
             .sink { _ in maintenanceTriggered = true }
             .store(in: &cancellables)
 
+        // When
         viewModel.setSelectedFav(favourite: datacenter)
 
-        XCTAssertTrue(maintenanceTriggered)
-        XCTAssertTrue(mockLocationsManager.getLocationCalled, "Should check location status")
+        // Then
+        XCTAssertTrue(
+            maintenanceTriggered,
+            "Maintenance popup should be triggered for an under-maintenance datacenter"
+        )
     }
 
-    func testLocationNotFoundShowsMaintenancePopup() {
-        let datacenter = createMockDatacenter(id: 999, city: "Unknown City")
-        var maintenanceTriggered = false
-
-        mockLocationsManager.mockLocationError = VPNConfigurationErrors.locationNotFound("999")
-
-        viewModel.showMaintenanceLocationTrigger
-            .sink { _ in maintenanceTriggered = true }
-            .store(in: &cancellables)
-
-        viewModel.setSelectedFav(favourite: datacenter)
-
-        XCTAssertTrue(maintenanceTriggered)
-        XCTAssertTrue(mockLocationsManager.getLocationCalled, "Should attempt to get location")
-    }
-
-    func testNoNodesAvailableShowsMaintenancePopup() {
+    func testAvailableDatacenterDoesNotShowMaintenancePopup() {
+        // Given — datacenter with status=1 and a server maps to
+        // statusValue == .available.
         let (location, datacenter) = createMockLocationWithDatacenter(
             locationId: 1,
-            locationName: "Test Location",
+            locationName: "Available Location",
             datacenterId: 123,
             city: "New York",
             status: 1,
-            hasServers: false  // No servers available
+            hasServers: true
         )
         var maintenanceTriggered = false
 
         mockLocationListRepository.locationListSubject.send([location])
         mockLocationListRepository.datacenterListSubject.send([datacenter])
-        mockLocationsManager.mockLocation = (location, datacenter)
 
         viewModel.showMaintenanceLocationTrigger
             .sink { _ in maintenanceTriggered = true }
             .store(in: &cancellables)
 
+        // When
         viewModel.setSelectedFav(favourite: datacenter)
 
-        XCTAssertTrue(maintenanceTriggered, "Maintenance popup should be triggered when no servers available")
+        // Then
+        XCTAssertFalse(
+            maintenanceTriggered,
+            "Maintenance popup must NOT fire for an available datacenter"
+        )
     }
 
-    func testPremiumLocationWithNoNodesShowsMaintenanceForPremiumUser() {
+    func testProDatacenterDoesNotShowMaintenancePopup() {
+        // Given — datacenter with status=1 and no servers maps to
+        // statusValue == .isPro (not .underMantainance), so no popup.
         let (location, datacenter) = createMockLocationWithDatacenter(
             locationId: 1,
-            locationName: "Premium Location",
+            locationName: "Pro Location",
             datacenterId: 456,
             city: "Tokyo",
             status: 1,
             isPremium: 1,
-            hasServers: false  // No servers available
+            hasServers: false
         )
         var maintenanceTriggered = false
 
         mockLocationListRepository.locationListSubject.send([location])
         mockLocationListRepository.datacenterListSubject.send([datacenter])
-        mockLocationsManager.mockLocation = (location, datacenter)
-        mockUserSessionRepository.setMockSession(userId: "123", isPremium: true)
 
         viewModel.showMaintenanceLocationTrigger
             .sink { _ in maintenanceTriggered = true }
             .store(in: &cancellables)
 
+        // When
         viewModel.setSelectedFav(favourite: datacenter)
 
-        XCTAssertTrue(maintenanceTriggered, "Maintenance popup should be triggered for premium user with no servers")
+        // Then
+        XCTAssertFalse(
+            maintenanceTriggered,
+            "Maintenance popup must NOT fire for a pro-required datacenter — that flow uses showUpgradeTrigger"
+        )
     }
 
     // MARK: Helper Methods
@@ -183,7 +195,11 @@ final class FavouriteListViewModelTests: XCTestCase {
             ovpnX509: "test-cert",
             linkSpeed: 1000
         )
-        datacenter.servers = servers.isEmpty ? [createMockServerMachine(datacenterId: id)] : servers
+        // Honor the caller's servers argument verbatim. The earlier helper
+        // silently replaced an empty list with a default mock, which made it
+        // impossible to provoke `statusValue == .underMantainance`
+        // (status=2 && servers.isEmpty).
+        datacenter.servers = servers
         return datacenter
     }
 

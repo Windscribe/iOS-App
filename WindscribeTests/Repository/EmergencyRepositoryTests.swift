@@ -168,10 +168,17 @@ class EmergencyRepositoryTests: XCTestCase {
     }
 
     // MARK: - isConnected Tests
+    //
+    // `EmergencyRepositoryImpl.isConnected()` was changed in commit fd7eb633
+    // (Issue #1018 — "Emergency Connect state leaks across logout/login cycle")
+    // to return `vpnStateRepository.isEmergencyConnection` instead of the
+    // generic `vpnStateRepository.isConnected()`. The semantics are now
+    // specifically "is the VPN connected via Emergency Connect", not "is the
+    // VPN connected at all". Tests below mirror the new contract.
 
-    func testIsConnected_whenVPNIsConnected_returnsTrue() {
+    func testIsConnected_whenEmergencyConnectionActive_returnsTrue() {
         // Given
-        mockVpnStateRepository.mockStatus = .connected
+        mockVpnStateRepository.isEmergencyConnection = true
 
         // When
         let result = repository.isConnected()
@@ -180,9 +187,9 @@ class EmergencyRepositoryTests: XCTestCase {
         XCTAssertTrue(result)
     }
 
-    func testIsConnected_whenVPNIsNotConnected_returnsFalse() {
+    func testIsConnected_whenEmergencyConnectionInactive_returnsFalse() {
         // Given
-        mockVpnStateRepository.mockStatus = .disconnected
+        mockVpnStateRepository.isEmergencyConnection = false
 
         // When
         let result = repository.isConnected()
