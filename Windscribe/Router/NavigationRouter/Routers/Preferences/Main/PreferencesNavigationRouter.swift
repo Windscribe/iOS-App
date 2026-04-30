@@ -33,7 +33,15 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
         case .help:
             return AnyView(Assembler.resolve(HelpSettingsView.self))
         case .about:
-            return AnyView(Assembler.resolve(AboutSettingsView.self))
+            // Project Neo M0 reference module (ND-005).
+            // iOS 17+ uses the new SwiftUI/@Observable AboutView consuming
+            // services via @Environment values. iOS 15/16 keeps the legacy
+            // path until the floor lifts in M1. Both behave identically.
+            if #available(iOS 17.0, *) {
+                return AnyView(AboutView())
+            } else {
+                return AnyView(Assembler.resolve(AboutSettingsView.self))
+            }
         case .screenTest:
             return AnyView(Assembler.resolve(ScreenTestView.self))
         case .ghostAccount:

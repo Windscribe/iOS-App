@@ -65,7 +65,7 @@ View (SwiftUI, @available(iOS 17.0, *))
       ⇄  Implementation (real impl + adapter to legacy Swinject services where applicable)
 ```
 
-The canonical reference is **`Windscribe/Features/LookAndFeel/`** (lands as part of M0). Copy that module, change names. If you need to make architectural decisions to do so, that's a signal the reference needs refining — flag it on the M0 issue rather than diverging.
+The canonical reference is **`Windscribe/Features/About/`** (lands as part of M0; see ND-005). Copy that module, change names. If you need to make architectural decisions to do so, that's a signal the reference needs refining — flag it on the M0 issue rather than diverging.
 
 Tests live in `WindscribeTests/Features/<FeatureName>Tests.swift` using the **Swift Testing** framework (`import Testing`, `@Test`, `#expect`). Each test injects mock service implementations directly into the VM constructor. No DI container needed.
 
@@ -80,7 +80,7 @@ tvOS-specific affordances to layer on top:
 - **Layout**: prefer `LazyVGrid` / `HStack` over `UICollectionViewCompositionalLayout`-style designs from the legacy `WindscribeTV/UI/` controllers.
 - **Navigation**: `NavigationStack` with focus-engine-aware modifiers; the iOS `NavigationRouter/` modifier may need a thin tvOS variant.
 
-If tvOS designs land before iOS designs, the first rebuilt tvOS screen plays the role LookAndFeel plays for iOS — it becomes the canonical tvOS reference.
+If tvOS designs land before iOS designs, the first rebuilt tvOS screen plays the role About plays for iOS — it becomes the canonical tvOS reference.
 
 ## Where to find things
 

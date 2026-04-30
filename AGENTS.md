@@ -176,6 +176,8 @@ UIKit VC or SwiftUI View  ⇄  ViewModel (ObservableObject / @Published)  ⇄  S
 
 The app is moving to an iOS 18 floor with a full UI rebuild. **When you write new code, write it in the modern style even if the surrounding code is legacy.** This keeps the eventual flip painless.
 
+**Canonical reference module:** [`Windscribe/Features/About/`](Windscribe/Features/About/) — the M0 PR 3 reference (per ND-005). Copy this when starting a new feature: it demonstrates `@Observable` + `@MainActor` view model, protocol-injected services via `@Environment(@Entry)`, async/await + `AsyncStream` over a Combine subject at the legacy boundary, and Swift Testing. The accompanying protocol seed lives in [`Windscribe/Services/Protocols/`](Windscribe/Services/Protocols/), the environment composition root in [`Windscribe/App/Environment+Dependencies.swift`](Windscribe/App/Environment+Dependencies.swift), and the test pattern in [`WindscribeTests/Features/AboutTests.swift`](WindscribeTests/Features/AboutTests.swift).
+
 | Layer | Legacy (current, in tree) | Modern (target, for new code) |
 | --- | --- | --- |
 | UI | UIKit + SnapKit | SwiftUI; UIKit only with a documented reason |

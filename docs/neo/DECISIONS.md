@@ -53,7 +53,7 @@
 ## ND-003 — Canonical reference module is `LookAndFeel`, `@available(iOS 17.0, *)`-gated
 
 **Date:** 2026-04-30
-**Status:** Active
+**Status:** Superseded by ND-005 (2026-04-30) — see below.
 **Context:** M0 needs one canonical, real, end-to-end Neo example so that "add a new screen" is a copy-paste-and-rename exercise rather than an architectural decision. The candidate set was Preferences leaves (already SwiftUI views, small scope) — `LookAndFeel`, `General`, etc.
 
 **Decision:** Use `LookAndFeelSettingsView` + `LookAndFeelViewModel`, moved to `Windscribe/Features/LookAndFeel/`. The new module is `@available(iOS 17.0, *)`-gated and runs alongside the existing legacy LookAndFeel — users on iOS 15/16 keep the legacy code path. `General` becomes M7's recipe-validation candidate.
@@ -95,3 +95,31 @@ Rule set:
 - **Documentation + code review only.** Rejected: too easy to drift, especially for AI-generated PRs that may not have read the docs.
 
 **Applies to:** M0 (PR 2), M3 (adds `Assembler.resolve` to the rule set).
+
+---
+
+## ND-005 — Canonical reference module is `About` (supersedes ND-003)
+
+**Date:** 2026-04-30
+**Status:** Active
+**Supersedes:** ND-003
+
+**Context:** ND-003 picked `LookAndFeel` as the M0 canonical reference based on a high-level read ("self-contained Preferences leaf, view already SwiftUI"). When PR 3 implementation began, reading the actual code revealed `LookAndFeelSettingsViewModel` is a 374-line class with 7 dependencies, inherits from `PreferencesBaseViewModelImpl`, drives a sub-router for app-icon selection, and handles file import/export for custom locations + backgrounds + sounds. Migrating it would force many judgment calls (router-in-VM, file-pickers-as-services, multi-step Combine chains, multi-protocol injection) and produce a >1,000-line PR that's neither easy to review nor easy to copy as a template — exactly what ND-003's "if the recipe required *any* judgment calls beyond mechanical transformation, refine the scaffolding" guard was protecting against.
+
+**Decision:** Switch the M0 canonical reference to `AboutSettingsView` + `AboutSettingsViewModel`, moved to `Windscribe/Features/About/`. Keep the `@available(iOS 17.0, *)` gating principle from ND-003. `LookAndFeel` becomes a candidate for M7's "second rebuilt screen" or M8's broader Preferences VM migration — its complexity is exactly what makes it the right *recipe-validation* test rather than the recipe-defining one.
+
+**Why About:**
+
+- 57-line VM, 48-line View. Reasonable PR size.
+- 2 dependencies (`FileLogger`, `LookAndFeelRepositoryType`). Realistic but minimal protocol surface to seed `Windscribe/Services/Protocols/`.
+- One Combine binding (the dark-mode subject) — demonstrates the `Combine .values → AsyncStream` conversion at a manageable scale.
+- Sheet presentation (`SafariView`) — demonstrates simple stateful UI without router complexity.
+- No file I/O, no inheritance, no sub-routes, no async chains.
+
+**Alternatives considered:**
+
+- **Push through with `LookAndFeel`.** Rejected — would produce a >1,000-line PR; the resulting "reference" wouldn't be a copy-paste template, defeating M0's goal.
+- **Thin slice of `LookAndFeel` (just the appearance entry).** Rejected — leaves half the screen on the legacy path and half on Neo, creates a confusing mid-state inside one feature.
+- **`General` or `Robert`.** Both are smaller than LookAndFeel but larger than About. About is the cleanest first cut.
+
+**Applies to:** M0 (PR 3), M7 (recipe-validation target — likely `General`, possibly `LookAndFeel`).

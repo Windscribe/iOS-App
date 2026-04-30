@@ -43,7 +43,7 @@ See [`../DECISIONS.md`](../DECISIONS.md) for the full architectural decision log
 - **`main` stays launchable at all times.** Neo work lands on `main` only if strictly forward-compatible.
 - **Two-track landing strategy** with explicit per-issue landing rules (table below).
 - **tvOS floor lifts to 18 in M1, on `neo-5.0` only.**
-- **Canonical reference module: `Windscribe/Features/LookAndFeel/`**, `@available(iOS 17.0, *)`-gated.
+- **Canonical reference module: `Windscribe/Features/About/`** (per ND-005, supersedes ND-003), `@available(iOS 17.0, *)`-gated.
 - **Enforcement: custom SwiftLint regex rules** scoped to `Windscribe/Features/**` and `WindscribeTV/Features/**`.
 
 #### Branching strategy at a glance
@@ -93,7 +93,7 @@ For the up-to-date task breakdown of any active issue, see its plan file in this
 
 ### M0 — Project Neo Guardrails (unblocks team contribution)
 
-**Lands on:** `main → neo-5.0`. All M0 work is forward-compatible. Docs and lint rules are purely additive. The LookAndFeel reference module ships behind `@available(iOS 17.0, *)` and runtime-branches against the existing legacy LookAndFeel — users on iOS 15/16 are unaffected.
+**Lands on:** `main → neo-5.0`. All M0 work is forward-compatible. Docs and lint rules are purely additive. The About reference module ships behind `@available(iOS 17.0, *)` and runtime-branches against the existing legacy About — users on iOS 15/16 are unaffected.
 
 **Goal:** Make it cheaper for teammates — and their AI agents — to write Neo-shaped code than to copy a legacy pattern. Establishes the rules, the working examples, and the **shared context layer** *before* the rebuild begins.
 
@@ -101,7 +101,7 @@ For the up-to-date task breakdown of any active issue, see its plan file in this
 
 - Shared context layer in tree (this directory, [`../DECISIONS.md`](../DECISIONS.md), [`../STATE.md`](../STATE.md), [`../../PROJECT_NEO.md`](../../PROJECT_NEO.md)).
 - SwiftLint custom rules forbidding the legacy patterns inside `Windscribe/Features/**` and `WindscribeTV/Features/**`.
-- Canonical reference module `Windscribe/Features/LookAndFeel/` end-to-end Neo: `@Observable` `@MainActor` VM, protocol-injected services, SwiftUI view via `@Environment(@Entry)`, Swift Testing tests with mock services.
+- Canonical reference module `Windscribe/Features/About/` end-to-end Neo: `@Observable` `@MainActor` VM, protocol-injected services, SwiftUI view via `@Environment(@Entry)`, Swift Testing tests with mock services.
 - `WindscribeTV/Features/` skeleton + tvOS-pattern doc section so tvOS isn't blocked if its designs land first.
 
 For per-task detail, see [`M0-guardrails.md`](M0-guardrails.md).
@@ -197,6 +197,7 @@ Once GRDB is in tree (post Step 2), `Windscribe/App/Environment+Dependencies.swi
 - Mock guidance documented: how to write a `MockX: ProtocolX` instead of mocking concrete impls. Two worked examples (struct mock with stored callbacks, actor mock for state) live alongside the reference module.
 - GRDB in-memory `DatabaseQueue` test fixture pattern documented (depends on M2 D2.2).
 - CI's `fastlane test` collects Swift Testing results (XCResult parsing) alongside XCTest.
+- **macOS-runnable test target — feasibility evaluation.** Today the only test target is `WindscribeTests`, which depends transitively on iOS-only frameworks (`NetworkExtension`, `RealmSwift`, etc.) and so requires a booted iOS Simulator runtime. Evaluate whether a separate `WindscribeCoreTests` (or similar) target can host new Neo Swift Testing suites against a macOS destination — runs headless via `swift test` / `xcodebuild -destination 'platform=macOS'`, no simulator boot, faster iteration. Only feasible if the modules under test (Neo `Features/`, `Services/Protocols/`, value-type domain models) compile against macOS without dragging the iOS-only legacy in. If the dependency graph forces iOS Simulator anyway, document why and stop. If it works, new Neo tests target the macOS surface; legacy iOS-coupled tests stay in `WindscribeTests`. Lands as part of M5 if proven feasible during M5; defer otherwise.
 
 ---
 
@@ -226,9 +227,9 @@ Depends on **M1** (for T6.2/T6.3).
 
 **Lands on:** `main → neo-5.0`. Same `@available(iOS 17.0, *)` gating as M0's reference module.
 
-**Goal:** Prove the M0 reference module is truly copy-able. M0 ships LookAndFeel; M7 picks a sibling Preferences leaf (likely `GeneralSettings`) and applies the recipe verbatim.
+**Goal:** Prove the M0 reference module is truly copy-able. M0 ships About; M7 picks a sibling Preferences leaf (candidates: `GeneralSettings` or `LookAndFeel` — the latter is intentionally heavier and serves as a stress test of the recipe) and applies the recipe verbatim.
 
-Depends on **M0** (LookAndFeel reference) and **M3** (DI shims established).
+Depends on **M0** (About reference) and **M3** (DI shims established).
 
 **Outcome:**
 
@@ -256,7 +257,7 @@ Cannot start in detail until iOS UI designs land. This issue is a **placeholder*
 
 - **Server list** — likely the easiest to rebuild against existing data; depends on GRDB (`ValueObservation`).
 - **Main / Connect / Status** — biggest single legacy hub (~5,200 lines across `MainViewController/`). Will likely be subdivided into Connect, Status, and Quick-Connect sub-features.
-- **Remaining Preferences VMs** — ~15 view models to migrate from `ObservableObject` → `@Observable` (M7's recipe applied repeatedly; LookAndFeel and General are already done). Views are already SwiftUI.
+- **Remaining Preferences VMs** — ~15 view models to migrate from `ObservableObject` → `@Observable` (M7's recipe applied repeatedly; About is done as M0's reference, M7's pick is the next). Views are already SwiftUI.
 - **PlanUpgrade** — full UIKit + SnapKit rebuild as SwiftUI. Retires the SnapKit dependency.
 - **Popups** — 13 view models to migrate (views already SwiftUI).
 - **Authentication VMs** — 5 view models to migrate (views already SwiftUI).
@@ -279,7 +280,7 @@ Cannot start in detail until tvOS UI designs land. This issue gets its own plan 
 
 - All 13 tvOS view controllers rebuilt as SwiftUI views with `@Observable` view models in `WindscribeTV/Features/`.
 - All 5 tvOS routers replaced with `NavigationStack`-based flows.
-- The first rebuilt tvOS screen plays the same role for tvOS that LookAndFeel does for iOS — it's the canonical reference once it lands.
+- The first rebuilt tvOS screen plays the same role for tvOS that About does for iOS — it's the canonical reference once it lands.
 - DI shims (M3) reused; the Swinject graph in `WindscribeTV/Dependencies/` decays as features migrate.
 
 ---
