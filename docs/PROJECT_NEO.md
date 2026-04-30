@@ -71,7 +71,9 @@ Tests live in `WindscribeTests/Features/<FeatureName>Tests.swift` using the **Sw
 
 ## Applying these patterns to tvOS
 
-Project Neo is **platform-symmetric**. Everything above applies identically to `WindscribeTV/Features/`. Where the iOS reference lands first, tvOS contributors copy the same shape into `WindscribeTV/Features/<Feature>/`.
+Project Neo is **platform-symmetric**. Everything above applies identically to [`WindscribeTV/Features/`](../WindscribeTV/Features/). New tvOS work goes in that directory; legacy tvOS UIKit screens stay in `WindscribeTV/UI/` until they are rebuilt. Capability protocols and adapters live in [`WindscribeTV/Services/Protocols/`](../WindscribeTV/Services/Protocols/), mirroring the iOS layout. SwiftLint custom rules apply to both Features paths automatically.
+
+The `@Observable` `@MainActor` view model, `@Environment(@Entry)`-injected protocol services, and `AsyncStream`-over-Combine boundary patterns from `Windscribe/Features/About/` are platform-agnostic — copy them as-is. Only the SwiftUI surface and the affordances below change.
 
 tvOS-specific affordances to layer on top:
 
@@ -80,7 +82,7 @@ tvOS-specific affordances to layer on top:
 - **Layout**: prefer `LazyVGrid` / `HStack` over `UICollectionViewCompositionalLayout`-style designs from the legacy `WindscribeTV/UI/` controllers.
 - **Navigation**: `NavigationStack` with focus-engine-aware modifiers; the iOS `NavigationRouter/` modifier may need a thin tvOS variant.
 
-If tvOS designs land before iOS designs, the first rebuilt tvOS screen plays the role About plays for iOS — it becomes the canonical tvOS reference.
+If tvOS designs land before iOS, the first rebuilt tvOS screen plays the role About plays for iOS — it becomes the canonical tvOS reference and the README pointers in `WindscribeTV/Features/` should be updated to link it directly.
 
 ## Where to find things
 
