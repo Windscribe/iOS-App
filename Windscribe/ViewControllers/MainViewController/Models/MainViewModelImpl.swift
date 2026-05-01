@@ -318,12 +318,24 @@ class MainViewModelImpl: MainViewModel {
     }
 
     private func sortLocationsByLatency(_ locationSections: [LocationSection]) -> [LocationSection] {
-        var mappedLocations = locationSections.compactMap { section in
-            if let pingServer = section.location?.datacenters.randomElement()?.pingServer,
-               let latency = latencyRepo.getPingData(ip: pingServer.ip)?.latency {
-                return (section, latency)
+        var mappedLocations = locationSections.compactMap { section -> (LocationSection, Int) in
+            var sortedSection = section
+            // Sort datacenters within each location by latency
+            guard let copyDatacenters = sortedSection.location?.datacenters else { return (section, -1) }
+
+            var mappedDatacenters: [(DatacenterModel, Int)] = copyDatacenters.compactMap {
+                let lat = getLatency(datacenter: $0)
+                return ($0, lat)
             }
-            return (section, -1)
+            mappedDatacenters = mappedDatacenters.sorted { mapped1, mapped2 in
+                if mapped1.1 == -1 { return false }
+                if mapped2.1 == -1 { return true }
+                return mapped1.1 < mapped2.1
+            }
+            // Use the best datacenter latency to represent the location
+            let bestLatency = mappedDatacenters.first?.1 ?? -1
+            sortedSection.location?.datacenters = mappedDatacenters.map(\.0)
+            return (sortedSection, bestLatency)
         }
 
         mappedLocations.sort {
