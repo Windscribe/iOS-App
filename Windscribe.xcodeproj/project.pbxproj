@@ -342,6 +342,7 @@
 		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
 		1EFFD04D2E994400005603FB /* LocationList.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFFD04C2E9943F6005603FB /* LocationList.json */; };
 		1EFFD0532E9FD8D4005603FB /* AdvanceRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */; };
+		3FF4243D140342EA94E36948 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		592CA79A2C4EC0FF0078D487 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592CA7992C4EC0FF0078D487 /* LoginViewController.swift */; };
 		592CA7A32C4FF8910078D487 /* Login2FA.xib in Resources */ = {isa = PBXBuildFile; fileRef = 592CA7A22C4FF8910078D487 /* Login2FA.xib */; };
@@ -437,7 +438,6 @@
 		59FC73CF2C514AC300021CD1 /* UserScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = C571C6732C135C3600786DA5 /* UserScope.swift */; };
 		59FC73D12C514AD600021CD1 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */; };
 		59FC73D32C514B0500021CD1 /* AlertManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E927021F26A1400A3F584 /* AlertManagerImpl.swift */; };
-		3FF4243D140342EA94E36948 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		59FC73D42C514B1300021CD1 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
@@ -9139,7 +9139,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				EXCLUDED_ARCHS = "";
