@@ -200,9 +200,8 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
             let datacenter = locationsSections[calculatedSection].location?.datacenters[indexPath.row - 1]
 
             var latency = -1
-            if let datacenter = datacenter,
-               let randomServer = locationListRepository.getRandomServer(for: datacenter.id),
-               let newlatency = latencyRepository.getPingData(ip: randomServer.ip)?.latency {
+            if let pingServer = datacenter?.pingServer,
+               let newlatency = latencyRepository.getPingData(ip: pingServer.ip)?.latency {
                 latency = newlatency
             }
 
