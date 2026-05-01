@@ -122,7 +122,7 @@ class ControlPlane {
     }
 
     func getSession() async throws -> SessionModel {
-        guard let sessionAuth = preferences.userSessionAuth() else {
+        guard let sessionAuth = preferences.getSessionAuthHash() else {
             throw Errors.validationFailure
         }
         let revision = preferences.getServerRevision()

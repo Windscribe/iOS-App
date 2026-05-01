@@ -16,6 +16,7 @@ class UserSessionRepositoryTests: XCTestCase {
     var mockContainer: Container!
     var mockPreferences: MockPreferences!
     var mockLocalDatabase: MockLocalDatabase!
+    var mockSessionStore: MockSessionKeychainStore!
     var mockLocationListRepository: MockLocationListRepository!
     var mockAntiCensorshipRepository: MockAntiCensorshipRepository!
 
@@ -26,6 +27,7 @@ class UserSessionRepositoryTests: XCTestCase {
         mockContainer = Container()
         mockPreferences = MockPreferences()
         mockLocalDatabase = MockLocalDatabase()
+        mockSessionStore = MockSessionKeychainStore()
         mockLocationListRepository = MockLocationListRepository()
         mockAntiCensorshipRepository = MockAntiCensorshipRepository()
 
@@ -34,6 +36,9 @@ class UserSessionRepositoryTests: XCTestCase {
         }
         mockContainer.register(LocalDatabase.self) { _ in
             return self.mockLocalDatabase
+        }
+        mockContainer.register(SessionKeychainStore.self) { _ in
+            return self.mockSessionStore
         }
         mockContainer.register(LocationListRepository.self) { _ in
             return self.mockLocationListRepository
@@ -45,6 +50,7 @@ class UserSessionRepositoryTests: XCTestCase {
         mockContainer.register(UserSessionRepository.self) { r in
             return UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!,
                                              localDatabase: r.resolve(LocalDatabase.self)!,
+                                             sessionStore: r.resolve(SessionKeychainStore.self)!,
                                              locationListRepository: r.resolve(LocationListRepository.self)!,
                                              antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!)
         }.inObjectScope(.container)
@@ -57,6 +63,7 @@ class UserSessionRepositoryTests: XCTestCase {
         repository = nil
         mockPreferences = nil
         mockLocalDatabase = nil
+        mockSessionStore = nil
         mockLocationListRepository = nil
         super.tearDown()
     }

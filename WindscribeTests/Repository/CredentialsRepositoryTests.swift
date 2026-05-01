@@ -137,29 +137,29 @@ class CredentialsRepositoryTests: XCTestCase {
         XCTAssertNotNil(repository.openVPNCrendentials, "OpenVPN credentials should be set")
         XCTAssertEqual(repository.openVPNCrendentials?.username, "test-openvpn-user")
         XCTAssertEqual(repository.openVPNCrendentials?.password, "test-openvpn-pass")
-        XCTAssertTrue(mockLocalDatabase.saveOpenVPNCredentialsCalled, "Should save credentials to database")
+        XCTAssertTrue(mockPreferences.saveOpenVPNCredentialsCalled, "Should save credentials to database")
     }
 
-    func testGetUpdatedOpenVPNCredentials_apiFailure_fallsBackToLocalDatabase() async throws {
+    func testGetUpdatedOpenVPNCredentials_apiFailure_fallsBackToCachedPreferences() async throws {
         // Given
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = NSError(domain: "TestError", code: -1)
-        let localCredentials = createMockOpenVPNCredentials()
-        mockLocalDatabase.mockOpenVPNCredentials = localCredentials
+        let cachedCredentials = ServerCredentialsModel(username: "test-openvpn-user", password: "test-openvpn-pass")
+        mockPreferences.mockOpenVPNCredentials = cachedCredentials
 
         // When
         try await repository.getUpdatedOpenVPNCrendentials()
 
         // Then
-        XCTAssertNotNil(repository.openVPNCrendentials, "Should use local credentials on API failure")
+        XCTAssertNotNil(repository.openVPNCrendentials, "Should use cached credentials on API failure")
         XCTAssertEqual(repository.openVPNCrendentials?.username, "test-openvpn-user")
     }
 
-    func testGetUpdatedOpenVPNCredentials_apiFailureWithNoLocalCredentials_throwsError() async {
+    func testGetUpdatedOpenVPNCredentials_apiFailureWithNoCachedCredentials_throwsError() async {
         // Given
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = NSError(domain: "TestError", code: -1)
-        mockLocalDatabase.mockOpenVPNCredentials = nil
+        mockPreferences.mockOpenVPNCredentials = nil
 
         // When/Then
         do {
@@ -184,29 +184,29 @@ class CredentialsRepositoryTests: XCTestCase {
         XCTAssertNotNil(repository.ikev2Crendentials, "IKEv2 credentials should be set")
         XCTAssertEqual(repository.ikev2Crendentials?.username, "test-ikev2-user")
         XCTAssertEqual(repository.ikev2Crendentials?.password, "test-ikev2-pass")
-        XCTAssertTrue(mockLocalDatabase.saveIKEv2CredentialsCalled, "Should save credentials to database")
+        XCTAssertTrue(mockPreferences.saveIKEv2CredentialsCalled, "Should save credentials to database")
     }
 
-    func testGetUpdatedIKEv2Credentials_apiFailure_fallsBackToLocalDatabase() async throws {
+    func testGetUpdatedIKEv2Credentials_apiFailure_fallsBackToCachedPreferences() async throws {
         // Given
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = NSError(domain: "TestError", code: -1)
-        let localCredentials = createMockIKEv2Credentials()
-        mockLocalDatabase.mockIKEv2Credentials = localCredentials
+        let cachedCredentials = ServerCredentialsModel(username: "test-ikev2-user", password: "test-ikev2-pass")
+        mockPreferences.mockIKEv2Credentials = cachedCredentials
 
         // When
         try await repository.getUpdatedIKEv2Crendentials()
 
         // Then
-        XCTAssertNotNil(repository.ikev2Crendentials, "Should use local credentials on API failure")
+        XCTAssertNotNil(repository.ikev2Crendentials, "Should use cached credentials on API failure")
         XCTAssertEqual(repository.ikev2Crendentials?.username, "test-ikev2-user")
     }
 
-    func testGetUpdatedIKEv2Credentials_apiFailureWithNoLocalCredentials_throwsError() async {
+    func testGetUpdatedIKEv2Credentials_apiFailureWithNoCachedCredentials_throwsError() async {
         // Given
         mockAPIManager.shouldThrowError = true
         mockAPIManager.customError = NSError(domain: "TestError", code: -1)
-        mockLocalDatabase.mockIKEv2Credentials = nil
+        mockPreferences.mockIKEv2Credentials = nil
 
         // When/Then
         do {
@@ -395,7 +395,7 @@ class CredentialsRepositoryTests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             // Then
             XCTAssertNotNil(self.repository.openVPNCrendentials, "Should update OpenVPN credentials")
-            XCTAssertTrue(self.mockLocalDatabase.saveOpenVPNCredentialsCalled, "Should save credentials")
+            XCTAssertTrue(self.mockPreferences.saveOpenVPNCredentialsCalled, "Should save credentials")
             XCTAssertTrue(self.mockFileDatabase.saveFileCalled, "Should save config file")
             expectation.fulfill()
         }
@@ -412,7 +412,7 @@ class CredentialsRepositoryTests: XCTestCase {
         // Then - verify no operations were performed
         let expectation = XCTestExpectation(description: "Wait for potential execution")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            XCTAssertFalse(self.mockLocalDatabase.saveOpenVPNCredentialsCalled, "Should not save credentials without session")
+            XCTAssertFalse(self.mockPreferences.saveOpenVPNCredentialsCalled, "Should not save credentials without session")
             XCTAssertFalse(self.mockFileDatabase.saveFileCalled, "Should not save config without session")
             expectation.fulfill()
         }
@@ -442,11 +442,11 @@ class CredentialsRepositoryTests: XCTestCase {
     // MARK: - Integration Tests
 
     func testCredentialsLifecycle_loadInitialDataThenUpdate() async throws {
-        // Given - Set up initial local data
-        let initialOpenVPNCredentials = createMockOpenVPNCredentials()
-        let initialIKEv2Credentials = createMockIKEv2Credentials()
-        mockLocalDatabase.mockOpenVPNCredentials = initialOpenVPNCredentials
-        mockLocalDatabase.mockIKEv2Credentials = initialIKEv2Credentials
+        // Given - Set up initial cached data in Preferences (Keychain)
+        let initialOpenVPNCredentials = ServerCredentialsModel(username: "test-openvpn-user", password: "test-openvpn-pass")
+        let initialIKEv2Credentials = ServerCredentialsModel(username: "test-ikev2-user", password: "test-ikev2-pass")
+        mockPreferences.mockOpenVPNCredentials = initialOpenVPNCredentials
+        mockPreferences.mockIKEv2Credentials = initialIKEv2Credentials
 
         // Create a new repository instance to trigger loadData()
         let newRepository = CredentialsRepositoryImpl(

@@ -141,6 +141,12 @@ enum SharedKeys {
     static let serverRevision = "serverRevision"
     static let routingType = "routingType"
 
+    // MARK: - Keychain Keys
+    static let keychainOpenVPNCred = "openvpn-server-cred"
+    static let keychainIKEv2Cred = "ikev2-server-cred"
+    static let keychainStoredSession = "stored-session-data"
+    static let keychainCustomConfigCreds = "customconfig-credentials"
+
     /// Cached plist dictionary to avoid repeated file I/O
     private static let plistDictionary: [String: Any] = {
         guard let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist"),

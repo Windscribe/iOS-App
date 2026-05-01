@@ -67,6 +67,13 @@ class MockPreferences: Preferences {
     var sessionAuthToReturn: String?
     var lastSavedSessionAuth: String?
 
+    // Migration tracking
+    var mockFirstInstall: Bool? = false
+    var mockUserDefaultsSessionAuth: String?
+    var clearUserDefaultsSessionAuthCalled = false
+    var clearSessionAuthCalled = false
+    var saveSessionAuthHashCalled = false
+
     // Background/Look and Feel mock storage
     var mockAspectRatio: String?
     var mockBackgroundEffectConnect: String?
@@ -110,14 +117,6 @@ class MockPreferences: Preferences {
 
     func saveRateUsActionCompleted(bool: Bool) {
         mockHasReviewed = bool
-    }
-
-    func saveUserSessionAuth(sessionAuth: String?) {
-        lastSavedSessionAuth = sessionAuth
-    }
-
-    func userSessionAuth() -> String? {
-        return sessionAuthToReturn
     }
 
     func saveOrderLocationsBy(order: String) {}
@@ -301,10 +300,12 @@ class MockPreferences: Preferences {
         return false
     }
 
-    func saveFirstInstall(bool: Bool?) {}
+    func saveFirstInstall(bool: Bool?) {
+        mockFirstInstall = bool
+    }
 
     func getFirstInstall() -> Bool? {
-        return false
+        return mockFirstInstall
     }
 
     func saveActiveAppleSig(sig: String?) {}
@@ -331,6 +332,62 @@ class MockPreferences: Preferences {
         return nil
     }
 
+    // MARK: - OpenVPN + IKEv2 Server Credentials
+
+    var mockOpenVPNCredentials: ServerCredentialsModel?
+    var mockIKEv2Credentials: ServerCredentialsModel?
+
+    var saveOpenVPNCredentialsCalled = false
+    func saveOpenVPNCredentials(_ credentials: ServerCredentialsModel) { saveOpenVPNCredentialsCalled = true; mockOpenVPNCredentials = credentials }
+    func getOpenVPNCredentials() -> ServerCredentialsModel? { mockOpenVPNCredentials }
+    func deleteOpenVPNCredentials() { mockOpenVPNCredentials = nil }
+
+    var saveIKEv2CredentialsCalled = false
+    func saveIKEv2Credentials(_ credentials: ServerCredentialsModel) { saveIKEv2CredentialsCalled = true; mockIKEv2Credentials = credentials }
+    func getIKEv2Credentials() -> ServerCredentialsModel? { mockIKEv2Credentials }
+    func deleteIKEv2Credentials() { mockIKEv2Credentials = nil }
+
+    // MARK: - Custom Config Credentials
+
+    private var customConfigCredentials: [String: ServerCredentialsModel] = [:]
+    private var storedSessionData: Data?
+
+    func saveCustomConfigCredentials(configId: String, credentials: ServerCredentialsModel) {
+        customConfigCredentials[configId] = credentials
+    }
+
+    func getCustomConfigCredentials(configId: String) -> ServerCredentialsModel? {
+        return customConfigCredentials[configId]
+    }
+
+    func deleteCustomConfigCredentials(configId: String) {
+        customConfigCredentials.removeValue(forKey: configId)
+    }
+
+    func getAllCustomConfigCredentials() -> [String: ServerCredentialsModel] {
+        return customConfigCredentials
+    }
+
+    func saveAllCustomConfigCredentials(_ credentials: [String: ServerCredentialsModel]) {
+        customConfigCredentials = credentials
+    }
+
+    func deleteAllCustomConfigCredentials() {
+        customConfigCredentials.removeAll()
+    }
+
+    func saveStoredSession(_ data: Data) throws {
+        storedSessionData = data
+    }
+
+    func getStoredSession() throws -> Data? {
+        return storedSessionData
+    }
+
+    func deleteStoredSession() {
+        storedSessionData = nil
+    }
+
     func saveSSOProvider(provider: String?) {}
 
     func getSSOProvider() -> String? {
@@ -355,8 +412,25 @@ class MockPreferences: Preferences {
         return nil
     }
 
+    func clearUserDefaultsSessionAuth() {
+        clearUserDefaultsSessionAuthCalled = true
+        mockUserDefaultsSessionAuth = nil
+    }
+
+    func getUserDefaultsSessionAuth() -> String? {
+        return mockUserDefaultsSessionAuth
+    }
+
+    func clearSessionAuth() {
+        clearSessionAuthCalled = true
+        sessionAuthToReturn = nil
+        lastSavedSessionAuth = nil
+    }
+
     func saveSessionAuthHash(sessionAuth: String) {
+        saveSessionAuthHashCalled = true
         sessionAuthToReturn = sessionAuth
+        lastSavedSessionAuth = sessionAuth
     }
 
     func getSessionAuthHash() -> String? {

@@ -14,6 +14,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
     private let localDatabase: LocalDatabase
     private let portMapRepository: PortMapRepository
     private let logger: FileLogger
+    private let preferences: Preferences
 
     private var cancellables = Set<AnyCancellable>()
     var customConfigs = CurrentValueSubject<[CustomConfigModel], Never>([])
@@ -21,19 +22,53 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
     init(fileDatabase: FileDatabase,
          localDatabase: LocalDatabase,
          logger: FileLogger,
-         portMapRepository: PortMapRepository) {
+         portMapRepository: PortMapRepository,
+         preferences: Preferences) {
         self.fileDatabase = fileDatabase
         self.localDatabase = localDatabase
         self.logger = logger
         self.portMapRepository = portMapRepository
+        self.preferences = preferences
 
         self.localDatabase.getCustomConfigPublisher()
             .filter {$0.filter({$0.isInvalidated}).count == 0}
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] customConfig in
-                self?.customConfigs.send(customConfig.map { $0.getModel() })
+                guard let self = self else { return }
+                let allCredentials = preferences.getAllCustomConfigCredentials()
+                let models = customConfig.map { config -> CustomConfigModel in
+                    var model = config.getModel()
+                    if let credentials = allCredentials[config.id] {
+                        self.loadCredentials(&model, with: credentials)
+                    }
+                    return model
+                }
+                self.customConfigs.send(models)
             })
             .store(in: &cancellables)
+    }
+
+    // MARK: - Credential Helpers (via Preferences)
+
+    private func saveCredentials(_ config: CustomConfigModel) {
+        let credentials = ServerCredentialsModel(username: config.username, password: config.password)
+        preferences.saveCustomConfigCredentials(configId: config.id, credentials: credentials)
+    }
+
+    private func loadCredentials(_ config: inout CustomConfigModel) {
+        if let credentials = preferences.getCustomConfigCredentials(configId: config.id) {
+            loadCredentials(&config, with: credentials)
+        }
+    }
+
+
+    private func loadCredentials(_ config: inout CustomConfigModel, with credentials: ServerCredentialsModel) {
+        config.username = credentials.username
+        config.password = credentials.password
+    }
+
+    private func deleteCredentials(configId: String) {
+        preferences.deleteCustomConfigCredentials(configId: configId)
     }
 
     func saveOpenVPNCustomConfig(data: Data,
@@ -45,13 +80,16 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         // Async file operation
         try await fileDatabase.saveFile(data: data, path: path)
 
-        // Create config model
-        let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true, saveCredentials: true)
+        // Save credentials to Keychain, store Realm object without them
+        let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: "", password: "", authRequired: true, saveCredentials: true)
+
+        let configModel = CustomConfigModel(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true, saveCredentials: true)
+        saveCredentials(configModel)
 
         // Realm operations must be on main thread
         localDatabase.saveCustomConfig(customConfig: customConfig)
 
-        return customConfig.getModel()
+        return configModel
     }
 
     func saveWgConfig(url: URL) async throws {
@@ -212,17 +250,36 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
     }
 
     func removeCustomConfig(fileId: String) {
+        deleteCredentials(configId: fileId)
         localDatabase.removeCustomConfig(fileId: fileId)
-        customConfigs.send(localDatabase.getCustomConfigs().map {$0.getModel()})
+        let allCredentials = preferences.getAllCustomConfigCredentials()
+        let models = localDatabase.getCustomConfigs().map { config -> CustomConfigModel in
+            var model = config.getModel()
+            if let credentials = allCredentials[config.id] {
+                self.loadCredentials(&model, with: credentials)
+            }
+            return model
+        }
+        customConfigs.send(models)
     }
 
     func getCustomConfig(fileId: String) -> CustomConfigModel? {
-        localDatabase.getCustomConfigs()
-            .first { fileId == $0.id }?
-            .getModel()
+        guard var model = localDatabase.getCustomConfigs()
+            .first(where: { fileId == $0.id })?
+            .getModel() else {
+            return nil
+        }
+        loadCredentials(&model)
+        return model
     }
 
     func saveCustomConfig(customConfig: CustomConfigModel) {
-        localDatabase.saveCustomConfig(customConfig: customConfig.getRealmObject())
+        // Save credentials to Keychain
+        saveCredentials(customConfig)
+        // Clear credentials from the Realm copy
+        var realmModel = customConfig
+        realmModel.username = ""
+        realmModel.password = ""
+        localDatabase.saveCustomConfig(customConfig: realmModel.getRealmObject())
     }
 }

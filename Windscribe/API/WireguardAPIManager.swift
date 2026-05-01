@@ -24,7 +24,7 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
     }
 
     func wgConfigInit(clientPublicKey: String, deleteOldestKey: Bool) async throws -> DynamicWireGuardConfig {
-        guard let sessionAuth = preferences.userSessionAuth() else {
+        guard let sessionAuth = preferences.getSessionAuthHash() else {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: DynamicWireGuardConfig.self) { [weak self] completion in
@@ -33,7 +33,7 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
     }
 
     func getSession() async throws -> SessionModel {
-        guard let sessionAuth = preferences.userSessionAuth() else {
+        guard let sessionAuth = preferences.getSessionAuthHash() else {
             throw Errors.validationFailure
         }
         let revision = preferences.getServerRevision()

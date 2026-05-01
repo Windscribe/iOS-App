@@ -396,7 +396,7 @@ class SessionManagerImpl: SessionManager {
 
         // Clearn favourites, Saved session location
         preferences.clearFavourites()
-        preferences.saveUserSessionAuth(sessionAuth: nil)
+        preferences.clearSessionAuth()
         preferences.clearSelectedLocations()
         preferences.saveLastUpdateCheckTimestamp(timeStamp: nil)
         preferences.saveLastUpdatePromptTimestamp(timeStamp: nil)

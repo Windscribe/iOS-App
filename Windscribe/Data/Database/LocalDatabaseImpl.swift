@@ -26,23 +26,15 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObjectList(type: Server.self)
     }
 
-    func saveSession(session: Session) {
-        do {
-            let realm = try Realm()
-            try realm.safeWrite {
-                realm.add(session, update: .modified)
-            }
-        } catch {
-            logger.logE("LocalDatabaseImpl", "Failed to save session: \(error.localizedDescription)")
-        }
-    }
-
-    func getSessionPublisher() -> AnyPublisher<Session?, Never> {
-        return getSafeRealmObjectPublisher(type: Session.self)
-    }
-
     func getSession() -> Session? {
         return getRealmObject(type: Session.self)
+    }
+
+
+    func clearSessionFromRealm() {
+        if let object = getSession() {
+            deleteRealmObject(object: object)
+        }
     }
 
     // MARK: - Server V2 Architecture
@@ -123,16 +115,20 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObject(type: OpenVPNServerCredentials.self)
     }
 
-    func saveOpenVPNServerCredentials(credentials: OpenVPNServerCredentials) {
-        return updateRealmObject(object: credentials)
-    }
-
     func getIKEv2ServerCredentials() -> IKEv2ServerCredentials? {
         return getRealmObject(type: IKEv2ServerCredentials.self)
     }
 
-    func saveIKEv2ServerCredentials(credentials: IKEv2ServerCredentials) {
-        return updateRealmObject(object: credentials)
+    func clearOpenVPNServerCredentials() {
+        if let object = getOpenVPNServerCredentials() {
+            deleteRealmObject(object: object)
+        }
+    }
+
+    func clearIKEv2ServerCredentials() {
+        if let object = getIKEv2ServerCredentials() {
+            deleteRealmObject(object: object)
+        }
     }
 
     func getPortMap() -> [PortMap]? {
@@ -257,21 +253,6 @@ class LocalDatabaseImpl: LocalDatabase {
         if let object = getRealmObject(type: Favourite.self, primaryKey: datacenterId) {
             deleteRealmObject(object: object)
         }
-    }
-
-    func saveOldSession() {
-        let realm = try? Realm()
-        if let session = realm?.objects(Session.self).first {
-            let oldSession = OldSession(session: session)
-            let realm = try? Realm()
-            try? realm?.safeWrite {
-                realm?.add(oldSession, update: .modified)
-            }
-        }
-    }
-
-    func getOldSession() -> OldSession? {
-        return getRealmObject(type: OldSession.self)
     }
 
     func clean() {

@@ -16,9 +16,8 @@ protocol LocalDatabase {
     // MARK: After Modelization of Database
     func getServers() -> [Server]? //Needs to be kept if the user migrates and has no Locations yet
 
-    func getSessionPublisher() -> AnyPublisher<Session?, Never>
-    func getSession() -> Session?
-    func saveSession(session: Session)
+    func getSession() -> Session? // Needs to be kept in order for migration to Keychain to happen
+    func clearSessionFromRealm()
 
     // MARK: New Server Architecture
     func getLocations() -> [LocationObject]?
@@ -35,9 +34,9 @@ protocol LocalDatabase {
     func saveStaticIPs(staticIps: [StaticIP])
     func deleteStaticIps(ignore: [String])
     func getOpenVPNServerCredentials() -> OpenVPNServerCredentials?
-    func saveOpenVPNServerCredentials(credentials: OpenVPNServerCredentials)
     func getIKEv2ServerCredentials() -> IKEv2ServerCredentials?
-    func saveIKEv2ServerCredentials(credentials: IKEv2ServerCredentials)
+    func clearOpenVPNServerCredentials()
+    func clearIKEv2ServerCredentials()
     func getPortMap() -> [PortMap]?
     func savePortMap(portMap: [PortMap])
     func saveSuggestedPorts(suggestedPorts: [SuggestedPorts])
@@ -80,8 +79,6 @@ protocol LocalDatabase {
     func removeFavourite(datacenterId: String)
 
     func toggleRobertRule(id: String)
-    func saveOldSession()
-    func getOldSession() -> OldSession?
     func getCustomConfigs() -> [CustomConfig]
 
     func saveUnblockWgParams(params: [UnblockWgParamsObj])

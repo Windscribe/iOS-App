@@ -14,7 +14,7 @@ extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 62,
+            schemaVersion: 63,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -311,6 +311,9 @@ extension LocalDatabaseImpl {
                     }
                     // Remove duplicates by deleting all and letting them be re-fetched from API
                     migration.deleteData(forType: UnblockWgParamsObj.className())
+                } else if oldSchemaVersion < 63 {
+                    // Delete deprecated OldSession
+                    migration.deleteData(forType: OldSession.className())
                 }
             }, deleteRealmIfMigrationNeeded: false
         )

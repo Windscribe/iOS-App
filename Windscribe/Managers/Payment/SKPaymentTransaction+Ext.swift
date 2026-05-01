@@ -19,7 +19,7 @@ extension SKPaymentTransaction {
     var signature: String? {
         guard let transactionID = transactionIdentifier,
               let appleData = appleData,
-              let sessionAuthHash = Assembler.resolve(Preferences.self).userSessionAuth()
+              let sessionAuthHash = Assembler.resolve(Preferences.self).getSessionAuthHash()
         else {
             return nil
         }

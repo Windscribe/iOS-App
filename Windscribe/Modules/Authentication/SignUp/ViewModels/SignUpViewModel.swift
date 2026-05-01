@@ -494,7 +494,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 if ignoreError {
                     routeTo.send(.main)
                 } else {
-                    preferences.saveUserSessionAuth(sessionAuth: nil)
+                    preferences.clearSessionAuth()
                     userSessionRepository.clearSession()
                     switch error {
                     case let Errors.apiError(e):

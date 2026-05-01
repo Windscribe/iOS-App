@@ -27,6 +27,7 @@ protocol UserSessionRepository {
 class UserSessionRepositoryImpl: UserSessionRepository {
     private let preferences: Preferences
     private let localDatabase: LocalDatabase
+    private let sessionStore: SessionKeychainStore
     private let locationListRepository: LocationListRepository
     private let antiCensorshipRepository: AntiCensorshipRepository
 
@@ -35,24 +36,25 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     var sessionModelSubject = CurrentValueSubject<SessionModel?, Never>(nil)
 
     var sessionAuth: String? {
-        return preferences.userSessionAuth()
+        return preferences.getSessionAuthHash()
     }
 
     var keepSessionUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     init(preferences: Preferences,
          localDatabase: LocalDatabase,
+         sessionStore: SessionKeychainStore,
          locationListRepository: LocationListRepository,
          antiCensorshipRepository: AntiCensorshipRepository) {
         self.preferences = preferences
         self.localDatabase = localDatabase
+        self.sessionStore = sessionStore
         self.locationListRepository = locationListRepository
         self.antiCensorshipRepository = antiCensorshipRepository
     }
 
     func update(session: SessionModel) async {
-        localDatabase.saveOldSession()
-        localDatabase.saveSession(session: Session(sessionModel: session))
+        sessionStore.save(session: session)
         antiCensorshipRepository.setSessionWgParameter(withId: session.inventory?.amneziawgConfigId ?? "")
 
         try? await locationListRepository.updateAllIfEmpty()
@@ -68,7 +70,7 @@ class UserSessionRepositoryImpl: UserSessionRepository {
                self.sessionModel = session
                sessionModelSubject.send(session)
                if !session.sessionAuthHash.isEmpty {
-                   preferences.saveUserSessionAuth(sessionAuth: session.sessionAuthHash)
+                   preferences.saveSessionAuthHash(sessionAuth: session.sessionAuthHash)
                }
         }
     }
@@ -83,19 +85,19 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     }
 
     func syncSession() async -> Bool {
-        guard let currentSession = localDatabase.getSession() else {
+        guard let currentSession = sessionStore.load() else {
             return false
         }
 
         if sessionModel == nil {
-            await update(session: SessionModel(from: currentSession))
+            await update(session: currentSession)
         }
 
-        localDatabase.saveOldSession()
         return true
     }
 
     func clean() {
+        sessionStore.clear()
         localDatabase.clean()
     }
 }

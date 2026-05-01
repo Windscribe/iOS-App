@@ -19,7 +19,7 @@ class TVWindowSetupServiceImpl: WindowSetupService {
     func configureWindow(_ window: UIWindow) {
         window.backgroundColor = UIColor.black
 
-        if preferences.userSessionAuth() != nil {
+        if preferences.getSessionAuthHash() != nil {
             if preferences.getLoginDate() == nil {
                 preferences.saveLoginDate(date: Date())
             }

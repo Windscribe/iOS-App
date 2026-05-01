@@ -72,7 +72,9 @@ struct CustomConfigModel: Equatable {
     dynamic var serverAddress: String = ""
     dynamic var protocolType: String = ""
     dynamic var port: String = ""
+    @available(*, deprecated, message: "Credentials are now stored in Keychain via Preferences. Use preferences.getCustomConfigCredentials(configId:) instead.")
     dynamic var username: String = ""
+    @available(*, deprecated, message: "Credentials are now stored in Keychain via Preferences. Use preferences.getCustomConfigCredentials(configId:) instead.")
     dynamic var password: String = ""
     dynamic var authRequired: Bool = false
     dynamic var saveCredentials: Bool = true

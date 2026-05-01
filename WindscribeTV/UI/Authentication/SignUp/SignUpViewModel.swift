@@ -362,7 +362,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 if ignoreError {
                     routeTo.send(.main)
                 } else {
-                    preferences.saveUserSessionAuth(sessionAuth: nil)
+                    preferences.clearSessionAuth()
                     userSessionRepository.clearSession()
                     logger.logE("SignUpViewModelImpl", "Failed to prepare user data: \(error)")
 

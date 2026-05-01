@@ -360,7 +360,7 @@ class LoginViewModelImpl: LoginViewModel {
                     routeToMainView.send(true)
                 }
             } catch {
-                preferences.saveUserSessionAuth(sessionAuth: nil)
+                preferences.clearSessionAuth()
                 userSessionRepository.clearSession()
                 logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
                 showLoadingView.send(false)

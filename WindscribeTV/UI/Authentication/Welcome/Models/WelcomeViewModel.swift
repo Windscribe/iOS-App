@@ -98,7 +98,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 showLoadingView.send(false)
                 routeToMainView.send(true)
             } catch {
-                preferences.saveUserSessionAuth(sessionAuth: nil)
+                preferences.clearSessionAuth()
                 userSessionRepository.clearSession()
                 logger.logE("WelcomeViewModelImpl", "Failed to prepare user data: \(error)")
                 showLoadingView.send(false)

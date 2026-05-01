@@ -20,6 +20,7 @@ class CustomConfigRepositoryTests: XCTestCase {
     var mockLocalDatabase: MockLocalDatabase!
     var mockPortMapRepository: MockPortMapRepository!
     var mockLogger: MockLogger!
+    var mockPreferences: MockPreferences!
 
     // MARK: - Setup and Teardown
 
@@ -30,6 +31,7 @@ class CustomConfigRepositoryTests: XCTestCase {
         mockLocalDatabase = MockLocalDatabase()
         mockPortMapRepository = MockPortMapRepository()
         mockLogger = MockLogger()
+        mockPreferences = MockPreferences()
 
         // Configure MockPortMapRepository with default ports
         mockPortMapRepository.portMapsToReturn = [
@@ -56,13 +58,18 @@ class CustomConfigRepositoryTests: XCTestCase {
             return self.mockLogger
         }.inObjectScope(.container)
 
+        mockContainer.register(Preferences.self) { _ in
+            return self.mockPreferences
+        }.inObjectScope(.container)
+
         // Register CustomConfigRepository
         mockContainer.register(CustomConfigRepository.self) { r in
             return CustomConfigRepositoryImpl(
                 fileDatabase: r.resolve(FileDatabase.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                portMapRepository: r.resolve(PortMapRepository.self)!
+                portMapRepository: r.resolve(PortMapRepository.self)!,
+                preferences: r.resolve(Preferences.self)!
             )
         }.inObjectScope(.container)
 
@@ -80,6 +87,7 @@ class CustomConfigRepositoryTests: XCTestCase {
         mockFileDatabase = nil
         mockLocalDatabase = nil
         mockPortMapRepository = nil
+        mockPreferences = nil
         mockLogger = nil
         super.tearDown()
     }

@@ -72,9 +72,17 @@ class Network: Assembly {
 class Repository: Assembly {
     func assemble(container: Container) {
         let logger = container.resolve(FileLogger.self)!
+        container.register(SessionKeychainStore.self) { r in
+            SessionKeychainStoreImpl(
+                preferences: r.resolve(Preferences.self)!,
+                logger: r.resolve(FileLogger.self)!
+            )
+        }.inObjectScope(.userScope)
+
         container.register(UserSessionRepository.self) { r in
             UserSessionRepositoryImpl(preferences: r.resolve(Preferences.self)!,
                                       localDatabase: r.resolve(LocalDatabase.self)!,
+                                      sessionStore: r.resolve(SessionKeychainStore.self)!,
                                       locationListRepository: r.resolve(LocationListRepository.self)!,
                                       antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!)
         }.inObjectScope(.userScope)
@@ -164,7 +172,8 @@ class Repository: Assembly {
             CustomConfigRepositoryImpl(fileDatabase: r.resolve(FileDatabase.self)!,
                                        localDatabase: r.resolve(LocalDatabase.self)!,
                                        logger: r.resolve(FileLogger.self)!,
-                                       portMapRepository: r.resolve(PortMapRepository.self)!)
+                                       portMapRepository: r.resolve(PortMapRepository.self)!,
+                                       preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
         container.register(AdvanceRepository.self) { r in
             AdvanceRepositoryImpl(preferences: r.resolve(Preferences.self)!,
@@ -205,7 +214,12 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
 
         container.register(MigrationRepository.self) { r in
-            MigrationRepositoryImpl(localDatabase: r.resolve(LocalDatabase.self)!)
+            MigrationRepositoryImpl(
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                sessionStore: r.resolve(SessionKeychainStore.self)!,
+                logger: r.resolve(FileLogger.self)!
+            )
         }.inObjectScope(.userScope)
 
         container.register(AntiCensorshipRepository.self) { r in

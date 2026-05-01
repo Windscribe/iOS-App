@@ -13,8 +13,6 @@ protocol Preferences {
     func saveAdvanceParams(params: String)
     func getAdvanceParams() -> AnyPublisher<String?, Never>
     func getAdvanceParams() -> String?
-    func saveUserSessionAuth(sessionAuth: String?)
-    func userSessionAuth() -> String?
 
     // UserPreferenceManager
     func saveOrderLocationsBy(order: String)
@@ -96,8 +94,6 @@ protocol Preferences {
     func getLastUpdatePromptTimestamp() -> Double?
     func saveLastUpdateCheckTimestamp(timeStamp: Double?)
     func getLastUpdateCheckTimestamp() -> Double?
-    func saveSessionAuthHash(sessionAuth: String)
-    func getSessionAuthHash() -> String?
     func saveCountryOverrride(value: String?)
     func getCountryOverride() -> String?
     func getLanguageManagerLanguage() -> String?
@@ -261,6 +257,29 @@ protocol Preferences {
     func getSelectedProtocolSync() -> String?
     func getSelectedPortSync() -> String?
 
+    // Custom Config Credentials (Keychain-backed)
+    func getAllCustomConfigCredentials() -> [String: ServerCredentialsModel]
+    func saveAllCustomConfigCredentials(_ credentials: [String: ServerCredentialsModel])
+    func saveCustomConfigCredentials(configId: String, credentials: ServerCredentialsModel)
+    func getCustomConfigCredentials(configId: String) -> ServerCredentialsModel?
+    func deleteCustomConfigCredentials(configId: String)
+    func deleteAllCustomConfigCredentials()
+
+    // OpenVPN Server Credentials (Keychain-backed)
+    func saveOpenVPNCredentials(_ credentials: ServerCredentialsModel)
+    func getOpenVPNCredentials() -> ServerCredentialsModel?
+    func deleteOpenVPNCredentials()
+
+    // IKEv2 Server Credentials (Keychain-backed)
+    func saveIKEv2Credentials(_ credentials: ServerCredentialsModel)
+    func getIKEv2Credentials() -> ServerCredentialsModel?
+    func deleteIKEv2Credentials()
+
+    // Session Persistence (Keychain-backed)
+    func saveStoredSession(_ data: Data) throws
+    func getStoredSession() throws -> Data?
+    func deleteStoredSession()
+
     // SSO Provider Tracking
     func saveSSOProvider(provider: String?)
     func getSSOProvider() -> String?
@@ -274,4 +293,11 @@ protocol Preferences {
     func getServerRevision() -> Int64
     func saveRoutingType(routingType: ServerRoutingType)
     func getRoutingType() -> ServerRoutingType
+
+    // Session Auth
+    func clearUserDefaultsSessionAuth()
+    func getUserDefaultsSessionAuth() -> String?
+    func clearSessionAuth()
+    func saveSessionAuthHash(sessionAuth: String)
+    func getSessionAuthHash() -> String?
 }

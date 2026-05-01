@@ -34,7 +34,7 @@ class SceneActionHandlerImpl: SceneActionHandler {
     }
 
     func handleURL(_ url: URL) -> Bool {
-        guard preferences.userSessionAuth() != nil else { return true }
+        guard preferences.getSessionAuthHash() != nil else { return true }
 
         if url.isFileURL && url.pathExtension == "ovpn" {
             logger.logI("SceneActionHandler", "Importing OpenVPN .ovpn file")
@@ -67,7 +67,7 @@ class SceneActionHandlerImpl: SceneActionHandler {
     }
 
     func handleUserActivity(_ userActivity: NSUserActivity) -> Bool {
-        guard preferences.userSessionAuth() != nil else { return true }
+        guard preferences.getSessionAuthHash() != nil else { return true }
 
         if userActivity.activityType == SiriIdentifiers.connect {
             NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
@@ -78,7 +78,7 @@ class SceneActionHandlerImpl: SceneActionHandler {
     }
 
     func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) {
-        guard preferences.userSessionAuth() != nil else { return }
+        guard preferences.getSessionAuthHash() != nil else { return }
 
         if shortcutItem.type.contains("Notifications") {
             windowProvider.shortcutType = .notifications

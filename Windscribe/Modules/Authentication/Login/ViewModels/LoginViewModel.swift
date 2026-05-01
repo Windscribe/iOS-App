@@ -438,7 +438,7 @@ class LoginViewModelImpl: LoginViewModel {
                     }
                 }
             } catch {
-                preferences.saveUserSessionAuth(sessionAuth: nil)
+                preferences.clearSessionAuth()
                 userSessionRepository.clearSession()
                 logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
 

@@ -16,6 +16,7 @@ struct DataLeftModel {
     let isPro: Bool
 }
 
+@available(*, deprecated, message: "Use SessionModel instead")
 @objcMembers class Session: Object {
     dynamic var session: String = "session"
     dynamic var sessionAuthHash: String = ""
@@ -42,76 +43,21 @@ struct DataLeftModel {
         return "session"
     }
 
-    convenience init(sessionModel: SessionModel) {
-        self.init()
-        sessionAuthHash = sessionModel.sessionAuthHash
-        username = sessionModel.username
-        userId = sessionModel.userId
-        trafficUsed = sessionModel.trafficUsed
-        trafficMax = sessionModel.trafficMax
-        status = sessionModel.status
-        email = sessionModel.email
-        emailStatus = sessionModel.emailStatus
-        billingPlanId = sessionModel.billingPlanId
-        isPremium = sessionModel.isPremium
-        premiumExpiryDate = sessionModel.premiumExpiryDate
-        regDate = sessionModel.regDate
-        lastReset = sessionModel.lastReset
-        locRev = sessionModel.locRev
-        locHash = sessionModel.locHash
-        amneziawgConfigId = sessionModel.inventory?.amneziawgConfigId ?? ""
-        setALC(array: sessionModel.alc)
-        setSip(array: sessionModel.sipCount.map { SipCount(model: $0)})
-    }
-
-    func setALC(array: [String]) {
-        alc.removeAll()
-        alc.append(objectsIn: array)
-    }
-
-    func setSip(object: SipCount) {
-        sipCount.removeAll()
-        sipCount.append(object)
-    }
-
-    func setSip(array: [SipCount]) {
-        sipCount.removeAll()
-        sipCount.append(objectsIn: array)
-    }
-
     func getModel() -> SessionModel {
         .init(from: self)
     }
 }
 
+@available(*, deprecated, message: "Don't use, it should not be necessary anywhere")
 class OldSession: Session {
-    convenience init(session: Session) {
-        self.init()
-        userId = session.userId
-        trafficMax = session.trafficMax
-        trafficUsed = session.trafficUsed
-        status = session.status
-        emailStatus = session.emailStatus
-        billingPlanId = session.billingPlanId
-        isPremium = session.isPremium
-        alc = session.alc
-        sipCount = session.sipCount
-        locHash = session.locHash
-        sessionAuthHash = session.sessionAuthHash
-        amneziawgConfigId = session.amneziawgConfigId
-    }
 }
 
+@available(*, deprecated, message: "Don't use, it should not be necessary anywhere")
 @objcMembers class SipCount: Object {
     dynamic var countNumber: Int = 0
-
-    convenience init(model: SipCountModel) {
-        self.init()
-        self.countNumber = model.countNumber
-    }
 }
 
-struct SipCountModel: Decodable, Equatable {
+struct SipCountModel: Codable, Equatable {
     var countNumber: Int = 0
 
     enum CodingKeys: String, CodingKey {
@@ -128,7 +74,7 @@ struct SipCountModel: Decodable, Equatable {
     }
 }
 
-struct ServerInventoryModel: Decodable, Equatable {
+struct ServerInventoryModel: Codable, Equatable {
     let action: String
     let enabled: [ServerMachineModel]
     let disabled: [DisabledServerModel]
@@ -157,6 +103,16 @@ struct ServerInventoryModel: Decodable, Equatable {
         amneziawgConfigId = try container.decodeIfPresent(String.self, forKey: .amneziawgConfigId) ?? ""
     }
 
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(action, forKey: .action)
+        try container.encode(enabled, forKey: .enabled)
+        try container.encode(disabled, forKey: .disabled)
+        try container.encode(revision, forKey: .revision)
+        try container.encode(backup, forKey: .backup)
+        try container.encode(amneziawgConfigId, forKey: .amneziawgConfigId)
+    }
+
     init(amneziawgConfigId: String) {
         action = ""
         enabled = []
@@ -167,7 +123,7 @@ struct ServerInventoryModel: Decodable, Equatable {
     }
 }
 
-struct SessionModel: Decodable, Equatable {
+struct SessionModel: Codable, Equatable {
     var sessionAuthHash: String
     let username: String
     let userId: String
@@ -291,7 +247,33 @@ struct SessionModel: Decodable, Equatable {
         inventory = try? data.decodeIfPresent(ServerInventoryModel.self, forKey: .inventory)
     }
 
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        var data = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
+        try data.encode(sessionAuthHash, forKey: .sessionAuthHash)
+        try data.encode(username, forKey: .username)
+        try data.encode(userId, forKey: .userId)
+        try data.encode(trafficUsed, forKey: .trafficUsed)
+        try data.encode(trafficMax, forKey: .trafficMax)
+        try data.encode(status, forKey: .status)
+        try data.encode(email, forKey: .email)
+        try data.encode(emailStatus ? 1 : 0, forKey: .emailStatus)
+        try data.encode(billingPlanId, forKey: .billingPlanId)
+        try data.encode(isPremium ? 1 : 0, forKey: .isPremium)
+        try data.encode(premiumExpiryDate, forKey: .premiumExpiryDate)
+        try data.encode(regDate, forKey: .regDate)
+        try data.encode(lastReset, forKey: .lastReset)
+        try data.encode(locRev, forKey: .locRev)
+        try data.encode(locHash, forKey: .locHash)
+        try data.encode(alc, forKey: .alc)
+        if let firstSip = sipCount.first {
+            try data.encode(firstSip, forKey: .sip)
+        }
+        try data.encodeIfPresent(inventory, forKey: .inventory)
+    }
+
     init(from: Session) {
+        // Auth hash is now stored in Keychain via Preferences — Realm field may be empty
         sessionAuthHash = from.sessionAuthHash
         username = from.username
         userId = from.userId

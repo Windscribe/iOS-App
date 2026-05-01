@@ -31,7 +31,7 @@ class WindowSetupServiceImpl: WindowSetupService {
         window.rootViewController = UIViewController()
         window.makeKeyAndVisible()
 
-        if preferences.userSessionAuth() != nil {
+        if preferences.getSessionAuthHash() != nil {
             let splash = LoadingSplashView(frame: window.bounds)
             window.addSubview(splash)
             self.splashView = splash
@@ -58,7 +58,7 @@ class WindowSetupServiceImpl: WindowSetupService {
     private func presentMainView<T: View>(with view: T, on window: UIWindow) {
         let rootViewController: UIViewController
 
-        if preferences.userSessionAuth() != nil {
+        if preferences.getSessionAuthHash() != nil {
             let mainViewController = Assembler.resolve(MainViewController.self).then {
                 $0.appJustStarted = true
             }

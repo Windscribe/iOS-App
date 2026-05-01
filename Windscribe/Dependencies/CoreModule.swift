@@ -17,11 +17,19 @@ extension Container {
             let logger = FileLoggerImpl()
             return logger
         }.inObjectScope(.container)
+        register(KeychainManager.self) { r in
+            KeychainManagerImpl(
+                logger: r.resolve(FileLogger.self)!
+            )
+        }.inObjectScope(.container)
         register(FileDatabase.self) { r in
             FileDatabaseImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
         register(Preferences.self) { r in
-            PreferencesImpl(logger: r.resolve(FileLogger.self)!)
+            PreferencesImpl(
+                logger: r.resolve(FileLogger.self)!,
+                keychainManager: r.resolve(KeychainManager.self)!
+            )
         }.inObjectScope(.container)
         register(LocalizationService.self) { r in
             LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)
@@ -41,15 +49,6 @@ extension Container {
 
         register(DNSSettingsManagerType.self) { _ in
             DNSSettingsManager()
-        }.inObjectScope(.container)
-        register(KeychainManager.self) { r in
-            KeychainManagerImpl(logger: r.resolve(FileLogger.self)!)
-        }.inObjectScope(.container)
-        register(DNSSettingsManagerType.self) { _ in
-            DNSSettingsManager()
-        }.inObjectScope(.container)
-        register(KeychainManager.self) { r in
-            KeychainManagerImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
     }
 

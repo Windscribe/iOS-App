@@ -96,7 +96,7 @@ class LifecycleManager: LifecycleManagerType {
         Task {
             await disconnectToUpdateSession()
             try? await connectivity.awaitNetwork(maxTime: 1.0)
-            if preferences.userSessionAuth() != nil && connectivity.internetConnectionAvailable() {
+            if preferences.getSessionAuthHash() != nil && connectivity.internetConnectionAvailable() {
                 antiCensorshipRepository.refreshParams()
                 if shouldCheckForUpdate() {
                     preferences.saveLastUpdateCheckTimestamp(timeStamp: Date().timeIntervalSince1970)

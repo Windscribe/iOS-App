@@ -57,33 +57,35 @@ class CredentialsRepositoryImpl: CredentialsRepository {
             }
             .store(in: &cancellables)
 
-        openVPNCrendentials = localDatabase.getOpenVPNServerCredentials()?.getModel()
-        ikev2Crendentials = localDatabase.getIKEv2ServerCredentials()?.getModel()
+        openVPNCrendentials = preferences.getOpenVPNCredentials()
+        ikev2Crendentials = preferences.getIKEv2Credentials()
     }
 
     func getUpdatedOpenVPNCrendentials() async throws {
         do {
             let credentials = try await self.apiManager.getOpenVPNServerCredentials()
-            self.localDatabase.saveOpenVPNServerCredentials(credentials: credentials)
-            openVPNCrendentials = credentials.getModel()
+            let model = credentials.getModel()
+            preferences.saveOpenVPNCredentials(model)
+            openVPNCrendentials = model
         } catch {
-            guard let credentials = localDatabase.getOpenVPNServerCredentials() else {
+            guard let cached = preferences.getOpenVPNCredentials() else {
                 throw error
             }
-            openVPNCrendentials = credentials.getModel()
+            openVPNCrendentials = cached
         }
     }
 
     func getUpdatedIKEv2Crendentials() async throws {
         do {
             let credentials = try await self.apiManager.getIKEv2ServerCredentials()
-            self.localDatabase.saveIKEv2ServerCredentials(credentials: credentials)
-            ikev2Crendentials = credentials.getModel()
+            let model = credentials.getModel()
+            preferences.saveIKEv2Credentials(model)
+            ikev2Crendentials = model
         } catch {
-            guard let credentials = localDatabase.getIKEv2ServerCredentials() else {
+            guard let cached = preferences.getIKEv2Credentials() else {
                 throw error
             }
-            ikev2Crendentials = credentials.getModel()
+            ikev2Crendentials = cached
         }
     }
 

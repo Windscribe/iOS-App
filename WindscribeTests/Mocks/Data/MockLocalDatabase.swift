@@ -40,9 +40,6 @@ class MockLocalDatabase: LocalDatabase {
     var deleteStaticIpsCalled = false
     var lastDeletedStaticIPsIgnoreList: [String]?
 
-    // Session tracking
-    var saveOldSessionCalled = false
-
     // MobilePlan tracking
     var mobilePlansToReturn: [Windscribe.MobilePlan]?
     var saveMobilePlansCalled = false
@@ -81,8 +78,6 @@ class MockLocalDatabase: LocalDatabase {
     // Credentials tracking
     var mockOpenVPNCredentials: OpenVPNServerCredentials?
     var mockIKEv2Credentials: IKEv2ServerCredentials?
-    var saveOpenVPNCredentialsCalled = false
-    var saveIKEv2CredentialsCalled = false
 
     func migrate() {
         migrateCalled = true
@@ -100,10 +95,6 @@ class MockLocalDatabase: LocalDatabase {
 
     func getServers() -> [Windscribe.Server]? {
         return mockServers
-    }
-
-    func saveServers(servers: [Windscribe.Server]) {
-        mockServers = servers
     }
 
     func getLocations() -> [LocationObject]? {
@@ -140,18 +131,16 @@ class MockLocalDatabase: LocalDatabase {
         return mockOpenVPNCredentials
     }
 
-    func saveOpenVPNServerCredentials(credentials: Windscribe.OpenVPNServerCredentials) {
-        saveOpenVPNCredentialsCalled = true
-        mockOpenVPNCredentials = credentials
-    }
-
     func getIKEv2ServerCredentials() -> Windscribe.IKEv2ServerCredentials? {
         return mockIKEv2Credentials
     }
 
-    func saveIKEv2ServerCredentials(credentials: Windscribe.IKEv2ServerCredentials) {
-        saveIKEv2CredentialsCalled = true
-        mockIKEv2Credentials = credentials
+    func clearOpenVPNServerCredentials() {
+        mockOpenVPNCredentials = nil
+    }
+
+    func clearIKEv2ServerCredentials() {
+        mockIKEv2Credentials = nil
     }
 
     func getPortMap() -> [Windscribe.PortMap]? {
@@ -237,16 +226,6 @@ class MockLocalDatabase: LocalDatabase {
         customConfigsSubject.send(savedList)
     }
 
-    func updateCustomConfigName(customConfigId: String, name: String) {
-        var savedList = customConfigsSubject.value
-        if var customConfig = savedList.first(where: { $0.id != customConfigId }) {
-            customConfig.name = name
-            savedList = savedList.filter { $0.id != customConfigId }
-            savedList.append(customConfig)
-            customConfigsSubject.send(savedList)
-        }
-    }
-
     func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never> {
         customConfigsSubject.eraseToAnyPublisher()
     }
@@ -255,8 +234,10 @@ class MockLocalDatabase: LocalDatabase {
         customConfigsSubject.value
     }
 
-    func getPorts(protocolType: String) -> [String]? {
-        return []
+    var clearSessionFromRealmCalled = false
+    func clearSessionFromRealm() {
+        clearSessionFromRealmCalled = true
+        sessionSubject.send(nil)
     }
 
     func getRobertFilters() -> Windscribe.RobertFilters? {
@@ -269,43 +250,14 @@ class MockLocalDatabase: LocalDatabase {
         mockRobertFilters = filters
     }
 
-    func saveLastConnetion(vpnConnection: Windscribe.VPNConnection) {
-
-    }
-
     func toggleRobertRule(id: String) {
         toggleRobertRuleCalled = true
         lastToggledRobertRuleId = id
     }
 
-    func updateCustomConfigCredentials(customConfigId: String, username: String, password: String) {}
-
-    func saveOldSession() {
-        saveOldSessionCalled = true
-        guard let oldSession = sessionSubject.value else {
-            return
-        }
-        oldSessionSubject.send(OldSession(session: oldSession))
-    }
-
-    func getOldSession() -> Windscribe.OldSession? {
-        return oldSessionSubject.value
-    }
-
-    func getSessionPublisher() -> AnyPublisher<Windscribe.Session?, Never> {
-        return sessionSubject.eraseToAnyPublisher()
-    }
-
     func getSession() -> Windscribe.Session? {
         return sessionSubject.value
     }
-
-    func saveSession(session: Windscribe.Session) {
-        // Trigger the subject to simulate Realm notification
-        sessionSubject.send(session)
-    }
-
-    func updateConnectionMode(value: String) {}
 
     func clean() {
         saveNetworkCalled = false
@@ -316,8 +268,6 @@ class MockLocalDatabase: LocalDatabase {
         saveUnblockWgParamsCalled = false
         mockOpenVPNCredentials = nil
         mockIKEv2Credentials = nil
-        saveOpenVPNCredentialsCalled = false
-        saveIKEv2CredentialsCalled = false
     }
 
     func saveNetwork(wifiNetwork: Windscribe.WifiNetwork) {
@@ -348,15 +298,10 @@ class MockLocalDatabase: LocalDatabase {
             .map { $0.value }
     }
 
-    func removeFavourite(groupId: String) {
-        var favourites = mockFavoritesSubject.value
-        favourites.removeValue(forKey: groupId)
-        mockFavoritesSubject.send(favourites)
-        return
-    }
-
     func removeFavourite(datacenterId: String) {
-        removeFavourite(groupId: datacenterId)
+        var favourites = mockFavoritesSubject.value
+        favourites.removeValue(forKey: datacenterId)
+        mockFavoritesSubject.send(favourites)
     }
 
     func saveUnblockWgParams(params: [Windscribe.UnblockWgParamsObj]) {
@@ -394,7 +339,6 @@ class MockLocalDatabase: LocalDatabase {
         saveStaticIPsCalled = false
         deleteStaticIpsCalled = false
         lastDeletedStaticIPsIgnoreList = nil
-        saveOldSessionCalled = false
         mobilePlansToReturn = nil
         saveMobilePlansCalled = false
         mockWifiNetworks = []

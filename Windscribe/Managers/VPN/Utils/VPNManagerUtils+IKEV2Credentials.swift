@@ -31,7 +31,7 @@ extension ConfigurationsManager {
            let password = staticIPCredentials.password {
             base64username = username
             base64password = password
-        } else if let credentials = localDatabase.getIKEv2ServerCredentials() {
+        } else if let credentials = preferences.getIKEv2Credentials() {
             base64username = credentials.username.base64Decoded()
             base64password = credentials.password.base64Decoded()
         }
