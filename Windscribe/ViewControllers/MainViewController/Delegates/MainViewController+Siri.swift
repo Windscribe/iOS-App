@@ -12,8 +12,6 @@ import IntentsUI
 
 extension MainViewController {
     func setupIntentsForSiri() {
-        var shortcuts: [INShortcut] = []
-
         let interaction = INInteraction(intent: ShowLocationIntent(), response: nil)
         interaction.donate(completion: nil)
 
@@ -25,7 +23,6 @@ extension MainViewController {
             disconnectActivity.isEligibleForPrediction = true
             disconnectActivity.persistentIdentifier = NSUserActivityPersistentIdentifier(SiriIdentifiers.disconnect)
             view.userActivity = disconnectActivity
-            shortcuts.append(INShortcut(userActivity: disconnectActivity))
 
             let activity = NSUserActivity(activityType: SiriIdentifiers.connect)
             activity.title = TextsAsset.Siri.connectToVPN
@@ -35,9 +32,16 @@ extension MainViewController {
             activity.persistentIdentifier = NSUserActivityPersistentIdentifier(SiriIdentifiers.connect)
             view.userActivity = activity
             activity.becomeCurrent()
-            shortcuts.append(INShortcut(userActivity: activity))
 
-            INVoiceShortcutCenter.shared.setShortcutSuggestions(shortcuts)
+            let shortcuts = [
+                INShortcut(userActivity: disconnectActivity),
+                INShortcut(userActivity: activity)
+            ]
+
+            // This can block for several seconds during serialization - keep on background
+            DispatchQueue.global(qos: .utility).async {
+                INVoiceShortcutCenter.shared.setShortcutSuggestions(shortcuts)
+            }
         }
     }
 

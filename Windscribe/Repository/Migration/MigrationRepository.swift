@@ -152,7 +152,7 @@ class MigrationRepositoryImpl: MigrationRepository {
             sessionStore.clear()
             return
         }
-        
+
         guard sessionStore.load() == nil else { return }
 
         // Try to read from Realm
