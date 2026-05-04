@@ -135,7 +135,7 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
         case .autoSecure:
             if case .toggle(let isSelected, _) = action {
                 preferences.saveAutoSecureNewNetworks(autoSecure: isSelected)
-            } else if case .infoLink(let parentId) = action {
+            } else if case .infoLink(_) = action {
                 openLink(.networkOptions)
             }
         case let .network(info):
@@ -146,7 +146,7 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
                     navigateToNetwork(named: info.name)
                 } else {
                     let index = parentId / 10
-                    if index < networks.count {
+                    if index < otherNetworks.count {
                         navigateToNetwork(named: otherNetworks[index].name)
                     }
                 }
