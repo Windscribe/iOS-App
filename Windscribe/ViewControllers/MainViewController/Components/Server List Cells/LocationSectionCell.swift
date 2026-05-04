@@ -16,7 +16,8 @@ protocol LocationSectionCellModelType: LocationCellModelType {
     func update(locationModel: LocationModel?,
                 locationLoad: Bool,
                 isPremium: Bool,
-                isDarkMode: Bool)
+                isDarkMode: Bool,
+                alcList: [String])
 }
 
 class LocationSectionCellModel: LocationSectionCellModelType {
@@ -24,6 +25,7 @@ class LocationSectionCellModel: LocationSectionCellModelType {
     var isExpanded: Bool = false
     var isPremium: Bool = false
     var locationLoad: Bool = DefaultValues.showServerNetLoad
+    var alcList: [String] = []
 
     var displayingLocation: LocationModel?
 
@@ -64,7 +66,8 @@ class LocationSectionCellModel: LocationSectionCellModelType {
 
     var hasProLocked: Bool {
         guard let location = displayingLocation else { return false }
-        return location.isPremiumOnly && !isPremium
+        let hasAlcAccess = alcList.contains(location.shortName)
+        return location.isPremiumOnly && !isPremium && !hasAlcAccess
     }
 
     func setIsExpanded(_ value: Bool) {
@@ -80,11 +83,13 @@ class LocationSectionCellModel: LocationSectionCellModelType {
     func update(locationModel: LocationModel?,
                 locationLoad: Bool,
                 isPremium: Bool,
-                isDarkMode: Bool) {
+                isDarkMode: Bool,
+                alcList: [String]) {
         self.displayingLocation = locationModel
         self.locationLoad = locationLoad
         self.isPremium = isPremium
         self.isDarkMode = isDarkMode
+        self.alcList = alcList
     }
 }
 

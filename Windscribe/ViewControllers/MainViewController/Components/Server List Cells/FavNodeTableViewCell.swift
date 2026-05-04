@@ -34,7 +34,9 @@ class FavNodeTableViewCellModel: DatacenterTableViewCellModel {
                 isPremium: Bool,
                 isDarkMode: Bool,
                 latency: Int,
-                countryCode: String?) {
+                countryCode: String?,
+                alcList: [String],
+                shortName: String) {
         self.displayingFavGroup = displayingFavGroup
         self.displayingDatacenter = displayingFavGroup?.datacenterModel
         self.countryCode = countryCode
@@ -44,6 +46,8 @@ class FavNodeTableViewCellModel: DatacenterTableViewCellModel {
         self.isPremium = isPremium
         self.isDarkMode = isDarkMode
         self.latency = latency
+        self.alcList = alcList
+        self.shortName = shortName
     }
 }
 

@@ -127,8 +127,8 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
             latency = newlatency
         }
 
-        // Get the location to retrieve the country code
-        let countryCode = locationListRepository.getLocation(by: favourite.datacenterModel.locationId)?.countryCode
+        // Get the location to check the countryCode and the shortName
+        let locationModel = locationListRepository.getLocation(by: favourite.datacenterModel.locationId)
 
         if cell.favNodeCellViewModel == nil {
             cell.favNodeCellViewModel = FavNodeTableViewCellModel()
@@ -142,7 +142,9 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
                                           isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
                                           isDarkMode: lookAndFeelRepository.isDarkMode,
                                           latency: latency,
-                                          countryCode: countryCode)
+                                          countryCode: locationModel?.countryCode,
+                                          alcList: userSessionRepository.sessionModel?.alc ?? [],
+                                          shortName: locationModel?.shortName ?? "")
         cell.refreshUI()
 
         return cell

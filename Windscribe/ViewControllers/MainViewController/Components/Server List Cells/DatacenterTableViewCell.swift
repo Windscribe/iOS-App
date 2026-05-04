@@ -24,7 +24,9 @@ protocol DatacenterTableViewCellModelType: BaseNodeCellViewModelType {
                 isPremium: Bool,
                 isDarkMode: Bool,
                 latency: Int,
-                countryCode: String?)
+                countryCode: String?,
+                alcList: [String],
+                shortName: String)
 }
 
 protocol DatacenterTableViewCellModelDelegate: AnyObject {
@@ -41,6 +43,8 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
     var isPremium: Bool = false
     var isUserPro: Bool = false
     var countryCode: String?
+    var alcList: [String] = []
+    var shortName: String = ""
 
     func update(displayingDatacenter: DatacenterModel?,
                 locationLoad: Bool,
@@ -49,7 +53,9 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
                 isPremium: Bool,
                 isDarkMode: Bool,
                 latency: Int,
-                countryCode: String?) {
+                countryCode: String?,
+                alcList: [String],
+                shortName: String) {
         self.displayingDatacenter = displayingDatacenter
         self.locationLoad = locationLoad
         self.isSavedHasFav = isSavedHasFav
@@ -58,6 +64,8 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
         self.isDarkMode = isDarkMode
         self.latency = latency
         self.countryCode = countryCode
+        self.alcList = alcList
+        self.shortName = shortName
     }
 
     override var isSignalVisible: Bool { !(isDisabled || displayingDatacenter?.servers.count == 0) }
@@ -107,7 +115,8 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
 
     var isProLocked: Bool {
         guard let datacenter = displayingDatacenter else { return false }
-        return datacenter.isPremiumOnly && !isPremium
+        var hasAlcAccess = alcList.contains(shortName)
+        return datacenter.isPremiumOnly && !isPremium && !hasAlcAccess
     }
 
     override var hasProLocked: Bool { isProLocked && isFavoriteCell }
