@@ -216,7 +216,9 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
                                                  isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
                                                  isDarkMode: lookAndFeelRepository.isDarkMode,
                                                  latency: latency,
-                                                 countryCode: locationModel.countryCode)
+                                                 countryCode: locationModel.countryCode,
+                                                 alcList: userSessionRepository.sessionModel?.alc ?? [],
+                                                 shortName: locationModel.shortName)
             cell.refreshUI()
         }
         return cell
@@ -280,7 +282,8 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
                 cell.locationCellViewModel?.update(locationModel: locationsSections[calculatedSection].location,
                                                    locationLoad: locationLoad,
                                                    isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
-                                                   isDarkMode: lookAndFeelRepository.isDarkMode)
+                                                   isDarkMode: lookAndFeelRepository.isDarkMode,
+                                                   alcList: userSessionRepository.sessionModel?.alc ?? [])
                 cell.setCollapsed(collapsed: locationSection.collapsed)
                 if !locationSection.collapsed {
                     print("ahah \(locationSection.location?.name ?? "")")

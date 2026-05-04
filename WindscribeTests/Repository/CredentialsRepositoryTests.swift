@@ -119,9 +119,16 @@ class CredentialsRepositoryTests: XCTestCase {
     private func setupPreferences(connectionMode: String = Fields.Values.auto, selectedProtocol: String = TextsAsset.wireGuard) async {
         mockPreferences.mockConnectionMode.send(connectionMode)
         mockPreferences.mockSelectedProtocol.send(selectedProtocol)
-        // Needs to wait for the preferences to propagate through
-        // Combine → .receive(on: DispatchQueue.main) → Task → actor method
-        try? await Task.sleep(nanoseconds: 500_000_000)
+        // Preferences propagate through: Combine → .receive(on: DispatchQueue.main) → Task → actor method.
+        // Task.sleep alone doesn't pump the main run loop, so Combine's dispatched callbacks
+        // can stall on CI. Alternate between pumping the run loop and yielding to let the
+        // actor-isolated Tasks complete.
+        for _ in 0..<5 {
+            await MainActor.run {
+                RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
+            }
+            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+        }
     }
 
     // MARK: - getUpdatedOpenVPNCrendentials Tests
