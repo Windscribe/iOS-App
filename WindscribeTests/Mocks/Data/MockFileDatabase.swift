@@ -9,8 +9,10 @@
 import Foundation
 @testable import Windscribe
 
-final class MockFileDatabase: FileDatabase {
-    // In-memory storage for testing (actor provides thread-safety)
+final class MockFileDatabase: FileDatabase, @unchecked Sendable {
+    private let lock = NSLock()
+
+    // In-memory storage for testing (lock-protected for thread-safety)
     private var _fileStorage: [String: Data] = [:]
 
     // Test configuration flags
@@ -36,6 +38,9 @@ final class MockFileDatabase: FileDatabase {
     init() {}
 
     func readFile(path: String) async throws -> Data {
+        lock.lock()
+        defer { lock.unlock() }
+
         readFileCalled = true
         lastReadFilePath = path
 
@@ -56,6 +61,9 @@ final class MockFileDatabase: FileDatabase {
     }
 
     func saveFile(data: Data, path: String) async throws {
+        lock.lock()
+        defer { lock.unlock() }
+
         saveFileCalled = true
         lastSavedFilePath = path
         lastSavedFileData = data
@@ -68,6 +76,9 @@ final class MockFileDatabase: FileDatabase {
     }
 
     func removeFile(path: String) async throws {
+        lock.lock()
+        defer { lock.unlock() }
+
         removeFileCalled = true
         lastRemovedFilePath = path
 

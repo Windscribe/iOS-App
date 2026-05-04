@@ -272,10 +272,11 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
                 cell.locationCellViewModel = LocationSectionCellModel()
             }
 
-            if let expanded = tableView.expandedSections[section] {
+            if let expanded = tableView.expandedSections[section],
+               calculatedSection >= 0 && calculatedSection < locationsSections.count {
                 locationsSections[calculatedSection].collapsed = !expanded
             }
-            if section <= locationsSections.count {
+            if calculatedSection >= 0 && calculatedSection < locationsSections.count {
                 cell.locationCellViewModel?.update(locationModel: locationsSections[calculatedSection].location,
                                                    locationLoad: locationLoad,
                                                    isPremium: userSessionRepository.sessionModel?.isPremium ?? false,

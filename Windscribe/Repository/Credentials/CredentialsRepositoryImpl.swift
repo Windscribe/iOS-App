@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 import Combine
 
-class CredentialsRepositoryImpl: CredentialsRepository {
+actor CredentialsRepositoryImpl: @preconcurrency CredentialsRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let fileDatabase: FileDatabase
@@ -22,8 +22,14 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     private var connectionMode: String?
     private var selectedProtocol: String?
 
+    private var _openVPNCrendentials: ServerCredentialsModel?
+    private var _ikev2Crendentials: ServerCredentialsModel?
+
     var openVPNCrendentials: ServerCredentialsModel?
     var ikev2Crendentials: ServerCredentialsModel?
+
+    // Prevents concurrent updateServerConfig calls
+    private var updateTask: Task<Void, Never>?
 
     init(apiManager: APIManager,
          localDatabase: LocalDatabase,
@@ -39,26 +45,44 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         self.wifiManager = wifiManager
         self.logger = logger
         self.preferences = preferences
-        loadData()
+
+        // Schedule loadData to run on the actor's executor
+        Task {
+            await self.loadData()
+        }
     }
 
     private func loadData() {
         preferences.getConnectionMode()
             .receive(on: DispatchQueue.main)
-            .sink { [self] data in
-                connectionMode = data
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                Task {
+                    await self.updateConnectionMode(data)
+                }
             }
             .store(in: &cancellables)
 
         preferences.getSelectedProtocol()
             .receive(on: DispatchQueue.main)
-            .sink { [self] data in
-                selectedProtocol = data
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                Task {
+                    await self.updateSelectedProtocol(data)
+                }
             }
             .store(in: &cancellables)
 
         openVPNCrendentials = preferences.getOpenVPNCredentials()
         ikev2Crendentials = preferences.getIKEv2Credentials()
+    }
+
+    private func updateConnectionMode(_ mode: String?) {
+        connectionMode = mode
+    }
+
+    private func updateSelectedProtocol(_ protocol: String?) {
+        selectedProtocol = `protocol`
     }
 
     func getUpdatedOpenVPNCrendentials() async throws {
@@ -139,14 +163,27 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         if preferences.getSessionAuthHash() == nil {
             return
         }
-        Task {
+
+        // Cancel any existing update task and start a new one
+        updateTask?.cancel()
+        let task = Task {
+            // Wait a moment to allow task cancellation to propagate
+            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+
+            guard !Task.isCancelled else { return }
+
             do {
                 try await getUpdatedOpenVPNCrendentials()
+                guard !Task.isCancelled else { return }
                 try await getUpdatedServerConfig()
+                guard !Task.isCancelled else { return }
                 self.logger.logI("CredentialsRepositoryImpl", "Server config updated.")
             } catch {
-                self.logger.logE("CredentialsRepositoryImpl", "Failed to update server config.")
+                if !Task.isCancelled {
+                    self.logger.logE("CredentialsRepositoryImpl", "Failed to update server config.")
+                }
             }
         }
+        updateTask = task
     }
 }

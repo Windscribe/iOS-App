@@ -119,8 +119,9 @@ class CredentialsRepositoryTests: XCTestCase {
     private func setupPreferences(connectionMode: String = Fields.Values.auto, selectedProtocol: String = TextsAsset.wireGuard) async {
         mockPreferences.mockConnectionMode.send(connectionMode)
         mockPreferences.mockSelectedProtocol.send(selectedProtocol)
-        // Needs to wait for the preferences to propagate the value
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        // Needs to wait for the preferences to propagate through
+        // Combine → .receive(on: DispatchQueue.main) → Task → actor method
+        try? await Task.sleep(nanoseconds: 500_000_000)
     }
 
     // MARK: - getUpdatedOpenVPNCrendentials Tests
@@ -134,9 +135,10 @@ class CredentialsRepositoryTests: XCTestCase {
         try await repository.getUpdatedOpenVPNCrendentials()
 
         // Then
-        XCTAssertNotNil(repository.openVPNCrendentials, "OpenVPN credentials should be set")
-        XCTAssertEqual(repository.openVPNCrendentials?.username, "test-openvpn-user")
-        XCTAssertEqual(repository.openVPNCrendentials?.password, "test-openvpn-pass")
+        let credentials = await repository.openVPNCrendentials
+        XCTAssertNotNil(credentials, "OpenVPN credentials should be set")
+        XCTAssertEqual(credentials?.username, "test-openvpn-user")
+        XCTAssertEqual(credentials?.password, "test-openvpn-pass")
         XCTAssertTrue(mockPreferences.saveOpenVPNCredentialsCalled, "Should save credentials to database")
     }
 
@@ -151,8 +153,9 @@ class CredentialsRepositoryTests: XCTestCase {
         try await repository.getUpdatedOpenVPNCrendentials()
 
         // Then
-        XCTAssertNotNil(repository.openVPNCrendentials, "Should use cached credentials on API failure")
-        XCTAssertEqual(repository.openVPNCrendentials?.username, "test-openvpn-user")
+        let credentials = await repository.openVPNCrendentials
+        XCTAssertNotNil(credentials, "Should use cached credentials on API failure")
+        XCTAssertEqual(credentials?.username, "test-openvpn-user")
     }
 
     func testGetUpdatedOpenVPNCredentials_apiFailureWithNoCachedCredentials_throwsError() async {
@@ -181,9 +184,10 @@ class CredentialsRepositoryTests: XCTestCase {
         try await repository.getUpdatedIKEv2Crendentials()
 
         // Then
-        XCTAssertNotNil(repository.ikev2Crendentials, "IKEv2 credentials should be set")
-        XCTAssertEqual(repository.ikev2Crendentials?.username, "test-ikev2-user")
-        XCTAssertEqual(repository.ikev2Crendentials?.password, "test-ikev2-pass")
+        let credentials = await repository.ikev2Crendentials
+        XCTAssertNotNil(credentials, "IKEv2 credentials should be set")
+        XCTAssertEqual(credentials?.username, "test-ikev2-user")
+        XCTAssertEqual(credentials?.password, "test-ikev2-pass")
         XCTAssertTrue(mockPreferences.saveIKEv2CredentialsCalled, "Should save credentials to database")
     }
 
@@ -198,8 +202,9 @@ class CredentialsRepositoryTests: XCTestCase {
         try await repository.getUpdatedIKEv2Crendentials()
 
         // Then
-        XCTAssertNotNil(repository.ikev2Crendentials, "Should use cached credentials on API failure")
-        XCTAssertEqual(repository.ikev2Crendentials?.username, "test-ikev2-user")
+        let credentials = await repository.ikev2Crendentials
+        XCTAssertNotNil(credentials, "Should use cached credentials on API failure")
+        XCTAssertEqual(credentials?.username, "test-ikev2-user")
     }
 
     func testGetUpdatedIKEv2Credentials_apiFailureWithNoCachedCredentials_throwsError() async {
@@ -388,16 +393,19 @@ class CredentialsRepositoryTests: XCTestCase {
         mockAPIManager.mockOpenVPNServerConfig = base64Config
 
         // When
-        repository.updateServerConfig()
+        await repository.updateServerConfig()
 
         // Wait for async Task to complete
         let expectation = XCTestExpectation(description: "Update completes")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            // Then
-            XCTAssertNotNil(self.repository.openVPNCrendentials, "Should update OpenVPN credentials")
-            XCTAssertTrue(self.mockPreferences.saveOpenVPNCredentialsCalled, "Should save credentials")
-            XCTAssertTrue(self.mockFileDatabase.saveFileCalled, "Should save config file")
-            expectation.fulfill()
+            Task {
+                // Then
+                let credentials = await self.repository.openVPNCrendentials
+                XCTAssertNotNil(credentials, "Should update OpenVPN credentials")
+                XCTAssertTrue(self.mockPreferences.saveOpenVPNCredentialsCalled, "Should save credentials")
+                XCTAssertTrue(self.mockFileDatabase.saveFileCalled, "Should save config file")
+                expectation.fulfill()
+            }
         }
         await fulfillment(of: [expectation], timeout: 1.0)
     }
@@ -462,10 +470,14 @@ class CredentialsRepositoryTests: XCTestCase {
         // Wait for publishers to emit initial values
         let loadExpectation = XCTestExpectation(description: "Initial data loads")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            // Then - Verify initial credentials are loaded
-            XCTAssertNotNil(newRepository.openVPNCrendentials, "Should load OpenVPN credentials on init")
-            XCTAssertNotNil(newRepository.ikev2Crendentials, "Should load IKEv2 credentials on init")
-            loadExpectation.fulfill()
+            Task {
+                // Then - Verify initial credentials are loaded
+                let openVPNCredentials = await newRepository.openVPNCrendentials
+                let ikev2Credentials = await newRepository.ikev2Crendentials
+                XCTAssertNotNil(openVPNCredentials, "Should load OpenVPN credentials on init")
+                XCTAssertNotNil(ikev2Credentials, "Should load IKEv2 credentials on init")
+                loadExpectation.fulfill()
+            }
         }
         await fulfillment(of: [loadExpectation], timeout: 0.5)
 
@@ -477,7 +489,168 @@ class CredentialsRepositoryTests: XCTestCase {
         try await newRepository.getUpdatedOpenVPNCrendentials()
 
         // Then - Verify updated credentials
-        XCTAssertEqual(newRepository.openVPNCrendentials?.username, "updated-openvpn-user")
+        let finalCredentials = await newRepository.openVPNCrendentials
+        XCTAssertEqual(finalCredentials?.username, "updated-openvpn-user")
+    }
+
+    // MARK: - Concurrency Regression Tests (Issue #1060 crash fixes)
+
+    /// RED without fix: CredentialsRepositoryImpl was a class with no synchronization.
+    /// Concurrent reads and writes to openVPNCrendentials from multiple threads could
+    /// cause data races and crashes.
+    /// GREEN with fix: Actor isolation serializes all access — concurrent operations
+    /// complete safely without data races.
+    func testCredentials_concurrentReadWriteAccess_noDataRace() async throws {
+        // Given
+        let mockCredentials = createMockOpenVPNCredentials()
+        mockAPIManager.mockOpenVPNCredentials = mockCredentials
+
+        // When - fire concurrent credential updates and reads simultaneously
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<10 {
+                group.addTask {
+                    try? await self.repository.getUpdatedOpenVPNCrendentials()
+                }
+                group.addTask {
+                    _ = await self.repository.openVPNCrendentials
+                }
+            }
+        }
+
+        // Then - should complete without crash; final state should be valid
+        let credentials = await repository.openVPNCrendentials
+        XCTAssertNotNil(credentials, "Credentials should be set after concurrent access")
+        XCTAssertEqual(credentials?.username, "test-openvpn-user")
+    }
+
+    /// RED without fix: Concurrent reads and writes to ikev2Crendentials had the
+    /// same class-level data race as openVPNCrendentials.
+    /// GREEN with fix: Actor serializes IKEv2 credential access too.
+    func testIKEv2Credentials_concurrentReadWriteAccess_noDataRace() async throws {
+        // Given
+        let mockCredentials = createMockIKEv2Credentials()
+        mockAPIManager.mockIKEv2Credentials = mockCredentials
+
+        // When - fire concurrent IKEv2 credential updates and reads
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<10 {
+                group.addTask {
+                    try? await self.repository.getUpdatedIKEv2Crendentials()
+                }
+                group.addTask {
+                    _ = await self.repository.ikev2Crendentials
+                }
+            }
+        }
+
+        // Then
+        let credentials = await repository.ikev2Crendentials
+        XCTAssertNotNil(credentials, "IKEv2 credentials should be set after concurrent access")
+        XCTAssertEqual(credentials?.username, "test-ikev2-user")
+    }
+
+    /// RED without fix: Multiple rapid updateServerConfig() calls would each spawn
+    /// independent Tasks that all ran to completion, racing on shared mutable state.
+    /// GREEN with fix: updateTask cancellation pattern ensures only the most recent
+    /// call runs to completion; earlier calls are cancelled.
+    func testUpdateServerConfig_rapidConsecutiveCalls_doesNotCrash() async {
+        // Given
+        mockPreferences.sessionAuthToReturn = "valid-session-auth"
+        let mockCredentials = createMockOpenVPNCredentials()
+        mockAPIManager.mockOpenVPNCredentials = mockCredentials
+        let base64Config = "client\ndev tun".data(using: .utf8)!.base64EncodedString()
+        mockAPIManager.mockOpenVPNServerConfig = base64Config
+
+        // When - fire multiple rapid consecutive calls
+        for _ in 0..<5 {
+            await repository.updateServerConfig()
+        }
+
+        // Wait for the debounced task to complete
+        let expectation = XCTestExpectation(description: "Final update completes")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            expectation.fulfill()
+        }
+        await fulfillment(of: [expectation], timeout: 2.0)
+
+        // Then - should not crash; credentials should be in a valid state
+        let credentials = await repository.openVPNCrendentials
+        // The last call should have completed successfully
+        XCTAssertNotNil(credentials, "Final updateServerConfig call should set credentials")
+    }
+
+    /// RED without fix: Concurrent updateServerConfig calls from different threads
+    /// would create multiple overlapping Tasks mutating shared state simultaneously.
+    /// GREEN with fix: Actor isolation + task cancellation prevents concurrent execution.
+    func testUpdateServerConfig_concurrentCalls_doesNotRace() async {
+        // Given
+        mockPreferences.sessionAuthToReturn = "valid-session-auth"
+        let mockCredentials = createMockOpenVPNCredentials()
+        mockAPIManager.mockOpenVPNCredentials = mockCredentials
+        let base64Config = "client\ndev tun".data(using: .utf8)!.base64EncodedString()
+        mockAPIManager.mockOpenVPNServerConfig = base64Config
+
+        // When - fire concurrent updateServerConfig calls from multiple tasks
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<10 {
+                group.addTask {
+                    await self.repository.updateServerConfig()
+                }
+            }
+        }
+
+        // Wait for any remaining async work
+        let expectation = XCTestExpectation(description: "All updates settle")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            expectation.fulfill()
+        }
+        await fulfillment(of: [expectation], timeout: 2.0)
+
+        // Then - should complete without crash
+        // The actor ensures only one task runs at a time, previous ones are cancelled
+        let credentials = await repository.openVPNCrendentials
+        XCTAssertNotNil(credentials, "Credentials should be set after concurrent updates")
+    }
+
+    /// RED without fix: Combine sinks used [self] (strong capture) which could keep
+    /// CredentialsRepositoryImpl alive after its consumer released it, leading to
+    /// use-after-free style crashes when the captured self was in an inconsistent state.
+    /// GREEN with fix: [weak self] capture + Task dispatch prevents retain cycles.
+    func testRepository_doesNotRetainCycleWithPublishers() async {
+        // Given - create repository and let publishers emit
+        var repo: CredentialsRepository? = CredentialsRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: mockLocalDatabase,
+            fileDatabase: mockFileDatabase,
+            vpnStateRepository: mockVPNStateRepository,
+            wifiManager: mockWifiManager,
+            preferences: mockPreferences,
+            logger: mockLogger
+        )
+        weak var weakRepo = repo as AnyObject?
+
+        // When - let publishers fire, then release the strong reference
+        mockPreferences.mockConnectionMode.send("manual")
+        mockPreferences.mockSelectedProtocol.send(TextsAsset.wireGuard)
+
+        // Wait for publisher dispatch
+        let setupExpectation = XCTestExpectation(description: "Publishers emit")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            setupExpectation.fulfill()
+        }
+        await fulfillment(of: [setupExpectation], timeout: 0.5)
+
+        repo = nil
+
+        // Wait for deallocation
+        let deallocExpectation = XCTestExpectation(description: "Deallocation")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            deallocExpectation.fulfill()
+        }
+        await fulfillment(of: [deallocExpectation], timeout: 1.0)
+
+        // Then - repository should be deallocated (no retain cycle)
+        XCTAssertNil(weakRepo, "Repository should be deallocated — no retain cycle from publishers")
     }
 
     // MARK: - Private Helper Methods

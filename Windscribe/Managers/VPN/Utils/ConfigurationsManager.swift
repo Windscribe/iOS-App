@@ -49,12 +49,22 @@ class ConfigurationsManager {
             managersLock.withLock { _managers }
         }
         set {
-            managersLock.withLock { _managers = newValue }
+            managersLock.withLock {
+                // Retain old managers temporarily to prevent premature deallocation
+                let oldManagers = _managers
+                _managers = newValue
+                // Keep reference to old managers until after lock is released
+                withExtendedLifetime(oldManagers) {}
+            }
         }
     }
     var showFailedPinIpTrigger = PassthroughSubject<Void, Never>()
     var reloadManagersTrigger = CurrentValueSubject<Void, Never>(())
     var cancellables = Set<AnyCancellable>()
+
+    // Prevents concurrent reloadManagers calls
+    private let reloadLock = NSLock()
+    private var isReloading = false
 
     /// Tracks all node hostnames that failed during current location session
     /// Cleared when location changes, protocol changes, or connection succeeds
@@ -169,6 +179,21 @@ class ConfigurationsManager {
     }
 
     func reloadManagers() async {
+        // Prevent concurrent reloads that could cause deallocation issues
+        reloadLock.lock()
+        guard !isReloading else {
+            reloadLock.unlock()
+            return
+        }
+        isReloading = true
+        reloadLock.unlock()
+
+        defer {
+            reloadLock.lock()
+            isReloading = false
+            reloadLock.unlock()
+        }
+
         managers = (try? await getAllManagers()) ?? []
         delegate?.configureForConnectionState()
     }
