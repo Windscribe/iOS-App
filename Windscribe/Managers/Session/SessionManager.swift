@@ -318,7 +318,6 @@ class SessionManagerImpl: SessionManager {
             try? await locationListRepository.updatedServerList()
             _ = try? await portmapRepo.getUpdatedPortMap()
         }
-        preferences.saveUserStatus(value: userSessionRepository.sessionModel?.isUserPro ?? false)
     }
 
     func logoutUser() {

@@ -24,10 +24,11 @@ extension NETunnelProviderManager {
         return config
     }
 
-    func setTunnelConfiguration(_ tunnelConfiguration: TunnelConfiguration, username: String, description: String) {
+    func setTunnelConfiguration(_ tunnelConfiguration: TunnelConfiguration, username: String, description: String, isUserPro: Bool) {
         protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
         protocolConfiguration?.username = username
         protocolConfiguration?.disconnectOnSleep = false
+        (protocolConfiguration as? NETunnelProviderProtocol)?.providerConfiguration = ["isUserPro": isUserPro]
         localizedDescription = description
         objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, tunnelConfiguration, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }

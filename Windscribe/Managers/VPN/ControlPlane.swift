@@ -15,9 +15,11 @@ import os
 class ControlPlane {
 
     private let consoleLogger: Logger
+    private let logger: FileLogger
     private let apiUtil: APIUtilService
     private let api: WSNetServerAPI
     private let preferences: Preferences
+    private let providerConfiguration: [String: Any]?
     private let onTunnelShouldStop: @MainActor (DisconnectReason, NSError) -> Void
 
     private var runningHealthCheck = false
@@ -27,12 +29,16 @@ class ControlPlane {
         apiUtil: APIUtilService,
         api: WSNetServerAPI,
         preferences: Preferences,
+        providerConfiguration: [String: Any]?,
+        logger: FileLogger,
         consoleLogger: Logger,
         onTunnelShouldStop: @escaping @MainActor (DisconnectReason, NSError) -> Void
     ) {
         self.apiUtil = apiUtil
         self.api = api
         self.preferences = preferences
+        self.providerConfiguration = providerConfiguration
+        self.logger = logger
         self.consoleLogger = consoleLogger
         self.onTunnelShouldStop = onTunnelShouldStop
     }
@@ -80,8 +86,13 @@ class ControlPlane {
                     return
                 }
 
-                // checking if user is still from or unlimited
-                if sessionModel.isUserPro != preferences.getUserStatus() {
+                // Check if user status changed since connection started
+                // isUserPro = isPremium || isUserUnlimited (billingPlanId == -9)
+                // This catches transitions between Free/Pro/Unlimited tiers
+                let connectionUserStatus = providerConfiguration?["isUserPro"] as? Bool ?? false
+                if sessionModel.isUserPro != connectionUserStatus {
+                    logger.logI("ControlPlane", "User status changed since connection: connection=\(connectionUserStatus), current=\(sessionModel.isUserPro)", flushImmediately: true)
+                    consoleLogger.debug("User status changed: connection=\(connectionUserStatus), current=\(sessionModel.isUserPro)")
                     await stopTunnel(reason: .userStatusChanged)
                     return
                 }

@@ -152,8 +152,6 @@ protocol Preferences {
     func removeFavouriteId(_ id: String)
     func saveDisconnectReason(reason: DisconnectReason)
     func getDisconnectReason() -> DisconnectReason
-    func saveUserStatus(value: Bool)
-    func getUserStatus() -> Bool
     func clearFavourites()
 
     func getLoginDate() -> Date?

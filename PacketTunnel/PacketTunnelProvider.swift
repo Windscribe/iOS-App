@@ -240,10 +240,13 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             self.startHandler = nil
                 // Initialize control plane when tunnel is ready
                 if controlPlane == nil {
+                    let providerConfig = (self.protocolConfiguration as? NETunnelProviderProtocol)?.providerConfiguration
                     controlPlane = ControlPlane(
                         apiUtil: apiUtil,
                         api: api,
                         preferences: preferences,
+                        providerConfiguration: providerConfig,
+                        logger: logger,
                         consoleLogger: self.consoleLogger,
                         onTunnelShouldStop: { @MainActor [weak self] reason, error in
                             guard let self = self else { return }

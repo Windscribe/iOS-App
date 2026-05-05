@@ -116,10 +116,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                 self.logger.logI("PacketTunnelProvider", "Tunnel interface is \(interfaceName)", flushImmediately: true)
 
                 // Initialize control plane when tunnel is ready
+                let providerConfig = (self.protocolConfiguration as? NETunnelProviderProtocol)?.providerConfiguration
                 self.controlPlane = ControlPlane(
                     apiUtil: self.apiUtil,
                     api: self.api,
                     preferences: self.preferences,
+                    providerConfiguration: providerConfig,
+                    logger: self.logger,
                     consoleLogger: self.consoleLogger,
                     onTunnelShouldStop: { @MainActor [weak self] reason, error in
                         guard let self = self else { return }

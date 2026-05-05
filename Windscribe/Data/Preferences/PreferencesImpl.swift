@@ -550,14 +550,6 @@ class PreferencesImpl: Preferences {
         setInt(reason.rawValue, forKey: SharedKeys.disconnectReason)
     }
 
-    func getUserStatus() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.userStatus) ?? false
-    }
-
-    func saveUserStatus(value: Bool) {
-        setBool(value, forKey: SharedKeys.userStatus)
-    }
-
     // MARK: - IP Address Storage - Issue #911
     func saveCurrentIpAddress(ip: String?) {
         setString(ip, forKey: SharedKeys.currentIpAddress)

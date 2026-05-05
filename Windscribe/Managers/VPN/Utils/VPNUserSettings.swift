@@ -83,6 +83,7 @@ struct OpenVPNConfiguration: VPNConfiguration {
     let password: String?
     let path: String
     let data: Data
+    let isUserPro: Bool
     var description: String {
         return "OpenVPN: [proto: \(proto) ip: \(ip) path: \(path)]"
     }
@@ -96,10 +97,12 @@ struct OpenVPNConfiguration: VPNConfiguration {
             tunnelProtocol.providerConfiguration = ["ovpn": data,
                                                     "username": configUsername,
                                                     "password": configPassword,
-                                                    "compressionEnabled": false]
+                                                    "compressionEnabled": false,
+                                                    "isUserPro": isUserPro]
         } else {
             tunnelProtocol.providerConfiguration = ["ovpn": data,
-                                                    "compressionEnabled": false]
+                                                    "compressionEnabled": false,
+                                                    "isUserPro": isUserPro]
         }
 
         tunnelProtocol.disconnectOnSleep = false
@@ -114,6 +117,7 @@ struct OpenVPNConfiguration: VPNConfiguration {
 
 struct WireguardVPNConfiguration: VPNConfiguration {
     let content: TunnelConfiguration
+    let isUserPro: Bool
     var description: String {
         var parts = [String]()
         let iface = content.interface
@@ -150,7 +154,7 @@ struct WireguardVPNConfiguration: VPNConfiguration {
         guard let manager = manager as? NETunnelProviderManager else {
             throw VPNConfigurationErrors.incorrectVPNManager
         }
-        manager.setTunnelConfiguration(content, username: TextsAsset.wireGuard, description: AppConstants.appName)
+        manager.setTunnelConfiguration(content, username: TextsAsset.wireGuard, description: AppConstants.appName, isUserPro: isUserPro)
     }
 }
 

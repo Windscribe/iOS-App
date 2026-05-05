@@ -94,7 +94,8 @@ extension ConfigurationsManager {
             customConfigRepository.saveCustomConfig(customConfig: updatedConfig)
         }
 
-        return OpenVPNConfiguration(proto: config.protocolType, ip: config.serverAddress, username: username, password: password, path: configFilePath, data: configData)
+        let isUserPro = userSessionRepository.sessionModel?.isUserPro ?? false
+        return OpenVPNConfiguration(proto: config.protocolType, ip: config.serverAddress, username: username, password: password, path: configFilePath, data: configData, isUserPro: isUserPro)
     }
 
     /// Loads a WireGuard configuration from a file path.
@@ -112,7 +113,8 @@ extension ConfigurationsManager {
             throw VPNConfigurationErrors.configNotFound
         }
         let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: stringData, called: TextsAsset.wireGuard)
-        return WireguardVPNConfiguration(content: tunnelConfiguration)
+        let isUserPro = userSessionRepository.sessionModel?.isUserPro ?? false
+        return WireguardVPNConfiguration(content: tunnelConfiguration, isUserPro: isUserPro)
     }
 
     /// Builds WireGuard configuration for a location based on its type.
@@ -221,7 +223,8 @@ extension ConfigurationsManager {
             let hostname = server.ip2
             locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: locationDatacenter.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
-            return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
+            let isUserPro = userSessionRepository.sessionModel?.isUserPro ?? false
+            return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1, isUserPro: isUserPro)
         case .staticIP:
             let staticLocation = try getStaticIPLocation(id: locationId)
             guard let node = Array(staticLocation.nodes).randomElement() else {
@@ -237,7 +240,8 @@ extension ConfigurationsManager {
             let hostname = node.ip2
             locationListRepository.saveLastConnectedHost(for: hostname, with: locationId)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: staticLocation.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
-            return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1)
+            let isUserPro = userSessionRepository.sessionModel?.isUserPro ?? false
+            return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1, isUserPro: isUserPro)
         default:
             throw VPNConfigurationErrors.customConfigSupportNotAvailable
         }
