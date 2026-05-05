@@ -75,25 +75,21 @@ class ControlPlane {
 
             do {
                 let sessionModel = try await getSession()
-                logger.logD("ControlPlane", "User session update successful. Status: \(sessionModel.status)")
-
+                let connectionUserStatus = providerConfiguration?["isUserPro"] as? Bool ?? false
+                logger.logD("ControlPlane", "Session updated | status=\(sessionModel.status), isPro=\(connectionUserStatus)→\(sessionModel.isUserPro)")
+                // Account status change
                 if sessionModel.status != 1 {
                     logger.logI("ControlPlane", "Session status is \(sessionModel.status) (not active), stopping tunnel.", flushImmediately: true)
                     await stopTunnel(reason: .accountStatusChanged)
                     return
                 }
-
                 // Check if user status changed since connection started
                 // isUserPro = isPremium || isUserUnlimited (billingPlanId == -9)
                 // This catches transitions between Free/Pro/Unlimited tiers
-                let connectionUserStatus = providerConfiguration?["isUserPro"] as? Bool ?? false
                 if sessionModel.isUserPro != connectionUserStatus {
-                    logger.logI("ControlPlane", "User status changed since connection: connection=\(connectionUserStatus), current=\(sessionModel.isUserPro)", flushImmediately: true)
                     await stopTunnel(reason: .userStatusChanged)
                     return
                 }
-
-                logger.logD("ControlPlane", "Health check passed.")
             } catch {
                 logger.logE("ControlPlane", "Get Session failed. \(error)")
 
