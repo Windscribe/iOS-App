@@ -16,24 +16,64 @@ class MigrationRepositoryImpl: MigrationRepository {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
     private let sessionStore: SessionKeychainStore
+    private let keychainManager: KeychainManager
     private let logger: FileLogger
 
     init(localDatabase: LocalDatabase,
          preferences: Preferences,
          sessionStore: SessionKeychainStore,
+         keychainManager: KeychainManager,
          logger: FileLogger) {
         self.localDatabase = localDatabase
         self.preferences = preferences
         self.sessionStore = sessionStore
+        self.keychainManager = keychainManager
         self.logger = logger
     }
 
     func runMigrations() {
         localDatabase.migrate()
+        migrateKeychainAccessibility()
         migrateSessionAuthToKeychain()
         migrateSessionFromRealmToKeychain()
         migrateCustomConfigCredentialsToKeychain()
         migrateServerCredentialsToKeychain()
+    }
+
+    private static let keychainAccessibilityMigrationKey = "keychain-accessibility-migrated-v1"
+
+    /// Ensures all known keychain items use `kSecAttrAccessibleAfterFirstUnlock` and the
+    /// shared access group so they are readable during device sleep/lock by all extensions.
+    /// Runs once and sets a UserDefaults flag so it never runs again.
+    private func migrateKeychainAccessibility() {
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: Self.keychainAccessibilityMigrationKey) else { return }
+
+        let sharedGroup = SharedKeys.sharedKeychainGroup
+        let keysToMigrate: [(key: String, service: String)] = [
+            (SharedKeys.privateKey, "WireguardService"),
+            (SharedKeys.activeSessionAuthHash, Bundle.main.bundleIdentifier ?? ""),
+            (SharedKeys.keychainStoredSession, Bundle.main.bundleIdentifier ?? ""),
+            (SharedKeys.keychainOpenVPNCred, Bundle.main.bundleIdentifier ?? ""),
+            (SharedKeys.keychainIKEv2Cred, Bundle.main.bundleIdentifier ?? ""),
+            (SharedKeys.keychainCustomConfigCreds, Bundle.main.bundleIdentifier ?? ""),
+            (KeyChainkeys.ghostAccountCreated, Bundle.main.bundleIdentifier ?? "")
+        ]
+
+        for item in keysToMigrate {
+            do {
+                try keychainManager.migrateItemAccessibility(
+                    forKey: item.key,
+                    service: item.service,
+                    accessGroup: sharedGroup
+                )
+            } catch {
+                logger.logE("MigrationRepository", "Failed to migrate keychain accessibility for '\(item.key)': \(error)")
+            }
+        }
+
+        defaults.set(true, forKey: Self.keychainAccessibilityMigrationKey)
+        logger.logD("MigrationRepository", "Keychain accessibility migration completed")
     }
 
     /// Migrates custom config credentials from Realm to Keychain.

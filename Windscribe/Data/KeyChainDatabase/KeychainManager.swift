@@ -95,4 +95,13 @@ protocol KeychainManager {
     /// - Parameter key: The key to check
     /// - Returns: True if the item exists, false otherwise
     func bundleExists(key: String) -> Bool
+
+    /// Ensures an existing keychain item has the correct accessibility and access group.
+    /// Reads the item, deletes it, and re-adds it with `kSecAttrAccessibleAfterFirstUnlock`
+    /// and the specified access group. No-op if the item doesn't exist.
+    /// - Parameters:
+    ///   - key: The key to migrate
+    ///   - service: The service name
+    ///   - accessGroup: The target access group
+    func migrateItemAccessibility(forKey key: String, service: String, accessGroup: String?) throws
 }

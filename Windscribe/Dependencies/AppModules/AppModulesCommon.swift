@@ -218,6 +218,7 @@ class Repository: Assembly {
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 sessionStore: r.resolve(SessionKeychainStore.self)!,
+                keychainManager: r.resolve(KeychainManager.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.userScope)

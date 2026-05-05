@@ -87,9 +87,12 @@ class KeychainManagerImpl: KeychainManager {
         let addStatus = SecItemAdd(query as CFDictionary, nil)
 
         if addStatus == errSecDuplicateItem {
-            // Item exists, update it
+            // Item exists, update it (include accessibility to fix items stored with wrong protection class)
             let updateQuery = buildBaseQuery(key: key, service: service, accessGroup: accessGroup)
-            let updateAttributes: [String: Any] = [kSecValueData as String: data]
+            let updateAttributes: [String: Any] = [
+                kSecValueData as String: data,
+                kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
+            ]
             let updateStatus = SecItemUpdate(updateQuery as CFDictionary, updateAttributes as CFDictionary)
 
             if updateStatus != errSecSuccess {
@@ -279,6 +282,51 @@ class KeychainManagerImpl: KeychainManager {
         query[kSecReturnPersistentRef as String] = kCFBooleanTrue
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         return query
+    }
+
+    func migrateItemAccessibility(forKey key: String, service: String, accessGroup: String?) throws {
+        // Read the existing item
+        var lookupQuery: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: key,
+            kSecReturnData as String: kCFBooleanTrue as Any,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
+        if let accessGroup = accessGroup {
+            lookupQuery[kSecAttrAccessGroup as String] = accessGroup
+        }
+
+        var result: AnyObject?
+        let status = SecItemCopyMatching(lookupQuery as CFDictionary, &result)
+
+        guard status == errSecSuccess, let data = result as? Data else {
+            // Item doesn't exist or can't be read — nothing to migrate
+            return
+        }
+
+        // Update the existing item's accessibility in-place (no delete needed)
+        var updateQuery: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: key
+        ]
+        if let accessGroup = accessGroup {
+            updateQuery[kSecAttrAccessGroup as String] = accessGroup
+        }
+        let updateAttributes: [String: Any] = [
+            kSecValueData as String: data,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
+        ]
+        let updateStatus = SecItemUpdate(updateQuery as CFDictionary, updateAttributes as CFDictionary)
+
+        if updateStatus != errSecSuccess {
+            let error = KeychainError(status: updateStatus)
+            logger.logE("KeychainManager", "Failed to migrate accessibility for key '\(key)' in service '\(service)': \(error.localizedDescription)")
+            throw error
+        }
+
+        logger.logD("KeychainManager", "Migrated accessibility for key '\(key)' in service '\(service)' to afterFirstUnlock")
     }
 
     /// Gets persistent reference for keychain item (for iOS system usage)

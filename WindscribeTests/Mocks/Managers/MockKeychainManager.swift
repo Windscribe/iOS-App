@@ -120,6 +120,20 @@ class MockKeychainManager: KeychainManager {
         return mockRef
     }
 
+    func migrateItemAccessibility(forKey key: String, service: String, accessGroup: String?) throws {
+        if shouldThrowError {
+            throw errorToThrow
+        }
+        // In mock, just verify the item exists — no real accessibility to migrate
+        let storageKey = buildStorageKey(key: key, service: service, accessGroup: accessGroup)
+        // If item exists under old key (no group), move it to the grouped key
+        let ungroupedKey = buildStorageKey(key: key, service: service, accessGroup: nil)
+        if storage[ungroupedKey] != nil && storageKey != ungroupedKey {
+            storage[storageKey] = storage[ungroupedKey]
+            storage.removeValue(forKey: ungroupedKey)
+        }
+    }
+
     // Helper methods
     func clearStorage() {
         storage.removeAll()

@@ -20,7 +20,7 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
     func save(username: String, password: String) {
         logger.logD("KeyChainDatabase", "Saving credentials to keychain")
         do {
-            try keychainManager.setString(password, forKey: username, service: AppConstants.service, accessGroup: nil)
+            try keychainManager.setString(password, forKey: username, service: AppConstants.service, accessGroup: SharedKeys.sharedKeychainGroup)
             logger.logI("KeyChainDatabase", "Saved credentials to keychain")
         } catch {
             logger.logE("KeyChainDatabase", "Failed to save credentials to keychain: \(error.localizedDescription)")
@@ -30,7 +30,7 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
     func retrieve(username: String) -> Data? {
         logger.logD("KeyChainDatabase", "Retrieving credentials from keychain")
         do {
-            let persistentRef = try keychainManager.getPersistentRef(forKey: username, service: AppConstants.service, accessGroup: nil)
+            let persistentRef = try keychainManager.getPersistentRef(forKey: username, service: AppConstants.service, accessGroup: SharedKeys.sharedKeychainGroup)
             logger.logI("KeyChainDatabase", "Retrieved credentials from keychain")
             return persistentRef
         } catch {

@@ -14,6 +14,7 @@ class MigrationRepositoryTests: XCTestCase {
     var mockLocalDatabase: MockLocalDatabase!
     var mockPreferences: MockPreferences!
     var mockSessionStore: MockSessionKeychainStore!
+    var mockKeychainManager: MockKeychainManager!
     var mockLogger: MockLogger!
     var repository: MigrationRepository!
 
@@ -22,12 +23,14 @@ class MigrationRepositoryTests: XCTestCase {
         mockLocalDatabase = MockLocalDatabase()
         mockPreferences = MockPreferences()
         mockSessionStore = MockSessionKeychainStore()
+        mockKeychainManager = MockKeychainManager()
         mockLogger = MockLogger()
 
         repository = MigrationRepositoryImpl(
             localDatabase: mockLocalDatabase,
             preferences: mockPreferences,
             sessionStore: mockSessionStore,
+            keychainManager: mockKeychainManager,
             logger: mockLogger
         )
     }
@@ -37,6 +40,7 @@ class MigrationRepositoryTests: XCTestCase {
         mockLocalDatabase = nil
         mockPreferences = nil
         mockSessionStore = nil
+        mockKeychainManager = nil
         mockLogger = nil
         super.tearDown()
     }
@@ -49,6 +53,7 @@ class MigrationRepositoryTests: XCTestCase {
             localDatabase: mockLocalDatabase,
             preferences: mockPreferences,
             sessionStore: mockSessionStore,
+            keychainManager: mockKeychainManager,
             logger: mockLogger
         )
 
@@ -111,6 +116,7 @@ class MigrationRepositoryTests: XCTestCase {
             localDatabase: freshDatabase,
             preferences: mockPreferences,
             sessionStore: mockSessionStore,
+            keychainManager: mockKeychainManager,
             logger: mockLogger
         )
 
