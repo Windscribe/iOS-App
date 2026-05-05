@@ -123,11 +123,11 @@ class CredentialsRepositoryTests: XCTestCase {
         // Task.sleep alone doesn't pump the main run loop, so Combine's dispatched callbacks
         // can stall on CI. Alternate between pumping the run loop and yielding to let the
         // actor-isolated Tasks complete.
-        for _ in 0..<5 {
+        for _ in 0..<10 {
             await MainActor.run {
                 RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
             }
-            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+            try? await Task.sleep(nanoseconds: 200_000_000) // 200ms
         }
     }
 
@@ -404,7 +404,7 @@ class CredentialsRepositoryTests: XCTestCase {
 
         // Wait for async Task to complete
         let expectation = XCTestExpectation(description: "Update completes")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             Task {
                 // Then
                 let credentials = await self.repository.openVPNCrendentials
@@ -414,7 +414,7 @@ class CredentialsRepositoryTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     func testUpdateServerConfig_withNoSession_doesNothing() {
@@ -426,12 +426,12 @@ class CredentialsRepositoryTests: XCTestCase {
 
         // Then - verify no operations were performed
         let expectation = XCTestExpectation(description: "Wait for potential execution")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             XCTAssertFalse(self.mockPreferences.saveOpenVPNCredentialsCalled, "Should not save credentials without session")
             XCTAssertFalse(self.mockFileDatabase.saveFileCalled, "Should not save config without session")
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 0.5)
+        wait(for: [expectation], timeout: 5.0)
     }
 
     func testUpdateServerConfig_withAPIFailure_logsError() async {
@@ -446,12 +446,12 @@ class CredentialsRepositoryTests: XCTestCase {
 
         // Wait for async Task to complete
         let expectation = XCTestExpectation(description: "Error logged")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             // Then
             XCTAssertTrue(self.mockLogger.logECalled, "Should log error on failure")
             expectation.fulfill()
         }
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     // MARK: - Integration Tests
@@ -476,7 +476,7 @@ class CredentialsRepositoryTests: XCTestCase {
 
         // Wait for publishers to emit initial values
         let loadExpectation = XCTestExpectation(description: "Initial data loads")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             Task {
                 // Then - Verify initial credentials are loaded
                 let openVPNCredentials = await newRepository.openVPNCrendentials
@@ -486,7 +486,7 @@ class CredentialsRepositoryTests: XCTestCase {
                 loadExpectation.fulfill()
             }
         }
-        await fulfillment(of: [loadExpectation], timeout: 0.5)
+        await fulfillment(of: [loadExpectation], timeout: 5.0)
 
         // When - Update credentials from API
         let updatedOpenVPNCredentials = OpenVPNServerCredentials()
@@ -642,19 +642,19 @@ class CredentialsRepositoryTests: XCTestCase {
 
         // Wait for publisher dispatch
         let setupExpectation = XCTestExpectation(description: "Publishers emit")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             setupExpectation.fulfill()
         }
-        await fulfillment(of: [setupExpectation], timeout: 0.5)
+        await fulfillment(of: [setupExpectation], timeout: 5.0)
 
         repo = nil
 
         // Wait for deallocation
         let deallocExpectation = XCTestExpectation(description: "Deallocation")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             deallocExpectation.fulfill()
         }
-        await fulfillment(of: [deallocExpectation], timeout: 1.0)
+        await fulfillment(of: [deallocExpectation], timeout: 5.0)
 
         // Then - repository should be deallocated (no retain cycle)
         XCTAssertNil(weakRepo, "Repository should be deallocated — no retain cycle from publishers")

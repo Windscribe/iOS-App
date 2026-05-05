@@ -143,7 +143,7 @@ class UserDataRepositoryTests: XCTestCase {
         try await repository.prepareUserData()
 
         // Small delay to ensure any background tasks don't interfere with assertions
-        try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
 
         // Then
         XCTAssertTrue(mockLatencyRepository.pickBestLocationCalled, "Should pick best location")

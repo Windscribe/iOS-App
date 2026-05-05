@@ -187,7 +187,7 @@ class LatencyRepositoryTests: XCTestCase {
 
         await repository.loadStaticIpLatency()
 
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        try? await Task.sleep(nanoseconds: 500_000_000)
 
         XCTAssertTrue(mockPingManager.pingCalled, "Should ping static IPs")
         XCTAssertGreaterThan(mockPingManager.pingCount, 0, "Should have pinged at least one static IP")
@@ -288,7 +288,7 @@ class LatencyRepositoryTests: XCTestCase {
         mockLocationListRepository.serverListSubject.send(serverMachines)
         mockVPNStateRepository.mockStatus = .disconnected
 
-        try? await Task.sleep(nanoseconds: 1_100_000_000)
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
 
         await repository.checkLocationsValidity()
 

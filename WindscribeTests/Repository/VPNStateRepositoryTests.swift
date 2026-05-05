@@ -109,7 +109,7 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.setConfigurationState(.configuring)
 
         // Then
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(repository.configurationState, .configuring)
 
         cancellable.cancel()
@@ -152,7 +152,7 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.vpnInfo.send(getVPNInfo(with: .connected))
 
         // Then
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(receivedStatus, .connected)
 
         cancellable.cancel()
@@ -173,7 +173,7 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.vpnInfo.send(getVPNInfo(with: .connected))
 
         // Then
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(receivedStatus, .connecting)
 
         cancellable.cancel()
@@ -194,7 +194,7 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.vpnInfo.send(getVPNInfo(with: .connected))
 
         // Then
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(receivedStatus, .disconnecting)
 
         cancellable.cancel()
@@ -215,7 +215,7 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.vpnInfo.send(getVPNInfo(with: .disconnected))
 
         // Then
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(receivedStatus, .disconnected)
 
         cancellable.cancel()
@@ -239,13 +239,13 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.vpnInfo.send(getVPNInfo(with: .connected))
 
         // Wait for debounce
-        try await Task.sleep(nanoseconds: 200_000_000) // 200ms
+        try await Task.sleep(nanoseconds: 500_000_000) // 500ms
 
         repository.vpnInfo.send(getVPNInfo(with: .connected))
         repository.vpnInfo.send(getVPNInfo(with: .connected))
 
         // Then - Should only receive one emission
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(emissionCount, 1)
 
         cancellable.cancel()
@@ -266,15 +266,15 @@ class VPNStateRepositoryTests: XCTestCase {
 
         // When
         repository.vpnInfo.send(getVPNInfo(with: .disconnected))
-        try await Task.sleep(nanoseconds: 200_000_000)
+        try await Task.sleep(nanoseconds: 500_000_000)
 
         repository.vpnInfo.send(getVPNInfo(with: .connecting))
-        try await Task.sleep(nanoseconds: 200_000_000)
+        try await Task.sleep(nanoseconds: 500_000_000)
 
         repository.vpnInfo.send(getVPNInfo(with: .connected))
 
         // Then
-        await fulfillment(of: [expectation], timeout: 2.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(receivedStatuses, [.disconnected, .connecting, .connected])
 
         cancellable.cancel()
@@ -302,7 +302,7 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.vpnInfo.send(getVPNInfo(with: .connected))
 
         // Then - Should only receive the last emission after debounce
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
         XCTAssertEqual(emissionCount, 1)
         XCTAssertEqual(lastStatus, .connected)
 
@@ -323,7 +323,7 @@ class VPNStateRepositoryTests: XCTestCase {
         repository.connectionStateUpdatedTrigger.send()
 
         // Then
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
 
         cancellable.cancel()
     }

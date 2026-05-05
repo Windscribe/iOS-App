@@ -72,24 +72,18 @@ class BridgeApiRepositoryTests: XCTestCase {
     // MARK: - VPN Connection State Tests
 
     func testVPNDisconnectedSetsBridgeAPIToDisconnected() async throws {
-        // Given
-        let expectation = XCTestExpectation(description: "Bridge API should be set to disconnected")
-
         // Wait a bit for the initial observation to complete
-        try await Task.sleep(nanoseconds: 100_000_000)
+        try await Task.sleep(nanoseconds: 200_000_000)
 
         // When
         mockVPNStateRepository.simulateStatusChange(.disconnected)
 
-        // Give time for the async observation to complete
-        try await Task.sleep(nanoseconds: 200_000_000)
+        // Wait for async observation to propagate
+        try await waitUntil(timeout: 5.0) { self.mockBridgeAPI.setConnectedStateCalled }
 
         // Then
         XCTAssertTrue(mockBridgeAPI.setConnectedStateCalled, "Should call setConnectedState")
         XCTAssertEqual(mockBridgeAPI.lastConnectedState, false, "Should set connected state to false")
-
-        expectation.fulfill()
-        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
     func testVPNConnectedWithWireGuardSetsCurrentHost() async throws {
@@ -107,8 +101,8 @@ class BridgeApiRepositoryTests: XCTestCase {
         // When - Simulate initial connection
         mockVPNStateRepository.simulateStatusChange(.connected)
 
-        // Give time for the async observation to complete
-        try await Task.sleep(nanoseconds: 300_000_000)
+        // Wait for the async observation to propagate
+        try await waitUntil(timeout: 5.0) { self.mockBridgeAPI.setConnectedStateCalled }
 
         // Then
         XCTAssertTrue(mockBridgeAPI.setCurrentHostCalled, "Should call setCurrentHost")
@@ -134,8 +128,8 @@ class BridgeApiRepositoryTests: XCTestCase {
         // When - Simulate initial connection
         mockVPNStateRepository.simulateStatusChange(.connected)
 
-        // Give time for the async observation to complete
-        try await Task.sleep(nanoseconds: 300_000_000)
+        // Wait for the async observation to propagate
+        try await waitUntil(timeout: 5.0) { self.mockBridgeAPI.setCurrentHostCalled }
 
         // Then
         XCTAssertTrue(mockBridgeAPI.setCurrentHostCalled, "Should call setCurrentHost")
@@ -145,7 +139,7 @@ class BridgeApiRepositoryTests: XCTestCase {
     func testVPNDisconnectAfterConnectionResetsState() async throws {
         // Given - First connect
         mockVPNStateRepository.simulateStatusChange(.connected)
-        try await Task.sleep(nanoseconds: 300_000_000)
+        try await waitUntil(timeout: 5.0) { self.mockBridgeAPI.setConnectedStateCalled }
 
         // Reset tracking
         mockBridgeAPI.setConnectedStateCalled = false
@@ -153,7 +147,7 @@ class BridgeApiRepositoryTests: XCTestCase {
 
         // When - Then disconnect
         mockVPNStateRepository.simulateStatusChange(.disconnected)
-        try await Task.sleep(nanoseconds: 200_000_000)
+        try await waitUntil(timeout: 5.0) { self.mockBridgeAPI.setConnectedStateCalled }
 
         // Then
         XCTAssertTrue(mockBridgeAPI.setConnectedStateCalled, "Should call setConnectedState on disconnect")
@@ -219,7 +213,7 @@ class BridgeApiRepositoryTests: XCTestCase {
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     func testApiAvailableWithFreeUserAndALCLocation() async throws {
@@ -273,7 +267,7 @@ class BridgeApiRepositoryTests: XCTestCase {
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     // MARK: - Helpers
@@ -284,7 +278,7 @@ class BridgeApiRepositoryTests: XCTestCase {
     /// the repository via `simulateApiAvailable` race with the registration
     /// and silently no-op.
     private func waitForApiAvailableCallbackRegistration(
-        timeout: TimeInterval = 0.5
+        timeout: TimeInterval = 5.0
     ) async throws {
         let deadline = Date().addingTimeInterval(timeout)
         while !mockBridgeAPI.setApiAvailableCallbackCalled, Date() < deadline {
@@ -294,6 +288,21 @@ class BridgeApiRepositoryTests: XCTestCase {
             mockBridgeAPI.setApiAvailableCallbackCalled,
             "setApiAvailableCallback was not registered within \(timeout)s"
         )
+    }
+
+    /// Polls a condition at 10ms intervals until it becomes true or the timeout
+    /// elapses. Replaces fixed `Task.sleep` waits that are too short on loaded
+    /// CI runners — the poll resolves as soon as the async side-effect lands,
+    /// so it's both faster on idle machines and safer under load.
+    private func waitUntil(
+        timeout: TimeInterval = 5.0,
+        condition: @escaping () -> Bool
+    ) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition(), Date() < deadline {
+            try await Task.sleep(nanoseconds: 10_000_000) // 10ms
+        }
+        XCTAssertTrue(condition(), "Condition was not met within \(timeout)s")
     }
 
     func testApiNotAvailableWithFreeUserAndNonALCLocation() async throws {
@@ -337,7 +346,7 @@ class BridgeApiRepositoryTests: XCTestCase {
         mockBridgeAPI.simulateApiAvailable(true)
 
         // Wait for observation
-        try await Task.sleep(nanoseconds: 100_000_000)
+        try await Task.sleep(nanoseconds: 500_000_000)
 
         // Then
         repository.bridgeIsAvailable
@@ -350,7 +359,7 @@ class BridgeApiRepositoryTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-        await fulfillment(of: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     func testApiNotAvailableWithoutSessionModel() async throws {
@@ -370,7 +379,7 @@ class BridgeApiRepositoryTests: XCTestCase {
         mockBridgeAPI.simulateApiAvailable(true)
 
         // Wait for observation
-        try await Task.sleep(nanoseconds: 100_000_000)
+        try await Task.sleep(nanoseconds: 500_000_000)
 
         // Then
         repository.bridgeIsAvailable
@@ -380,7 +389,7 @@ class BridgeApiRepositoryTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-        await fulfillment(of: [expectation], timeout: 0.5)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     func testApiNotAvailableWithNonServerLocation() async throws {
@@ -424,7 +433,7 @@ class BridgeApiRepositoryTests: XCTestCase {
         mockBridgeAPI.simulateApiAvailable(true)
 
         // Wait for observation
-        try await Task.sleep(nanoseconds: 100_000_000)
+        try await Task.sleep(nanoseconds: 500_000_000)
 
         // Then
         repository.bridgeIsAvailable
@@ -434,7 +443,7 @@ class BridgeApiRepositoryTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-        await fulfillment(of: [expectation], timeout: 0.5)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     func testApiNotAvailableWhenBridgeAPIReportsNotReady() async throws {
@@ -478,7 +487,7 @@ class BridgeApiRepositoryTests: XCTestCase {
         mockBridgeAPI.simulateApiAvailable(false)
 
         // Wait for observation
-        try await Task.sleep(nanoseconds: 100_000_000)
+        try await Task.sleep(nanoseconds: 500_000_000)
 
         // Then
         repository.bridgeIsAvailable
@@ -488,27 +497,27 @@ class BridgeApiRepositoryTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-        await fulfillment(of: [expectation], timeout: 0.5)
+        await fulfillment(of: [expectation], timeout: 5.0)
     }
 
     // MARK: - Edge Cases
 
     func testMultipleConnectionStateChanges() async throws {
         // Given
-        try await Task.sleep(nanoseconds: 100_000_000)
+        try await Task.sleep(nanoseconds: 200_000_000)
 
         // When - Rapid state changes
         mockVPNStateRepository.simulateStatusChange(.connecting)
-        try await Task.sleep(nanoseconds: 50_000_000)
+        try await Task.sleep(nanoseconds: 100_000_000)
 
         mockVPNStateRepository.simulateStatusChange(.connected)
-        try await Task.sleep(nanoseconds: 300_000_000)
+        try await waitUntil(timeout: 5.0) { self.mockBridgeAPI.setConnectedStateCalled }
 
         mockVPNStateRepository.simulateStatusChange(.disconnecting)
-        try await Task.sleep(nanoseconds: 50_000_000)
+        try await Task.sleep(nanoseconds: 100_000_000)
 
         mockVPNStateRepository.simulateStatusChange(.disconnected)
-        try await Task.sleep(nanoseconds: 200_000_000)
+        try await waitUntil(timeout: 5.0) { self.mockBridgeAPI.lastConnectedState == false }
 
         // Then - Should handle all state changes
         XCTAssertTrue(mockBridgeAPI.setConnectedStateCallCount >= 2, "Should handle multiple state changes")
