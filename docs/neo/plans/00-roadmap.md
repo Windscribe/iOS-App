@@ -140,7 +140,7 @@ This issue is a **dependency tracker**, not a new plan. Source-of-truth plans:
 **Outcome:**
 
 - D2.1 ✅ Keychain consolidation merged to `main` as !1323 (2026-05-01). Sessions, OldSession, OpenVPN/IKEv2 server credentials, custom-config credentials, and session auth hash now live in the Keychain via `SessionKeychainStore` / `Preferences+Keychain`. `LocalDatabase` gained three `clear*` methods used by `MigrationRepository` to wipe stale Realm rows post-port. `LocalDatabase.{saveSession, getSessionPublisher, saveOldSession, getOldSession, save{OpenVPN,IKEv2}ServerCredentials}` are gone.
-- D2.2 GRDB Migration PR ships to `main` (the **Pre-Neo release**). Records mirror the surviving 14 entity families — sessions/credentials are not GRDB's concern. Realm + `RealmToGRDBMigrator` stay linked. Tracked under #1050.
+- D2.2 ✅ GRDB Migration PR merged as !1311 (2026-05-05) on `main` (the **Pre-Neo release**). 14 entity families mirrored 1:1; sessions/credentials remain Keychain-resident. Realm + `RealmToGRDBMigrator` stay linked as the migration source + fallback. **M2 #1050 closed.**
 - D2.3 → **#1065** (split out from #1050): pure GRDB v1→v2 migration covering the ~10 surviving normalization items (the original 12 minus the two moot'd by the Keychain move — flatten Session.alc / merge OpenVPN+IKEv2 credentials tables). Decoupled from D2.4; can ship as soon as one main release after D2.2.
 - D2.4 → **#1066** (split out from #1050): Realm-removal PR ships **post-Neo + 3-month forced-upgrade soak** (see Launch cadence). Drops `LocalDatabaseImpl`, the `realm-swift` SPM packages, target linkage, the migrator, and the keychain `clear*` migration hooks.
 

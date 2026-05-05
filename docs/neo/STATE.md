@@ -12,10 +12,14 @@
 
 ## Status snapshot
 
-- **Active issue:** none — M0 closed, M1 not yet started.
-- **Active branch:** `main` (and `neo-5.0` post periodic merge).
+- **Active issue:** none — M2 closed 2026-05-05 (D2.2 shipped via !1311). M3 not yet started.
+- **Active branch:** `main` (and `neo-5.0` via the periodic merge).
 - **Blocked on:** —
-- **Up next:** M1 (#1049) — iOS 18 / tvOS 18 floor + Swift 6-ready build settings. Lands on `neo-5.0` only (deployment-target lift is irreversible).
+- **Up next:** M3 (#1051) — DI modernization with constructor injection + `@Environment` shims. Lands `main → neo-5.0`.
+- **M2 follow-ups (separate issues, not blocking M3):**
+  - #1065 — D2.3 schema normalization (GRDB v1→v2). Ships any main release after D2.2.
+  - #1066 — D2.4 Realm removal. Ships post-Neo + 3-month forced-upgrade soak.
+- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050).
 
 ## Log
 
@@ -29,3 +33,4 @@
 - 2026-04-30 — M0 — `aw/neo-m0-tvos-scaffolding` — `f31768f6` — PR 4 opened (MR !1339): tvOS scaffolding + tvOS doc section + scheme wiring (T0.10, T0.11, T0.14). Adds `WindscribeTV/Features/` and `WindscribeTV/Services/Protocols/` with `README.md` placeholders pointing at `docs/PROJECT_NEO.md` and the iOS About reference. SwiftLint custom rules already match `(Windscribe|WindscribeTV)/Features/.*\.swift` so they apply automatically — verified by probe. `docs/PROJECT_NEO.md` "Applying these patterns to tvOS" section now has explicit pointers to the new directories. `Windscribe-Debug.xcscheme`, `Windscribe-Staging.xcscheme`, `Windscribe-Release.xcscheme` each get a populated `<TestAction>` (TestPlans + Testables) so cmd+U works from any scheme. Lands on `main`. Next: review + merge → close M0.
 - 2026-04-30 — M0 — `main` — `27390bce` — PR 4 merged. **M0 closed (#1048).** GitLab issue #1048 closed with `QA` label; CI-fix detour issue #1061 also closed. All four M0 PRs landed: !1334 (shared context), !1335 (SwiftLint custom rules), !1337 (About reference module), !1339 (tvOS scaffolding + scheme wiring). Next: M1 (#1049) — iOS 18 / tvOS 18 floor + Swift 6-ready build settings, on `neo-5.0` only.
 - 2026-05-01 — M2 — `aw/realm-to-grdb` — `c9345b37` — Realm→GRDB branch rebased on post-keychain `main` (Phases 1–5 of the rebase). Driver: !1323 (#1040) shipped today, moving sessions/credentials/auth-hash into the Keychain — branch had to drop the four orphaned entity families (Session, OldSession, OpenVPN/IKEv2 credentials) from Records, schema, migrator, and parity suite. Surviving GRDB scope: 14 entity families. !1311 description refreshed; milestone + labels (`project-neo`, `lands-on::main`, `area::persistence`) attached. All gates green: 81/81 tests pass. Long-tail launch cadence locked in (ND-007): D2.2 ships to `main` as the Pre-Neo release, D2.3 (schema normalization) follows, D2.4 (Realm removal) waits on Neo + 3-month forced-upgrade soak via `/CheckUpdate`. Next: M2 alignment review with team; phase-7 doc sync (00-roadmap.md, DECISIONS.md ND-006 + ND-007, agent memory, Notion artifact). Branch retains `aw/realm-to-grdb` name (not renamed to `aw/neo-m2-*`) to preserve !1311's 23 review notes including Andre's substantive feedback on the schema/Records design.
+- 2026-05-05 — M2 — `main` — `f1233062` — !1311 merged. **D2.2 (Realm→GRDB migration) shipped.** GRDB now production for the 14 entity families that survived the keychain consolidation; Realm + `RealmToGRDBMigrator` stay linked through Pre-Neo and Neo as migration source + fallback. The MR also folded in the /CheckUpdate `force_upgrade` gate (Pre-Neo release introduces the mechanism, not yet enforced — see ND-007). Force-upgrade clears the 24h cooldown so users below Pre-Neo will be re-prompted on every cold launch once the gate is flipped post-Neo. **M2 #1050 closed** (scope was D2.1 + D2.2; the follow-ups are tracked under #1065 (D2.3 schema normalization) and #1066 (D2.4 Realm removal)). Next: M3 (#1051) — DI modernization with constructor injection + `@Environment` shims, lands `main → neo-5.0`.
