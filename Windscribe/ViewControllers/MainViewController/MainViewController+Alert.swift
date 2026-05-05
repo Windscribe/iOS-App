@@ -55,8 +55,24 @@ extension MainViewController {
                 UIApplication.shared.open(url)
             }
         }
-        let laterAction = UIAlertAction(title: TextsAsset.UpdateAlert.updateLater, style: .cancel, handler: nil)
         let version = model.latestVersion ?? ""
+
+        // Force-update variant: undismissable. Single "Update Now" action that
+        // opens the App Store. If the user dismisses by backgrounding the app
+        // without actually updating, MainViewController's foreground observer
+        // re-presents this alert because viewModel.pendingForceUpdate is still set.
+        if model.force {
+            let forceMessage = version.isEmpty
+                ? TextsAsset.UpdateAlert.forceMessage
+                : String(format: TextsAsset.UpdateAlert.forceMessageWithVersion, version)
+            viewModel.showAlert(
+                title: TextsAsset.UpdateAlert.forceTitle,
+                message: forceMessage,
+                actions: [updateAction])
+            return
+        }
+
+        let laterAction = UIAlertAction(title: TextsAsset.UpdateAlert.updateLater, style: .cancel, handler: nil)
         let message = version.isEmpty
             ? TextsAsset.UpdateAlert.message
             : String(format: TextsAsset.UpdateAlert.messageWithVersion, version)

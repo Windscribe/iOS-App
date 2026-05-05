@@ -23,17 +23,17 @@ class PortMapRepositoryImpl: PortMapRepository {
         self.logger = logger
 
         if let portMaps = localDatabase.getPortMap() {
-            currentPortMaps = portMaps.map { $0.getModel() }
+            currentPortMaps = portMaps
         }
-        suggestedPorts = localDatabase.getSuggestedPorts()?.first?.getModel()
+        suggestedPorts = localDatabase.getSuggestedPorts()?.first
     }
 
     func getUpdatedPortMap() async throws -> [PortMapModel] {
         do {
             let portList = try await apiManager.getPortMap(version: APIParameterValues.portMapVersion, forceProtocols: APIParameterValues.forceProtocols)
-            localDatabase.savePortMap(portMap: Array(portList.portMaps))
+            localDatabase.savePortMap(portMap: Array(portList.portMaps).map { $0.getModel() })
             if let suggested = portList.suggested {
-                localDatabase.saveSuggestedPorts(suggestedPorts: [suggested])
+                localDatabase.saveSuggestedPorts(suggestedPorts: [suggested.getModel()])
                 suggestedPorts = suggested.getModel()
             }
             currentPortMaps = Array(portList.portMaps).map { $0.getModel() }
@@ -41,7 +41,7 @@ class PortMapRepositoryImpl: PortMapRepository {
         } catch {
             // Fallback to cached data on error
             if let portMaps = localDatabase.getPortMap(), !portMaps.isEmpty {
-                currentPortMaps = portMaps.map { $0.getModel() }
+                currentPortMaps = portMaps
                 return currentPortMaps
             } else {
                 throw error

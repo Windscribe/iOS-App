@@ -25,6 +25,21 @@ import RealmSwift
         filters = try data.decodeIfPresent(List<RobertFilter>.self, forKey: .filters) ?? List()
     }
 
+    convenience init(from models: [RobertFilterModel]) {
+        self.init()
+        let realmFilters = models.map { model -> RobertFilter in
+            let f = RobertFilter()
+            f.id = model.id
+            f.title = model.title
+            f.filterDescription = model.filterDescription
+            f.status = model.status
+            f.enabled = model.enabled
+            return f
+        }
+        filters.removeAll()
+        filters.append(objectsIn: realmFilters)
+    }
+
     override static func primaryKey() -> String? {
         return "id"
     }
@@ -63,7 +78,7 @@ import RealmSwift
     }
 }
 
-struct RobertFilterModel: Equatable, Hashable {
+struct RobertFilterModel: Equatable, Hashable, Codable {
     var id: String
     var title: String
     var filterDescription: String

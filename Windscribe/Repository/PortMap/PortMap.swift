@@ -52,6 +52,15 @@ import RealmSwift
         return "connectionProtocol"
     }
 
+    convenience init(from model: PortMapModel) {
+        self.init()
+        connectionProtocol = model.connectionProtocol
+        heading = model.heading
+        use = model.use
+        setPortsArray(array: model.ports)
+        setLegacyPortsArray(array: model.legacyPorts)
+    }
+
     func getModel() -> PortMapModel {
         .init(from: self)
     }

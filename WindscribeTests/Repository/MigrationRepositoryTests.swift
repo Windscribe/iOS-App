@@ -129,7 +129,25 @@ class MigrationRepositoryTests: XCTestCase {
 
     func testMigrationRepositoryWithExistingDatabase() {
         // Given - Database with existing data
-        mockLocalDatabase.sessionSubject.send(Session())
+        mockLocalDatabase.sessionSubject.send(SessionModel(
+            sessionAuthHash: "abc123",
+            username: "testuser",
+            userId: "user-1",
+            email: "test@example.com",
+            emailStatus: true,
+            trafficUsed: 0,
+            trafficMax: 10737418240,
+            status: 1,
+            billingPlanId: 1,
+            isPremium: false,
+            premiumExpiryDate: "",
+            regDate: 1700000000,
+            lastReset: "2024-01-01",
+            locRev: 0,
+            locHash: "",
+            amneziawgConfigId: "",
+            alc: [],
+            sipCount: []))
 
         // When
         repository.runMigrations()
@@ -158,11 +176,11 @@ class MigrationRepositoryTests: XCTestCase {
     }
 
     func testExistingRealmSession_MigratedToKeychain_RealmCleared() {
-        // Given — existing user with a Realm Session object
+        // Given — existing user with a session value the Realm impl would surface
         mockPreferences.mockFirstInstall = true
         let mockSession = MockSession()
         mockSession.configureLists()
-        mockLocalDatabase.sessionSubject.send(mockSession)
+        mockLocalDatabase.sessionSubject.send(SessionModel(from: mockSession))
 
         // When
         repository.runMigrations()

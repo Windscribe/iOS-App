@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe 버전 %@을 사용할 수 있습니다.";
 "Update Now" = "지금 업데이트";
 "Update Later" = "나중에 업데이트";
+"Update Required" = "업데이트 필요";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "이 버전의 Windscribe는 더 이상 지원되지 않습니다. 앱을 계속 사용하려면 업데이트하세요.";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "이 버전의 Windscribe는 더 이상 지원되지 않습니다. 앱을 계속 사용하려면 %@(으)로 업데이트하세요.";
 "PLAN INFO" = "요금제 정보";
 "Copied to Clipboard!" = "클립보드에 복사됨!";

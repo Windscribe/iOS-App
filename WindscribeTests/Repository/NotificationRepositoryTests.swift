@@ -256,14 +256,17 @@ class NotificationRepositoryTests: XCTestCase {
         // Simulate database update
         let jsonData = SampleDataNotifications.singleNotificationListJSON.data(using: .utf8)!
         let noticeList = try! JSONDecoder().decode(NoticeList.self, from: jsonData)
-        let noticesArray = Array(noticeList.notices)
+        let noticesArray = Array(noticeList.notices).map { $0.getModel() }
 
         // Append one more to make it 2
-        let secondNotice = Notice()
-        secondNotice.id = 2
-        secondNotice.title = "Second Notification"
-        secondNotice.message = "Test"
-        secondNotice.date = 1697530800
+        let secondNotice = NoticeModel(
+            id: 2,
+            title: "Second Notification",
+            message: "Test",
+            date: 1697530800,
+            popup: false,
+            action: nil
+        )
 
         mockLocalDatabase.notificationsSubject.send([noticesArray[0], secondNotice])
 
@@ -297,13 +300,11 @@ class NotificationRepositoryTests: XCTestCase {
             .store(in: &cancellables)
 
         // First update
-        mockLocalDatabase.notificationsSubject.send([Notice()])
+        mockLocalDatabase.notificationsSubject.send([NoticeModel(id: 0, title: "", message: "", date: 0, popup: false, action: nil)])
 
         // Second update
-        let notice1 = Notice()
-        notice1.id = 1
-        let notice2 = Notice()
-        notice2.id = 2
+        let notice1 = NoticeModel(id: 1, title: "", message: "", date: 0, popup: false, action: nil)
+        let notice2 = NoticeModel(id: 2, title: "", message: "", date: 0, popup: false, action: nil)
         mockLocalDatabase.notificationsSubject.send([notice1, notice2])
 
         await fulfillment(of: [expectation], timeout: 1.0)

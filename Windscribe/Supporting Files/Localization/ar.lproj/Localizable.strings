@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "الإصدار %@ من Windscribe متاح الآن.";
 "Update Now" = "تحديث الآن";
 "Update Later" = "تحديث لاحقاً";
+"Update Required" = "التحديث مطلوب";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "إصدار Windscribe هذا لم يعد مدعوماً. يرجى التحديث للاستمرار في استخدام التطبيق.";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "إصدار Windscribe هذا لم يعد مدعوماً. يرجى التحديث إلى %@ للاستمرار في استخدام التطبيق.";
 "Copied to Clipboard!" = "تم النسخ إلى الحافظة!";
 "PLAN INFO" = "معلومات الخطة";

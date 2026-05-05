@@ -46,13 +46,12 @@ class RobertyFiltersRepositoryTests: XCTestCase {
 
     func testInitializationLoadsFiltersFromDatabase() {
         // Given
-        let filter1 = createMockRobertFilter(id: "1", title: "Ads", enabled: true)
-        let filter2 = createMockRobertFilter(id: "2", title: "Trackers", enabled: false)
-        let robertFilters = RobertFilters()
-        robertFilters.filters.append(filter1)
-        robertFilters.filters.append(filter2)
+        let mockLocalFilters: [RobertFilterModel] = [
+            RobertFilterModel(id: "1", title: "Ads", filterDescription: "Description for Ads", status: 1, enabled: true),
+            RobertFilterModel(id: "2", title: "Trackers", filterDescription: "Description for Trackers", status: 0, enabled: false)
+        ]
 
-        mockLocalDatabase.mockRobertFilters = robertFilters
+        mockLocalDatabase.mockRobertFilters = mockLocalFilters
 
         // When - Create a new repository instance to test initialization
         let newRepository = RobertyFiltersRepositoryImpl(
@@ -104,7 +103,7 @@ class RobertyFiltersRepositoryTests: XCTestCase {
         // Then
         XCTAssertTrue(mockAPIManager.getRobertFiltersCalled, "Should call API to get filters")
         XCTAssertTrue(mockLocalDatabase.saveRobertFiltersCalled, "Should save filters to database")
-        XCTAssertEqual(mockLocalDatabase.lastSavedRobertFilters?.filters.count, 2)
+        XCTAssertEqual(mockLocalDatabase.lastSavedRobertFilters?.count, 2)
         XCTAssertEqual(repository.robertFilters.value.count, 2, "Should update subject with new filters")
         XCTAssertEqual(repository.robertFilters.value[0].title, "Ads")
         XCTAssertEqual(repository.robertFilters.value[1].title, "Malware")
@@ -112,10 +111,10 @@ class RobertyFiltersRepositoryTests: XCTestCase {
 
     func testRefreshFiltersFailureWithExistingFilters() async throws {
         // Given - Repository already has filters
-        let existingFilter = createMockRobertFilter(id: "1", title: "Existing", enabled: true)
-        let existingRobertFilters = RobertFilters()
-        existingRobertFilters.filters.append(existingFilter)
-        mockLocalDatabase.mockRobertFilters = existingRobertFilters
+        let existingLocalFilters: [RobertFilterModel] = [
+            RobertFilterModel(id: "1", title: "Existing", filterDescription: "Description for Existing", status: 1, enabled: true)
+        ]
+        mockLocalDatabase.mockRobertFilters = existingLocalFilters
 
         // Create new repository to load existing filters
         repository = RobertyFiltersRepositoryImpl(
@@ -143,10 +142,10 @@ class RobertyFiltersRepositoryTests: XCTestCase {
         XCTAssertTrue(repository.robertFilters.value.isEmpty, "Should start with empty filters")
 
         // Set up database to have filters
-        let dbFilter = createMockRobertFilter(id: "1", title: "Database Filter", enabled: true)
-        let dbRobertFilters = RobertFilters()
-        dbRobertFilters.filters.append(dbFilter)
-        mockLocalDatabase.mockRobertFilters = dbRobertFilters
+        let dbLocalFilters: [RobertFilterModel] = [
+            RobertFilterModel(id: "1", title: "Database Filter", filterDescription: "Description for Database Filter", status: 1, enabled: true)
+        ]
+        mockLocalDatabase.mockRobertFilters = dbLocalFilters
 
         // When - API fails
         mockAPIManager.shouldThrowError = true
@@ -191,10 +190,10 @@ class RobertyFiltersRepositoryTests: XCTestCase {
         let mockMessage = createMockAPIMessage(success: true)
         mockAPIManager.mockAPIMessage = mockMessage
 
-        let updatedFilter = createMockRobertFilter(id: "1", title: "Ads", enabled: false)
-        let robertFilters = RobertFilters()
-        robertFilters.filters.append(updatedFilter)
-        mockLocalDatabase.mockRobertFilters = robertFilters
+        let postUpdateLocalFilters1: [RobertFilterModel] = [
+            RobertFilterModel(id: "1", title: "Ads", filterDescription: "Description for Ads", status: 0, enabled: false)
+        ]
+        mockLocalDatabase.mockRobertFilters = postUpdateLocalFilters1
 
         // When
         try await repository.updateFilter(filter)
@@ -221,10 +220,10 @@ class RobertyFiltersRepositoryTests: XCTestCase {
         let mockMessage = createMockAPIMessage(success: true)
         mockAPIManager.mockAPIMessage = mockMessage
 
-        let updatedFilter = createMockRobertFilter(id: "2", title: "Trackers", enabled: true)
-        let robertFilters = RobertFilters()
-        robertFilters.filters.append(updatedFilter)
-        mockLocalDatabase.mockRobertFilters = robertFilters
+        let postUpdateLocalFilters2: [RobertFilterModel] = [
+            RobertFilterModel(id: "2", title: "Trackers", filterDescription: "Description for Trackers", status: 1, enabled: true)
+        ]
+        mockLocalDatabase.mockRobertFilters = postUpdateLocalFilters2
 
         // When
         try await repository.updateFilter(filter)
@@ -377,11 +376,11 @@ class RobertyFiltersRepositoryTests: XCTestCase {
 
         // When - Update a filter
         mockAPIManager.mockAPIMessage = createMockAPIMessage(success: true)
-        let updatedFilter = createMockRobertFilter(id: "1", title: "Ads", enabled: false)
-        let updatedRobertFilters = RobertFilters()
-        updatedRobertFilters.filters.append(updatedFilter)
-        updatedRobertFilters.filters.append(filter2)
-        mockLocalDatabase.mockRobertFilters = updatedRobertFilters
+        let postUpdateIntegrationFilters: [RobertFilterModel] = [
+            RobertFilterModel(id: "1", title: "Ads", filterDescription: "Description for Ads", status: 0, enabled: false),
+            RobertFilterModel(id: "2", title: "Trackers", filterDescription: "Description for Trackers", status: 0, enabled: false)
+        ]
+        mockLocalDatabase.mockRobertFilters = postUpdateIntegrationFilters
 
         try await repository.updateFilter(adsFilter!)
 

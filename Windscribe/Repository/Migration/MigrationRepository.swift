@@ -87,7 +87,7 @@ class MigrationRepositoryImpl: MigrationRepository {
 
         let customConfigs = localDatabase.getCustomConfigs()
         var existingCredentials = preferences.getAllCustomConfigCredentials()
-        var clearedConfigs = [CustomConfig]()
+        var clearedConfigs = [CustomConfigModel]()
         var didMigrate = false
 
         for config in customConfigs {
@@ -101,18 +101,10 @@ class MigrationRepositoryImpl: MigrationRepository {
             // Add to dictionary
             existingCredentials[config.id] = ServerCredentialsModel(username: config.username, password: config.password)
 
-            // Clear from Realm
-            let cleared = CustomConfig(
-                id: config.id,
-                name: config.name,
-                serverAddress: config.serverAddress,
-                protocolType: config.protocolType,
-                port: config.port,
-                username: "",
-                password: "",
-                authRequired: config.authRequired,
-                saveCredentials: config.saveCredentials
-            )
+            // Clear from Realm — overwrite with a credential-stripped copy
+            var cleared = config
+            cleared.username = ""
+            cleared.password = ""
             clearedConfigs.append(cleared)
             logger.logD("MigrationRepository", "Migrated credentials for custom config \(config.id) to Keychain")
             didMigrate = true
@@ -195,13 +187,10 @@ class MigrationRepositoryImpl: MigrationRepository {
 
         guard sessionStore.load() == nil else { return }
 
-        // Try to read from Realm
-        guard let realmSession = localDatabase.getSession() else {
+        // Read the (already-modeled) session out of Realm and stash it in the Keychain.
+        guard let sessionModel = localDatabase.getSession() else {
             return // No session to migrate
         }
-
-        // Convert Realm Session → SessionModel → Keychain
-        let sessionModel = SessionModel(from: realmSession)
         sessionStore.save(session: sessionModel)
         localDatabase.clearSessionFromRealm()
         logger.logD("MigrationRepository", "Successfully migrated Session from Realm to Keychain")

@@ -312,8 +312,8 @@ extension LocalDatabaseImpl {
                     // Remove duplicates by deleting all and letting them be re-fetched from API
                     migration.deleteData(forType: UnblockWgParamsObj.className())
                 } else if oldSchemaVersion < 63 {
-                    // Delete deprecated OldSession
-                    migration.deleteData(forType: OldSession.className())
+                    // Delete deprecated OldSession. Class no longer exists in code; reference by name.
+                    migration.deleteData(forType: "OldSession")
                 }
             }, deleteRealmIfMigrationNeeded: false
         )

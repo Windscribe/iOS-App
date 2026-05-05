@@ -29,10 +29,7 @@ class MobilePlanRepositoryImpl: MobilePlanRepository {
     }
 
     private func loadMobilePlans() {
-        let localPlans = localDatabase.getMobilePlans() ?? []
-        mobilePlans = localPlans
-            .filter { !$0.isInvalidated }
-            .map { $0.getModel() }
+        mobilePlans = localDatabase.getMobilePlans() ?? []
     }
 
     func getMobilePlans(promo: String?) async throws -> [MobilePlanModel] {
@@ -40,7 +37,7 @@ class MobilePlanRepositoryImpl: MobilePlanRepository {
             let plansList = try await apiManager.getMobileBillingPlans(promo: promo)
             let plans = Array(plansList.mobilePlans)
             let planModels = plans.map { MobilePlanModel.init(from: $0) }
-            localDatabase.saveMobilePlans(mobilePlansList: plans)
+            localDatabase.saveMobilePlans(mobilePlansList: planModels)
 
             loadMobilePlans()
 
@@ -50,7 +47,7 @@ class MobilePlanRepositoryImpl: MobilePlanRepository {
 
             // Fallback to cached data if available and not empty
             if let cachedPlans = localDatabase.getMobilePlans(), !cachedPlans.isEmpty {
-                return cachedPlans.map { MobilePlanModel.init(from: $0) }
+                return cachedPlans
             } else {
                 throw error
             }

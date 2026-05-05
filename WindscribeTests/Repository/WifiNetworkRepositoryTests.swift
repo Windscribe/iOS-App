@@ -83,7 +83,7 @@ class WifiNetworkRepositoryTests: XCTestCase {
         )
 
         let expectation = XCTestExpectation(description: "Networks loaded")
-        mockLocalDatabase.mockWifiNetworks = [WifiNetwork(from: network)]
+        mockLocalDatabase.mockWifiNetworks = [network]
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let result = self.repository.getCurrentNetwork()
@@ -108,7 +108,7 @@ class WifiNetworkRepositoryTests: XCTestCase {
         )
 
         let expectation = XCTestExpectation(description: "Networks loaded")
-        mockLocalDatabase.mockWifiNetworks = [WifiNetwork(from: network)]
+        mockLocalDatabase.mockWifiNetworks = [network]
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let result = self.repository.getCurrentNetwork()
@@ -144,7 +144,7 @@ class WifiNetworkRepositoryTests: XCTestCase {
         )
 
         let expectation = XCTestExpectation(description: "Networks loaded")
-        mockLocalDatabase.mockWifiNetworks = [WifiNetwork(from: network1), WifiNetwork(from: network2)]
+        mockLocalDatabase.mockWifiNetworks = [network1, network2]
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             let result = self.repository.getOtherNetworks()

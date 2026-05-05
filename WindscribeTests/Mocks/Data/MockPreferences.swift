@@ -943,4 +943,16 @@ class MockPreferences: Preferences {
         .auto
     }
 
+    // MARK: - Realm → GRDB migration flag
+
+    var mockDidMigrateRealmToGRDB: Bool = false
+
+    func didMigrateRealmToGRDB() -> Bool {
+        return mockDidMigrateRealmToGRDB
+    }
+
+    func saveDidMigrateRealmToGRDB(_ value: Bool) {
+        mockDidMigrateRealmToGRDB = value
+    }
+
 }

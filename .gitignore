@@ -106,6 +106,10 @@ iOSInjectionProject/
 # End of https://www.gitignore.io/api/xcode,swift
 
 .claude/settings.local.json
+
+# Snapshot comparison test artifacts
+WindscribeTests/Data/Fixtures/live_snapshot*.json
+
 !libs/**
 libs/.DS_Store
 libs/**/.DS_Store

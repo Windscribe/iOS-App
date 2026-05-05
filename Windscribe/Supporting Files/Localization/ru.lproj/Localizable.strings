@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe версии %@ уже доступен.";
 "Update Now" = "Обновить сейчас";
 "Update Later" = "Обновить позже";
+"Update Required" = "Требуется обновление";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "Эта версия Windscribe больше не поддерживается. Пожалуйста, обновите, чтобы продолжить использование приложения.";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Эта версия Windscribe больше не поддерживается. Пожалуйста, обновите до %@, чтобы продолжить использование приложения.";
 "PLAN INFO" = "ИНФОРМАЦИЯ О ПЛАНЕ";
 "Copied to Clipboard!" = "Скопировано в буфер обмена!";

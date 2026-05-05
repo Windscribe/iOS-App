@@ -681,4 +681,14 @@ class PreferencesImpl: Preferences {
     func getRoutingType() -> ServerRoutingType {
         ServerRoutingType.init(rawValue: getString(forKey: SharedKeys.routingType) ?? "") ?? ServerRoutingType.auto
     }
+
+    // MARK: - Realm → GRDB migration flag
+
+    func didMigrateRealmToGRDB() -> Bool {
+        return UserDefaults.standard.bool(forKey: SharedKeys.didMigrateRealmToGRDB)
+    }
+
+    func saveDidMigrateRealmToGRDB(_ value: Bool) {
+        UserDefaults.standard.set(value, forKey: SharedKeys.didMigrateRealmToGRDB)
+    }
 }

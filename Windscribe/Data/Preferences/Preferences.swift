@@ -294,6 +294,10 @@ protocol Preferences {
     func saveRoutingType(routingType: ServerRoutingType)
     func getRoutingType() -> ServerRoutingType
 
+    // Realm → GRDB one-time migration flag
+    func didMigrateRealmToGRDB() -> Bool
+    func saveDidMigrateRealmToGRDB(_ value: Bool)
+
     // Session Auth
     func clearUserDefaultsSessionAuth()
     func getUserDefaultsSessionAuth() -> String?

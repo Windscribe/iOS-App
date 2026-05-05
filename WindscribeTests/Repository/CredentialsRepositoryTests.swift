@@ -102,14 +102,22 @@ class CredentialsRepositoryTests: XCTestCase {
 
     // MARK: - Helper Methods
 
-    private func createMockOpenVPNCredentials() -> OpenVPNServerCredentials {
+    private func createMockOpenVPNCredentials() -> ServerCredentialsModel {
+        ServerCredentialsModel(username: "test-openvpn-user", password: "test-openvpn-pass")
+    }
+
+    private func createMockIKEv2Credentials() -> ServerCredentialsModel {
+        ServerCredentialsModel(username: "test-ikev2-user", password: "test-ikev2-pass")
+    }
+
+    private func createMockAPIOpenVPNCredentials() -> OpenVPNServerCredentials {
         let credentials = OpenVPNServerCredentials()
         credentials.username = "test-openvpn-user"
         credentials.password = "test-openvpn-pass"
         return credentials
     }
 
-    private func createMockIKEv2Credentials() -> IKEv2ServerCredentials {
+    private func createMockAPIIKEv2Credentials() -> IKEv2ServerCredentials {
         let credentials = IKEv2ServerCredentials()
         credentials.username = "test-ikev2-user"
         credentials.password = "test-ikev2-pass"
@@ -135,8 +143,7 @@ class CredentialsRepositoryTests: XCTestCase {
 
     func testGetUpdatedOpenVPNCredentials_success_savesToDatabaseAndUpdatesProperty() async throws {
         // Given
-        let mockCredentials = createMockOpenVPNCredentials()
-        mockAPIManager.mockOpenVPNCredentials = mockCredentials
+        mockAPIManager.mockOpenVPNCredentials = createMockAPIOpenVPNCredentials()
 
         // When
         try await repository.getUpdatedOpenVPNCrendentials()
@@ -184,8 +191,7 @@ class CredentialsRepositoryTests: XCTestCase {
 
     func testGetUpdatedIKEv2Credentials_success_savesToDatabaseAndUpdatesProperty() async throws {
         // Given
-        let mockCredentials = createMockIKEv2Credentials()
-        mockAPIManager.mockIKEv2Credentials = mockCredentials
+        mockAPIManager.mockIKEv2Credentials = createMockAPIIKEv2Credentials()
 
         // When
         try await repository.getUpdatedIKEv2Crendentials()
@@ -392,11 +398,10 @@ class CredentialsRepositoryTests: XCTestCase {
     func testUpdateServerConfig_withValidSession_updatesCredentialsAndConfig() async {
         // Given
         mockPreferences.sessionAuthToReturn = "valid-session-auth"
-        let mockOpenVPNCredentials = createMockOpenVPNCredentials()
         let mockConfig = "client\ndev tun"
         let base64Config = mockConfig.data(using: .utf8)!.base64EncodedString()
 
-        mockAPIManager.mockOpenVPNCredentials = mockOpenVPNCredentials
+        mockAPIManager.mockOpenVPNCredentials = createMockAPIOpenVPNCredentials()
         mockAPIManager.mockOpenVPNServerConfig = base64Config
 
         // When
@@ -509,7 +514,7 @@ class CredentialsRepositoryTests: XCTestCase {
     /// complete safely without data races.
     func testCredentials_concurrentReadWriteAccess_noDataRace() async throws {
         // Given
-        let mockCredentials = createMockOpenVPNCredentials()
+        let mockCredentials = createMockAPIOpenVPNCredentials()
         mockAPIManager.mockOpenVPNCredentials = mockCredentials
 
         // When - fire concurrent credential updates and reads simultaneously
@@ -535,7 +540,7 @@ class CredentialsRepositoryTests: XCTestCase {
     /// GREEN with fix: Actor serializes IKEv2 credential access too.
     func testIKEv2Credentials_concurrentReadWriteAccess_noDataRace() async throws {
         // Given
-        let mockCredentials = createMockIKEv2Credentials()
+        let mockCredentials = createMockAPIIKEv2Credentials()
         mockAPIManager.mockIKEv2Credentials = mockCredentials
 
         // When - fire concurrent IKEv2 credential updates and reads
@@ -563,7 +568,7 @@ class CredentialsRepositoryTests: XCTestCase {
     func testUpdateServerConfig_rapidConsecutiveCalls_doesNotCrash() async {
         // Given
         mockPreferences.sessionAuthToReturn = "valid-session-auth"
-        let mockCredentials = createMockOpenVPNCredentials()
+        let mockCredentials = createMockAPIOpenVPNCredentials()
         mockAPIManager.mockOpenVPNCredentials = mockCredentials
         let base64Config = "client\ndev tun".data(using: .utf8)!.base64EncodedString()
         mockAPIManager.mockOpenVPNServerConfig = base64Config
@@ -592,7 +597,7 @@ class CredentialsRepositoryTests: XCTestCase {
     func testUpdateServerConfig_concurrentCalls_doesNotRace() async {
         // Given
         mockPreferences.sessionAuthToReturn = "valid-session-auth"
-        let mockCredentials = createMockOpenVPNCredentials()
+        let mockCredentials = createMockAPIOpenVPNCredentials()
         mockAPIManager.mockOpenVPNCredentials = mockCredentials
         let base64Config = "client\ndev tun".data(using: .utf8)!.base64EncodedString()
         mockAPIManager.mockOpenVPNServerConfig = base64Config

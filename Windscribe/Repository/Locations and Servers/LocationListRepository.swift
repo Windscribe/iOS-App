@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 import Combine
 
 protocol LocationListRepository {
@@ -155,30 +154,26 @@ class LocationListRepositoryImpl: LocationListRepository {
 
     private func loadInitialLocations(skipCustomNames: Bool = false) {
         if let locationObjects = localDatabase.getLocations(), !locationObjects.isEmpty {
-            let locations = locationObjects.map { LocationModel(from: $0) }
             guard skipCustomNames else {
-                updateLocationModels(locations)
+                updateLocationModels(locationObjects)
                 return
             }
-            locationListSubject.send(locations)
-            updateDatacenterList(from: locations)
+            locationListSubject.send(locationObjects)
+            updateDatacenterList(from: locationObjects)
         } else if let deprecatedList = self.localDatabase.getServers(), !deprecatedList.isEmpty {
-            let newlocationList = deprecatedList.map { $0.getLocationModel() }
-            saveLocationList(with: newlocationList)
+            saveLocationList(with: deprecatedList)
         }
     }
 
     private func loadInitialServers() {
         if let serversObjects = self.localDatabase.getServerMachines() {
-            let servers = serversObjects.map { ServerMachineModel(from: $0) }
-            serverListSubject.send(servers)
+            serverListSubject.send(serversObjects)
         }
     }
 
     private func saveLocationList(with locations: [LocationModel], skipCustomNames: Bool = false) {
-        // Save original locations to Realm before applying custom names
-        let locationObjects = locations.map { LocationObject(from: $0) }
-        localDatabase.saveLocations(locations: locationObjects)
+        // Persist locations before applying custom names so the disk copy is the canonical shape.
+        localDatabase.saveLocations(locations: locations)
 
         logger.logI("LocationListRepositoryImpl", "Successfully updated \(locations.count) locations")
 
@@ -201,8 +196,7 @@ class LocationListRepositoryImpl: LocationListRepository {
 
             // Try to load from local database as fallback
             if let locationObjects = localDatabase.getLocations() {
-                let locations = locationObjects.map { LocationModel(from: $0) }
-                updateLocationModels(locations)
+                updateLocationModels(locationObjects)
                 return
             } else {
                 throw error
@@ -211,8 +205,7 @@ class LocationListRepositoryImpl: LocationListRepository {
     }
 
     private func loadInitialFavourites() {
-        let favListObjects = self.localDatabase.getFavouriteList()
-        let favList = favListObjects.map { FavouriteModel(from: $0) }
+        let favList = self.localDatabase.getFavouriteList()
         favouriteListSubject.send(favList)
     }
 
@@ -227,8 +220,7 @@ class LocationListRepositoryImpl: LocationListRepository {
             logger.logE("LocationListRepositoryImpl", "Failed to update servers machines: \(error.localizedDescription)")
 
             if let serversObjects = self.localDatabase.getServerMachines() {
-                let servers = serversObjects.map { ServerMachineModel(from: $0) }
-                serverListSubject.send(servers)
+                serverListSubject.send(serversObjects)
                 return
             } else {
                 throw error
@@ -265,8 +257,7 @@ class LocationListRepositoryImpl: LocationListRepository {
     private func updateCurrentServers(with servers: [ServerMachineModel], revision: Int64, hasBackup: Bool) {
         preferences.saveServerRevision(revision: revision)
         serverListSubject.send(servers)
-        let serverObjects = servers.map { ServerMachineObject(from: $0) }
-        localDatabase.saveServerMachines(serverMachines: serverObjects)
+        localDatabase.saveServerMachines(serverMachines: servers)
     }
 
     func getServers(for datacenterId: Int) -> [ServerMachineModel] {
@@ -295,8 +286,7 @@ class LocationListRepositoryImpl: LocationListRepository {
     // MARK: - Favorites
     func getFavorite(from locationId: String) -> FavouriteModel? {
         localDatabase.getFavouriteList()
-            .first { $0.id == locationId }?
-            .getModel()
+            .first { $0.id == locationId }
     }
 
     func removeFavorite(with datacenterId: String) {
@@ -316,7 +306,7 @@ class LocationListRepositoryImpl: LocationListRepository {
             favList.append(favourite)
             favouriteListSubject.send(favList)
         }
-        localDatabase.saveFavourite(favourite: favourite.getObject())
+        localDatabase.saveFavourite(favourite: favourite)
     }
 
     // MARK: - Pinned Locations
@@ -340,8 +330,8 @@ class LocationListRepositoryImpl: LocationListRepository {
 
     func getDatacenterPinnedHotname(for datacenterId: Int) -> String? {
         localDatabase.getFavouriteList().first {
-            $0.id == String(datacenterId) && $0.pinnedNodeIp != nil
-        }?.pinnedNodeIp
+            $0.id == String(datacenterId) && $0.pinnedNodeHostname != nil
+        }?.pinnedNodeHostname
     }
 
     // MARK: - Exported Regions

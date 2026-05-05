@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe versi %@ sekarang tersedia.";
 "Update Now" = "Perbarui Sekarang";
 "Update Later" = "Perbarui Nanti";
+"Update Required" = "Pembaruan Diperlukan";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "Versi Windscribe ini tidak lagi didukung. Silakan perbarui untuk terus menggunakan aplikasi.";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Versi Windscribe ini tidak lagi didukung. Silakan perbarui ke %@ untuk terus menggunakan aplikasi.";
 "PLAN INFO" = "INFO PAKET";
 "Copied to Clipboard!" = "Disalin ke Papan Klip!";

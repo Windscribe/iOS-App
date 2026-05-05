@@ -128,8 +128,8 @@ class LatencyRepositoryTests: XCTestCase {
     // MARK: GetPingData Tests
 
     func testGetPingDataWithExistingIP() {
-        let pingData1 = PingData(ip: "1.2.3.4", latency: 50)
-        let pingData2 = PingData(ip: "5.6.7.8", latency: 100)
+        let pingData1 = PingDataModel(ip: "1.2.3.4", latency: 50)
+        let pingData2 = PingDataModel(ip: "5.6.7.8", latency: 100)
         mockLocalDatabase.addPingData(pingData: pingData1)
         mockLocalDatabase.addPingData(pingData: pingData2)
 
@@ -143,7 +143,7 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     func testGetPingDataWithNonExistingIP() {
-        let pingData = PingData(ip: "1.2.3.4", latency: 50)
+        let pingData = PingDataModel(ip: "1.2.3.4", latency: 50)
         mockLocalDatabase.addPingData(pingData: pingData)
 
         repository.refreshBestLocation()
@@ -210,14 +210,14 @@ class LatencyRepositoryTests: XCTestCase {
         mockLocationListRepository.serverListSubject.send(serverMachines)
         mockUserSessionRepository.sessionModel = createMockSession(isPremium: true)
 
-        let pingData1 = PingData(ip: "1.2.3.4", latency: 100)
-        let pingData2 = PingData(ip: "5.6.7.8", latency: 50)
+        let pingData1 = PingDataModel(ip: "1.2.3.4", latency: 100)
+        let pingData2 = PingDataModel(ip: "5.6.7.8", latency: 50)
         mockLocalDatabase.addPingData(pingData: pingData1)
         mockLocalDatabase.addPingData(pingData: pingData2)
 
         let pingDataModels = [
-            PingDataModel(from: pingData1),
-            PingDataModel(from: pingData2)
+            pingData1,
+            pingData2
         ]
 
         repository.pickBestLocation(pingData: pingDataModels)
@@ -233,14 +233,14 @@ class LatencyRepositoryTests: XCTestCase {
         mockLocationListRepository.serverListSubject.send(serverMachines)
         mockUserSessionRepository.sessionModel = createMockSession(isPremium: false)
 
-        let pingDataFree = PingData(ip: "1.2.3.4", latency: 100) // Free location
-        let pingDataPremium = PingData(ip: "9.9.9.9", latency: 50) // Premium location (better latency)
+        let pingDataFree = PingDataModel(ip: "1.2.3.4", latency: 100) // Free location
+        let pingDataPremium = PingDataModel(ip: "9.9.9.9", latency: 50) // Premium location (better latency)
         mockLocalDatabase.addPingData(pingData: pingDataFree)
         mockLocalDatabase.addPingData(pingData: pingDataPremium)
 
         let pingDataModels = [
-            PingDataModel(from: pingDataFree),
-            PingDataModel(from: pingDataPremium)
+            pingDataFree,
+            pingDataPremium
         ]
 
         repository.pickBestLocation(pingData: pingDataModels)
@@ -269,7 +269,7 @@ class LatencyRepositoryTests: XCTestCase {
     // MARK: RefreshBestLocation Tests
 
     func testRefreshBestLocationShouldLoadFromDatabase() {
-        let pingData = PingData(ip: "1.2.3.4", latency: 50)
+        let pingData = PingDataModel(ip: "1.2.3.4", latency: 50)
         mockLocalDatabase.addPingData(pingData: pingData)
 
         repository.refreshBestLocation()
@@ -318,7 +318,7 @@ class LatencyRepositoryTests: XCTestCase {
             }
             .store(in: &cancellables)
 
-        let pingData = PingData(ip: "1.2.3.4", latency: 50)
+        let pingData = PingDataModel(ip: "1.2.3.4", latency: 50)
         mockLocalDatabase.addPingData(pingData: pingData)
         repository.refreshBestLocation()
 

@@ -46,7 +46,7 @@ extension ServerCredentialType {
     }
 }
 
-struct ServerCredentialsModel: ServerCredentialType, Codable {
+struct ServerCredentialsModel: ServerCredentialType, Codable, Equatable {
     let username: String
     let password: String
 

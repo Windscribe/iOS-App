@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe sürüm %@ şimdi mevcut.";
 "Update Now" = "Şimdi Güncelle";
 "Update Later" = "Daha Sonra Güncelle";
+"Update Required" = "Güncelleme Gerekli";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "Windscribe’ın bu sürümü artık desteklenmiyor. Uygulamayı kullanmaya devam etmek için lütfen güncelleyin.";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Windscribe’ın bu sürümü artık desteklenmiyor. Uygulamayı kullanmaya devam etmek için lütfen %@ sürümüne güncelleyin.";
 "PLAN INFO" = "PLAN BİLGİSİ";
 "Copied to Clipboard!" = "Panoya kopyalandı!";

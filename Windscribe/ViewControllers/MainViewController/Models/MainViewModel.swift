@@ -40,6 +40,12 @@ protocol MainViewModel {
     var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
     var showNoInternetBeforeFailoverTrigger: PassthroughSubject<Void, Never> { get }
     var showUpdateAvailableTrigger: PassthroughSubject<CheckUpdateModel, Never> { get }
+    /// Latest force-update payload, set whenever `/CheckUpdate` returns `force: true`
+    /// and cleared when a subsequent response stops asserting force. The view
+    /// re-presents the undismissable prompt on `applicationDidBecomeActive` while
+    /// this is non-nil — handling the case where the user backgrounds without
+    /// updating.
+    var pendingForceUpdate: CurrentValueSubject<CheckUpdateModel?, Never> { get }
 
     var didShowBannedProfilePopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }

@@ -114,7 +114,7 @@ class CustomConfigRepositoryTests: XCTestCase {
             .store(in: &cancellables)
 
         // When
-        let customConfig = CustomConfig(
+        let customConfig = CustomConfigModel(
             id: "test-id",
             name: "Test Config",
             serverAddress: "192.168.1.1",
@@ -344,7 +344,7 @@ class CustomConfigRepositoryTests: XCTestCase {
 
     func test_removeWgConfig_success_shouldRemoveFileAndDatabaseEntry() async {
         // Given - manually add a WG config
-        let testConfig = CustomConfig(
+        let testConfig = CustomConfigModel(
             id: "wg-test-id",
             name: "WG Config",
             serverAddress: "192.168.1.1",
@@ -371,8 +371,8 @@ class CustomConfigRepositoryTests: XCTestCase {
 
     func test_getCustomConfig_withMatchingId_shouldReturnConfig() {
         // Given
-        let config1 = CustomConfig(id: "id1", name: "Config 1", serverAddress: "1.1.1.1", protocolType: "UDP", port: "443")
-        let config2 = CustomConfig(id: "id2", name: "Config 2", serverAddress: "2.2.2.2", protocolType: "TCP", port: "80")
+        let config1 = CustomConfigModel(id: "id1", name: "Config 1", serverAddress: "1.1.1.1", protocolType: "UDP", port: "443")
+        let config2 = CustomConfigModel(id: "id2", name: "Config 2", serverAddress: "2.2.2.2", protocolType: "TCP", port: "80")
 
         mockLocalDatabase.saveCustomConfig(customConfig: config1)
         mockLocalDatabase.saveCustomConfig(customConfig: config2)
@@ -420,7 +420,7 @@ class CustomConfigRepositoryTests: XCTestCase {
 
     func test_removeCustomConfig_shouldClearFromDatabase() {
         // Given
-        let config = CustomConfig(id: "remove-me", name: "To Remove", serverAddress: "1.2.3.4", protocolType: "UDP", port: "443")
+        let config = CustomConfigModel(id: "remove-me", name: "To Remove", serverAddress: "1.2.3.4", protocolType: "UDP", port: "443")
         mockLocalDatabase.saveCustomConfig(customConfig: config)
 
         XCTAssertEqual(mockLocalDatabase.customConfigsSubject.value.count, 1)
@@ -500,12 +500,12 @@ class CustomConfigRepositoryTests: XCTestCase {
             .store(in: &cancellables)
 
         // When - trigger updates
-        let config1 = CustomConfig(id: "id1", name: "First", serverAddress: "1.1.1.1", protocolType: "UDP", port: "443")
+        let config1 = CustomConfigModel(id: "id1", name: "First", serverAddress: "1.1.1.1", protocolType: "UDP", port: "443")
         mockLocalDatabase.saveCustomConfig(customConfig: config1)
 
         wait(for: [expectation1], timeout: 1.0)
 
-        let config2 = CustomConfig(id: "id2", name: "Second", serverAddress: "2.2.2.2", protocolType: "TCP", port: "80")
+        let config2 = CustomConfigModel(id: "id2", name: "Second", serverAddress: "2.2.2.2", protocolType: "TCP", port: "80")
         mockLocalDatabase.saveCustomConfig(customConfig: config2)
 
         wait(for: [expectation2], timeout: 1.0)

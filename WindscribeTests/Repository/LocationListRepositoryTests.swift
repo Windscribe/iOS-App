@@ -122,7 +122,7 @@ class LocationListRepositoryTests: XCTestCase {
 
         let savedServerMachines = mockLocalDatabase.getServerMachines()
         let currentServerModels = repository.currentServerModels
-        let savedServersModels = savedServerMachines?.map { ServerMachineModel(from: $0) } ?? []
+        let savedServersModels = savedServerMachines ?? []
 
         // Then
         XCTAssertEqual(currentServerModels.count, expectedServers.count)
@@ -145,7 +145,7 @@ class LocationListRepositoryTests: XCTestCase {
 
         // But local database has data
         let localServers = mockServerList.servers
-        mockLocalDatabase.mockServerMachines = localServers.map { ServerMachineObject(from: $0) }
+        mockLocalDatabase.mockServerMachines = localServers
 
         // When
         try await repository.updatedServerList()

@@ -128,23 +128,31 @@ For per-task detail, see [`M0-guardrails.md`](M0-guardrails.md).
 
 ### M2 — Persistence Track (parallel — not re-planned)
 
-**Lands on:** `main → neo-5.0`. Both Keychain consolidation and the Realm→GRDB plan are designed to ship from `main` on the current floor.
+**Lands on:** `main → neo-5.0` for D2.1 (already merged) and D2.2. The Realm-removal PR (D2.4) lands on whichever branch is active when the long-tail soak window closes — see "Launch cadence" below.
 
-**Goal:** Land the Keychain consolidation, then resume Realm→GRDB.
+**Goal:** Move sensitive state into the Keychain (done — !1323), then port the remaining `LocalDatabase`-resident state from Realm to GRDB, then ship a normalization pass, and finally retire Realm once `/CheckUpdate` force-upgrade has bedded in.
 
-This issue is a **dependency tracker**, not a new plan. Both work streams have their own homes:
+This issue is a **dependency tracker**, not a new plan. Source-of-truth plans:
 
-- Keychain consolidation: in-flight; let it land first.
-- Realm→GRDB: `aw/realm-to-grdb`, with its own multi-step plan (3 PRs across ≥ 2 releases). Plan moves into [`M2-grdb-migration.md`](M2-grdb-migration.md) when M2 work resumes.
+- Keychain consolidation: ✅ merged to `main` as !1323 (#1040), 2026-05-01.
+- Realm→GRDB migration: `aw/realm-to-grdb`, plan + execution log at `~/.claude/plans/we-ve-maybe-briefly-touched-delegated-pike.md`. Plan migrates into [`M2-grdb-migration.md`](M2-grdb-migration.md) once D2.2 is opened for review.
 
 **Outcome:**
 
-- D2.1 Keychain consolidation merges to `main`.
-- D2.2 GRDB Migration PR (Steps 0–5) merges and ships in Release N.
-- D2.3 Realm-removal PR (Step 6) ships in Release N+1.
-- D2.4 Schema-normalization PR (Step 7) ships in Release N+1 (alongside or independent of removal).
+- D2.1 ✅ Keychain consolidation merged to `main` as !1323 (2026-05-01). Sessions, OldSession, OpenVPN/IKEv2 server credentials, custom-config credentials, and session auth hash now live in the Keychain via `SessionKeychainStore` / `Preferences+Keychain`. `LocalDatabase` gained three `clear*` methods used by `MigrationRepository` to wipe stale Realm rows post-port. `LocalDatabase.{saveSession, getSessionPublisher, saveOldSession, getOldSession, save{OpenVPN,IKEv2}ServerCredentials}` are gone.
+- D2.2 GRDB Migration PR ships to `main` (the **Pre-Neo release**). Records mirror the surviving 14 entity families — sessions/credentials are not GRDB's concern. Realm + `RealmToGRDBMigrator` stay linked. Tracked under #1050.
+- D2.3 → **#1065** (split out from #1050): pure GRDB v1→v2 migration covering the ~10 surviving normalization items (the original 12 minus the two moot'd by the Keychain move — flatten Session.alc / merge OpenVPN+IKEv2 credentials tables). Decoupled from D2.4; can ship as soon as one main release after D2.2.
+- D2.4 → **#1066** (split out from #1050): Realm-removal PR ships **post-Neo + 3-month forced-upgrade soak** (see Launch cadence). Drops `LocalDatabaseImpl`, the `realm-swift` SPM packages, target linkage, the migrator, and the keychain `clear*` migration hooks.
 
-Once GRDB is in tree (post Step 2), `Windscribe/App/Environment+Dependencies.swift` should expose persistence stores via `@Entry` so the M0 reference module switches to consuming GRDB through these.
+**Launch cadence (gated by `/CheckUpdate` nag + force-upgrade):**
+
+- **Phase 1 — "Pre-Neo" release (D2.2 ships):** GRDB migration goes live to `main`. Begin nag-to-update via `/CheckUpdate` for users below this version. Introduce the **force-upgrade** capability via `/CheckUpdate` (the mechanism, not yet enforced for this version). Goal: maximum natural-update soak time before Neo lands; ramp telemetry on the migrator (success rate, digest hits, fallback frequency).
+- **Phase 2 — "Neo 5.0" launch (M10):** UI rebuild + iOS 18 floor + the bulk of Neo. Continue nagging users below Neo via `/CheckUpdate`; **don't force-upgrade them** — Neo is a bigger jump and users get to choose their moment. **Realm + `RealmToGRDBMigrator` must still ship in Neo** — anyone upgrading from a pre-Pre-Neo build directly to Neo still needs the migrator to run before their custom configs are lost.
+- **Phase 3 — "Post-Neo" cleanup:** ≥3 months after Neo ships, flip `/CheckUpdate` to **force-upgrade everyone below Pre-Neo** (target = "at least Pre-Neo," not Neo itself, so iOS 15-17 users still on Pre-Neo are unaffected; only stragglers below Pre-Neo get pushed). Once that's bedded in (every active user has run the migrator at least once), ship #1066 (D2.4 — Realm removal).
+
+The 3-month gate is the explicit soak window. The forced-upgrade-to-Pre-Neo (not to Neo) preserves the iOS-floor separation set up in M0/M1's branching strategy: iOS 15-17 users stay on Pre-Neo indefinitely with Realm linked; only iOS 18+ users see Neo.
+
+Once GRDB is in tree (post D2.2 step 2), `Windscribe/App/Environment+Dependencies.swift` should expose persistence stores via `@Entry` so the M0 reference module switches to consuming GRDB through these.
 
 ---
 

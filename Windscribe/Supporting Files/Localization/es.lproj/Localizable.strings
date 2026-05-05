@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe versión %@ ya está disponible.";
 "Update Now" = "Actualizar ahora";
 "Update Later" = "Actualizar después";
+"Update Required" = "Actualización requerida";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "Esta versión de Windscribe ya no es compatible. Actualiza para seguir usando la aplicación.";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Esta versión de Windscribe ya no es compatible. Actualiza a %@ para seguir usando la aplicación.";
 "PLAN INFO" = "INFORMACIÓN DEL PLAN";
 "Copied to Clipboard!" = "¡Copiado al portapapeles!";

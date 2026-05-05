@@ -348,9 +348,9 @@ class StaticIpRepositoryTests: XCTestCase {
 
     // MARK: - Helper Methods
 
-    private func createMockStaticIPs() -> [StaticIP] {
+    private func createMockStaticIPs() -> [StaticIPModel] {
         let jsonData = SampleDataStaticIP.staticIPListJSON.data(using: .utf8)!
         let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
-        return Array(staticIPList.staticIPs)
+        return Array(staticIPList.staticIPs).map { $0.getModel() }
     }
 }

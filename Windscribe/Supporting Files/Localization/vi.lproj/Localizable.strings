@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe phiên bản %@ hiện đã có sẵn.";
 "Update Now" = "Cập nhật ngay";
 "Update Later" = "Cập nhật sau";
+"Update Required" = "Yêu cầu cập nhật";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "Phiên bản Windscribe này không còn được hỗ trợ. Vui lòng cập nhật để tiếp tục sử dụng ứng dụng.";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Phiên bản Windscribe này không còn được hỗ trợ. Vui lòng cập nhật lên %@ để tiếp tục sử dụng ứng dụng.";
 "PLAN INFO" = "THÔNG TIN GÓI";
 "Copied to Clipboard!" = "Đã sao chép vào bộ nhớ tạm!";

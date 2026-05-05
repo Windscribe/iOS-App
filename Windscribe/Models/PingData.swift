@@ -34,9 +34,14 @@ import RealmSwift
     }
 }
 
-struct PingDataModel {
+struct PingDataModel: Equatable {
     var ip: String = ""
     var latency = -1
+
+    init(ip: String, latency: Int) {
+        self.ip = ip
+        self.latency = latency
+    }
 
     init(from: PingData) {
         ip = from.ip

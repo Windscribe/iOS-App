@@ -63,6 +63,7 @@ class MainViewModelImpl: MainViewModel {
     let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
     let showNoInternetBeforeFailoverTrigger = PassthroughSubject<Void, Never>()
     let showUpdateAvailableTrigger = PassthroughSubject<CheckUpdateModel, Never>()
+    let pendingForceUpdate = CurrentValueSubject<CheckUpdateModel?, Never>(nil)
     var showConnectionModeTriggeer = PassthroughSubject<Void, Never>()
     var disconnectConnectionTrigger = PassthroughSubject<Void, Never>()
 
@@ -458,10 +459,22 @@ class MainViewModelImpl: MainViewModel {
     private func observeUpdateAvailable() {
         checkUpdateRepository.updateAvailable
             .compactMap { $0 }
-            .filter { $0.updateAvailable }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] model in
                 guard let self = self else { return }
+                // Force-update path bypasses the soft-prompt rate limit and the
+                // didAutoShowNotifications gate. Cache the model so the view can
+                // re-present on foreground until the user actually updates.
+                if model.updateAvailable && model.force {
+                    self.pendingForceUpdate.send(model)
+                    self.showUpdateAvailableTrigger.send(model)
+                    return
+                }
+                // Backend stopped asserting force — clear any cached force payload.
+                if self.pendingForceUpdate.value != nil {
+                    self.pendingForceUpdate.send(nil)
+                }
+                guard model.updateAvailable else { return }
                 if !self.didAutoShowNotifications && self.shouldShowUpdatePrompt() {
                     self.preferences.saveLastUpdatePromptTimestamp(timeStamp: Date().timeIntervalSince1970)
                     self.showUpdateAvailableTrigger.send(model)

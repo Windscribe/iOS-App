@@ -20,7 +20,7 @@ class StaticIpRepositoryImpl: StaticIpRepository {
         self.localDatabase = localDatabase
         self.logger = logger
 
-        staticIPs = (localDatabase.getStaticIPs()?.map { $0.getModel() } ?? [])
+        staticIPs = (localDatabase.getStaticIPs() ?? [])
             .sorted { $0.cityName.lowercased() < $1.cityName.lowercased() }
     }
 
@@ -29,7 +29,7 @@ class StaticIpRepositoryImpl: StaticIpRepository {
         do {
             let result = try await apiManager.getStaticIpList()
             localDatabase.deleteStaticIps(ignore: Array(result.staticIPs).map { $0.staticIP })
-            localDatabase.saveStaticIPs(staticIps: Array(result.staticIPs))
+            localDatabase.saveStaticIPs(staticIps: result.staticIPs.map { $0.getModel() })
             staticIPs = result.staticIPs.map { $0.getModel() }
                 .sorted { $0.cityName.lowercased() < $1.cityName.lowercased() }
         } catch {
@@ -37,7 +37,7 @@ class StaticIpRepositoryImpl: StaticIpRepository {
 
             // Fallback to cached data if available and not empty
             if let cachedIps = localDatabase.getStaticIPs(), !cachedIps.isEmpty {
-                staticIPs = cachedIps.map { $0.getModel() }
+                staticIPs = cachedIps
                     .sorted { $0.cityName.lowercased() < $1.cityName.lowercased() }
             } else {
                 throw error
@@ -46,6 +46,6 @@ class StaticIpRepositoryImpl: StaticIpRepository {
     }
 
     func getStaticIp(id: Int) -> StaticIPModel? {
-        return localDatabase.getStaticIPs()?.first { $0.id == id }?.getModel()
+        return localDatabase.getStaticIPs()?.first { $0.id == id }
     }
 }

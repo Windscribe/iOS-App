@@ -12,40 +12,41 @@ import Combine
 @testable import Windscribe
 
 class MockLocalDatabase: LocalDatabase {
-    let sessionSubject = CurrentValueSubject<Windscribe.Session?, Never>(nil)
-    let oldSessionSubject = CurrentValueSubject<Windscribe.OldSession?, Never>(nil)
-    let notificationsSubject = CurrentValueSubject<[Windscribe.Notice], Never>([])
-    let networksSubject = CurrentValueSubject<[Windscribe.WifiNetwork], Never>([])
-    let readNoticesSubject = CurrentValueSubject<[Windscribe.ReadNotice], Never>([])
-    let customConfigsSubject = CurrentValueSubject<[Windscribe.CustomConfig], Never>([])
-    let serverMachinesSubject = CurrentValueSubject<[Windscribe.ServerMachineObject], Never>([])
+    let sessionSubject = CurrentValueSubject<SessionModel?, Never>(nil)
+    let oldSessionSubject = CurrentValueSubject<SessionModel?, Never>(nil)
+    let notificationsSubject = CurrentValueSubject<[NoticeModel], Never>([])
+    let networksSubject = CurrentValueSubject<[WifiNetworkModel], Never>([])
+    let readNoticesSubject = CurrentValueSubject<[Int], Never>([])
+    let customConfigsSubject = CurrentValueSubject<[CustomConfigModel], Never>([])
+    let serverMachinesSubject = CurrentValueSubject<[ServerMachineModel], Never>([])
 
-    var mockServers: [Server]? = []
-    var mockLocations: [LocationObject]? = []
-    var mockServerMachines: [ServerMachineObject]? = []
-    let mockFavoritesSubject = CurrentValueSubject<[String: Favourite], Never>([:])
+    var mockServers: [LocationModel]? = []
+    var mockLocations: [LocationModel]? = []
+    var mockServerMachines: [ServerMachineModel]? = []
+    let mockFavoritesSubject = CurrentValueSubject<[String: FavouriteModel], Never>([:])
+
     // PortMap tracking
     var savePortMapCalled = false
     var saveSuggestedPortsCalled = false
-    var portMapsToReturn: [Windscribe.PortMap]?
-    var suggestedPortsToReturn: [Windscribe.SuggestedPorts]?
+    var portMapsToReturn: [PortMapModel]?
+    var suggestedPortsToReturn: [SuggestedPortsModel]?
 
     // Notifications tracking
     var saveNotificationsCalled = false
-    var notificationsToReturn: [Windscribe.Notice]?
+    var notificationsToReturn: [NoticeModel]?
 
     // StaticIP tracking
-    var staticIPsToReturn: [Windscribe.StaticIP]?
+    var staticIPsToReturn: [StaticIPModel]?
     var saveStaticIPsCalled = false
     var deleteStaticIpsCalled = false
     var lastDeletedStaticIPsIgnoreList: [String]?
 
     // MobilePlan tracking
-    var mobilePlansToReturn: [Windscribe.MobilePlan]?
+    var mobilePlansToReturn: [MobilePlanModel]?
     var saveMobilePlansCalled = false
 
     // WifiNetwork tracking
-    var mockWifiNetworks: [Windscribe.WifiNetwork] = [] {
+    var mockWifiNetworks: [WifiNetworkModel] = [] {
         didSet {
             networksSubject.send(mockWifiNetworks)
         }
@@ -54,21 +55,21 @@ class MockLocalDatabase: LocalDatabase {
     var removeNetworkCalled = false
 
     // Robert filters tracking
-    var mockRobertFilters: Windscribe.RobertFilters?
+    var mockRobertFilters: [RobertFilterModel]?
     var saveRobertFiltersCalled = false
-    var lastSavedRobertFilters: Windscribe.RobertFilters?
+    var lastSavedRobertFilters: [RobertFilterModel]?
     var toggleRobertRuleCalled = false
     var lastToggledRobertRuleId: String?
-    var lastSavedNetwork: Windscribe.WifiNetwork?
+    var lastSavedNetwork: WifiNetworkModel?
 
     // PingData tracking
-    var mockPingData: [Windscribe.PingData] = []
+    var mockPingData: [PingDataModel] = []
 
     // MyIP tracking (for migration tests)
     var mockMyIP: Windscribe.MyIP?
 
     // UnblockWgParams tracking
-    var mockUnblockWgParams: [Windscribe.UnblockWgParamsObj] = []
+    var mockUnblockWgParams: [UnblockWgParams] = []
     var saveUnblockWgParamsCalled = false
 
     // Migration tracking
@@ -76,48 +77,48 @@ class MockLocalDatabase: LocalDatabase {
     var onMigrate: (() -> Void)?
 
     // Credentials tracking
-    var mockOpenVPNCredentials: OpenVPNServerCredentials?
-    var mockIKEv2Credentials: IKEv2ServerCredentials?
+    var mockOpenVPNCredentials: ServerCredentialsModel?
+    var mockIKEv2Credentials: ServerCredentialsModel?
 
     func migrate() {
         migrateCalled = true
         onMigrate?()
     }
 
-    func getMobilePlans() -> [Windscribe.MobilePlan]? {
+    func getMobilePlans() -> [MobilePlanModel]? {
         return mobilePlansToReturn
     }
 
-    func saveMobilePlans(mobilePlansList: [Windscribe.MobilePlan]) {
+    func saveMobilePlans(mobilePlansList: [MobilePlanModel]) {
         saveMobilePlansCalled = true
         mobilePlansToReturn = mobilePlansList
     }
 
-    func getServers() -> [Windscribe.Server]? {
+    func getServers() -> [LocationModel]? {
         return mockServers
     }
 
-    func getLocations() -> [LocationObject]? {
+    func getLocations() -> [LocationModel]? {
         return mockLocations
     }
 
-    func saveLocations(locations: [LocationObject]) {
+    func saveLocations(locations: [LocationModel]) {
         mockLocations = locations
     }
 
-    func getServerMachines() -> [ServerMachineObject]? {
+    func getServerMachines() -> [ServerMachineModel]? {
         return mockServerMachines
     }
 
-    func saveServerMachines(serverMachines: [ServerMachineObject]) {
+    func saveServerMachines(serverMachines: [ServerMachineModel]) {
         mockServerMachines = serverMachines
     }
 
-    func getStaticIPs() -> [Windscribe.StaticIP]? {
+    func getStaticIPs() -> [StaticIPModel]? {
         return staticIPsToReturn
     }
 
-    func saveStaticIPs(staticIps: [Windscribe.StaticIP]) {
+    func saveStaticIPs(staticIps: [StaticIPModel]) {
         saveStaticIPsCalled = true
         staticIPsToReturn = staticIps
     }
@@ -127,11 +128,11 @@ class MockLocalDatabase: LocalDatabase {
         lastDeletedStaticIPsIgnoreList = ignore
     }
 
-    func getOpenVPNServerCredentials() -> Windscribe.OpenVPNServerCredentials? {
+    func getOpenVPNServerCredentials() -> ServerCredentialsModel? {
         return mockOpenVPNCredentials
     }
 
-    func getIKEv2ServerCredentials() -> Windscribe.IKEv2ServerCredentials? {
+    func getIKEv2ServerCredentials() -> ServerCredentialsModel? {
         return mockIKEv2Credentials
     }
 
@@ -143,43 +144,46 @@ class MockLocalDatabase: LocalDatabase {
         mockIKEv2Credentials = nil
     }
 
-    func getPortMap() -> [Windscribe.PortMap]? {
+    func getPortMap() -> [PortMapModel]? {
         return portMapsToReturn
     }
 
-    func savePortMap(portMap: [Windscribe.PortMap]) {
+    func savePortMap(portMap: [PortMapModel]) {
         savePortMapCalled = true
     }
 
-    func saveSuggestedPorts(suggestedPorts: [Windscribe.SuggestedPorts]) {
+    func saveSuggestedPorts(suggestedPorts: [SuggestedPortsModel]) {
         saveSuggestedPortsCalled = true
         suggestedPortsToReturn = suggestedPorts
     }
 
-    func getSuggestedPorts() -> [Windscribe.SuggestedPorts]? {
+    func getSuggestedPorts() -> [SuggestedPortsModel]? {
         return suggestedPortsToReturn
     }
 
-    func getNotificationsPublisher() -> AnyPublisher<[Windscribe.Notice], Never> {
+    func getNotificationsPublisher() -> AnyPublisher<[NoticeModel], Never> {
         return notificationsSubject.eraseToAnyPublisher()
     }
 
-    func saveNotifications(notifications: [Windscribe.Notice]) {
+    func getNotifications() -> [NoticeModel] {
+        return notificationsToReturn ?? []
+    }
+
+    func saveNotifications(notifications: [NoticeModel]) {
         saveNotificationsCalled = true
         notificationsToReturn = notifications
-        // Trigger the subject to simulate Realm notification
         notificationsSubject.send(notifications)
     }
 
-    func getReadNotices() -> [Windscribe.ReadNotice]? {
+    func getReadNotices() -> [Int]? {
         return readNoticesSubject.value
     }
 
-    func getReadNoticesPublisher() -> AnyPublisher<[Windscribe.ReadNotice], Never> {
+    func getReadNoticesPublisher() -> AnyPublisher<[Int], Never> {
         return readNoticesSubject.eraseToAnyPublisher()
     }
 
-    func saveReadNotices(readNotices: [Windscribe.ReadNotice]) {
+    func saveReadNotices(readNotices: [Int]) {
         readNoticesSubject.send(readNotices)
     }
 
@@ -195,26 +199,28 @@ class MockLocalDatabase: LocalDatabase {
 
     }
 
-    func getNetworksPublisher() -> AnyPublisher<[Windscribe.WifiNetwork], Never> {
+    func getNetworksPublisher() -> AnyPublisher<[WifiNetworkModel], Never> {
         return networksSubject.eraseToAnyPublisher()
     }
 
-    func removeNetwork(wifiNetwork: Windscribe.WifiNetwork) {
+    func getNetworks() -> [WifiNetworkModel] {
+        return mockWifiNetworks
+    }
+
+    func removeNetwork(wifiNetwork: WifiNetworkModel) {
         mockWifiNetworks.removeAll { $0.SSID == wifiNetwork.SSID }
     }
 
-    func addPingData(pingData: Windscribe.PingData) {
-        // Remove existing ping data for the same IP if it exists
+    func addPingData(pingData: PingDataModel) {
         mockPingData.removeAll { $0.ip == pingData.ip }
-        // Add new ping data
         mockPingData.append(pingData)
     }
 
-    func getAllPingData() -> [Windscribe.PingData] {
+    func getAllPingData() -> [PingDataModel] {
         return mockPingData
     }
 
-    func saveCustomConfig(customConfig: Windscribe.CustomConfig) {
+    func saveCustomConfig(customConfig: CustomConfigModel) {
         var savedList = customConfigsSubject.value
         savedList.append(customConfig)
         customConfigsSubject.send(savedList)
@@ -226,11 +232,11 @@ class MockLocalDatabase: LocalDatabase {
         customConfigsSubject.send(savedList)
     }
 
-    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never> {
+    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfigModel], Never> {
         customConfigsSubject.eraseToAnyPublisher()
     }
 
-    func getCustomConfigs() -> [Windscribe.CustomConfig] {
+    func getCustomConfigs() -> [CustomConfigModel] {
         customConfigsSubject.value
     }
 
@@ -240,11 +246,11 @@ class MockLocalDatabase: LocalDatabase {
         sessionSubject.send(nil)
     }
 
-    func getRobertFilters() -> Windscribe.RobertFilters? {
+    func getRobertFilters() -> [RobertFilterModel]? {
         return mockRobertFilters
     }
 
-    func saveRobertFilters(filters: Windscribe.RobertFilters) {
+    func saveRobertFilters(filters: [RobertFilterModel]) {
         saveRobertFiltersCalled = true
         lastSavedRobertFilters = filters
         mockRobertFilters = filters
@@ -255,7 +261,7 @@ class MockLocalDatabase: LocalDatabase {
         lastToggledRobertRuleId = id
     }
 
-    func getSession() -> Windscribe.Session? {
+    func getSession() -> SessionModel? {
         return sessionSubject.value
     }
 
@@ -270,7 +276,7 @@ class MockLocalDatabase: LocalDatabase {
         mockIKEv2Credentials = nil
     }
 
-    func saveNetwork(wifiNetwork: Windscribe.WifiNetwork) {
+    func saveNetwork(wifiNetwork: WifiNetworkModel) {
         saveNetworkCalled = true
         lastSavedNetwork = wifiNetwork
         if let index = mockWifiNetworks.firstIndex(where: { $0.SSID == wifiNetwork.SSID }) {
@@ -280,23 +286,22 @@ class MockLocalDatabase: LocalDatabase {
         }
     }
 
-    func saveFavourite(favourite: Windscribe.Favourite) {
+    func saveFavourite(favourite: FavouriteModel) {
         var favourites = mockFavoritesSubject.value
         favourites[favourite.id] = favourite
         mockFavoritesSubject.send(favourites)
-
     }
 
-    func getFavouriteListPublisher() -> AnyPublisher<[Windscribe.Favourite], Never> {
+    func getFavouriteListPublisher() -> AnyPublisher<[FavouriteModel], Never> {
         return mockFavoritesSubject
             .map { $0.count > 0 ? Array($0.values) : [] }
             .eraseToAnyPublisher()
     }
 
-    func getFavouriteList() -> [Windscribe.Favourite] {
-        return mockFavoritesSubject.value
-            .map { $0.value }
+    func getFavouriteList() -> [FavouriteModel] {
+        return mockFavoritesSubject.value.map { $0.value }
     }
+
 
     func removeFavourite(datacenterId: String) {
         var favourites = mockFavoritesSubject.value
@@ -304,16 +309,16 @@ class MockLocalDatabase: LocalDatabase {
         mockFavoritesSubject.send(favourites)
     }
 
-    func saveUnblockWgParams(params: [Windscribe.UnblockWgParamsObj]) {
+    func saveUnblockWgParams(params: [UnblockWgParams]) {
         saveUnblockWgParamsCalled = true
         mockUnblockWgParams = params
     }
 
-    func getUnblockWgParams() -> [Windscribe.UnblockWgParamsObj] {
+    func getUnblockWgParams() -> [UnblockWgParams] {
         return mockUnblockWgParams
     }
 
-    func getServerMachinesPublisher() -> AnyPublisher<[Windscribe.ServerMachineObject], Never> {
+    func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineModel], Never> {
         serverMachinesSubject.eraseToAnyPublisher()
     }
 

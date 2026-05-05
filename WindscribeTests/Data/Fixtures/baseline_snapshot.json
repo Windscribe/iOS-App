@@ -1,0 +1,476 @@
+{
+  "customConfigs" : [
+    {
+      "authRequired" : true,
+      "id" : "11111111-1111-1111-1111-111111111111",
+      "name" : "Home VPN",
+      "password" : "home_pass",
+      "port" : "443",
+      "protocolType" : "openvpn",
+      "saveCredentials" : true,
+      "serverAddress" : "home.vpn.example.com",
+      "username" : "home_user"
+    },
+    {
+      "authRequired" : true,
+      "id" : "22222222-2222-2222-2222-222222222222",
+      "name" : "Office VPN",
+      "password" : "office_pass",
+      "port" : "51820",
+      "protocolType" : "wireguard",
+      "saveCredentials" : true,
+      "serverAddress" : "office.vpn.example.com",
+      "username" : "office_user"
+    }
+  ],
+  "favourites" : [
+    {
+      "id" : "fav-dc-100"
+    },
+    {
+      "id" : "fav-dc-200",
+      "pinnedIp" : "1.2.3.4",
+      "pinnedNodeIp" : "host1.example.com"
+    },
+    {
+      "id" : "fav-dc-300",
+      "pinnedNodeIp" : "host2.example.com"
+    }
+  ],
+  "locations" : [
+    {
+      "continent" : "NA",
+      "countryCode" : "US",
+      "datacenters" : [
+        {
+          "city" : "New York",
+          "gps" : "40.71,-74.01",
+          "iata" : "JFK",
+          "id" : 100,
+          "isPremium" : 0,
+          "linkSpeed" : 1000,
+          "nick" : "NYC",
+          "ovpnX509" : "US-East",
+          "p2p" : 1,
+          "tz" : "America\/New_York",
+          "wgEndpoint" : "10.0.0.100:51820",
+          "wgPubkey" : "wgkey_us100"
+        },
+        {
+          "city" : "Los Angeles",
+          "gps" : "34.05,-118.24",
+          "iata" : "LAX",
+          "id" : 101,
+          "isPremium" : 0,
+          "linkSpeed" : 1000,
+          "nick" : "LAX",
+          "ovpnX509" : "US-West",
+          "p2p" : 1,
+          "tz" : "America\/Los_Angeles",
+          "wgEndpoint" : "10.0.0.101:51820",
+          "wgPubkey" : "wgkey_us101"
+        }
+      ],
+      "id" : 1,
+      "name" : "United States",
+      "shortName" : "US",
+      "sortOrder" : 0
+    },
+    {
+      "continent" : "NA",
+      "countryCode" : "CA",
+      "datacenters" : [
+        {
+          "city" : "Toronto",
+          "gps" : "43.65,-79.38",
+          "iata" : "YYZ",
+          "id" : 200,
+          "isPremium" : 0,
+          "linkSpeed" : 1000,
+          "nick" : "YYZ",
+          "ovpnX509" : "CA-Central",
+          "p2p" : 1,
+          "tz" : "America\/Toronto",
+          "wgEndpoint" : "10.0.0.200:51820",
+          "wgPubkey" : "wgkey_ca200"
+        }
+      ],
+      "id" : 2,
+      "name" : "Canada",
+      "shortName" : "CA",
+      "sortOrder" : 1
+    },
+    {
+      "continent" : "AS",
+      "countryCode" : "JP",
+      "datacenters" : [
+        {
+          "city" : "Tokyo",
+          "gps" : "35.68,139.69",
+          "iata" : "NRT",
+          "id" : 300,
+          "isPremium" : 0,
+          "linkSpeed" : 1000,
+          "nick" : "TYO",
+          "ovpnX509" : "JP-East",
+          "p2p" : 1,
+          "tz" : "Asia\/Tokyo",
+          "wgEndpoint" : "10.0.0.300:51820",
+          "wgPubkey" : "wgkey_jp300"
+        },
+        {
+          "city" : "Osaka",
+          "gps" : "34.69,135.50",
+          "iata" : "KIX",
+          "id" : 301,
+          "isPremium" : 0,
+          "linkSpeed" : 1000,
+          "nick" : "OSA",
+          "ovpnX509" : "JP-West",
+          "p2p" : 1,
+          "tz" : "Asia\/Tokyo",
+          "wgEndpoint" : "10.0.0.301:51820",
+          "wgPubkey" : "wgkey_jp301"
+        }
+      ],
+      "id" : 3,
+      "name" : "Japan",
+      "shortName" : "JP",
+      "sortOrder" : 2
+    }
+  ],
+  "mobilePlans" : [
+    {
+      "active" : false,
+      "discount" : 50,
+      "duration" : 24,
+      "extId" : "com.windscribe.biennial",
+      "name" : "Biennial",
+      "price" : "$89",
+      "type" : "subscription"
+    },
+    {
+      "active" : true,
+      "discount" : 0,
+      "duration" : 1,
+      "extId" : "com.windscribe.monthly",
+      "name" : "Monthly",
+      "price" : "$9.99",
+      "type" : "subscription"
+    },
+    {
+      "active" : true,
+      "discount" : 30,
+      "duration" : 12,
+      "extId" : "com.windscribe.yearly",
+      "name" : "Yearly",
+      "price" : "$49",
+      "type" : "subscription"
+    }
+  ],
+  "notices" : [
+    {
+      "action" : {
+        "label" : "Upgrade",
+        "pcpid" : "123",
+        "promoCode" : "PROMO2026",
+        "type" : "openUrl"
+      },
+      "date" : 1700000000,
+      "id" : 1,
+      "message" : "Upgrade to Pro and save 50% today.",
+      "popup" : true,
+      "title" : "Limited Time Offer"
+    },
+    {
+      "date" : 1700100000,
+      "id" : 2,
+      "message" : "Brief maintenance on 2026-06-01 at 02:00 UTC.",
+      "popup" : false,
+      "title" : "Maintenance Scheduled"
+    },
+    {
+      "date" : 1700200000,
+      "id" : 3,
+      "message" : "AmneziaWG is now available for all Pro users.",
+      "popup" : true,
+      "title" : "New Feature Available"
+    }
+  ],
+  "pingData" : [
+    {
+      "ip" : "1.2.3.4",
+      "latency" : 25
+    },
+    {
+      "ip" : "13.14.15.16",
+      "latency" : 150
+    },
+    {
+      "ip" : "17.18.19.20",
+      "latency" : -1
+    },
+    {
+      "ip" : "5.6.7.8",
+      "latency" : 50
+    },
+    {
+      "ip" : "9.10.11.12",
+      "latency" : 100
+    }
+  ],
+  "portMaps" : [
+    {
+      "connectionProtocol" : "OpenVPN",
+      "heading" : "UDP",
+      "legacyPorts" : [
+        "80"
+      ],
+      "ports" : [
+        "1194",
+        "443",
+        "4443"
+      ],
+      "use" : "default"
+    },
+    {
+      "connectionProtocol" : "WireGuard",
+      "heading" : "WireGuard",
+      "legacyPorts" : [
+
+      ],
+      "ports" : [
+        "443",
+        "51820"
+      ],
+      "use" : "default"
+    }
+  ],
+  "readNotices" : [
+    {
+      "id" : 1
+    },
+    {
+      "id" : 3
+    }
+  ],
+  "robertFilters" : {
+    "filters" : [
+      {
+        "enabled" : true,
+        "filterDescription" : "Block ads",
+        "id" : "ads",
+        "status" : 1,
+        "title" : "Ads"
+      },
+      {
+        "enabled" : false,
+        "filterDescription" : "Block adult content",
+        "id" : "adult",
+        "status" : 0,
+        "title" : "Adult"
+      },
+      {
+        "enabled" : true,
+        "filterDescription" : "Block malware",
+        "id" : "malware",
+        "status" : 1,
+        "title" : "Malware"
+      },
+      {
+        "enabled" : true,
+        "filterDescription" : "Block trackers",
+        "id" : "trackers",
+        "status" : 1,
+        "title" : "Trackers"
+      }
+    ]
+  },
+  "serverMachines" : [
+    {
+      "datacenterId" : 100,
+      "hostname" : "us-east-1.windscribe.com",
+      "id" : 1001,
+      "ip" : "1.2.3.4",
+      "ip2" : "1.2.3.5",
+      "ip3" : "1.2.3.6",
+      "ipv6" : 1,
+      "netLoad" : 15,
+      "sclass" : 1,
+      "weight" : 100
+    },
+    {
+      "datacenterId" : 101,
+      "hostname" : "us-west-1.windscribe.com",
+      "id" : 1002,
+      "ip" : "1.2.3.4",
+      "ip2" : "1.2.3.5",
+      "ip3" : "1.2.3.6",
+      "ipv6" : 1,
+      "netLoad" : 15,
+      "sclass" : 1,
+      "weight" : 100
+    },
+    {
+      "datacenterId" : 200,
+      "hostname" : "ca-central-1.windscribe.com",
+      "id" : 1003,
+      "ip" : "1.2.3.4",
+      "ip2" : "1.2.3.5",
+      "ip3" : "1.2.3.6",
+      "ipv6" : 1,
+      "netLoad" : 15,
+      "sclass" : 1,
+      "weight" : 100
+    },
+    {
+      "datacenterId" : 300,
+      "hostname" : "jp-east-1.windscribe.com",
+      "id" : 1004,
+      "ip" : "1.2.3.4",
+      "ip2" : "1.2.3.5",
+      "ip3" : "1.2.3.6",
+      "ipv6" : 1,
+      "netLoad" : 15,
+      "sclass" : 1,
+      "weight" : 100
+    },
+    {
+      "datacenterId" : 301,
+      "hostname" : "jp-west-1.windscribe.com",
+      "id" : 1005,
+      "ip" : "1.2.3.4",
+      "ip2" : "1.2.3.5",
+      "ip3" : "1.2.3.6",
+      "ipv6" : 1,
+      "netLoad" : 15,
+      "sclass" : 1,
+      "weight" : 100
+    }
+  ],
+  "staticIPs" : [
+    {
+      "cityName" : "New York",
+      "connectIP" : "203.0.113.1",
+      "countryCode" : "US",
+      "credentials" : [
+        {
+          "password" : "stat_pass",
+          "username" : "stat_user"
+        }
+      ],
+      "deviceName" : "iPhone",
+      "expiry" : "2027-01-01T05:00:00Z",
+      "id" : 1001,
+      "isActive" : true,
+      "name" : "Work VPN",
+      "nodes" : [
+        {
+          "dnsHostname" : "dns.node1.example.com",
+          "forceDisconnect" : false,
+          "hostname" : "node1.example.com",
+          "ip" : "1.2.3.4",
+          "ip2" : "1.2.3.5",
+          "ip3" : "1.2.3.6",
+          "weight" : 100
+        }
+      ],
+      "ovpnX509" : "SIP-1",
+      "pingHost" : "ping1.example.com",
+      "staticIP" : "203.0.113.1",
+      "type" : "openvpn",
+      "wgIp" : "10.64.0.1",
+      "wgPublicKey" : "wgpub_sip1"
+    },
+    {
+      "cityName" : "Los Angeles",
+      "connectIP" : "203.0.113.2",
+      "countryCode" : "US",
+      "credentials" : [
+        {
+          "password" : "stat_pass",
+          "username" : "stat_user"
+        }
+      ],
+      "deviceName" : "iPhone",
+      "expiry" : "2027-06-01T04:00:00Z",
+      "id" : 1002,
+      "isActive" : true,
+      "name" : "Home VPN",
+      "nodes" : [
+        {
+          "dnsHostname" : "dns.node1.example.com",
+          "forceDisconnect" : false,
+          "hostname" : "node1.example.com",
+          "ip" : "1.2.3.4",
+          "ip2" : "1.2.3.5",
+          "ip3" : "1.2.3.6",
+          "weight" : 100
+        }
+      ],
+      "ovpnX509" : "SIP-2",
+      "pingHost" : "ping2.example.com",
+      "staticIP" : "203.0.113.2",
+      "type" : "openvpn",
+      "wgIp" : "10.64.0.2",
+      "wgPublicKey" : "wgpub_sip2"
+    }
+  ],
+  "suggestedPorts" : [
+    {
+      "port" : "51820",
+      "protocolType" : "WireGuard"
+    }
+  ],
+  "unblockWgParams" : [
+    {
+      "countries" : [
+
+      ],
+      "id" : "awg-01",
+      "title" : ""
+    },
+    {
+      "countries" : [
+
+      ],
+      "id" : "awg-02",
+      "title" : ""
+    }
+  ],
+  "wifiNetworks" : [
+    {
+      "dontAskAgainForPreferredProtocol" : true,
+      "popupDismissCount" : 5,
+      "port" : "500",
+      "preferredPort" : "500",
+      "preferredProtocol" : "IKEv2",
+      "preferredProtocolStatus" : false,
+      "protocolType" : "IKEv2",
+      "ssid" : "CoffeeShop",
+      "status" : false
+    },
+    {
+      "dontAskAgainForPreferredProtocol" : false,
+      "popupDismissCount" : 0,
+      "port" : "443",
+      "preferredPort" : "443",
+      "preferredProtocol" : "WireGuard",
+      "preferredProtocolStatus" : true,
+      "protocolType" : "WireGuard",
+      "ssid" : "HomeNet",
+      "status" : true
+    },
+    {
+      "dontAskAgainForPreferredProtocol" : false,
+      "popupDismissCount" : 2,
+      "port" : "1194",
+      "preferredPort" : "1194",
+      "preferredProtocol" : "OpenVPN",
+      "preferredProtocolStatus" : false,
+      "protocolType" : "OpenVPN",
+      "ssid" : "WorkNet",
+      "status" : false
+    }
+  ]
+}

@@ -43,17 +43,15 @@ class RobertyFiltersRepositoryImpl: RobertyFiltersRepository {
     }
 
     private func loadFilters() {
-        robertFilters.send(localDatabase.getRobertFilters()?.filters
-            .filter { !$0.isInvalidated }
-            .map { $0.getModel() } ?? [])
+        robertFilters.send(localDatabase.getRobertFilters() ?? [])
     }
 
     func refreshFilters() async throws {
         do {
             let apiFilters = try await apiManager.getRobertFilters()
-            localDatabase.saveRobertFilters(filters: apiFilters)
-            robertFilters.send(apiFilters.filters
-                .map { $0.getModel() })
+            let filterModels = Array(apiFilters.filters.map { $0.getModel() })
+            localDatabase.saveRobertFilters(filters: filterModels)
+            robertFilters.send(filterModels)
         } catch {
             if robertFilters.value.isEmpty {
                 loadFilters()

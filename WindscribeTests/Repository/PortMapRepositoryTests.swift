@@ -375,13 +375,13 @@ class PortMapRepositoryTests: XCTestCase {
 
     // MARK: - Helper Methods
 
-    private func createMockPortMaps() -> [PortMap] {
+    private func createMockPortMaps() -> [PortMapModel] {
         let jsonData = SampleDataPorts.portMapsJSON.data(using: .utf8)!
         let portMaps = try! JSONDecoder().decode([PortMap].self, from: jsonData)
-        return portMaps
+        return portMaps.map { $0.getModel() }
     }
 
-    private func createMockPortMapList(portMaps: [PortMap], suggested: SuggestedPorts?) -> PortMapList {
+    private func createMockPortMapList(portMaps: [PortMapModel], suggested: SuggestedPortsModel?) -> PortMapList {
         // Build JSON structure matching PortMapList's expected format
         var portMapsJson: [[String: Any]] = []
         for portMap in portMaps {
@@ -389,8 +389,8 @@ class PortMapRepositoryTests: XCTestCase {
                 "protocol": portMap.connectionProtocol,
                 "heading": portMap.heading,
                 "use": portMap.use,
-                "ports": Array(portMap.ports),
-                "legacy_ports": Array(portMap.legacyPorts)
+                "ports": portMap.ports,
+                "legacy_ports": portMap.legacyPorts
             ])
         }
 
@@ -410,9 +410,9 @@ class PortMapRepositoryTests: XCTestCase {
         return portMapList
     }
 
-    private func createMockSuggestedPorts() -> SuggestedPorts {
+    private func createMockSuggestedPorts() -> SuggestedPortsModel {
         let jsonData = SampleDataPorts.suggestedPortsJSON.data(using: .utf8)!
         let suggested = try! JSONDecoder().decode(SuggestedPorts.self, from: jsonData)
-        return suggested
+        return suggested.getModel()
     }
 }

@@ -8,10 +8,8 @@
 
 import Foundation
 import NetworkExtension
-import Realm
 import Combine
 import Swinject
-import RealmSwift
 
 enum TCPLatencyError: Error {
     case cancelled
@@ -78,7 +76,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.staticIpRepository = staticIpRepository
         self.locationListRepository = locationListRepository
 
-        latency.send(self.database.getAllPingData().map { PingDataModel(from: $0) })
+        latency.send(self.database.getAllPingData())
         observeFavouriteList()
 
         refreshBestLocation()
@@ -100,7 +98,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private func observeFavouriteList() {
         database.getFavouriteListPublisher()
             .sink { favList in
-                self.favList.send(favList.map { $0.getModel() })
+                self.favList.send(favList)
             }
             .store(in: &self.cancellables)
     }
@@ -224,7 +222,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func getPingDataModel() -> [PingDataModel] {
-        database.getAllPingData().map { PingDataModel(from: $0)}
+        database.getAllPingData()
     }
 
     private func getCustomConfigLatency() async {
@@ -236,14 +234,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                 group.addTask {
                     do {
                         let latency = try await self.getTCPLatency(pingIp: address)
-
-                        let pingData = PingData(
-                            ip: address,
-                            latency: latency
-                        )
-
-                        self.database.addPingData(pingData: pingData)
-
+                        self.database.addPingData(pingData: PingDataModel(ip: address, latency: latency))
                     } catch TCPLatencyError.vpnConnected {
                         self.logger.logI("LatencyRepositoryImpl", "getCustomConfigLatency - vpn connected")
                     } catch TCPLatencyError.cancelled {
@@ -307,17 +298,17 @@ class LatencyRepositoryImpl: LatencyRepository {
     private func performPing(ip: String, host: String, pingType: Int32) async {
         // Check if task is cancelled before starting
         guard !Task.isCancelled else {
-            self.database.addPingData(pingData: PingData(ip: ip, latency: -1))
+            self.database.addPingData(pingData: PingDataModel(ip: ip, latency: -1))
             return
         }
 
         let result = await pingManager.ping(ip, hostname: host, pingType: pingType)
 
         guard !Task.isCancelled else {
-            self.database.addPingData(pingData: PingData(ip: ip, latency: -1))
+            self.database.addPingData(pingData: PingDataModel(ip: ip, latency: -1))
             return
         }
-        self.database.addPingData(pingData: PingData(ip: ip, latency: result.success ? Int(result.time) : -1))
+        self.database.addPingData(pingData: PingDataModel(ip: ip, latency: result.success ? Int(result.time) : -1))
     }
 
     private func performPingTask(ip: String, host: String, pingType: Int32) async {
@@ -371,7 +362,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func refreshBestLocation() {
-        let pingData = self.database.getAllPingData().map { PingDataModel.init(from: $0) }
+        let pingData = self.database.getAllPingData()
         self.latency.send(pingData)
         self.pickBestLocation(pingData: pingData)
     }

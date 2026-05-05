@@ -375,6 +375,18 @@ enum TextsAsset {
         static var updateLater: String {
             return "Update Later".localized
         }
+
+        static var forceTitle: String {
+            return "Update Required".localized
+        }
+
+        static var forceMessage: String {
+            return "This version of Windscribe is no longer supported. Please update to continue using the app.".localized
+        }
+
+        static var forceMessageWithVersion: String {
+            return "This version of Windscribe is no longer supported. Please update to %@ to continue using the app.".localized
+        }
     }
 
     enum AutomaticModeFailedAlert {

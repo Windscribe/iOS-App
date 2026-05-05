@@ -17,6 +17,11 @@ struct SuggestedPortsModel: Equatable {
         self.protocolType = from.protocolType
         self.port = from.port
     }
+
+    init(protocolType: String, port: String) {
+        self.protocolType = protocolType
+        self.port = port
+    }
 }
 
 @objcMembers class SuggestedPorts: Object, Decodable {
@@ -45,6 +50,12 @@ struct SuggestedPortsModel: Equatable {
         } else {
             port = ""
         }
+    }
+
+    convenience init(from model: SuggestedPortsModel) {
+        self.init()
+        protocolType = model.protocolType
+        port = model.port
     }
 
     func getModel() -> SuggestedPortsModel {

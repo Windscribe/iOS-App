@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe バージョン %@ が利用可能です。";
 "Update Now" = "今すぐアップデート";
 "Update Later" = "後でアップデート";
+"Update Required" = "アップデートが必要です";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "このバージョンのWindscribeはサポートされていません。アプリを引き続きご利用いただくにはアップデートしてください。";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "このバージョンのWindscribeはサポートされていません。アプリを引き続きご利用いただくには %@ にアップデートしてください。";
 "PLAN INFO" = "プラン情報";
 "Copied to Clipboard!" = "クリップボードにコピーしました！";

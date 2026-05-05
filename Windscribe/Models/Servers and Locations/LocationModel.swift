@@ -28,7 +28,7 @@ struct LocationsListModel: Decodable {
     }
 }
 
-struct LocationModel: Decodable {
+struct LocationModel: Decodable, Equatable {
     let id: Int
     let name: String
     let countryCode: String

@@ -336,9 +336,9 @@ class MobilePlanRepositoryTests: XCTestCase {
 
     // MARK: Helper Methods
 
-    private func createMockMobilePlans() -> [MobilePlan] {
+    private func createMockMobilePlans() -> [MobilePlanModel] {
         let jsonData = SampleDataMobilePlan.mobilePlanListJSON.data(using: .utf8)!
         let mobilePlanList = try! JSONDecoder().decode(MobilePlanList.self, from: jsonData)
-        return Array(mobilePlanList.mobilePlans)
+        return Array(mobilePlanList.mobilePlans).map { $0.getModel() }
     }
 }

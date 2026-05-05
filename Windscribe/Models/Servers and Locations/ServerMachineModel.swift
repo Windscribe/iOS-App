@@ -161,7 +161,7 @@ struct ServerMachineModel: Codable, Equatable {
     }
 }
 
-struct NodeModel: Equatable {
+struct NodeModel: Equatable, Codable {
     let ip1: String
     let ip2: String
     let ip3: String

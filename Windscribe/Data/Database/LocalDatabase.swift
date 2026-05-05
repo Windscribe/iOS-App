@@ -7,45 +7,53 @@
 //
 
 import Foundation
-import RealmSwift
 import Combine
 
 protocol LocalDatabase {
     func migrate()
 
     // MARK: After Modelization of Database
-    func getServers() -> [Server]? //Needs to be kept if the user migrates and has no Locations yet
+    func getServers() -> [LocationModel]? // Needs to be kept if the user migrates and has no Locations yet
 
-    func getSession() -> Session? // Needs to be kept in order for migration to Keychain to happen
+    // Sessions live in the Keychain via SessionKeychainStore. The Realm-backed
+    // getSession + clearSessionFromRealm exist solely so MigrationRepository
+    // can read any pre-keychain session row out of Realm and then wipe it.
+    func getSession() -> SessionModel?
     func clearSessionFromRealm()
 
     // MARK: New Server Architecture
-    func getLocations() -> [LocationObject]?
-    func saveLocations(locations: [LocationObject])
+    func getLocations() -> [LocationModel]?
+    func saveLocations(locations: [LocationModel])
 
-    func getServerMachines() -> [ServerMachineObject]?
-    func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineObject], Never>
-    func saveServerMachines(serverMachines: [ServerMachineObject])
+    func getServerMachines() -> [ServerMachineModel]?
+    func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineModel], Never>
+    func saveServerMachines(serverMachines: [ServerMachineModel])
 
-    // MARK: Before Modelization of Databas)
-    func getMobilePlans() -> [MobilePlan]?
-    func saveMobilePlans(mobilePlansList: [MobilePlan])
-    func getStaticIPs() -> [StaticIP]?
-    func saveStaticIPs(staticIps: [StaticIP])
+    // MARK: Before Modelization of Database
+    func getMobilePlans() -> [MobilePlanModel]?
+    func saveMobilePlans(mobilePlansList: [MobilePlanModel])
+    func getStaticIPs() -> [StaticIPModel]?
+    func saveStaticIPs(staticIps: [StaticIPModel])
     func deleteStaticIps(ignore: [String])
-    func getOpenVPNServerCredentials() -> OpenVPNServerCredentials?
-    func getIKEv2ServerCredentials() -> IKEv2ServerCredentials?
+
+    // OpenVPN/IKEv2 server credentials live in the Keychain via Preferences.
+    // The Realm-backed get + clear methods exist solely so MigrationRepository
+    // can copy any pre-keychain credentials out of Realm and wipe the rows.
+    func getOpenVPNServerCredentials() -> ServerCredentialsModel?
     func clearOpenVPNServerCredentials()
+    func getIKEv2ServerCredentials() -> ServerCredentialsModel?
     func clearIKEv2ServerCredentials()
-    func getPortMap() -> [PortMap]?
-    func savePortMap(portMap: [PortMap])
-    func saveSuggestedPorts(suggestedPorts: [SuggestedPorts])
-    func getSuggestedPorts() -> [SuggestedPorts]?
-    func getNotificationsPublisher() -> AnyPublisher<[Notice], Never>
-    func saveNotifications(notifications: [Notice])
-    func getReadNotices() -> [ReadNotice]?
-    func getReadNoticesPublisher() -> AnyPublisher<[ReadNotice], Never>
-    func saveReadNotices(readNotices: [ReadNotice])
+
+    func getPortMap() -> [PortMapModel]?
+    func savePortMap(portMap: [PortMapModel])
+    func saveSuggestedPorts(suggestedPorts: [SuggestedPortsModel])
+    func getSuggestedPorts() -> [SuggestedPortsModel]?
+    func getNotificationsPublisher() -> AnyPublisher<[NoticeModel], Never>
+    func getNotifications() -> [NoticeModel]
+    func saveNotifications(notifications: [NoticeModel])
+    func getReadNotices() -> [Int]?
+    func getReadNoticesPublisher() -> AnyPublisher<[Int], Never>
+    func saveReadNotices(readNotices: [Int])
 
     /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddressPublisher() instead.
     /// This method is kept for migration support only. Will be removed in v3.10.0+
@@ -62,27 +70,28 @@ protocol LocalDatabase {
     @available(*, deprecated, message: "Use Preferences.saveCurrentIpAddress(ip:) instead")
     func saveIp(myip: MyIP)
 
-    func getNetworksPublisher() -> AnyPublisher<[WifiNetwork], Never>
-    func saveNetwork(wifiNetwork: WifiNetwork)
-    func removeNetwork(wifiNetwork: WifiNetwork)
-    func addPingData(pingData: PingData)
-    func getAllPingData() -> [PingData]
-    func saveCustomConfig(customConfig: CustomConfig)
+    func getNetworksPublisher() -> AnyPublisher<[WifiNetworkModel], Never>
+    func getNetworks() -> [WifiNetworkModel]
+    func saveNetwork(wifiNetwork: WifiNetworkModel)
+    func removeNetwork(wifiNetwork: WifiNetworkModel)
+    func addPingData(pingData: PingDataModel)
+    func getAllPingData() -> [PingDataModel]
+    func saveCustomConfig(customConfig: CustomConfigModel)
     func removeCustomConfig(fileId: String)
-    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never>
-    func getRobertFilters() -> RobertFilters?
-    func saveRobertFilters(filters: RobertFilters)
+    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfigModel], Never>
+    func getRobertFilters() -> [RobertFilterModel]?
+    func saveRobertFilters(filters: [RobertFilterModel])
 
-    func saveFavourite(favourite: Favourite)
-    func getFavouriteListPublisher() -> AnyPublisher<[Favourite], Never>
-    func getFavouriteList() -> [Favourite]
+    func saveFavourite(favourite: FavouriteModel)
+    func getFavouriteListPublisher() -> AnyPublisher<[FavouriteModel], Never>
+    func getFavouriteList() -> [FavouriteModel]
     func removeFavourite(datacenterId: String)
 
     func toggleRobertRule(id: String)
-    func getCustomConfigs() -> [CustomConfig]
+    func getCustomConfigs() -> [CustomConfigModel]
 
-    func saveUnblockWgParams(params: [UnblockWgParamsObj])
-    func getUnblockWgParams() -> [UnblockWgParamsObj]
+    func saveUnblockWgParams(params: [UnblockWgParams])
+    func getUnblockWgParams() -> [UnblockWgParams]
 
     func clean()
 }

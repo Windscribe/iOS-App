@@ -22,61 +22,64 @@ class LocalDatabaseImpl: LocalDatabase {
     }
 
     // MARK: - After Modelization of Database
-    func getServers() -> [Server]? {
-        return getRealmObjectList(type: Server.self)
+    func getServers() -> [LocationModel]? {
+        return getRealmObjectList(type: Server.self)?.map { $0.getLocationModel() }
     }
 
-    func getSession() -> Session? {
-        return getRealmObject(type: Session.self)
+    func getSession() -> SessionModel? {
+        return getRealmObject(type: Session.self)?.getModel()
     }
-
 
     func clearSessionFromRealm() {
-        if let object = getSession() {
+        if let object = getRealmObject(type: Session.self) {
             deleteRealmObject(object: object)
         }
     }
 
     // MARK: - Server V2 Architecture
-    func getLocations() -> [LocationObject]? {
-        return getRealmObjectList(type: LocationObject.self)
+    func getLocations() -> [LocationModel]? {
+        return getRealmObjectList(type: LocationObject.self)?.map { LocationModel(from: $0) }
     }
 
-    func saveLocations(locations: [LocationObject]) {
-        return updateRealmObjects(objects: locations)
+    func saveLocations(locations: [LocationModel]) {
+        let objects = locations.map { LocationObject(from: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
-    func getServerMachines() -> [ServerMachineObject]? {
-        return getRealmObjectList(type: ServerMachineObject.self)
+    func getServerMachines() -> [ServerMachineModel]? {
+        return getRealmObjectList(type: ServerMachineObject.self)?.map { ServerMachineModel(from: $0) }
     }
 
-    func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineObject], Never> {
-        return getSafeRealmArrayPublisher(type: ServerMachineObject.self)
+    func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineModel], Never> {
+        return getModelArrayPublisher(type: ServerMachineObject.self) { ServerMachineModel(from: $0) }
     }
 
-    func saveServerMachines(serverMachines: [ServerMachineObject]) {
-        return updateRealmObjects(objects: serverMachines)
+    func saveServerMachines(serverMachines: [ServerMachineModel]) {
+        let objects = serverMachines.map { ServerMachineObject(from: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
     // MARK: - Before Modelization of Database
 
-    func getMobilePlans() -> [MobilePlan]? {
-        return getRealmObjectList(type: MobilePlan.self)
+    func getMobilePlans() -> [MobilePlanModel]? {
+        return getRealmObjectList(type: MobilePlan.self)?.map { $0.getModel() }
     }
 
-    func saveMobilePlans(mobilePlansList: [MobilePlan]) {
-        return updateRealmObjects(objects: mobilePlansList)
+    func saveMobilePlans(mobilePlansList: [MobilePlanModel]) {
+        let objects = mobilePlansList.map { MobilePlan(from: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
-    func getCustomConfigs() -> [CustomConfig] {
-        return getRealmObjectList(type: CustomConfig.self) ?? []
+    func getCustomConfigs() -> [CustomConfigModel] {
+        return getRealmObjectList(type: CustomConfig.self)?.map { $0.getModel() } ?? []
     }
 
-    func saveCustomConfig(customConfig: CustomConfig) {
+    func saveCustomConfig(customConfig: CustomConfigModel) {
+        let obj = customConfig.getRealmObject()
         do {
             let realm = try Realm()
             try realm.safeWrite {
-                realm.add(customConfig, update: .modified)
+                realm.add(obj, update: .modified)
             }
         } catch {
             logger.logE("LocalDatabaseImpl", "Failed to save custom config: \(error.localizedDescription)")
@@ -89,16 +92,17 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfig], Never> {
-        return getSafeRealmArrayPublisher(type: CustomConfig.self)
+    func getCustomConfigPublisher() -> AnyPublisher<[CustomConfigModel], Never> {
+        return getModelArrayPublisher(type: CustomConfig.self) { $0.getModel() }
     }
 
-    func getStaticIPs() -> [StaticIP]? {
-        return getRealmObjectList(type: StaticIP.self)
+    func getStaticIPs() -> [StaticIPModel]? {
+        return getRealmObjectList(type: StaticIP.self)?.map { $0.getModel() }
     }
 
-    func saveStaticIPs(staticIps: [StaticIP]) {
-        return updateRealmObjects(objects: staticIps)
+    func saveStaticIPs(staticIps: [StaticIPModel]) {
+        let objects = staticIps.map { StaticIP(from: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
     func deleteStaticIps(ignore: [String]) {
@@ -111,47 +115,53 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func getOpenVPNServerCredentials() -> OpenVPNServerCredentials? {
-        return getRealmObject(type: OpenVPNServerCredentials.self)
+    func getOpenVPNServerCredentials() -> ServerCredentialsModel? {
+        return getRealmObject(type: OpenVPNServerCredentials.self)?.getModel()
     }
 
-    func getIKEv2ServerCredentials() -> IKEv2ServerCredentials? {
-        return getRealmObject(type: IKEv2ServerCredentials.self)
+    func getIKEv2ServerCredentials() -> ServerCredentialsModel? {
+        return getRealmObject(type: IKEv2ServerCredentials.self)?.getModel()
     }
 
     func clearOpenVPNServerCredentials() {
-        if let object = getOpenVPNServerCredentials() {
+        if let object = getRealmObject(type: OpenVPNServerCredentials.self) {
             deleteRealmObject(object: object)
         }
     }
 
     func clearIKEv2ServerCredentials() {
-        if let object = getIKEv2ServerCredentials() {
+        if let object = getRealmObject(type: IKEv2ServerCredentials.self) {
             deleteRealmObject(object: object)
         }
     }
 
-    func getPortMap() -> [PortMap]? {
-        return getRealmObjectList(type: PortMap.self)
+    func getPortMap() -> [PortMapModel]? {
+        return getRealmObjectList(type: PortMap.self)?.map { $0.getModel() }
     }
 
-    func getSuggestedPorts() -> [SuggestedPorts]? {
-        return getRealmObjectList(type: SuggestedPorts.self)
+    func getSuggestedPorts() -> [SuggestedPortsModel]? {
+        return getRealmObjectList(type: SuggestedPorts.self)?.map { $0.getModel() }
     }
 
-    func saveSuggestedPorts(suggestedPorts: [SuggestedPorts]) {
-        return updateRealmObjects(objects: suggestedPorts)
+    func saveSuggestedPorts(suggestedPorts: [SuggestedPortsModel]) {
+        let objects = suggestedPorts.map { SuggestedPorts(from: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
-    func savePortMap(portMap: [PortMap]) {
-        return updateRealmObjects(objects: portMap)
+    func savePortMap(portMap: [PortMapModel]) {
+        let objects = portMap.map { PortMap(from: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
-    func getNotificationsPublisher() -> AnyPublisher<[Notice], Never> {
-        return getSafeRealmArrayPublisher(type: Notice.self)
+    func getNotificationsPublisher() -> AnyPublisher<[NoticeModel], Never> {
+        return getModelArrayPublisher(type: Notice.self) { $0.getModel() }
     }
 
-    func saveNotifications(notifications: [Notice]) {
+    func getNotifications() -> [NoticeModel] {
+        return getRealmObjectList(type: Notice.self)?.map { $0.getModel() } ?? []
+    }
+
+    func saveNotifications(notifications: [NoticeModel]) {
         do {
             let realm = try Realm()
             try realm.safeWrite {
@@ -160,8 +170,9 @@ class LocalDatabaseImpl: LocalDatabase {
                 realm.delete(existingNotifications)
 
                 // Add all new notifications from API
-                for notification in notifications {
-                    realm.add(notification, update: .modified)
+                for model in notifications {
+                    let obj = Notice(from: model)
+                    realm.add(obj, update: .modified)
                 }
             }
         } catch {
@@ -169,16 +180,17 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func getReadNoticesPublisher() -> AnyPublisher<[ReadNotice], Never> {
-        return getSafeRealmArrayPublisher(type: ReadNotice.self)
+    func getReadNoticesPublisher() -> AnyPublisher<[Int], Never> {
+        return getModelArrayPublisher(type: ReadNotice.self) { $0.id }
     }
 
-    func getReadNotices() -> [ReadNotice]? {
-        return getRealmObjectList(type: ReadNotice.self)
+    func getReadNotices() -> [Int]? {
+        return getRealmObjectList(type: ReadNotice.self)?.map { $0.id }
     }
 
-    func saveReadNotices(readNotices: [ReadNotice]) {
-        return updateRealmObjects(objects: readNotices)
+    func saveReadNotices(readNotices: [Int]) {
+        let objects = readNotices.map { ReadNotice(noticeID: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
     /// DEPRECATED - Issue #911: Use Preferences.getCurrentIpAddressPublisher() instead.
@@ -202,51 +214,61 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObject(object: myip)
     }
 
-    func getNetworksPublisher() -> AnyPublisher<[WifiNetwork], Never> {
-        return getSafeRealmArrayPublisher(type: WifiNetwork.self)
+    func getNetworksPublisher() -> AnyPublisher<[WifiNetworkModel], Never> {
+        return getModelArrayPublisher(type: WifiNetwork.self) { WifiNetworkModel(from: $0) }
     }
 
-    func saveNetwork(wifiNetwork: WifiNetwork) {
-        return updateRealmObject(object: wifiNetwork)
+    func getNetworks() -> [WifiNetworkModel] {
+        return getRealmObjectList(type: WifiNetwork.self)?.map { WifiNetworkModel(from: $0) } ?? []
     }
 
-    func removeNetwork(wifiNetwork: WifiNetwork) {
+    func saveNetwork(wifiNetwork: WifiNetworkModel) {
+        let obj = WifiNetwork(from: wifiNetwork)
+        return updateRealmObject(object: obj)
+    }
+
+    func removeNetwork(wifiNetwork: WifiNetworkModel) {
         if let managedNetwork = getRealmObject(type: WifiNetwork.self, primaryKey: wifiNetwork.SSID) {
             deleteRealmObject(object: managedNetwork)
         }
     }
 
-    func getAllPingData() -> [PingData] {
-        return getRealmObjectList(type: PingData.self) ?? []
+    func getAllPingData() -> [PingDataModel] {
+        return getRealmObjectList(type: PingData.self)?.map { PingDataModel(from: $0) } ?? []
     }
 
-    func addPingData(pingData: PingData) {
-        autoreleasepool {
-            let realm = try? Realm()
-            try? realm?.write {
-                realm?.add(pingData, update: .modified)
+    func addPingData(pingData: PingDataModel) {
+        do {
+            let realm = try Realm()
+            let obj = PingData(from: pingData)
+            try realm.safeWrite {
+                realm.add(obj, update: .modified)
             }
+        } catch {
+            logger.logE("LocalDatabaseImpl", "Failed to add ping data: \(error.localizedDescription)")
         }
     }
 
-    func getRobertFilters() -> RobertFilters? {
-        return getRealmObject(type: RobertFilters.self)
+    func getRobertFilters() -> [RobertFilterModel]? {
+        return getRealmObject(type: RobertFilters.self)?.filters.map { $0.getModel() }
     }
 
-    func saveRobertFilters(filters: RobertFilters) {
-        return updateRealmObject(object: filters)
+    func saveRobertFilters(filters: [RobertFilterModel]) {
+        let robertFilters = RobertFilters(from: filters)
+        return updateRealmObject(object: robertFilters)
     }
 
-    func saveFavourite(favourite: Favourite) {
-        return updateRealmObject(object: favourite)
+    func saveFavourite(favourite: FavouriteModel) {
+        let obj = Favourite(from: favourite)
+        return updateRealmObject(object: obj)
     }
 
-    func getFavouriteListPublisher() -> AnyPublisher<[Favourite], Never> {
-        return getSafeRealmArrayPublisher(type: Favourite.self)
+    func getFavouriteListPublisher() -> AnyPublisher<[FavouriteModel], Never> {
+        return getModelArrayPublisher(type: Favourite.self) { $0.getModel() }
     }
 
-    func getFavouriteList() -> [Favourite] {
-        return getRealmObjectList(type: Favourite.self) ?? []
+    func getFavouriteList() -> [FavouriteModel] {
+        return getRealmObjectList(type: Favourite.self)?.map { $0.getModel() } ?? []
     }
 
     func removeFavourite(datacenterId: String) {
@@ -277,17 +299,18 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func saveUnblockWgParams(params: [UnblockWgParamsObj] ) {
-        return updateRealmObjects(objects: params)
+    func saveUnblockWgParams(params: [UnblockWgParams]) {
+        let objects = params.map { UnblockWgParamsObj(from: $0) }
+        return updateRealmObjects(objects: objects)
     }
 
-    func getUnblockWgParams() -> [UnblockWgParamsObj] {
-        return getRealmObjectList(type: UnblockWgParamsObj.self) ?? []
+    func getUnblockWgParams() -> [UnblockWgParams] {
+        return getRealmObjectList(type: UnblockWgParamsObj.self)?.map { $0.getModel() } ?? []
     }
 
     func toggleRobertRule(id: String) {
-        guard let object = getRobertFilters() else { return }
-        let o = object.filters.first {
+        guard let filters = getRealmObject(type: RobertFilters.self) else { return }
+        let o = filters.filters.first {
             $0.id == id
         }
         guard let filter = o else { return }

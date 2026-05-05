@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe সংস্করণ %@ এখন উপলব্ধ।";
 "Update Now" = "এখনই আপডেট করুন";
 "Update Later" = "পরে আপডেট করুন";
+"Update Required" = "আপডেট প্রয়োজন";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "Windscribe-এর এই সংস্করণটি আর সমর্থিত নয়। অ্যাপটি ব্যবহার চালিয়ে যেতে দয়া করে আপডেট করুন।";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Windscribe-এর এই সংস্করণটি আর সমর্থিত নয়। অ্যাপটি ব্যবহার চালিয়ে যেতে দয়া করে %@-এ আপডেট করুন।";
 "PLAN INFO" = "পরিকল্পনার তথ্য";
 "Copied to Clipboard!" = "ক্লিপবোর্ডে কপি করা হয়েছে!";

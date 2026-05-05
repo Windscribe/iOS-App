@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-struct DatacenterModel: Decodable {
+struct DatacenterModel: Codable, Equatable {
     enum DatacenterStatus: Int {
         case available = 0
         case isPro = 1

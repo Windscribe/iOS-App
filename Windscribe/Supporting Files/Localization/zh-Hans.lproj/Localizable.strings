@@ -475,5 +475,8 @@
 "Windscribe version %@ is now available." = "Windscribe 版本 %@ 现已可用。";
 "Update Now" = "立即更新";
 "Update Later" = "稍后更新";
+"Update Required" = "需要更新";
+"This version of Windscribe is no longer supported. Please update to continue using the app." = "此版本的 Windscribe 不再受支持。请更新以继续使用此应用。";
+"This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "此版本的 Windscribe 不再受支持。请更新至 %@ 以继续使用此应用。";
 "PLAN INFO" = "套餐信息";
 "Copied to Clipboard!" = "已复制到剪贴板！";

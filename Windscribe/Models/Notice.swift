@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-struct NoticeActionModel {
+struct NoticeActionModel: Codable, Equatable {
     let type: String?
     let pcpid: String?
     let promoCode: String?
@@ -20,6 +20,13 @@ struct NoticeActionModel {
         self.pcpid = from.pcpid
         self.promoCode = from.promoCode
         self.label = from.label
+    }
+
+    init(type: String?, pcpid: String?, promoCode: String?, label: String?) {
+        self.type = type
+        self.pcpid = pcpid
+        self.promoCode = promoCode
+        self.label = label
     }
 }
 
@@ -119,6 +126,25 @@ struct NoticeModel {
 
         if container.contains(.action) {
             let actionObj = try container.decodeIfPresent(NoticeAction.self, forKey: .action)
+            setValue(actionObj, forKey: "action")
+        } else {
+            setValue(nil, forKey: "action")
+        }
+    }
+
+    convenience init(from model: NoticeModel) {
+        self.init()
+        setValue(model.id, forKey: "id")
+        setValue(model.title, forKey: "title")
+        setValue(model.message, forKey: "message")
+        setValue(model.date, forKey: "date")
+        setValue(model.popup, forKey: "popup")
+        if let actionModel = model.action {
+            let actionObj = NoticeAction()
+            actionObj.setValue(actionModel.type, forKey: "type")
+            actionObj.setValue(actionModel.pcpid, forKey: "pcpid")
+            actionObj.setValue(actionModel.promoCode, forKey: "promoCode")
+            actionObj.setValue(actionModel.label, forKey: "label")
             setValue(actionObj, forKey: "action")
         } else {
             setValue(nil, forKey: "action")

@@ -29,7 +29,7 @@ struct UnblockWgResponse: Decodable {
     }
 }
 
-struct UnblockWgParams: Codable {
+struct UnblockWgParams: Codable, Equatable {
     let id: String
     let title: String
     let countries: [String]
@@ -70,6 +70,32 @@ struct UnblockWgParams: Codable {
         case i3 = "I3"
         case i4 = "I4"
         case i5 = "I5"
+    }
+
+    init(id: String, title: String, countries: [String],
+         jc: Int?, jMin: Int?, jMax: Int?,
+         s1: Int?, s2: Int?, s3: Int?, s4: Int?,
+         h1: String?, h2: String?, h3: String?, h4: String?,
+         i1: String?, i2: String?, i3: String?, i4: String?, i5: String?) {
+        self.id = id
+        self.title = title
+        self.countries = countries
+        self.jc = jc
+        self.jMin = jMin
+        self.jMax = jMax
+        self.s1 = s1
+        self.s2 = s2
+        self.s3 = s3
+        self.s4 = s4
+        self.h1 = h1
+        self.h2 = h2
+        self.h3 = h3
+        self.h4 = h4
+        self.i1 = i1
+        self.i2 = i2
+        self.i3 = i3
+        self.i4 = i4
+        self.i5 = i5
     }
 
     init(from: UnblockWgParamsObj) {

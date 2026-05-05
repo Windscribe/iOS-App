@@ -49,10 +49,6 @@ struct DataLeftModel {
 }
 
 @available(*, deprecated, message: "Don't use, it should not be necessary anywhere")
-class OldSession: Session {
-}
-
-@available(*, deprecated, message: "Don't use, it should not be necessary anywhere")
 @objcMembers class SipCount: Object {
     dynamic var countNumber: Int = 0
 }
@@ -296,6 +292,44 @@ struct SessionModel: Codable, Equatable {
         inventory = ServerInventoryModel(amneziawgConfigId: from.amneziawgConfigId)
 
         planType = isUserPro ? "1" : "0"
+    }
+
+    init(sessionAuthHash: String,
+         username: String,
+         userId: String,
+         email: String,
+         emailStatus: Bool,
+         trafficUsed: Double,
+         trafficMax: Double,
+         status: Int,
+         billingPlanId: Int,
+         isPremium: Bool,
+         premiumExpiryDate: String,
+         regDate: Int,
+         lastReset: String,
+         locRev: Int,
+         locHash: String,
+         amneziawgConfigId: String,
+         alc: [String],
+         sipCount: [SipCountModel]) {
+        self.sessionAuthHash = sessionAuthHash
+        self.username = username
+        self.userId = userId
+        self.email = email
+        self.emailStatus = emailStatus
+        self.trafficUsed = trafficUsed
+        self.trafficMax = trafficMax
+        self.status = status
+        self.billingPlanId = billingPlanId
+        self.isPremium = isPremium
+        self.premiumExpiryDate = premiumExpiryDate
+        self.regDate = regDate
+        self.lastReset = lastReset
+        self.locRev = locRev
+        self.locHash = locHash
+        self.alc = alc
+        self.sipCount = sipCount
+        self.inventory = ServerInventoryModel(amneziawgConfigId: amneziawgConfigId)
     }
 
     init(sessionAuthHash: String,

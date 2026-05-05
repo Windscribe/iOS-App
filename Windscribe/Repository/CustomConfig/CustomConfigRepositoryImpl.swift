@@ -31,17 +31,16 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         self.preferences = preferences
 
         self.localDatabase.getCustomConfigPublisher()
-            .filter {$0.filter({$0.isInvalidated}).count == 0}
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] customConfig in
                 guard let self = self else { return }
                 let allCredentials = preferences.getAllCustomConfigCredentials()
-                let models = customConfig.map { config -> CustomConfigModel in
-                    var model = config.getModel()
-                    if let credentials = allCredentials[config.id] {
-                        self.loadCredentials(&model, with: credentials)
+                let models = customConfig.map { model -> CustomConfigModel in
+                    var hydrated = model
+                    if let credentials = allCredentials[model.id] {
+                        self.loadCredentials(&hydrated, with: credentials)
                     }
-                    return model
+                    return hydrated
                 }
                 self.customConfigs.send(models)
             })
@@ -80,14 +79,13 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         // Async file operation
         try await fileDatabase.saveFile(data: data, path: path)
 
-        // Save credentials to Keychain, store Realm object without them
-        let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: "", password: "", authRequired: true, saveCredentials: true)
-
+        // Build full model for caller, save credentials to Keychain, persist Realm row with empty creds.
         let configModel = CustomConfigModel(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true, saveCredentials: true)
         saveCredentials(configModel)
-
-        // Realm operations must be on main thread
-        localDatabase.saveCustomConfig(customConfig: customConfig)
+        var realmModel = configModel
+        realmModel.username = ""
+        realmModel.password = ""
+        localDatabase.saveCustomConfig(customConfig: realmModel)
 
         return configModel
     }
@@ -130,7 +128,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     try await fileDatabase.saveFile(data: data, path: path)
 
                     // Realm operation on main thread
-                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, saveCredentials: true)
+                    let customConfig = CustomConfigModel(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, saveCredentials: true)
                     localDatabase.saveCustomConfig(customConfig: customConfig)
                 } catch {
                     logger.logE("CustomConfigRepositoryImpl", "Failed to save WG config file: \(error)")
@@ -224,7 +222,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     try await fileDatabase.saveFile(data: data, path: path)
 
                     // Realm operation on main thread
-                    let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, authRequired: configAuthRequired, saveCredentials: true)
+                    let customConfig = CustomConfigModel(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, authRequired: configAuthRequired, saveCredentials: true)
                     localDatabase.saveCustomConfig(customConfig: customConfig)
                 } catch {
                     logger.logE("CustomConfigRepositoryImpl", "Failed to save OpenVPN config file: \(error)")
@@ -253,20 +251,19 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         deleteCredentials(configId: fileId)
         localDatabase.removeCustomConfig(fileId: fileId)
         let allCredentials = preferences.getAllCustomConfigCredentials()
-        let models = localDatabase.getCustomConfigs().map { config -> CustomConfigModel in
-            var model = config.getModel()
-            if let credentials = allCredentials[config.id] {
-                self.loadCredentials(&model, with: credentials)
+        let models = localDatabase.getCustomConfigs().map { model -> CustomConfigModel in
+            var hydrated = model
+            if let credentials = allCredentials[model.id] {
+                self.loadCredentials(&hydrated, with: credentials)
             }
-            return model
+            return hydrated
         }
         customConfigs.send(models)
     }
 
     func getCustomConfig(fileId: String) -> CustomConfigModel? {
         guard var model = localDatabase.getCustomConfigs()
-            .first(where: { fileId == $0.id })?
-            .getModel() else {
+            .first(where: { fileId == $0.id }) else {
             return nil
         }
         loadCredentials(&model)
@@ -274,12 +271,11 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
     }
 
     func saveCustomConfig(customConfig: CustomConfigModel) {
-        // Save credentials to Keychain
+        // Save credentials to Keychain; persist a credential-stripped Realm row.
         saveCredentials(customConfig)
-        // Clear credentials from the Realm copy
         var realmModel = customConfig
         realmModel.username = ""
         realmModel.password = ""
-        localDatabase.saveCustomConfig(customConfig: realmModel.getRealmObject())
+        localDatabase.saveCustomConfig(customConfig: realmModel)
     }
 }

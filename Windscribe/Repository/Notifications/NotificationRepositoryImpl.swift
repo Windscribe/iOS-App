@@ -34,9 +34,7 @@ class NotificationRepositoryImpl: NotificationRepository {
                     }
                 },
                 receiveValue: { [weak self] notifications in
-                    self?.notices.send(notifications.compactMap {
-                        $0.isInvalidated ? nil : $0.getModel()
-                    })
+                    self?.notices.send(notifications)
                 }
             )
             .store(in: &cancellables)
@@ -49,9 +47,7 @@ class NotificationRepositoryImpl: NotificationRepository {
                     }
                 },
                 receiveValue: { [weak self] notifications in
-                    self?.readNotices.send(notifications.compactMap {
-                        $0.isInvalidated ? nil : $0.id
-                    })
+                    self?.readNotices.send(notifications)
                 }
             )
             .store(in: &cancellables)
@@ -69,7 +65,7 @@ class NotificationRepositoryImpl: NotificationRepository {
         let notificationsArray = Array(result.notices)
 
         // Save to database - this will trigger the reactive publisher chain
-        localDatabase.saveNotifications(notifications: notificationsArray)
+        localDatabase.saveNotifications(notifications: notificationsArray.map { $0.getModel() })
 
         return notificationsArray.map { $0.getModel() }
     }
@@ -86,11 +82,10 @@ class NotificationRepositoryImpl: NotificationRepository {
 
     func readNotice(with id: Int) {
         var readNotifications = localDatabase.getReadNotices() ?? []
-        guard readNotifications.first(where: { $0.id == id }) == nil else {
+        guard !readNotifications.contains(id) else {
             return
         }
-        let readNotice = ReadNotice(noticeID: id)
-        readNotifications.append(readNotice)
+        readNotifications.append(id)
         localDatabase.saveReadNotices(readNotices: readNotifications)
     }
 }

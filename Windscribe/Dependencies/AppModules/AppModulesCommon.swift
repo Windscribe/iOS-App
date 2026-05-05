@@ -119,7 +119,9 @@ class Repository: Assembly {
             NotificationRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger, pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
         }.inObjectScope(.userScope)
         container.register(CheckUpdateRepository.self) { r in
-            CheckUpdateRepositoryImpl(apiManager: r.resolve(APIManager.self)!, logger: logger)
+            CheckUpdateRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
+                                      preferences: r.resolve(Preferences.self)!,
+                                      logger: logger)
         }.inObjectScope(.userScope)
         container.register(StaticIpRepository.self) { r in
             StaticIpRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
@@ -420,7 +422,33 @@ class Database: Assembly {
     // Remove this singleton in future
     func assemble(container: Container) {
         container.register(LocalDatabase.self) { r in
-            LocalDatabaseImpl(logger: r.resolve(FileLogger.self)!, preferences: r.resolve(Preferences.self)!)
+            let logger = r.resolve(FileLogger.self)!
+            let preferences = r.resolve(Preferences.self)!
+
+            // Always construct the Realm impl — it's the migration source and the
+            // session-fallback if GRDB init/migration fails. Run its own schema
+            // migration (no-op for users already at v62).
+            let realmImpl = LocalDatabaseImpl(logger: logger, preferences: preferences)
+            realmImpl.migrate()
+
+            // Try to stand up the GRDB impl + run the one-time Realm→GRDB port.
+            do {
+                let grdbImpl = try GRDBLocalDatabaseImpl(logger: logger, preferences: preferences)
+                let migrator = RealmToGRDBMigrator(
+                    realmDB: realmImpl,
+                    grdbDB: grdbImpl,
+                    preferences: preferences,
+                    logger: logger
+                )
+                if migrator.migrateIfNeeded() {
+                    logger.logI("Database", "Using GRDBLocalDatabaseImpl (migration complete).")
+                    return grdbImpl
+                }
+                logger.logE("Database", "Realm→GRDB migration did not verify. Falling back to Realm for this session; retry next launch.")
+            } catch {
+                logger.logE("Database", "Failed to initialize GRDBLocalDatabaseImpl: \(error). Falling back to Realm.")
+            }
+            return realmImpl
         }.inObjectScope(.userScope)
         container.register(KeyChainDatabase.self) { r in
             KeyChainDatabaseImpl(logger: r.resolve(FileLogger.self)!, keychainManager: r.resolve(KeychainManager.self)!)

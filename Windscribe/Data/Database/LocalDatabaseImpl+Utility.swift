@@ -122,6 +122,38 @@ extension LocalDatabaseImpl {
             .eraseToAnyPublisher()
     }
 
+    // MARK: - Model Publisher Helpers
+
+    /// Returns a publisher that emits a mapped domain model (or nil) whenever the first
+    /// Realm object of `type` changes.
+    func getModelObjectPublisher<R: Object, M>(type: R.Type,
+                                               convert: @escaping (R) -> M) -> AnyPublisher<M?, Never> {
+        let cleanPublisher = cleanSubject
+            .map { _ in nil as M? }
+            .eraseToAnyPublisher()
+        let realmPublisher = getRealmObjectPublisher(type: R.self)
+            .map { $0.map(convert) }
+            .eraseToAnyPublisher()
+
+        return Publishers.Merge(cleanPublisher, realmPublisher)
+            .eraseToAnyPublisher()
+    }
+
+    /// Returns a publisher that emits a mapped array of domain models whenever the
+    /// Realm collection of `type` changes.
+    func getModelArrayPublisher<R: Object, M>(type: R.Type,
+                                              convert: @escaping (R) -> M) -> AnyPublisher<[M], Never> {
+        let cleanPublisher = cleanSubject
+            .map { _ in [M]() }
+            .eraseToAnyPublisher()
+        let realmPublisher = getRealmArrayPublisher(type: R.self)
+            .map { $0.map(convert) }
+            .eraseToAnyPublisher()
+
+        return Publishers.Merge(cleanPublisher, realmPublisher)
+            .eraseToAnyPublisher()
+    }
+
     private func getRealmObjectPublisher<T: Object>(type: T.Type) -> AnyPublisher<T?, Never> {
         do {
             let realm = try Realm()

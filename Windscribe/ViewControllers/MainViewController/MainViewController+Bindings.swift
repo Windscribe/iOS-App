@@ -213,6 +213,18 @@ extension MainViewController {
                 self.showUpdateAvailableAlert(model: model)
             }.store(in: &cancellables)
 
+        // Re-present the force-update alert whenever the app comes back to
+        // the foreground while the force-update flag is still set. This handles
+        // the case where the user backgrounds the app without going through
+        // with the App Store update — the alert returns on resume.
+        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self,
+                      let model = self.viewModel.pendingForceUpdate.value else { return }
+                self.showUpdateAvailableAlert(model: model)
+            }.store(in: &cancellables)
+
         vpnConnectionViewModel.reloadLocationsTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] id in

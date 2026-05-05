@@ -49,6 +49,29 @@ struct StaticIPModel {
         StaticIPType(from: type)
     }
 
+    init(id: Int, staticIP: String, connectIP: String, type: String, name: String,
+         countryCode: String, deviceName: String, cityName: String, expiry: Date?,
+         isActive: Bool, credentials: [ServerCredentialsModel], wgPublicKey: String,
+         ovpnX509: String, wgIp: String, pingHost: String, nodes: [NodeModel]) {
+        self.id = id
+        self.staticIP = staticIP
+        self.connectIP = connectIP
+        self.type = type
+        self.name = name
+        self.countryCode = countryCode
+        self.deviceName = deviceName
+        self.cityName = cityName
+        self.expiry = expiry
+        self.isActive = isActive
+        self.credentials = credentials
+        self.bestNode = nodes.last
+        self.wgPublicKey = wgPublicKey
+        self.ovpnX509 = ovpnX509
+        self.wgIp = wgIp
+        self.pingHost = pingHost
+        self.nodes = nodes
+    }
+
     init(from: StaticIP) {
         self.id = from.id
         self.staticIP = from.staticIP
@@ -192,6 +215,42 @@ class StaticIPNode: Node {}
     func setStaticIPCredentials(object: StaticIPCredentials) {
         credentials.removeAll()
         credentials.append(object)
+    }
+
+    convenience init(from model: StaticIPModel) {
+        self.init()
+        id = model.id
+        staticIP = model.staticIP
+        connectIP = model.connectIP
+        type = model.type
+        name = model.name
+        countryCode = model.countryCode
+        deviceName = model.deviceName
+        cityName = model.cityName
+        expiry = model.expiry
+        isActive = model.isActive
+        wgPublicKey = model.wgPublicKey
+        ovpnX509 = model.ovpnX509
+        wgIp = model.wgIp
+        pingHost = model.pingHost
+        let realmNodes = model.nodes.map { nodeModel -> StaticIPNode in
+            let n = StaticIPNode()
+            n.ip = nodeModel.ip1
+            n.ip2 = nodeModel.ip2
+            n.ip3 = nodeModel.ip3
+            n.hostname = nodeModel.hostname
+            n.dnsHostname = nodeModel.dnsHostname
+            n.forceDisconnect = nodeModel.forceDisconnect
+            n.weight = nodeModel.weight
+            return n
+        }
+        nodes.removeAll()
+        nodes.append(objectsIn: realmNodes)
+        let realmCredentials = model.credentials.map { cred -> StaticIPCredentials in
+            StaticIPCredentials(username: cred.username, password: cred.password)
+        }
+        credentials.removeAll()
+        credentials.append(objectsIn: realmCredentials)
     }
 
     func getModel() -> StaticIPModel {

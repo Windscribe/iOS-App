@@ -55,10 +55,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
         self.localDatabase = localDatabase
         self.preferences = preferences
 
-        unlockParams = localDatabase.getUnblockWgParams().compactMap {
-            if $0.isInvalidated { return nil }
-            return $0.getModel()
-        }
+        unlockParams = localDatabase.getUnblockWgParams()
 
         selectedWgParamSubject.send(preferences.getUnblockWgParams())
         useProtocolTweaksSubject.send(preferences.isCircumventCensorshipEnabled())
@@ -137,7 +134,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
                 isRefreshing = true
                 logger.logI("UnblockWgParamsRepository", "Refreshing wg unblock params")
                 unlockParams = try await apiManager.wgUnlockParams().params
-                localDatabase.saveUnblockWgParams(params: unlockParams.map {$0.getObject()})
+                localDatabase.saveUnblockWgParams(params: unlockParams)
 
                 updateSelectedWgParam()
             } catch {

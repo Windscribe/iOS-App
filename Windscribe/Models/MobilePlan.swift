@@ -101,4 +101,14 @@ struct MobilePlanModel: Equatable {
         duration = from.duration
         discount = from.discount
     }
+
+    init(active: Bool, extId: String, name: String, price: String, type: String, duration: Int, discount: Int) {
+        self.active = active
+        self.extId = extId
+        self.name = name
+        self.price = price
+        self.type = type
+        self.duration = duration
+        self.discount = discount
+    }
 }

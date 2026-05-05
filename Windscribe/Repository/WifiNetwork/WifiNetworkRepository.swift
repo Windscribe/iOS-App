@@ -68,7 +68,7 @@ class WifiNetworkRepositoryImpl: WifiNetworkRepository {
                 receiveValue: { [weak self] savedNetworks in
                     guard let self = self else { return }
                     self.logger.logD("WifiNetworkRepository", "Secured Networks : \(savedNetworks)")
-                    self.networks.send(savedNetworks.map { WifiNetworkModel(from: $0) })
+                    self.networks.send(savedNetworks)
                 })
             .store(in: &cancellables)
     }
@@ -98,12 +98,12 @@ class WifiNetworkRepositoryImpl: WifiNetworkRepository {
         }
     }
     func addNetwork(wifiSSID: String, status: Bool, protocolType: String, port: String, preferredProtocol: String, preferredPort: String) {
-        localDatabase.saveNetwork(wifiNetwork: WifiNetwork(SSID: wifiSSID,
-                                                           status: status,
-                                                           protocolType: protocolType,
-                                                           port: port,
-                                                           preferredProtocol: preferredProtocol,
-                                                           preferredPort: preferredPort))
+        localDatabase.saveNetwork(wifiNetwork: WifiNetworkModel(SSID: wifiSSID,
+                                                               status: status,
+                                                               protocolType: protocolType,
+                                                               port: port,
+                                                               preferredProtocol: preferredProtocol,
+                                                               preferredPort: preferredPort))
         // if this is the first object being added to database, add observer again.
         if !isObserving {
             loadNetworks()
@@ -112,7 +112,7 @@ class WifiNetworkRepositoryImpl: WifiNetworkRepository {
 
     /// Remove network from database.
     func removeNetwork(network: WifiNetworkModel) {
-        localDatabase.removeNetwork(wifiNetwork: WifiNetwork(from: network))
+        localDatabase.removeNetwork(wifiNetwork: network)
     }
 
     func setNetworkPreferredProtocol(network: WifiNetworkModel, status: Bool) {
@@ -121,7 +121,6 @@ class WifiNetworkRepositoryImpl: WifiNetworkRepository {
 
     func updateNetworkPreferredProtocol(with preferredProtocol: String, andPort port: String) {
         if let network = getCurrentNetwork() {
-            localDatabase.saveNetwork(wifiNetwork: WifiNetwork(from: network))
             updateWifiNetwork(from: network, with: [.preferredProtocol(value: preferredProtocol),
                                                     .preferredPort(value: port)])
         }
@@ -185,7 +184,7 @@ class WifiNetworkRepositoryImpl: WifiNetworkRepository {
                 updatedNetwork.popupDismissCount = value
             }
         }
-        localDatabase.saveNetwork(wifiNetwork: WifiNetwork(from: updatedNetwork))
+        localDatabase.saveNetwork(wifiNetwork: updatedNetwork)
     }
 
     func findNetwork(with nameSSID: String) -> WifiNetworkModel? {
