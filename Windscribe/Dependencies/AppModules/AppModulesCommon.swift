@@ -217,9 +217,7 @@ class Repository: Assembly {
 
         container.register(MigrationRepository.self) { r in
             MigrationRepositoryImpl(
-                localDatabase: r.resolve(LocalDatabase.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                sessionStore: r.resolve(SessionKeychainStore.self)!,
                 keychainManager: r.resolve(KeychainManager.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
@@ -424,12 +422,24 @@ class Database: Assembly {
         container.register(LocalDatabase.self) { r in
             let logger = r.resolve(FileLogger.self)!
             let preferences = r.resolve(Preferences.self)!
+            let sessionStore = r.resolve(SessionKeychainStore.self)!
 
             // Always construct the Realm impl — it's the migration source and the
             // session-fallback if GRDB init/migration fails. Run its own schema
             // migration (no-op for users already at v62).
             let realmImpl = LocalDatabaseImpl(logger: logger, preferences: preferences)
             realmImpl.migrate()
+
+            // Port Realm-only legacy data (Session, OpenVPN/IKEv2 creds, custom
+            // config creds) into the Keychain before the GRDB swap. GRDB has no
+            // schema for these, so once the swap happens MigrationRepository's
+            // Realm-read paths return nil and the data is silently lost.
+            RealmKeychainPortMigration.run(
+                realm: realmImpl,
+                preferences: preferences,
+                sessionStore: sessionStore,
+                logger: logger
+            )
 
             // Try to stand up the GRDB impl + run the one-time Realm→GRDB port.
             do {

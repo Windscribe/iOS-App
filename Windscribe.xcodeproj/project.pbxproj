@@ -278,7 +278,6 @@
 		1EB910BA2F9FB01D00D04943 /* ServerCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA715F21C43A8E00349195 /* ServerCredentials.swift */; };
 		1EB910BB2F9FB01D00D04943 /* ServerCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA715F21C43A8E00349195 /* ServerCredentials.swift */; };
 		1EBBDB032D79EB900075B8F5 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 1EBBDB022D79EB900075B8F5 /* GRDB */; };
-		956390B5C3DBFA82F5708A4B /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 6E7D0EC08D670F3A49856637 /* GRDB */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
@@ -674,6 +673,10 @@
 		92C9859F2FA3A76900326D64 /* AboutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C9859E2FA3A76900326D64 /* AboutViewModel.swift */; };
 		92C985A12FA3A77400326D64 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A02FA3A77400326D64 /* AboutView.swift */; };
 		92C985A42FA3A79E00326D64 /* AboutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A32FA3A79E00326D64 /* AboutTests.swift */; };
+		92C985A62FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */; };
+		92C985A72FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */; };
+		92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */; };
+		956390B5C3DBFA82F5708A4B /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 6E7D0EC08D670F3A49856637 /* GRDB */; };
 		A1B2C3D401F600000001A002 /* ShortcutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A001 /* ShortcutType.swift */; };
 		A1B2C3D401F600000001A004 /* WindowProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A003 /* WindowProvider.swift */; };
 		A1B2C3D401F600000001A007 /* WindowSetupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A006 /* WindowSetupService.swift */; };
@@ -1952,6 +1955,8 @@
 		92C9859E2FA3A76900326D64 /* AboutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewModel.swift; sourceTree = "<group>"; };
 		92C985A02FA3A77400326D64 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		92C985A32FA3A79E00326D64 /* AboutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTests.swift; sourceTree = "<group>"; };
+		92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmKeychainPortMigration.swift; sourceTree = "<group>"; };
+		92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmKeychainPortMigrationTests.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A001 /* ShortcutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutType.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A003 /* WindowProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowProvider.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A006 /* WindowSetupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupService.swift; sourceTree = "<group>"; };
@@ -4363,6 +4368,7 @@
 				1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */,
 				1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */,
 				92B7B5752F92E1D9006B69DF /* GRDB */,
+				92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -5248,6 +5254,7 @@
 				92B7B57A2F92E2F0006B69DF /* RecordTests */,
 				92B7B5DB2F92E5A1006B69DF /* GRDBLocalDatabaseParityTests.swift */,
 				92B7B5E02F92EBCB006B69DF /* RealmToGRDBMigratorGoldenTests.swift */,
+				92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -7158,6 +7165,7 @@
 				1E0492EC2F51BFEC0016B11F /* ServerMachineModel.swift in Sources */,
 				1E743FEF2F1E6EA100F0E24B /* AlertManager.swift in Sources */,
 				59FC73DA2C514B9000021CD1 /* WgErrorCodes.swift in Sources */,
+				92C985A62FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */,
 				59FC73EA2C5150C700021CD1 /* APIUtil.swift in Sources */,
 				59FC73EB2C5150D300021CD1 /* String+Extension.swift in Sources */,
 				92B7B58B2F92E32F006B69DF /* LocationRecord.swift in Sources */,
@@ -7851,6 +7859,7 @@
 				C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */,
 				1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */,
 				AF21995C2270B147009B42E5 /* QNNTraceRoute.m in Sources */,
+				92C985A72FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */,
 				AF537A192249318C00A66683 /* MainViewController+Siri.swift in Sources */,
 				F43184BF2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift in Sources */,
 				F499353F2DA9953900108558 /* SoundManaging.swift in Sources */,
@@ -8013,6 +8022,7 @@
 				1E0492D32F4779100016B11F /* MockWSNetBridgeAPI.swift in Sources */,
 				92B7B5C02F92E376006B69DF /* FavouriteRecordTests.swift in Sources */,
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,
+				92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */,
 				92890E142F7C4917002EAB44 /* MockAntiCensorshipRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
 				1E0492BC2F4750BC0016B11F /* MockEmergencyRepository.swift in Sources */,
@@ -9987,11 +9997,6 @@
 			package = 1EBBDB012D79EB900075B8F5 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
 			productName = GRDB;
 		};
-		6E7D0EC08D670F3A49856637 /* GRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1EBBDB012D79EB900075B8F5 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
-			productName = GRDB;
-		};
 		1ED33DDC2D7B3D4500B980D3 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
@@ -10006,6 +10011,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		6E7D0EC08D670F3A49856637 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1EBBDB012D79EB900075B8F5 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
 		};
 		AF9E08A325E6B1BF00A0E372 /* Resolver */ = {
 			isa = XCSwiftPackageProductDependency;
