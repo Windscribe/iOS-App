@@ -14,7 +14,6 @@ import os
 /// Started when tunnel is ready and works with packet tunnel provider.
 class ControlPlane {
 
-    private let consoleLogger: Logger
     private let logger: FileLogger
     private let apiUtil: APIUtilService
     private let api: WSNetServerAPI
@@ -31,7 +30,6 @@ class ControlPlane {
         preferences: Preferences,
         providerConfiguration: [String: Any]?,
         logger: FileLogger,
-        consoleLogger: Logger,
         onTunnelShouldStop: @escaping @MainActor (DisconnectReason, NSError) -> Void
     ) {
         self.apiUtil = apiUtil
@@ -39,7 +37,6 @@ class ControlPlane {
         self.preferences = preferences
         self.providerConfiguration = providerConfiguration
         self.logger = logger
-        self.consoleLogger = consoleLogger
         self.onTunnelShouldStop = onTunnelShouldStop
     }
 
@@ -48,14 +45,14 @@ class ControlPlane {
         // Skip health check for custom configs
         guard !preferences.isCustomConfigSelected() else { return }
         guard !runningHealthCheck else {
-            consoleLogger.debug("Health check already running, skipping.")
+            logger.logD("ControlPlane", "Health check already running, skipping.")
             return
         }
 
         // Throttle health checks to once every 10 seconds
         let currentTime = Date().timeIntervalSince1970
         if lastHealthCheckTime > 0 && currentTime - lastHealthCheckTime < 10 {
-            consoleLogger.debug("Health check throttled (last check was \(Int(currentTime - self.lastHealthCheckTime))s ago), skipping.")
+            logger.logD("ControlPlane", "Health check throttled (last check was \(Int(currentTime - self.lastHealthCheckTime))s ago), skipping.")
             return
         }
 
@@ -70,7 +67,7 @@ class ControlPlane {
 
     /// Performs the actual health check by fetching session
     private func performHealthCheck() {
-        consoleLogger.debug("Requesting user session update.")
+        logger.logD("ControlPlane", "Requesting user session update.")
 
         Task { [weak self] in
             guard let self = self else { return }
@@ -78,10 +75,10 @@ class ControlPlane {
 
             do {
                 let sessionModel = try await getSession()
-                consoleLogger.debug("User session update successful. Status: \(sessionModel.status, privacy: .public)")
+                logger.logD("ControlPlane", "User session update successful. Status: \(sessionModel.status)")
 
                 if sessionModel.status != 1 {
-                    consoleLogger.debug("Session status is \(sessionModel.status, privacy: .public) (not active), stopping tunnel.")
+                    logger.logI("ControlPlane", "Session status is \(sessionModel.status) (not active), stopping tunnel.", flushImmediately: true)
                     await stopTunnel(reason: .accountStatusChanged)
                     return
                 }
@@ -92,26 +89,25 @@ class ControlPlane {
                 let connectionUserStatus = providerConfiguration?["isUserPro"] as? Bool ?? false
                 if sessionModel.isUserPro != connectionUserStatus {
                     logger.logI("ControlPlane", "User status changed since connection: connection=\(connectionUserStatus), current=\(sessionModel.isUserPro)", flushImmediately: true)
-                    consoleLogger.debug("User status changed: connection=\(connectionUserStatus), current=\(sessionModel.isUserPro)")
                     await stopTunnel(reason: .userStatusChanged)
                     return
                 }
 
-                consoleLogger.debug("Health check passed.")
+                logger.logD("ControlPlane", "Health check passed.")
             } catch {
-                consoleLogger.debug("Get Session failed. \(error, privacy: .public)")
+                logger.logE("ControlPlane", "Get Session failed. \(error)")
 
                 if let wsError = error as? Errors {
                     switch wsError {
                     case .sessionIsInvalid:
-                        consoleLogger.debug("Session is invalid, stopping tunnel.")
+                        logger.logI("ControlPlane", "Session is invalid, stopping tunnel.", flushImmediately: true)
                         await stopTunnel(reason: .invalidSession)
 
                     case let .apiError(apiError):
-                        consoleLogger.debug("Get Session failed with API error - \(apiError.errorMessage ?? "unknown", privacy: .public)")
+                        logger.logE("ControlPlane", "Get Session failed with API error - \(apiError.errorMessage ?? "unknown")")
 
                     default:
-                        consoleLogger.debug("Get Session failed with error: \(wsError.unlocalizedDescription, privacy: .public)")
+                        logger.logE("ControlPlane", "Get Session failed with error: \(wsError.unlocalizedDescription)")
                     }
                 }
             }
@@ -120,7 +116,7 @@ class ControlPlane {
 
     /// Stops the tunnel with error code 50 (credentials failure)
     private func stopTunnel(reason: DisconnectReason) async {
-        consoleLogger.debug("Stopping tunnel - Reason: \(reason.rawValue, privacy: .public)")
+        logger.logI("ControlPlane", "Stopping tunnel - Reason: \(reason.rawValue)", flushImmediately: true)
         preferences.saveDisconnectReason(reason: reason)
 
         // Cancel tunnel with error code 50

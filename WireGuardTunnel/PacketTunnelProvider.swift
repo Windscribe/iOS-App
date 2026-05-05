@@ -37,7 +37,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         return logger
     }()
 
-    private let consoleLogger = Logger(subsystem: "Windscribe-tunnel", category: "com.windscribe.vpn")
     private lazy var dnsSettingsManager: DNSSettingsManagerType = container.resolve(DNSSettingsManagerType.self)!
 
     // MARK: Properties
@@ -123,7 +122,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                     preferences: self.preferences,
                     providerConfiguration: providerConfig,
                     logger: self.logger,
-                    consoleLogger: self.consoleLogger,
                     onTunnelShouldStop: { @MainActor [weak self] reason, error in
                         guard let self = self else { return }
                         self.logger.logI("PacketTunnelProvider", "Control plane requested tunnel stop for reason: \(reason.rawValue)", flushImmediately: true)
@@ -216,8 +214,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         }
     }
 
+    private var lastSleepLogTime: TimeInterval = 0
+
     override func sleep(completionHandler: @escaping () -> Void) {
-        logger.logI("PacketTunnelProvider", "Device going to sleep.", flushImmediately: true)
+        let currentTime = Date().timeIntervalSince1970
+        if currentTime - lastSleepLogTime >= 60 {
+            logger.logI("PacketTunnelProvider", "Device going to sleep.", flushImmediately: true)
+            lastSleepLogTime = currentTime
+        }
         completionHandler()
     }
 

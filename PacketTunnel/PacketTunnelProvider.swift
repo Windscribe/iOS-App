@@ -33,8 +33,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     private lazy var api: WSNetServerAPI = container.resolve(WSNetServerAPI.self)!
 
-    private let consoleLogger = Logger(subsystem: "Windscribe-tunnel", category: "com.windscribe.vpn")
-
     // MARK: Properties
 
     private var startHandler: ((Error?) -> Void)?
@@ -62,7 +60,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         else {
             fatalError()
         }
-        consoleLogger.debug("Starting tunnel.")
         logger.logI("PacketTunnelProvider", "Started OpenVPNAdapter.", flushImmediately: true)
         let properties: OpenVPNConfigurationEvaluation!
         guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else { return }
@@ -181,8 +178,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         }
     }
 
+    private var lastSleepLogTime: TimeInterval = 0
+
     override func sleep(completionHandler: @escaping () -> Void) {
-        logger.logI("PacketTunnelProvider", "Device going to sleep.", flushImmediately: true)
+        let currentTime = Date().timeIntervalSince1970
+        if currentTime - lastSleepLogTime >= 60 {
+            logger.logI("PacketTunnelProvider", "Device going to sleep.", flushImmediately: true)
+            lastSleepLogTime = currentTime
+        }
         completionHandler()
     }
 
@@ -247,7 +250,6 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
                         preferences: preferences,
                         providerConfiguration: providerConfig,
                         logger: logger,
-                        consoleLogger: self.consoleLogger,
                         onTunnelShouldStop: { @MainActor [weak self] reason, error in
                             guard let self = self else { return }
                             self.logger.logI("PacketTunnelProvider", "Control plane requested tunnel stop for reason: \(reason.rawValue)", flushImmediately: true)
@@ -256,7 +258,6 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
                     )
                 }
                 if preferences.getDisconnectReason() == DisconnectReason.unknown {
-                    consoleLogger.debug("Tunnel connected, checking tunnel health.")
                     controlPlane?.checkTunnelHealth()
                 }
         case .disconnected:
