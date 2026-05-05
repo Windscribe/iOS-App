@@ -106,6 +106,18 @@ New code follows the patterns in [`AGENTS.md`](AGENTS.md). In short: SwiftUI + `
 
 Semantic Versioning — `Major.Minor.Patch (BuildNumber)`, e.g. `3.10.1 (22)` on TestFlight.
 
+Bump the marketing version in **one place**: `Windscribe/Environments/Config.xcconfig`.
+
+```
+MARKETING_VERSION       = 3.11.0    # iOS app + all extensions
+TV_MARKETING_VERSION    = 1.0.4     # tvOS app (independent cadence)
+CURRENT_PROJECT_VERSION = 1         # build number — overridden by CI
+```
+
+The xcconfig is the single source of truth; every target's `Info.plist` reads `$(MARKETING_VERSION)` / `$(CURRENT_PROJECT_VERSION)` from it. **Do not edit version values inside `project.pbxproj`** — those entries were removed during consolidation.
+
+The build number is injected at archive time by `fastlane iOSTestFlight` via `xcargs CURRENT_PROJECT_VERSION=$CI_PIPELINE_IID` (with a TestFlight latest+1 fallback for local archives), so CI builds never mutate the project file.
+
 ### Acknowledgements
 
 Third-party licenses: [`ACKNOWLEDGEMENTS.md`](ACKNOWLEDGEMENTS.md).

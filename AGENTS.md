@@ -93,6 +93,15 @@ Build and test through Xcode or `xcodebuild` / `fastlane`. If you are running un
 
 Signing lives in `Windscribe/Environments/Config.xcconfig`. Don't commit personal signing values — override locally.
 
+### Versioning
+
+`MARKETING_VERSION`, `TV_MARKETING_VERSION`, and `CURRENT_PROJECT_VERSION` live in `Windscribe/Environments/Config.xcconfig`. That xcconfig is the project's single source of truth for versions — every target inherits it via the project-level `baseConfigurationReference`.
+
+- Bumping the iOS app + all extensions: edit `MARKETING_VERSION` in `Config.xcconfig`. Nothing else.
+- Bumping tvOS independently: edit `TV_MARKETING_VERSION` in `Config.xcconfig`.
+- **Do not add `MARKETING_VERSION = …` or `CURRENT_PROJECT_VERSION = …` lines to `Windscribe.xcodeproj/project.pbxproj`.** They were intentionally removed; reintroducing them shadows the xcconfig per-target and recreates the drift problem we just fixed.
+- Build numbers are injected at archive time via `xcargs` from `CI_PIPELINE_IID` in `fastlane/Fastfile`. CI does not mutate the project file.
+
 ## Core architectural facts
 
 ### Dependency injection — Swinject
