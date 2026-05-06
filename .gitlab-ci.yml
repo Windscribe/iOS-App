@@ -17,7 +17,9 @@ stages:
   - lint
   - test
   - build
+  - prepare
   - deploy
+  - notify
 
 # ─── Rules templates ──────────────────────────────────────────────────────────
 
@@ -57,6 +59,39 @@ Build-tvOS:
   script:
     - fastlane tvBuild
 
+# ─── Prepare (schedule-only change detection) ─────────────────────────────────
+
+# Short-circuits scheduled deploys when no new commits landed on this ref
+# since the last successful scheduled deploy. Writes HAS_CHANGES=true|false
+# as a dotenv artifact; consumed by Deploy-iOS-Release and notify-codescribe.
+precheck-changes:
+  stage: prepare
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+    - when: never
+  script:
+    - |
+      set -e
+      api_url="$CI_API_V4_URL/projects/$CI_PROJECT_ID/pipelines"
+      query="ref=$CI_COMMIT_REF_NAME&status=success&source=schedule&per_page=5"
+      api_resp=$(curl -sf -H "PRIVATE-TOKEN: $GITLAB_API_TOKEN" "$api_url?$query" || echo '[]')
+      last_sha=$(echo "$api_resp" | ruby -rjson -e 'puts (JSON.parse(STDIN.read).first || {}).fetch("sha", "")' 2>/dev/null || echo "")
+      if [ -n "$last_sha" ] && [ "$last_sha" = "$CI_COMMIT_SHA" ]; then
+        echo "No new commits on $CI_COMMIT_REF_NAME since last scheduled deploy ($last_sha) — gating downstream jobs."
+        echo "HAS_CHANGES=false" > precheck.env
+      else
+        if [ -n "$last_sha" ]; then
+          echo "New commits detected since $last_sha — proceeding."
+        else
+          echo "No prior scheduled deploy found for $CI_COMMIT_REF_NAME — proceeding."
+        fi
+        echo "HAS_CHANGES=true" > precheck.env
+      fi
+  artifacts:
+    reports:
+      dotenv: precheck.env
+
 # ─── Deploy (manual) ──────────────────────────────────────────────────────────
 
 .deploy-ios-base:
@@ -73,8 +108,50 @@ Deploy-iOS-Release:
   extends: .deploy-ios-base
   variables:
     BUILD_SCHEME: "Windscribe-Release"
+  needs:
+    - job: precheck-changes
+      optional: true
+      artifacts: true
+  script:
+    - |
+      if [ "$CI_PIPELINE_SOURCE" = "schedule" ] && [ "${HAS_CHANGES:-true}" != "true" ]; then
+        echo "Skipping deploy: no new commits since last scheduled run."
+        exit 0
+      fi
+    - fastlane iOSTestFlight
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+      allow_failure: false
+    - when: manual
+      allow_failure: true
 
 Deploy-iOS-Staging:
   extends: .deploy-ios-base
   variables:
     BUILD_SCHEME: "Windscribe-Staging"
+
+# ─── Notify ───────────────────────────────────────────────────────────────────
+
+notify-codescribe:
+  stage: notify
+  needs:
+    - job: Deploy-iOS-Release
+    - job: precheck-changes
+      optional: true
+      artifacts: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+    - when: never
+  script:
+    - |
+      if [ "${HAS_CHANGES:-true}" != "true" ]; then
+        echo "Deploy was short-circuited (no changes); not pinging Codescribe."
+        exit 0
+      fi
+      curl -s -X POST "$SLACK_WEBHOOK_CODESCRIBE" \
+        -H "Content-Type: application/json" \
+        -d "{\"text\": \"<@U0ACAUUA6QL> deploy-ios-release completed pipeline=${CI_PIPELINE_URL} ref=${CI_COMMIT_REF_NAME}\"}"
