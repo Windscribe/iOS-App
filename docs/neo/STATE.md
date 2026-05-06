@@ -12,14 +12,14 @@
 
 ## Status snapshot
 
-- **Active issue:** M3 (#1051) — DI modernization. MR !1361 open against `main`; awaiting review.
-- **Active branch:** `aw/neo-m3-di-shims` (off `main`).
+- **Active issue:** none — M3 closed 2026-05-06 (!1361 merged). M4 not yet started.
+- **Active branch:** `main` (and `neo-5.0` via the periodic merge).
 - **Blocked on:** —
-- **Up next (after M3 lands):** M4 (#1052) — Async/Sendable boundaries. T4.1/T4.2 land on `main`; T4.3 on `neo-5.0`.
-- **M2 follow-ups (separate issues, not blocking M3):**
+- **Up next:** M4 (#1052) — Async/Sendable boundaries. T4.1/T4.2/T4.4/T4.5 land on `main → neo-5.0`; T4.3 on `neo-5.0` only. Plan in [`plans/M4-async-sendable-boundaries.md`](plans/M4-async-sendable-boundaries.md).
+- **M2 follow-ups (separate issues, not blocking M4):**
   - #1065 — D2.3 schema normalization (GRDB v1→v2). Ships any main release after D2.2.
   - #1066 — D2.4 Realm removal. Ships post-Neo + 3-month forced-upgrade soak.
-- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050).
+- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050), M3 (#1051).
 
 ## Log
 
@@ -35,3 +35,4 @@
 - 2026-05-01 — M2 — `aw/realm-to-grdb` — `c9345b37` — Realm→GRDB branch rebased on post-keychain `main` (Phases 1–5 of the rebase). Driver: !1323 (#1040) shipped today, moving sessions/credentials/auth-hash into the Keychain — branch had to drop the four orphaned entity families (Session, OldSession, OpenVPN/IKEv2 credentials) from Records, schema, migrator, and parity suite. Surviving GRDB scope: 14 entity families. !1311 description refreshed; milestone + labels (`project-neo`, `lands-on::main`, `area::persistence`) attached. All gates green: 81/81 tests pass. Long-tail launch cadence locked in (ND-007): D2.2 ships to `main` as the Pre-Neo release, D2.3 (schema normalization) follows, D2.4 (Realm removal) waits on Neo + 3-month forced-upgrade soak via `/CheckUpdate`. Next: M2 alignment review with team; phase-7 doc sync (00-roadmap.md, DECISIONS.md ND-006 + ND-007, agent memory, Notion artifact). Branch retains `aw/realm-to-grdb` name (not renamed to `aw/neo-m2-*`) to preserve !1311's 23 review notes including Andre's substantive feedback on the schema/Records design.
 - 2026-05-05 — M2 — `main` — `f1233062` — !1311 merged. **D2.2 (Realm→GRDB migration) shipped.** GRDB now production for the 14 entity families that survived the keychain consolidation; Realm + `RealmToGRDBMigrator` stay linked through Pre-Neo and Neo as migration source + fallback. The MR also folded in the /CheckUpdate `force_upgrade` gate (Pre-Neo release introduces the mechanism, not yet enforced — see ND-007). Force-upgrade clears the 24h cooldown so users below Pre-Neo will be re-prompted on every cold launch once the gate is flipped post-Neo. **M2 #1050 closed** (scope was D2.1 + D2.2; the follow-ups are tracked under #1065 (D2.3 schema normalization) and #1066 (D2.4 Realm removal)). Next: M3 (#1051) — DI modernization with constructor injection + `@Environment` shims, lands `main → neo-5.0`.
 - 2026-05-06 — M3 — `aw/neo-m3-di-shims` — `a29f935a` — Single PR landing T3.1–T3.5 opened as MR !1361 against `main`: SwiftLint rule `neo_no_assembler_resolve` (Features/** scope), five service protocols + thin `Legacy*` adapters in `Windscribe/Services/Protocols/` (`VPNConnecting`, `ServerProviding`, `CredentialStoring`, `PreferencesReading`, `SessionProviding`), five `@Entry` slots in `Windscribe/App/Environment+Dependencies.swift`, `M3ServiceProtocolMockabilityTests` (5 mockability sanity tests), and general `@unchecked Sendable` legacy-adapter pattern documented in `docs/PROJECT_NEO.md` so adapter inline comments stay one-line. M3 plan file added to `docs/neo/plans/M3-di-modernization.md`. Build clean; lint clean (zero violations); 18/18 tests green (5 new + M0 About). Acceptance: `grep -rn "Assembler\.resolve\|import Swinject" Windscribe/Features WindscribeTV/Features` returns zero. Lands on `main`. Next: review + merge → close M3.
+- 2026-05-06 — M3 — `main` — `ba1c1bee` — !1361 merged. **M3 closed (#1051).** Five service-protocol shims (`VPNConnecting`, `ServerProviding`, `CredentialStoring`, `PreferencesReading`, `SessionProviding`) + their `@Entry` slots are in tree; `Assembler.resolve` is forbidden in `Features/**` by lint. PR also folded in: M0/M3 file-header normalization to the standard codebase format, `## Routing` section in `docs/PROJECT_NEO.md` introducing the Screen/View/Route convention on top of `NavigationStack`, rename of `AboutView` → `AboutScreen` (outer DI hub) with the inner private rendering view becoming `AboutView`, and the `@unchecked Sendable` cleanup tracked as T4.5 in #1052 / Notion roadmap. M2 cadence: `main → neo-5.0` periodic merge picks this up. Next: M4 (#1052) — Async/Sendable boundaries; plan in [`plans/M4-async-sendable-boundaries.md`](plans/M4-async-sendable-boundaries.md).
