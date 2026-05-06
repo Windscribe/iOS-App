@@ -158,8 +158,6 @@ class BridgeApiRepositoryTests: XCTestCase {
 
     func testApiAvailableWithProUserAndServerLocation() async throws {
         // Given
-        let expectation = XCTestExpectation(description: "Bridge API should be available")
-
         mockUserSessionRepository.sessionModel = SessionModel(
             sessionAuthHash: "test",
             username: "testuser",
@@ -200,26 +198,18 @@ class BridgeApiRepositoryTests: XCTestCase {
         // `simulateApiAvailable` is a no-op and the test times out.
         try await waitForApiAvailableCallbackRegistration()
 
-        // Then — subscribe before triggering so we observe the rising edge.
-        repository.bridgeIsAvailable
-            .sink { isAvailable in
-                if isAvailable {
-                    XCTAssertTrue(self.repository.isReady, "Repository should be ready")
-                    expectation.fulfill()
-                }
-            }
-            .store(in: &cancellables)
-
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        await fulfillment(of: [expectation], timeout: 5.0)
+        // Then — poll for the actual state change instead of relying on
+        // XCTestExpectation + Combine publisher timing, which races on loaded
+        // CI runners (the publisher chain can take >5s under load).
+        try await waitUntil(timeout: 10.0) { self.repository.isReady }
+        XCTAssertTrue(repository.isReady, "Repository should be ready")
     }
 
     func testApiAvailableWithFreeUserAndALCLocation() async throws {
         // Given
-        let expectation = XCTestExpectation(description: "Bridge API should be available with ALC")
-
         mockUserSessionRepository.sessionModel = SessionModel(
             sessionAuthHash: "test",
             username: "testuser",
@@ -259,19 +249,14 @@ class BridgeApiRepositoryTests: XCTestCase {
 
         try await waitForApiAvailableCallbackRegistration()
 
-        // Then — subscribe before triggering so we observe the rising edge.
-        repository.bridgeIsAvailable
-            .sink { isAvailable in
-                if isAvailable {
-                    expectation.fulfill()
-                }
-            }
-            .store(in: &cancellables)
-
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        await fulfillment(of: [expectation], timeout: 5.0)
+        // Then — poll for the actual state change instead of relying on
+        // XCTestExpectation + Combine publisher timing, which races on loaded
+        // CI runners.
+        try await waitUntil(timeout: 10.0) { self.repository.isReady }
+        XCTAssertTrue(repository.isReady, "Repository should be ready with ALC")
     }
 
     // MARK: - Helpers
@@ -311,8 +296,6 @@ class BridgeApiRepositoryTests: XCTestCase {
 
     func testApiNotAvailableWithFreeUserAndNonALCLocation() async throws {
         // Given
-        let expectation = XCTestExpectation(description: "Bridge API should not be available")
-
         mockUserSessionRepository.sessionModel = SessionModel(
             sessionAuthHash: "test",
             username: "testuser",
@@ -346,30 +329,19 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
+        try await waitForApiAvailableCallbackRegistration()
+
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        // Wait for observation
+        // Then — allow async propagation, then verify state settled to not-ready
+        // (non-ALC location for free user should be denied).
         try await Task.sleep(nanoseconds: 500_000_000)
-
-        // Then
-        repository.bridgeIsAvailable
-            .sink { isAvailable in
-                if !isAvailable {
-                    XCTAssertFalse(isAvailable, "Bridge API should not be available for non-ALC location")
-                    XCTAssertFalse(self.repository.isReady, "Repository should not be ready")
-                    expectation.fulfill()
-                }
-            }
-            .store(in: &cancellables)
-
-        await fulfillment(of: [expectation], timeout: 5.0)
+        XCTAssertFalse(repository.isReady, "Repository should not be ready for non-ALC location")
     }
 
     func testApiNotAvailableWithoutSessionModel() async throws {
         // Given
-        let expectation = XCTestExpectation(description: "Bridge API should not be available without session")
-
         mockUserSessionRepository.sessionModel = nil
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(
@@ -379,27 +351,18 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
+        try await waitForApiAvailableCallbackRegistration()
+
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        // Wait for observation
+        // Then — allow propagation, verify not ready (no session).
         try await Task.sleep(nanoseconds: 500_000_000)
-
-        // Then
-        repository.bridgeIsAvailable
-            .sink { isAvailable in
-                XCTAssertFalse(isAvailable, "Bridge API should not be available without session model")
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
-
-        await fulfillment(of: [expectation], timeout: 5.0)
+        XCTAssertFalse(repository.isReady, "Repository should not be ready without session model")
     }
 
     func testApiNotAvailableWithNonServerLocation() async throws {
         // Given
-        let expectation = XCTestExpectation(description: "Bridge API should not be available for non-server")
-
         mockUserSessionRepository.sessionModel = SessionModel(
             sessionAuthHash: "test",
             username: "testuser",
@@ -433,27 +396,18 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: false
         )
 
+        try await waitForApiAvailableCallbackRegistration()
+
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
-        // Wait for observation
+        // Then — allow propagation, verify not ready (non-server location).
         try await Task.sleep(nanoseconds: 500_000_000)
-
-        // Then
-        repository.bridgeIsAvailable
-            .sink { isAvailable in
-                XCTAssertFalse(isAvailable, "Bridge API should not be available for non-server location")
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
-
-        await fulfillment(of: [expectation], timeout: 5.0)
+        XCTAssertFalse(repository.isReady, "Repository should not be ready for non-server location")
     }
 
     func testApiNotAvailableWhenBridgeAPIReportsNotReady() async throws {
         // Given
-        let expectation = XCTestExpectation(description: "Bridge API should not be available when not ready")
-
         mockUserSessionRepository.sessionModel = SessionModel(
             sessionAuthHash: "test",
             username: "testuser",
@@ -487,21 +441,14 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
-        // When
+        try await waitForApiAvailableCallbackRegistration()
+
+        // When — bridge reports NOT available
         mockBridgeAPI.simulateApiAvailable(false)
 
-        // Wait for observation
+        // Then — allow propagation, verify not ready.
         try await Task.sleep(nanoseconds: 500_000_000)
-
-        // Then
-        repository.bridgeIsAvailable
-            .sink { isAvailable in
-                XCTAssertFalse(isAvailable, "Bridge API should not be available when bridge reports not ready")
-                expectation.fulfill()
-            }
-            .store(in: &cancellables)
-
-        await fulfillment(of: [expectation], timeout: 5.0)
+        XCTAssertFalse(repository.isReady, "Repository should not be ready when bridge reports not ready")
     }
 
     // MARK: - Edge Cases
