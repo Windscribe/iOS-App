@@ -115,4 +115,10 @@ lane :iOSTestFlight do
     skip_waiting_for_build_processing: true,
     distribute_external: false
   )
+
+  # Grep anchor for Codescribe's QA-handoff automation. Must come after a
+  # successful TestFlight upload; format is parsed downstream — do not change.
+  marketing_version = File.read("Windscribe/Environments/Config.xcconfig")
+                          .match(/^MARKETING_VERSION\s*=\s*(\S+)/)[1]
+  puts "[DEPLOY_INFO] version=#{marketing_version} build=#{build_number}"
 end
