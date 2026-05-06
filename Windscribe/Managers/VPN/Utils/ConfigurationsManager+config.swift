@@ -461,10 +461,10 @@ extension ConfigurationsManager {
                 if isFreeUser, locationDatacenter.1.isPremiumOnly {
                     throw VPNConfigurationErrors.invalidLocationType
                 }
-                _ = try geServerFrom(datacenterId: locationDatacenter.1.id)
+                _ = try await geServerFrom(datacenterId: locationDatacenter.1.id)
                 return lastLocation
             case .staticIP:
-                let staticLocation = try getStaticIPLocation(id: locationId)
+                let staticLocation = try await getStaticIPLocation(id: locationId)
                 guard let _ = Array(staticLocation.nodes).randomElement() else {
                     throw VPNConfigurationErrors.noValidServerFound
                 }
@@ -478,7 +478,7 @@ extension ConfigurationsManager {
                 return lastLocation
             }
         } catch {
-            let updatedLocation = handleLocationFallback(for: lastLocation)
+            let updatedLocation = await handleLocationFallback(for: lastLocation)
             logger.logI("VPNConfiguration", "Updated location to \(updatedLocation ?? "n/a")")
             return updatedLocation
         }
@@ -520,14 +520,21 @@ extension ConfigurationsManager {
                     let location = try self.locationsManager.getLocation(from: locationID)
                     let session = self.userSessionRepository.sessionModel
                     let isFreeUser = session?.isPremium == false
+
                     if session?.status == 2 {
                         promise(.failure(VPNConfigurationErrors.accountExpired))
                     } else if session?.status == 3 {
                         promise(.failure(VPNConfigurationErrors.accountBanned))
-                    } else if isFreeUser, location.1.isPremiumOnly {
-                        promise(.failure(VPNConfigurationErrors.upgradeRequired))
-                    } else {
-                        promise(.success(()))
+                    } else if isFreeUser {
+                        if location.1.isPremiumOnly {
+                            if !self.userSessionRepository.canAccesstoProLocation(location: location.0) {
+                                promise(.failure(VPNConfigurationErrors.upgradeRequired))
+                            } else {
+                                promise(.success(()))
+                            }
+                        } else {
+                            promise(.success(()))
+                        }
                     }
                 case .custom:
                     let customId = self.locationsManager.getCustomId(location: locationID)

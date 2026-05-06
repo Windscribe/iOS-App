@@ -138,13 +138,10 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
         cell.favNodeCellViewModel?.update(displayingFavGroup: favourite,
                                           locationLoad: locationLoad,
                                           isSavedHasFav: true,
-                                          isUserPro: userSessionRepository.sessionModel?.isUserPro ?? false,
-                                          isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
+                                          isPremium: userSessionRepository.canAccesstoProLocation(locationId: favourite.datacenterModel.locationId),
                                           isDarkMode: lookAndFeelRepository.isDarkMode,
                                           latency: latency,
-                                          countryCode: locationModel?.countryCode,
-                                          alcList: userSessionRepository.sessionModel?.alc ?? [],
-                                          shortName: locationModel?.shortName ?? "")
+                                          countryCode: locationModel?.countryCode)
         cell.refreshUI()
 
         return cell

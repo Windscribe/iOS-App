@@ -57,7 +57,8 @@ class FavouriteListViewModel: FavouriteListViewModelType {
             showMaintenanceLocationTrigger.send()
             return
         }
-        if !canAccesstoProLocation() && favourite.isPremiumOnly {
+        if !userSessionRepository.canAccesstoProLocation(locationId: favourite.locationId),
+           favourite.isPremiumOnly {
             showUpgradeTrigger.send(())
             return
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
@@ -70,11 +71,6 @@ class FavouriteListViewModel: FavouriteListViewModelType {
         } else {
             presentAlertTrigger.send(.connecting)
         }
-    }
-
-    private func canAccesstoProLocation() -> Bool {
-        guard let session = userSessionRepository.sessionModel else { return false }
-        return session.isPremium
     }
 }
 

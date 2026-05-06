@@ -109,15 +109,64 @@ class UserSessionRepositoryTests: XCTestCase {
         // Given
         let mockSession = createMockSession()
         let mockSessionSecond = createMockSessionSecond()
+        let proLocation = createMockLocation()
 
         await repository.update(session: mockSession)
-        XCTAssertTrue(repository.canAccesstoProLocation(), "First Session IS pro and CAN Access to Pro Location")
+        XCTAssertTrue(repository.canAccesstoProLocation(location: proLocation), "First Session IS pro and CAN Access to Pro Location")
 
         await repository.update(session: mockSessionSecond)
-        XCTAssertFalse(repository.canAccesstoProLocation(), "Second Session is NOT pro and CANNOT Access to Pro Location")
+        XCTAssertFalse(repository.canAccesstoProLocation(location: proLocation), "Second Session is NOT pro and CANNOT Access to Pro Location")
+    }
+
+    func test_canAccesstoProLocation_withALC() async {
+        // Given — free user but location is in their ALC list
+        let alcLocation = createMockLocation(shortName: "US")
+        let sessionWithALC = SessionModel(
+            sessionAuthHash: "test-auth-hash",
+            username: "TestUser",
+            userId: "123",
+            isUserPro: false,
+            isPremium: false,
+            email: "test@example.com",
+            emailStatus: true,
+            billing: 0,
+            alc: ["US"],
+            rebill: 0,
+            billingPlanId: 0,
+            trafficUsed: 0,
+            trafficMax: 10737418240,
+            status: 1,
+            expiryDate: "",
+            lastReset: "2026-01-01",
+            regDate: "2021",
+            deviceId: "test-device",
+            sipCount: 0,
+            loc: "",
+            locHash: "test-loc-hash",
+            revisionHash: "test-revision",
+            amneziawgConfigId: ""
+        )
+
+        await repository.update(session: sessionWithALC)
+        XCTAssertTrue(repository.canAccesstoProLocation(location: alcLocation), "Free user with ALC containing location shortName CAN access")
+
+        let nonALCLocation = createMockLocation(shortName: "DE")
+        XCTAssertFalse(repository.canAccesstoProLocation(location: nonALCLocation), "Free user without ALC for location CANNOT access")
     }
 
     // MARK: - Helper Methods
+
+    private func createMockLocation(shortName: String = "CA") -> LocationModel {
+        return LocationModel(
+            id: 1,
+            name: "Test Location",
+            countryCode: "XX",
+            shortName: shortName,
+            sortOrder: 0,
+            continent: "NA",
+            datacenters: []
+        )
+    }
 
     private func createMockSession() -> SessionModel {
         return SessionModel(

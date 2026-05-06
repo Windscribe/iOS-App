@@ -59,7 +59,8 @@ class LocationListViewModel: ServerListViewModelType {
             return
         }
 
-        if !userSessionRepository.canAccesstoProLocation() && datacenter.isPremiumOnly {
+        if !userSessionRepository.canAccesstoProLocation(location: location),
+           datacenter.isPremiumOnly {
             showUpgradeTrigger.send(())
             return
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {

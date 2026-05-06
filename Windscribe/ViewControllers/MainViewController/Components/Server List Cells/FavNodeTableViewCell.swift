@@ -30,24 +30,18 @@ class FavNodeTableViewCellModel: DatacenterTableViewCellModel {
     func update(displayingFavGroup: FavoriteDatacenterlModel?,
                 locationLoad: Bool,
                 isSavedHasFav: Bool,
-                isUserPro: Bool,
                 isPremium: Bool,
                 isDarkMode: Bool,
                 latency: Int,
-                countryCode: String?,
-                alcList: [String],
-                shortName: String) {
+                countryCode: String?) {
         self.displayingFavGroup = displayingFavGroup
         self.displayingDatacenter = displayingFavGroup?.datacenterModel
         self.countryCode = countryCode
         self.locationLoad = locationLoad
         self.isSavedHasFav = isSavedHasFav
-        self.isUserPro = isUserPro
         self.isPremium = isPremium
         self.isDarkMode = isDarkMode
         self.latency = latency
-        self.alcList = alcList
-        self.shortName = shortName
     }
 }
 

@@ -28,6 +28,11 @@ class MockUserSessionRepository: UserSessionRepository {
     var shouldThrowError = false
     var errorToThrow: Error = Errors.notDefined
     var sessionModelToReturn: SessionModel?
+    /// When non-nil, both `canAccesstoProLocation` overloads return this value
+    /// instead of computing from the session model. Useful when tests exercise
+    /// callers (e.g. BridgeApiRepository) that go through `locationId:` but the
+    /// mock has no LocationListRepository to resolve the id.
+    var mockCanAccessProLocation: Bool?
 
     // MARK: UserSessionRepository Protocol
 
@@ -43,8 +48,16 @@ class MockUserSessionRepository: UserSessionRepository {
         sessionModel = nil
     }
 
-    func canAccesstoProLocation() -> Bool {
-        sessionModel?.isPremium ?? false
+    func canAccesstoProLocation(location: LocationModel) -> Bool {
+        if let override = mockCanAccessProLocation { return override }
+        let isLocationALC = sessionModel?.alc.contains(location.shortName) ?? false
+        let isUserPro = sessionModel?.isPremium ?? false
+        return isLocationALC || isUserPro
+    }
+
+    func canAccesstoProLocation(locationId: Int) -> Bool {
+        if let override = mockCanAccessProLocation { return override }
+        return sessionModel?.isPremium ?? false
     }
 
     private func createMockSession() -> SessionModel {
@@ -73,6 +86,7 @@ class MockUserSessionRepository: UserSessionRepository {
         lastUpdateSession = nil
         shouldThrowError = false
         errorToThrow = Errors.notDefined
+        mockCanAccessProLocation = nil
         sessionModel = nil
         oldSessionModel = nil
     }

@@ -18,7 +18,8 @@ protocol UserSessionRepository {
 
     func update(session: SessionModel) async
     func clearSession()
-    func canAccesstoProLocation() -> Bool
+    func canAccesstoProLocation(location: LocationModel) -> Bool
+    func canAccesstoProLocation(locationId: Int) -> Bool
     func syncSession() async -> Bool
 
     func clean()
@@ -80,8 +81,17 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         oldSessionModel = nil
     }
 
-    func canAccesstoProLocation() -> Bool {
-        sessionModel?.isPremium ?? false
+    func canAccesstoProLocation(location: LocationModel) -> Bool {
+        let isLocationALC = sessionModel?.alc.contains(location.shortName) ?? false
+        let isUserPro = sessionModel?.isPremium ?? false
+        return isLocationALC || isUserPro
+    }
+
+    func canAccesstoProLocation(locationId: Int) -> Bool {
+        guard let location = locationListRepository.getLocation(by: locationId) else {
+            return false
+        }
+        return canAccesstoProLocation(location: location)
     }
 
     func syncSession() async -> Bool {
