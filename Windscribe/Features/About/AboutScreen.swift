@@ -1,30 +1,27 @@
 //
-//  AboutView.swift
+//  AboutScreen.swift
 //  Windscribe
 //
-//  Project Neo — canonical reference module (M0, ND-005).
-//  Mirrors the legacy `AboutSettingsView` UI verbatim, but on the Neo stack:
-//  `@Observable` view model via `@State`, dependencies via `@Environment`.
-//  Copy this when starting a new feature.
-//
-//  Note the two-view split: `AboutView` reads the environment-injected
-//  service, `AboutContent` owns the @State view model. This is the canonical
-//  SwiftUI pattern for "construct an `@Observable` from an env value once."
+//  Created by Anthony Wong on 2026-04-30.
+//  Copyright © 2026 Windscribe. All rights reserved.
 //
 
 import SwiftUI
 
+/// Top-level navigation destination. Reads `@Environment`, constructs the
+/// view model, hands it to the inner `AboutView`. See "Routing" in
+/// `docs/PROJECT_NEO.md` for the Screen/View/Route convention.
 @available(iOS 17.0, *)
-struct AboutView: View {
+struct AboutScreen: View {
     @Environment(\.lookAndFeel) private var lookAndFeel
 
     var body: some View {
-        AboutContent(viewModel: AboutViewModel(lookAndFeel: lookAndFeel))
+        AboutView(viewModel: AboutViewModel(lookAndFeel: lookAndFeel))
     }
 }
 
 @available(iOS 17.0, *)
-private struct AboutContent: View {
+private struct AboutView: View {
 
     @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 

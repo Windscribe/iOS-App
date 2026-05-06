@@ -54,20 +54,81 @@ Below applies to any code under `Windscribe/Features/**` and `WindscribeTV/Featu
 
 When editing legacy code, **match the surrounding style.** Don't rewrite a UIKit controller to SwiftUI mid-feature unless that rewrite *is* the task.
 
+### `@unchecked Sendable` is allowed at the legacy-adapter seam
+
+Strict-concurrency mode is on across the project ([ND-006](neo/DECISIONS.md#nd-006)) but the legacy types Neo features wrap (managers, repositories, value-type models) are not yet `Sendable`-marked — that work is scheduled for M4 ([ND-006](neo/DECISIONS.md#nd-006)). To keep the M3 protocol seam compilable today without preempting M4's per-type cleanup, the project tolerates a narrow `@unchecked Sendable` exemption:
+
+- **Allowed** on `Legacy*` adapters in `Windscribe/Services/Protocols/` (e.g. `LegacyVPNConnector`, `LegacyServerProvider`). The adapter wraps a non-Sendable legacy type behind a `Sendable` Neo protocol; the wrapped accessors are de-facto thread-safe (Combine subjects, immutable Keychain reads) and the adapter holds no mutable state of its own.
+- **Allowed** as one-line retroactive conformances on legacy value-type structs in the same protocol files (e.g. `extension LocationModel: @unchecked Sendable {}`). These are pure value-type structs (Int / String / nested structs) that are pragmatically Sendable already; the conformance documents that.
+- **Not allowed** in feature modules (`Windscribe/Features/**`, `WindscribeTV/Features/**`). If a feature seems to need it, the protocol surface is wrong — refine the protocol instead of pushing `@unchecked` deeper.
+
+Inline comments on these conformances stay one line: `// @unchecked until M4's Sendability cleanup marks <Type> directly.` The rationale is here, not duplicated in every file. M4 (ND-006) replaces these with proper `Sendable` conformance on the type definitions and removes the workaround.
+
 ## Adding a new feature
 
 The shape every Neo feature follows:
 
 ```
-View (SwiftUI, @available(iOS 17.0, *))
-  ⇄  ViewModel (@Observable, @MainActor, no SwiftUI imports)
-    ⇄  Service protocol (Sendable, in Windscribe/Services/Protocols/)
-      ⇄  Implementation (real impl + adapter to legacy Swinject services where applicable)
+Route (Hashable enum case, in the flow's NavigationStack root)
+  ⇄  Screen (SwiftUI, @available(iOS 17.0, *), reads @Environment, constructs the VM)
+    ⇄  View (SwiftUI, owns the VM as @State, renders the UI)
+      ⇄  ViewModel (@Observable, @MainActor, no SwiftUI imports)
+        ⇄  Service protocol (Sendable, in Windscribe/Services/Protocols/)
+          ⇄  Implementation (real impl + adapter to legacy Swinject services where applicable)
 ```
 
 The canonical reference is **`Windscribe/Features/About/`** (lands as part of M0; see ND-005). Copy that module, change names. If you need to make architectural decisions to do so, that's a signal the reference needs refining — flag it on the M0 issue rather than diverging.
 
 Tests live in `WindscribeTests/Features/<FeatureName>Tests.swift` using the **Swift Testing** framework (`import Testing`, `@Test`, `#expect`). Each test injects mock service implementations directly into the VM constructor. No DI container needed.
+
+## Routing
+
+Neo navigation is value-based, on top of `NavigationStack` + `NavigationPath`. There's no `UINavigationController`, no router class that owns navigation state — flows are described as data, resolved to views by a pure function.
+
+### Three-name convention
+
+| Type     | Suffix      | Role                                                                 |
+|----------|-------------|----------------------------------------------------------------------|
+| Screen   | `*Screen`   | Top-level navigation destination. Reads `@Environment`, constructs the view model, hands it to the inner View. |
+| View     | `*View`     | The actual rendering surface. Takes the VM via init, owns it as `@State`. Composes freely from smaller `*View` building blocks. |
+| Route    | `*Route`    | `Hashable` enum of navigable destinations within a single flow. Cases name screens. |
+
+Calling the env-reading DI hub a Screen reads honestly: the outer type IS what gets routed to, not just another view. Inner Views are just views.
+
+### How a flow wires up
+
+A flow's root owns a `NavigationStack` bound to a `NavigationPath`, and resolves its `Route` enum to a `Screen` via `.navigationDestination(for: SomeRoute.self) { route in … }`. That switch is the entire router — value in, view out, no state.
+
+```swift
+enum PreferencesRoute: Hashable {
+    case about
+    case general
+}
+
+struct PreferencesScreen: View {
+    @State private var path = NavigationPath()
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            PreferencesMenuView(path: $path)
+                .navigationDestination(for: PreferencesRoute.self) { route in
+                    switch route {
+                    case .about:   AboutScreen()
+                    case .general: GeneralScreen()
+                    }
+                }
+        }
+    }
+}
+```
+
+### Why the Screen/View split exists
+
+The Screen is the only place that can read `@Environment` and pass values into the VM's `init`. SwiftUI's `@State` doesn't expose env values to its default initializer, so the construction has to happen one view up — the Screen reads, the View owns the resulting `@State` via `init(initialValue:)`, and SwiftUI's "first init wins" semantics ensure the VM is retained across re-renders. See `Windscribe/Features/About/AboutScreen.swift` for the canonical shape.
+
+### From legacy `Router`
+
+`Router/NavigationRouter/BaseNavigationRouter` is a UIKit ⇄ SwiftUI bridge. As each flow goes Neo, it stops needing the bridge — the flow's root becomes a `NavigationStack`, its destinations become Screens, and the router class disappears. Until then, the legacy `Router/` and `BaseNavigationRouter` stay; new Screens are reachable from legacy routers via `AnyView(SomeScreen())`, the same way `AboutScreen` is wired in today.
 
 ## Applying these patterns to tvOS
 

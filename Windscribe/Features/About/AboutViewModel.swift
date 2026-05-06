@@ -2,8 +2,8 @@
 //  AboutViewModel.swift
 //  Windscribe
 //
-//  Project Neo — canonical reference module (M0, ND-005).
-//  See docs/PROJECT_NEO.md for the pattern this exemplifies.
+//  Created by Anthony Wong on 2026-04-30.
+//  Copyright © 2026 Windscribe. All rights reserved.
 //
 
 import Foundation

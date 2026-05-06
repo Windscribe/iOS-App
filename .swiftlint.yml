@@ -97,3 +97,9 @@ custom_rules:
     message: "New Neo screens are SwiftUI views, not UIKit view controllers. See docs/PROJECT_NEO.md."
     severity: error
     included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'
+  neo_no_assembler_resolve:
+    name: "Neo: no Assembler.resolve in Features/"
+    regex: '\bAssembler\s*\.\s*resolve\b'
+    message: "Resolve services at the composition seam (Windscribe/App/Environment+Dependencies.swift), not inside a Feature. Inject via constructor or @Environment. See docs/PROJECT_NEO.md."
+    severity: error
+    included: '.*(Windscribe|WindscribeTV)/Features/.*\.swift'

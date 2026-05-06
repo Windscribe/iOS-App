@@ -2,13 +2,8 @@
 //  AboutTests.swift
 //  WindscribeTests
 //
-//  Project Neo — first Swift Testing suite in the project (M0 PR 3, T0.12).
-//  Demonstrates the Neo testing pattern: protocol-based mocks injected
-//  directly into the VM, no DI container.
-//
-//  The WindscribeTests target's deployment floor is iOS 17 (test-target only —
-//  production app stays at iOS 15) so `@Observable`/Swift Testing macros
-//  compose without availability gymnastics. See ND-005.
+//  Created by Anthony Wong on 2026-04-30.
+//  Copyright © 2026 Windscribe. All rights reserved.
 //
 
 import Testing

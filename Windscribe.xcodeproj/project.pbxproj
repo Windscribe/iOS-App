@@ -671,11 +671,17 @@
 		92C9859B2FA3A75C00326D64 /* LookAndFeelObserving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C9859A2FA3A75C00326D64 /* LookAndFeelObserving.swift */; };
 		92C9859D2FA3A76300326D64 /* Environment+Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C9859C2FA3A76300326D64 /* Environment+Dependencies.swift */; };
 		92C9859F2FA3A76900326D64 /* AboutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C9859E2FA3A76900326D64 /* AboutViewModel.swift */; };
-		92C985A12FA3A77400326D64 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A02FA3A77400326D64 /* AboutView.swift */; };
+		92C985A12FA3A77400326D64 /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A02FA3A77400326D64 /* AboutScreen.swift */; };
 		92C985A42FA3A79E00326D64 /* AboutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A32FA3A79E00326D64 /* AboutTests.swift */; };
 		92C985A62FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */; };
 		92C985A72FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */; };
 		92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */; };
+		92C985AB2FABBB2000326D64 /* VPNConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985AA2FABBB2000326D64 /* VPNConnecting.swift */; };
+		92C985AD2FABBB3E00326D64 /* ServerProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985AC2FABBB3E00326D64 /* ServerProviding.swift */; };
+		92C985AF2FABBB4A00326D64 /* CredentialStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985AE2FABBB4A00326D64 /* CredentialStoring.swift */; };
+		92C985B12FABBB5500326D64 /* PreferencesReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985B02FABBB5500326D64 /* PreferencesReading.swift */; };
+		92C985B32FABBB8300326D64 /* SessionProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985B22FABBB8300326D64 /* SessionProviding.swift */; };
+		92C985B52FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985B42FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift */; };
 		956390B5C3DBFA82F5708A4B /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 6E7D0EC08D670F3A49856637 /* GRDB */; };
 		A1B2C3D401F600000001A002 /* ShortcutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A001 /* ShortcutType.swift */; };
 		A1B2C3D401F600000001A004 /* WindowProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A003 /* WindowProvider.swift */; };
@@ -1953,10 +1959,16 @@
 		92C9859A2FA3A75C00326D64 /* LookAndFeelObserving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelObserving.swift; sourceTree = "<group>"; };
 		92C9859C2FA3A76300326D64 /* Environment+Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Environment+Dependencies.swift"; sourceTree = "<group>"; };
 		92C9859E2FA3A76900326D64 /* AboutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewModel.swift; sourceTree = "<group>"; };
-		92C985A02FA3A77400326D64 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		92C985A02FA3A77400326D64 /* AboutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutScreen.swift; sourceTree = "<group>"; };
 		92C985A32FA3A79E00326D64 /* AboutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTests.swift; sourceTree = "<group>"; };
 		92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmKeychainPortMigration.swift; sourceTree = "<group>"; };
 		92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmKeychainPortMigrationTests.swift; sourceTree = "<group>"; };
+		92C985AA2FABBB2000326D64 /* VPNConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConnecting.swift; sourceTree = "<group>"; };
+		92C985AC2FABBB3E00326D64 /* ServerProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerProviding.swift; sourceTree = "<group>"; };
+		92C985AE2FABBB4A00326D64 /* CredentialStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialStoring.swift; sourceTree = "<group>"; };
+		92C985B02FABBB5500326D64 /* PreferencesReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesReading.swift; sourceTree = "<group>"; };
+		92C985B22FABBB8300326D64 /* SessionProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionProviding.swift; sourceTree = "<group>"; };
+		92C985B42FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3ServiceProtocolMockabilityTests.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A001 /* ShortcutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutType.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A003 /* WindowProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowProvider.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A006 /* WindowSetupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupService.swift; sourceTree = "<group>"; };
@@ -3804,7 +3816,7 @@
 			isa = PBXGroup;
 			children = (
 				92C9859E2FA3A76900326D64 /* AboutViewModel.swift */,
-				92C985A02FA3A77400326D64 /* AboutView.swift */,
+				92C985A02FA3A77400326D64 /* AboutScreen.swift */,
 			);
 			path = About;
 			sourceTree = "<group>";
@@ -3813,6 +3825,11 @@
 			isa = PBXGroup;
 			children = (
 				92C9859A2FA3A75C00326D64 /* LookAndFeelObserving.swift */,
+				92C985AA2FABBB2000326D64 /* VPNConnecting.swift */,
+				92C985AC2FABBB3E00326D64 /* ServerProviding.swift */,
+				92C985AE2FABBB4A00326D64 /* CredentialStoring.swift */,
+				92C985B02FABBB5500326D64 /* PreferencesReading.swift */,
+				92C985B22FABBB8300326D64 /* SessionProviding.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -3821,6 +3838,7 @@
 			isa = PBXGroup;
 			children = (
 				92C985A32FA3A79E00326D64 /* AboutTests.swift */,
+				92C985B42FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -7438,7 +7456,7 @@
 				F48705B82DE61AA4007435EB /* MenuLoadingOverlayView.swift in Sources */,
 				C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */,
 				E97ABD5928E60A9500B38587 /* WSButton.swift in Sources */,
-				92C985A12FA3A77400326D64 /* AboutView.swift in Sources */,
+				92C985A12FA3A77400326D64 /* AboutScreen.swift in Sources */,
 				F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */,
 				AFA804262209F13100F8E379 /* WifiNetwork.swift in Sources */,
 				AF97EFDB2280E70300378058 /* Realm+Extension.swift in Sources */,
@@ -7527,6 +7545,7 @@
 				1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */,
 				AF018DED21B0866600B225FF /* AppDelegate.swift in Sources */,
 				F4A1B2C3D4E5F60718293A4C /* SceneDelegate.swift in Sources */,
+				92C985AD2FABBB3E00326D64 /* ServerProviding.swift in Sources */,
 				1EE7AC582F72AC87003BD80A /* AntiCensorshipOptionsEntryType.swift in Sources */,
 				AF4B92EC221CA1C50054580D /* UserPreferences.swift in Sources */,
 				1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */,
@@ -7908,7 +7927,9 @@
 				92B7B5BD2F92E36C006B69DF /* ReadNoticeRecord.swift in Sources */,
 				AF4E91D521ED277A00A3F584 /* MobilePlan.swift in Sources */,
 				F404193A2D822F0F0005EF97 /* HTMLParsing.swift in Sources */,
+				92C985B12FABBB5500326D64 /* PreferencesReading.swift in Sources */,
 				AF21995B2270B147009B42E5 /* QNNTcpPing.m in Sources */,
+				92C985AF2FABBB4A00326D64 /* CredentialStoring.swift in Sources */,
 				F49C45772DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				E9C9143D2735770000C2ABCD /* MainViewController+Connection.swift in Sources */,
 				F470F55F2E81C00F00F8400D /* PreferencesImpl+LookAndFeel.swift in Sources */,
@@ -7923,6 +7944,7 @@
 				F4888E362D931364005EF149 /* NavigationRouterModifier.swift in Sources */,
 				F47EC5382DEA1B8400AF5089 /* AdvancedParametersViewModel.swift in Sources */,
 				1E60E0172CAD664300623CD5 /* ContainerResolver.swift in Sources */,
+				92C985B32FABBB8300326D64 /* SessionProviding.swift in Sources */,
 				1EA91DCB2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift in Sources */,
 				AF36A1FF237DC3FE00BDDCDB /* MainViewController+Motion.swift in Sources */,
 				AFA0D7C0243CA9F2007C912E /* SuggestedPorts.swift in Sources */,
@@ -7945,6 +7967,7 @@
 				F433744D2E46778700333190 /* ProtocolConnectionDebugView.swift in Sources */,
 				1ED23F812DBBD37000C7BEE5 /* IPInfoViewModel.swift in Sources */,
 				C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */,
+				92C985AB2FABBB2000326D64 /* VPNConnecting.swift in Sources */,
 				AF54C6BC228215A700DAAB07 /* UIDevice+Extension.swift in Sources */,
 				AF36BF1022FC971E00FCC6F4 /* WSTextField.swift in Sources */,
 				F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */,
@@ -7975,6 +7998,7 @@
 				F45BD5AD2EF9A46100490072 /* APIMessage+Test.swift in Sources */,
 				1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */,
 				1E0492B62F4750A40016B11F /* MockCredentialsRepository.swift in Sources */,
+				92C985B52FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,
 				92B7B5C42F92E37E006B69DF /* WifiNetworkRecordTests.swift in Sources */,

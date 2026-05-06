@@ -2,8 +2,8 @@
 //  LookAndFeelObserving.swift
 //  Windscribe
 //
-//  Project Neo — service protocol seeded by M0 PR 3.
-//  See docs/PROJECT_NEO.md and ND-005 for context.
+//  Created by Anthony Wong on 2026-04-30.
+//  Copyright © 2026 Windscribe. All rights reserved.
 //
 
 import Foundation

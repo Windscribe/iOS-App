@@ -188,8 +188,12 @@ Once GRDB is in tree (post D2.2 step 2), `Windscribe/App/Environment+Dependencie
 - T4.2: `VPNConnecting.status: AsyncStream<ConnectionStatus>` wrapping `NEVPNStatusDidChange`.
 - T4.3: `async`-style overrides for `startTunnel` / `stopTunnel` / `sleep` / `handleAppMessage` in both `PacketTunnel/PacketTunnelProvider.swift` and `WireGuardTunnel/PacketTunnelProvider.swift`.
 - T4.4: "Combine → AsyncSequence" conversion guideline appended to [`../../PROJECT_NEO.md`](../../PROJECT_NEO.md).
+- T4.5 *(main → neo-5.0)*: Retire M3's narrow `@unchecked Sendable` exemption (per ND-006). M3 introduced `@unchecked Sendable` on six legacy-adapter classes and four retroactive struct conformances; M4 replaces them with proper Sendability:
+  - Mark these legacy protocols `Sendable` directly: `VPNManager`, `LocationListRepository`, `CredentialsRepository`, `Preferences`, `UserSessionRepository`, `LookAndFeelRepositoryType` — and drop `@unchecked` from `LegacyVPNConnector`, `LegacyServerProvider`, `LegacyCredentialStore`, `LegacyPreferencesReader`, `LegacySessionProvider`, and M0's `LegacyLookAndFeelObserver`.
+  - Move the retroactive `@unchecked Sendable` extensions on `LocationModel`, `DatacenterModel`, `SessionModel`, `ServerCredentialsModel` (currently at the bottom of the M3 protocol files in `Windscribe/Services/Protocols/`) to direct `Sendable` conformance on each type's definition.
+  - Delete the "@unchecked Sendable is allowed at the legacy-adapter seam" subsection from [`../../PROJECT_NEO.md`](../../PROJECT_NEO.md) once the workarounds are gone.
 
-**Verification:** A new feature module can subscribe to VPN status with `for await status in vpn.status` without `import Combine`. Tunnel logs show no behavior regression on physical hardware.
+**Verification:** A new feature module can subscribe to VPN status with `for await status in vpn.status` without `import Combine`. Tunnel logs show no behavior regression on physical hardware. T4.5: `grep -rn "@unchecked Sendable" Windscribe/Services/Protocols/` returns zero.
 
 ---
 
