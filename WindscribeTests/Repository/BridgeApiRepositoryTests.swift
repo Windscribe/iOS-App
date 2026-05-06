@@ -245,6 +245,10 @@ class BridgeApiRepositoryTests: XCTestCase {
             revisionHash: "",
             amneziawgConfigId: ""
         )
+        // The ALC check now lives inside UserSessionRepository (tested separately
+        // in UserSessionRepositoryTests). BridgeApiRepository delegates via
+        // canAccesstoProLocation(locationId:), so we tell the mock the result.
+        mockUserSessionRepository.mockCanAccessProLocation = true
 
         mockLocationsManager.mockLocationUIInfo = LocationUIInfo(
             nickName: "Best Location",

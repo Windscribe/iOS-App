@@ -109,8 +109,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
             logger.logI("BridgeApiRepository", "locationInfo - nil")
             return
         }
-
-        let hasAlc = sessionModel.alc.contains(locationInfo.countryCode)
-        self.bridgeIsAvailable.send(ready && (sessionModel.isUserPro || hasAlc))
+        let locationId = self.locationManager.getId()
+        self.bridgeIsAvailable.send(ready && userSessionRepository.canAccesstoProLocation(locationId: locationId))
     }
 }

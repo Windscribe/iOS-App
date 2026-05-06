@@ -297,7 +297,8 @@ class LocationsManagerImpl: LocationsManager {
             isPremiumOnly = currentLocation.1.isPremiumOnly
         }
         if userSessionRepository.sessionModel != nil,
-           !userSessionRepository.canAccesstoProLocation(),
+           let locId = Int(locationId),
+           !userSessionRepository.canAccesstoProLocation(locationId: locId),
            isPremiumOnly {
             updateToBestLocation()
         }

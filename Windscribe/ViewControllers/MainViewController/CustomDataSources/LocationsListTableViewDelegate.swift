@@ -196,7 +196,7 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
         let calculatedSection = getCalculatedSection(from: indexPath.section)
         if locationsSections.count > calculatedSection,
            let locationModel = locationsSections[calculatedSection].location,
-           (locationModel.datacenters.count > indexPath.row - 1) {
+           locationModel.datacenters.count > (indexPath.row - 1) {
             let datacenter = locationsSections[calculatedSection].location?.datacenters[indexPath.row - 1]
 
             var latency = -1
@@ -212,13 +212,10 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
             cell.datacenterCellViewModel?.update(displayingDatacenter: datacenter,
                                                  locationLoad: locationLoad,
                                                  isSavedHasFav: isGroupFavorite(datacenter?.id),
-                                                 isUserPro: userSessionRepository.sessionModel?.isUserPro ?? false,
-                                                 isPremium: userSessionRepository.sessionModel?.isPremium ?? false,
+                                                 isPremium: userSessionRepository.canAccesstoProLocation(location: locationModel),
                                                  isDarkMode: lookAndFeelRepository.isDarkMode,
                                                  latency: latency,
-                                                 countryCode: locationModel.countryCode,
-                                                 alcList: userSessionRepository.sessionModel?.alc ?? [],
-                                                 shortName: locationModel.shortName)
+                                                 countryCode: locationModel.countryCode)
             cell.refreshUI()
         }
         return cell
