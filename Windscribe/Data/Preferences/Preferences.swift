@@ -37,9 +37,6 @@ protocol Preferences {
     func getDarkMode() -> AnyPublisher<Bool?, Never>
     func saveShowServerNetLoad(show: Bool)
     func getShowServerNetLoad() -> AnyPublisher<Bool?, Never>
-    func savePingMethod(method: String)
-    func getPingMethod() -> AnyPublisher<String?, Never>
-    func getPingMethodSync() -> String
     func saveEgressProtocolPreference(value: String)
     func getEgressProtocolPreference() -> AnyPublisher<String?, Never>
     func getEgressProtocolPreferenceSync() -> String
@@ -51,8 +48,6 @@ protocol Preferences {
     func getConnectionCount() -> Int?
     func increaseConnectionCount()
     func saveConnectionCount(count: Int)
-    func getLastConnectedNetworkName() -> String?
-    func saveLastConnectedNetworkName(network: String)
     func getRateUsActionCompleted() -> Bool
     func saveRateUsActionCompleted(bool: Bool)
     func getWhenRateUsPopupDisplayed() -> Date?
@@ -63,21 +58,17 @@ protocol Preferences {
     func savePrivacyPopupAccepted(bool: Bool)
     func getShakeForDataHighestScore() -> Int?
     func saveShakeForDataHighestScore(score: Int)
-    func getUnlockShakeForData() -> Bool?
-    func saveUnlockShakeForData(bool: Bool?)
 
     func saveBlurStaticIpAddress(bool: Bool?)
     func getBlurStaticIpAddress() -> Bool?
     func saveBlurNetworkName(bool: Bool?)
     func getBlurNetworkName() -> Bool?
-    func saveSelectedLanguage(language: String?)
     func getSelectedLanguage() -> String?
     func saveDefaultLanguage(language: String?)
     func getDefaultLanguage() -> String?
     func saveActiveManagerKey(key: String?)
     func getActiveManagerKey() -> String?
     func saveRegisteredForPushNotifications(bool: Bool?)
-    func getRegisteredForPushNotifications() -> Bool?
     func saveFirstInstall(bool: Bool?)
     func getFirstInstall() -> Bool?
     func saveActiveAppleSig(sig: String?)
@@ -108,15 +99,10 @@ protocol Preferences {
     func isCircumventCensorshipEnabled() -> Bool
     func saveCircumventCensorshipStatus(status: Bool)
 
-    func getServerpedeEnabled() -> AnyPublisher<Bool, Never>
-    func saveServerpedeEnable(status: Bool)
 
     func setLanguageManagerSelectedLanguage(language: Languages)
-    func setLanguageManagerDefaultLanguage(language: String)
-    func getLanguageManagerDefaultLanguage() -> String?
     func getLanguageManagerSelectedLanguage() -> AnyPublisher<String?, Never>
 
-    func getServerCredentialTypeKey() -> String?
 
     func setServerCredentialTypeKey(typeKey: String)
 
@@ -141,8 +127,6 @@ protocol Preferences {
     func getCustomDNSValue() -> DNSValue
     func saveWireguardWakeupTime(value: Double)
     func getWireguardWakeupTime() -> Double
-    func saveForceDisconnect(value: Bool)
-    func getForceDisconnect() -> AnyPublisher<Bool?, Never>
     func observeFavouriteIds() -> AnyPublisher<[String], Never>
     func addFavouriteId(_ id: String)
     func removeFavouriteId(_ id: String)
@@ -156,8 +140,6 @@ protocol Preferences {
     func saveLoginDate(date: Date)
 
     // Widget Info
-    func saveConnectionRequested(value: Bool)
-    func getConnectionRequested() -> Bool
 
     // IP Address - Issue #911
     func saveCurrentIpAddress(ip: String?)

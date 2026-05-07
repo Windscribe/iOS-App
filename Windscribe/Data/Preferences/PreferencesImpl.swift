@@ -35,10 +35,6 @@ class PreferencesImpl: Preferences {
         return getBool(key: SharedKeys.referAndShareUserDefautsKeys)
     }
 
-    func getServerCredentialTypeKey() -> String? {
-        return getString(forKey: SharedKeys.serverCredentialsTypeKey)
-    }
-
     func setServerCredentialTypeKey(typeKey: String) {
         setString(typeKey, forKey: SharedKeys.serverCredentialsTypeKey)
     }
@@ -53,14 +49,6 @@ class PreferencesImpl: Preferences {
 
     func getLanguageManagerLanguage() -> String? {
         return getString(forKey: SharedKeys.languageManagerSelectedLanguage)
-    }
-
-    func setLanguageManagerDefaultLanguage(language: String) {
-        setString(language, forKey: SharedKeys.languageManagerDefaultLanguage)
-    }
-
-    func getLanguageManagerDefaultLanguage() -> String? {
-        return getString(forKey: SharedKeys.languageManagerDefaultLanguage)
     }
 
     func saveServerNameKey(key: String?) {
@@ -135,10 +123,6 @@ class PreferencesImpl: Preferences {
         return getBool(key: SharedKeys.blurNetworkName)
     }
 
-    func saveSelectedLanguage(language: String?) {
-        setString(language, forKey: SharedKeys.selectedLanguage)
-    }
-
     func getSelectedLanguage() -> String? {
         return getString(forKey: SharedKeys.selectedLanguage)
     }
@@ -161,10 +145,6 @@ class PreferencesImpl: Preferences {
 
     func saveRegisteredForPushNotifications(bool: Bool?) {
         setBool(bool, forKey: SharedKeys.registeredForPushNotifications)
-    }
-
-    func getRegisteredForPushNotifications() -> Bool? {
-        return getBool(key: SharedKeys.registeredForPushNotifications)
     }
 
     func saveFirstInstall(bool: Bool?) {
@@ -244,14 +224,6 @@ class PreferencesImpl: Preferences {
         setInt(count, forKey: SharedKeys.connectionCount)
     }
 
-    func getLastConnectedNetworkName() -> String? {
-        return getString(forKey: SharedKeys.lastConnectedNetworkName)
-    }
-
-    func saveLastConnectedNetworkName(network: String) {
-        setString(network, forKey: SharedKeys.lastConnectedNetworkName)
-    }
-
     func getRateUsActionCompleted() -> Bool {
         return getBool(key: SharedKeys.rateUsActionCompleted)
     }
@@ -300,28 +272,12 @@ class PreferencesImpl: Preferences {
         setInt(score, forKey: SharedKeys.shakeForDataHighestScore)
     }
 
-    func getUnlockShakeForData() -> Bool? {
-        return getBool(key: SharedKeys.shakeForDataUnlock)
-    }
-
-    func saveUnlockShakeForData(bool: Bool?) {
-        setBool(bool, forKey: SharedKeys.shakeForDataUnlock)
-    }
-
     func saveOrderLocationsBy(order: String) {
         setString(order, forKey: SharedKeys.orderLocationsBy)
     }
 
     func getOrderLocationsBy() -> AnyPublisher<String?, Never> {
         return observeKey(SharedKeys.orderLocationsBy, type: String.self, defaultValue: DefaultValues.orderLocationsBy)
-    }
-
-    func saveAppSkinPreferences(type: String) {
-        setString(type, forKey: SharedKeys.appSkinType)
-    }
-
-    func getAppSkinPreferences() -> AnyPublisher<String?, Never> {
-        return observeKey(SharedKeys.appSkinType, type: String.self, defaultValue: DefaultValues.appSkin)
     }
 
     func saveLanguage(language: String) {
@@ -420,18 +376,6 @@ class PreferencesImpl: Preferences {
         return observeKey(SharedKeys.serverNetLoad, type: Bool.self, defaultValue: DefaultValues.showServerNetLoad)
     }
 
-    func savePingMethod(method: String) {
-        setString(method, forKey: SharedKeys.pingMethod)
-    }
-
-    func getPingMethod() -> AnyPublisher<String?, Never> {
-        return observeKey(SharedKeys.pingMethod, type: String.self, defaultValue: DefaultValues.pingMethod)
-    }
-
-    func getPingMethodSync() -> String {
-        return sharedDefault?.string(forKey: SharedKeys.pingMethod) ?? DefaultValues.pingMethod
-    }
-
     func saveAdvanceParams(params: String) {
         setString(params, forKey: SharedKeys.advanceParams)
     }
@@ -467,26 +411,6 @@ class PreferencesImpl: Preferences {
         return false
     }
 
-    func getServerpedeEnabled() -> AnyPublisher<Bool, Never> {
-        return observeKeyNonOptional(SharedKeys.serverpedeEnabled, type: Bool.self, defaultValue: false) { $0 ?? false }
-    }
-
-    func saveServerpedeEnable(status: Bool) {
-        setBool(status, forKey: SharedKeys.serverpedeEnabled)
-    }
-
-    func isRestrictedCountry() -> Bool {
-        let languageCode: String?
-
-        if #available(iOS 16.0, *) {
-            languageCode = Locale.current.language.languageCode?.identifier
-        } else {
-            languageCode = Locale.current.languageCode
-        }
-
-        return ["be", "fa", "ru", "tr", "zh"].contains(languageCode ?? "")
-    }
-
     func getServerSettings() -> String {
         return sharedDefault?.string(forKey: SharedKeys.serverSettings) ?? ""
     }
@@ -503,28 +427,12 @@ class PreferencesImpl: Preferences {
         sharedDefault?.set(value, forKey: SharedKeys.wireguardWakeupTime)
     }
 
-    func saveForceDisconnect(value: Bool) {
-        setBool(value, forKey: SharedKeys.forceDisconnect)
-    }
-
     func saveSSOProvider(provider: String?) {
         setString(provider, forKey: SharedKeys.ssoProvider)
     }
 
     func getSSOProvider() -> String? {
         return getString(forKey: SharedKeys.ssoProvider)
-    }
-
-    func getForceDisconnect() -> AnyPublisher<Bool?, Never> {
-        return observeKey(SharedKeys.forceDisconnect, type: Bool.self, defaultValue: false)
-    }
-
-    func saveConnectionRequested(value: Bool) {
-        setBool(value, forKey: SharedKeys.widgetConnectionRequested)
-    }
-
-    func getConnectionRequested() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.widgetConnectionRequested) ?? false
     }
 
     func getDisconnectReason() -> DisconnectReason {

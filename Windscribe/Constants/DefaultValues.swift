@@ -11,7 +11,6 @@ import Foundation
 enum DefaultValues {
     static let latencyType = "Bars"
     static let orderLocationsBy = "Geography"
-    static let appSkin = "Alpha"
     static let appearance = "Dark"
     static let language = "English"
     static let `protocol` = "WireGuard"
@@ -30,9 +29,7 @@ enum DefaultValues {
     static let autoSecure = true
     static let showServerNetLoad = false
     static let circumventCensorship = false
-    static let serverpede = false
     static let aspectRatio = "Stretch"
-    static let pingMethod = "http"
     static let revision: Int64 = 0
     static let ipv4Only = "IPv4 Only"
 }

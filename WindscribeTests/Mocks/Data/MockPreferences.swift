@@ -26,7 +26,6 @@ class MockPreferences: Preferences {
     var mockDarkMode: Bool?
     var mockSelectedProtocol = CurrentValueSubject<String?,Never>(TextsAsset.wireGuard)
     var mockConnectionMode = CurrentValueSubject<String?,Never>(Fields.Values.manual)
-    var mockServerpedeEnabled = CurrentValueSubject<Bool,Never>(false)
     var mockFavouriteIds: [String] = []
     var mockCustomLocations: [ExportedRegion] = []
     private let favouriteIdsSubject = CurrentValueSubject<[String], Never>([])
@@ -204,16 +203,6 @@ class MockPreferences: Preferences {
         return darkModeSubject.eraseToAnyPublisher()
     }
 
-    func savePingMethod(method: String) {}
-
-    func getPingMethod() -> AnyPublisher<String?, Never> {
-        return Just(nil).eraseToAnyPublisher()
-    }
-
-    func getPingMethodSync() -> String {
-        return ""
-    }
-
     func getConnectionCount() -> Int? {
         return mockConnectionCount
     }
@@ -225,12 +214,6 @@ class MockPreferences: Preferences {
     func saveConnectionCount(count: Int) {
         mockConnectionCount = count
     }
-
-    func getLastConnectedNetworkName() -> String? {
-        return nil
-    }
-
-    func saveLastConnectedNetworkName(network: String) {}
 
     func getNativeRateUsPopupDisplayCount() -> Int? {
         return 0
@@ -249,12 +232,6 @@ class MockPreferences: Preferences {
     }
 
     func saveShakeForDataHighestScore(score: Int) {}
-
-    func getUnlockShakeForData() -> Bool? {
-        return false
-    }
-
-    func saveUnlockShakeForData(bool: Bool?) {}
 
     func saveBlurStaticIpAddress(bool: Bool?) {}
 
@@ -276,8 +253,6 @@ class MockPreferences: Preferences {
         return false
     }
 
-    func saveSelectedLanguage(language: String?) {}
-
     func getSelectedLanguage() -> String? {
         return nil
     }
@@ -295,10 +270,6 @@ class MockPreferences: Preferences {
     }
 
     func saveRegisteredForPushNotifications(bool: Bool?) {}
-
-    func getRegisteredForPushNotifications() -> Bool? {
-        return false
-    }
 
     func saveFirstInstall(bool: Bool?) {
         mockFirstInstall = bool
@@ -477,18 +448,8 @@ class MockPreferences: Preferences {
 
     func setLanguageManagerSelectedLanguage(language: Windscribe.Languages) {}
 
-    func setLanguageManagerDefaultLanguage(language: String) {}
-
-    func getLanguageManagerDefaultLanguage() -> String? {
-        return nil
-    }
-
     func getLanguageManagerSelectedLanguage() -> AnyPublisher<String?, Never> {
         return Just(nil).eraseToAnyPublisher()
-    }
-
-    func getServerCredentialTypeKey() -> String? {
-        return nil
     }
 
     func setServerCredentialTypeKey(typeKey: String) {}
@@ -551,16 +512,6 @@ class MockPreferences: Preferences {
         return 0.0
     }
 
-    func saveForceDisconnect(value: Bool) {}
-
-    func getForceDisconnect() -> AnyPublisher<Bool?, Never> {
-        return Just(nil).eraseToAnyPublisher()
-    }
-
-    func getForceDisconnectSync() -> Bool {
-        return false
-    }
-
     func observeFavouriteIds() -> AnyPublisher<[String], Never> {
         return favouriteIdsSubject.eraseToAnyPublisher()
     }
@@ -583,12 +534,6 @@ class MockPreferences: Preferences {
     }
 
     func saveLoginDate(date: Date) {}
-
-    func saveConnectionRequested(value: Bool) {}
-
-    func getConnectionRequested() -> Bool {
-        return false
-    }
 
     func clearSelectedLocations() {
         mockLastSelectedLocation = ""
@@ -920,13 +865,6 @@ class MockPreferences: Preferences {
 
     func getServerRevision() -> Int64 {
         0
-    }
-
-    func getServerpedeEnabled() -> AnyPublisher<Bool, Never> {
-        mockServerpedeEnabled.eraseToAnyPublisher()
-    }
-
-    func saveServerpedeEnable(status: Bool) {
     }
 
     func saveHasIpBackup(backup: Bool) {

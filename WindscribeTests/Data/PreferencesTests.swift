@@ -233,7 +233,6 @@ class PreferencesTests: XCTestCase {
         // These are read-only methods in the mock
         XCTAssertFalse(preferences.getKillSwitchSync())
         XCTAssertFalse(preferences.getAllowLaneSync())
-        XCTAssertEqual(preferences.getPingMethodSync(), "")
 
         // getConnectionModeSync returns the default value from mockConnectionMode
         let connectionMode = preferences.getConnectionModeSync()

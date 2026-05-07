@@ -33,7 +33,6 @@ enum SharedKeys {
     static let serverSettings = "ServerSettings"
     static let lasUsedNodeIP = "LastUsedNodeIP"
     static let ignorePinIP = "IgnorePinIP"
-    static let serverpedeEnabled = "serverpedeEnabled"
 
     // UserPreferenceManager
     static let orderLocationsBy = "OrderLocationsBy"
@@ -45,16 +44,13 @@ enum SharedKeys {
     static let selectedProtocol = "selectedProtocol"
     static let serverNetLoad = "serverHealth"
     static let darkMode = "darkMode"
-    static let pingMethod = "pingMethod"
     static let connectedDNSValue = "connectedDNSValue"
-    static let appSkinType = "appSkinType"
 
     // UserDefaultKeys
     static let autoSecureNewNetworks = "AutoSecureNewNetworks"
     static let connectionMode = "connection-mode"
     static let connectedDNS = "connected-DNS"
     static let connectionCount = "connection-count"
-    static let lastConnectedNetworkName = "last-connected-network-name"
     static let rateUsPopupDisplayed = "rate-us-popup-displayed"
     static let rateUsPopupWasAttempted = "rate-us-popup-was-attempted"
     static let lastLoginDate = "last-login-date"
@@ -62,7 +58,6 @@ enum SharedKeys {
     static let rateUsPopupDisplayCount = "rate-us-popup-display-count"
     static let privacyPopupAccepted = "privacy-popup-accepted"
     static let shakeForDataHighestScore = "shake-for-data-highest-score"
-    static let shakeForDataUnlock = "shake-for-data-unlock"
     static let firstInstall = "first-install"
     static let registeredForPushNotifications = "registered-for-push-notifications"
     static let blurStaticIpAddress = "blur-static-ip-address"
@@ -88,17 +83,14 @@ enum SharedKeys {
     static let countryCodeKey = "country-code"
     static let nickNameKey = "nick-name"
     static let serverCredentialsTypeKey = "server-credentials"
-    static let forceDisconnect = "force-disconnect"
     static let disconnectReason = "disconnect-reason"
     static let userStatus = "user-status"
-    static let widgetConnectionRequested = "widget-connection-requested"
 
     // IP Address - Issue #911
     static let currentIpAddress = "current-ip-address"
 
     // language manager
     static let languageManagerSelectedLanguage = "LanguageManagerSelectedLanguage"
-    static let languageManagerDefaultLanguage = "LanguageManagerDefaultLanguage"
 
     // ReferAndShareManager
     static let referAndShareUserDefautsKeys = "referAndShareUserDefautsKeys"
