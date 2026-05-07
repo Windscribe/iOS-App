@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 import Swinject
 @testable import Windscribe
 import XCTest
@@ -216,4 +217,130 @@ class UserSessionRepositoryTests: XCTestCase {
             amneziawgConfigId: ""
         )
     }
+}
+
+// MARK: - ConfigurationsManager Access Validation Regression Tests
+
+final class ConfigurationsManagerAccessValidationTests: XCTestCase {
+    private var cancellables = Set<AnyCancellable>()
+
+    func testValidateAccessToLocationForProUserServerLocationCompletes() {
+        let sut = makeSUT()
+        let expectation = expectation(description: "Pro user server location access validation completes")
+        var receivedError: Error?
+
+        sut.validateAccessToLocation(locationID: "101")
+            .sink(receiveCompletion: { completion in
+                if case let .failure(error) = completion {
+                    receivedError = error
+                }
+            }, receiveValue: {
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNil(receivedError)
+    }
+
+    private func makeSUT() -> ConfigurationsManager {
+        let preferences = MockPreferences()
+        preferences.mockPrivacyPopupAccepted = true
+
+        let server = ServerMachineModel(
+            id: 1,
+            hostname: "pro-location-001.windscribe.com",
+            ip: "192.0.2.1",
+            ip2: "192.0.2.2",
+            ip3: "192.0.2.3",
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 10,
+            sclass: 1
+        )
+
+        var datacenter = DatacenterModel(
+            id: 101,
+            city: "Toronto",
+            nick: "Pro",
+            iata: "YYZ",
+            status: 1,
+            gps: "43.6532,-79.3832",
+            tz: "America/Toronto",
+            p2p: 1,
+            isPremium: 1,
+            wgPubkey: "test-wg-key",
+            wgEndpoint: "pro-location.windscribe.com:443",
+            ovpnX509: "test-x509",
+            linkSpeed: 1000
+        )
+        datacenter.locationId = 1
+        datacenter.servers = [server]
+
+        let location = LocationModel(
+            id: 1,
+            name: "Canada",
+            countryCode: "CA",
+            shortName: "CA",
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: [datacenter]
+        )
+
+        let locationsManager = MockLocationsManager()
+        locationsManager.mockLocationType = .server
+        locationsManager.mockLocation = (location, datacenter)
+
+        let userSessionRepository = MockUserSessionRepository()
+        userSessionRepository.setMockSession(userId: "pro-user", isPremium: true)
+
+        let locationListRepository = MockLocationListRepository()
+        locationListRepository.locationListSubject.send([location])
+        locationListRepository.datacenterListSubject.send([datacenter])
+        locationListRepository.serverListSubject.send([server])
+
+        return ConfigurationsManager(
+            logger: MockLogger(),
+            keychainDb: ConfigurationsManagerAccessKeyChainDatabase(),
+            fileDatabase: MockFileDatabase(),
+            advanceRepository: MockAdvanceRepository(),
+            wgRepository: ConfigurationsManagerAccessWireguardConfigRepository(),
+            wgCredentials: MockWgCredentials(),
+            preferences: preferences,
+            locationsManager: locationsManager,
+            ipRepository: ConfigurationsManagerAccessIPRepository(),
+            userSessionRepository: userSessionRepository,
+            locationListRepository: locationListRepository,
+            bridgeAPI: MockWSNetBridgeAPI(),
+            bridgeApiRepository: ConfigurationsManagerAccessBridgeApiRepository(),
+            credentialsRepository: MockCredentialsRepository(),
+            staticIpRepository: MockStaticIpRepository(),
+            customConfigRepository: MockCustomConfigRepository(),
+            antiCensorshipRepository: MockAntiCensorshipRepository()
+        )
+    }
+}
+
+private final class ConfigurationsManagerAccessKeyChainDatabase: KeyChainDatabase {
+    func save(username: String, password: String) {}
+    func retrieve(username: String) -> Data? { nil }
+    func isGhostAccountCreated() -> Bool { false }
+    func setGhostAccountCreated() {}
+}
+
+private final class ConfigurationsManagerAccessWireguardConfigRepository: WireguardConfigRepository {
+    func getCredentials() async throws {}
+}
+
+private final class ConfigurationsManagerAccessIPRepository: IPRepository {
+    let ipState = CurrentValueSubject<IPState?, Never>(nil)
+    let currentIp = CurrentValueSubject<String?, Never>(nil)
+
+    func getIp(usePingTest: Bool) async throws {}
+}
+
+private final class ConfigurationsManagerAccessBridgeApiRepository: BridgeApiRepository {
+    let bridgeIsAvailable = CurrentValueSubject<Bool, Never>(false)
+    let isReady = false
 }

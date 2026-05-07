@@ -539,6 +539,8 @@ extension ConfigurationsManager {
                         } else {
                             promise(.success(()))
                         }
+                    } else {
+                        promise(.success(()))
                     }
                 case .custom:
                     let customId = self.locationsManager.getCustomId(location: locationID)
