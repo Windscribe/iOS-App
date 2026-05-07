@@ -52,7 +52,7 @@ class Network: Assembly {
                                     bridgeAPI: r.resolve(WSNetBridgeAPIType.self)!)
         }.inObjectScope(.userScope)
         container.register(APIManager.self) { r in
-            APIManagerImpl(api: r.resolve(WSNetServerAPI.self)!,
+            APIManagerImpl(api: r.resolve(WSNetServerAPIType.self)!,
                            bridgeApi: r.resolve(WSNetBridgeAPIType.self)!,
                            logger: r.resolve(FileLogger.self)!,
                            apiUtil: r.resolve(APIUtilService.self)!,
@@ -62,7 +62,7 @@ class Network: Assembly {
             (apiManager as? APIManagerImpl)?.userSessionRepository = r.resolve(UserSessionRepository.self)
         }.inObjectScope(.userScope)
         container.register(WireguardAPIManager.self) { r in
-            WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!, apiUtil: r.resolve(APIUtilService.self)!)
+            WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPIType.self)!, preferences: r.resolve(Preferences.self)!, apiUtil: r.resolve(APIUtilService.self)!)
         }.inObjectScope(.userScope)
     }
 }
@@ -408,8 +408,8 @@ class Managers: Assembly {
                        userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.userScope)
 
-        container.register(LocalPingManager.self) { _ in
-            LocalPingManagerImpl(pingManager: WSNet.instance().pingManager())
+        container.register(LocalPingManager.self) { r in
+            LocalPingManagerImpl(pingManager: r.resolve(WSNetPingManagerType.self)!)
         }.inObjectScope(.container)
     }
 }

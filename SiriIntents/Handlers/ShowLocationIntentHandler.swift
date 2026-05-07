@@ -17,7 +17,7 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
 
     private lazy var preferences: Preferences = resolver.getPreferences()
 
-    private lazy var api: WSNetServerAPI = resolver.getApi()
+    private lazy var api: WSNetServerAPIType = resolver.getApi()
 
     private lazy var apiUtil: APIUtilService = resolver.getApiUtil()
 

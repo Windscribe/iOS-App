@@ -31,7 +31,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     private lazy var apiUtil: APIUtilService = container.resolve(APIUtilService.self)!
 
-    private lazy var api: WSNetServerAPI = container.resolve(WSNetServerAPI.self)!
+    private lazy var api: WSNetServerAPIType = container.resolve(WSNetServerAPIType.self)!
 
     private let consoleLogger = Logger(subsystem: "Windscribe-tunnel", category: "com.windscribe.vpn")
 

@@ -64,6 +64,23 @@ Strict-concurrency mode is on across the project ([ND-006](neo/DECISIONS.md#nd-0
 
 Inline comments on these conformances stay one line: `// @unchecked until M4's Sendability cleanup marks <Type> directly.` The rationale is here, not duplicated in every file. M4 (ND-006) replaces these with proper `Sendable` conformance on the type definitions and removes the workaround.
 
+### Converting Combine to AsyncSequence
+
+Neo features must not `import Combine`. The boundary adapters in `Windscribe/Services/Protocols/` and `Windscribe/API/WSNet Protocol/` are the only place Combine is allowed; everywhere else, work in `async/await` and `AsyncSequence`.
+
+There are two flavors of conversion, depending on what's on the legacy side:
+
+**One-shot value (Combine `Future` / completion handler) → `async`:** wrap with `withCheckedThrowingContinuation`. Existing example: `WSNetBridgeAPIType.rotateIp()` in [`Windscribe/API/WSNet Protocol/WSNetBridgeAPIType.swift`](../Windscribe/API/WSNet Protocol/WSNetBridgeAPIType.swift) wraps a `WSNetCancelableCallback`-style call into an `async throws -> (Int32, String)`.
+
+**Stream of values (Combine subject / `NotificationCenter`) → `AsyncStream`:** wrap with `AsyncStream { continuation in … }` and bridge each emitted value into the continuation. The canonical worked example is `LegacyLookAndFeelObserver` in [`Windscribe/Services/Protocols/LookAndFeelObserving.swift`](../Windscribe/Services/Protocols/LookAndFeelObserving.swift) — a `CurrentValueSubject` becomes an `AsyncStream<Theme>` that yields the current value first, then each subsequent emission. M3's `LegacyServerProvider` and `LegacySessionProvider` follow the same shape for `[LocationModel]` and `SessionModel?`.
+
+The rules:
+
+- **Never `import Combine` inside a Feature.** If a Feature seems to need it, the protocol surface is wrong — extend the protocol with an `AsyncStream` accessor at the boundary instead.
+- **`AsyncStream` is the contract surface; the legacy subscription is hidden.** Adapters retain the Combine subscription (`AnyCancellable`) for the stream's lifetime via the continuation's `onTermination` handler — don't leak it into the protocol.
+- **`.values` is fine for one-off Apple-API conversions** (e.g. `NotificationCenter.default.notifications(named: …)`) where you don't own the publisher. Use `AsyncStream { … }` when you're wrapping legacy code we control — it's clearer about the seam and easier to test.
+- **Drop the first value if the consumer already has it.** A `CurrentValueSubject`-backed stream yields the seed value first; consumers that already read the synchronous accessor (`var locations: [LocationModel]`) typically want updates only. Drop in the consumer with `.dropFirst()` rather than baking the policy into the adapter.
+
 ## Adding a new feature
 
 The shape every Neo feature follows:
@@ -80,6 +97,15 @@ Route (Hashable enum case, in the flow's NavigationStack root)
 The canonical reference is **`Windscribe/Features/About/`** (lands as part of M0; see ND-005). Copy that module, change names. If you need to make architectural decisions to do so, that's a signal the reference needs refining — flag it on the M0 issue rather than diverging.
 
 Tests live in `WindscribeTests/Features/<FeatureName>Tests.swift` using the **Swift Testing** framework (`import Testing`, `@Test`, `#expect`). Each test injects mock service implementations directly into the VM constructor. No DI container needed.
+
+## Protocol naming
+
+| Kind | Suffix | When | Examples |
+|---|---|---|---|
+| Capability protocol | `*ing` (verb-of-action) | A Neo protocol that names what something *does*. Single responsibility, lives in `Services/Protocols/`, consumed by feature view models via `@Environment(@Entry)`. | `VPNConnecting`, `ServerProviding`, `CredentialStoring`, `PreferencesReading`, `LookAndFeelObserving` |
+| Legacy bridge mirror | `*Type` | A Swift protocol that mirrors the surface of a generated Obj-C class so it's mockable in tests. Reserved for bridges over types we don't own (WSNet xcframework, Apple frameworks where the underlying class is final/extension-hostile). | `WSNetServerAPIType`, `WSNetBridgeAPIType`, `WSNetPingManagerType` |
+
+The split makes the seam visible: `*ing` reads as a Neo capability you can write a fresh impl for; `*Type` reads as a thin protocol-shaped slice through a fixed underlying type. Don't use `*Type` for new Neo capability protocols — `VPNConnectingType` is wrong. Don't use `*ing` for legacy bridge mirrors — `WSNetServerCalling` reads forced for a 40-method API surface.
 
 ## Routing
 

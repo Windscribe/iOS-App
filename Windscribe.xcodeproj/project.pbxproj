@@ -682,6 +682,19 @@
 		92C985B12FABBB5500326D64 /* PreferencesReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985B02FABBB5500326D64 /* PreferencesReading.swift */; };
 		92C985B32FABBB8300326D64 /* SessionProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985B22FABBB8300326D64 /* SessionProviding.swift */; };
 		92C985B52FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985B42FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift */; };
+		92EFE9B62FACE69000B381CB /* WSNetServerAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */; };
+		92EFE9B72FACE69000B381CB /* WSNetServerAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */; };
+		92EFE9B82FACE69000B381CB /* WSNetServerAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */; };
+		92EFE9B92FACE69000B381CB /* WSNetServerAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */; };
+		92EFE9BA2FACE69000B381CB /* WSNetServerAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */; };
+		92EFE9BB2FACE69000B381CB /* WSNetServerAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */; };
+		92EFE9BD2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */; };
+		92EFE9BE2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */; };
+		92EFE9BF2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */; };
+		92EFE9C02FACE69200B381CB /* WSNetPingManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */; };
+		92EFE9C12FACE69200B381CB /* WSNetPingManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */; };
+		92EFE9C22FACE69200B381CB /* WSNetPingManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */; };
+		92EFE9C42FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EFE9C32FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift */; };
 		956390B5C3DBFA82F5708A4B /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 6E7D0EC08D670F3A49856637 /* GRDB */; };
 		A1B2C3D401F600000001A002 /* ShortcutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A001 /* ShortcutType.swift */; };
 		A1B2C3D401F600000001A004 /* WindowProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D401F600000001A003 /* WindowProvider.swift */; };
@@ -1969,6 +1982,9 @@
 		92C985B02FABBB5500326D64 /* PreferencesReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesReading.swift; sourceTree = "<group>"; };
 		92C985B22FABBB8300326D64 /* SessionProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionProviding.swift; sourceTree = "<group>"; };
 		92C985B42FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3ServiceProtocolMockabilityTests.swift; sourceTree = "<group>"; };
+		92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetServerAPIType.swift; sourceTree = "<group>"; };
+		92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetPingManagerType.swift; sourceTree = "<group>"; };
+		92EFE9C32FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdapterStreamEquivalenceTests.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A001 /* ShortcutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutType.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A003 /* WindowProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowProvider.swift; sourceTree = "<group>"; };
 		A1B2C3D401F600000001A006 /* WindowSetupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupService.swift; sourceTree = "<group>"; };
@@ -2718,6 +2734,8 @@
 			children = (
 				1E04929C2F3F5CC20016B11F /* WSNetEmergencyConnectType.swift */,
 				1E0492D52F47799F0016B11F /* WSNetBridgeAPIType.swift */,
+				92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */,
+				92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */,
 			);
 			path = "WSNet Protocol";
 			sourceTree = "<group>";
@@ -3839,6 +3857,7 @@
 			children = (
 				92C985A32FA3A79E00326D64 /* AboutTests.swift */,
 				92C985B42FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift */,
+				92EFE9C32FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -7135,6 +7154,7 @@
 				F4843A992D89F7DE0034330F /* URL+Extension.swift in Sources */,
 				F4F51A792D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */,
 				F469F0D82D7BA74E004DC6AB /* UIImage+GIF.swift in Sources */,
+				92EFE9C12FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
 				59FC74202C51549600021CD1 /* AdvanceKeys.swift in Sources */,
 				59909FC62C778D68008FA4C7 /* ServerListRouter.swift in Sources */,
 				59FC743F2C515BAC00021CD1 /* CredentialsRepository.swift in Sources */,
@@ -7154,6 +7174,7 @@
 				F4433D0A2E8310790012EA34 /* KeychainManagerImpl.swift in Sources */,
 				59DF45882C59C30400EB6DC1 /* SignupRouter.swift in Sources */,
 				59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */,
+				92EFE9B62FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				F49E61D02E00A2030087386F /* CustomSoundEffectType.swift in Sources */,
 				59FC73CD2C514A7A00021CD1 /* AppModulesCommon.swift in Sources */,
 				1E2CC46D2F5B3D640077C82E /* Deprecated Servers.swift in Sources */,
@@ -7732,6 +7753,7 @@
 				F43374432E4672CF00333190 /* ProtocolSwitchViewModel.swift in Sources */,
 				1E6ECB5F2F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */,
 				C5D1C2D42BBFE1AD0083B9EC /* AdvanceRepositoryImpl.swift in Sources */,
+				92EFE9B72FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				C5A930CB2B42169A0001CFA0 /* APIManagerImpl+Billing.swift in Sources */,
 				C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */,
 				1E5553B72D8C323800F16AF0 /* TopNavBarHeader.swift in Sources */,
@@ -7793,6 +7815,7 @@
 				1ED6164C2DCA713E006CDC99 /* MenuEntryViewModel.swift in Sources */,
 				1ED616792DD75868006CDC99 /* MenuCategoryRowType.swift in Sources */,
 				C5A930E12B43F0270001CFA0 /* CredentialsRepositoryImpl.swift in Sources */,
+				92EFE9BF2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
 				1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935332DA8435D00108558 /* EnterEmailView.swift in Sources */,
 				F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */,
@@ -8046,6 +8069,7 @@
 				1E0492D32F4779100016B11F /* MockWSNetBridgeAPI.swift in Sources */,
 				92B7B5C02F92E376006B69DF /* FavouriteRecordTests.swift in Sources */,
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,
+				92EFE9C42FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift in Sources */,
 				92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */,
 				92890E142F7C4917002EAB44 /* MockAntiCensorshipRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
@@ -8124,6 +8148,7 @@
 				1E6ECB652F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,
 				F49C457A2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
+				92EFE9C02FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
 				AFD16F1222775EA300E9FAD3 /* Notifications.swift in Sources */,
 				C50BB0EA2F3CD5C200D6283B /* APIUtil.swift in Sources */,
 				1E2CC4602F5604310077C82E /* ServerMachineModel.swift in Sources */,
@@ -8138,6 +8163,7 @@
 				C56FCBEA2B2B8E4D008DE7D4 /* SharedKeys.swift in Sources */,
 				C585F3E22C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
 				C571C6752C135C3600786DA5 /* UserScope.swift in Sources */,
+				92EFE9B92FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				596E60062B8F77EC00D51E20 /* Language.swift in Sources */,
 				C5A6F07C2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				F4433D0E2E8312500012EA34 /* KeychainManagerImpl.swift in Sources */,
@@ -8208,12 +8234,14 @@
 				C50F20CA2B61777C00266B23 /* CoreModule.swift in Sources */,
 				C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */,
 				F49C45822DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
+				92EFE9BB2FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				F4433D062E830A340012EA34 /* KeychainManager.swift in Sources */,
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				1EB910AF2F9F7B9D00D04943 /* ServerMachineModel.swift in Sources */,
 				C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
+				92EFE9BD2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
 				C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */,
 				C5035A142CBE280600A46B6D /* Connect.swift in Sources */,
 				1EB910AC2F9F797200D04943 /* PreferencesImpl+Keychain.swift in Sources */,
@@ -8288,6 +8316,7 @@
 				C5A930F52B45A4670001CFA0 /* FileLogger.swift in Sources */,
 				1E0492E72F4F28CC0016B11F /* WSNetBridgeAPIType.swift in Sources */,
 				1E2CC46A2F5890830077C82E /* LocationModel.swift in Sources */,
+				92EFE9C22FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
 				C5925B7A2F38F0AB0057D29C /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				C535D28427E2CECA00C08345 /* WgCredentials.swift in Sources */,
 				C5D0E40229BB8BE70091FB14 /* ringlogger.c in Sources */,
@@ -8303,6 +8332,7 @@
 				C50F20C72B61769F00266B23 /* WireguardModule.swift in Sources */,
 				C5D0E40E29BB8BE70091FB14 /* FileManager+Extension.swift in Sources */,
 				C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */,
+				92EFE9BA2FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				C590D76927F2A55D007515B3 /* Session.swift in Sources */,
 				C50F20852B60BCCE00266B23 /* WireguardConfigRepository.swift in Sources */,
 				C5D0E40A29BB8BE70091FB14 /* String+ArrayConversion.swift in Sources */,
@@ -8331,6 +8361,7 @@
 				C50F20B22B616DF900266B23 /* FileLogger.swift in Sources */,
 				1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */,
 				599339702B4CD28400EC615D /* DefaultValues.swift in Sources */,
+				92EFE9BE2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
 				C5035A192CBE2C0100A46B6D /* WSNetErrors.swift in Sources */,
 				1E60E0232CAD692400623CD5 /* KeyChainDatabaseImpl.swift in Sources */,
 				C59FF1A42CBB8D920072EF70 /* ContainerResolver.swift in Sources */,
@@ -8384,6 +8415,7 @@
 				C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C5A6F07F2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
+				92EFE9B82FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				1EB910AA2F9F797200D04943 /* PreferencesImpl+Keychain.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
 				F470F55C2E81B00400F8400D /* UserDefaults+Extension.swift in Sources */,

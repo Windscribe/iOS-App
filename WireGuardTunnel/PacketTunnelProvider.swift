@@ -28,7 +28,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     private lazy var apiUtil: APIUtilService = container.resolve(APIUtilService.self)!
 
-    private lazy var api: WSNetServerAPI = container.resolve(WSNetServerAPI.self)!
+    private lazy var api: WSNetServerAPIType = container.resolve(WSNetServerAPIType.self)!
 
     private lazy var preferences: Preferences = container.resolve(Preferences.self)!
 

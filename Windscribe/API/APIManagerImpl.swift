@@ -9,14 +9,14 @@
 import Foundation
 
 class APIManagerImpl: APIManager {
-    var api: WSNetServerAPI
+    var api: WSNetServerAPIType
     var bridgeApi: WSNetBridgeAPIType
     private let logger: FileLogger
     let apiUtil: APIUtilService
     let preferences: Preferences
     var userSessionRepository: UserSessionRepository?
 
-    init(api: WSNetServerAPI,
+    init(api: WSNetServerAPIType,
          bridgeApi: WSNetBridgeAPIType,
          logger: FileLogger,
          apiUtil: APIUtilService,

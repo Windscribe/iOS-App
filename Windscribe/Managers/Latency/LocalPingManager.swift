@@ -15,10 +15,10 @@ protocol LocalPingManager {
 }
 
 class LocalPingManagerImpl: LocalPingManager {
-    private let pingManager: WSNetPingManager
+    private let pingManager: WSNetPingManagerType
     private let serialQueue = DispatchQueue(label: "com.windscribe.ping.serial", qos: .userInitiated)
 
-    init(pingManager: WSNetPingManager) {
+    init(pingManager: WSNetPingManagerType) {
         self.pingManager = pingManager
     }
 

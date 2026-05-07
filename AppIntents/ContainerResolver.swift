@@ -27,8 +27,8 @@ class ContainerResolver: ContainerResolvertype {
         return container.resolve(FileLogger.self)!
     }
 
-    func getApi() -> WSNetServerAPI {
-        return container.resolve(WSNetServerAPI.self)!
+    func getApi() -> WSNetServerAPIType {
+        return container.resolve(WSNetServerAPIType.self)!
     }
 
     func getBridgeApi() -> WSNetBridgeAPIType {

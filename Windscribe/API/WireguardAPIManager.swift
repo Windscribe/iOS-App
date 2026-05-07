@@ -14,10 +14,10 @@ protocol WireguardAPIManager {
 }
 
 class WireguardAPIManagerImpl: WireguardAPIManager {
-    private let api: WSNetServerAPI
+    private let api: WSNetServerAPIType
     private let preferences: Preferences
     private let apiUtil: APIUtilService
-    init(api: WSNetServerAPI, preferences: Preferences, apiUtil: APIUtilService) {
+    init(api: WSNetServerAPIType, preferences: Preferences, apiUtil: APIUtilService) {
         self.api = api
         self.preferences = preferences
         self.apiUtil = apiUtil

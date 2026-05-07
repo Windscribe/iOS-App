@@ -37,11 +37,14 @@ extension Container {
         if !WSNet.isValid() {
             initializeWSNet(r: self)
         }
-        register(WSNetServerAPI.self) { _ in
+        register(WSNetServerAPIType.self) { _ in
             WSNet.instance().serverAPI()
         }.inObjectScope(.container)
         register(WSNetBridgeAPIType.self) { _ in
             WSNet.instance().bridgeAPI()
+        }.inObjectScope(.container)
+        register(WSNetPingManagerType.self) { _ in
+            WSNet.instance().pingManager()
         }.inObjectScope(.container)
         register(APIUtilService.self) { _ in
             APIUtilServiceImpl()

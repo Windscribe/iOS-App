@@ -16,7 +16,7 @@ class ControlPlane {
 
     private let consoleLogger: Logger
     private let apiUtil: APIUtilService
-    private let api: WSNetServerAPI
+    private let api: WSNetServerAPIType
     private let preferences: Preferences
     private let onTunnelShouldStop: @MainActor (DisconnectReason, NSError) -> Void
 
@@ -25,7 +25,7 @@ class ControlPlane {
 
     init(
         apiUtil: APIUtilService,
-        api: WSNetServerAPI,
+        api: WSNetServerAPIType,
         preferences: Preferences,
         consoleLogger: Logger,
         onTunnelShouldStop: @escaping @MainActor (DisconnectReason, NSError) -> Void
