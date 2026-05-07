@@ -10,6 +10,7 @@ import Foundation
 @testable import Windscribe
 
 class MockWSNetBridgeAPI: WSNetBridgeAPIType {
+    private let lock = NSLock()
 
     // Mock Configuration
     var mockCurrentHost: String = ""
@@ -17,13 +18,21 @@ class MockWSNetBridgeAPI: WSNetBridgeAPIType {
     var mockHasSessionToken: Bool = false
     var mockIgnoreSslErrors: Bool = false
     var mockConnectedState: Bool = false
-    var mockApiAvailableCallback: ((Bool) -> Void)?
+    private var _mockApiAvailableCallback: ((Bool) -> Void)?
+    var mockApiAvailableCallback: ((Bool) -> Void)? {
+        get { lock.withLock { _mockApiAvailableCallback } }
+        set { lock.withLock { _mockApiAvailableCallback = newValue } }
+    }
 
     // Tracking
     var setCurrentHostCalled = false
     var setIgnoreSslErrorsCalled = false
     var setConnectedStateCalled = false
-    var setApiAvailableCallbackCalled = false
+    private var _setApiAvailableCallbackCalled = false
+    var setApiAvailableCallbackCalled: Bool {
+        get { lock.withLock { _setApiAvailableCallbackCalled } }
+        set { lock.withLock { _setApiAvailableCallbackCalled = newValue } }
+    }
     var rotateIPCalled = false
     var pinIpCalled = false
     var hasSessionTokenCalled = false
@@ -60,8 +69,10 @@ class MockWSNetBridgeAPI: WSNetBridgeAPIType {
     }
 
     func setApiAvailableCallback(_ callback: @escaping (Bool) -> Void) {
-        setApiAvailableCallbackCalled = true
-        mockApiAvailableCallback = callback
+        lock.withLock {
+            _setApiAvailableCallbackCalled = true
+            _mockApiAvailableCallback = callback
+        }
     }
 
     func hasSessionToken() -> Bool {
@@ -82,7 +93,8 @@ class MockWSNetBridgeAPI: WSNetBridgeAPIType {
     // MARK: Helper Methods
 
     func simulateApiAvailable(_ ready: Bool) {
-        mockApiAvailableCallback?(ready)
+        let callback = lock.withLock { _mockApiAvailableCallback }
+        callback?(ready)
     }
 
     func reset() {

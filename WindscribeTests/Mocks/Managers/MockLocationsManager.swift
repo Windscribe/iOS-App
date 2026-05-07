@@ -15,6 +15,7 @@ class MockLocationsManager: LocationsManager {
     // MARK: Protocol Properties
     var mockLocation: (LocationModel, DatacenterModel)?
     var mockLocationError: Error?
+    var mockLocationType: LocationType?
     var mockLocationUIInfo: LocationUIInfo = LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
 
     var getLocationCalled = false
@@ -96,9 +97,9 @@ class MockLocationsManager: LocationsManager {
 
     func getLastSelectedLocation() -> String { return "" }
 
-    func getLocationType() -> LocationType? { return nil }
+    func getLocationType() -> LocationType? { return mockLocationType }
 
-    func getLocationType(id: String) -> LocationType? { return nil }
+    func getLocationType(id: String) -> LocationType? { return mockLocationType }
 
     func getId() -> Int { return 0 }
 
@@ -121,6 +122,7 @@ class MockLocationsManager: LocationsManager {
     func reset() {
         mockLocation = nil
         mockLocationError = nil
+        mockLocationType = nil
         mockLocationUIInfo = LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
         getLocationCalled = false
         saveLastSelectedLocationCalled = false

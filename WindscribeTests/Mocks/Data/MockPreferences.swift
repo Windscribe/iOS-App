@@ -43,6 +43,7 @@ class MockPreferences: Preferences {
     var mockUnblockWgParams: Windscribe.UnblockWgParams?
     var disconnectReason: Windscribe.DisconnectReason?
     var userStatus: Bool?
+    var mockPrivacyPopupAccepted: Bool? = false
 
     // WireGuard configuration storage
     var mockWireGuardAddress: String?
@@ -222,10 +223,12 @@ class MockPreferences: Preferences {
     func saveNativeRateUsPopupDisplayCount(count: Int) {}
 
     func getPrivacyPopupAccepted() -> Bool? {
-        return false
+        return mockPrivacyPopupAccepted
     }
 
-    func savePrivacyPopupAccepted(bool: Bool) {}
+    func savePrivacyPopupAccepted(bool: Bool) {
+        mockPrivacyPopupAccepted = bool
+    }
 
     func getShakeForDataHighestScore() -> Int? {
         return 0
