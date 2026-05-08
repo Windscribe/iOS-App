@@ -133,8 +133,8 @@ enum SharedKeys {
     static let serverRevision = "serverRevision"
     static let routingType = "routingType"
 
-    // Realm → GRDB one-time migration flag
-    static let didMigrateRealmToGRDB = "didMigrateRealmToGRDB_v1"
+    // Realm → GRDB one-time migration flag. Bumped to _v2 with #1074 to force re-migration from canonical Realm.
+    static let didMigrateRealmToGRDB = "didMigrateRealmToGRDB_v2"
 
     // MARK: - Keychain Keys
     static let keychainOpenVPNCred = "openvpn-server-cred"

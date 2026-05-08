@@ -7,7 +7,7 @@
 //
 // Safety contract
 // ───────────────
-// • The migration flag (`didMigrateRealmToGRDB_v1`) is set ONLY on success.
+// • The migration flag (`didMigrateRealmToGRDB_v2`) is set ONLY on success.
 // • If any step throws, the flag stays unset and the migrator retries next launch.
 // • The Realm file is never touched; GRDB can be wiped and re-seeded freely.
 // • A post-write digest compares row/object counts between both DBs; mismatch
