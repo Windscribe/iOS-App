@@ -125,13 +125,21 @@ class CredentialsRepositoryTests: XCTestCase {
     }
 
     private func setupPreferences(connectionMode: String = Fields.Values.auto, selectedProtocol: String = TextsAsset.wireGuard) async {
+        // Preferences propagate through: Combine → .receive(on: DispatchQueue.main) → Task → actor method.
+        // The actor's loadData() subscribes to the mock subjects in setUp; CurrentValueSubject
+        // delivers its seeded value to the new subscriber, queueing an actor Task. If the test
+        // sends new values before that initial Task runs, both Tasks land on the actor's
+        // executor with no FIFO guarantee — the older value can win and clobber the test setup.
+        // Drain the initial-subscription Tasks first, then send.
+        await drainPropagation(iterations: 5)
+
         mockPreferences.mockConnectionMode.send(connectionMode)
         mockPreferences.mockSelectedProtocol.send(selectedProtocol)
-        // Preferences propagate through: Combine → .receive(on: DispatchQueue.main) → Task → actor method.
-        // Task.sleep alone doesn't pump the main run loop, so Combine's dispatched callbacks
-        // can stall on CI. Alternate between pumping the run loop and yielding to let the
-        // actor-isolated Tasks complete.
-        for _ in 0..<10 {
+        await drainPropagation(iterations: 10)
+    }
+
+    private func drainPropagation(iterations: Int) async {
+        for _ in 0..<iterations {
             await MainActor.run {
                 RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.05))
             }
