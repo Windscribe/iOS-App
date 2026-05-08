@@ -38,11 +38,11 @@ struct ServerMachinesListModel: Decodable, Equatable {
     }
 }
 
-struct DisabledServerModel: Codable, Equatable {
+struct DisabledServerModel: Codable, Equatable, Sendable {
     let id: Int
 }
 
-struct ServerMachineModel: Codable, Equatable {
+struct ServerMachineModel: Codable, Equatable, Sendable {
     let id: Int
     let hostname: String
     let ip: String

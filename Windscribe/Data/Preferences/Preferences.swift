@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-protocol Preferences {
+protocol Preferences: Sendable {
     func saveAdvanceParams(params: String)
     func getAdvanceParams() -> AnyPublisher<String?, Never>
     func getAdvanceParams() -> String?

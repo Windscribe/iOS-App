@@ -25,8 +25,7 @@ protocol SessionProviding: Sendable {
 }
 
 /// Adapter wrapping the legacy `UserSessionRepository`.
-final class LegacySessionProvider: SessionProviding, @unchecked Sendable {
-    // @unchecked until M4's Sendability cleanup marks `UserSessionRepository` directly.
+final class LegacySessionProvider: SessionProviding, Sendable {
     private let legacy: UserSessionRepository
 
     init(legacy: UserSessionRepository) {
@@ -47,6 +46,3 @@ final class LegacySessionProvider: SessionProviding, @unchecked Sendable {
         }
     }
 }
-
-// Retroactive Sendable for legacy value-type struct; M4 (ND-006) replaces with direct conformance.
-extension SessionModel: @unchecked Sendable {}

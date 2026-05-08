@@ -30,12 +30,7 @@ protocol LookAndFeelObserving: Sendable {
 ///
 /// Lives at the Neo composition seam: created in
 /// `Windscribe/App/Environment+Dependencies.swift`, never inside a feature module.
-final class LegacyLookAndFeelObserver: LookAndFeelObserving, @unchecked Sendable {
-    // @unchecked Sendable: wraps `LookAndFeelRepositoryType`, which is not
-    // Sendable-marked. The wrapped subject (`CurrentValueSubject<Bool, Never>`)
-    // is thread-safe; reads of `isDarkMode` are racy in principle but match the
-    // existing legacy behavior (the legacy About VM reads it the same way).
-    // Drop @unchecked once the repository itself migrates to actor / Sendable.
+final class LegacyLookAndFeelObserver: LookAndFeelObserving, Sendable {
     private let repository: LookAndFeelRepositoryType
 
     init(repository: LookAndFeelRepositoryType) {

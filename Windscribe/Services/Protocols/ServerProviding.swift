@@ -27,8 +27,7 @@ protocol ServerProviding: Sendable {
 }
 
 /// Adapter wrapping the legacy `LocationListRepository`.
-final class LegacyServerProvider: ServerProviding, @unchecked Sendable {
-    // @unchecked until M4's Sendability cleanup marks `LocationListRepository` directly.
+final class LegacyServerProvider: ServerProviding, Sendable {
     private let legacy: LocationListRepository
 
     init(legacy: LocationListRepository) {
@@ -49,7 +48,3 @@ final class LegacyServerProvider: ServerProviding, @unchecked Sendable {
         }
     }
 }
-
-// Retroactive Sendable for legacy value-type structs; M4 (ND-006) replaces with direct conformance.
-extension LocationModel: @unchecked Sendable {}
-extension DatacenterModel: @unchecked Sendable {}

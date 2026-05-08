@@ -24,8 +24,7 @@ protocol PreferencesReading: Sendable {
 }
 
 /// Adapter wrapping the legacy `Preferences` store.
-final class LegacyPreferencesReader: PreferencesReading, @unchecked Sendable {
-    // @unchecked until M4's Sendability cleanup marks `Preferences` directly.
+final class LegacyPreferencesReader: PreferencesReading, Sendable {
     private let legacy: Preferences
 
     init(legacy: Preferences) {

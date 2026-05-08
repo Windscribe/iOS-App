@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol CredentialsRepository {
+protocol CredentialsRepository: Sendable {
     var openVPNCrendentials: ServerCredentialsModel? { get }
     var ikev2Crendentials: ServerCredentialsModel? { get }
 

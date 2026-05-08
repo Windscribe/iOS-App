@@ -12,7 +12,7 @@ import RealmSwift
 import Combine
 import Swinject
 
-protocol VPNManager {
+protocol VPNManager: Sendable {
     var showFailedPinIpTrigger: PassthroughSubject<Void, Never> { get }
 
     func configureForConnectionState()

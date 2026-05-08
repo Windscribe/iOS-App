@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-protocol LocationListRepository {
+protocol LocationListRepository: Sendable {
     var locationListSubject: CurrentValueSubject<[LocationModel], Never> { get }
     var datacenterListSubject: CurrentValueSubject<[DatacenterModel], Never> { get }
     var serverListSubject: CurrentValueSubject<[ServerMachineModel], Never> { get }

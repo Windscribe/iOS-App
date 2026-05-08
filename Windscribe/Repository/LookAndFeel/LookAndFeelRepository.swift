@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-protocol LookAndFeelRepositoryType {
+protocol LookAndFeelRepositoryType: Sendable {
     // Subjects
     var backgroundChangedTrigger: PassthroughSubject<Void, Never> { get }
     var isDarkModeSubject: CurrentValueSubject<Bool, Never> { get }

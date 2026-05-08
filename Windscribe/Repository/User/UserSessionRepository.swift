@@ -10,7 +10,7 @@ import Foundation
 import Swinject
 import Combine
 
-protocol UserSessionRepository {
+protocol UserSessionRepository: Sendable {
     var sessionAuth: String? { get }
     var sessionModel: SessionModel? { get }
     var oldSessionModel: SessionModel? { get }

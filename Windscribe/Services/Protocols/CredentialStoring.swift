@@ -24,8 +24,7 @@ protocol CredentialStoring: Sendable {
 }
 
 /// Adapter wrapping the legacy `CredentialsRepository`.
-final class LegacyCredentialStore: CredentialStoring, @unchecked Sendable {
-    // @unchecked until M4's Sendability cleanup marks `CredentialsRepository` directly.
+final class LegacyCredentialStore: CredentialStoring, Sendable {
     private let legacy: CredentialsRepository
 
     init(legacy: CredentialsRepository) {
@@ -44,6 +43,3 @@ final class LegacyCredentialStore: CredentialStoring, @unchecked Sendable {
         try await legacy.getUpdatedIKEv2Crendentials()
     }
 }
-
-// Retroactive Sendable for legacy value-type struct; M4 (ND-006) replaces with direct conformance.
-extension ServerCredentialsModel: @unchecked Sendable {}

@@ -29,8 +29,7 @@ protocol VPNConnecting: Sendable {
 ///
 /// Lives at the Neo composition seam — created in
 /// `Windscribe/App/Environment+Dependencies.swift`, never inside a feature.
-final class LegacyVPNConnector: VPNConnecting, @unchecked Sendable {
-    // @unchecked until M4's Sendability cleanup marks `VPNManager` directly.
+final class LegacyVPNConnector: VPNConnecting, Sendable {
     private let legacy: VPNManager
     private let stateRepository: VPNStateRepository
 

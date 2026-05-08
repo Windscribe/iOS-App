@@ -53,7 +53,7 @@ struct DataLeftModel {
     dynamic var countNumber: Int = 0
 }
 
-struct SipCountModel: Codable, Equatable {
+struct SipCountModel: Codable, Equatable, Sendable {
     var countNumber: Int = 0
 
     enum CodingKeys: String, CodingKey {
@@ -70,7 +70,7 @@ struct SipCountModel: Codable, Equatable {
     }
 }
 
-struct ServerInventoryModel: Codable, Equatable {
+struct ServerInventoryModel: Codable, Equatable, Sendable {
     let action: String
     let enabled: [ServerMachineModel]
     let disabled: [DisabledServerModel]
@@ -119,7 +119,7 @@ struct ServerInventoryModel: Codable, Equatable {
     }
 }
 
-struct SessionModel: Codable, Equatable {
+struct SessionModel: Codable, Equatable, Sendable {
     var sessionAuthHash: String
     let username: String
     let userId: String

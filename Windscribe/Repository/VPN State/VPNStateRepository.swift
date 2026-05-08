@@ -18,7 +18,7 @@ enum ConfigurationState {
     case testing
 }
 
-protocol VPNStateRepository {
+protocol VPNStateRepository: Sendable {
     var configurationState: ConfigurationState { get }
     var vpnInfo: CurrentValueSubject<VPNConnectionInfo?, Never> { get }
     var configurationStateUpdatedTrigger: PassthroughSubject<Void, Never> { get }

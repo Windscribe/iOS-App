@@ -54,16 +54,6 @@ Below applies to any code under `Windscribe/Features/**` and `WindscribeTV/Featu
 
 When editing legacy code, **match the surrounding style.** Don't rewrite a UIKit controller to SwiftUI mid-feature unless that rewrite *is* the task.
 
-### `@unchecked Sendable` is allowed at the legacy-adapter seam
-
-Strict-concurrency mode is on across the project ([ND-006](neo/DECISIONS.md#nd-006)) but the legacy types Neo features wrap (managers, repositories, value-type models) are not yet `Sendable`-marked — that work is scheduled for M4 ([ND-006](neo/DECISIONS.md#nd-006)). To keep the M3 protocol seam compilable today without preempting M4's per-type cleanup, the project tolerates a narrow `@unchecked Sendable` exemption:
-
-- **Allowed** on `Legacy*` adapters in `Windscribe/Services/Protocols/` (e.g. `LegacyVPNConnector`, `LegacyServerProvider`). The adapter wraps a non-Sendable legacy type behind a `Sendable` Neo protocol; the wrapped accessors are de-facto thread-safe (Combine subjects, immutable Keychain reads) and the adapter holds no mutable state of its own.
-- **Allowed** as one-line retroactive conformances on legacy value-type structs in the same protocol files (e.g. `extension LocationModel: @unchecked Sendable {}`). These are pure value-type structs (Int / String / nested structs) that are pragmatically Sendable already; the conformance documents that.
-- **Not allowed** in feature modules (`Windscribe/Features/**`, `WindscribeTV/Features/**`). If a feature seems to need it, the protocol surface is wrong — refine the protocol instead of pushing `@unchecked` deeper.
-
-Inline comments on these conformances stay one line: `// @unchecked until M4's Sendability cleanup marks <Type> directly.` The rationale is here, not duplicated in every file. M4 (ND-006) replaces these with proper `Sendable` conformance on the type definitions and removes the workaround.
-
 ### Converting Combine to AsyncSequence
 
 Neo features must not `import Combine`. The boundary adapters in `Windscribe/Services/Protocols/` and `Windscribe/API/WSNet Protocol/` are the only place Combine is allowed; everywhere else, work in `async/await` and `AsyncSequence`.
