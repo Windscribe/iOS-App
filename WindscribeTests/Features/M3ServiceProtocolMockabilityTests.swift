@@ -81,6 +81,9 @@ struct M3ServiceProtocolMockabilityTests {
 final class MockVPNConnecting: VPNConnecting, @unchecked Sendable {
     private(set) var connectCallCount = 0
     private(set) var disconnectCallCount = 0
+    var statusUpdates: AsyncStream<VPNConnectionState> {
+        AsyncStream { $0.finish() }
+    }
 
     func connect(locationId: String, proto: ProtocolPort) async throws {
         connectCallCount += 1

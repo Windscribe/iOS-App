@@ -12,6 +12,7 @@ excluded:
   - Windscribe/Configurations
   - Windscribe/scrtips
   - MockingbirdMocks
+  - .claude
 disabled_rules:
   - non_optional_string_data_conversion
   - cyclomatic_complexity

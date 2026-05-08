@@ -35,7 +35,7 @@ PR 3 (Sendability cleanup) can land in any order relative to PR 1 / PR 2; it's a
 
 ### PR 2 — VPN status AsyncStream
 
-- [ ] **T4.2** Add `var statusUpdates: AsyncStream<VPNConnectionState> { get }` to `VPNConnecting` (M3 introduced the protocol commands-only on purpose). Adapter wraps `NEVPNStatusDidChange` notifications + the legacy `VPNManager`'s connection-state surface. Verify a feature can subscribe via `for await status in vpn.statusUpdates` without `import Combine`.
+- [x] **T4.2** Add `var statusUpdates: AsyncStream<VPNConnectionState> { get }` to `VPNConnecting` (M3 introduced the protocol commands-only on purpose). Adapter wraps `NEVPNStatusDidChange` notifications + the legacy `VPNManager`'s connection-state surface. Verify a feature can subscribe via `for await status in vpn.statusUpdates` without `import Combine`.
 
 ### PR 3 — Retire M3's `@unchecked Sendable` exemption
 
@@ -69,3 +69,4 @@ PR 3 (Sendability cleanup) can land in any order relative to PR 1 / PR 2; it's a
 Append-only — each commit/merge gets one line. Format: `YYYY-MM-DD — branch — sha7 — summary; next: <what>`.
 
 - 2026-05-07 — `aw/neo-m4-wsnet-wrappers` — `e614ddcc` — PR 1 opened (MR !1365): T4.1 + T4.4. `WSNetServerAPIType` (40 methods) + `WSNetPingManagerType` (1 method) protocols added in `Windscribe/API/WSNet Protocol/`; concrete classes conform via empty extension. All consumers (`APIManagerImpl`, `WireguardAPIManagerImpl`, `ControlPlane`, `LocalPingManagerImpl`, `PacketTunnel`/`WireGuardTunnel` providers, `ContainerResolver`, `ShowLocationIntentHandler`) and DI sites (`CoreModule`, `WireguardModule`, `AppModulesCommon`) updated. `docs/PROJECT_NEO.md` gains the "Converting Combine to AsyncSequence" guideline and codifies the protocol-naming convention (`*ing` for capability, `*Type` for legacy Obj-C bridge mirrors only). Build clean; 18/18 Neo tests pass. Lands on `main`. Next: review + merge → PR 2 (T4.2 — `VPNConnecting.statusUpdates` AsyncStream).
+- 2026-05-07 — `aw/neo-m4-vpn-status-stream` — pending — PR 2 opened: T4.2. `VPNConnecting` grows `var statusUpdates: AsyncStream<VPNConnectionState>` sourced from `VPNStateRepository.vpnInfo` (the legacy `CurrentValueSubject` fed by `NEVPNStatusDidChange` notifications). `LegacyVPNConnector` takes `stateRepository: VPNStateRepository` at composition; `Environment+Dependencies.swift` resolves it. `AdapterStreamEquivalenceTests` extended with 3 VPN tests (initial-when-nil, initial-when-seeded, ordered updates), mutation-verified. Also folds in `.swiftlint.yml` `.claude` exclusion to keep agent worktrees out of lint scope. Build clean; 28/28 Neo tests pass. Lands on `main`. Next: review + merge.

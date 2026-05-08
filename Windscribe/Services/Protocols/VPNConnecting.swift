@@ -9,37 +9,55 @@
 import Foundation
 import Combine
 
-/// Command surface for connecting and disconnecting the VPN. The async/await
-/// surface Neo features consume; back this with a thin adapter over the
-/// legacy `VPNManager` until that manager itself migrates.
-///
-/// **Scope note:** the connection-status stream lives in M4 (T4.2 —
-/// `AsyncStream<VPNConnectionState>` over `NEVPNStatusDidChange`). This
-/// protocol is commands-only on purpose.
+/// Command + status surface for the VPN. Neo features consume `connect`/
+/// `disconnect` as `async throws` and watch `statusUpdates` as an
+/// `AsyncStream`. Back this with a thin adapter over the legacy
+/// `VPNManager` + `VPNStateRepository` until those migrate.
 protocol VPNConnecting: Sendable {
     func connect(locationId: String, proto: ProtocolPort) async throws
     func disconnect() async throws
+
+    /// Async stream of VPN connection-state updates, sourced from
+    /// `NEVPNStatusDidChange` notifications via the legacy
+    /// `VPNStateRepository.vpnInfo` subject. The first emission is the
+    /// current state, so callers can drive UI directly off this stream.
+    var statusUpdates: AsyncStream<VPNConnectionState> { get }
 }
 
-/// Adapter that wraps the legacy `VPNManager` (Combine-based) and exposes
-/// the Neo `VPNConnecting` surface.
+/// Adapter wrapping the legacy `VPNManager` (commands) and
+/// `VPNStateRepository` (status surface).
 ///
 /// Lives at the Neo composition seam — created in
 /// `Windscribe/App/Environment+Dependencies.swift`, never inside a feature.
 final class LegacyVPNConnector: VPNConnecting, @unchecked Sendable {
     // @unchecked until M4's Sendability cleanup marks `VPNManager` directly.
     private let legacy: VPNManager
+    private let stateRepository: VPNStateRepository
 
-    init(legacy: VPNManager) {
+    init(legacy: VPNManager, stateRepository: VPNStateRepository) {
         self.legacy = legacy
+        self.stateRepository = stateRepository
     }
 
     func connect(locationId: String, proto: ProtocolPort) async throws {
-        // Drain intermediate states; await publisher completion. M4 owns the live status stream.
+        // Drain intermediate states; await publisher completion. The live
+        // status surface is `statusUpdates`, sourced from `vpnInfo`.
         for try await _ in legacy.connectFromViewModel(locationId: locationId, proto: proto).values {}
     }
 
     func disconnect() async throws {
         for try await _ in legacy.disconnectFromViewModel().values {}
+    }
+
+    var statusUpdates: AsyncStream<VPNConnectionState> {
+        let subject = stateRepository.vpnInfo
+        return AsyncStream { continuation in
+            let cancellable = subject.sink { info in
+                continuation.yield(.vpn(info?.status ?? .disconnected))
+            }
+            continuation.onTermination = { _ in
+                cancellable.cancel()
+            }
+        }
     }
 }

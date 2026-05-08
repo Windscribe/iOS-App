@@ -20,6 +20,7 @@
 import Testing
 import Foundation
 import Combine
+import NetworkExtension
 @testable import Windscribe
 
 @Suite("Combine→AsyncStream adapter equivalence")
@@ -139,6 +140,51 @@ struct AdapterStreamEquivalenceTests {
         #expect(v2??.sessionAuthHash == "b")
         #expect(v3 ?? nil == nil)
     }
+
+    // MARK: - LegacyVPNConnector (M4 PR2)
+
+    @Test("VPNConnecting: initial subscription yields current status (.disconnected when nil)")
+    func vpnConnecting_initialValueYielded_nil() async {
+        let stateRepo = StubVPNStateRepository(initial: nil)
+        let connector = LegacyVPNConnector(legacy: NoopVPNManager(), stateRepository: stateRepo)
+
+        var iterator = connector.statusUpdates.makeAsyncIterator()
+        let first = await iterator.next()
+        #expect(first.map(neStatus) == .disconnected)
+    }
+
+    @Test("VPNConnecting: initial subscription yields current status when seeded")
+    func vpnConnecting_initialValueYielded_seeded() async {
+        let stateRepo = StubVPNStateRepository(initial: makeInfo(status: .connected))
+        let connector = LegacyVPNConnector(legacy: NoopVPNManager(), stateRepository: stateRepo)
+
+        var iterator = connector.statusUpdates.makeAsyncIterator()
+        let first = await iterator.next()
+        #expect(first.map(neStatus) == .connected)
+    }
+
+    @Test("VPNConnecting: subsequent status changes forwarded in order")
+    func vpnConnecting_orderedUpdates() async {
+        let stateRepo = StubVPNStateRepository(initial: nil)
+        let connector = LegacyVPNConnector(legacy: NoopVPNManager(), stateRepository: stateRepo)
+
+        var iterator = connector.statusUpdates.makeAsyncIterator()
+        let initial = await iterator.next()
+        stateRepo.vpnInfo.send(makeInfo(status: .connecting))
+        stateRepo.vpnInfo.send(makeInfo(status: .connected))
+        stateRepo.vpnInfo.send(makeInfo(status: .disconnecting))
+        stateRepo.vpnInfo.send(nil)
+        let v1 = await iterator.next()
+        let v2 = await iterator.next()
+        let v3 = await iterator.next()
+        let v4 = await iterator.next()
+
+        #expect(initial.map(neStatus) == .disconnected)
+        #expect(v1.map(neStatus) == .connecting)
+        #expect(v2.map(neStatus) == .connected)
+        #expect(v3.map(neStatus) == .disconnecting)
+        #expect(v4.map(neStatus) == .disconnected)
+    }
 }
 
 // MARK: - Helpers
@@ -162,6 +208,20 @@ private func makeSession(authHash: String) -> SessionModel {
         amneziawgConfigId: "",
         alc: [], sipCount: []
     )
+}
+
+private func makeInfo(status: NEVPNStatus) -> VPNConnectionInfo {
+    VPNConnectionInfo(
+        selectedProtocol: "WireGuard", selectedPort: "443",
+        status: status, server: nil, killSwitch: false, onDemand: false
+    )
+}
+
+/// Pull the wrapped `NEVPNStatus` out of a `VPNConnectionState.vpn(...)`.
+/// Returns `nil` for any other case (none expected in these tests).
+private func neStatus(_ state: VPNConnectionState) -> NEVPNStatus? {
+    if case let .vpn(s) = state { return s }
+    return nil
 }
 
 // MARK: - Stub repositories
@@ -240,4 +300,57 @@ private final class StubUserSessionRepository: UserSessionRepository {
     func canAccesstoProLocation(locationId _: Int) -> Bool { false }
     func syncSession() async -> Bool { false }
     func clean() {}
+}
+
+private final class StubVPNStateRepository: VPNStateRepository {
+    let vpnInfo: CurrentValueSubject<VPNConnectionInfo?, Never>
+    let configurationStateUpdatedTrigger = PassthroughSubject<Void, Never>()
+    let connectionStateUpdatedTrigger = PassthroughSubject<Void, Never>()
+    var configurationState: ConfigurationState { .initial }
+    var isFromProtocolFailover: Bool { false }
+    var isFromProtocolChange: Bool { false }
+    var untrustedOneTimeOnlySSID: String { "" }
+    var lastConnectionStatus: NEVPNStatus { vpnInfo.value?.status ?? .disconnected }
+    var lastConnectionType: ConnectionType { .user }
+    var isEmergencyConnection: Bool { false }
+
+    init(initial: VPNConnectionInfo?) {
+        self.vpnInfo = CurrentValueSubject<VPNConnectionInfo?, Never>(initial)
+    }
+
+    func setUntrustedOneTimeOnlySSID(_: String) {}
+    func setIsFromProtocolFailover(_: Bool) {}
+    func setIsFromProtocolChange(_: Bool) {}
+    func setLastConnectionStatus(_: NEVPNStatus) {}
+    func setConfigurationState(_: ConfigurationState) {}
+    func setLastConnectionType(_: ConnectionType) {}
+    func isDisconnected() -> Bool { vpnInfo.value?.status == .disconnected }
+    func isConnecting() -> Bool { vpnInfo.value?.status == .connecting }
+    func isConnected() -> Bool { vpnInfo.value?.status == .connected }
+    func getStatus() -> AnyPublisher<NEVPNStatus, Never> {
+        vpnInfo.map { $0?.status ?? .disconnected }.eraseToAnyPublisher()
+    }
+}
+
+/// Minimal VPNManager stub. The status-stream test path doesn't touch
+/// any of these methods; trap on call so a misuse surfaces loudly.
+private final class NoopVPNManager: VPNManager {
+    let showFailedPinIpTrigger = PassthroughSubject<Void, Never>()
+
+    func configureForConnectionState() {}
+    func isActive() async -> Bool { false }
+    func updateOnDemandRules() {}
+    func resetProfiles() async {}
+    func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error> {
+        fatalError("unused in status-stream test")
+    }
+    func connectFromViewModel(locationId _: String, proto _: ProtocolPort) -> AnyPublisher<VPNConnectionState, Error> {
+        fatalError("unused in status-stream test")
+    }
+    func connectFromViewModel(locationId _: String, proto _: ProtocolPort, connectionType _: ConnectionType) -> AnyPublisher<VPNConnectionState, Error> {
+        fatalError("unused in status-stream test")
+    }
+    func simpleDisableConnection() {}
+    func simpleEnableConnection() {}
+    func makeUserSettings() -> VPNUserSettings { fatalError("unused in status-stream test") }
 }

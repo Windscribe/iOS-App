@@ -17,10 +17,11 @@ extension EnvironmentValues {
         repository: Assembler.resolve(LookAndFeelRepositoryType.self)
     )
 
-    /// VPN connect / disconnect command surface.
-    /// (Status stream is M4 work — see T4.2.)
+    /// VPN connect / disconnect commands + status stream
+    /// (`AsyncStream<VPNConnectionState>` over `NEVPNStatusDidChange`).
     @Entry var vpnConnecting: any VPNConnecting = LegacyVPNConnector(
-        legacy: Assembler.resolve(VPNManager.self)
+        legacy: Assembler.resolve(VPNManager.self),
+        stateRepository: Assembler.resolve(VPNStateRepository.self)
     )
 
     /// Read-side surface over the location list.
