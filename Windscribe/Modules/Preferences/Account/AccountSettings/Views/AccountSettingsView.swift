@@ -414,6 +414,22 @@ struct AccountSectionView: View {
         }
 }
 
+private struct AccountRowLeadingContentWidthKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
+private struct AccountRowContentWidthKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
 struct AccountRowView: View {
     let isDarkMode: Bool
     let row: AccountRowModel
@@ -423,27 +439,60 @@ struct AccountRowView: View {
     let actionHandler: (AccountRowAction) -> Void
 
     @State private var showCopied = false
+    @State private var leadingContentWidth: CGFloat = 0
+    @State private var rowContentWidth: CGFloat = 0
+
+    private var leadingContent: some View {
+        HStack(spacing: 6) {
+            if row.shouldShowExclamationIcon(accountStatus: accountStatus) {
+                Image(systemName: "exclamationmark.circle")
+                    .foregroundColor(row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) ? .orangeYellow : .from(.iconColor, isDarkMode))
+            }
+
+            Text(row.title)
+                .foregroundColor(.from(.titleColor, isDarkMode))
+                .font(.medium(.callout))
+                .lineLimit(1)
+                .truncationMode(.tail)
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(alignment: .top) {
-                HStack(spacing: 6) {
-                    if row.shouldShowExclamationIcon(accountStatus: accountStatus) {
-                        Image(systemName: "exclamationmark.circle")
-                            .foregroundColor(row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) ? .orangeYellow : .from(.iconColor, isDarkMode))
+            let maxLeadingWidth = rowContentWidth / 2
+            let leadingWidth = rowContentWidth > 0 ? min(leadingContentWidth, maxLeadingWidth) : leadingContentWidth
+
+            HStack(alignment: .top, spacing: 6) {
+                leadingContent
+                    .frame(width: leadingWidth, alignment: .leading)
+                    .hidden()
+                    .overlay(alignment: .leading) {
+                        leadingContent
+                            .frame(width: leadingWidth, alignment: .leading)
+                            .clipped()
+                    }
+                    .background {
+                        leadingContent
+                            .fixedSize(horizontal: true, vertical: false)
+                            .hidden()
+                            .background {
+                                GeometryReader { proxy in
+                                    Color.clear.preference(
+                                        key: AccountRowLeadingContentWidthKey.self,
+                                        value: proxy.size.width
+                                    )
+                                }
+                            }
                     }
 
-                    Text(row.title)
-                        .foregroundColor(.from(.titleColor, isDarkMode))
-                        .font(.medium(.callout))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    if let message = row.message, section != .other {
-                        Text(message)
+                if let message = row.message, section != .other {
+                    Text(message)
                             .foregroundColor(section == .plan
                                              ? (message == TextsAsset.pro ? .actionGreen : (message == TextsAsset.Account.freeAccountDescription) ? .from(.titleColor, isDarkMode) : .infoGrey)
                                              : .from(.infoColor, isDarkMode))
                             .font(.regular(.callout))
+                            .lineLimit(1)
+                            .truncationMode(.middle)
                             .multilineTextAlignment(.trailing)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .opacity(showCopied ? 0.2 : 1)
@@ -463,18 +512,32 @@ struct AccountRowView: View {
                                     withAnimation { showCopied = false }
                                 }
                             }
-                    }
+                }
 
-                    if row.action != nil {
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.from(.infoColor, isDarkMode))
-                    }
+                if row.action != nil {
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                 }
 
                 if let image = row.image {
                     Image(image)
                         .foregroundColor(.from(.infoColor, isDarkMode))
                 }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                GeometryReader { proxy in
+                    Color.clear.preference(
+                        key: AccountRowContentWidthKey.self,
+                        value: proxy.size.width
+                    )
+                }
+            }
+            .onPreferenceChange(AccountRowLeadingContentWidthKey.self) { width in
+                leadingContentWidth = width
+            }
+            .onPreferenceChange(AccountRowContentWidthKey.self) { width in
+                rowContentWidth = width
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
