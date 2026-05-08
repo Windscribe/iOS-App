@@ -13,7 +13,7 @@ import RealmSwift
 extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
-        Realm.Configuration.defaultConfiguration = Realm.Configuration(
+        var configuration = Realm.Configuration(
             schemaVersion: 63,
             migrationBlock: { migration, oldSchemaVersion in
                 let shouldDeleteBestLocation = oldSchemaVersion < 51
@@ -381,6 +381,51 @@ extension LocalDatabaseImpl {
                 }
             }, deleteRealmIfMigrationNeeded: false
         )
+        // Pin the schema to an explicit class list. Prevents Realm from
+        // calling objc_copyClassList() during +sharedSchema, which forces
+        // Swift metadata realization for every class in the binary —
+        // including @available-gated classes whose metadata depends on
+        // weakly-linked frameworks (e.g. @Observable on iOS 16).
+        configuration.objectTypes = [
+            Session.self,
+            SipCount.self,
+            UserPreferences.self,
+            LocationObject.self,
+            DatacenterObject.self,
+            ServerMachineObject.self,
+            Server.self,
+            Group.self,
+            Info.self,
+            Node.self,
+            BestNode.self,
+            BestLocation.self,
+            StaticIP.self,
+            StaticIPNode.self,
+            PortDetails.self,
+            Favourite.self,
+            FavNode.self,
+            LastConnectedNode.self,
+            WifiNetwork.self,
+            AutomaticMode.self,
+            Notice.self,
+            NoticeAction.self,
+            ReadNotice.self,
+            VPNConnection.self,
+            CustomConfig.self,
+            PortMap.self,
+            SuggestedPorts.self,
+            UnblockWgParamsObj.self,
+            PingData.self,
+            MyIP.self,
+            MobilePlan.self,
+            RobertFilters.self,
+            RobertFilter.self,
+            ServerCredentials.self,
+            OpenVPNServerCredentials.self,
+            IKEv2ServerCredentials.self,
+            StaticIPCredentials.self
+        ]
+        Realm.Configuration.defaultConfiguration = configuration
     }
 
     var doNotDeleteObjects: [String] { [String(describing: Favourite.self)] }
