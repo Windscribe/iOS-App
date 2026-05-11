@@ -63,10 +63,7 @@ class BridgeApiRepositoryTests: XCTestCase {
     func testInitialization() async throws {
         XCTAssertNotNil(repository, "Repository should be initialized")
         XCTAssertFalse(repository.isReady, "Should not be ready initially")
-        // setApiAvailableCallback is registered on a background queue (see
-        // BridgeApiRepositoryImpl.observeBridgeApi), so this isn't synchronous
-        // with init. waitForApiAvailableCallbackRegistration polls + asserts.
-        try await waitForApiAvailableCallbackRegistration()
+        XCTAssertTrue(mockBridgeAPI.setApiAvailableCallbackCalled, "Call back should be set on the BridegeAPIRepository init")
     }
 
     // MARK: - VPN Connection State Tests
@@ -191,12 +188,7 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
-        // `BridgeApiRepositoryImpl.observeBridgeApi` registers
-        // `setApiAvailableCallback` on a background queue, so the callback isn't
-        // necessarily wired by the time setUp() returns. Wait for it to be
-        // registered before we trigger via the mock — otherwise
-        // `simulateApiAvailable` is a no-op and the test times out.
-        try await waitForApiAvailableCallbackRegistration()
+        updateMockLocation()
 
         // When
         mockBridgeAPI.simulateApiAvailable(true)
@@ -247,7 +239,7 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
-        try await waitForApiAvailableCallbackRegistration()
+        updateMockLocation()
 
         // When
         mockBridgeAPI.simulateApiAvailable(true)
@@ -257,41 +249,6 @@ class BridgeApiRepositoryTests: XCTestCase {
         // CI runners.
         try await waitUntil(timeout: 10.0) { self.repository.isReady }
         XCTAssertTrue(repository.isReady, "Repository should be ready with ALC")
-    }
-
-    // MARK: - Helpers
-
-    /// Polls `mockBridgeAPI.setApiAvailableCallbackCalled` until the
-    /// background-dispatched callback registration has completed (or fails the
-    /// test if it doesn't within `timeout`). Without this, tests that drive
-    /// the repository via `simulateApiAvailable` race with the registration
-    /// and silently no-op.
-    private func waitForApiAvailableCallbackRegistration(
-        timeout: TimeInterval = 5.0
-    ) async throws {
-        let deadline = Date().addingTimeInterval(timeout)
-        while !mockBridgeAPI.setApiAvailableCallbackCalled, Date() < deadline {
-            try await Task.sleep(nanoseconds: 5_000_000) // 5 ms
-        }
-        XCTAssertTrue(
-            mockBridgeAPI.setApiAvailableCallbackCalled,
-            "setApiAvailableCallback was not registered within \(timeout)s"
-        )
-    }
-
-    /// Polls a condition at 10ms intervals until it becomes true or the timeout
-    /// elapses. Replaces fixed `Task.sleep` waits that are too short on loaded
-    /// CI runners — the poll resolves as soon as the async side-effect lands,
-    /// so it's both faster on idle machines and safer under load.
-    private func waitUntil(
-        timeout: TimeInterval = 5.0,
-        condition: @escaping () -> Bool
-    ) async throws {
-        let deadline = Date().addingTimeInterval(timeout)
-        while !condition(), Date() < deadline {
-            try await Task.sleep(nanoseconds: 10_000_000) // 10ms
-        }
-        XCTAssertTrue(condition(), "Condition was not met within \(timeout)s")
     }
 
     func testApiNotAvailableWithFreeUserAndNonALCLocation() async throws {
@@ -329,7 +286,7 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
-        try await waitForApiAvailableCallbackRegistration()
+        updateMockLocation()
 
         // When
         mockBridgeAPI.simulateApiAvailable(true)
@@ -350,8 +307,6 @@ class BridgeApiRepositoryTests: XCTestCase {
             countryCode: "US",
             isServer: true
         )
-
-        try await waitForApiAvailableCallbackRegistration()
 
         // When
         mockBridgeAPI.simulateApiAvailable(true)
@@ -396,8 +351,6 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: false
         )
 
-        try await waitForApiAvailableCallbackRegistration()
-
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
@@ -440,8 +393,6 @@ class BridgeApiRepositoryTests: XCTestCase {
             countryCode: "US",
             isServer: true
         )
-
-        try await waitForApiAvailableCallbackRegistration()
 
         // When — bridge reports NOT available
         mockBridgeAPI.simulateApiAvailable(false)
@@ -512,14 +463,79 @@ class BridgeApiRepositoryTests: XCTestCase {
             isServer: true
         )
 
-        // setApiAvailableCallback registers async — wait before triggering.
-        try await waitForApiAvailableCallbackRegistration()
+        updateMockLocation()
 
         // When
         mockBridgeAPI.simulateApiAvailable(true)
 
+        try await waitUntil(timeout: 10.0) { self.repository.isReady }
         // Then — checkAndEmitApiAvailability runs synchronously inside the
         // callback, so isReady is updated by the time simulate returns.
         XCTAssertTrue(repository.isReady, "Should be ready after API becomes available")
+    }
+}
+
+extension BridgeApiRepositoryTests {
+    // MARK: - Helpers
+
+    /// Polls a condition at 10ms intervals until it becomes true or the timeout
+    /// elapses. Replaces fixed `Task.sleep` waits that are too short on loaded
+    /// CI runners — the poll resolves as soon as the async side-effect lands,
+    /// so it's both faster on idle machines and safer under load.
+    func waitUntil(
+        timeout: TimeInterval = 5.0,
+        condition: @escaping () -> Bool
+    ) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition(), Date() < deadline {
+            try await Task.sleep(nanoseconds: 10_000_000) // 10ms
+        }
+        XCTAssertTrue(condition(), "Condition was not met within \(timeout)s")
+    }
+
+    func updateMockLocation() {
+        let server = ServerMachineModel(
+            id: 1,
+            hostname: "pro-location-001.windscribe.com",
+            ip: "192.0.2.1",
+            ip2: "192.0.2.2",
+            ip3: "192.0.2.3",
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 10,
+            sclass: 1
+        )
+
+        var datacenter = DatacenterModel(
+            id: 101,
+            city: "Toronto",
+            nick: "Pro",
+            iata: "YYZ",
+            status: 1,
+            gps: "43.6532,-79.3832",
+            tz: "America/Toronto",
+            p2p: 1,
+            isPremium: 1,
+            wgPubkey: "test-wg-key",
+            wgEndpoint: "pro-location.windscribe.com:443",
+            ovpnX509: "test-x509",
+            linkSpeed: 1000
+        )
+        datacenter.locationId = 1
+        datacenter.servers = [server]
+
+        let location = LocationModel(
+            id: 1,
+            name: "Canada",
+            countryCode: "CA",
+            shortName: "CA",
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: [datacenter]
+        )
+
+        mockLocationsManager.mockLocationType = .server
+        mockLocationsManager.mockLocation = (location, datacenter)
     }
 }
