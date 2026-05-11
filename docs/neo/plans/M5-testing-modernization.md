@@ -37,3 +37,7 @@ Single PR bundling T5.1–T5.3. The work is all purely additive doc/test content
 ## Execution log
 
 Append-only — each commit/merge gets one line. Format: `YYYY-MM-DD — branch — sha7 — summary; next: <what>`.
+
+- 2026-05-11 — `aw/neo-m5` — `fd93b530` — Single bundled PR (T5.1 + T5.2 + T5.3) opened as MR !1387 against `main`. Replaces parallel-attempt MRs !1382/!1383/!1384/!1385 (closed as superseded).
+- 2026-05-11 — `aw/neo-m5` — `6ca871a3` — Post-push fix: actor mock declared `private(set) var` for the credential properties, which is actor-isolated and can't satisfy `CredentialStoring`'s sync nonisolated getter requirements. CI's test-target build caught it; local `BuildProject` missed it because the Debug scheme's BuildAction excludes `WindscribeTests`. Fix: `let` for immutable properties (implicitly nonisolated on actors); `private(set) var` retained only for `refreshCallCount`. Doc snippet in PROJECT_NEO.md updated with the rule.
+- 2026-05-11 — `main` — `d8be3a9e` — !1387 merged. **M5 closed (#1053).** All three tasks landed. Next: M6 (#1054) — tunnel cleanup.

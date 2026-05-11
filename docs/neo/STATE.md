@@ -12,14 +12,14 @@
 
 ## Status snapshot
 
-- **Active issue:** M5 (#1053) — Testing modernization. Single bundled PR covering T5.1 (CI Swift Testing verification), T5.2 (mock patterns doc + canonical actor-mock example), T5.3 (GRDB in-memory fixture doc). Plan: [`plans/M5-testing-modernization.md`](plans/M5-testing-modernization.md).
-- **Active branch:** `aw/neo-m5`.
+- **Active issue:** M6 (#1054) — Tunnel cleanup: IKEv2 consolidation + SiriIntents removal. Mixed landing: T6.1 (IKEv2 consolidation) lands `main → neo-5.0`; T6.2/T6.3 (SiriIntents removal, tunnel-guard cleanup) are `neo-5.0` only. Plan file not yet drafted; scope captured in the GitLab issue and [`plans/00-roadmap.md`](plans/00-roadmap.md).
+- **Active branch:** `main`.
 - **Blocked on:** —
-- **Up next:** Review + merge → close M5 (#1053).
-- **M2 follow-ups (separate issues, not blocking M5):**
+- **Up next:** Draft `docs/neo/plans/M6-tunnel-extensions-cleanup.md`, then PR breakdown.
+- **M2 follow-ups (separate issues, not blocking M6):**
   - #1065 — D2.3 schema normalization (GRDB v1→v2). Ships any main release after D2.2.
   - #1066 — D2.4 Realm removal. Ships post-Neo + 3-month forced-upgrade soak.
-- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050), M3 (#1051), M4 (#1052).
+- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050), M3 (#1051), M4 (#1052), M5 (#1053).
 
 ## Log
 
@@ -41,3 +41,4 @@
 - 2026-05-08 — M4 — `main` — `e1c86ba5` — PR 3 merged (MR !1369): T4.5. `@unchecked Sendable` retired from all 6 `Legacy*` adapters in `Windscribe/Services/Protocols/`; 7 legacy protocols (`LookAndFeelRepositoryType`, `Preferences`, `CredentialsRepository`, `VPNManager`, `LocationListRepository`, `UserSessionRepository`, `VPNStateRepository`) now `Sendable` directly; 4 retroactive value-type conformances on `ServerCredentialsModel`, `LocationModel`, `DatacenterModel`, `SessionModel` (+ helper types `ServerMachineModel`, `DisabledServerModel`, `SipCountModel`, `ServerInventoryModel`) moved to direct `Sendable` on their definition files; `@unchecked Sendable is allowed at the legacy-adapter seam` subsection deleted from `docs/PROJECT_NEO.md`. `grep -rn "@unchecked Sendable" Windscribe/Services/Protocols/` returns zero. Next: PR 4 (T4.3 — tunnel async lifecycle, `neo-5.0` only) — needs hardware smoke testing.
 - 2026-05-11 — M4 — `neo-5.0` — `e5259595` — PR 4 merged (MR !1379): T4.3. `startTunnel` / `stopTunnel` / `sleep` / `handleAppMessage` async overrides in both `PacketTunnel` and `WireGuardTunnel` providers; PacketTunnel bridges via `withCheckedThrowingContinuation` to `*Internal` helpers; vestigial `stopHandler` + dead `#if os(macOS) exit(0)` template hack removed. Hardware smoke test passed across OpenVPN/IKEv2/WireGuard. **M4 closed (#1052).** Next: M5 (#1053) — Testing modernization (Swift Testing adoption + mock patterns + GRDB in-memory fixtures + optional macOS test target). Lands `main → neo-5.0`. Plan file TBD.
 - 2026-05-11 — M5 — `aw/neo-m5` — `fd93b53` — Single bundled PR (T5.1 + T5.2 + T5.3) opened against `main`. T5.1: verified CI's `fastlane test` (scan + xcodebuild under Xcode 26.3) treats `@Test` suites as first-class XCResult — no code change. T5.2: `## Testing mocks` section in `docs/PROJECT_NEO.md` covering struct + actor patterns; new `ActorMockCredentialStoring` in `WindscribeTests/Features/MockPatternTests.swift` as the canonical actor mock (none existed in tree). T5.3: `## GRDB test fixtures` section citing `PingDataRecordTests` and `GRDBLocalDatabaseParityTests` as canonical in-memory `DatabaseQueue` examples from M2 D2.2 (!1311).
+- 2026-05-11 — M5 — `main` — `d8be3a9e` — !1387 merged. **M5 closed (#1053).** All three tasks (T5.1–T5.3) landed in a single bundled PR. Post-merge fix `6ca871a3` corrected actor mock conformance (`let` for sync nonisolated getters; `private(set) var` only for actor-isolated mutable state) — caught by CI's test-target build, missed locally because `Windscribe-Debug` scheme's BuildAction excludes `WindscribeTests`. Mock-tooling research captured: stick with hand-rolled mocks (AI-maintained); macro libraries like Mockable (v0.6.2, pre-1.0) don't yet justify the dependency given AI handles the boilerplate cost. Next: M6 (#1054) — Tunnel cleanup: IKEv2 consolidation (`main → neo-5.0`) + SiriIntents removal + tunnel-guard cleanup (`neo-5.0` only).
