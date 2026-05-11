@@ -35,7 +35,6 @@ protocol LocationsManager {
     func getId(location: String) -> Int
     func getCustomId(location: String) -> String
     func isCustomConfigSelected() -> Bool
-    func checkLocationValidity()
     func checkForForceDisconnect() -> Bool
     func getIsSelectedLocationPremium() -> Bool
 
@@ -44,7 +43,6 @@ protocol LocationsManager {
 }
 
 class LocationsManagerImpl: LocationsManager {
-
     private let customConfigRepository: CustomConfigRepository
     private let preferences: Preferences
     private let logger: FileLogger
@@ -184,14 +182,7 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func saveLastSelectedLocation(with locationID: String) {
-        let currentLocation = getLastSelectedLocation()
-        guard locationID != currentLocation else {
-            // Even if location hasn't changed, trigger update for UI reactivity
-            selectedLocationUpdated.send(true)
-            return
-        }
-        preferences.saveLastSelectedLocation(with: locationID)
-        selectedLocationUpdated.send(true)
+        saveLastSelectedLocation(with: locationID, shouldReconnect: true)
     }
 
     func saveStaticIP(withID staticID: Int?) {
@@ -269,7 +260,7 @@ class LocationsManagerImpl: LocationsManager {
         return preferences.isCustomConfigSelected()
     }
 
-    func checkLocationValidity() {
+    private func checkLocationValidity() {
         guard !locationListRepository.currentServerModels.isEmpty else {
             return
         }
@@ -313,7 +304,7 @@ class LocationsManagerImpl: LocationsManager {
 
 extension LocationsManagerImpl {
     private func updateToBestLocation() {
-        saveLastSelectedLocation(with: String(getBestLocation()))
+        saveLastSelectedLocation(with: String(getBestLocation()), shouldReconnect: false)
     }
 
     private func getSisterLocationId(from datacenterId: Int) -> Int? {
@@ -324,5 +315,16 @@ extension LocationsManagerImpl {
         let datacenter = safeLocation.datacenters.filter { datacenterId != $0.id }
             .randomElement()
         return datacenter?.id
+    }
+
+    private func saveLastSelectedLocation(with locationID: String, shouldReconnect: Bool) {
+        let currentLocation = getLastSelectedLocation()
+        guard locationID != currentLocation else {
+            // Even if location hasn't changed, trigger update for UI reactivity
+            selectedLocationUpdated.send(shouldReconnect)
+            return
+        }
+        preferences.saveLastSelectedLocation(with: locationID)
+        selectedLocationUpdated.send(shouldReconnect)
     }
 }
