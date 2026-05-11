@@ -146,6 +146,138 @@ The Screen is the only place that can read `@Environment` and pass values into t
 
 `Router/NavigationRouter/BaseNavigationRouter` is a UIKit ⇄ SwiftUI bridge. As each flow goes Neo, it stops needing the bridge — the flow's root becomes a `NavigationStack`, its destinations become Screens, and the router class disappears. Until then, the legacy `Router/` and `BaseNavigationRouter` stay; new Screens are reachable from legacy routers via `AnyView(SomeScreen())`, the same way `AboutScreen` is wired in today.
 
+## Testing mocks
+
+Neo tests inject mock service implementations directly into the VM constructor — no DI container, no global state. All mocks live alongside the test that uses them (or in the same `Features/` file when reused across tests). There are two shapes to reach for.
+
+### Struct mock with stored callbacks
+
+Use when the protocol is stateless from the mock's perspective: the test seeds the return values up front and verifies results after the call. Seeded properties are `let`; call counters are `private(set) var`. The type conforms to `Sendable` directly (value semantics or actor-isolated state means no `@unchecked` needed).
+
+**Canonical in-tree examples:** `MockCredentialStoring` and `MockPreferencesReading` in [`WindscribeTests/Features/M3ServiceProtocolMockabilityTests.swift`](../WindscribeTests/Features/M3ServiceProtocolMockabilityTests.swift).
+
+```swift
+final class MockCredentialStoring: CredentialStoring, @unchecked Sendable {
+    let openVPNCredentials: ServerCredentialsModel?
+    let ikev2Credentials: ServerCredentialsModel?
+    private(set) var refreshCallCount = 0
+
+    init(openVPN: ServerCredentialsModel?, ikev2: ServerCredentialsModel?) {
+        self.openVPNCredentials = openVPN
+        self.ikev2Credentials = ikev2
+    }
+
+    func refreshOpenVPNCredentials() async throws { refreshCallCount += 1 }
+    func refreshIKEv2Credentials() async throws { refreshCallCount += 1 }
+}
+```
+
+Use `@unchecked Sendable` on `final class` only when the mutable state (`refreshCallCount`) is test-local and single-threaded. For mocks that receive concurrent calls, use the actor shape below.
+
+### Actor mock for state
+
+Use when the mock must record mutable state (call log, captured arguments, emitted values) that could be read or written from multiple isolation contexts. Declare the type as `actor` — the actor serialises all access, so `@unchecked Sendable` is not needed.
+
+**Canonical in-tree example:** `ActorMockCredentialStoring` in [`WindscribeTests/Features/MockPatternTests.swift`](../WindscribeTests/Features/MockPatternTests.swift).
+
+```swift
+actor ActorMockCredentialStoring: CredentialStoring {
+    // Protocol requires sync nonisolated getters; `let` is implicitly
+    // nonisolated on an actor.
+    let openVPNCredentials: ServerCredentialsModel?
+    let ikev2Credentials: ServerCredentialsModel?
+
+    // Mutable state stays actor-isolated.
+    private(set) var refreshCallCount = 0
+
+    init(openVPN: ServerCredentialsModel? = nil, ikev2: ServerCredentialsModel? = nil) {
+        self.openVPNCredentials = openVPN
+        self.ikev2Credentials = ikev2
+    }
+
+    func refreshOpenVPNCredentials() async throws { refreshCallCount += 1 }
+    func refreshIKEv2Credentials() async throws { refreshCallCount += 1 }
+}
+
+// Reading state from the test:
+let count = await mock.refreshCallCount
+```
+
+The rule: protocol requirements that are **sync nonisolated** (read-only properties on a `Sendable` protocol) need either immutable `let` storage on the actor, or `nonisolated` accessors backed by `Sendable` state. Don't reach for `nonisolated(unsafe)` — if you need mutable nonisolated state, the actor's the wrong tool.
+
+**When to pick which:**
+
+| Situation | Shape |
+|---|---|
+| Mock returns canned values; test is single-threaded | `final class … @unchecked Sendable` |
+| Mock tracks call history; VM calls it from `@MainActor` or a `Task` | `actor` |
+| Mock drives an `AsyncStream` (e.g. `MockServerProviding`) | `final class … @unchecked Sendable` — the stream's `Continuation` is the serialisation boundary |
+
+## GRDB test fixtures
+
+New GRDB-backed stores are tested against an **in-memory `DatabaseQueue`** — no file I/O, clean state per test, no teardown required.
+
+### The canonical pattern
+
+Every store test follows the same three-step setup: create an in-memory queue, apply the **production migrator** (`GRDBSchema.makeMigrator()`), and inject the queue into the store under test via constructor injection.
+
+Canonical reference: [`WindscribeTests/Data/RecordTests/PingDataRecordTests.swift`](../WindscribeTests/Data/RecordTests/PingDataRecordTests.swift) (record-level) and [`WindscribeTests/Data/GRDBLocalDatabaseParityTests.swift`](../WindscribeTests/Data/GRDBLocalDatabaseParityTests.swift) (full-store level, from M2 D2.2 / !1311).
+
+**Record-level test (copy this for a single `FetchableRecord`/`PersistableRecord`):**
+
+```swift
+import Testing
+import GRDB
+@testable import Windscribe
+
+@Suite struct PingDataRecordTests {
+    private func makeDB() throws -> DatabaseQueue {
+        let queue = try DatabaseQueue()          // in-memory, no path
+        try GRDBSchema.makeMigrator().migrate(queue)
+        return queue
+    }
+
+    @Test func roundTrip() throws {
+        let model  = PingDataModel(ip: "10.0.0.1", latency: 42)
+        let record = PingDataRecord(from: model)
+        let queue  = try makeDB()
+        try queue.write { db in try record.save(db) }
+        let fetched = try queue.read { db in try PingDataRecord.fetchOne(db, key: record.ip) }
+        #expect(fetched == record)
+        #expect(fetched?.toModel() == model)
+    }
+}
+```
+
+**Full-store test (copy this to exercise a `LocalDatabase` implementation):**
+
+```swift
+// GRDBLocalDatabaseParityTests.swift — in-memory store wired into the contract suite
+final class GRDBLocalDatabaseParityTests: LocalDatabaseContractTests {
+    override func makeLocalDatabase() -> LocalDatabase? {
+        do {
+            let queue = try DatabaseQueue()
+            try GRDBSchema.makeMigrator().migrate(queue)
+            return GRDBLocalDatabaseImpl(
+                logger: MockLogger(),
+                preferences: MockPreferences(),
+                dbQueue: queue
+            )
+        } catch {
+            XCTFail("Failed to set up in-memory DB: \(error)")
+            return nil
+        }
+    }
+}
+```
+
+### Rules
+
+- **One `makeDB()` call per test function.** Never share a `DatabaseQueue` across tests — isolation is the only thing in-memory buys you over a file-backed DB.
+- **Use the production migrator, not a hand-rolled schema.** `GRDBSchema.makeMigrator().migrate(queue)` applies the same migration sequence production does. A test-only schema diverges silently and defeats the purpose of the test.
+- **Constructor-inject `DatabaseQueue`.** `GRDBLocalDatabaseImpl` accepts `dbQueue:` at init. Don't subclass or use a global.
+- **New tests use Swift Testing** (`import Testing`, `@Test`, `#expect`). The XCTest `makeDB()` shape above is shown because the existing in-tree examples predate M5; new suites should use `@Suite` + `@Test`.
+
 ## Applying these patterns to tvOS
 
 Project Neo is **platform-symmetric**. Everything above applies identically to [`WindscribeTV/Features/`](../WindscribeTV/Features/). New tvOS work goes in that directory; legacy tvOS UIKit screens stay in `WindscribeTV/UI/` until they are rebuilt. Capability protocols and adapters live in [`WindscribeTV/Services/Protocols/`](../WindscribeTV/Services/Protocols/), mirroring the iOS layout. SwiftLint custom rules apply to both Features paths automatically.

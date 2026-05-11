@@ -588,6 +588,7 @@
 		59FC74872C52FCEE00021CD1 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74862C52FCEE00021CD1 /* Router.swift */; };
 		59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74882C530A4100021CD1 /* LoginRouter.swift */; };
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
+		9223E1F32FB22934007252B6 /* MockPatternTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E1F22FB22934007252B6 /* MockPatternTests.swift */; };
 		927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		9279914B2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
 		9279914C2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
@@ -1912,6 +1913,7 @@
 		59FC74862C52FCEE00021CD1 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		59FC74882C530A4100021CD1 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPressLoginCodeResponse.swift; sourceTree = "<group>"; };
+		9223E1F22FB22934007252B6 /* MockPatternTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPatternTests.swift; sourceTree = "<group>"; };
 		9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedCredential.swift; sourceTree = "<group>"; };
 		9279914D2F86C638000BB9D0 /* AuthActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthActionButton.swift; sourceTree = "<group>"; };
 		9279914F2F86C74F000BB9D0 /* MockHashAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHashAuthManager.swift; sourceTree = "<group>"; };
@@ -3855,6 +3857,7 @@
 				92C985A32FA3A79E00326D64 /* AboutTests.swift */,
 				92C985B42FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift */,
 				92EFE9C32FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift */,
+				9223E1F22FB22934007252B6 /* MockPatternTests.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -8015,6 +8018,7 @@
 				F45BD5AD2EF9A46100490072 /* APIMessage+Test.swift in Sources */,
 				1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */,
 				1E0492B62F4750A40016B11F /* MockCredentialsRepository.swift in Sources */,
+				9223E1F32FB22934007252B6 /* MockPatternTests.swift in Sources */,
 				92C985B52FABBBC100326D64 /* M3ServiceProtocolMockabilityTests.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,
