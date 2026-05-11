@@ -209,7 +209,6 @@ Once GRDB is in tree (post D2.2 step 2), `Windscribe/App/Environment+Dependencie
 - Mock guidance documented: how to write a `MockX: ProtocolX` instead of mocking concrete impls. Two worked examples (struct mock with stored callbacks, actor mock for state) live alongside the reference module.
 - GRDB in-memory `DatabaseQueue` test fixture pattern documented (depends on M2 D2.2).
 - CI's `fastlane test` collects Swift Testing results (XCResult parsing) alongside XCTest.
-- **macOS-runnable test target — feasibility evaluation.** Today the only test target is `WindscribeTests`, which depends transitively on iOS-only frameworks (`NetworkExtension`, `RealmSwift`, etc.) and so requires a booted iOS Simulator runtime. Evaluate whether a separate `WindscribeCoreTests` (or similar) target can host new Neo Swift Testing suites against a macOS destination — runs headless via `swift test` / `xcodebuild -destination 'platform=macOS'`, no simulator boot, faster iteration. Only feasible if the modules under test (Neo `Features/`, `Services/Protocols/`, value-type domain models) compile against macOS without dragging the iOS-only legacy in. If the dependency graph forces iOS Simulator anyway, document why and stop. If it works, new Neo tests target the macOS surface; legacy iOS-coupled tests stay in `WindscribeTests`. Lands as part of M5 if proven feasible during M5; defer otherwise.
 
 ---
 
