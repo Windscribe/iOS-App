@@ -449,6 +449,7 @@ class ViewModels: Assembly {
 
         container.register(LocationNameViewModel.self) { r in
             LocationNameViewModelImpl(languageManager: r.resolve(LanguageManager.self)!,
+                                      vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                      locationsManager: r.resolve(LocationsManager.self)!)
         }.inObjectScope(.transient)
 
