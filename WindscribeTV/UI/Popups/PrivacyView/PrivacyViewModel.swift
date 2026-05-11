@@ -42,7 +42,7 @@ class PrivacyViewModel: PrivacyViewModelType {
     private func actionWithCompletion(completionHandler: (() -> Void)? = nil) {
         preferences.savePrivacyPopupAccepted(bool: true)
         NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
-        var defaultProtocol = TextsAsset.General.protocols[0]
+        var defaultProtocol = VPNProtocolType.wireGuard.identifier
         var defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
         if let suggestedPorts = portMapRepository.suggestedPorts,

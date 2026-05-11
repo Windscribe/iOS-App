@@ -163,7 +163,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
                             portOptions: portOptions),
             .ipStack(selectedEgressOption: egressProtocol, egressOptions: ipStackOptions, selectedIngressOption: ingressProtocol, ingressOptions: ipStackOptions)
         ]
-        if currentProtocol != TextsAsset.iKEv2 || connectionMode == Fields.Values.auto {
+        if currentProtocol != VPNProtocolType.iKEv2.identifier || connectionMode == Fields.Values.auto {
             entries.append(.connectedDns(currentOption: connectedDNS,
                                          customValue: customDNSValue,
                                          options: connectedDNSOptions))

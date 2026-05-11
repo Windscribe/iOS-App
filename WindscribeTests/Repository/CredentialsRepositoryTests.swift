@@ -124,7 +124,7 @@ class CredentialsRepositoryTests: XCTestCase {
         return credentials
     }
 
-    private func setupPreferences(connectionMode: String = Fields.Values.auto, selectedProtocol: String = TextsAsset.wireGuard) async {
+    private func setupPreferences(connectionMode: String = Fields.Values.auto, selectedProtocol: String = VPNProtocolType.wireGuard.identifier) async {
         // Preferences propagate through: Combine → .receive(on: DispatchQueue.main) → Task → actor method.
         // The actor's loadData() subscribes to the mock subjects in setUp; CurrentValueSubject
         // delivers its seeded value to the new subscriber, queueing an actor Task. If the test
@@ -321,7 +321,7 @@ class CredentialsRepositoryTests: XCTestCase {
         // Given
         let network = createMockWifiNetwork(
             preferredProtocolStatus: true,
-            preferredProtocol: TextsAsset.iKEv2
+            preferredProtocol: VPNProtocolType.iKEv2.identifier
         )
         mockWifiManager.mockConnectedNetwork = network
         mockVPNStateRepository.isFromProtocolFailover = false
@@ -338,7 +338,7 @@ class CredentialsRepositoryTests: XCTestCase {
         // Given
         let network = createMockWifiNetwork(
             preferredProtocolStatus: true,
-            preferredProtocol: TextsAsset.wireGuard
+            preferredProtocol: VPNProtocolType.wireGuard.identifier
         )
         mockWifiManager.mockConnectedNetwork = network
         mockVPNStateRepository.isFromProtocolFailover = false
@@ -355,11 +355,11 @@ class CredentialsRepositoryTests: XCTestCase {
         // Given
         let network = createMockWifiNetwork(
             preferredProtocolStatus: true,
-            preferredProtocol: TextsAsset.iKEv2
+            preferredProtocol: VPNProtocolType.iKEv2.identifier
         )
         mockWifiManager.mockConnectedNetwork = network
         mockVPNStateRepository.isFromProtocolFailover = true
-        await setupPreferences(connectionMode: Fields.Values.manual, selectedProtocol: TextsAsset.iKEv2)
+        await setupPreferences(connectionMode: Fields.Values.manual, selectedProtocol: VPNProtocolType.iKEv2.identifier)
 
         // When
         let credentialsType = repository.selectedServerCredentialsType()
@@ -375,7 +375,7 @@ class CredentialsRepositoryTests: XCTestCase {
             preferredProtocol: nil
         )
         mockWifiManager.mockConnectedNetwork = network
-        await setupPreferences(connectionMode: Fields.Values.manual, selectedProtocol: TextsAsset.iKEv2)
+        await setupPreferences(connectionMode: Fields.Values.manual, selectedProtocol: VPNProtocolType.iKEv2.identifier)
 
         // When
         let credentialsType = repository.selectedServerCredentialsType()
@@ -389,10 +389,10 @@ class CredentialsRepositoryTests: XCTestCase {
         let network = createMockWifiNetwork(
             preferredProtocolStatus: false,
             preferredProtocol: nil,
-            protocolType: TextsAsset.iKEv2
+            protocolType: VPNProtocolType.iKEv2.identifier
         )
         mockWifiManager.mockConnectedNetwork = network
-        await setupPreferences(connectionMode: Fields.Values.auto, selectedProtocol: TextsAsset.wireGuard)
+        await setupPreferences(connectionMode: Fields.Values.auto, selectedProtocol: VPNProtocolType.wireGuard.identifier)
 
         // When
         let credentialsType = repository.selectedServerCredentialsType()
@@ -651,7 +651,7 @@ class CredentialsRepositoryTests: XCTestCase {
 
         // When - let publishers fire, then release the strong reference
         mockPreferences.mockConnectionMode.send("manual")
-        mockPreferences.mockSelectedProtocol.send(TextsAsset.wireGuard)
+        mockPreferences.mockSelectedProtocol.send(VPNProtocolType.wireGuard.identifier)
 
         // Wait for publisher dispatch
         let setupExpectation = XCTestExpectation(description: "Publishers emit")
@@ -678,7 +678,7 @@ class CredentialsRepositoryTests: XCTestCase {
     private func createMockWifiNetwork(
         preferredProtocolStatus: Bool = false,
         preferredProtocol: String? = nil,
-        protocolType: String = TextsAsset.wireGuard
+        protocolType: String = VPNProtocolType.wireGuard.identifier
     ) -> WifiNetworkModel {
         let network = WifiNetwork()
         network.SSID = "TestNetwork"

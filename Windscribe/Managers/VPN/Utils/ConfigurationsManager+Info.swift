@@ -13,9 +13,9 @@ extension ConfigurationsManager {
     func getIKEV2ConnectionInfo(manager: NEVPNManager?) -> VPNConnectionInfo? {
         guard let manager = manager else { return nil }
         #if os(iOS)
-            return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
+            return VPNConnectionInfo(selectedProtocol: VPNProtocolType.iKEv2.identifier, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
         #else
-            return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress, killSwitch: false, onDemand: manager.isOnDemandEnabled)
+            return VPNConnectionInfo(selectedProtocol: VPNProtocolType.iKEv2.identifier, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress, killSwitch: false, onDemand: manager.isOnDemandEnabled)
         #endif
     }
 
@@ -25,9 +25,9 @@ extension ConfigurationsManager {
         if let wgConfig = conf.tunnelConfiguration,
            let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {
             #if os(iOS)
-                return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
+                return VPNConnectionInfo(selectedProtocol: VPNProtocolType.wireGuard.identifier, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
             #else
-                return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
+                return VPNConnectionInfo(selectedProtocol: VPNProtocolType.wireGuard.identifier, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
             #endif
         }
         guard let neProtocol = conf.protocolConfiguration as? NETunnelProviderProtocol,
@@ -45,10 +45,10 @@ extension ConfigurationsManager {
         let proxyRow = rows?.first { line in line.starts(with: "local-proxy") }
         if let proxyColumns = proxyRow?.splitToArray(separator: " "), proxyColumns.count > 4, let proxyType = Int(proxyColumns[4]) {
             if proxyType == 1 {
-                proto = wsTunnel
+                proto = VPNProtocolType.wsTunnel.identifier
             }
             if proxyType == 2 {
-                proto = stealth
+                proto = VPNProtocolType.stealth.identifier
             }
             port = proxyColumns[3]
             server = proxyColumns[2]

@@ -137,19 +137,19 @@ actor CredentialsRepositoryImpl: @preconcurrency CredentialsRepository {
             return OpenVPNServerCredentials.self
         }
         if result.preferredProtocolStatus == true && !vpnStateRepository.isFromProtocolFailover && !vpnStateRepository.isFromProtocolChange {
-            if result.preferredProtocol == TextsAsset.iKEv2 {
+            if result.preferredProtocol == VPNProtocolType.iKEv2.identifier {
                 return IKEv2ServerCredentials.self
             }
             return OpenVPNServerCredentials.self
         } else {
             if let connection = connectionMode, let selectedprotocol = selectedProtocol {
                 if connection == Fields.Values.manual {
-                    if selectedprotocol == TextsAsset.iKEv2 {
+                    if selectedprotocol == VPNProtocolType.iKEv2.identifier {
                         return IKEv2ServerCredentials.self
                     }
                     return OpenVPNServerCredentials.self
                 } else {
-                    if result.protocolType == TextsAsset.iKEv2 {
+                    if result.protocolType == VPNProtocolType.iKEv2.identifier {
                         return IKEv2ServerCredentials.self
                     }
                     return OpenVPNServerCredentials.self

@@ -120,7 +120,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 let configId = fileId
                 let configName = serverName
                 let configServerAddress = serverAddress
-                let configProtocolType = TextsAsset.wireGuard
+                let configProtocolType = VPNProtocolType.wireGuard.identifier
                 let configPort = port
 
                 do {
@@ -192,7 +192,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     throw RepositoryError.invalidConfigData
                 }
                 if protocolType == "" {
-                    protocolType = TextsAsset.General.protocols[1]
+                    protocolType = VPNProtocolType.iKEv2.identifier
                     lines.insert("proto \(protocolType.lowercased())", at: remoteLineNumber)
                 }
                 if port == "" {

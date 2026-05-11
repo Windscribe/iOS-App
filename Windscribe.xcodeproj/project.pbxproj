@@ -501,7 +501,6 @@
 		59FC74012C5153B200021CD1 /* PreferenceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8DA7AE2204BD5700885BD8 /* PreferenceItem.swift */; };
 		59FC74022C5153B500021CD1 /* APIEmailSent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA8041D22089ED200F8E379 /* APIEmailSent.swift */; };
 		59FC74032C5153B700021CD1 /* WifiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA804252209F13100F8E379 /* WifiNetwork.swift */; };
-		59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0221B09B6400B225FF /* VPNProtocols.swift */; };
 		59FC74072C5153D300021CD1 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92EB221CA1C50054580D /* UserPreferences.swift */; };
 		59FC74082C5153D700021CD1 /* ClosestCountry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16C98C2225CDAB00997A2A /* ClosestCountry.swift */; };
 		59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */; };
@@ -705,7 +704,6 @@
 		AF018DEF21B0866600B225FF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018DEE21B0866600B225FF /* MainViewController.swift */; };
 		AF018DF721B0866800B225FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AF018DF521B0866800B225FF /* LaunchScreen.storyboard */; };
 		AF018E0121B09A6100B225FF /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0021B09A6100B225FF /* AppConstants.swift */; };
-		AF018E0321B09B6400B225FF /* VPNProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0221B09B6400B225FF /* VPNProtocols.swift */; };
 		AF018E0621B09FB300B225FF /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0521B09FB300B225FF /* String+Extension.swift */; };
 		AF018E0D21B1921600B225FF /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
 		AF038CC825640754008F34A6 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
@@ -1996,7 +1994,6 @@
 		AF018DF621B0866800B225FF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AF018DF821B0866800B225FF /* Production.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Production.plist; sourceTree = "<group>"; };
 		AF018E0021B09A6100B225FF /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
-		AF018E0221B09B6400B225FF /* VPNProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNProtocols.swift; sourceTree = "<group>"; };
 		AF018E0521B09FB300B225FF /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		AF018E0C21B1921600B225FF /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		AF018E1621B1AA2D00B225FF /* WindscribeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WindscribeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4230,7 +4227,6 @@
 				F47D8E6C2D5A809600B3FA5A /* UIConstants */,
 				AF018E0021B09A6100B225FF /* AppConstants.swift */,
 				5993396A2B4CD26600EC615D /* DefaultValues.swift */,
-				AF018E0221B09B6400B225FF /* VPNProtocols.swift */,
 				E9425BA42743707B008B8786 /* URLs.swift */,
 				E9425BA127437064008B8786 /* FilePaths.swift */,
 				E9425B9827437024008B8786 /* APIParameters.swift */,
@@ -7233,7 +7229,6 @@
 				59FC73DD2C514BCD00021CD1 /* ConnectivityManager.swift in Sources */,
 				59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */,
 				59FC73E62C51506C00021CD1 /* APIManagerImpl+Robert.swift in Sources */,
-				59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */,
 				C512546E2DE76D06003A58BD /* SSOSession.swift in Sources */,
 				1EF7BB312C6D0D750032A4DF /* UpgradePricingView.swift in Sources */,
 				59FC74532C51605300021CD1 /* UIStackView+Extension.swift in Sources */,
@@ -7771,7 +7766,6 @@
 				F49C45C82DCD3311007E5EF1 /* HelpSettingsViewModel.swift in Sources */,
 				1ED616812DE4906A006CDC99 /* ConnectionsEntryType.swift in Sources */,
 				F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */,
-				AF018E0321B09B6400B225FF /* VPNProtocols.swift in Sources */,
 				AF018E0621B09FB300B225FF /* String+Extension.swift in Sources */,
 				1E3F776A2DB7E5E2008308A8 /* FreeAccountFooterView.swift in Sources */,
 				598F173329EEF500007137A4 /* OpenVPNConnectionInfo.swift in Sources */,

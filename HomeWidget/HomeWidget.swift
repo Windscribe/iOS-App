@@ -47,7 +47,7 @@ struct Provider: TimelineProvider {
             var entries: [SimpleEntry] = []
             entries.append(snapshotEntry)
             debugLog("Getting widget timeline")
-            let protocolType = self.preferences.getActiveManagerKey() ?? TextsAsset.wireGuard
+            let protocolType = self.preferences.getActiveManagerKey() ?? VPNProtocolType.wireGuard.identifier
             getActiveManager(for: protocolType) { result in
                 autoreleasepool {
                     switch result {

@@ -195,14 +195,14 @@ enum VPNManagerType: String {
 
     var username: String {
         switch self {
-        case .wg: return TextsAsset.wireGuard
+        case .wg: return VPNProtocolType.wireGuard.identifier
         case .openVPN: return TextsAsset.openVPN
-        default: return TextsAsset.iKEv2
+        default: return VPNProtocolType.iKEv2.identifier
         }
     }
 
     init(from key: String) {
-        if key == TextsAsset.iKEv2 {
+        if key == VPNProtocolType.iKEv2.identifier {
             self = .iKEV2
         } else if key == TextsAsset.openVPN {
             self = .openVPN

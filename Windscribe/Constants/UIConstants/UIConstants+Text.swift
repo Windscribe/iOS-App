@@ -11,6 +11,45 @@
 
 import Foundation
 
+/// Canonical VPN protocol values used for persistence/configuration plus their UI display names.
+/// `identifier` is the stored/config value; `displayName` is what UI lists should render.
+enum VPNProtocolType: String, CaseIterable {
+    case wireGuard = "WireGuard"
+    case iKEv2 = "IKEv2"
+    case udp = "UDP"
+    case tcp = "TCP"
+    case stealth = "Stealth"
+    case wsTunnel = "WStunnel"
+
+    var identifier: String {
+        rawValue
+    }
+
+    var displayName: String {
+        rawValue
+    }
+
+    static var allDisplayNames: [String] {
+        allCases.map(\.displayName)
+    }
+
+    static var openVPNTypes: [VPNProtocolType] {
+        [.udp, .tcp, .stealth, .wsTunnel]
+    }
+
+    static var openVPNIdentifiers: [String] {
+        openVPNTypes.map(\.identifier)
+    }
+
+    static var proxiedOpenVPNIdentifiers: [String] {
+        [VPNProtocolType.stealth, .wsTunnel].map(\.identifier)
+    }
+
+    static var openVPNDisplayNames: [String] {
+        openVPNTypes.map(\.displayName)
+    }
+}
+
 enum TextsAsset {
     static var slogan: String {
         return "Keep Your Secrets.".localized
@@ -618,8 +657,8 @@ enum TextsAsset {
         static var pushNotificationSettings: String { "Enable Notifications".localized }
         static var openSettings: String { return "Open Settings".localized }
         static var orderLocationsBy: String { "Location Order".localized }
-        static let protocols = ["WireGuard", "IKEv2", "UDP", "TCP", "Stealth", "WStunnel"]
-        static let openVpnProtocols = ["UDP", "TCP", "Stealth", "WStunnel"]
+        static let protocols = VPNProtocolType.allDisplayNames
+        static let openVpnProtocols = VPNProtocolType.openVPNDisplayNames
         static var version: String { "Version".localized }
         static var auto: String { "Auto".localized }
         static var manual: String { "Manual".localized }
@@ -1348,8 +1387,8 @@ enum TextsAsset {
     static let http = "http"
     static let icmp = "icmp"
     static let openVPN = "OpenVPN"
-    static let iKEv2 = "IKEv2"
-    static let wireGuard = "WireGuard"
+    static let iKEv2 = VPNProtocolType.iKEv2.displayName
+    static let wireGuard = VPNProtocolType.wireGuard.displayName
     static var appearances: [String] {
         return ["Light".localized, "Dark".localized]
     }

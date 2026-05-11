@@ -83,7 +83,7 @@ class PreferencesTests: XCTestCase {
 
         // Subscribe first, then save to ensure we catch the update
         preferences.getSelectedProtocol()
-            .dropFirst() // Drop the initial value (TextsAsset.wireGuard)
+            .dropFirst() // Drop the initial value (VPNProtocolType.wireGuard.identifier)
             .first() // Only take the first emission after the initial
             .sink { selectedProtocol in
                 XCTAssertEqual(selectedProtocol, self.testProtocol)

@@ -48,9 +48,9 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             let ip = endpoint.ip()
             let port = String(endpoint.port())
             let proto = if endpoint.protocol() == 0 {
-                udp
+                VPNProtocolType.udp.identifier
             } else {
-                tcp
+                VPNProtocolType.tcp.identifier
             }
             let username = self.wsnetEmergencyConnect.getUsername()
             let password = self.wsnetEmergencyConnect.getPassword()

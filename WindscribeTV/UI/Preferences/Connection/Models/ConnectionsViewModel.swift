@@ -148,12 +148,12 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             .sink { [weak self] (connectionMode, selectedProtocol, network) in
                 guard let self = self else { return }
                 if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {
-                    self.shouldShowCustomDNSOption.send(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
+                    self.shouldShowCustomDNSOption.send(currentNetwork.preferredProtocol != VPNProtocolType.iKEv2.identifier)
                     return
                 }
                 if let connectionMode = connectionMode, let selectedProtocol = selectedProtocol {
                     if connectionMode == Fields.Values.manual {
-                        self.shouldShowCustomDNSOption.send(selectedProtocol != TextsAsset.iKEv2)
+                        self.shouldShowCustomDNSOption.send(selectedProtocol != VPNProtocolType.iKEv2.identifier)
                         return
                     }
                 }

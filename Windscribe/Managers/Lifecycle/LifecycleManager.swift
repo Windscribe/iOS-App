@@ -246,7 +246,7 @@ class LifecycleManager: LifecycleManagerType {
         if let info = vpnStateRepository.vpnInfo.value {
             proto = ProtocolPort(info.selectedProtocol, info.selectedPort)
         } else {
-            proto = ProtocolPort(TextsAsset.wireGuard, "443")
+            proto = ProtocolPort(VPNProtocolType.wireGuard.identifier, "443")
         }
         try await withCheckedThrowingContinuation { continuation in
             self.connectTask = configManager.connectAsync(

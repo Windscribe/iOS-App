@@ -59,7 +59,7 @@ class ProtocolManager: ProtocolManagerType {
     // MARK: - Properties
 
     /// Default protocol
-    let defaultProtocol = ProtocolPort(wireGuard, DefaultValues.port)
+    let defaultProtocol = ProtocolPort(VPNProtocolType.wireGuard.identifier, DefaultValues.port)
     /// Provides concurrent access to protocol list.
     private let accessQueue = DispatchQueue(label: "protocolManagerAccessQueve", attributes: .concurrent)
     /// List of Protocols in ordered by priority

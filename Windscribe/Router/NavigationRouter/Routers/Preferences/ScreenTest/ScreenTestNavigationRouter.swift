@@ -67,7 +67,7 @@ class ScreenTestNavigationRouter: BaseNavigationRouter {
             return AnyView(DeviceTypeProvider { restrictiveNetworkView })
         case .preferredProtocol:
             let context = ProtocolConnectionResultContext()
-            context.protocolName = TextsAsset.iKEv2.localized
+            context.protocolName = VPNProtocolType.iKEv2.displayName.localized
             context.viewType = .connected
             return AnyView(
                 Assembler.resolve(ProtocolConnectionResultView.self)

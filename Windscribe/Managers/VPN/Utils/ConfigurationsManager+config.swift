@@ -36,9 +36,9 @@ extension ConfigurationsManager {
                 return try await openConfigFromCustomConfig(locationID: locationId)
             }
         }
-        if [udp, tcp, wsTunnel, stealth].contains(proto) {
+        if VPNProtocolType.openVPNIdentifiers.contains(proto) {
             return try await buildOpenVPNConfig(location: location, proto: proto, port: port, userSettings: userSettings)
-        } else if proto == TextsAsset.iKEv2 {
+        } else if proto == VPNProtocolType.iKEv2.identifier {
             return try buildIKEv2Config(location: location)
         } else {
             return try await buildWgConfig(location: location, port: port, vpnSettings: userSettings)
@@ -55,7 +55,7 @@ extension ConfigurationsManager {
     func getProtoFromConfig(locationId: String) async -> String? {
         do {
             _ = try await wgConfigFromCustomConfig(locationId: locationId)
-            return TextsAsset.wireGuard
+            return VPNProtocolType.wireGuard.identifier
         } catch {
             do {
                 let config = try await openConfigFromCustomConfig(locationID: locationId)
@@ -111,7 +111,7 @@ extension ConfigurationsManager {
         guard let stringData = String(data: configData, encoding: String.Encoding.utf8) else {
             throw VPNConfigurationErrors.configNotFound
         }
-        let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: stringData, called: TextsAsset.wireGuard)
+        let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: stringData, called: VPNProtocolType.wireGuard.identifier)
         return WireguardVPNConfiguration(content: tunnelConfiguration)
     }
 
@@ -164,7 +164,7 @@ extension ConfigurationsManager {
         switch locationType {
         case .server:
             guard let credentials = credentialsRepository.ikev2Crendentials else {
-                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
+                throw VPNConfigurationErrors.credentialsNotFound(VPNProtocolType.iKEv2.identifier)
             }
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
@@ -176,7 +176,7 @@ extension ConfigurationsManager {
             let hostname = server.hostname
             locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
             guard let auth = keychainDb.retrieve(username: username) else {
-                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
+                throw VPNConfigurationErrors.credentialsNotFound(VPNProtocolType.iKEv2.identifier)
             }
             return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         case .staticIP:
@@ -189,13 +189,13 @@ extension ConfigurationsManager {
             let hostname = node.hostname
             locationListRepository.saveLastConnectedHost(for: hostname, with: locationID)
             guard let credentials = staticLocation.credentials.last else {
-                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
+                throw VPNConfigurationErrors.credentialsNotFound(VPNProtocolType.iKEv2.identifier)
             }
             let username = credentials.username
             let password = credentials.password
             keychainDb.save(username: username, password: password)
             guard let auth = keychainDb.retrieve(username: username) else {
-                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
+                throw VPNConfigurationErrors.credentialsNotFound(VPNProtocolType.iKEv2.identifier)
             }
             return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         default:
@@ -245,12 +245,12 @@ extension ConfigurationsManager {
 
     /// Builds proxy info for OpenVPN if protocols is stealth or wstunnel.
     private func getProxyInfo(proto: String, port: String, ip1: String, ip3: String) -> ProxyInfo? {
-        if ![stealth, wsTunnel].contains(proto) {
+        if !VPNProtocolType.proxiedOpenVPNIdentifiers.contains(proto) {
             return nil
         }
         var proxyProtocol = ProxyType.wstunnel
         var remoteAddress = ip1
-        if proto == stealth {
+        if proto == VPNProtocolType.stealth.identifier {
             proxyProtocol = .stunnel
             remoteAddress = ip3
         }
@@ -277,7 +277,7 @@ extension ConfigurationsManager {
      */
     private func editOpenVPNConfig(proto: String, serverAddress: String, port: String, x509Name: String, proxyInfo: ProxyInfo?, userSettings: VPNUserSettings) async throws -> (String, Data) {
         var protoLine = "proto \(proto.lowercased())"
-        if [stealth, wsTunnel].contains(proto) {
+        if VPNProtocolType.proxiedOpenVPNIdentifiers.contains(proto) {
             protoLine = "proto tcp"
         }
         let remoteLine = "remote \(serverAddress) \(port)"

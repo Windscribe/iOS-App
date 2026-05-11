@@ -313,7 +313,7 @@ class SessionManagerImpl: SessionManager {
             await updateProtocolCredentials()
         }
 
-        let portMaps = portmapRepo.currentPortMaps.filter({ $0.heading == wireGuard })
+        let portMaps = portmapRepo.currentPortMaps.filter({ $0.heading == VPNProtocolType.wireGuard.identifier })
         if portMaps.first == nil {
             try? await locationListRepository.updatedServerList()
             _ = try? await portmapRepo.getUpdatedPortMap()

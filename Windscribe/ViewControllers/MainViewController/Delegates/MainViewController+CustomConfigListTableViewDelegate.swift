@@ -55,7 +55,7 @@ extension MainViewController: CustomConfigListTableViewDelegate {
     func showRemoveAlertForCustomConfig(id: String, protocolType: String) {
         let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { _ in
             Task {
-                if protocolType == wireGuard {
+                if protocolType == VPNProtocolType.wireGuard.identifier {
                     await self.customConfigRepository?.removeWgConfig(fileId: id)
                 } else {
                     await self.customConfigRepository?.removeOpenVPNConfig(fileId: id)
@@ -150,11 +150,11 @@ extension MainViewController: CustomConfigListTableViewDelegate {
     @objc func autoModeProtocolButtonTapped(sender: UIButton) {
         switch sender {
         case autoModeSelectorIkev2Button:
-            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: iKEv2)
+            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: VPNProtocolType.iKEv2.identifier)
         case autoModeSelectorUDPButton:
-            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: udp)
+            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: VPNProtocolType.udp.identifier)
         case autoModeSelectorTCPButton:
-            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: tcp)
+            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: VPNProtocolType.tcp.identifier)
         default:
             return
         }

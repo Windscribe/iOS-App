@@ -101,7 +101,7 @@ extension LocalDatabaseImpl {
                 if oldSchemaVersion < 20 {
                     migration.enumerateObjects(ofType: WifiNetwork.className()) { _, newObject in
                         newObject?["preferredProtocolStatus"] = false
-                        newObject?["preferredProtocol"] = wireGuard
+                        newObject?["preferredProtocol"] = VPNProtocolType.wireGuard.identifier
                         newObject?["preferredPort"] = "443"
                     }
                 }
@@ -139,7 +139,7 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 32 {
                     migration.enumerateObjects(ofType: WifiNetwork.className()) { _, newObject in
-                        newObject?["protocolType"] = wireGuard
+                        newObject?["protocolType"] = VPNProtocolType.wireGuard.identifier
                         newObject?["port"] = "443"
                     }
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
@@ -165,7 +165,7 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 39 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject?["protocolType"] = wireGuard
+                        newObject?["protocolType"] = VPNProtocolType.wireGuard.identifier
                         newObject?["port"] = "443"
                     }
                 }

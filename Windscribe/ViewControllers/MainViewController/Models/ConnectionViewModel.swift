@@ -568,7 +568,7 @@ extension ConnectionViewModel {
         preferences.saveCountryCodeKey(key: locationInfo.countryCode)
 
         if credentialsRepository.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
-            preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
+            preferences.setServerCredentialTypeKey(typeKey: VPNProtocolType.iKEv2.identifier)
         } else {
             preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
         }

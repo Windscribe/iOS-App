@@ -76,9 +76,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: testSSID,
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -101,9 +101,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -128,9 +128,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network1 = WifiNetworkModel(
             SSID: currentSSID,
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -161,9 +161,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -178,9 +178,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443",
             preferredProtocolStatus: false
         )
@@ -195,9 +195,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: false,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443",
             preferredProtocolStatus: true
         )
@@ -213,9 +213,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -230,9 +230,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -247,9 +247,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -263,9 +263,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443",
             preferredProtocolStatus: false
         )
@@ -287,9 +287,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -303,9 +303,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 
@@ -319,9 +319,9 @@ class WifiNetworkRepositoryTests: XCTestCase {
         let network = WifiNetworkModel(
             SSID: "TestWiFi",
             status: true,
-            protocolType: wireGuard,
+            protocolType: VPNProtocolType.wireGuard.identifier,
             port: "443",
-            preferredProtocol: wireGuard,
+            preferredProtocol: VPNProtocolType.wireGuard.identifier,
             preferredPort: "443"
         )
 

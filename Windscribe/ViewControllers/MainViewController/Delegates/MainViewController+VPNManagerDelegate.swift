@@ -91,7 +91,7 @@ extension MainViewController: VPNManagerDelegate {
             GroupPersistenceManager.shared.saveData(value: nickName, key: nickNameKey)
             GroupPersistenceManager.shared.saveData(value: countryCode, key: countryCodeKey)
             if UserPreferencesManager.shared.selectedServerCredentialsType == IKEv2ServerCredentials.self {
-                GroupPersistenceManager.shared.saveData(value: TextsAsset.iKEv2,
+                GroupPersistenceManager.shared.saveData(value: VPNProtocolType.iKEv2.identifier,
                                                         key: serverCredentialsTypeKey)
             } else {
                 GroupPersistenceManager.shared.saveData(value: TextsAsset.openVPN,

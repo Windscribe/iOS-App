@@ -25,7 +25,7 @@ class CustomConfigCellModel: BaseNodeCellViewModel {
     override var iconAspect: UIView.ContentMode { .scaleAspectFit }
 
     override var iconImage: UIImage? {
-        if displayingCustomConfig?.protocolType == TextsAsset.wireGuard {
+        if displayingCustomConfig?.protocolType == VPNProtocolType.wireGuard.identifier {
             return UIImage(named: ImagesAsset.customConfigWG)?.withRenderingMode(.alwaysTemplate)
         } else if TextsAsset.General.openVpnProtocols.contains(displayingCustomConfig?.protocolType ?? "") {
             return UIImage(named: ImagesAsset.customConfigOVPN)?.withRenderingMode(.alwaysTemplate)

@@ -274,7 +274,7 @@ class ConnectionStateInfoView: UIView {
         protocolLabel.adjustsFontSizeToFitWidth = true
         protocolLabel.font = UIFont.bold(size: 12)
         protocolLabel.textColor = UIColor.white
-        protocolLabel.text = wifiManager.getConnectedNetwork()?.protocolType ?? TextsAsset.wireGuard
+        protocolLabel.text = wifiManager.getConnectedNetwork()?.protocolType ?? VPNProtocolType.wireGuard.displayName
 
         portLabel.textAlignment = .center
         portLabel.adjustsFontSizeToFitWidth = true

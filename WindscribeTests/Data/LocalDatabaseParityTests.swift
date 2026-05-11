@@ -62,9 +62,9 @@ class LocalDatabaseContractTests: XCTestCase {
         try skip()
         let network = WifiNetworkModel(SSID: "HomeNet",
                                        status: true,
-                                       protocolType: wireGuard,
+                                       protocolType: VPNProtocolType.wireGuard.identifier,
                                        port: "443",
-                                       preferredProtocol: wireGuard,
+                                       preferredProtocol: VPNProtocolType.wireGuard.identifier,
                                        preferredPort: "443")
         sut.saveNetwork(wifiNetwork: network)
 
@@ -76,7 +76,7 @@ class LocalDatabaseContractTests: XCTestCase {
                 let found = networks.first { $0.SSID == "HomeNet" }
                 XCTAssertNotNil(found)
                 XCTAssertEqual(found?.status, true)
-                XCTAssertEqual(found?.protocolType, wireGuard)
+                XCTAssertEqual(found?.protocolType, VPNProtocolType.wireGuard.identifier)
                 exp.fulfill()
             }
             .store(in: &cancellables)
@@ -88,17 +88,17 @@ class LocalDatabaseContractTests: XCTestCase {
         try skip()
         let network = WifiNetworkModel(SSID: "CafeNet",
                                        status: false,
-                                       protocolType: wireGuard,
+                                       protocolType: VPNProtocolType.wireGuard.identifier,
                                        port: "1194",
-                                       preferredProtocol: wireGuard,
+                                       preferredProtocol: VPNProtocolType.wireGuard.identifier,
                                        preferredPort: "1194")
         sut.saveNetwork(wifiNetwork: network)
 
         let networkToRemove = WifiNetworkModel(SSID: "CafeNet",
                                                status: false,
-                                               protocolType: wireGuard,
+                                               protocolType: VPNProtocolType.wireGuard.identifier,
                                                port: "1194",
-                                               preferredProtocol: wireGuard,
+                                               preferredProtocol: VPNProtocolType.wireGuard.identifier,
                                                preferredPort: "1194")
         sut.removeNetwork(wifiNetwork: networkToRemove)
 
@@ -120,17 +120,17 @@ class LocalDatabaseContractTests: XCTestCase {
         try skip()
         let first = WifiNetworkModel(SSID: "OfficeNet",
                                      status: true,
-                                     protocolType: wireGuard,
+                                     protocolType: VPNProtocolType.wireGuard.identifier,
                                      port: "443",
-                                     preferredProtocol: wireGuard,
+                                     preferredProtocol: VPNProtocolType.wireGuard.identifier,
                                      preferredPort: "443")
         sut.saveNetwork(wifiNetwork: first)
 
         let second = WifiNetworkModel(SSID: "OfficeNet",
                                       status: false,
-                                      protocolType: wireGuard,
+                                      protocolType: VPNProtocolType.wireGuard.identifier,
                                       port: "443",
-                                      preferredProtocol: wireGuard,
+                                      preferredProtocol: VPNProtocolType.wireGuard.identifier,
                                       preferredPort: "443")
         sut.saveNetwork(wifiNetwork: second)
 
@@ -266,9 +266,9 @@ class LocalDatabaseContractTests: XCTestCase {
 
         let network = WifiNetworkModel(SSID: "TempNet",
                                        status: true,
-                                       protocolType: wireGuard,
+                                       protocolType: VPNProtocolType.wireGuard.identifier,
                                        port: "443",
-                                       preferredProtocol: wireGuard,
+                                       preferredProtocol: VPNProtocolType.wireGuard.identifier,
                                        preferredPort: "443")
         sut.saveNetwork(wifiNetwork: network)
 
@@ -517,12 +517,12 @@ class LocalDatabaseContractTests: XCTestCase {
 
     func testSuggestedPortsSaveRead() throws {
         try skip()
-        let suggestedPorts = SuggestedPortsModel(protocolType: wireGuard, port: "51820")
+        let suggestedPorts = SuggestedPortsModel(protocolType: VPNProtocolType.wireGuard.identifier, port: "51820")
         sut.saveSuggestedPorts(suggestedPorts: [suggestedPorts])
 
         let result = sut.getSuggestedPorts()
         XCTAssertNotNil(result)
-        let found = result?.first { $0.protocolType == wireGuard }
+        let found = result?.first { $0.protocolType == VPNProtocolType.wireGuard.identifier }
         XCTAssertNotNil(found)
         XCTAssertEqual(found?.port, "51820")
     }
@@ -685,8 +685,8 @@ class LocalDatabaseContractTests: XCTestCase {
         try skip()
         // Seed entity types LocalDatabase still owns (sessions / credentials are
         // in Keychain and don't go through clean() here).
-        let network = WifiNetworkModel(SSID: "CleanNet", status: true, protocolType: wireGuard,
-                                       port: "443", preferredProtocol: wireGuard, preferredPort: "443")
+        let network = WifiNetworkModel(SSID: "CleanNet", status: true, protocolType: VPNProtocolType.wireGuard.identifier,
+                                       port: "443", preferredProtocol: VPNProtocolType.wireGuard.identifier, preferredPort: "443")
         sut.saveNetwork(wifiNetwork: network)
 
         let config = CustomConfigModel(id: "clean-cfg", name: "CleanConfig",

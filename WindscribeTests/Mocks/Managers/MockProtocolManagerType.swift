@@ -75,10 +75,10 @@ class MockProtocolManagerType: ProtocolManagerType {
 
         displayProtocolsSubject.send(protocols)
 
-        if !protocols.isEmpty {
-            currentProtocolSubject.send(protocols[0].protocolPort)
+        if let firstProtocol = protocols.first?.protocolPort {
+            currentProtocolSubject.send(firstProtocol)
             if shouldReconnect {
-                connectionProtocolSubject.send((protocolPort: protocols[0].protocolPort, connectionType: .user))
+                connectionProtocolSubject.send((protocolPort: firstProtocol, connectionType: .user))
             }
         }
 
@@ -255,8 +255,8 @@ class MockProtocolManagerType: ProtocolManagerType {
         mockProtocols = newProtocols
         displayProtocolsSubject.send(protocols)
 
-        if !protocols.isEmpty {
-            currentProtocolSubject.send(protocols[0].protocolPort)
+        if let firstProtocol = protocols.first?.protocolPort {
+            currentProtocolSubject.send(firstProtocol)
         }
     }
 

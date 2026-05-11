@@ -25,10 +25,10 @@ protocol WifiNetworkProtocol: Equatable {
 @objcMembers class WifiNetwork: Object, WifiNetworkProtocol, Decodable {
     dynamic var SSID: String = ""
     dynamic var status: Bool = false
-    dynamic var protocolType: String = wireGuard
+    dynamic var protocolType: String = VPNProtocolType.wireGuard.identifier
     dynamic var port: String = "443"
     dynamic var preferredProtocolStatus: Bool = false
-    dynamic var preferredProtocol: String = wireGuard
+    dynamic var preferredProtocol: String = VPNProtocolType.wireGuard.identifier
     dynamic var preferredPort: String = "443"
     dynamic var popupDismissCount: Int = 0
     dynamic var dontAskAgainForPreferredProtocol: Bool = false

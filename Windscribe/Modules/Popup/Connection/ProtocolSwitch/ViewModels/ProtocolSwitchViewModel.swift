@@ -152,20 +152,20 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
     /// Maps protocol names to their user-friendly descriptions
     private func getProtocolDescription(_ protocolName: String) -> String {
-        switch protocolName {
-        case iKEv2:
+        switch VPNProtocolType(rawValue: protocolName) {
+        case .some(.iKEv2):
             return TextsAsset.ProtocolVariation.ikev2ProtocolDescription
-        case udp:
+        case .some(.udp):
             return TextsAsset.ProtocolVariation.udpProtocolDescription
-        case tcp:
+        case .some(.tcp):
             return TextsAsset.ProtocolVariation.tcpProtocolDescription
-        case wsTunnel:
+        case .some(.wsTunnel):
             return TextsAsset.ProtocolVariation.wsTunnelProtocolDescription
-        case stealth:
+        case .some(.stealth):
             return TextsAsset.ProtocolVariation.stealthProtocolDescription
-        case wireGuard:
+        case .some(.wireGuard):
             return TextsAsset.ProtocolVariation.wireGuardProtocolDescription
-        default:
+        case .none:
             return ""
         }
     }

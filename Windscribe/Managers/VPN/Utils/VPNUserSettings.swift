@@ -150,7 +150,7 @@ struct WireguardVPNConfiguration: VPNConfiguration {
         guard let manager = manager as? NETunnelProviderManager else {
             throw VPNConfigurationErrors.incorrectVPNManager
         }
-        manager.setTunnelConfiguration(content, username: TextsAsset.wireGuard, description: AppConstants.appName)
+        manager.setTunnelConfiguration(content, username: VPNProtocolType.wireGuard.identifier, description: AppConstants.appName)
     }
 }
 

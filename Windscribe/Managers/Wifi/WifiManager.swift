@@ -98,7 +98,7 @@ class WifiManagerImpl: WifiManager {
                 guard let self = self,
                       let wifiSSID = wifiSSID else { return }
 
-                var defaultProtocol = TextsAsset.General.protocols[0]
+                var defaultProtocol = VPNProtocolType.wireGuard.identifier
                 var defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
                 if let suggestedPorts = self.portMapRepository.suggestedPorts,
@@ -174,7 +174,7 @@ class WifiManagerImpl: WifiManager {
     }
 
     private func saveNewNetwork(wifiSSID: String) {
-        let defaultProtocol = TextsAsset.General.protocols[0]
+        let defaultProtocol = VPNProtocolType.wireGuard.identifier
         let defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
         let status = !autoSecureNewNetworks.value
         logger.logI("WifiManager", "Adding \"\(wifiSSID)\" to \(status ? "Unsecured" : "secured") networks database.")

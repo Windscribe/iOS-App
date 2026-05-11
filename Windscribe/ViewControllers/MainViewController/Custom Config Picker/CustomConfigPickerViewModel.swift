@@ -152,7 +152,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     func showRemoveAlertForCustomConfig(id: String, protocolType: String) {
         let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { _ in
             Task {
-                if protocolType == wireGuard {
+                if protocolType == VPNProtocolType.wireGuard.identifier {
                     await self.customConfigRepository.removeWgConfig(fileId: id)
                 } else {
                     await self.customConfigRepository.removeOpenVPNConfig(fileId: id)

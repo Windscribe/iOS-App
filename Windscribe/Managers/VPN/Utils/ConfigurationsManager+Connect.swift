@@ -24,7 +24,7 @@ extension ConfigurationsManager {
     /// - Parameters:
     ///   - locationID: A `String` representing the unique identifier of the VPN server location to connect to. This could
     ///     be a specific server ID, a static IP ID, or a custom configuration ID, depending on the user's selection.
-    ///   - proto: A `String` specifying the protocol to use for the connection (e.g., "TextAsset.WireGuard", "TextAsset.IKEv2",  udp", "tcp", "wstunnel", "stealth"").
+    ///   - proto: Protocol identifier to use for the connection (for example, `VPNProtocolType.wireGuard.identifier`).
     ///   - port: A `String` representing the port number  such as "443"
     ///   - vpnSettings: A `VPNUserSettings` object containing user-specific VPN configuration options such as allowLan
     ///
@@ -52,7 +52,7 @@ extension ConfigurationsManager {
                 let protocolName = correctedProtocolPort.protocolName
                 let portName = correctedProtocolPort.portName
 
-                let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(protocolName) ? TextsAsset.openVPN : protocolName
+                let wrapperProtocol = VPNProtocolType.openVPNIdentifiers.contains(protocolName) ? TextsAsset.openVPN : protocolName
                 self.logger.logI("VPNConfiguration", "Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)")
                 progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)"))
                 guard !Task.isCancelled else { return }
@@ -183,9 +183,9 @@ extension ConfigurationsManager {
 
     private func checkForCustomConfig(config: VPNConfiguration, proto: String, port: String) -> ProtocolPort {
         if let config = config as? OpenVPNConfiguration {
-            return ProtocolPort(protocolName: config.proto, portName: proto == TextsAsset.iKEv2 ? "443" : port)
+            return ProtocolPort(protocolName: config.proto, portName: proto == VPNProtocolType.iKEv2.identifier ? "443" : port)
         } else if config is WireguardVPNConfiguration {
-            return ProtocolPort(protocolName: TextsAsset.wireGuard, portName: proto == TextsAsset.iKEv2 ? "443" : port)
+            return ProtocolPort(protocolName: VPNProtocolType.wireGuard.identifier, portName: proto == VPNProtocolType.iKEv2.identifier ? "443" : port)
         }
         return ProtocolPort(protocolName: proto, portName: port)
     }

@@ -24,7 +24,7 @@ class MockPreferences: Preferences {
     var mockFirewallMode: Bool?
     var mockKillSwitch: Bool?
     var mockDarkMode: Bool?
-    var mockSelectedProtocol = CurrentValueSubject<String?,Never>(TextsAsset.wireGuard)
+    var mockSelectedProtocol = CurrentValueSubject<String?,Never>(VPNProtocolType.wireGuard.identifier)
     var mockConnectionMode = CurrentValueSubject<String?,Never>(Fields.Values.manual)
     var mockFavouriteIds: [String] = []
     var mockCustomLocations: [ExportedRegion] = []

@@ -73,7 +73,7 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
     }
 
     private func setupDefaultProtocol() {
-        var defaultProtocol = TextsAsset.General.protocols[0]
+        var defaultProtocol = VPNProtocolType.wireGuard.identifier
         var defaultPort = portMapRepository.getPorts(protocolType: defaultProtocol)?.first ?? "443"
 
         if let suggestedPorts = portMapRepository.suggestedPorts,

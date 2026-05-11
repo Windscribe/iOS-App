@@ -145,7 +145,7 @@ class ConfigurationsManager {
             NETunnelProviderManager.loadAllFromPreferences { tunnels, _ in
                 if let tunnels = tunnels {
                     for tunnel in tunnels {
-                        if tunnel.protocolConfiguration?.username == TextsAsset.wireGuard && self.wgTunnelManager == nil {
+                        if tunnel.protocolConfiguration?.username == VPNProtocolType.wireGuard.identifier && self.wgTunnelManager == nil {
                             self.wgTunnelManager = tunnel
                         }
                         if tunnel.protocolConfiguration?.username == TextsAsset.openVPN && self.opTunnelManager == nil {
@@ -164,7 +164,7 @@ class ConfigurationsManager {
             if manager.protocolConfiguration?.username == TextsAsset.openVPN &&  opTunnelManager == nil {
                 opTunnelManager = manager as? NETunnelProviderManager
             }
-            if manager.protocolConfiguration?.username == TextsAsset.wireGuard &&  wgTunnelManager == nil {
+            if manager.protocolConfiguration?.username == VPNProtocolType.wireGuard.identifier &&  wgTunnelManager == nil {
                 wgTunnelManager = manager as? NETunnelProviderManager
             }
         }
@@ -222,7 +222,7 @@ class ConfigurationsManager {
     }
 
     func isManagerConfigured(for manager: NEVPNManager) -> Bool {
-        if [TextsAsset.openVPN, TextsAsset.wireGuard].contains(manager.protocolConfiguration?.username) {
+        if [TextsAsset.openVPN, VPNProtocolType.wireGuard.identifier].contains(manager.protocolConfiguration?.username) {
             return true
         }
         return manager.protocolConfiguration?.username != nil
@@ -249,7 +249,7 @@ class ConfigurationsManager {
     }
 
     func isWireguard(manager: NEVPNManager) -> Bool {
-        return manager.protocolConfiguration?.username == TextsAsset.wireGuard
+        return manager.protocolConfiguration?.username == VPNProtocolType.wireGuard.identifier
     }
 
     func isOpenVPN(manager: NEVPNManager) -> Bool {
@@ -285,11 +285,11 @@ class ConfigurationsManager {
         for manager in managers {
             switch manager.protocolConfiguration {
             case is NEVPNProtocolIKEv2:
-                managerMap[TextsAsset.iKEv2] = manager
+                managerMap[VPNProtocolType.iKEv2.identifier] = manager
             case let tunnelProtocol as NETunnelProviderProtocol where tunnelProtocol.username == TextsAsset.openVPN:
                 managerMap[TextsAsset.openVPN] = manager
-            case let tunnelProtocol as NETunnelProviderProtocol where tunnelProtocol.username == TextsAsset.wireGuard:
-                managerMap[TextsAsset.wireGuard] = manager
+            case let tunnelProtocol as NETunnelProviderProtocol where tunnelProtocol.username == VPNProtocolType.wireGuard.identifier:
+                managerMap[VPNProtocolType.wireGuard.identifier] = manager
             default:
                 break
             }
@@ -302,7 +302,7 @@ class ConfigurationsManager {
         if map.keys.contains(proto) {
             return map[proto]!
         }
-        if proto == TextsAsset.iKEv2 {
+        if proto == VPNProtocolType.iKEv2.identifier {
             return NEVPNManager.shared()
         } else {
             return NETunnelProviderManager()
@@ -316,10 +316,10 @@ class ConfigurationsManager {
 
     func getManagerName(from manager: NEVPNManager) -> String {
         if let username = manager.protocolConfiguration?.username {
-            if username == TextsAsset.wireGuard || username == TextsAsset.openVPN {
+            if username == VPNProtocolType.wireGuard.identifier || username == TextsAsset.openVPN {
                 return username
             }
-            return TextsAsset.iKEv2
+            return VPNProtocolType.iKEv2.identifier
         }
         return ""
     }
