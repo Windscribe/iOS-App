@@ -12,14 +12,14 @@
 
 ## Status snapshot
 
-- **Active issue:** M4 (#1052) — Async/Sendable boundaries. PR 1–3 on `main`; PR 4 (T4.3 — tunnel async lifecycle, `neo-5.0` only) is the remaining work and waits for hardware smoke testing.
-- **Active branch:** `main` (and `neo-5.0` via the periodic merge).
+- **Active issue:** M5 (#1053) — Testing modernization. Swift Testing adoption + mock patterns. Lands `main → neo-5.0`. Plan file not yet drafted; scope captured in the GitLab issue.
+- **Active branch:** `main`.
 - **Blocked on:** —
-- **Up next:** M4 PR 4 (T4.3) on `neo-5.0`. Plan in [`plans/M4-async-sendable-boundaries.md`](plans/M4-async-sendable-boundaries.md).
-- **M2 follow-ups (separate issues, not blocking M4):**
+- **Up next:** Draft `docs/neo/plans/M5-testing-modernization.md`, then PR breakdown.
+- **M2 follow-ups (separate issues, not blocking M5):**
   - #1065 — D2.3 schema normalization (GRDB v1→v2). Ships any main release after D2.2.
   - #1066 — D2.4 Realm removal. Ships post-Neo + 3-month forced-upgrade soak.
-- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050), M3 (#1051).
+- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050), M3 (#1051), M4 (#1052).
 
 ## Log
 
@@ -39,3 +39,4 @@
 - 2026-05-07 — M4 — `main` — `3901c93e` — PR 1 merged (MR !1365): T4.1 + T4.4. `WSNetServerAPIType` (40 methods) + `WSNetPingManagerType` (1 method) Swift-protocol mirrors over the Obj-C generated WSNet classes, conformed via empty extension; all consumers (`APIManagerImpl`, `WireguardAPIManagerImpl`, `ControlPlane`, `LocalPingManagerImpl`, both tunnel providers, `ContainerResolver`, `ShowLocationIntentHandler`) and DI sites (`CoreModule`, `WireguardModule`, `AppModulesCommon`) now depend on the protocols. `docs/PROJECT_NEO.md` gains the `Combine → AsyncSequence` guideline + protocol-naming convention (`*ing` for capability protocols, `*Type` for legacy Obj-C bridge mirrors only). `WindscribeTests/Features/AdapterStreamEquivalenceTests.swift` (7 tests) pins the M0/M3 adapter contracts (initial value yielded, ordered updates, independent streams per access), mutation-verified. Next: PR 2 (T4.2 — `VPNConnecting.statusUpdates` AsyncStream).
 - 2026-05-07 — M4 — `main` — `507d8c01` — PR 2 merged (MR !1371): T4.2. `VPNConnecting` grows `var statusUpdates: AsyncStream<VPNConnectionState>` sourced from `VPNStateRepository.vpnInfo` (the legacy `CurrentValueSubject` fed by `NEVPNStatusDidChange`). `LegacyVPNConnector` takes `stateRepository: VPNStateRepository` at composition; `Environment+Dependencies.swift` resolves it. `AdapterStreamEquivalenceTests` extended with 3 VPN tests (initial-when-nil, initial-when-seeded, ordered updates), mutation-verified. `.swiftlint.yml` `.claude` exclusion folded in. Next: PR 3 (T4.5 — retire `@unchecked Sendable`).
 - 2026-05-08 — M4 — `main` — `e1c86ba5` — PR 3 merged (MR !1369): T4.5. `@unchecked Sendable` retired from all 6 `Legacy*` adapters in `Windscribe/Services/Protocols/`; 7 legacy protocols (`LookAndFeelRepositoryType`, `Preferences`, `CredentialsRepository`, `VPNManager`, `LocationListRepository`, `UserSessionRepository`, `VPNStateRepository`) now `Sendable` directly; 4 retroactive value-type conformances on `ServerCredentialsModel`, `LocationModel`, `DatacenterModel`, `SessionModel` (+ helper types `ServerMachineModel`, `DisabledServerModel`, `SipCountModel`, `ServerInventoryModel`) moved to direct `Sendable` on their definition files; `@unchecked Sendable is allowed at the legacy-adapter seam` subsection deleted from `docs/PROJECT_NEO.md`. `grep -rn "@unchecked Sendable" Windscribe/Services/Protocols/` returns zero. Next: PR 4 (T4.3 — tunnel async lifecycle, `neo-5.0` only) — needs hardware smoke testing.
+- 2026-05-11 — M4 — `neo-5.0` — `e5259595` — PR 4 merged (MR !1379): T4.3. `startTunnel` / `stopTunnel` / `sleep` / `handleAppMessage` async overrides in both `PacketTunnel` and `WireGuardTunnel` providers; PacketTunnel bridges via `withCheckedThrowingContinuation` to `*Internal` helpers; vestigial `stopHandler` + dead `#if os(macOS) exit(0)` template hack removed. Hardware smoke test passed across OpenVPN/IKEv2/WireGuard. **M4 closed (#1052).** Next: M5 (#1053) — Testing modernization (Swift Testing adoption + mock patterns + GRDB in-memory fixtures + optional macOS test target). Lands `main → neo-5.0`. Plan file TBD.
