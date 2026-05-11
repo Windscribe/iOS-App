@@ -26,34 +26,34 @@ extension LocalDatabaseImpl {
                 if oldSchemaVersion < 2 {
                     var nextID = 0
                     migration.enumerateObjects(ofType: Group.className()) { _, newObject in
-                        newObject!["id"] = nextID
+                        newObject?["id"] = nextID
                         nextID += 1
                     }
                     migration.enumerateObjects(ofType: Server.className()) { _, newObject in
-                        newObject!["id"] = nextID
+                        newObject?["id"] = nextID
                         nextID += 1
                     }
                 }
                 if oldSchemaVersion < 3 {
                     var nextID = 0
                     migration.enumerateObjects(ofType: StaticIP.className()) { _, newObject in
-                        newObject!["id"] = nextID
+                        newObject?["id"] = nextID
                         nextID += 1
                     }
                 }
                 if oldSchemaVersion < 4 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject!["appearance"] = TextsAsset.appearances[0]
+                        newObject?["appearance"] = TextsAsset.appearances[0]
                     }
                 }
                 if oldSchemaVersion < 5 {
                     migration.enumerateObjects(ofType: ReadNotice.className()) { oldObject, newObject in
-                        newObject!["id"] = oldObject!["id"]
+                        newObject?["id"] = oldObject?["id"]
                     }
                 }
                 if oldSchemaVersion < 6 {
                     migration.enumerateObjects(ofType: AutomaticMode.className()) { _, newObject in
-                        newObject!["SSID"] = TextsAsset.unknownNetworkName
+                        newObject?["SSID"] = TextsAsset.unknownNetworkName
                     }
                 }
                 if oldSchemaVersion < 7 {
@@ -61,7 +61,7 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 8 {
                     migration.enumerateObjects(ofType: Node.className()) { _, newObject in
-                        newObject!["forceDisconnect"] = false
+                        newObject?["forceDisconnect"] = false
                     }
                 }
                 if oldSchemaVersion < 9 {
@@ -100,9 +100,9 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 20 {
                     migration.enumerateObjects(ofType: WifiNetwork.className()) { _, newObject in
-                        newObject!["preferredProtocolStatus"] = false
-                        newObject!["preferredProtocol"] = wireGuard
-                        newObject!["preferredPort"] = "443"
+                        newObject?["preferredProtocolStatus"] = false
+                        newObject?["preferredProtocol"] = wireGuard
+                        newObject?["preferredPort"] = "443"
                     }
                 }
                 if oldSchemaVersion < 21 {
@@ -116,12 +116,13 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 24 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject!["autoSecureNewNetworks"] = true
+                        newObject?["autoSecureNewNetworks"] = true
                     }
                 }
                 if oldSchemaVersion < 27 {
-                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, newObject in
-                        newObject!["connectedAt"] = Date()
+                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in
+                        // connectedAt property was removed when LastConnectedNode was deprecated
+                        // This migration step is kept for historical compatibility but does nothing
                     }
                 }
                 if oldSchemaVersion < 28 {
@@ -138,16 +139,16 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 32 {
                     migration.enumerateObjects(ofType: WifiNetwork.className()) { _, newObject in
-                        newObject!["protocolType"] = wireGuard
-                        newObject!["port"] = "443"
+                        newObject?["protocolType"] = wireGuard
+                        newObject?["port"] = "443"
                     }
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject!["hapticFeedback"] = true
+                        newObject?["hapticFeedback"] = true
                     }
                 }
                 if oldSchemaVersion < 33 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject!["hapticFeedback"] = true
+                        newObject?["hapticFeedback"] = true
                     }
                 }
                 if oldSchemaVersion < 34 {
@@ -164,59 +165,59 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 39 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject!["protocolType"] = wireGuard
-                        newObject!["port"] = "443"
+                        newObject?["protocolType"] = wireGuard
+                        newObject?["port"] = "443"
                     }
                 }
                 if oldSchemaVersion < 42 {
                     migration.enumerateObjects(ofType: Group.className()) { _, newObject in
-                        newObject!["ovpnX509"] = ""
+                        newObject?["ovpnX509"] = ""
                     }
                     migration.enumerateObjects(ofType: StaticIP.className()) { _, newObject in
-                        newObject!["ovpnX509"] = ""
+                        newObject?["ovpnX509"] = ""
                     }
                 }
                 if oldSchemaVersion < 43 {
                     migration.enumerateObjects(ofType: Group.className()) { _, newObject in
-                        newObject!["health"] = 0
-                        newObject!["linkSpeed"] = "1000"
+                        newObject?["health"] = 0
+                        newObject?["linkSpeed"] = "1000"
                     }
                     migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
-                        newObject!["health"] = 0
-                        newObject!["linkSpeed"] = "1000"
+                        newObject?["health"] = 0
+                        newObject?["linkSpeed"] = "1000"
                     }
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject!["showServerHealth"] = false
+                        newObject?["showServerHealth"] = false
                     }
                     migration.enumerateObjects(ofType: Notice.className()) { _, newObject in
-                        newObject!["permFree"] = false
-                        newObject!["permPro"] = false
-                        newObject!["action"] = nil
+                        newObject?["permFree"] = false
+                        newObject?["permPro"] = false
+                        newObject?["action"] = nil
                     }
                     migration.enumerateObjects(ofType: MobilePlan.className()) { _, newObject in
-                        newObject!["discount"] = 0
-                        newObject!["duration"] = 0
+                        newObject?["discount"] = 0
+                        newObject?["duration"] = 0
                     }
                 }
                 if oldSchemaVersion < 44 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject!["killSwitch"] = false
-                        newObject!["allowLan"] = false
+                        newObject?["killSwitch"] = false
+                        newObject?["allowLan"] = false
                     }
                 }
                 if oldSchemaVersion < 45 {
                     migration.enumerateObjects(ofType: AutomaticMode.className()) { _, newObject in
-                        newObject!["wgFailed"] = 0
-                        newObject!["wsTunnelFailed"] = 0
-                        newObject!["stealthFailed"] = 0
+                        newObject?["wgFailed"] = 0
+                        newObject?["wsTunnelFailed"] = 0
+                        newObject?["stealthFailed"] = 0
                     }
                 }
                 if oldSchemaVersion < 46 {
                     migration.enumerateObjects(ofType: Group.className()) { _, newObject in
-                        newObject!["pingHost"] = ""
+                        newObject?["pingHost"] = ""
                     }
                     migration.enumerateObjects(ofType: StaticIP.className()) { _, newObject in
-                        newObject!["pingHost"] = ""
+                        newObject?["pingHost"] = ""
                     }
                 }
                 if oldSchemaVersion < 47 {
@@ -259,15 +260,15 @@ extension LocalDatabaseImpl {
                     migration.enumerateObjects(ofType: PingData.className()) { _, _ in }
                     migration.enumerateObjects(ofType: MyIP.className()) { _, _ in }
                     migration.enumerateObjects(ofType: OpenVPNServerCredentials.className()) { _, newObject in
-                        newObject!["id"] = "OpenVPNServerCredentials"
+                        newObject?["id"] = "OpenVPNServerCredentials"
                     }
                     migration.enumerateObjects(ofType: IKEv2ServerCredentials.className()) { _, newObject in
-                        newObject!["id"] = "IKEv2ServerCredentials"
+                        newObject?["id"] = "IKEv2ServerCredentials"
                     }
                 }
                 if oldSchemaVersion < 48 {
                     migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
-                        newObject!["pingHost"] = ""
+                        newObject?["pingHost"] = ""
                     }
                 }
                 if oldSchemaVersion < 49 {
@@ -275,10 +276,10 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 50 {
                     migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
-                        newObject!["isPremiumOnly"] = false
+                        newObject?["isPremiumOnly"] = false
                     }
                     migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, newObject in
-                        newObject!["isPremiumOnly"] = false
+                        newObject?["isPremiumOnly"] = false
                     }
                 }
                 if oldSchemaVersion < 51 {
@@ -306,9 +307,9 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 53 {
                     migration.enumerateObjects(ofType: StaticIP.className()) { _, newObject in
-                        newObject!["expiry"] = nil
-                        newObject!["isActive"] = true
-                        newObject!["pingIP"] = ""
+                        newObject?["expiry"] = nil
+                        newObject?["isActive"] = true
+                        newObject?["pingIP"] = ""
                     }
                 }
                 if oldSchemaVersion < 55 {
@@ -333,7 +334,7 @@ extension LocalDatabaseImpl {
                 if oldSchemaVersion < 56 {
                     migration.enumerateObjects(ofType: Favourite.className()) { _, newObject in
                         newObject?["pinnedIp"] = nil
-                        newObject?["pinnedNodeHostname"] = nil
+                        newObject?["pinnedNodeIp"] = nil
                     }
                 }
                 if oldSchemaVersion < 57 {
@@ -350,7 +351,7 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 61 {
                     migration.enumerateObjects(ofType: CustomConfig.className()) { _, newObject in
-                        newObject!["saveCredentials"] = true
+                        newObject?["saveCredentials"] = true
                     }
                 }
                 if oldSchemaVersion < 62 {
@@ -361,16 +362,16 @@ extension LocalDatabaseImpl {
                     // Add/update UnblockWgParamsObj schema with new properties
                     migration.enumerateObjects(ofType: UnblockWgParamsObj.className()) { _, newObject in
                         // Add new properties with default values if they don't exist
-                        newObject!["title"] = ""
-                        newObject!["h1"] = nil
-                        newObject!["h2"] = nil
-                        newObject!["h3"] = nil
-                        newObject!["h4"] = nil
-                        newObject!["i1"] = nil
-                        newObject!["i2"] = nil
-                        newObject!["i3"] = nil
-                        newObject!["i4"] = nil
-                        newObject!["i5"] = nil
+                        newObject?["title"] = ""
+                        newObject?["h1"] = nil
+                        newObject?["h2"] = nil
+                        newObject?["h3"] = nil
+                        newObject?["h4"] = nil
+                        newObject?["i1"] = nil
+                        newObject?["i2"] = nil
+                        newObject?["i3"] = nil
+                        newObject?["i4"] = nil
+                        newObject?["i5"] = nil
                     }
                     // Remove duplicates by deleting all and letting them be re-fetched from API
                     migration.deleteData(forType: UnblockWgParamsObj.className())
