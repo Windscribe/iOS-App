@@ -109,7 +109,10 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
             logger.logI("BridgeApiRepository", "locationInfo - nil")
             return
         }
-        let locationId = self.locationManager.getId()
-        self.bridgeIsAvailable.send(ready && userSessionRepository.canAccesstoProLocation(locationId: locationId))
+        var canAccessDatacenter = false
+        if let locationDataCenter = try? locationManager.getLocation(from: locationManager.getId()) {
+            canAccessDatacenter = userSessionRepository.canAccesstoProLocation(locationId: locationDataCenter.0.id)
+        }
+        self.bridgeIsAvailable.send(ready && canAccessDatacenter)
     }
 }
