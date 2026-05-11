@@ -10,46 +10,58 @@ import UIKit
 import Combine
 
 protocol LocationNameViewModel {
-    var locationInfoUpdatedTrigger: PassthroughSubject<Void, Never> { get }
+    var locationInfoUpdatedTrigger: PassthroughSubject<Bool, Never> { get }
     func getInfo() -> LocationUIInfo?
 }
 
 class LocationNameViewModelImpl: LocationNameViewModel {
 
-    let locationInfoUpdatedTrigger = PassthroughSubject<Void, Never>()
+    let locationInfoUpdatedTrigger = PassthroughSubject<Bool, Never>()
 
     private let languageManager: LanguageManager
     private let locationsManager: LocationsManager
 
+    private var isConnected = false
+
     private var cancellables = Set<AnyCancellable>()
 
     init(languageManager: LanguageManager,
+         vpnStateRepository: VPNStateRepository,
          locationsManager: LocationsManager) {
         self.languageManager = languageManager
         self.locationsManager = locationsManager
 
-        self.locationInfoUpdatedTrigger.send()
+        self.locationInfoUpdatedTrigger.send(isConnected)
 
         locationsManager.selectedLocationUpdated
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
             guard let self = self else { return }
-                self.locationInfoUpdatedTrigger.send()
+                self.locationInfoUpdatedTrigger.send(isConnected)
         }.store(in: &cancellables)
 
         locationsManager.bestLocationUpdatedTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
             guard let self = self else { return }
-                self.locationInfoUpdatedTrigger.send()
+                self.locationInfoUpdatedTrigger.send(isConnected)
         }.store(in: &cancellables)
 
         languageManager.activelanguage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
             guard let self = self else { return }
-                self.locationInfoUpdatedTrigger.send()
+                self.locationInfoUpdatedTrigger.send(isConnected)
         }.store(in: &cancellables)
+
+        vpnStateRepository.getStatus()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                self.isConnected = state == .connected
+                self.locationInfoUpdatedTrigger.send(self.isConnected)
+            }
+            .store(in: &cancellables)
     }
 
     func getInfo() -> LocationUIInfo? {
@@ -114,8 +126,10 @@ class LocationNameView: UIView {
     private func bindViewModel() {
         viewModel.locationInfoUpdatedTrigger
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] info in
-            guard let self = self, let info = self.viewModel.getInfo() else { return }
+            .sink { [weak self] isConnected in
+                guard let self = self, let info = self.viewModel.getInfo() else { return }
+                // If it's connected and the name has best location then don't change
+                guard !(isConnected && info.cityName.contains(TextsAsset.bestLocation)) else { return }
                 self.update(mainName: info.cityName, nickName: info.nickName)
         }.store(in: &cancellables)
     }
