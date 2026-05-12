@@ -12,14 +12,14 @@
 
 ## Status snapshot
 
-- **Active issue:** M6 (#1054) — Tunnel cleanup: IKEv2 consolidation + SiriIntents removal. Mixed landing: T6.1 (IKEv2 consolidation) lands `main → neo-5.0`; T6.2/T6.3 (SiriIntents removal, tunnel-guard cleanup) are `neo-5.0` only. Plan file not yet drafted; scope captured in the GitLab issue and [`plans/00-roadmap.md`](plans/00-roadmap.md).
+- **Active issue:** M7 (#1055) — Second rebuilt screen (recipe validation). Apply the M0 About-module shape to a sibling Preferences leaf. Lands `main → neo-5.0`, same `@available(iOS 17.0, *)` gating. Plan file not yet drafted; scope captured in the GitLab issue and [`plans/00-roadmap.md`](plans/00-roadmap.md).
 - **Active branch:** `main`.
 - **Blocked on:** —
-- **Up next:** Draft `docs/neo/plans/M6-tunnel-extensions-cleanup.md`, then PR breakdown.
-- **M2 follow-ups (separate issues, not blocking M6):**
+- **Up next:** Draft `docs/neo/plans/M7-second-rebuilt-screen.md`, then PR.
+- **M2 follow-ups (separate issues, not blocking M7):**
   - #1065 — D2.3 schema normalization (GRDB v1→v2). Ships any main release after D2.2.
   - #1066 — D2.4 Realm removal. Ships post-Neo + 3-month forced-upgrade soak.
-- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050), M3 (#1051), M4 (#1052), M5 (#1053).
+- **Closed milestones:** M0 (#1048), M1 (#1049, neo-5.0), M2 (#1050), M3 (#1051), M4 (#1052), M5 (#1053), M6 (#1054).
 
 ## Log
 
@@ -42,3 +42,6 @@
 - 2026-05-11 — M4 — `neo-5.0` — `e5259595` — PR 4 merged (MR !1379): T4.3. `startTunnel` / `stopTunnel` / `sleep` / `handleAppMessage` async overrides in both `PacketTunnel` and `WireGuardTunnel` providers; PacketTunnel bridges via `withCheckedThrowingContinuation` to `*Internal` helpers; vestigial `stopHandler` + dead `#if os(macOS) exit(0)` template hack removed. Hardware smoke test passed across OpenVPN/IKEv2/WireGuard. **M4 closed (#1052).** Next: M5 (#1053) — Testing modernization (Swift Testing adoption + mock patterns + GRDB in-memory fixtures + optional macOS test target). Lands `main → neo-5.0`. Plan file TBD.
 - 2026-05-11 — M5 — `aw/neo-m5` — `fd93b53` — Single bundled PR (T5.1 + T5.2 + T5.3) opened against `main`. T5.1: verified CI's `fastlane test` (scan + xcodebuild under Xcode 26.3) treats `@Test` suites as first-class XCResult — no code change. T5.2: `## Testing mocks` section in `docs/PROJECT_NEO.md` covering struct + actor patterns; new `ActorMockCredentialStoring` in `WindscribeTests/Features/MockPatternTests.swift` as the canonical actor mock (none existed in tree). T5.3: `## GRDB test fixtures` section citing `PingDataRecordTests` and `GRDBLocalDatabaseParityTests` as canonical in-memory `DatabaseQueue` examples from M2 D2.2 (!1311).
 - 2026-05-11 — M5 — `main` — `d8be3a9e` — !1387 merged. **M5 closed (#1053).** All three tasks (T5.1–T5.3) landed in a single bundled PR. Post-merge fix `6ca871a3` corrected actor mock conformance (`let` for sync nonisolated getters; `private(set) var` only for actor-isolated mutable state) — caught by CI's test-target build, missed locally because `Windscribe-Debug` scheme's BuildAction excludes `WindscribeTests`. Mock-tooling research captured: stick with hand-rolled mocks (AI-maintained); macro libraries like Mockable (v0.6.2, pre-1.0) don't yet justify the dependency given AI handles the boilerplate cost. Next: M6 (#1054) — Tunnel cleanup: IKEv2 consolidation (`main → neo-5.0`) + SiriIntents removal + tunnel-guard cleanup (`neo-5.0` only).
+- 2026-05-11 — M6 — `main` — `26b4005d` — PR 1 merged (MR !1390): T6.1. Deleted orphaned `Windscribe/Managers/VPN/Utils/VPNManagerUtils+IKEV2Credentials.swift` — file was never in `project.pbxproj`'s compile sources, had zero callers, and contained a `userSettings.allowLane` typo. Roadmap's "two assembly sites" premise was incorrect: the live IKEv2 path through `IKEv2VPNConfiguration.buildProtocol` + `applySettings` is already the single consolidated assembly site. Behavior unchanged. M6 plan file added.
+- 2026-05-11 — M6 — `neo-5.0` — `47eb946d` — PR 2 merged (MR !1392): T6.2. SiriIntents extension target deleted via Ruby `xcodeproj` gem (Python `pbxproj` mangled 14 unrelated quoted IDs on round-trip — reverted to gem). Removed: PBXNativeTarget + 3 build configs + XCConfigurationList + build phases + 70 build-file refs + Handlers/* + VPN Managers/* + Info.plist + entitlements + main app's dependency + Embed Foundation Extensions reference. Kept: `SiriIntents/SiriIntents.xcstrings` + per-locale `SiriOldIntents.intentdefinition`/`.strings` (referenced by the main app target for the AppIntents `CustomIntentMigratedAppIntent` seam). pbxproj SiriIntents refs: 37 → 11. Team follow-up: regenerate provisioning profiles to drop `com.windscribe.SiriIntents` bundle ID.
+- 2026-05-12 — M6 — `neo-5.0` — `c9d8adf3` — PR 3 merged (MR !1391): T6.3. Docs-only — all 7 `#available(iOS 1[5-7]` guards already removed by M1 PR2 (`fbfa74df`) when the iOS/tvOS floor was lifted to 18. **M6 closed (#1054).** Lesson logged: surveys for `neo-5.0`-only work must run on `neo-5.0`, not `main` — the floor differs. Next: M7 (#1055) — Second rebuilt screen (recipe validation), `main → neo-5.0`.
