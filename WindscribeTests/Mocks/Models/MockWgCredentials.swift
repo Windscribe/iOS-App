@@ -15,9 +15,12 @@ class MockWgCredentials: WgCredentials {
     private var mockPreferences: MockPreferences?
     private var forceConfigStringNil = false
 
-    init() {
-        // Create mock dependencies
-        let mockPreferences = MockPreferences()
+    init(preferences: MockPreferences? = nil) {
+        // Share the test's MockPreferences when provided so reads like
+        // getEgressProtocolPreferenceSync() see the same state the test
+        // set up. Falls back to a dedicated MockPreferences for callers
+        // that don't need cross-mock coordination.
+        let mockPreferences = preferences ?? MockPreferences()
         let mockLogger = MockLogger()
         let mockKeychainManager = MockKeychainManager()
 

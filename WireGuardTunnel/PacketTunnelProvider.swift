@@ -93,8 +93,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         }
         // Ensure tunnel configuration is up to date with latest credentials
         if !preferences.isCustomConfigSelected() {
+            guard let quickConfig = wgCrendentials.asWgCredentialsString() else {
+                logger.logE("PacketTunnelProvider", "WG credentials incomplete (base IPv4 fields missing); refusing to start tunnel", flushImmediately: true)
+                errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                return
+            }
             do {
-                tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: wgCrendentials.asWgCredentialsString() ?? "")
+                tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: quickConfig)
                 logger.logI("PacketTunnelProvider", "Created tunnel configuration from wgQuickConfig", flushImmediately: true)
             } catch {
                 logger.logE("PacketTunnelProvider", "Failed to create tunnel configuration: \(error)", flushImmediately: true)

@@ -51,7 +51,11 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private func wgInit() async throws {
         let currentEndpoint = self.wgCrendentials.serverEndPoint ?? ""
         let isFirstForServer = !hasConnectedOnceEndpoints.contains(currentEndpoint)
-        guard !self.wgCrendentials.initialized() || (self.wgCrendentials.initialized() && isFirstForServer) else {
+        let needsIPv6Refresh = self.wgCrendentials.needsIPv6InitRefreshForCurrentServer()
+        if needsIPv6Refresh {
+            logger.logI("WireguardConfigRepository", "IPv6 expected but init data missing — forcing wgInit refresh")
+        }
+        guard !self.wgCrendentials.initialized() || isFirstForServer || needsIPv6Refresh else {
             return
         }
         hasConnectedOnceEndpoints.insert(currentEndpoint)
@@ -98,16 +102,24 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
 
             // Generate IPv6 address if server supports it, egress is "Auto", and v6 CIDR is available
             var generatedIPv6: String?
-            let egressPref = preferences.getEgressProtocolPreferenceSync()
-            if wgCrendentials.serverSupportsIPv6,
-               egressPref == Fields.Values.auto,
-               let hashedCIDRv6 = initResponse.hashedCIDRv6,
-               let firstCIDRv6 = hashedCIDRv6.first {
-                do {
-                    generatedIPv6 = try ipManager.generateIPv6(publicKeyBase64: publicKey, cidr: firstCIDRv6)
-                    logger.logI("WireguardConfigRepository", "Generated IPv6: \(generatedIPv6!) from CIDR: \(firstCIDRv6)")
-                } catch {
-                    logger.logE("WireguardConfigRepository", "Failed to generate IPv6: \(error.localizedDescription)")
+            let expectsIPv6 = wgCrendentials.expectsIPv6ForCurrentServer()
+            if expectsIPv6 {
+                if let hashedCIDRv6 = initResponse.hashedCIDRv6,
+                   let firstCIDRv6 = hashedCIDRv6.first,
+                   !firstCIDRv6.isEmpty {
+                    do {
+                        let v6 = try ipManager.generateIPv6(publicKeyBase64: publicKey, cidr: firstCIDRv6)
+                        if v6.isEmpty {
+                            logger.logE("WireguardConfigRepository", "IPv6 generation returned empty string for CIDR \(firstCIDRv6); falling back to IPv4-only")
+                        } else {
+                            generatedIPv6 = v6
+                            logger.logI("WireguardConfigRepository", "Generated IPv6 from CIDR: \(firstCIDRv6)")
+                        }
+                    } catch {
+                        logger.logE("WireguardConfigRepository", "IPv6 expected but generation failed; falling back to IPv4-only: \(error.localizedDescription)")
+                    }
+                } else {
+                    logger.logE("WireguardConfigRepository", "IPv6 expected for current server but hashedCIDRv6 missing/empty from wgInit response; falling back to IPv4-only")
                 }
             }
 

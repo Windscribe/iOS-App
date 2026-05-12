@@ -171,7 +171,6 @@ class WireguardIPManagerImpl: WireguardIPManager {
 
     // Ported from Kotlin implementation
     func generateIPv6(publicKeyBase64: String, cidr: String) throws -> String {
-        // Parse the IPv6 CIDR prefix
         let parts = cidr.split(separator: "/")
         guard parts.count == 2 else {
             throw WireguardIPError.invalidCIDR("Invalid IPv6 CIDR format: \(cidr)")
@@ -192,45 +191,38 @@ class WireguardIPManagerImpl: WireguardIPManager {
             )
         }
 
-        // Decode the base64 public key
         guard let publicKeyData = Data(base64Encoded: publicKeyBase64) else {
             throw WireguardIPError.invalidBase64("Failed to decode base64 public key: \(publicKeyBase64)")
         }
 
-        // Generate SHA-256 hash of the decoded public key
         let hash = SHA256.hash(data: publicKeyData)
-        let hashBytes = Array(hash)
+        let interfaceId = Array(hash).prefix(8)
 
-        // Extract first 8 bytes for the interface identifier
-        let interfaceId = Array(hashBytes[0..<8])
-
-        // Parse the prefix address to binary representation
         var addr = in6_addr()
         guard inet_pton(AF_INET6, prefixAddr, &addr) == 1 else {
             throw WireguardIPError.invalidIPFormat("Failed to parse IPv6 address: \(prefixAddr)")
         }
 
-        // Get the 16 bytes of the prefix address
-        var ipBytes = withUnsafeBytes(of: &addr) { Array($0) }
-        guard ipBytes.count == 16 else {
-            throw WireguardIPError.invalidIPFormat("Invalid IPv6 address: \(prefixAddr)")
-        }
-
-        // Set the interface identifier (last 64 bits / bytes 8-15) from the hash
-        for i in 0..<8 {
-            ipBytes[8 + i] = interfaceId[i]
-        }
-
-        // Convert back to a human-readable IPv6 address
-        var result = ipBytes.withUnsafeBufferPointer { buffer -> in6_addr in
-            buffer.baseAddress!.withMemoryRebound(to: in6_addr.self, capacity: 1) { $0.pointee }
+        // Write the interface identifier (last 8 bytes / 64 bits) directly into addr.
+        // Avoid round-tripping through Array<UInt8> + withMemoryRebound — that pattern
+        // can mis-optimize under Release builds and produce an empty inet_ntop result.
+        withUnsafeMutableBytes(of: &addr) { rawBytes in
+            for i in 0..<8 {
+                rawBytes[8 + i] = interfaceId[interfaceId.startIndex + i]
+            }
         }
 
         var outputBuffer = [CChar](repeating: 0, count: Int(INET6_ADDRSTRLEN))
-        guard let cString = inet_ntop(AF_INET6, &result, &outputBuffer, socklen_t(INET6_ADDRSTRLEN)) else {
-            throw WireguardIPError.invalidIPFormat("Failed to format IPv6 address")
+        let formatted: String? = outputBuffer.withUnsafeMutableBufferPointer { bufPtr -> String? in
+            guard let base = bufPtr.baseAddress,
+                  inet_ntop(AF_INET6, &addr, base, socklen_t(INET6_ADDRSTRLEN)) != nil else {
+                return nil
+            }
+            return String(cString: base)
         }
-
-        return String(cString: cString)
+        guard let result = formatted, !result.isEmpty else {
+            throw WireguardIPError.invalidIPFormat("Failed to format IPv6 address (inet_ntop produced empty result)")
+        }
+        return result
     }
 }

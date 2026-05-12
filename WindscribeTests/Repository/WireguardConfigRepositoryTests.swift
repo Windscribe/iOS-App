@@ -31,11 +31,13 @@ class WireguardConfigRepositoryTests: XCTestCase {
         mockContainer = Container()
         mockAPIManager = MockWireguardAPIManager()
         mockFileDatabase = MockFileDatabase()
-        mockWgCredentials = MockWgCredentials()
         mockAlertManager = MockAlertManager()
         mockLogger = MockLogger()
         mockIPManager = MockWireguardIPManager()
         mockPreferences = MockPreferences()
+        // Share preferences with WgCredentials so expectsIPv6ForCurrentServer()
+        // reads the same egress preference the test sets.
+        mockWgCredentials = MockWgCredentials(preferences: mockPreferences)
 
         // Register mocks
         mockContainer.register(WireguardAPIManager.self) { _ in
