@@ -155,6 +155,29 @@ class WgCredentials {
         preferences.clearWireGuardConfiguration()
     }
 
+    // MARK: - IPv6 expectation helpers
+
+    func expectsIPv6ForCurrentServer() -> Bool {
+        return serverSupportsIPv6 && preferences.getEgressProtocolPreferenceSync() == "Auto"
+    }
+
+    func hasIPv6InitDataForCurrentServer() -> Bool {
+        let v6Allowed = allowedIpsV6 ?? preferences.getWireGuardAllowedIPsV6()
+        let v6CIDR = preferences.getWireGuardHashedCIDRv6()
+        return !(v6Allowed?.isEmpty ?? true) && !(v6CIDR?.isEmpty ?? true)
+    }
+
+    func hasCompleteIPv6ConfigForCurrentServer() -> Bool {
+        let hasAddressV6 = !(addressV6?.isEmpty ?? true)
+        let hasAllowedV6 = !(allowedIpsV6?.isEmpty ?? true)
+        let hasHashedCIDRv6 = !(preferences.getWireGuardHashedCIDRv6()?.isEmpty ?? true)
+        return hasAddressV6 && hasAllowedV6 && hasHashedCIDRv6
+    }
+
+    func needsIPv6InitRefreshForCurrentServer() -> Bool {
+        return expectsIPv6ForCurrentServer() && !hasIPv6InitDataForCurrentServer()
+    }
+
     func asWgCredentialsString() -> String? {
         if let privateKey = getPrivateKey(),
            let address = address,
@@ -165,8 +188,15 @@ class WgCredentials {
            let serverEndPoint = serverEndPoint,
            let port = port
         {
-            let fullAddress = addressV6 != nil ? "\(address), \(addressV6!)" : address
-            let fullAllowedIps = allowedIpsV6 != nil ? "\(allowedIps), \(allowedIpsV6!)" : allowedIps
+            if expectsIPv6ForCurrentServer() && !hasCompleteIPv6ConfigForCurrentServer() {
+                logger.logE("WgCredentials", "IPv6 expected for current server but config is incomplete (addressV6/allowedIpsV6/hashedCIDRv6 missing); falling back to IPv4-only")
+            }
+
+            let hasAddressV6 = !(addressV6?.isEmpty ?? true)
+            let hasAllowedV6 = !(allowedIpsV6?.isEmpty ?? true)
+            let includeV6 = hasAddressV6 && hasAllowedV6
+            let fullAddress = includeV6 ? "\(address), \(addressV6!)" : address
+            let fullAllowedIps = includeV6 ? "\(allowedIps), \(allowedIpsV6!)" : allowedIps
 
             var lines: [String] = [
                 "[Interface]",

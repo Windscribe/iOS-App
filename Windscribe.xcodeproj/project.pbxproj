@@ -561,6 +561,8 @@
 		59FC74872C52FCEE00021CD1 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74862C52FCEE00021CD1 /* Router.swift */; };
 		59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74882C530A4100021CD1 /* LoginRouter.swift */; };
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
+		9223E1F32FB22934007252B6 /* MockPatternTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E1F22FB22934007252B6 /* MockPatternTests.swift */; };
+		9223E2092FB3C1DC007252B6 /* WireguardIPManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */; };
 		927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		9279914B2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
 		9279914C2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
@@ -1798,6 +1800,8 @@
 		59FC74862C52FCEE00021CD1 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		59FC74882C530A4100021CD1 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPressLoginCodeResponse.swift; sourceTree = "<group>"; };
+		9223E1F22FB22934007252B6 /* MockPatternTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPatternTests.swift; sourceTree = "<group>"; };
+		9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardIPManagerTests.swift; sourceTree = "<group>"; };
 		9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedCredential.swift; sourceTree = "<group>"; };
 		9279914D2F86C638000BB9D0 /* AuthActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthActionButton.swift; sourceTree = "<group>"; };
 		9279914F2F86C74F000BB9D0 /* MockHashAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHashAuthManager.swift; sourceTree = "<group>"; };
@@ -4463,6 +4467,7 @@
 				F40419442D8232460005EF97 /* HTMLParserTests.swift */,
 				F49935422DA9987800108558 /* SoundManagerTests.swift */,
 				927991512F86C766000BB9D0 /* HashAuthManagerTests.swift */,
+				9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -7672,6 +7677,7 @@
 				1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */,
 				927991522F86C766000BB9D0 /* HashAuthManagerTests.swift in Sources */,
 				1E0492E22F48BD950016B11F /* MigrationRepositoryTests.swift in Sources */,
+				9223E2092FB3C1DC007252B6 /* WireguardIPManagerTests.swift in Sources */,
 				1E0492AC2F45F32E0016B11F /* WireguardConfigRepositoryTests.swift in Sources */,
 				927991542F86C7DD000BB9D0 /* SignUpViewModelHashTests.swift in Sources */,
 				F425B0A62F33C80C0046D5E1 /* LatencyRepositoryTests.swift in Sources */,
