@@ -289,7 +289,7 @@ class BridgeApiRepositoryTests: XCTestCase {
             email: "test@test.com",
             emailStatus: true,
             billing: nil,
-            alc: ["GB", "CA"],
+            alc: [],
             rebill: 0,
             billingPlanId: 0,
             trafficUsed: 0,

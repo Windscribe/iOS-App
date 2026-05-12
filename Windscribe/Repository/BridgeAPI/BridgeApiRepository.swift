@@ -111,7 +111,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
         }
         var canAccessDatacenter = false
         if let locationDataCenter = try? locationManager.getLocation(from: locationManager.getId()) {
-            canAccessDatacenter = userSessionRepository.canAccesstoProLocation(locationId: locationDataCenter.0.id)
+            canAccessDatacenter = userSessionRepository.canAccesstoProLocation(location: locationDataCenter.0)
         }
         self.bridgeIsAvailable.send(ready && canAccessDatacenter)
     }
