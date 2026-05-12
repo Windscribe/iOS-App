@@ -273,7 +273,6 @@ class LocationsManagerImpl: LocationsManager {
             updateToBestLocation()
             return
         }
-        var isPremiumOnly = false
         if locationType == .server, let datacenterId = Int(locationId) {
             guard let currentLocation = try? getLocation(from: datacenterId) else {
                 self.logger.logI("LocationsManager", "Unable to find location with ID: \(datacenterId). Switching to Sister location.")
@@ -285,13 +284,12 @@ class LocationsManagerImpl: LocationsManager {
                 }
                 return
             }
-            isPremiumOnly = currentLocation.1.isPremiumOnly
-        }
-        if userSessionRepository.sessionModel != nil,
-           let locId = Int(locationId),
-           !userSessionRepository.canAccesstoProLocation(locationId: locId),
-           isPremiumOnly {
-            updateToBestLocation()
+            let isPremiumOnly = currentLocation.1.isPremiumOnly
+            if userSessionRepository.sessionModel != nil,
+               !userSessionRepository.canAccesstoProLocation(location: currentLocation.0),
+               isPremiumOnly {
+                updateToBestLocation()
+            }
         }
     }
 
