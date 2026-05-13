@@ -337,7 +337,7 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
     }
 
     private func getLocationModel(from datacenterId: Int) -> LocationModel? {
-        try? locationsManager.getLocation(from: datacenterId).0
+        try? locationsManager.getLocationDatacenter(from: datacenterId).0
     }
 
     private func isGroupFavorite(_ datacenterId: Int?) -> Bool {

@@ -296,7 +296,7 @@ final class ConfigurationsManagerAccessValidationTests: XCTestCase {
         )
 
         let locationsManager = MockLocationsManager()
-        locationsManager.mockLocationType = .server
+        locationsManager.mockConnectionTargetType = .server
         locationsManager.mockLocation = (location, datacenter)
 
         let userSessionRepository = MockUserSessionRepository()

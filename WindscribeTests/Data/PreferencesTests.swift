@@ -250,11 +250,11 @@ class PreferencesTests: XCTestCase {
     func testLocationPreferences() {
         let preferences = mockContainer.resolve(Preferences.self)!
         let testLocationId = "test-location-123"
-        let originalLastLocation = preferences.getLastSelectedLocation()
+        let originalLastLocation = preferences.getLastConnectionTarget()
         let originalBestLocation = preferences.getBestLocation()
 
-        preferences.saveLastSelectedLocation(with: testLocationId)
-        let lastLocation = preferences.getLastSelectedLocation()
+        preferences.saveLastConnectionTarget(with: testLocationId)
+        let lastLocation = preferences.getLastConnectionTarget()
         XCTAssertEqual(lastLocation, testLocationId)
 
         preferences.saveBestLocation(with: testLocationId)
@@ -262,7 +262,7 @@ class PreferencesTests: XCTestCase {
         XCTAssertEqual(bestLocation, testLocationId)
 
         // Cleanup - restore original values
-        preferences.saveLastSelectedLocation(with: originalLastLocation)
+        preferences.saveLastConnectionTarget(with: originalLastLocation)
         preferences.saveBestLocation(with: originalBestLocation)
         preferences.clearSelectedLocations()
     }

@@ -24,11 +24,11 @@ extension ConfigurationsManager {
             currentConnectionProtocol = proto
         }
 
-        guard let locationType = locationsManager.getLocationType(id: location) else {
-            throw VPNConfigurationErrors.invalidLocationType
+        guard let connectionTargetType = locationsManager.getConnectionTargetType(id: location) else {
+            throw VPNConfigurationErrors.invalidConnectionTargetType
         }
         // If location type is custom config, proto/port does not matter just use whats in the profile.
-        if locationType == .custom {
+        if connectionTargetType == .custom {
             let locationId = String(locationsManager.getCustomId(location: location))
             do {
                 return try await wgConfigFromCustomConfig(locationId: locationId)
@@ -117,12 +117,12 @@ extension ConfigurationsManager {
 
     /// Builds WireGuard configuration for a location based on its type.
     private func buildWgConfig(location: String, port: String, vpnSettings: VPNUserSettings) async throws -> WireguardVPNConfiguration {
-        guard let locationType = locationsManager.getLocationType(id: location) else {
-            throw VPNConfigurationErrors.invalidLocationType
+        guard let connectionTargetType = locationsManager.getConnectionTargetType(id: location) else {
+            throw VPNConfigurationErrors.invalidConnectionTargetType
         }
-        switch locationType {
+        switch connectionTargetType {
         case .server:
-            let locationDatacenter = try locationsManager.getLocation(from: location)
+            let locationDatacenter = try locationsManager.getLocationDatacenter(from: location)
             let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
             let ip = server.ip3
             let hostname = server.hostname
@@ -132,7 +132,7 @@ extension ConfigurationsManager {
             return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         case .staticIP:
-            let locationId = locationsManager.getId(location: location)
+            let locationId = locationsManager.getLastConnectionTargetId(location: location)
             let staticLocation = try getStaticIPLocation(id: locationId)
             guard let node = Array(staticLocation.nodes).randomElement() else {
                 throw VPNConfigurationErrors.noValidServerFound
@@ -158,10 +158,10 @@ extension ConfigurationsManager {
 
     /// Creates an IKEv2 VPN configuration for the specified location.
     private func buildIKEv2Config(location: String) throws -> IKEv2VPNConfiguration {
-        guard let locationType = locationsManager.getLocationType(id: location) else {
-            throw VPNConfigurationErrors.invalidLocationType
+        guard let connectionTargetType = locationsManager.getConnectionTargetType(id: location) else {
+            throw VPNConfigurationErrors.invalidConnectionTargetType
         }
-        switch locationType {
+        switch connectionTargetType {
         case .server:
             guard let credentials = credentialsRepository.ikev2Crendentials else {
                 throw VPNConfigurationErrors.credentialsNotFound(VPNProtocolType.iKEv2.identifier)
@@ -169,8 +169,8 @@ extension ConfigurationsManager {
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
-            let locationId = locationsManager.getId(location: location)
-            let locationDatacenter = try locationsManager.getLocation(from: locationId)
+            let locationId = locationsManager.getLastConnectionTargetId(location: location)
+            let locationDatacenter = try locationsManager.getLocationDatacenter(from: locationId)
             let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
             let ip = server.ip
             let hostname = server.hostname
@@ -180,7 +180,7 @@ extension ConfigurationsManager {
             }
             return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         case .staticIP:
-            let locationID = locationsManager.getId(location: location)
+            let locationID = locationsManager.getLastConnectionTargetId(location: location)
             let staticLocation = try getStaticIPLocation(id: locationID)
             guard let node = Array(staticLocation.nodes).randomElement() else {
                 throw VPNConfigurationErrors.noValidServerFound
@@ -205,17 +205,17 @@ extension ConfigurationsManager {
 
     /// Constructs an OpenVPN configuration using location, protocol, port, and user preferences.
     private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> OpenVPNConfiguration {
-        let locationId = locationsManager.getId(location: location)
-        guard let locationType = locationsManager.getLocationType(id: location) else {
-            throw VPNConfigurationErrors.invalidLocationType
+        let locationId = locationsManager.getLastConnectionTargetId(location: location)
+        guard let connectionTargetType = locationsManager.getConnectionTargetType(id: location) else {
+            throw VPNConfigurationErrors.invalidConnectionTargetType
         }
-        switch locationType {
+        switch connectionTargetType {
         case .server:
             guard let credentials = credentialsRepository.openVPNCrendentials else { throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN) }
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
-            let locationDatacenter = try locationsManager.getLocation(from: location)
+            let locationDatacenter = try locationsManager.getLocationDatacenter(from: location)
             let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: server.ip, ip3: server.ip3)
             let hostname = server.ip2
@@ -449,17 +449,17 @@ extension ConfigurationsManager {
     @MainActor
     func validateLocation(lastLocation: String) async throws -> String? {
         do {
-            let locationId = locationsManager.getId(location: lastLocation)
-            guard let locationType = locationsManager.getLocationType(id: lastLocation) else {
-                throw VPNConfigurationErrors.invalidLocationType
+            let locationId = locationsManager.getLastConnectionTargetId(location: lastLocation)
+            guard let connectionTargetType = locationsManager.getConnectionTargetType(id: lastLocation) else {
+                throw VPNConfigurationErrors.invalidConnectionTargetType
             }
 
-            switch locationType {
+            switch connectionTargetType {
             case .server:
-                let locationDatacenter = try locationsManager.getLocation(from: locationId)
+                let locationDatacenter = try locationsManager.getLocationDatacenter(from: locationId)
                 let isFreeUser = userSessionRepository.sessionModel?.isPremium == false
                 if isFreeUser, locationDatacenter.1.isPremiumOnly {
-                    throw VPNConfigurationErrors.invalidLocationType
+                    throw VPNConfigurationErrors.invalidConnectionTargetType
                 }
                 _ = try await geServerFrom(datacenterId: locationDatacenter.1.id)
                 return lastLocation
@@ -485,7 +485,7 @@ extension ConfigurationsManager {
     }
 
     private func handleLocationFallback(for location: String) -> String? {
-        let locationId = locationsManager.getId(location: location)
+        let locationId = locationsManager.getLastConnectionTargetId(location: location)
         logger.logI("VPNConfiguration", "Looking for fallback location for \(location)")
         let locations = locationListRepository.currentLocationModels
         guard !locations.isEmpty else { return nil }
@@ -512,12 +512,12 @@ extension ConfigurationsManager {
                     promise(.failure(VPNConfigurationErrors.privacyNotAccepted))
                     return
                 }
-                guard let locationType = self.locationsManager.getLocationType(id: locationID) else {
-                    throw VPNConfigurationErrors.invalidLocationType
+                guard let connectionTargetType = self.locationsManager.getConnectionTargetType(id: locationID) else {
+                    throw VPNConfigurationErrors.invalidConnectionTargetType
                 }
-                switch locationType {
+                switch connectionTargetType {
                 case .server:
-                    let location = try self.locationsManager.getLocation(from: locationID)
+                    let location = try self.locationsManager.getLocationDatacenter(from: locationID)
                     let session = self.userSessionRepository.sessionModel
                     let isFreeUser = session?.isPremium == false
 

@@ -63,7 +63,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
             return
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
             logger.logD("FavouriteListViewModel", "Tapped on Favourite \(favourite.city) from the server list.")
-            locationsManager.saveLastSelectedLocation(with: "\(favourite.id)")
+            locationsManager.saveLastConnectionTarget(with: "\(favourite.id)")
             Task {
                 self.logger.logI("FavouriteListViewModel", "setSelectedFav for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)

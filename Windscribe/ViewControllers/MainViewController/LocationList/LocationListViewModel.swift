@@ -64,7 +64,7 @@ class LocationListViewModel: ServerListViewModelType {
             showUpgradeTrigger.send(())
             return
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
-            locationsManager.saveLastSelectedLocation(with: "\(datacenter.id)")
+            locationsManager.saveLastConnectionTarget(with: "\(datacenter.id)")
             Task {
                 self.logger.logI("ServerListViewModel", "setSelectedServerAndGroup for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)

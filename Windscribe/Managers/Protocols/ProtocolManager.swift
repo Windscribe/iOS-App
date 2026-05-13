@@ -250,10 +250,10 @@ class ProtocolManager: ProtocolManagerType {
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
 
-        let locationId = locationManager.getLastSelectedLocation()
+        let locationId = locationManager.getLastConnectionTarget()
         let customId = locationManager.getCustomId(location: locationId)
-        if let locationType = locationManager.getLocationType(),
-           locationType == .custom,
+        if let connectionTargetType = locationManager.getConnectionTargetType(),
+           connectionTargetType == .custom,
            let config = customConfigRepository.getCustomConfig(fileId: String(customId)) {
             let protocolName = config.protocolType
             appendPort(proto: protocolName, port: config.port)

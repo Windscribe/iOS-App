@@ -148,15 +148,15 @@ protocol Preferences: Sendable {
 
     // Locations
     func clearSelectedLocations()
-    func saveLastSelectedLocation(with locationID: String)
-    func getLastSelectedLocation() -> String
+    func saveLastConnectionTarget(with targetId: String)
+    func getLastConnectionTarget() -> String
     func saveLastSelectedPinnedIp(with pinnedIP: String)
     func getLastSelectedPinnedIp() -> String?
-    func saveBestLocation(with locationID: String)
+    func saveBestLocation(with datacenterId: String)
     func getBestLocation() -> String
     func isCustomConfigSelected() -> Bool
-    func getLocationType() -> LocationType?
-    func getLocationType(id: String) -> LocationType?
+    func getConnectionTargetType() -> ConnectionTargetType?
+    func getConnectionTargetType(id: String) -> ConnectionTargetType?
     func saveLastNodeIP(nodeIp: String)
     func getLastNodeIP() -> String?
     func saveIgnorePinIP(status: Bool)

@@ -18,25 +18,41 @@ struct LocationUIInfo {
 protocol LocationsManager {
     func getBestLocationModel(from datacenterId: Int) -> BestLocationModel?
     func getBestLocationModel() -> BestLocationModel?
-    func getLocation(from datacenterId: Int) throws -> (LocationModel, DatacenterModel)
-    func getLocation(from datacenterId: String) throws -> (LocationModel, DatacenterModel)
+    func getLocationDatacenter(from datacenterId: Int) throws -> (LocationModel, DatacenterModel)
+    func getLocationDatacenter(from datacenterId: String) throws -> (LocationModel, DatacenterModel)
     func getLocationUIInfo() -> LocationUIInfo
-    func saveLastSelectedLocation(with locationID: String)
-    func saveStaticIP(withID staticID: Int?)
-    func saveCustomConfig(withID staticID: String?)
-    func clearLastSelectedLocation()
-    func saveBestLocation(with locationID: String)
-    func selectBestLocation(with locationID: String)
+
+    func saveStaticIP(withId staticId: Int?)
+    func saveCustomConfig(withId customId: String?)
+    
+    /// Saves the best location, it needs a datacenterId to access the information needed, the BestLocation is Not a Datacenter
+    /// And holds information from both LocationModel and the DatacenterModel
+    func saveBestLocation(with datacenterId: String)
+    
+    /// Selects the Best Locations associated to the datacenterId as the last Connected Target and saves the best location
+    /// it needs a datacenterId to access the information needed, the BestLocation is Not a Datacenter
+    /// And holds information from both LocationModel and the DatacenterModel
+    func selectBestLocation(with datacenterId: String)
     func getBestLocation() -> Int
-    func getLastSelectedLocation() -> String
-    func getLocationType() -> LocationType?
-    func getLocationType(id: String) -> LocationType?
-    func getId() -> Int
-    func getId(location: String) -> Int
     func getCustomId(location: String) -> String
     func isCustomConfigSelected() -> Bool
     func checkForForceDisconnect() -> Bool
-    func getIsSelectedLocationPremium() -> Bool
+    func getIsProDatacenterSelected() -> Bool
+
+    /// Gets the full Id of the Datacenter / Static IP / Custom Config that was last connected/selected by the user
+    func getLastConnectionTarget() -> String
+    /// Saves the full Id of the Datacenter / Static IP / Custom Config that was last connected/selected by the user
+    func saveLastConnectionTarget(with targetId: String)
+    /// Clears the full id, making it empty string "", so there is no Datacenter / Static IP / Custom Config as the last place the user connected to
+    func clearLastConnectionTarget()
+
+    func getConnectionTargetType() -> ConnectionTargetType?
+    func getConnectionTargetType(id: String) -> ConnectionTargetType?
+
+    /// Gets the short Id (no identifier for the target type, server, static, custom) of the Datacenter / Static IP / Custom Config that was last connected/selected by the user
+    func getLastConnectionTargetId() -> Int
+    /// Gets the short Id (no identifier for the target type, server, static, custom) of the Datacenter / Static IP / Custom Config that was last connected/selected by the user
+    func getLastConnectionTargetId(location: String) -> Int
 
     var selectedLocationUpdated: CurrentValueSubject<Bool, Never> { get }
     var bestLocationUpdatedTrigger: PassthroughSubject<Void, Never> { get }
@@ -88,19 +104,19 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func getBestLocationModel(from datacenterId: Int) -> BestLocationModel? {
-        guard let locationDatacenter = try? getLocation(from: datacenterId) else { return nil }
+        guard let locationDatacenter = try? getLocationDatacenter(from: datacenterId) else { return nil }
         return BestLocationModel(datacenter: locationDatacenter.1,
                                  location: locationDatacenter.0)
     }
 
-    func getLocation(from datacenterId: String) throws -> (LocationModel, DatacenterModel) {
+    func getLocationDatacenter(from datacenterId: String) throws -> (LocationModel, DatacenterModel) {
         if let intId = Int(datacenterId) {
-            return try getLocation(from: intId)
+            return try getLocationDatacenter(from: intId)
         }
         throw VPNConfigurationErrors.locationNotFound(datacenterId)
     }
 
-    func getLocation(from datacenterId: Int) throws -> (LocationModel, DatacenterModel) {
+    func getLocationDatacenter(from datacenterId: Int) throws -> (LocationModel, DatacenterModel) {
         let locations = locationListRepository.currentLocationModels
         guard !locations.isEmpty else { throw VPNConfigurationErrors.locationNotFound(String(datacenterId)) }
         var datacenterResult: DatacenterModel?
@@ -119,27 +135,27 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func getLocationUIInfo() -> LocationUIInfo {
-        let selectedId = getLastSelectedLocation()
+        let selectedId = getLastConnectionTarget()
         let bestLocationId = getBestLocation()
-        var selectedLocationId = Int(selectedId) ?? 0
+        var selectedDatacenterId = Int(selectedId) ?? 0
 
-        guard let locationType = getLocationType(id: selectedId) else {
+        guard let connectionTargetType = getConnectionTargetType(id: selectedId) else {
             return getEmptyUIInfo()
         }
 
         // If no location selected but best location exists, use best location
         if (selectedId.isEmpty || selectedId == "0") && bestLocationId != 0 {
-            selectedLocationId = bestLocationId
+            selectedDatacenterId = bestLocationId
         }
 
-        if locationType == .server {
-            guard let location = try? getLocation(from: selectedLocationId) else {
+        if connectionTargetType == .server {
+            guard let location = try? getLocationDatacenter(from: selectedDatacenterId) else {
                 return getEmptyUIInfo()
             }
-            let cityName = bestLocationId == selectedLocationId ? TextsAsset.bestLocation : location.1.city
+            let cityName = bestLocationId == selectedDatacenterId ? TextsAsset.bestLocation : location.1.city
             return LocationUIInfo(nickName: location.1.nick, cityName: cityName, countryCode: location.0.countryCode, isServer: true)
         } else {
-            if locationType == .custom {
+            if connectionTargetType == .custom {
                 let customId = getCustomId(location: selectedId)
                 guard let customConfig = customConfigRepository.getCustomConfig(fileId: customId) else {
                     return getEmptyUIInfo()
@@ -149,9 +165,9 @@ class LocationsManagerImpl: LocationsManager {
                     return getEmptyUIInfo()
                 }
                 return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation, isServer: false)
-            } else if locationType == .staticIP {
-                let locationID = getId()
-                guard let staticIP = staticIpRepository.getStaticIp(id: locationID) else {
+            } else if connectionTargetType == .staticIP {
+                let targetId = getLastConnectionTargetId()
+                guard let staticIP = staticIpRepository.getStaticIp(id: targetId) else {
                     return getEmptyUIInfo()
                 }
                 return LocationUIInfo(nickName: staticIP.staticIP, cityName: staticIP.cityName, countryCode: staticIP.countryCode, isServer: false)
@@ -165,78 +181,78 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func checkForForceDisconnect() -> Bool {
-        let locationID = getLastSelectedLocation()
-        guard !locationID.isEmpty, locationID != "0", let datacenterId = Int(locationID) else {
+        let targetId = getLastConnectionTarget()
+        guard !targetId.isEmpty, targetId != "0", let datacenterId = Int(targetId) else {
             return false
         }
         guard !locationListRepository.currentServerModels.isEmpty else {
             return false
         }
         if locationListRepository.getServers(for: datacenterId).isEmpty {
-            if let sisterLocationID = getSisterLocationId(from: datacenterId) {
-                saveLastSelectedLocation(with: "\(sisterLocationID)")
+            if let sisterLocationId = getSisterLocationId(from: datacenterId) {
+                saveLastConnectionTarget(with: "\(sisterLocationId)")
                 return true
             }
         }
         return false
     }
 
-    func saveLastSelectedLocation(with locationID: String) {
-        saveLastSelectedLocation(with: locationID, shouldReconnect: true)
+    func saveLastConnectionTarget(with targetId: String) {
+        saveLastConnectionTarget(with: targetId, shouldReconnect: true)
     }
 
-    func saveStaticIP(withID staticID: Int?) {
-        saveLastSelectedLocation(with: "static_\(staticID ?? 0)")
+    func saveStaticIP(withId staticId: Int?) {
+        saveLastConnectionTarget(with: "static_\(staticId ?? 0)")
     }
 
-    func saveCustomConfig(withID customID: String?) {
-        saveLastSelectedLocation(with: "custom_\(customID ?? "0")")
+    func saveCustomConfig(withId customId: String?) {
+        saveLastConnectionTarget(with: "custom_\(customId ?? "0")")
     }
 
-    func clearLastSelectedLocation() {
-        preferences.saveLastSelectedLocation(with: "")
+    func clearLastConnectionTarget() {
+        preferences.saveLastConnectionTarget(with: "")
     }
 
-    func saveBestLocation(with locationID: String) {
+    func saveBestLocation(with datacenterId: String) {
         let currentBestLocation = getBestLocation()
-        preferences.saveBestLocation(with: locationID)
-        self.logger.logI("LocationsManager", "Saved BestLocation ID: \(locationID) (previous: \(currentBestLocation))")
+        preferences.saveBestLocation(with: datacenterId)
+        self.logger.logI("LocationsManager", "Saved BestLocation Id: \(datacenterId) (previous: \(currentBestLocation))")
         checkLocationValidity()
         // Always send update even if location is same, to ensure UI reactivity
         bestLocationUpdatedTrigger.send(())
     }
 
-    func selectBestLocation(with locationID: String) {
-        saveLastSelectedLocation(with: locationID)
-        saveBestLocation(with: locationID)
+    func selectBestLocation(with datacenterId: String) {
+        saveLastConnectionTarget(with: datacenterId)
+        saveBestLocation(with: datacenterId)
     }
 
     func getBestLocation() -> Int {
-        if let locationId = Int(preferences.getBestLocation()) {
-            return locationId
+        if let datacenterId = Int(preferences.getBestLocation()) {
+            return datacenterId
         }
         return 0
     }
 
-    func getLastSelectedLocation() -> String {
-        preferences.getLastSelectedLocation()
+    func getLastConnectionTarget() -> String {
+        preferences.getLastConnectionTarget()
     }
 
-    func getLocationType() -> LocationType? {
-        preferences.getLocationType()
+    func getConnectionTargetType() -> ConnectionTargetType? {
+        preferences.getConnectionTargetType()
     }
 
-    /// Gets location type based on id.
-    func getLocationType(id: String) -> LocationType? {
-        preferences.getLocationType(id: id)
+    /// Gets the Connection target  type based on id.
+    func getConnectionTargetType(id: String) -> ConnectionTargetType? {
+        preferences.getConnectionTargetType(id: id)
     }
 
     /// Gets id from location id which can be used to access data from database.
-    func getId() -> Int {
-        return getId(location: getLastSelectedLocation())
+    func getLastConnectionTargetId() -> Int {
+        return getLastConnectionTargetId(location: getLastConnectionTarget())
     }
 
-    func getId(location: String) -> Int {
+    func getLastConnectionTargetId(location: String) -> Int {
         guard !location.isEmpty else {
             return getBestLocation()
         }
@@ -265,19 +281,19 @@ class LocationsManagerImpl: LocationsManager {
             return
         }
 
-        let locationType = getLocationType() ?? .server
+        let connectionTargetType = getConnectionTargetType() ?? .server
 
-        let locationId = getLastSelectedLocation()
+        let locationId = getLastConnectionTarget()
         guard !locationId.isEmpty, locationId != "0" else {
             self.logger.logI("LocationsManager", "Location is empty or invalid.. Switching to Best location.")
             updateToBestLocation()
             return
         }
-        if locationType == .server, let datacenterId = Int(locationId) {
-            guard let currentLocation = try? getLocation(from: datacenterId) else {
-                self.logger.logI("LocationsManager", "Unable to find location with ID: \(datacenterId). Switching to Sister location.")
+        if connectionTargetType == .server, let datacenterId = Int(locationId) {
+            guard let currentLocation = try? getLocationDatacenter(from: datacenterId) else {
+                self.logger.logI("LocationsManager", "Unable to find location with Id: \(datacenterId). Switching to Sister location.")
                 if let sisterLocationId = getSisterLocationId(from: datacenterId) {
-                    saveLastSelectedLocation(with: String(sisterLocationId))
+                    saveLastConnectionTarget(with: String(sisterLocationId))
                 } else {
                     self.logger.logI("LocationsManager", "Unable to find sister location. Switching to Best location.")
                     updateToBestLocation()
@@ -293,8 +309,8 @@ class LocationsManagerImpl: LocationsManager {
         }
     }
 
-    func getIsSelectedLocationPremium() -> Bool {
-        let datacenterId = getId()
+    func getIsProDatacenterSelected() -> Bool {
+        let datacenterId = getLastConnectionTargetId()
         guard let datacenter = locationListRepository.getDatacenter(by: datacenterId) else { return false }
         return datacenter.isPremiumOnly
     }
@@ -302,7 +318,7 @@ class LocationsManagerImpl: LocationsManager {
 
 extension LocationsManagerImpl {
     private func updateToBestLocation() {
-        saveLastSelectedLocation(with: String(getBestLocation()), shouldReconnect: false)
+        saveLastConnectionTarget(with: String(getBestLocation()), shouldReconnect: false)
     }
 
     private func getSisterLocationId(from datacenterId: Int) -> Int? {
@@ -315,14 +331,14 @@ extension LocationsManagerImpl {
         return datacenter?.id
     }
 
-    private func saveLastSelectedLocation(with locationID: String, shouldReconnect: Bool) {
-        let currentLocation = getLastSelectedLocation()
-        guard locationID != currentLocation else {
+    private func saveLastConnectionTarget(with locationId: String, shouldReconnect: Bool) {
+        let currentLocation = getLastConnectionTarget()
+        guard locationId != currentLocation else {
             // Even if location hasn't changed, trigger update for UI reactivity
             selectedLocationUpdated.send(shouldReconnect)
             return
         }
-        preferences.saveLastSelectedLocation(with: locationID)
+        preferences.saveLastConnectionTarget(with: locationId)
         selectedLocationUpdated.send(shouldReconnect)
     }
 }

@@ -126,7 +126,7 @@ extension VPNManagerImpl {
                     self.configManager.updateFailedNode()
                     switch error {
                     case .authFailure:
-                        if self.locationsManager.getLocationType(id: id) != .custom {
+                        if self.locationsManager.getConnectionTargetType(id: id) != .custom {
                             return self.updateConnectionData(locationID: id, connectionError: error)
                                 .flatMap { updatedLocation in
                                     self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), connectionType: connectionType)
@@ -134,7 +134,7 @@ extension VPNManagerImpl {
                         }
                         // Retry protocol once with new node.
                     case .connectionTimeout, .connectivityTestFailed:
-                        if connectionType == .user, self.locationsManager.getLocationType(id: id) != .custom {
+                        if connectionType == .user, self.locationsManager.getConnectionTargetType(id: id) != .custom {
                             self.logger.logI("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
                             return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
                         }

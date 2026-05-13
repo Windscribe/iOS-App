@@ -225,9 +225,9 @@ extension MainViewController {
             let isCustomConfig = vpnConnectionViewModel.isCustomConfigSelected()
             if !isCustomConfig {
                 let session = viewModel.sessionModel.value
-                let locationType = vpnConnectionViewModel.getLocationType()
-                let isStaticIP = (locationType == .staticIP)
-                let islocationPremium = viewModel.getIsSelectedLocationPremium()
+                let connectionTargetType = vpnConnectionViewModel.getConnectionTargetType()
+                let isStaticIP = (connectionTargetType == .staticIP)
+                let islocationPremium = viewModel.getIsProDatacenterSelected()
                 let isEligible = checkEligibility(session: session,
                                                   isStaticIP: isStaticIP,
                                                   islocationPremium: islocationPremium)

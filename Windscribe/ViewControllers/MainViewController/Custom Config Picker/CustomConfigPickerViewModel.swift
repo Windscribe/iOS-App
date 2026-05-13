@@ -158,7 +158,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
                     await self.customConfigRepository.removeOpenVPNConfig(fileId: id)
                 }
             }
-            if self.locationsManager.getLastSelectedLocation() == id {
+            if self.locationsManager.getLastConnectionTarget() == id {
                 self.resetConnectionStatus()
             }
         }
@@ -180,7 +180,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
             return
         }
 
-        locationsManager.saveCustomConfig(withID: customConfig.id)
+        locationsManager.saveCustomConfig(withId: customConfig.id)
         configureVPNTrigger.send(())
     }
 
@@ -193,7 +193,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         let locationID = locationsManager.getBestLocation()
         if locationID != 0, !self.vpnStateRepository.isConnecting() {
             self.logger.logD("CustomConfigPickerViewModel", "Changing selected location to Best location ID \(locationID) from the server list.")
-            self.locationsManager.saveLastSelectedLocation(with: String(locationID))
+            self.locationsManager.saveLastConnectionTarget(with: String(locationID))
             self.configureVPNTrigger.send(())
         } else {
             self.locationsManager.saveBestLocation(with: "")

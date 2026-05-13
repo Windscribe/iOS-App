@@ -47,7 +47,7 @@ protocol ConnectionViewModelType {
     func setOutOfData()
     func enableConnection()
     func disableConnection()
-    func saveLastSelectedLocation(with locationID: String)
+    func saveLastConnectionTarget(with locationID: String)
     func selectBestLocation(with locationID: String)
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
     func displayLocalIPAddress()
@@ -61,7 +61,7 @@ protocol ConnectionViewModelType {
     func isCustomConfigSelected() -> Bool
     func getBestLocationId() -> Int
     func getBestLocation() -> BestLocationModel?
-    func getLocationType() -> LocationType?
+    func getConnectionTargetType() -> ConnectionTargetType?
     func isNetworkCellularWhileConnecting(for network: WifiNetworkModel?) -> Bool
     func isNetworkCellularWhileConnecting(for network: AppNetwork?) -> Bool
 }
@@ -189,7 +189,7 @@ class ConnectionViewModel: ConnectionViewModelType {
 
         locationsManager.selectedLocationUpdated.sink { [weak self] canReconnect in
             guard let self = self else { return }
-            let locationID = locationsManager.getLastSelectedLocation()
+            let locationID = locationsManager.getLastConnectionTarget()
             if canReconnect, !locationID.isEmpty, locationID != "0", self.isConnected() {
                 self.enableConnection()
             }
@@ -309,11 +309,11 @@ extension ConnectionViewModel {
     }
 
     func isBestLocationSelected() -> Bool {
-        return String(locationsManager.getBestLocation()) == locationsManager.getLastSelectedLocation()
+        return String(locationsManager.getBestLocation()) == locationsManager.getLastConnectionTarget()
     }
 
-    func saveLastSelectedLocation(with locationID: String) {
-        locationsManager.saveLastSelectedLocation(with: locationID)
+    func saveLastConnectionTarget(with locationID: String) {
+        locationsManager.saveLastConnectionTarget(with: locationID)
     }
 
     func selectBestLocation(with locationID: String) {
@@ -329,8 +329,8 @@ extension ConnectionViewModel {
         return locationsManager.getBestLocationModel(from: bestLocationId)
     }
 
-    func getLocationType() -> LocationType? {
-        return locationsManager.getLocationType()
+    func getConnectionTargetType() -> ConnectionTargetType? {
+        return locationsManager.getConnectionTargetType()
     }
 
     private func refreshConnectionFromNetworkChange() {
@@ -409,7 +409,7 @@ extension ConnectionViewModel {
             }
 
             let nextProtocol = protocolManager.getProtocol()
-            let locationID = locationsManager.getLastSelectedLocation()
+            let locationID = locationsManager.getLastConnectionTarget()
             currentConnectionType = connectionType
             connectionTaskPublisher?.cancel()
 
@@ -583,7 +583,7 @@ extension ConnectionViewModel {
     func handleErrors(error: VPNConfigurationErrors, fromEnable: Bool = false) -> Bool {
         switch error {
         case .credentialsNotFound,
-                .invalidLocationType,
+                .invalidConnectionTargetType,
                 .customConfigSupportNotAvailable,
                 .noValidServerFound,
                 .invalidServerConfig,
@@ -606,7 +606,7 @@ extension ConnectionViewModel {
         case .authFailure:
             showAuthFailureTrigger.send(())
         case .connectivityTestFailed:
-            guard locationsManager.getLocationType() == .custom else { return false }
+            guard locationsManager.getConnectionTargetType() == .custom else { return false }
             showAuthFailureTrigger.send(())
         case let .customConfigMissingCredentials(customConfig):
             showEditCustomConfigTrigger.send(customConfig)

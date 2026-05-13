@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 import Combine
 
-enum LocationType {
+enum ConnectionTargetType {
     case server
     case staticIP
     case custom
@@ -469,11 +469,11 @@ class PreferencesImpl: Preferences {
         sharedDefault?.set("", forKey: SharedKeys.savedLastLocation)
     }
 
-    func saveLastSelectedLocation(with locationID: String) {
-        sharedDefault?.set(locationID, forKey: SharedKeys.savedLastLocation)
+    func saveLastConnectionTarget(with targetId: String) {
+        sharedDefault?.set(targetId, forKey: SharedKeys.savedLastLocation)
     }
 
-    func getLastSelectedLocation() -> String {
+    func getLastConnectionTarget() -> String {
         return sharedDefault?.string(forKey: SharedKeys.savedLastLocation) ?? "0"
     }
 
@@ -486,8 +486,8 @@ class PreferencesImpl: Preferences {
         return value?.isEmpty == true ? nil : value
     }
 
-    func saveBestLocation(with locationID: String) {
-        sharedDefault?.set(locationID, forKey: SharedKeys.savedBestLocation)
+    func saveBestLocation(with datacenterId: String) {
+        sharedDefault?.set(datacenterId, forKey: SharedKeys.savedBestLocation)
     }
 
     func getBestLocation() -> String {
@@ -495,25 +495,25 @@ class PreferencesImpl: Preferences {
     }
 
     func isCustomConfigSelected() -> Bool {
-        return getLocationType() == .custom
+        return getConnectionTargetType() == .custom
     }
 
-    func getLocationType() -> LocationType? {
-        return getLocationType(id: getLastSelectedLocation())
+    func getConnectionTargetType() -> ConnectionTargetType? {
+        return getConnectionTargetType(id: getLastConnectionTarget())
     }
 
     /// Gets location type based on id.
-    func getLocationType(id: String) -> LocationType? {
+    func getConnectionTargetType(id: String) -> ConnectionTargetType? {
         guard !id.isEmpty else { return nil }
         let parts = id.split(separator: "_")
         if parts.count == 1 {
-            return LocationType.server
+            return ConnectionTargetType.server
         }
         let prefix = parts[0]
         if prefix == "static" {
-            return LocationType.staticIP
+            return ConnectionTargetType.staticIP
         } else if prefix == "custom" {
-            return LocationType.custom
+            return ConnectionTargetType.custom
         }
         return nil
     }

@@ -15,14 +15,14 @@ class MockLocationsManager: LocationsManager {
     // MARK: Protocol Properties
     var mockLocation: (LocationModel, DatacenterModel)?
     var mockLocationError: Error?
-    var mockLocationType: LocationType?
+    var mockConnectionTargetType: ConnectionTargetType?
     var mockLocationUIInfo: LocationUIInfo = LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
 
     var getLocationCalled = false
-    var saveLastSelectedLocationCalled = false
-    var lastSavedLocationID: String?
+    var saveLastConnectionTargetCalled = false
+    var lastSavedLocationId: String?
     var saveBestLocationCalled = false
-    var lastSavedBestLocationID: String?
+    var lastSavedBestLocationId: String?
     var mockBestLocation: Int = 0
 
     var selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
@@ -30,7 +30,7 @@ class MockLocationsManager: LocationsManager {
 
     // MARK: Protocol Methods
 
-    func getLocation(from datacenterId: Int) throws -> (LocationModel, DatacenterModel) {
+    func getLocationDatacenter(from datacenterId: Int) throws -> (LocationModel, DatacenterModel) {
         getLocationCalled = true
 
         if let error = mockLocationError {
@@ -44,7 +44,7 @@ class MockLocationsManager: LocationsManager {
         return location
     }
 
-    func getLocation(from datacenterId: String) throws -> (LocationModel, DatacenterModel) {
+    func getLocationDatacenter(from datacenterId: String) throws -> (LocationModel, DatacenterModel) {
         getLocationCalled = true
 
         if let error = mockLocationError {
@@ -58,9 +58,9 @@ class MockLocationsManager: LocationsManager {
         return location
     }
 
-    func saveLastSelectedLocation(with locationID: String) {
-        saveLastSelectedLocationCalled = true
-        lastSavedLocationID = locationID
+    func saveLastConnectionTarget(with locationId: String) {
+        saveLastConnectionTargetCalled = true
+        lastSavedLocationId = locationId
     }
 
     func getBestLocationModel(from datacenterId: Int) -> BestLocationModel? {
@@ -78,32 +78,32 @@ class MockLocationsManager: LocationsManager {
         return mockLocationUIInfo
     }
 
-    func saveStaticIP(withID staticID: Int?) {}
+    func saveStaticIP(withId staticId: Int?) {}
 
-    func saveCustomConfig(withID staticID: String?) {}
+    func saveCustomConfig(withId customId: String?) {}
 
-    func clearLastSelectedLocation() {}
+    func clearLastConnectionTarget() {}
 
-    func saveBestLocation(with locationID: String) {
+    func saveBestLocation(with locationId: String) {
         saveBestLocationCalled = true
-        lastSavedBestLocationID = locationID
-        mockBestLocation = Int(locationID) ?? 0
+        lastSavedBestLocationId = locationId
+        mockBestLocation = Int(locationId) ?? 0
         bestLocationUpdatedTrigger.send(())
     }
 
-    func selectBestLocation(with locationID: String) {}
+    func selectBestLocation(with locationId: String) {}
 
     func getBestLocation() -> Int { return mockBestLocation }
 
-    func getLastSelectedLocation() -> String { return "" }
+    func getLastConnectionTarget() -> String { return "" }
 
-    func getLocationType() -> LocationType? { return mockLocationType }
+    func getConnectionTargetType() -> ConnectionTargetType? { return mockConnectionTargetType }
 
-    func getLocationType(id: String) -> LocationType? { return mockLocationType }
+    func getConnectionTargetType(id: String) -> ConnectionTargetType? { return mockConnectionTargetType }
 
-    func getId() -> Int { return 0 }
+    func getLastConnectionTargetId() -> Int { return 0 }
 
-    func getId(location: String) -> Int { return 0 }
+    func getLastConnectionTargetId(location: String) -> Int { return 0 }
 
     func getCustomId(location: String) -> String { return "" }
 
@@ -113,7 +113,7 @@ class MockLocationsManager: LocationsManager {
 
     func checkForForceDisconnect() -> Bool { return false }
 
-    func getIsSelectedLocationPremium() -> Bool {
+    func getIsProDatacenterSelected() -> Bool {
         return false
     }
 
@@ -122,13 +122,13 @@ class MockLocationsManager: LocationsManager {
     func reset() {
         mockLocation = nil
         mockLocationError = nil
-        mockLocationType = nil
+        mockConnectionTargetType = nil
         mockLocationUIInfo = LocationUIInfo(nickName: "", cityName: "", countryCode: "", isServer: false)
         getLocationCalled = false
-        saveLastSelectedLocationCalled = false
-        lastSavedLocationID = nil
+        saveLastConnectionTargetCalled = false
+        lastSavedLocationId = nil
         saveBestLocationCalled = false
-        lastSavedBestLocationID = nil
+        lastSavedBestLocationId = nil
         mockBestLocation = 0
     }
 }

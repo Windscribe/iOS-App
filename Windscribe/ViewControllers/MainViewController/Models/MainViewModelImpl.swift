@@ -601,12 +601,12 @@ class MainViewModelImpl: MainViewModel {
         updateSSIDTrigger.send(())
     }
 
-    func getIsSelectedLocationPremium() -> Bool {
-        locationsManager.getIsSelectedLocationPremium()
+    func getIsProDatacenterSelected() -> Bool {
+        locationsManager.getIsProDatacenterSelected()
     }
 
     func getLocationModel(from datacenterId: Int) -> LocationModel? {
-        try? locationsManager.getLocation(from: datacenterId).0
+        try? locationsManager.getLocationDatacenter(from: datacenterId).0
     }
 
     func runHapticFeedback(level: HapticFeedbackLevel) {

@@ -74,16 +74,16 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         }
 
         // Then clear the location if it's pointing to an emergency custom config
-        if locationsManager.getLocationType() == .custom {
+        if locationsManager.getConnectionTargetType() == .custom {
             // Check if the current custom config is an emergency config
-            let locationId = locationsManager.getLastSelectedLocation()
+            let locationId = locationsManager.getLastConnectionTarget()
             let customId = locationsManager.getCustomId(location: locationId)
             let isEmergencyConfig = emergencyConfigs.contains { config in
                 config.id == customId
             }
 
             if isEmergencyConfig {
-                locationsManager.clearLastSelectedLocation()
+                locationsManager.clearLastConnectionTarget()
                 let bestLocation = locationsManager.getBestLocation()
                 locationsManager.saveBestLocation(with: String(bestLocation))
             }
@@ -125,7 +125,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                             .saveOpenVPNCustomConfig(data: data,
                                                      configInfo: configInfo,
                                                      configuationName: self.configuationName)
-                        self.locationsManager.saveCustomConfig(withID: customConfig.id)
+                        self.locationsManager.saveCustomConfig(withId: customConfig.id)
                         promise(.success(customConfig))
                     } catch {
                         promise(.failure(error))
@@ -144,7 +144,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             }
             .flatMap { _ -> AnyPublisher<VPNConnectionState, Error> in
                 let nextProtocol = self.protocolManager.getProtocol()
-                let locationID = self.locationsManager.getLastSelectedLocation()
+                let locationID = self.locationsManager.getLastConnectionTarget()
                 return self.vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: .emergency)
             }
             .eraseToAnyPublisher()

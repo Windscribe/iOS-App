@@ -83,7 +83,7 @@ class IPInfoViewModel: IPInfoViewModelType {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                let groupId = locationManager.getLastSelectedLocation()
+                let groupId = locationManager.getLastConnectionTarget()
                 self.isFavouritedSubject.send(isLocationPinned(groupId: groupId))
             }
             .store(in: &cancellables)
@@ -133,7 +133,7 @@ class IPInfoViewModel: IPInfoViewModelType {
     }
 
     private func performPinIp() async {
-        let groupId = locationManager.getLastSelectedLocation()
+        let groupId = locationManager.getLastConnectionTarget()
         if isLocationPinned(groupId: groupId) {
             locationListRepository.removeFavorite(with: groupId)
             return

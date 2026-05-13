@@ -13,7 +13,7 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case customConfigSupportNotAvailable
     case locationNotFound(String)
     case noValidServerFound
-    case invalidLocationType
+    case invalidConnectionTargetType
     case invalidServerConfig
     case configNotFound
     case incorrectVPNManager
@@ -37,7 +37,7 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return "No location found matching location ID: \(id)"
         case .noValidServerFound:
             return "No valid server found to connect."
-        case .invalidLocationType:
+        case .invalidConnectionTargetType:
             return "Invalid location error."
         case .invalidServerConfig:
             return "Invalid server config."

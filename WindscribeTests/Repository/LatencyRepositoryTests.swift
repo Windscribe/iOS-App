@@ -223,7 +223,7 @@ class LatencyRepositoryTests: XCTestCase {
         repository.pickBestLocation(pingData: pingDataModels)
 
         XCTAssertTrue(mockLocationsManager.saveBestLocationCalled, "Should save best location")
-        XCTAssertNotNil(mockLocationsManager.lastSavedBestLocationID, "Should have saved a location ID")
+        XCTAssertNotNil(mockLocationsManager.lastSavedBestLocationId, "Should have saved a location ID")
     }
 
     func testPickBestLocationFreeUser() {

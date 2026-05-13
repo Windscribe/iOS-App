@@ -15,7 +15,7 @@ import Swinject
 extension VPNManagerImpl {
     func simpleEnableConnection() {
         let nextProtocol = protocolManager.getProtocol()
-        let locationID = locationsManager.getLastSelectedLocation()
+        let locationID = locationsManager.getLastConnectionTarget()
         connectionTaskPublisher?.cancel()
         connectionTaskPublisher = connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: .user)
             .sink { _ in } receiveValue: { _ in }

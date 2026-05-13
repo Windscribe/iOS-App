@@ -535,7 +535,7 @@ extension BridgeApiRepositoryTests {
             datacenters: [datacenter]
         )
 
-        mockLocationsManager.mockLocationType = .server
+        mockLocationsManager.mockConnectionTargetType = .server
         mockLocationsManager.mockLocation = (location, datacenter)
     }
 }

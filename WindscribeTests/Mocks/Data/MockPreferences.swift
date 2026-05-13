@@ -543,16 +543,16 @@ class MockPreferences: Preferences {
         mockBestLocation = ""
     }
 
-    func saveLastSelectedLocation(with locationID: String) {
-        mockLastSelectedLocation = locationID
+    func saveLastConnectionTarget(with targetId: String) {
+        mockLastSelectedLocation = targetId
     }
 
-    func getLastSelectedLocation() -> String {
+    func getLastConnectionTarget() -> String {
         return mockLastSelectedLocation
     }
 
-    func saveBestLocation(with locationID: String) {
-        mockBestLocation = locationID
+    func saveBestLocation(with datacenterId: String) {
+        mockBestLocation = datacenterId
     }
 
     func getBestLocation() -> String {
@@ -563,11 +563,11 @@ class MockPreferences: Preferences {
         return false
     }
 
-    func getLocationType() -> Windscribe.LocationType? {
+    func getConnectionTargetType() -> Windscribe.ConnectionTargetType? {
         return nil
     }
 
-    func getLocationType(id: String) -> Windscribe.LocationType? {
+    func getConnectionTargetType(id: String) -> Windscribe.ConnectionTargetType? {
         return nil
     }
 

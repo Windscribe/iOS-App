@@ -206,7 +206,7 @@ class LifecycleManager: LifecycleManagerType {
     }
 
     private func validateLocation() async throws {
-        let id = locationsManager.getLastSelectedLocation()
+        let id = locationsManager.getLastConnectionTarget()
         do {
             let updatedId = try await configManager.validateLocation(lastLocation: id)
             if let updatedId = updatedId, id != updatedId {
