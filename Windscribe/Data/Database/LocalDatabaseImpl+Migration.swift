@@ -10,13 +10,17 @@ import Foundation
 import Realm
 import RealmSwift
 
+enum DeletedRealmObjects {
+    static let lastConnectedNode = "LastConnectedNode"
+    static let oldSession = "OldSession"
+}
+
 extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
         var configuration = Realm.Configuration(
-            schemaVersion: 63,
+            schemaVersion: 64,
             migrationBlock: { migration, oldSchemaVersion in
-                let shouldDeleteBestLocation = oldSchemaVersion < 51
 
                 // Realm calls this block once with the original stored schema version,
                 // so these checks must be cumulative. Do not change them to else-if.
@@ -56,47 +60,13 @@ extension LocalDatabaseImpl {
                         newObject?["SSID"] = TextsAsset.unknownNetworkName
                     }
                 }
-                if oldSchemaVersion < 7 {
-                    migration.enumerateObjects(ofType: UserPreferences.className()) { _, _ in }
-                }
                 if oldSchemaVersion < 8 {
                     migration.enumerateObjects(ofType: Node.className()) { _, newObject in
                         newObject?["forceDisconnect"] = false
                     }
                 }
-                if oldSchemaVersion < 9 {
-                    migration.enumerateObjects(ofType: UserPreferences.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 10 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 11 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 12 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 13 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 14 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 15 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
-                }
                 if oldSchemaVersion < 16 {
                     migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
-                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 17 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 18 {
-                    migration.enumerateObjects(ofType: StaticIP.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 19 {
-                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _, _ in }
                 }
                 if oldSchemaVersion < 20 {
                     migration.enumerateObjects(ofType: WifiNetwork.className()) { _, newObject in
@@ -105,34 +75,10 @@ extension LocalDatabaseImpl {
                         newObject?["preferredPort"] = "443"
                     }
                 }
-                if oldSchemaVersion < 21 {
-                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 22 {
-                    migration.enumerateObjects(ofType: Notice.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 23 {
-                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _, _ in }
-                }
                 if oldSchemaVersion < 24 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
                         newObject?["autoSecureNewNetworks"] = true
                     }
-                }
-                if oldSchemaVersion < 27 {
-                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in
-                        // connectedAt property was removed when LastConnectedNode was deprecated
-                        // This migration step is kept for historical compatibility but does nothing
-                    }
-                }
-                if oldSchemaVersion < 28 {
-                    migration.enumerateObjects(ofType: Group.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 29 {
-                    migration.enumerateObjects(ofType: StaticIP.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 30 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _, _ in }
                 }
                 if oldSchemaVersion < 31 {
                     migration.enumerateObjects(ofType: VPNConnection.className()) { _, _ in }
@@ -154,14 +100,8 @@ extension LocalDatabaseImpl {
                 if oldSchemaVersion < 34 {
                     migration.enumerateObjects(ofType: Node.className()) { _, _ in }
                 }
-                if oldSchemaVersion < 35 {
-                    migration.enumerateObjects(ofType: Group.className()) { _, _ in }
-                }
                 if oldSchemaVersion < 36 {
                     migration.enumerateObjects(ofType: BestNode.className()) { _, _ in }
-                }
-                if oldSchemaVersion < 37 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _, _ in }
                 }
                 if oldSchemaVersion < 39 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
@@ -179,10 +119,6 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 43 {
                     migration.enumerateObjects(ofType: Group.className()) { _, newObject in
-                        newObject?["health"] = 0
-                        newObject?["linkSpeed"] = "1000"
-                    }
-                    migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
                         newObject?["health"] = 0
                         newObject?["linkSpeed"] = "1000"
                     }
@@ -266,33 +202,10 @@ extension LocalDatabaseImpl {
                         newObject?["id"] = "IKEv2ServerCredentials"
                     }
                 }
-                if oldSchemaVersion < 48 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
-                        newObject?["pingHost"] = ""
-                    }
-                }
                 if oldSchemaVersion < 49 {
                     migration.enumerateObjects(ofType: MobilePlan.className()) { _, _ in }
                 }
-                if oldSchemaVersion < 50 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
-                        newObject?["isPremiumOnly"] = false
-                    }
-                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, newObject in
-                        newObject?["isPremiumOnly"] = false
-                    }
-                }
-                if oldSchemaVersion < 51 {
-                    migration.enumerateObjects(ofType: BestLocation.className()) { _, newObject in
-                        newObject?["id"] = "BestLocation"
-                    }
-                }
                 if oldSchemaVersion < 52 {
-                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { oldObject, _ in
-                        if let groupId = oldObject?["groupId"] as? String {
-                            self.preferences.saveLastSelectedLocation(with: groupId)
-                        }
-                    }
                     migration.enumerateObjects(ofType: BestLocation.className()) { oldObject, _ in
                         if let groupId = oldObject?["groupId"] as? String {
                             self.preferences.saveBestLocation(with: groupId)
@@ -300,9 +213,6 @@ extension LocalDatabaseImpl {
                             self.preferences.saveBestLocation(with: String(groupId))
                         }
                     }
-                }
-                if shouldDeleteBestLocation {
-                    // Delete after the v52 preference migration has had a chance to read old rows.
                     migration.deleteData(forType: BestLocation.className())
                 }
                 if oldSchemaVersion < 53 {
@@ -337,9 +247,6 @@ extension LocalDatabaseImpl {
                         newObject?["pinnedNodeIp"] = nil
                     }
                 }
-                if oldSchemaVersion < 57 {
-                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in }
-                }
                 if oldSchemaVersion < 58 {
                     migration.enumerateObjects(ofType: SipCount.className()) { _, _ in }
                 }
@@ -347,7 +254,7 @@ extension LocalDatabaseImpl {
                     // Delete deprecated FavNode and LastConnectedNode data
                     // These were migrated to Favourite in version 55
                     migration.deleteData(forType: FavNode.className())
-                    migration.deleteData(forType: LastConnectedNode.className())
+                    migration.deleteData(forType: DeletedRealmObjects.lastConnectedNode)
                 }
                 if oldSchemaVersion < 61 {
                     migration.enumerateObjects(ofType: CustomConfig.className()) { _, newObject in
@@ -378,7 +285,7 @@ extension LocalDatabaseImpl {
                 }
                 if oldSchemaVersion < 63 {
                     // Delete deprecated OldSession. Class no longer exists in code; reference by name.
-                    migration.deleteData(forType: "OldSession")
+                    migration.deleteData(forType: DeletedRealmObjects.oldSession)
                 }
             }, deleteRealmIfMigrationNeeded: false
         )
@@ -405,7 +312,6 @@ extension LocalDatabaseImpl {
             PortDetails.self,
             Favourite.self,
             FavNode.self,
-            LastConnectedNode.self,
             WifiNetwork.self,
             AutomaticMode.self,
             Notice.self,

@@ -89,37 +89,11 @@ import RealmSwift
 @available(*, deprecated, message: "Use Favourite instead")
 @objcMembers class FavNode: Object, Decodable {
     dynamic var groupId: String = ""
-    dynamic var serverName: String = ""
-    dynamic var countryCode: String = ""
-    dynamic var hostname: String = ""
-    dynamic var cityName: String = ""
-    dynamic var nickName: String = ""
-    dynamic var dnsHostname: String = ""
-    dynamic var ipAddress: String = ""
-    dynamic var customConfigId: String?
-    dynamic var isPremiumOnly: Bool = false
-    dynamic var pingIp: String = ""
-    dynamic var pingHost: String = ""
-    dynamic var linkSpeed: String = ""
-    dynamic var health: Int = 0
 }
 
 // NOTE: This class is only ever used in Migration it no longer needs any implementation
-@available(*, deprecated, message: "Don't use it anymore it is here for old data migration purposes only")
-class LastConnectedNode: FavNode { }
-
-// NOTE: This class is only ever used in Migration it no longer needs any implementation
 @objcMembers class BestLocation: Object, Decodable {
-    dynamic var serverName: String = ""
-    dynamic var countryCode: String = ""
-    dynamic var hostname: String = ""
-    dynamic var cityName: String = ""
-    dynamic var nickName: String = ""
-    dynamic var dnsHostname: String = ""
-    dynamic var ipAddress: String = ""
     dynamic var groupId: Int = 0
-    dynamic var linkSpeed: String = "1000"
-    dynamic var health: Int = 0
     dynamic var id = "BestLocation"
 
     override static func primaryKey() -> String? {
