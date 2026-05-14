@@ -24,11 +24,11 @@ protocol LocationsManager {
 
     func saveStaticIP(withId staticId: Int?)
     func saveCustomConfig(withId customId: String?)
-    
+
     /// Saves the best location, it needs a datacenterId to access the information needed, the BestLocation is Not a Datacenter
     /// And holds information from both LocationModel and the DatacenterModel
     func saveBestLocation(with datacenterId: String)
-    
+
     /// Selects the Best Locations associated to the datacenterId as the last Connected Target and saves the best location
     /// it needs a datacenterId to access the information needed, the BestLocation is Not a Datacenter
     /// And holds information from both LocationModel and the DatacenterModel

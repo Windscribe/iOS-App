@@ -15,6 +15,8 @@ struct HashedSignUpContentView: View {
     @ObservedObject var viewModel: SignUpViewModelImpl
     @State private var safariURL: URL?
     @State private var fileError: String?
+    @State private var isShowingCopiedFeedback = false
+    @State private var copyFeedbackResetTask: DispatchWorkItem?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -76,6 +78,13 @@ struct HashedSignUpContentView: View {
         .sheet(item: $safariURL) { url in
             SafariView(url: url, isDarkMode: viewModel.isDarkMode)
         }
+        .onChange(of: viewModel.accountHash) { _ in
+            hideCopiedFeedback()
+        }
+        .onDisappear {
+            copyFeedbackResetTask?.cancel()
+            copyFeedbackResetTask = nil
+        }
     }
 }
 
@@ -91,9 +100,7 @@ private extension HashedSignUpContentView {
                 .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.7))
                 .fixedSize(horizontal: false, vertical: true)
 
-            Button(action: {
-                safariURL = URL(string: Links.learnMoreHashedLogin)
-            }) {
+            Button(action: { safariURL = URL(string: Links.learnMoreHashedLogin) }) {
                 Text(TextsAsset.learnMore)
                     .font(.regular(.callout))
                     .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.7))
@@ -105,20 +112,31 @@ private extension HashedSignUpContentView {
 
     @ViewBuilder
     var hashDisplay: some View {
-        Text(viewModel.accountHash.formattedHash(splitAt: 18))
-            .font(.system(.body, design: .monospaced))
-            .bold()
-            .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
-            .multilineTextAlignment(.center)
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.from(.backgroundColor, viewModel.isDarkMode))
-            .cornerRadius(8)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(style: StrokeStyle(lineWidth: 1, dash: [2]))
+        ZStack {
+            Text(formattedAccountHash)
+                .font(.system(.body, design: .monospaced))
+                .bold()
+                .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+                .opacity(isShowingCopiedFeedback ? 0 : 1)
+
+            if isShowingCopiedFeedback {
+                Text(TextsAsset.copied)
+                    .font(.system(.body, design: .monospaced))
+                    .bold()
                     .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
-            )
+                    .transition(.opacity)
+            }
+        }
+        .multilineTextAlignment(.center)
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Color.from(.backgroundColor, viewModel.isDarkMode))
+        .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(style: StrokeStyle(lineWidth: 1, dash: [2]))
+                .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+        )
     }
 
     @ViewBuilder
@@ -135,9 +153,14 @@ private extension HashedSignUpContentView {
             }
             hashActionButton(imageName: ImagesAsset.copyClipboard) {
                 viewModel.copyHash()
+                showCopiedFeedback()
             }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    var formattedAccountHash: String {
+        viewModel.accountHash.formattedHash(splitAt: 18)
     }
 
     func hashActionButton(imageName: String, action: @escaping () -> Void) -> some View {
@@ -149,6 +172,29 @@ private extension HashedSignUpContentView {
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
+    }
+
+    func showCopiedFeedback() {
+        copyFeedbackResetTask?.cancel()
+
+        withAnimation(.easeInOut(duration: 0.2)) {
+            isShowingCopiedFeedback = true
+        }
+
+        let task = DispatchWorkItem {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isShowingCopiedFeedback = false
+            }
+            copyFeedbackResetTask = nil
+        }
+        copyFeedbackResetTask = task
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: task)
+    }
+
+    func hideCopiedFeedback() {
+        copyFeedbackResetTask?.cancel()
+        copyFeedbackResetTask = nil
+        isShowingCopiedFeedback = false
     }
 
     @ViewBuilder
