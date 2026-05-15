@@ -70,7 +70,7 @@ extension VPNManagerImpl {
             // Refresh IP after VPN connection from on-demand mode to display current IP
             logger.logI("VPNManager", "Refreshing IP after VPN connection from on-demand mode.")
             Task { @MainActor in
-                try? await ipRepository.getIp(usePingTest: false)
+                try? await ipRepository.getIp()
             }
         default: ()
         }

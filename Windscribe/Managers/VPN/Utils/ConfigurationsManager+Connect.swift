@@ -294,6 +294,10 @@ extension ConfigurationsManager {
         if ipPinningError != nil {
             showFailedPinIpTrigger.send()
         }
+        Task {
+            // it needs to refresh ip after pinning, or it might not show new ip
+            try? await ipRepository.getIp()
+        }
     }
 
     /// Initialise bridge API state for server connections so wsnet can

@@ -302,7 +302,11 @@ class LocationListRepositoryImpl: LocationListRepository {
 
     func saveFavorite(for favourite: FavouriteModel) {
         var favList = currentFavouriteModels
-        if favList.first(where: { favourite.id == $0.id }) == nil {
+        let savedFavourite = favList.first(where: { favourite.id == $0.id })
+        if favourite != savedFavourite {
+            if savedFavourite != nil {
+                favList.removeAll(where: { favourite.id == $0.id })
+            }
             favList.append(favourite)
             favouriteListSubject.send(favList)
         }

@@ -405,7 +405,7 @@ class IPRepositoryTests: XCTestCase {
         XCTAssertEqual(mockAPIManager.getIpUsedPingTest, true, "Should use pingTest endpoint when requested")
     }
 
-    func testGetIPWithPingTestStoresResultInPreferences() async throws {
+    func testGetIPWithPingTestDoesNotStoresResultInPreferences() async throws {
         mockPreferences.mockCurrentIpAddress = nil
         repository = mockContainer.resolve(IPRepository.self)!
         mockAPIManager.shouldThrowError = false
@@ -413,10 +413,10 @@ class IPRepositoryTests: XCTestCase {
 
         try await repository.getIp(usePingTest: true)
 
-        XCTAssertEqual(repository.currentIp.value, "10.20.30.40")
-        XCTAssertEqual(mockPreferences.mockCurrentIpAddress, "10.20.30.40")
+        XCTAssertNil(repository.currentIp.value)
+        XCTAssertNil(mockPreferences.mockCurrentIpAddress)
         await MainActor.run {
-            XCTAssertEqual(repository.ipState.value, .available("10.20.30.40"))
+            XCTAssertEqual(repository.ipState.value, .unavailable)
         }
     }
 }
