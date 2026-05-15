@@ -158,7 +158,7 @@ class IPInfoViewModel: IPInfoViewModelType {
             logger.logI("IPInfoViewModel", "Rotate IP request successful")
             let currentIp = ipAddressSubject.value ?? " -- "
             do {
-                try await ipRepository.getIp(usePingTest: false)
+                try await self.ipRepository.getIp()
                 guard let newIp = ipRepository.currentIp.value else {
                     logger.logE("IPInfoViewModel", "Could not get ip after rotation")
                     return false

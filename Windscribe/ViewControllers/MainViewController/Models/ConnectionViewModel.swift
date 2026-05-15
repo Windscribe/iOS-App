@@ -372,7 +372,7 @@ extension ConnectionViewModel {
             Task { [weak self] in
                 guard let self = self else { return }
                 do {
-                    try await self.ipRepository.getIp(usePingTest: false)
+                    try await self.ipRepository.getIp()
                 } catch {
                     // Error already logged in repository
                 }
@@ -550,7 +550,7 @@ extension ConnectionViewModel {
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                try await self.ipRepository.getIp(usePingTest: false)
+                try await self.ipRepository.getIp()
             } catch {
                 // Error already logged in repository
             }

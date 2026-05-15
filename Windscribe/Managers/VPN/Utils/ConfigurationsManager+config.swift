@@ -220,7 +220,7 @@ extension ConfigurationsManager {
             let locationDatacenter = try locationsManager.getLocation(from: location)
             let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: server.ip, ip3: server.ip3)
-            let hostname = server.ip2
+            let hostname = server.hostname
             locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
             let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: locationDatacenter.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             let isUserPro = userSessionRepository.sessionModel?.isUserPro ?? false

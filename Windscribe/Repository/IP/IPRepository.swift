@@ -19,6 +19,7 @@ protocol IPRepository {
     var ipState: CurrentValueSubject<IPState?, Never> { get }
     var currentIp: CurrentValueSubject<String?, Never> { get }
     func getIp(usePingTest: Bool) async throws
+    func getIp() async throws
 }
 
 class IPRepositoryImpl: IPRepository {
@@ -83,9 +84,13 @@ class IPRepositoryImpl: IPRepository {
             .store(in: &cancellables)
     }
 
+    func getIp() async throws {
+        try await getIp(usePingTest: false)
+    }
+
     /// Fetches the current IP from the API and updates Preferences
     /// - Parameter usePingTest: If true, uses pingTest endpoint for connectivity check. If false (default), uses /myip endpoint.
-    func getIp(usePingTest: Bool = false) async throws {
+    func getIp(usePingTest: Bool) async throws {
         let lastState = ipState.value
 
         // Only show .updating if we don't have a valid IP already
@@ -99,14 +104,21 @@ class IPRepositoryImpl: IPRepository {
 
         do {
             let ipAddress = try await apiManager.getIp(usePingTest: usePingTest)
+            guard !usePingTest else {
+                // if it was just for testing conectivity do not update the ip
+                logger.logI("IPRepositoryImpl", "IP connectivity found with: \(ipAddress.redactedIP)")
+                await MainActor.run {
+                    updateState(lastState)
+                }
+                return
+            }
             if !wasObserved {
                 await MainActor.run {
                     load()
                     updateState(.available(ipAddress))
                 }
             }
-
-            logger.logI("IPRepositoryImpl", "IP was refreshed with: \(ipAddress.redactedIP) (usePingTest: \(usePingTest))")
+            logger.logI("IPRepositoryImpl", "IP was refreshed with: \(ipAddress.redactedIP)")
             currentIp.send(ipAddress)
             preferences.saveCurrentIpAddress(ip: ipAddress)
         } catch {

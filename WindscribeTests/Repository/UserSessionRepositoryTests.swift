@@ -334,9 +334,11 @@ private final class ConfigurationsManagerAccessWireguardConfigRepository: Wiregu
 }
 
 private final class ConfigurationsManagerAccessIPRepository: IPRepository {
+
     let ipState = CurrentValueSubject<IPState?, Never>(nil)
     let currentIp = CurrentValueSubject<String?, Never>(nil)
 
+    func getIp() async throws {}
     func getIp(usePingTest: Bool) async throws {}
 }
 
