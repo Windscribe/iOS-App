@@ -320,7 +320,7 @@ class LocationListRepositoryImpl: LocationListRepository {
 
         if let favorite = getFavorite(from: String(locationId)),
            favorite.pinnedNodeHostname != nil {
-            if favorite.pinnedNodeHostname == hostName {
+            if hostName.areSubdomainsEqual(other: favorite.pinnedNodeHostname ?? "") {
                 if let pinnedIp = favorite.pinnedIp {
                     preferences.saveLastSelectedPinnedIp(with: pinnedIp)
                     return
