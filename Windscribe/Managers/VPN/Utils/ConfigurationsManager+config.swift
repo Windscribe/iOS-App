@@ -221,10 +221,11 @@ extension ConfigurationsManager {
             let server = try geServerFrom(datacenterId: locationDatacenter.1.id)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: server.ip, ip3: server.ip3)
             let hostname = server.hostname
-            locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
-            let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: locationDatacenter.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
+            let serverAddress = server.ip2
             let isUserPro = userSessionRepository.sessionModel?.isUserPro ?? false
-            return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1, isUserPro: isUserPro)
+            locationListRepository.saveLastConnectedHost(for: hostname, with: locationDatacenter.1.id)
+            let config = try await editOpenVPNConfig(proto: proto, serverAddress: serverAddress, port: port, x509Name: locationDatacenter.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
+            return OpenVPNConfiguration(proto: proto, ip: serverAddress, username: username, password: password, path: config.0, data: config.1, isUserPro: isUserPro)
         case .staticIP:
             let staticLocation = try getStaticIPLocation(id: locationId)
             guard let node = Array(staticLocation.nodes).randomElement() else {
