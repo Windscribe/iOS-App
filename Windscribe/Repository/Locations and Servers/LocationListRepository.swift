@@ -319,8 +319,8 @@ class LocationListRepositoryImpl: LocationListRepository {
         hasPinnedNodeMismatch = false
 
         if let favorite = getFavorite(from: String(locationId)),
-           favorite.pinnedNodeHostname != nil {
-            if hostName.areSubdomainsEqual(other: favorite.pinnedNodeHostname ?? "") {
+           let pinnedNodeHostname = favorite.pinnedNodeHostname {
+            if hostName.areSubdomainsEqual(other: pinnedNodeHostname) {
                 if let pinnedIp = favorite.pinnedIp {
                     preferences.saveLastSelectedPinnedIp(with: pinnedIp)
                     return
