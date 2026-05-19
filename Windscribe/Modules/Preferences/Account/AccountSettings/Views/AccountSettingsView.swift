@@ -520,6 +520,8 @@ struct AccountRowView: View {
                 }
 
                 if let image = row.image {
+                    Spacer()
+
                     Image(image)
                         .foregroundColor(.from(.infoColor, isDarkMode))
                 }
