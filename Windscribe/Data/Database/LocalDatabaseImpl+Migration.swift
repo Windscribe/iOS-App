@@ -10,11 +10,6 @@ import Foundation
 import Realm
 import RealmSwift
 
-enum DeletedRealmObjects {
-    static let lastConnectedNode = "LastConnectedNode"
-    static let oldSession = "OldSession"
-}
-
 extension LocalDatabaseImpl {
     // MARK: migration
     func migrate() {
@@ -251,10 +246,10 @@ extension LocalDatabaseImpl {
                     migration.enumerateObjects(ofType: SipCount.className()) { _, _ in }
                 }
                 if oldSchemaVersion < 59 {
-                    // Delete deprecated FavNode and LastConnectedNode data
-                    // These were migrated to Favourite in version 55
+                    // FavNode and LastConnectedNode data was migrated to Favourite in v55.
+                    // LastConnectedNode is no longer in objectTypes, so deleteData(forType:)
+                    // would crash iOS 16 via objc_copyClassList — leave its orphan table.
                     migration.deleteData(forType: FavNode.className())
-                    migration.deleteData(forType: DeletedRealmObjects.lastConnectedNode)
                 }
                 if oldSchemaVersion < 61 {
                     migration.enumerateObjects(ofType: CustomConfig.className()) { _, newObject in
@@ -283,10 +278,9 @@ extension LocalDatabaseImpl {
                     // Remove duplicates by deleting all and letting them be re-fetched from API
                     migration.deleteData(forType: UnblockWgParamsObj.className())
                 }
-                if oldSchemaVersion < 63 {
-                    // Delete deprecated OldSession. Class no longer exists in code; reference by name.
-                    migration.deleteData(forType: DeletedRealmObjects.oldSession)
-                }
+                // v63 previously called migration.deleteData(forType: "OldSession") here;
+                // OldSession isn't in objectTypes, so that crashes iOS 16 via
+                // objc_copyClassList. Realm silently ignores the orphan table.
             }, deleteRealmIfMigrationNeeded: false
         )
         // Pin the schema to an explicit class list. Prevents Realm from
@@ -294,6 +288,11 @@ extension LocalDatabaseImpl {
         // Swift metadata realization for every class in the binary —
         // including @available-gated classes whose metadata depends on
         // weakly-linked frameworks (e.g. @Observable on iOS 16).
+        // Note: migration.deleteData(forType:) and enumerateObjects(ofType:)
+        // hit the same objc_copyClassList path for any name absent from this
+        // list (their schemaForClassName lookup misses the fast cache and
+        // falls through to +classForString:). Never call them with class
+        // names that aren't here — orphan tables on disk are harmless.
         configuration.objectTypes = [
             Session.self,
             SipCount.self,
