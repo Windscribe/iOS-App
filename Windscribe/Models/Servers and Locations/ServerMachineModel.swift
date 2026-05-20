@@ -42,7 +42,7 @@ struct DisabledServerModel: Codable, Equatable, Sendable {
     let id: Int
 }
 
-struct ServerMachineModel: Codable, Equatable, Sendable {
+struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
     let id: Int
     let hostname: String
     let ip: String

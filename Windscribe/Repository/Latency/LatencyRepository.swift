@@ -129,6 +129,12 @@ class LatencyRepositoryImpl: LatencyRepository {
             return
         }
         hasPassedInitialTimer = true
+
+        guard !vpnStateRepository.isConnected() else {
+            logger.logI("LatencyRepositoryImpl", "Latency update skipped - VPN is connected.")
+            return
+        }
+
         await loadAllDatacentersLatency()
         latencyUpdatedTrigger.send(())
         refreshBestLocation()
@@ -205,10 +211,13 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func checkLocationsValidity() async {
-        refreshBestLocation()
-        if !vpnStateRepository.isConnected() {
-            await loadLatency()
+        guard !vpnStateRepository.isConnected() else {
+            logger.logI("LatencyRepositoryImpl", "Location validity latency check skipped - VPN is connected.")
+            return
         }
+
+        refreshBestLocation()
+        await loadLatency()
     }
 
     func loadStaticIpLatency() async {

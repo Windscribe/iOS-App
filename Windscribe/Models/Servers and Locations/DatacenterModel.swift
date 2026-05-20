@@ -33,12 +33,19 @@ struct DatacenterModel: Codable, Equatable, Sendable {
     var locationId: Int = 0
     var servers: [ServerMachineModel] = [] {
         didSet {
+            guard !servers.isEmpty else {
+                netLoad = 0
+                pingServer = nil
+                return
+            }
+
+            guard  Set(oldValue) != Set(servers) else {
+                return
+            }
+
             if let randomServer = servers.randomElement() {
                 netLoad = randomServer.netLoad
                 pingServer = randomServer
-            } else {
-                netLoad = 0
-                pingServer = nil
             }
         }
     }

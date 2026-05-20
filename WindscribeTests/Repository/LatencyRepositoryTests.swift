@@ -297,11 +297,109 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     func testCheckLocationsValidityWhenConnected() async {
+        let (locations, datacenters, serverMachines) = createMockData()
+        mockLocationListRepository.locationListSubject.send(locations)
+        mockLocationListRepository.datacenterListSubject.send(datacenters)
+        mockLocationListRepository.serverListSubject.send(serverMachines)
+        mockUserSessionRepository.sessionModel = createMockSession(isPremium: true)
+        mockLocalDatabase.addPingData(pingData: PingDataModel(ip: "1.2.3.4", latency: 50))
         mockVPNStateRepository.mockStatus = .connected
 
         await repository.checkLocationsValidity()
 
         XCTAssertFalse(mockPingManager.pingCalled, "Should not ping when VPN is connected")
+        XCTAssertFalse(mockLocationsManager.saveBestLocationCalled, "Should not refresh best location when VPN is connected")
+    }
+
+    // MARK: Datacenter Ping Server Tests
+
+    func testDatacenterPingServerStaysStableUntilServersChange() {
+        var datacenter = DatacenterModel(
+            id: 101,
+            city: "New York",
+            nick: "Big Apple",
+            iata: "NYC",
+            status: 1,
+            gps: "40.7128,-74.0060",
+            tz: "America/New_York",
+            p2p: 1,
+            isPremium: 0,
+            wgPubkey: "test-wg-key",
+            wgEndpoint: "us-east.windscribe.com:443",
+            ovpnX509: "test-x509",
+            linkSpeed: 1000
+        )
+        let firstServer = ServerMachineModel(
+            id: 3,
+            hostname: "server-3.windscribe.com",
+            ip: "3.3.3.3",
+            ip2: "",
+            ip3: "",
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 30,
+            sclass: 1
+        )
+        let secondServer = ServerMachineModel(
+            id: 1,
+            hostname: "server-1.windscribe.com",
+            ip: "1.1.1.1",
+            ip2: "",
+            ip3: "",
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 10,
+            sclass: 1
+        )
+        let thirdServer = ServerMachineModel(
+            id: 2,
+            hostname: "server-2.windscribe.com",
+            ip: "2.2.2.2",
+            ip2: "",
+            ip3: "",
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 20,
+            sclass: 1
+        )
+
+        datacenter.servers = [firstServer, secondServer, thirdServer]
+        let initialPingServer = datacenter.pingServer
+
+        datacenter.servers = [thirdServer, firstServer, secondServer]
+
+        XCTAssertEqual(datacenter.pingServer, initialPingServer)
+
+        datacenter.servers = [thirdServer]
+
+        XCTAssertEqual(datacenter.pingServer, thirdServer)
+    }
+
+    func testDatacenterPingServerDoesNotRandomizeWhenServerDetailsChange() {
+        let (_, datacenters, serverMachines) = createMockData()
+        var datacenter = datacenters[0]
+        let originalServer = serverMachines[0]
+        let updatedServer = ServerMachineModel(
+            id: originalServer.id,
+            hostname: originalServer.hostname,
+            ip: originalServer.ip,
+            ip2: originalServer.ip2,
+            ip3: originalServer.ip3,
+            ipv6: originalServer.ipv6,
+            datacenterId: originalServer.datacenterId,
+            weight: originalServer.weight,
+            netLoad: 90,
+            sclass: originalServer.sclass
+        )
+
+        datacenter.servers = [updatedServer]
+
+        XCTAssertEqual(datacenter.pingServer?.id, originalServer.id)
+        XCTAssertEqual(datacenter.pingServer?.netLoad, updatedServer.netLoad)
+        XCTAssertEqual(datacenter.netLoad, updatedServer.netLoad)
     }
 
     // MARK: Latency Subject Tests
