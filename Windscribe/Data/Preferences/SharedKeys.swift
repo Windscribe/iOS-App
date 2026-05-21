@@ -11,8 +11,9 @@ import Foundation
 enum SharedKeys {
     static let privateKey = "DynamicWireguardPrivateKey"
     static let activeUserSessionAuth = "activeSessionAuthHash"
-    static let sharedGroup = "group.\(SharedKeys.getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
-    static let sharedKeychainGroup = "\(SharedKeys.getValueFromPlistFile(key: "CFAccountID")).\(SharedKeys.getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
+    static let appBundleID = SharedKeys.getValueFromPlistFile(key: "CFAPP_BUNDLE_ID")
+    static let sharedGroup = "group.\(appBundleID)"
+    static let sharedKeychainGroup = "\(SharedKeys.getValueFromPlistFile(key: "CFAccountID")).\(appBundleID)"
     static let preSharedKey = "preSharedKey"
     static let allowedIp = "allowedIp"
     static let allowedIpV6 = "allowedIpV6"

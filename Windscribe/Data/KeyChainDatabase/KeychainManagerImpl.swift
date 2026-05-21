@@ -202,49 +202,31 @@ class KeychainManagerImpl: KeychainManager {
     // MARK: - Bundle ID Service Methods
 
     func setBundleData(_ data: Data, forKey key: String) throws {
-        guard let bundleId = Bundle.main.bundleIdentifier else {
-            let error = KeychainError.unknown(message: "Unable to get bundle identifier")
-            logger.logE("KeychainManager", "Failed to get bundle identifier for key '\(key)': \(error.localizedDescription)")
-            throw error
-        }
-
-        let accessGroup = SharedKeys.sharedKeychainGroup
-        try setData(data, forKey: key, service: bundleId, accessGroup: accessGroup)
+        try setData(data, forKey: key,
+                    service: SharedKeys.appBundleID,
+                    accessGroup: SharedKeys.sharedKeychainGroup)
     }
 
     func getBundleData(forKey key: String) throws -> Data? {
-        guard let bundleId = Bundle.main.bundleIdentifier else {
-            let error = KeychainError.unknown(message: "Unable to get bundle identifier")
-            logger.logE("KeychainManager", "Failed to get bundle identifier for key '\(key)': \(error.localizedDescription)")
-            throw error
-        }
-
-        let accessGroup = SharedKeys.sharedKeychainGroup
         do {
-            return try getData(forKey: key, service: bundleId, accessGroup: accessGroup)
+            return try getData(forKey: key,
+                               service: SharedKeys.appBundleID,
+                               accessGroup: SharedKeys.sharedKeychainGroup)
         } catch KeychainError.itemNotFound {
             return nil
         }
     }
 
     func deleteBundleItem(forKey key: String) throws {
-        guard let bundleId = Bundle.main.bundleIdentifier else {
-            let error = KeychainError.unknown(message: "Unable to get bundle identifier")
-            logger.logE("KeychainManager", "Failed to get bundle identifier for key '\(key)': \(error.localizedDescription)")
-            throw error
-        }
-
-        let accessGroup = SharedKeys.sharedKeychainGroup
-        try deleteItem(forKey: key, service: bundleId, accessGroup: accessGroup)
+        try deleteItem(forKey: key,
+                       service: SharedKeys.appBundleID,
+                       accessGroup: SharedKeys.sharedKeychainGroup)
     }
 
     func bundleExists(key: String) -> Bool {
-        guard let bundleId = Bundle.main.bundleIdentifier else {
-            return false
-        }
-
-        let accessGroup = SharedKeys.sharedKeychainGroup
-        return exists(key: key, service: bundleId, accessGroup: accessGroup)
+        return exists(key: key,
+                      service: SharedKeys.appBundleID,
+                      accessGroup: SharedKeys.sharedKeychainGroup)
     }
 
     // MARK: - Private Helper Methods
