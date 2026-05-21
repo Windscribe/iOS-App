@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WSNetDnsResolver : BridgeObject
 
 -(void)setDnsServers:(NSArray<NSString*>*)dnsServers;
--(WSNetCancelableCallback*)lookup:(NSString*)hostname requestId:(uint64_t)requestId callback:(void(^)(unsigned long long, NSString*, WSNetDnsRequestResult*))callback;
--(WSNetDnsRequestResult*)lookupBlocked:(NSString*)hostname;
+-(WSNetCancelableCallback*)lookup:(NSString*)hostname requestId:(uint64_t)requestId ipFamily:(int)ipFamily callback:(void(^)(unsigned long long, NSString*, WSNetDnsRequestResult*))callback;
+-(WSNetDnsRequestResult*)lookupBlocked:(NSString*)hostname ipFamily:(int)ipFamily;
 
 @end
 
