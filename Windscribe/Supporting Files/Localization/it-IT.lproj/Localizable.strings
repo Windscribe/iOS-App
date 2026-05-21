@@ -61,6 +61,7 @@
 "Auto" = "Automatico";
 "Auto-Secure" = "Protezione automatica";
 "Auto-Secure New Networks" = "Protezione automatica per le nuove reti";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "Scegli automaticamente il protocollo VPN o selezionane uno manualmente. NOTA: \"Protocollo preferito\" sostituirà questa impostazione.";
 "Automatically Secure any Network" = "Proteggi automaticamente qualsiasi rete";
 "Awww! This email already exists." = "Ahhh! Questo indirizzo email esiste già.";
 "Awww! This username is taken." = "Ahhh! Questo nome utente è già preso.";
@@ -229,7 +230,7 @@
 "Invalid 2FA code, please try again." = "Codice 2FA non valido, riprova.";
 "IP Stack" = "Stack IP";
 "IP/DNS-over-HTTPS/TLS" = "IP/DNS-over-HTTPS/TLS";
-"IPv4 Only" = "IPv4 Only";
+"IPv4 Only" = "Solo IPv4";
 "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!" = "ti sta invitando a iscriverti a Windscribe. Profornisci il loro nome utente al momento della registrazione ed entrambi riceverete 1 GB di dati gratuiti aggiunti ai vostri account. Se diventi professionista, diventeranno professionisti anche loro!";
 "Jobs" = "Offerte di lavoro";
 "Join our Discord community" = "Unisciti alla nostra comunità su Discord";

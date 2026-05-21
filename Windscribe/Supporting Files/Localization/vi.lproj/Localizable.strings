@@ -61,6 +61,7 @@
 "Auto" = "Tự động";
 "Auto-Secure" = "Tự động Bảo mật";
 "Auto-Secure New Networks" = "Tự động Bảo mật Mạng mới";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "Tự động chọn giao thức VPN hoặc chọn một giao thức theo cách thủ công. LƯU Ý: \"Giao thức Ưu tiên\" sẽ ghi đè cài đặt này.";
 "Automatically Secure any Network" = "Tự động bảo mật bất kỳ mạng nào";
 "Awww! This email already exists." = "Ôi! Email này đã tồn tại.";
 "Awww! This username is taken." = "Ôi! Tên người dùng này đã được sử dụng.";
@@ -229,7 +230,7 @@
 "Invalid 2FA code, please try again." = "Mã 2FA không hợp lệ, vui lòng thử lại.";
 "IP Stack" = "Ngăn xếp IP";
 "IP/DNS-over-HTTPS/TLS" = "IP/DNS-over-HTTPS/TLS";
-"IPv4 Only" = "IPv4 Only";
+"IPv4 Only" = "Chỉ IPv4";
 "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!" = "đang mời bạn tham gia Windscribe. Procung cấp tên người dùng của họ khi đăng ký và cả hai bạn sẽ nhận được 1gb dữ liệu miễn phí được thêm vào tài khoản của mình. Nếu bạn chuyên nghiệp, họ cũng sẽ chuyên nghiệp!";
 "Jobs" = "Công việc";
 "Join our Discord community" = "Tham gia cộng đồng Discord của chúng tôi";

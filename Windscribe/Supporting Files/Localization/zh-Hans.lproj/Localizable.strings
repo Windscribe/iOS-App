@@ -61,6 +61,7 @@
 "Auto" = "自动";
 "Auto-Secure" = "自动保护";
 "Auto-Secure New Networks" = "自动保护新网络";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "自动选择 VPN 协议，或手动选择一个。注意：“首选协议”将覆盖此设置。";
 "Automatically Secure any Network" = "自动保护任何网络";
 "Awww! This email already exists." = "哇！此电子邮箱已存在。";
 "Awww! This username is taken." = "哇！此用户名已被占用。";
@@ -229,7 +230,7 @@
 "Invalid 2FA code, please try again." = "无效的 2FA 验证码，请重试。";
 "IP Stack" = "IP 协议栈";
 "IP/DNS-over-HTTPS/TLS" = "IP/DNS-over-HTTPS/TLS";
-"IPv4 Only" = "IPv4 Only";
+"IPv4 Only" = "仅IPv4";
 "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!" = "邀请您加入Windscribe。 Pro在注册时提供他们的用户名，你们都将获得 1GB 免费数据添加到您的帐户中。如果你成为职业选手，他们也会成为职业选手！";
 "Jobs" = "工作";
 "Join our Discord community" = "加入我们的 Discord 社区";

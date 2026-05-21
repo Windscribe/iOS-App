@@ -61,6 +61,7 @@
 "Auto" = "自動";
 "Auto-Secure" = "自動セキュリティ";
 "Auto-Secure New Networks" = "新しいネットワークを自動で保護";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPNプロトコルを自動的に選択するか、手動で1つ選択します。注: \"優先プロトコル\" はこの設定を上書きします。";
 "Automatically Secure any Network" = "あらゆるネットワークを自動で保護";
 "Awww! This email already exists." = "ああ！このメールアドレスはすでに存在します。";
 "Awww! This username is taken." = "ああ！このユーザ名はすでに使われています。";
@@ -229,7 +230,7 @@
 "Invalid 2FA code, please try again." = "無効な2FAコードです。もう一度お試しください。";
 "IP Stack" = "IPスタック";
 "IP/DNS-over-HTTPS/TLS" = "IP/DN-OVER-HTTPS/TLS";
-"IPv4 Only" = "IPv4 Only";
+"IPv4 Only" = "IPv4のみ";
 "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!" = "Windscribe への参加を招待しています。 Proサインアップ時にユーザー名を入力すると、両方のアカウントに 1 GB の無料データが追加されます。あなたがプロになれば、彼らもプロになれるでしょう！";
 "Jobs" = "求人";
 "Join our Discord community" = "Discordコミュニティに参加";

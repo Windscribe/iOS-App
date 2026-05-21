@@ -61,6 +61,7 @@
 "Auto" = "Otomatik";
 "Auto-Secure" = "Otomatik Koruma";
 "Auto-Secure New Networks" = "Güvenlir Yeni Ağlar";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPN protokolünü otomatik olarak seçin veya manuel olarak bir tane seçin. NOT: \"Tercih Edilen Protokol\" bu ayarı geçersiz kılacaktır.";
 "Automatically Secure any Network" = "Herhangi bir ağı otomatik olarak güvenceye alın";
 "Awww! This email already exists." = "Bu email zaten mevcut.";
 "Awww! This username is taken." = "Bu kullanıcı adı zaten var.";
@@ -229,7 +230,7 @@
 "Invalid 2FA code, please try again." = "Geçersiz 2FA kodu, lütfen tekrar deneyin.";
 "IP Stack" = "IP Yığını";
 "IP/DNS-over-HTTPS/TLS" = "HTTPS/TLS üzerinden IP/DNS";
-"IPv4 Only" = "IPv4 Only";
+"IPv4 Only" = "Yalnızca IPv4";
 "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!" = "sizi Windscribe'e katılmaya davet ediyor. Prokayıt sırasında kullanıcı adlarını belirtin ve her ikiniz de hesaplarınıza 1 GB ücretsiz veri ekleyin. Sen profesyonel olursan, onlar da profesyonel olur!";
 "Jobs" = "İşler";
 "Join our Discord community" = "Discord topluluğumuza katılın";

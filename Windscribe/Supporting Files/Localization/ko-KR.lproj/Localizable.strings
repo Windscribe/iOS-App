@@ -61,6 +61,7 @@
 "Auto" = "자동";
 "Auto-Secure" = "자동 보안";
 "Auto-Secure New Networks" = "새로운 네트워크 자동 보안";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPN 프로토콜을 자동으로 선택하거나 수동으로 하나를 선택하세요. 참고: \"기본 프로토콜\"이 이 설정을 재정의합니다.";
 "Automatically Secure any Network" = "모든 네트워크를 자동으로 보호";
 "Awww! This email already exists." = "이런! 이미 존재하는 이메일입니다.";
 "Awww! This username is taken." = "이런! 이미 사용 중인 사용자 이름입니다.";
@@ -229,7 +230,7 @@
 "Invalid 2FA code, please try again." = "유효하지 않은 2FA 코드입니다. 다시 시도하세요.";
 "IP Stack" = "IP 스택";
 "IP/DNS-over-HTTPS/TLS" = "IP/DNS-over-HTTPS/TLS";
-"IPv4 Only" = "IPv4 Only";
+"IPv4 Only" = "IPv4만";
 "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!" = "Windscribe에 가입하도록 귀하를 초대합니다. Pro가입 시 사용자 이름을 제공하면 두 사람 모두 계정에 1GB의 무료 데이터가 추가됩니다. 당신이 프로가 되면 그들도 프로가 될 거예요!";
 "Jobs" = "채용";
 "Join our Discord community" = "Discord 커뮤니티에 참여하기";
