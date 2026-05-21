@@ -250,6 +250,39 @@ class LocationListRepositoryTests: XCTestCase {
         XCTAssertEqual(datacenter?.nick, city?.nickname)
     }
 
+    func testUpdateLocationsOrdersByGeographyInRepository() async throws {
+        mockAPIManager.mockLocationList = LocationsListModel(locations: [
+            makeLocation(id: 300, name: "Zimbabwe", sortOrder: 30),
+            makeLocation(id: 100, name: "Canada", sortOrder: 10),
+            makeLocation(id: 200, name: "France", sortOrder: 20),
+            makeLocation(id: 40, name: "Albania", sortOrder: 10)
+        ])
+
+        try await repository.updateLocations()
+
+        XCTAssertEqual(repository.currentLocationModels.map(\.id), [40, 100, 200, 300])
+        XCTAssertEqual(mockLocalDatabase.mockLocations?.map(\.id), [40, 100, 200, 300])
+    }
+
+    func testInitialCachedLocationsOrderByGeographyInRepository() {
+        mockLocalDatabase.mockLocations = [
+            makeLocation(id: 300, name: "Zimbabwe", sortOrder: 30),
+            makeLocation(id: 100, name: "Canada", sortOrder: 10),
+            makeLocation(id: 200, name: "France", sortOrder: 20),
+            makeLocation(id: 40, name: "Albania", sortOrder: 10)
+        ]
+
+        repository = LocationListRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: mockLocalDatabase,
+            logger: mockLogger,
+            antiCensorshipRepository: mockAntiCensorshipRepository,
+            preferences: mockPreferences
+        )
+
+        XCTAssertEqual(repository.currentLocationModels.map(\.id), [40, 100, 200, 300])
+    }
+
     func testFavouritsStartEmpty() async {
         // Then
         XCTAssertEqual(repository.favouriteListSubject.value.count, 0)
@@ -305,6 +338,18 @@ class LocationListRepositoryTests: XCTestCase {
 
 // MARK: - Helper Methods
 extension LocationListRepositoryTests {
+
+    private func makeLocation(id: Int, name: String, sortOrder: Int) -> LocationModel {
+        LocationModel(
+            id: id,
+            name: name,
+            countryCode: String(name.prefix(2)).uppercased(),
+            shortName: name,
+            sortOrder: sortOrder,
+            continent: "",
+            datacenters: []
+        )
+    }
 
     private func createMockSessionModel() -> SessionModel {
         let session = Session()

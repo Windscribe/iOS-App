@@ -154,12 +154,13 @@ class LocationListRepositoryImpl: LocationListRepository {
 
     private func loadInitialLocations(skipCustomNames: Bool = false) {
         if let locationObjects = localDatabase.getLocations(), !locationObjects.isEmpty {
+            let orderedLocations = sortLocationsByGeography(locationObjects)
             guard skipCustomNames else {
-                updateLocationModels(locationObjects)
+                updateLocationModels(orderedLocations)
                 return
             }
-            locationListSubject.send(locationObjects)
-            updateDatacenterList(from: locationObjects)
+            locationListSubject.send(orderedLocations)
+            updateDatacenterList(from: orderedLocations)
         } else if let deprecatedList = self.localDatabase.getServers(), !deprecatedList.isEmpty {
             saveLocationList(with: deprecatedList)
         }
@@ -172,18 +173,20 @@ class LocationListRepositoryImpl: LocationListRepository {
     }
 
     private func saveLocationList(with locations: [LocationModel], skipCustomNames: Bool = false) {
-        // Persist locations before applying custom names so the disk copy is the canonical shape.
-        localDatabase.saveLocations(locations: locations)
+        let orderedLocations = sortLocationsByGeography(locations)
 
-        logger.logI("LocationListRepositoryImpl", "Successfully updated \(locations.count) locations")
+        // Persist locations before applying custom names so the disk copy is the canonical shape.
+        localDatabase.saveLocations(locations: orderedLocations)
+
+        logger.logI("LocationListRepositoryImpl", "Successfully updated \(orderedLocations.count) locations")
 
         // Apply custom names (if any) and update subjects
         guard skipCustomNames else {
-            updateLocationModels(locations)
+            updateLocationModels(orderedLocations)
             return
         }
-        locationListSubject.send(locations)
-        updateDatacenterList(from: locations)
+        locationListSubject.send(orderedLocations)
+        updateDatacenterList(from: orderedLocations)
     }
 
     func updateLocations() async throws {
@@ -196,7 +199,7 @@ class LocationListRepositoryImpl: LocationListRepository {
 
             // Try to load from local database as fallback
             if let locationObjects = localDatabase.getLocations() {
-                updateLocationModels(locationObjects)
+                updateLocationModels(sortLocationsByGeography(locationObjects))
                 return
             } else {
                 throw error
@@ -351,7 +354,8 @@ class LocationListRepositoryImpl: LocationListRepository {
         logger.logI("LocationListRepository", "Stating merge of local and external servers")
         let regions = preferences.getCustomLocationsNames()
         if regions.isEmpty {
-            loadInitialLocations(skipCustomNames: true)
+            locationListSubject.send(locationList)
+            updateDatacenterList(from: locationList)
             return
         }
 
@@ -382,6 +386,20 @@ class LocationListRepositoryImpl: LocationListRepository {
             locationListSubject.send(mergedModels)
             updateDatacenterList(from: mergedModels)
             return
+        }
+    }
+
+    private func sortLocationsByGeography(_ locations: [LocationModel]) -> [LocationModel] {
+        locations.sorted { location1, location2 in
+            if location1.sortOrder != location2.sortOrder {
+                return location1.sortOrder < location2.sortOrder
+            }
+
+            if location1.name != location2.name {
+                return location1.name < location2.name
+            }
+
+            return location1.id < location2.id
         }
     }
 }
