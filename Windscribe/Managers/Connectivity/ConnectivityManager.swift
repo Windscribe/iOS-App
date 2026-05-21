@@ -32,7 +32,13 @@ class ConnectivityManagerImpl: ConnectivityManager {
     /// A real disconnect still propagates once the timer fires; a transient
     /// blip is superseded by the next emit and never reaches downstream.
     private static let connectedToNotConnectedDebounce: TimeInterval = 1.5
+
+    /// Debounces the brief Wi-Fi → Cellular → Wi-Fi sequence iOS can emit while
+    /// switching SSIDs. Without this, downstream reconnect logic can pick the
+    /// Cellular/global protocol before the destination Wi-Fi SSID is available.
+    private static let wifiToCellularHandoffDebounce: TimeInterval = 1.5
     private var pendingEmit: DispatchWorkItem?
+    private var pendingEmitToken: UUID?
 
     init(logger: FileLogger,
          bridgeAPI: WSNetBridgeAPIType) {
@@ -93,7 +99,14 @@ class ConnectivityManagerImpl: ConnectivityManager {
     private func scheduleEmit(_ appNetwork: AppNetwork) {
         pendingEmit?.cancel()
         pendingEmit = nil
+        pendingEmitToken = nil
         guard lastEvent != appNetwork else { return }
+
+        if Self.shouldDebounceWifiToCellularHandoff(previous: lastEvent, next: appNetwork) {
+            logger.logD("Connectivity", "Debouncing possible Wi-Fi to Cellular handoff: \(appNetwork.description)")
+            schedulePendingEmit(appNetwork, delay: Self.wifiToCellularHandoffDebounce)
+            return
+        }
 
         let wasConnected = lastEvent?.status == .connected
         if appNetwork.status == .connected || !wasConnected {
@@ -101,13 +114,29 @@ class ConnectivityManagerImpl: ConnectivityManager {
             return
         }
 
+        schedulePendingEmit(appNetwork, delay: Self.connectedToNotConnectedDebounce)
+    }
+
+    static func shouldDebounceWifiToCellularHandoff(previous: AppNetwork?, next: AppNetwork) -> Bool {
+        guard previous?.status == .connected, next.status == .connected else { return false }
+        return previous?.networkType == .wifi && next.networkType == .cellular
+    }
+
+    @MainActor
+    private func schedulePendingEmit(_ appNetwork: AppNetwork, delay: TimeInterval) {
+        let token = UUID()
+        pendingEmitToken = token
+
         let work = DispatchWorkItem { [weak self] in
-            self?.emit(appNetwork)
+            guard let self = self, self.pendingEmitToken == token else { return }
+            self.pendingEmit = nil
+            self.pendingEmitToken = nil
+            self.emit(appNetwork)
         }
         pendingEmit = work
 
         DispatchQueue.main.asyncAfter(
-            deadline: .now() + Self.connectedToNotConnectedDebounce,
+            deadline: .now() + delay,
             execute: work
         )
     }
