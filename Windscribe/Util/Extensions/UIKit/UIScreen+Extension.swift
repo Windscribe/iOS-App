@@ -11,12 +11,15 @@ import UIKit
 
 extension UIScreen {
     static var activeScreen: UIScreen {
-        guard let windowScene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene }).first else {
-            // Blow up loudly -- this would indicate the app didn't boot or didn't setup it's window properly.
-            fatalError("No active UIWindowScene found — ensure SceneDelegate is configured")
+        // Try to find an active window scene
+        if let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene }).first {
+            return windowScene.screen
         }
-        return windowScene.screen
+
+        // Fallback: When app is backgrounded, scenes can be disconnected
+        // Return main screen instead of crashing
+        return UIScreen.main
     }
 
     static var isSmallScreen: Bool {
