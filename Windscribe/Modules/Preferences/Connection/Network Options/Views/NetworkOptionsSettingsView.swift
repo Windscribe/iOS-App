@@ -30,7 +30,6 @@ struct NetworkSecurityView: View {
                 VStack(spacing: 14) {
                     if let entry = viewModel.autoSecureEntry {
                         MenuEntryView(item: entry,
-                                      isDarkMode: viewModel.isDarkMode,
                                       action: { actionType in
                             viewModel.entrySelected(entry, action: actionType)
                         })
@@ -44,7 +43,6 @@ struct NetworkSecurityView: View {
                                 .padding(.bottom, 8)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             MenuEntryView(item: entry,
-                                          isDarkMode: viewModel.isDarkMode,
                                           action: { actionType in
                                 viewModel.entrySelected(entry, action: actionType)
                             })
@@ -59,7 +57,6 @@ struct NetworkSecurityView: View {
                                 .padding(.bottom, 8)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             MenuEntryView(item: entry,
-                                          isDarkMode: viewModel.isDarkMode,
                                           action: { actionType in
                                 viewModel.entrySelected(entry, action: actionType)
                             })

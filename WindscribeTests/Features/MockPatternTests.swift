@@ -9,8 +9,8 @@
 //  `docs/PROJECT_NEO.md`. See "## Testing mocks" for the rationale.
 //
 //  Pattern 1 — struct mock with stored callbacks:
-//    See MockCredentialStoring / MockPreferencesReading in
-//    M3ServiceProtocolMockabilityTests.swift (the canonical in-tree example).
+//    See the per-feature mocks in WindscribeTests/Features/* (e.g.
+//    StubPreferencesReading in GeneralTests.swift).
 //
 //  Pattern 2 — actor mock for state:
 //    ActorMockCredentialStoring below is the canonical in-tree example.

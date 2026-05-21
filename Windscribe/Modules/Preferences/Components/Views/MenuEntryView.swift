@@ -11,25 +11,25 @@ import UniformTypeIdentifiers
 import Swinject
 
 struct MenuEntryView: View {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
     let item: any MenuEntryHeaderType
-    let isDarkMode: Bool
     let action: (MenuEntryActionResponseType) -> Void
 
-    init(item: any MenuEntryHeaderType, isDarkMode: Bool, action: @escaping (MenuEntryActionResponseType) -> Void) {
+    init(item: any MenuEntryHeaderType, action: @escaping (MenuEntryActionResponseType) -> Void) {
         self.item = item
         self.action = action
-        self.isDarkMode = isDarkMode
     }
 
     var body: some View {
         VStack {
             if item.action != nil || item.secondaryEntries.count != 0 {
-                MenuEntryInteractiveView(item: item, isDarkMode: isDarkMode, action: action)
+                MenuEntryInteractiveView(item: item, isDarkMode: lookAndFeel.isDarkMode, action: action)
             } else {
-                MenuEntryInfoView(item: item, title: item.title, isDarkMode: isDarkMode)
+                MenuEntryInfoView(item: item, title: item.title, isDarkMode: lookAndFeel.isDarkMode)
             }
         }
-        .background(Color.from(.backgroundColor, isDarkMode))
+        .background(Color.from(.backgroundColor, lookAndFeel.isDarkMode))
         .cornerRadius(12)
         .padding(.horizontal, 16)
     }

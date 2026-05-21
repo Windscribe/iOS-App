@@ -29,7 +29,6 @@ struct NetworkSettingsView: View {
                 VStack(spacing: 14) {
                     ForEach(viewModel.entries, id: \.self) { entry in
                         MenuEntryView(item: entry,
-                                      isDarkMode: viewModel.isDarkMode,
                                       action: { actionType in
                             viewModel.entrySelected(entry, action: actionType)
                         })

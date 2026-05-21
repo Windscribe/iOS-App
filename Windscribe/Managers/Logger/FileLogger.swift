@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol FileLogger {
+protocol FileLogger: Sendable {
     var logDirectory: URL? { get set }
     func logDeviceInfo()
     func getLogData() async throws -> String

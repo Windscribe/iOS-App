@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Combine
+@preconcurrency import Combine
 
 /// Observes app-wide look-and-feel state. The Neo-side surface used by feature
 /// modules; back this with a thin adapter over the legacy

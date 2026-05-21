@@ -29,6 +29,7 @@ protocol Preferences: Sendable {
     func getAllowLAN() -> AnyPublisher<Bool?, Never>
     func saveHapticFeedback(haptic: Bool)
     func getHapticFeedback() -> AnyPublisher<Bool?, Never>
+    func getHapticFeedbackSync() -> Bool
     func saveSelectedProtocol(selectedProtocol: String)
     func getSelectedProtocol() -> AnyPublisher<String?, Never>
     func saveSelectedPort(port: String)
@@ -37,6 +38,7 @@ protocol Preferences: Sendable {
     func getDarkMode() -> AnyPublisher<Bool?, Never>
     func saveShowServerNetLoad(show: Bool)
     func getShowServerNetLoad() -> AnyPublisher<Bool?, Never>
+    func getShowServerNetLoadSync() -> Bool
     func saveEgressProtocolPreference(value: String)
     func getEgressProtocolPreference() -> AnyPublisher<String?, Never>
     func getEgressProtocolPreferenceSync() -> String

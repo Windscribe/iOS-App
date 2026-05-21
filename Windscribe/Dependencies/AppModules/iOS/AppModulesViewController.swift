@@ -131,6 +131,13 @@ class ViewControllerModule: Assembly {
             ))
         }.inObjectScope(.transient)
 
+        container.register(AboutSettingsView.self) { r in
+            AboutSettingsView(
+                viewModel: AboutSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!))
+        }.inObjectScope(.transient)
+
         container.register(AccountSettingsView.self) { r in
             AccountSettingsView(
                 viewModel: AccountSettingsViewModelImpl(
@@ -284,13 +291,6 @@ class ViewControllerModule: Assembly {
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
                 )
-        }.inObjectScope(.transient)
-
-        container.register(AboutSettingsView.self) { r in
-            AboutSettingsView(
-                viewModel: AboutSettingsViewModelImpl(
-                    logger: r.resolve(FileLogger.self)!,
-                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!))
         }.inObjectScope(.transient)
 
         container.register(ScreenTestView.self) { r in

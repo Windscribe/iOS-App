@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Combine
+@preconcurrency import Combine
 
 enum PushNotificationActionType: String, CaseIterable {
     case userDowngraded = "user_downgraded"
@@ -24,7 +24,7 @@ enum PushNotificationActionType: String, CaseIterable {
     }
 }
 
-protocol PushNotificationManager {
+protocol PushNotificationManager: Sendable {
     func askForPushNotificationPermission()
     func handleSilentPushNotificationActions(payload: PushNotificationPayload)
     func addPushNotification(notificationPayload: PushNotificationPayload?)

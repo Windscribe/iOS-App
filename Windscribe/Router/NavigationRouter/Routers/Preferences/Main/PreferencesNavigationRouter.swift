@@ -19,7 +19,11 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
     func createView(for route: PreferencesRouteID) -> AnyView {
         switch route {
         case .general:
-            return AnyView(Assembler.resolve(GeneralSettingsView.self))
+            if #available(iOS 17.0, *) {
+                return AnyView(GeneralScreen())
+            } else {
+                return AnyView(Assembler.resolve(GeneralSettingsView.self))
+            }
         case .account:
             return AnyView(Assembler.resolve(AccountSettingsView.self))
         case .connection:
@@ -33,9 +37,6 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
         case .help:
             return AnyView(Assembler.resolve(HelpSettingsView.self))
         case .about:
-            // iOS 17+ uses the new SwiftUI/@Observable AboutScreen consuming
-            // services via @Environment values. iOS 15/16 keeps the legacy
-            // path until the floor lifts in M1. Both behave identically.
             if #available(iOS 17.0, *) {
                 return AnyView(AboutScreen())
             } else {

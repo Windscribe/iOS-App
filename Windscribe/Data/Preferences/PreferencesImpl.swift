@@ -44,7 +44,7 @@ class PreferencesImpl: Preferences {
     }
 
     func getLanguageManagerSelectedLanguage() -> AnyPublisher<String?, Never> {
-        return observeKey(SharedKeys.languageManagerSelectedLanguage, type: String.self, defaultValue: Languages.english.rawValue)
+        return observeKey(SharedKeys.languageManagerSelectedLanguage, type: String.self, defaultValue: Languages.english.name)
     }
 
     func getLanguageManagerLanguage() -> String? {
@@ -328,6 +328,10 @@ class PreferencesImpl: Preferences {
         return observeKey(SharedKeys.hapticFeedback, type: Bool.self, defaultValue: DefaultValues.hapticFeedback)
     }
 
+    func getHapticFeedbackSync() -> Bool {
+        getBool(key: SharedKeys.hapticFeedback)
+    }
+
     func saveCustomDNSValue(value: DNSValue) {
         saveObject(object: value, forKey: SharedKeys.connectedDNSValue)
     }
@@ -374,6 +378,10 @@ class PreferencesImpl: Preferences {
 
     func getShowServerNetLoad() -> AnyPublisher<Bool?, Never> {
         return observeKey(SharedKeys.serverNetLoad, type: Bool.self, defaultValue: DefaultValues.showServerNetLoad)
+    }
+
+    func getShowServerNetLoadSync() -> Bool {
+        getBool(key: SharedKeys.serverNetLoad)
     }
 
     func saveAdvanceParams(params: String) {

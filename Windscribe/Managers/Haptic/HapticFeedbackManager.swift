@@ -19,15 +19,17 @@ enum HapticFeedbackLevel {
     case rigid
 }
 
-protocol HapticFeedbackManager {
+protocol HapticFeedbackManager: Sendable {
+    var hapticFeedbackEnabled: Bool { get }
     func run(level: HapticFeedbackLevel)
 }
 
 class HapticFeedbackManagerImpl: HapticFeedbackManager {
     private let preferences: Preferences
     private let logger: FileLogger
-    private var hapticFeedback = true
     private var cancellables = Set<AnyCancellable>()
+
+    var hapticFeedbackEnabled = true
 
     init(preferences: Preferences, logger: FileLogger) {
         self.preferences = preferences
@@ -39,14 +41,14 @@ class HapticFeedbackManagerImpl: HapticFeedbackManager {
         preferences.getHapticFeedback()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
-                self?.hapticFeedback = data ?? true
+                self?.hapticFeedbackEnabled = data ?? true
             }
             .store(in: &cancellables)
     }
 
     func run(level: HapticFeedbackLevel) {
         #if os(iOS)
-        if hapticFeedback {
+        if hapticFeedbackEnabled {
             let style: UIImpactFeedbackGenerator.FeedbackStyle
             switch level {
             case .light:

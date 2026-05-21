@@ -10,7 +10,7 @@ import Combine
 import Foundation
 import UIKit
 
-protocol LanguageManager {
+protocol LanguageManager: Sendable {
     var activelanguage: CurrentValueSubject<Languages, Never> { get }
     func setAppLanguage()
     func setLanguage(language: Languages)

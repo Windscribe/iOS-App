@@ -173,6 +173,8 @@ class MockPreferences: Preferences {
         return Just(nil).eraseToAnyPublisher()
     }
 
+    func getHapticFeedbackSync() -> Bool { false }
+
     func saveSelectedProtocol(selectedProtocol: String) {
         mockSelectedProtocol.send(selectedProtocol)
     }
@@ -194,6 +196,8 @@ class MockPreferences: Preferences {
     func getShowServerNetLoad() -> AnyPublisher<Bool?, Never> {
         return Just(nil).eraseToAnyPublisher()
     }
+
+    func getShowServerNetLoadSync() -> Bool { false }
 
     func saveDarkMode(darkMode: Bool) {
         mockDarkMode = darkMode

@@ -9,7 +9,6 @@
 import SwiftUI
 import Swinject
 
-@available(iOS 17.0, *)
 extension EnvironmentValues {
     /// Look-and-feel observation surface (dark-mode state + updates).
     /// Default: adapter wrapping the Swinject-resolved legacy repository.
@@ -40,8 +39,34 @@ extension EnvironmentValues {
         legacy: Assembler.resolve(Preferences.self)
     )
 
+    /// Sync write surface over the high-frequency `Preferences` writes Neo
+    /// features need today. Grows per-feature.
+    @Entry var preferencesWriting: any PreferencesWriting = LegacyPreferencesWriter(
+        legacy: Assembler.resolve(Preferences.self)
+    )
+
     /// Active user session + session-update stream.
     @Entry var sessionProviding: any SessionProviding = LegacySessionProvider(
         legacy: Assembler.resolve(UserSessionRepository.self)
+    )
+
+    /// Active language + update stream.
+    @Entry var languageStoring: any LanguageStoring = LegacyLanguageStore(
+        legacy: Assembler.resolve(LanguageManager.self)
+    )
+
+    /// Logger.
+    @Entry var logger: any LogStoring = LegacyLogStore(
+        legacy: Assembler.resolve(FileLogger.self)
+    )
+
+    /// Push Notifications actions.
+    @Entry var pushNotifications: any PushNotificationManaging = LegacyPushNotificationManager(
+        legacy: Assembler.resolve(PushNotificationManager.self)
+    )
+
+    /// Haptic Feedback actions.
+    @Entry var hapticFeedback: any HapticFeedbacking = LegacyHapticFeedbackManager(
+        legacy: Assembler.resolve(HapticFeedbackManager.self)
     )
 }
