@@ -138,7 +138,8 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
 
                 updateSelectedWgParam()
             } catch {
-                logger.logI("UnblockWgParamsRepository", "Failed Refreshing wg unblock params with error: \(error)")
+                logger.logE("UnblockWgParamsRepository", "Failed Refreshing wg unblock params with error: \(error)")
+                isRefreshing = false
             }
             // Will only allow for new refresh after one minute in case the user
             // switches between background and foreground multiple times
