@@ -58,9 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
                 do {
                     _ = try await self.apiManager.recordInstall(platform: "ios")
-                    self.logger.logD("AppDelegate", "Successfully recorded new install.")
+                    self.logger.logI("AppDelegate", "RecordInstall was successfully recorded new install.")
                 } catch {
-                    self.logger.logE("AppDelegate", "Failed to record new install: \(error)")
+                    self.logger.logE("AppDelegate", "RecordInstall failed to record new install: \(error)")
                 }
             }
         }
