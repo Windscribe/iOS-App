@@ -194,37 +194,30 @@ extension ConfigurationsManager {
                                    proto: String,
                                    port: String,
                                    vpnSettings: VPNUserSettings) async throws -> VPNConfiguration? {
-
-        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<VPNConfiguration?, Error>) in
-            var hasResumed = false
-            var cancelableTask: Task<(), Never>?
-
-            let timeoutTask = Task {
+        try await withThrowingTaskGroup(of: VPNConfiguration?.self) { group in
+            // Add the build task
+            group.addTask {
+                try await self.buildConfig(location: locationID,
+                                           proto: proto,
+                                           port: port,
+                                           userSettings: vpnSettings)
+            }
+            
+            // Add the timeout task
+            group.addTask {
                 try await Task.sleep(nanoseconds: 30_000_000_000)
-                if !hasResumed {
-                    hasResumed = true
-                    cancelableTask?.cancel()
-                    continuation.resume(returning: nil)
-                }
+                throw VPNConfigurationErrors.connectionTimeout
             }
-
-            cancelableTask = Task {
-                do {
-                    let config = try await self.buildConfig(location: locationID,
-                                                             proto: proto,
-                                                             port: port,
-                                                             userSettings: vpnSettings)
-                    if !hasResumed {
-                        hasResumed = true
-                        timeoutTask.cancel()
-                        continuation.resume(returning: config)
-                    }
-                } catch {
-                    if let error = error as? Errors {
-                        continuation.resume(throwing: error)
-                    }
-                }
+            
+            // Get the first result (whichever completes first)
+            guard let result = try await group.next() else {
+                throw VPNConfigurationErrors.connectionTimeout
             }
+            
+            // Cancel remaining tasks
+            group.cancelAll()
+            
+            return result
         }
     }
 
