@@ -548,11 +548,11 @@ class PreferencesImpl: Preferences {
     }
 
     func getEgressProtocolPreference() -> AnyPublisher<String?, Never> {
-        return observeKey(SharedKeys.ipStackEgressKey, type: String.self, defaultValue: DefaultValues.ipv4Only)
+        return observeKey(SharedKeys.ipStackEgressKey, type: String.self, defaultValue: DefaultValues.ipStack)
     }
 
     func getEgressProtocolPreferenceSync() -> String {
-        return sharedDefault?.string(forKey: SharedKeys.ipStackEgressKey) ?? DefaultValues.ipv4Only
+        return sharedDefault?.string(forKey: SharedKeys.ipStackEgressKey) ?? DefaultValues.ipStack
     }
 
     func saveIngressProtocolPreference(value: String) {
@@ -560,11 +560,11 @@ class PreferencesImpl: Preferences {
     }
 
     func getIngressProtocolPreference() -> AnyPublisher<String?, Never> {
-        return observeKey(SharedKeys.ipStackIngressKey, type: String.self, defaultValue: DefaultValues.ipv4Only)
+        return observeKey(SharedKeys.ipStackIngressKey, type: String.self, defaultValue: DefaultValues.ipStack)
     }
 
     func getIngressProtocolPreferenceSync() -> String {
-        return sharedDefault?.string(forKey: SharedKeys.ipStackIngressKey) ?? DefaultValues.ipv4Only
+        return sharedDefault?.string(forKey: SharedKeys.ipStackIngressKey) ?? DefaultValues.ipStack
     }
 
     // Unblock WG Params

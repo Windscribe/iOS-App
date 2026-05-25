@@ -77,8 +77,8 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var autoSecure = CurrentValueSubject<Bool, Never>(DefaultValues.autoSecureNewNetworks)
     private var connectionMode = ConnectionModeType.defaultValue()
     private var connectedDNS = ConnectedDNSType.defaultValue()
-    private var egressProtocol = CurrentValueSubject<String, Never>(DefaultValues.ipv4Only)
-    private var ingressProtocol = CurrentValueSubject<String, Never>(DefaultValues.ipv4Only)
+    private var egressProtocol = CurrentValueSubject<String, Never>(DefaultValues.ipStack)
+    private var ingressProtocol = CurrentValueSubject<String, Never>(DefaultValues.ipStack)
 
     let isCircumventCensorshipEnabled = CurrentValueSubject<Bool, Never>(DefaultValues.circumventCensorship)
     let isDarkMode: CurrentValueSubject<Bool, Never>
@@ -134,10 +134,10 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             self?.isCircumventCensorshipEnabled.send(data)
         }.store(in: &cancellables)
         preferences.getEgressProtocolPreference().sink { [weak self] data in
-            self?.egressProtocol.send(data ?? DefaultValues.ipv4Only)
+            self?.egressProtocol.send(data ?? DefaultValues.ipStack)
         }.store(in: &cancellables)
         preferences.getIngressProtocolPreference().sink { [weak self] data in
-            self?.ingressProtocol.send(data ?? DefaultValues.ipv4Only)
+            self?.ingressProtocol.send(data ?? DefaultValues.ipStack)
         }.store(in: &cancellables)
 
         let connectionModePublisher = preferences.getConnectionMode()

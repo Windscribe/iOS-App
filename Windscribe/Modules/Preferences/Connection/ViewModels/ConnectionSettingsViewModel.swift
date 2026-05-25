@@ -32,8 +32,8 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     private var connectionMode = DefaultValues.connectionMode
     private var connectedDNS = DefaultValues.connectedDNS
 
-    private var egressProtocol = DefaultValues.ipv4Only
-    private var ingressProtocol = DefaultValues.ipv4Only
+    private var egressProtocol = DefaultValues.ipStack
+    private var ingressProtocol = DefaultValues.ipStack
 
     // MARK: - Dependencies
     private let preferences: Preferences
@@ -121,7 +121,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             .receive(on: DispatchQueue.main)
             .sink { [weak self] preference in
                 guard let self = self else { return }
-                self.egressProtocol = preference ?? Fields.Values.ipv4Only
+                self.egressProtocol = preference ?? DefaultValues.ipStack
                 self.reloadItems()
             }
             .store(in: &cancellables)
@@ -130,7 +130,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             .receive(on: DispatchQueue.main)
             .sink { [weak self] preference in
                 guard let self = self else { return }
-                self.ingressProtocol = preference ?? Fields.Values.ipv4Only
+                self.ingressProtocol = preference ?? DefaultValues.ipStack
             }
             .store(in: &cancellables)
     }

@@ -247,6 +247,32 @@ class PreferencesTests: XCTestCase {
         XCTAssertEqual(portSync, "", "Non-optional getSelectedPortSync should return empty string")
     }
 
+    func testIPStackDefaultsToAuto() {
+        let preferences = mockContainer.resolve(Preferences.self)!
+
+        let egressExpectation = expectation(description: "Default egress IP stack")
+        preferences.getEgressProtocolPreference()
+            .first()
+            .sink { preference in
+                XCTAssertEqual(preference, DefaultValues.ipStack)
+                egressExpectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        let ingressExpectation = expectation(description: "Default ingress IP stack")
+        preferences.getIngressProtocolPreference()
+            .first()
+            .sink { preference in
+                XCTAssertEqual(preference, DefaultValues.ipStack)
+                ingressExpectation.fulfill()
+            }
+            .store(in: &cancellables)
+
+        XCTAssertEqual(preferences.getEgressProtocolPreferenceSync(), DefaultValues.ipStack)
+        XCTAssertEqual(preferences.getIngressProtocolPreferenceSync(), DefaultValues.ipStack)
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
     func testLocationPreferences() {
         let preferences = mockContainer.resolve(Preferences.self)!
         let testLocationId = "test-location-123"

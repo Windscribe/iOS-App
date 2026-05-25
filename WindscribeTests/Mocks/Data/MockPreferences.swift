@@ -38,7 +38,7 @@ class MockPreferences: Preferences {
     var mockWireGuardHashedCIDRv6: [String]?
     var mockWireGuardAllowedIPsV6: String?
     var mockWireGuardAddressV6: String?
-    var mockEgressProtocolPreference: String = DefaultValues.ipv4Only
+    var mockEgressProtocolPreference: String = DefaultValues.ipStack
     var mockLastSelectedPinnedIp: String?
     var mockUnblockWgParams: Windscribe.UnblockWgParams?
     var disconnectReason: Windscribe.DisconnectReason?
@@ -827,11 +827,11 @@ class MockPreferences: Preferences {
     }
 
     func getIngressProtocolPreference() -> AnyPublisher<String?, Never> {
-        return Just(DefaultValues.ipv4Only).eraseToAnyPublisher()
+        return Just(DefaultValues.ipStack).eraseToAnyPublisher()
     }
 
     func getIngressProtocolPreferenceSync() -> String {
-        return DefaultValues.ipv4Only
+        return DefaultValues.ipStack
     }
 
     func saveLastSelectedPinnedIp(with pinnedIP: String) {
