@@ -101,6 +101,7 @@ class StaticIPListTableViewDataSourceImpl: WSTableViewDataSource, StaticIPListTa
         ?? StaticIPTableViewCell(
             style: .default,
             reuseIdentifier: ReuseIdentifiers.staticIPCellReuseIdentifier)
+        guard indexPath.row < staticIPs.count else { return cell }
         let staticIP = staticIPs[indexPath.row]
 
         var latency = -1
@@ -124,6 +125,7 @@ class StaticIPListTableViewDataSourceImpl: WSTableViewDataSource, StaticIPListTa
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row < staticIPs.count else { return }
         let staticIP = staticIPs[indexPath.row]
         delegate?.setSelectedStaticIP(staticIP: staticIP)
     }

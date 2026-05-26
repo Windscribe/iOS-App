@@ -97,6 +97,7 @@ class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConf
             ?? CustomConfigCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.customConfigCellReuseIdentifier)
+        guard indexPath.row < customConfigs.count else { return cell }
 
         let customConfig = customConfigs[indexPath.row]
 
@@ -120,6 +121,7 @@ class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConf
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row < customConfigs.count else { return }
         let customConfig = customConfigs[indexPath.row]
         logicDelegate?.setSelectedCustomConfig(customConfig: customConfig)
     }
@@ -141,6 +143,7 @@ class CustomConfigListTableViewDataSourceImpl: WSTableViewDataSource, CustomConf
 
     func tableView(_: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
+        guard indexPath.row < customConfigs.count else { return nil }
         let customConfig = customConfigs[indexPath.row]
 
         let deleteAction = SwipeAction(style: .destructive, title: nil) { _, _ in

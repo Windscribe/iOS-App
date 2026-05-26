@@ -119,7 +119,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
         ?? FavNodeTableViewCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
-        guard !favList.isEmpty else { return cell }
+        guard indexPath.row < favList.count else { return cell }
         let favourite = favList[indexPath.row]
         var latency = -1
         if let randomServer = locationListRepository.getRandomServer(for: favourite.datacenterModel.id),
@@ -152,6 +152,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.row < favList.count else { return }
         let favourite = favList[indexPath.row]
         delegate?.setSelectedFavourite(favourite: favourite.datacenterModel)
     }
