@@ -94,6 +94,7 @@ class LifecycleManager: LifecycleManagerType {
     /// Fresh app launch.
     func onAppStart() {
         Task {
+            await recoverFromAppUpdateIfNeeded()
             await disconnectToUpdateSession()
             try? await connectivity.awaitNetwork(maxTime: 1.0)
             if preferences.getSessionAuthHash() != nil && connectivity.internetConnectionAvailable() {
@@ -113,6 +114,15 @@ class LifecycleManager: LifecycleManagerType {
         guard let lastCheck = preferences.getLastUpdateCheckTimestamp() else { return true }
         let oneDay: Double = 24 * 3600
         return Date().timeIntervalSince1970 - lastCheck >= oneDay
+    }
+
+    private func recoverFromAppUpdateIfNeeded() async {
+        guard preferences.getTunnelStoppedForAppUpdate() else { return }
+
+        logger.logI("LifecycleManager", "Recovering VPN profiles after app update.")
+        await configManager.reloadManagers()
+        await vpnManager.resetProfiles()
+        preferences.saveTunnelStoppedForAppUpdate(status: false)
     }
 
     private func checkForKillSwitch() {

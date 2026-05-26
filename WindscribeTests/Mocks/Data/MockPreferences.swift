@@ -44,6 +44,7 @@ class MockPreferences: Preferences {
     var disconnectReason: Windscribe.DisconnectReason?
     var userStatus: Bool?
     var mockPrivacyPopupAccepted: Bool? = false
+    var mockTunnelStoppedForAppUpdate = false
 
     // WireGuard configuration storage
     var mockWireGuardAddress: String?
@@ -388,6 +389,14 @@ class MockPreferences: Preferences {
 
     func getLastUpdateCheckTimestamp() -> Double? {
         return nil
+    }
+
+    func saveTunnelStoppedForAppUpdate(status: Bool) {
+        mockTunnelStoppedForAppUpdate = status
+    }
+
+    func getTunnelStoppedForAppUpdate() -> Bool {
+        return mockTunnelStoppedForAppUpdate
     }
 
     func clearUserDefaultsSessionAuth() {

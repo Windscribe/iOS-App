@@ -171,8 +171,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         }
     }
 
-    override func stopTunnel(with _: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        logger.logI("PacketTunnelProvider", "Stopping WireGuard tunnel.", flushImmediately: true)
+    override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
+        logger.logI("PacketTunnelProvider", "Stopping WireGuard tunnel with reason \(reason.rawValue).", flushImmediately: true)
+        if reason == .appUpdate {
+            preferences.saveTunnelStoppedForAppUpdate(status: true)
+        }
         adapter.stop { error in
             ErrorNotifier.removeLastErrorFile()
 

@@ -115,6 +115,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         logger.logI("PacketTunnelProvider", "Stopping OpenVPNAdapter with \(reason)")
+        if reason == .appUpdate {
+            preferences.saveTunnelStoppedForAppUpdate(status: true)
+        }
         stopHandler = completionHandler
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()

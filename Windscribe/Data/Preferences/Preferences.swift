@@ -87,6 +87,8 @@ protocol Preferences: Sendable {
     func getLastUpdatePromptTimestamp() -> Double?
     func saveLastUpdateCheckTimestamp(timeStamp: Double?)
     func getLastUpdateCheckTimestamp() -> Double?
+    func saveTunnelStoppedForAppUpdate(status: Bool)
+    func getTunnelStoppedForAppUpdate() -> Bool
     func saveCountryOverrride(value: String?)
     func getCountryOverride() -> String?
     func getLanguageManagerLanguage() -> String?

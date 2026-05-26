@@ -211,6 +211,14 @@ class PreferencesImpl: Preferences {
         return getDouble(forKey: SharedKeys.lastUpdateCheckTimestamp)
     }
 
+    func saveTunnelStoppedForAppUpdate(status: Bool) {
+        setBool(status, forKey: SharedKeys.tunnelStoppedForAppUpdate)
+    }
+
+    func getTunnelStoppedForAppUpdate() -> Bool {
+        return getBool(key: SharedKeys.tunnelStoppedForAppUpdate)
+    }
+
     func getConnectionCount() -> Int? {
         return getInt(forKey: SharedKeys.connectionCount)
     }
