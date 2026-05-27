@@ -601,6 +601,11 @@
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
 		9223E1F32FB22934007252B6 /* MockPatternTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E1F22FB22934007252B6 /* MockPatternTests.swift */; };
 		9223E2092FB3C1DC007252B6 /* WireguardIPManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */; };
+		9223E2282FC4AD11007252B6 /* DeviceAttesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2272FC4AD11007252B6 /* DeviceAttesting.swift */; };
+		9223E22A2FC4AD19007252B6 /* DCDeviceAttestation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2292FC4AD19007252B6 /* DCDeviceAttestation.swift */; };
+		9223E2282FC4AD11007252C7 /* DeviceAttesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2272FC4AD11007252B6 /* DeviceAttesting.swift */; };
+		9223E22A2FC4AD19007252C8 /* DCDeviceAttestation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2292FC4AD19007252B6 /* DCDeviceAttestation.swift */; };
+		9223E22D2FC4AD33007252B6 /* DeviceAttestingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E22C2FC4AD33007252B6 /* DeviceAttestingTests.swift */; };
 		927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		9279914B2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
 		9279914C2F86A2D6000BB9D0 /* GeneratedCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */; };
@@ -1936,6 +1941,9 @@
 		59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPressLoginCodeResponse.swift; sourceTree = "<group>"; };
 		9223E1F22FB22934007252B6 /* MockPatternTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPatternTests.swift; sourceTree = "<group>"; };
 		9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardIPManagerTests.swift; sourceTree = "<group>"; };
+		9223E2272FC4AD11007252B6 /* DeviceAttesting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAttesting.swift; sourceTree = "<group>"; };
+		9223E2292FC4AD19007252B6 /* DCDeviceAttestation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCDeviceAttestation.swift; sourceTree = "<group>"; };
+		9223E22C2FC4AD33007252B6 /* DeviceAttestingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAttestingTests.swift; sourceTree = "<group>"; };
 		9279914A2F86A2D6000BB9D0 /* GeneratedCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedCredential.swift; sourceTree = "<group>"; };
 		9279914D2F86C638000BB9D0 /* AuthActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthActionButton.swift; sourceTree = "<group>"; };
 		9279914F2F86C74F000BB9D0 /* MockHashAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHashAuthManager.swift; sourceTree = "<group>"; };
@@ -3781,6 +3789,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9223E2262FC4AD07007252B6 /* DeviceCheck */ = {
+			isa = PBXGroup;
+			children = (
+				9223E2292FC4AD19007252B6 /* DCDeviceAttestation.swift */,
+			);
+			path = DeviceCheck;
+			sourceTree = "<group>";
+		};
+		9223E22B2FC4AD2A007252B6 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				9223E22C2FC4AD33007252B6 /* DeviceAttestingTests.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		92890E1D2F7EF189002EAB44 /* HashAuth */ = {
 			isa = PBXGroup;
 			children = (
@@ -3882,6 +3906,7 @@
 			isa = PBXGroup;
 			children = (
 				92C985992FA3A74900326D64 /* Protocols */,
+				9223E2262FC4AD07007252B6 /* DeviceCheck */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3909,6 +3934,7 @@
 				92C985AC2FABBB3E00326D64 /* ServerProviding.swift */,
 				92C985AE2FABBB4A00326D64 /* CredentialStoring.swift */,
 				92C985B22FABBB8300326D64 /* SessionProviding.swift */,
+				9223E2272FC4AD11007252B6 /* DeviceAttesting.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -4129,6 +4155,7 @@
 				F434A1B22D834A3D0059415F /* SampleData */,
 				AF018E1A21B1AA2D00B225FF /* Info.plist */,
 				92C985A22FA3A78A00326D64 /* Features */,
+				9223E22B2FC4AD2A007252B6 /* Services */,
 			);
 			path = WindscribeTests;
 			sourceTree = "<group>";
@@ -7101,6 +7128,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9223E2282FC4AD11007252C7 /* DeviceAttesting.swift in Sources */,
+				9223E22A2FC4AD19007252C8 /* DCDeviceAttestation.swift in Sources */,
 				1E6610A22E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */,
 				59FC74292C5155CB00021CD1 /* VPNManager+ConnectionStatus.swift in Sources */,
 				1E8C8F382C65000800CBFDC5 /* ConnectionsViewModel.swift in Sources */,
@@ -7650,6 +7679,7 @@
 				F485CBC12D4D672D0063EA3A /* UIWindow+Extension.swift in Sources */,
 				1E0492F92F51CDC40016B11F /* APIManager+Locations.swift in Sources */,
 				C5A930F92B45A57B0001CFA0 /* FileLoggerImpl.swift in Sources */,
+				9223E22A2FC4AD19007252B6 /* DCDeviceAttestation.swift in Sources */,
 				C580FE1A2B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift in Sources */,
 				92B7B56A2F8D5952006B69DF /* CheckUpdateRepository.swift in Sources */,
 				59C311612BC73990004B16B3 /* ProtocolSwitchRouter.swift in Sources */,
@@ -7663,6 +7693,7 @@
 				F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */,
 				F4433D052E830A340012EA34 /* KeychainManager.swift in Sources */,
 				F49C45BE2DCD304E007E5EF1 /* ReferForDataSettingsView.swift in Sources */,
+				9223E2282FC4AD11007252B6 /* DeviceAttesting.swift in Sources */,
 				AF443D6D22C170FD004986DA /* ImageButton.swift in Sources */,
 				1EB910A22F9F791E00D04943 /* PreferencesImpl+Utils.swift in Sources */,
 				C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */,
@@ -8138,6 +8169,7 @@
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				92B7B5CA2F92E38B006B69DF /* SuggestedPortsRecordTests.swift in Sources */,
 				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,
+				9223E22D2FC4AD33007252B6 /* DeviceAttestingTests.swift in Sources */,
 				F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */,
 				1E0492B02F462A030016B11F /* MockWireguardIPManager.swift in Sources */,
 				F4B4C1ED2EA023AE0024D824 /* NotificationRepositoryTests.swift in Sources */,

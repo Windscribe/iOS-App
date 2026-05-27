@@ -51,12 +51,16 @@ class Network: Assembly {
             ConnectivityManagerImpl(logger: r.resolve(FileLogger.self)!,
                                     bridgeAPI: r.resolve(WSNetBridgeAPIType.self)!)
         }.inObjectScope(.userScope)
+        container.register((any DeviceAttesting).self) { _ in
+            DCDeviceAttestation()
+        }.inObjectScope(.container)
         container.register(APIManager.self) { r in
             APIManagerImpl(api: r.resolve(WSNetServerAPIType.self)!,
                            bridgeApi: r.resolve(WSNetBridgeAPIType.self)!,
                            logger: r.resolve(FileLogger.self)!,
                            apiUtil: r.resolve(APIUtilService.self)!,
-                           preferences: r.resolve(Preferences.self)!)
+                           preferences: r.resolve(Preferences.self)!,
+                           deviceAttesting: r.resolve((any DeviceAttesting).self)!)
         }.initCompleted { r, apiManager in
             // Note: Api manager and user repository both have circular dependency on each other.
             (apiManager as? APIManagerImpl)?.userSessionRepository = r.resolve(UserSessionRepository.self)

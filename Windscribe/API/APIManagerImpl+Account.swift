@@ -45,6 +45,8 @@ extension APIManagerImpl {
                 captchaTrailX: [CGFloat],
                 captchaTrailY: [CGFloat]) async throws -> SessionModel {
 
+        let attestationToken = (try? await deviceAttesting.generateToken()) ?? ""
+
         return try await apiUtil.makeApiCall(modalType: SessionModel.self) { [weak self] completion in
             guard let self = self else {
                 return nil
@@ -60,6 +62,7 @@ extension APIManagerImpl {
                 captchaSolution: captchaSolution,
                 captchaTrailX: captchaTrailX.asNSNumberArray,
                 captchaTrailY: captchaTrailY.asNSNumberArray,
+                attestationToken: attestationToken,
                 callback: completion
             )
         }
@@ -92,18 +95,20 @@ extension APIManagerImpl {
     }
 
     func signUpUsingToken(token: String) async throws -> SessionModel {
+        let attestationToken = (try? await deviceAttesting.generateToken()) ?? ""
         return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
-            self.api.signup(usingToken: token, callback: completion)
+            self.api.signup(usingToken: token, attestationToken: attestationToken, callback: completion)
         }
     }
 
     func ssoSession(token: String) async throws -> SSOSession {
+        let attestationToken = (try? await deviceAttesting.generateToken()) ?? ""
         return try await apiUtil.makeApiCall(modalType: SSOSession.self) {  [weak self] completion in
             guard let self = self else {
                 return nil
             }
 
-            return self.api.sso(SSOSessionType.apple.ssoID, token: token, callback: completion)
+            return self.api.sso(SSOSessionType.apple.ssoID, token: token, attestationToken: attestationToken, callback: completion)
         }
     }
 

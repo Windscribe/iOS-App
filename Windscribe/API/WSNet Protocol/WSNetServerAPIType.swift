@@ -45,12 +45,15 @@ protocol WSNetServerAPIType {
                 captchaSolution: String,
                 captchaTrailX: [NSNumber],
                 captchaTrailY: [NSNumber],
+                attestationToken: String,
                 callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     // swiftlint:enable function_parameter_count
     func signup(usingToken token: String,
+                attestationToken: String,
                 callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     func sso(_ provider: String,
              token: String,
+             attestationToken: String,
              callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     func authTokenLogin(_ username: String,
                         useAsciiCaptcha: Bool,

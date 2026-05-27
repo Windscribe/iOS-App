@@ -69,4 +69,8 @@ extension EnvironmentValues {
     @Entry var hapticFeedback: any HapticFeedbacking = LegacyHapticFeedbackManager(
         legacy: Assembler.resolve(HapticFeedbackManager.self)
     )
+
+    /// Device attestation surface (DeviceCheck tokens for backend-side device
+    /// quota / fraud signals). Default: production `DCDeviceAttestation`.
+    @Entry var deviceAttesting: any DeviceAttesting = DCDeviceAttestation()
 }
