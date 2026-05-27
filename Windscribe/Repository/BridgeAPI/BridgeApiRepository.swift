@@ -76,7 +76,6 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                     } else {
                         self.bridgeAPI.setCurrentHost("")
                     }
-                    self.bridgeAPI.setIgnoreSslErrors(true)
                     self.bridgeAPI.setConnectedState(true)
                     Task {
                         // we need to wait on the first time, other wise we might might the tokens for bridge api

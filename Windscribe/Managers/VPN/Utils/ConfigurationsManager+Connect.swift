@@ -202,21 +202,21 @@ extension ConfigurationsManager {
                                            port: port,
                                            userSettings: vpnSettings)
             }
-            
+
             // Add the timeout task
             group.addTask {
                 try await Task.sleep(nanoseconds: 30_000_000_000)
                 throw VPNConfigurationErrors.connectionTimeout
             }
-            
+
             // Get the first result (whichever completes first)
             guard let result = try await group.next() else {
                 throw VPNConfigurationErrors.connectionTimeout
             }
-            
+
             // Cancel remaining tasks
             group.cancelAll()
-            
+
             return result
         }
     }
@@ -302,7 +302,6 @@ extension ConfigurationsManager {
                 logger.logI("ConfigurationsManager","Bridge API - WSNEt - set host for wireguard: \(currentHost)")
                 bridgeAPI.setCurrentHost(currentHost)
             }
-            bridgeAPI.setIgnoreSslErrors(true)
             bridgeAPI.setConnectedState(true)
             self.logger.logI("ConfigurationsManager", "wsnet setIsConnectedToVpnState to true")
             WSNet.instance().setIsConnectedToVpnState(true)

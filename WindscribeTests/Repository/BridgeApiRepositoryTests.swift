@@ -104,8 +104,6 @@ class BridgeApiRepositoryTests: XCTestCase {
         // Then
         XCTAssertTrue(mockBridgeAPI.setCurrentHostCalled, "Should call setCurrentHost")
         XCTAssertEqual(mockBridgeAPI.lastCurrentHost, testHost, "Should set correct host")
-        XCTAssertTrue(mockBridgeAPI.setIgnoreSslErrorsCalled, "Should call setIgnoreSslErrors")
-        XCTAssertEqual(mockBridgeAPI.lastIgnoreSslErrors, true, "Should set ignoreSslErrors to true")
         XCTAssertTrue(mockBridgeAPI.setConnectedStateCalled, "Should call setConnectedState")
         XCTAssertEqual(mockBridgeAPI.lastConnectedState, true, "Should set connected state to true")
     }

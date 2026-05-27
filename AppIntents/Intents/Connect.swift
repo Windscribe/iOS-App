@@ -96,7 +96,6 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 bridgeAPI.setCurrentHost("")
             }
 
-            bridgeAPI.setIgnoreSslErrors(true)
             bridgeAPI.setConnectedState(true)
 
             if !preferences.getIgnorePinIP() {
