@@ -149,6 +149,7 @@
 "Done" = "完成";
 "Edit Credentials" = "编辑凭据";
 "Egress" = "出口";
+"Egress (WireGuard only)" = "出口（仅 WireGuard）";
 "Email" = "电子邮箱";
 "Email is required to reset password." = "重置密码需要电子邮箱。";
 "Emergency Connect On" = "紧急连接已开启";

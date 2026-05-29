@@ -149,6 +149,7 @@
 "Done" = "Готово";
 "Edit Credentials" = "Редагувати облікові дані";
 "Egress" = "Вихідний";
+"Egress (WireGuard only)" = "Вихідний (тільки WireGuard)";
 "Email" = "Електронна адреса";
 "Email is required to reset password." = "Для скидання пароля потрібна електронна пошта.";
 "Emergency Connect On" = "Аварійне підключення увімкнено";

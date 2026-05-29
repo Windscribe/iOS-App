@@ -555,7 +555,7 @@ enum TextsAsset {
         static var port: String { "Port".localized }
         static var configuration: String { "Configuration".localized }
         static var ipStack: String { "IP Stack".localized }
-        static var egress: String { "Egress".localized }
+        static var egress: String { "Egress (WireGuard only)".localized }
         static var ingress: String { "Ingress".localized }
         static var antiCensorshipOptions: String { return "Anti-censorship Settings".localized }
         static var antiCensorshipTitle: String { "Anti-censorship".localized }

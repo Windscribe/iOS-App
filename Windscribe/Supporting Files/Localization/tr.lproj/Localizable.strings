@@ -149,6 +149,7 @@
 "Done" = "Tamam";
 "Edit Credentials" = "Kimlik Bilgilerini Düzenle";
 "Egress" = "Çıkış";
+"Egress (WireGuard only)" = "Çıkış (yalnızca WireGuard)";
 "Email" = "E-posta";
 "Email is required to reset password." = "Şifreyi sıfırlamak için e-posta gereklidir.";
 "Emergency Connect On" = "Acil Bağlantı Açık";

@@ -149,6 +149,7 @@
 "Done" = "Erledigt";
 "Edit Credentials" = "Anmeldeinformationen bearbeiten";
 "Egress" = "Ausstieg";
+"Egress (WireGuard only)" = "Ausstieg (nur WireGuard)";
 "Email" = "E-Mail";
 "Email is required to reset password." = "Eine E-Mail-Adresse ist erforderlich, um das Passwort zurückzusetzen.";
 "Emergency Connect On" = "Notfallverbindung eingeschaltet";

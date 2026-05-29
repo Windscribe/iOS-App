@@ -149,6 +149,7 @@
 "Done" = "Selesai";
 "Edit Credentials" = "Edit Kredensial";
 "Egress" = "Jalan keluar";
+"Egress (WireGuard only)" = "Jalan keluar (Hanya WireGuard)";
 "Email" = "Surel";
 "Email is required to reset password." = "Email diperlukan untuk mengatur ulang kata sandi.";
 "Emergency Connect On" = "Koneksi darurat aktif";

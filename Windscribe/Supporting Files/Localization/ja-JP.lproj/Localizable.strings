@@ -149,6 +149,7 @@
 "Done" = "完了";
 "Edit Credentials" = "認証情報を編集";
 "Egress" = "エグレス";
+"Egress (WireGuard only)" = "エグレス（WireGuardのみ）";
 "Email" = "メールアドレス";
 "Email is required to reset password." = "パスワードをリセットするにはメールアドレスが必要です。";
 "Emergency Connect On" = "緊急接続オン";

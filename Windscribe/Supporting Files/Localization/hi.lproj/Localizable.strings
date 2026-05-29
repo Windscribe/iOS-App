@@ -149,6 +149,7 @@
 "Done" = "हो गया";
 "Edit Credentials" = "क्रेडेंशियल संपादित करें";
 "Egress" = "एग्रेस";
+"Egress (WireGuard only)" = "एग्रेस (केवल WireGuard)";
 "Email" = "ईमेल";
 "Email is required to reset password." = "पासवर्ड रीसेट करने के लिए ईमेल आवश्यक है।";
 "Emergency Connect On" = "आपातकालीन कनेक्ट चालू";

@@ -149,6 +149,7 @@
 "Done" = "Xong";
 "Edit Credentials" = "Chỉnh sửa thông tin đăng nhập";
 "Egress" = "Đi ra";
+"Egress (WireGuard only)" = "Đi ra (Chỉ WireGuard)";
 "Email" = "Thư điện tử";
 "Email is required to reset password." = "Cần có email để đặt lại mật khẩu.";
 "Emergency Connect On" = "Kết nối khẩn cấp bật";

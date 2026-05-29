@@ -149,6 +149,7 @@
 "Done" = "Готово";
 "Edit Credentials" = "Редактировать учётные данные";
 "Egress" = "Исходящий";
+"Egress (WireGuard only)" = "Исходящий (только WireGuard)";
 "Email" = "Эл. адрес";
 "Email is required to reset password." = "Для сброса пароля требуется электронная почта.";
 "Emergency Connect On" = "Аварийное подключение включено";

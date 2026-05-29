@@ -149,6 +149,7 @@
 "Done" = "منتهي";
 "Edit Credentials" = "تحرير بيانات الاعتماد";
 "Egress" = "الخروج";
+"Egress (WireGuard only)" = "الخروج (WireGuard فقط)";
 "Email" = "البريد الإلكتروني";
 "Email is required to reset password." = "البريد الإلكتروني مطلوب لإعادة تعيين كلمة المرور.";
 "Emergency Connect On" = "تم تفعيل الاتصال الطارئ";
