@@ -37,6 +37,7 @@ class LifecycleManager: LifecycleManagerType {
     private let locationListRepository: LocationListRepository
     private let windowProvider: WindowProvider
     private let checkUpdateRepository: CheckUpdateRepository
+    private let userSessionRepository: UserSessionRepository
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -63,7 +64,8 @@ class LifecycleManager: LifecycleManagerType {
          wifiManager: WifiManager,
          locationListRepository: LocationListRepository,
          windowProvider: WindowProvider,
-         checkUpdateRepository: CheckUpdateRepository) {
+         checkUpdateRepository: CheckUpdateRepository,
+         userSessionRepository: UserSessionRepository) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences
@@ -81,6 +83,7 @@ class LifecycleManager: LifecycleManagerType {
         self.locationListRepository = locationListRepository
         self.windowProvider = windowProvider
         self.checkUpdateRepository = checkUpdateRepository
+        self.userSessionRepository = userSessionRepository
 
         sessionManager.checkForDiscconectReasonTrigger
             .sink { [weak self] _ in
@@ -96,7 +99,7 @@ class LifecycleManager: LifecycleManagerType {
         Task {
             await disconnectToUpdateSession()
             try? await connectivity.awaitNetwork(maxTime: 1.0)
-            if preferences.getSessionAuthHash() != nil && connectivity.internetConnectionAvailable() {
+            if userSessionRepository.sessionAuth != nil && connectivity.internetConnectionAvailable() {
                 antiCensorshipRepository.refreshParams()
                 if shouldCheckForUpdate() {
                     preferences.saveLastUpdateCheckTimestamp(timeStamp: Date().timeIntervalSince1970)
@@ -163,7 +166,7 @@ class LifecycleManager: LifecycleManagerType {
                     preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
                     return
                 }
-                if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 && preferences.getSessionAuthHash() != nil {
+                if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 && userSessionRepository.sessionAuth != nil {
                     preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
                     Task {
                         await notificationRepo.loadNotifications()

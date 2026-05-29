@@ -17,6 +17,7 @@ protocol UserSessionRepository: Sendable {
     var sessionModelSubject: CurrentValueSubject<SessionModel?, Never> { get }
 
     func update(session: SessionModel) async
+    func updateSessionAuth(with sessionAuthHash: String?)
     func clearSession()
     func canAccesstoProLocation(location: LocationModel) -> Bool
     func canAccesstoProLocation(locationId: Int) -> Bool
@@ -36,8 +37,15 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     var oldSessionModel: SessionModel?
     var sessionModelSubject = CurrentValueSubject<SessionModel?, Never>(nil)
 
+    // Cache session auth hash to avoid repeated keychain access which can cause
+    // crashes when accessed concurrently from multiple threads (build 3343 crash).
+    private var _sessionAuth: String?
+    private let authCacheLock = NSLock()
+
     var sessionAuth: String? {
-        return preferences.getSessionAuthHash()
+        authCacheLock.lock()
+        defer { authCacheLock.unlock() }
+        return _sessionAuth
     }
 
     var keepSessionUpdatedTrigger = PassthroughSubject<Void, Never>()
@@ -52,6 +60,19 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         self.sessionStore = sessionStore
         self.locationListRepository = locationListRepository
         self.antiCensorshipRepository = antiCensorshipRepository
+
+        updateSessionAuth(with: preferences.getSessionAuthHash())
+    }
+
+    func updateSessionAuth(with sessionAuthHash: String?) {
+        if let sessionAuthHash = sessionAuthHash {
+            preferences.saveSessionAuthHash(sessionAuth: sessionAuthHash)
+        } else {
+            preferences.clearSessionAuth()
+        }
+        authCacheLock.lock()
+        _sessionAuth = sessionAuthHash
+        authCacheLock.unlock()
     }
 
     func update(session: SessionModel) async {
@@ -65,20 +86,21 @@ class UserSessionRepositoryImpl: UserSessionRepository {
         }
 
         await MainActor.run { [weak self] in
-               guard let self = self else { return }
+            guard let self = self else { return }
 
-               self.oldSessionModel = self.sessionModel
-               self.sessionModel = session
-               sessionModelSubject.send(session)
-               if !session.sessionAuthHash.isEmpty {
-                   preferences.saveSessionAuthHash(sessionAuth: session.sessionAuthHash)
-               }
+            self.oldSessionModel = self.sessionModel
+            self.sessionModel = session
+            sessionModelSubject.send(session)
+            if !session.sessionAuthHash.isEmpty {
+                updateSessionAuth(with: session.sessionAuthHash)
+            }
         }
     }
 
     func clearSession() {
         sessionModel = nil
         oldSessionModel = nil
+        updateSessionAuth(with: nil)
     }
 
     func canAccesstoProLocation(location: LocationModel) -> Bool {

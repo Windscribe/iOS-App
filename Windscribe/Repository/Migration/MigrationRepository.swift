@@ -15,13 +15,16 @@ protocol MigrationRepository {
 class MigrationRepositoryImpl: MigrationRepository {
     private let preferences: Preferences
     private let keychainManager: KeychainManager
+    private let userSessionRepository: UserSessionRepository
     private let logger: FileLogger
 
     init(preferences: Preferences,
          keychainManager: KeychainManager,
+         userSessionRepository: UserSessionRepository,
          logger: FileLogger) {
         self.preferences = preferences
         self.keychainManager = keychainManager
+        self.userSessionRepository = userSessionRepository
         self.logger = logger
     }
 
@@ -89,7 +92,7 @@ class MigrationRepositoryImpl: MigrationRepository {
         }
 
         // Migrate via Preferences (which writes to Keychain)
-        preferences.saveSessionAuthHash(sessionAuth: oldAuthHash)
+        userSessionRepository.updateSessionAuth(with: oldAuthHash)
         preferences.clearUserDefaultsSessionAuth()
         logger.logD("MigrationRepository", "Successfully migrated session auth hash to Keychain")
     }

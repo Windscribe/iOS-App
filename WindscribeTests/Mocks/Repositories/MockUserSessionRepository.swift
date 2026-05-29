@@ -22,6 +22,8 @@ class MockUserSessionRepository: UserSessionRepository {
     var loginCalled = false
     var updateCalled = false
     var lastUpdateSession: SessionModel?
+    var updateSessionAuthCalled = false
+    var lastUpdatedSessionAuth: String?
 
     // MARK: Mock Configuration
 
@@ -42,6 +44,12 @@ class MockUserSessionRepository: UserSessionRepository {
         self.oldSessionModel = self.sessionModel
         self.sessionModel = session
         sessionModelSubject.send(session)
+    }
+
+    func updateSessionAuth(with sessionAuthHash: String?) {
+        updateSessionAuthCalled = true
+        lastUpdatedSessionAuth = sessionAuthHash
+        sessionAuth = sessionAuthHash
     }
 
     func clearSession() {
@@ -84,6 +92,8 @@ class MockUserSessionRepository: UserSessionRepository {
         loginCalled = false
         updateCalled = false
         lastUpdateSession = nil
+        updateSessionAuthCalled = false
+        lastUpdatedSessionAuth = nil
         shouldThrowError = false
         errorToThrow = Errors.notDefined
         mockCanAccessProLocation = nil
