@@ -18,6 +18,7 @@ actor CredentialsRepositoryImpl: @preconcurrency CredentialsRepository {
     private let wifiManager: WifiManager
     private let logger: FileLogger
     private let preferences: Preferences
+    private let userSessionRepository: UserSessionRepository
     private var cancellables = Set<AnyCancellable>()
     private var connectionMode: String?
     private var selectedProtocol: String?
@@ -37,6 +38,7 @@ actor CredentialsRepositoryImpl: @preconcurrency CredentialsRepository {
          vpnStateRepository: VPNStateRepository,
          wifiManager: WifiManager,
          preferences: Preferences,
+         userSessionRepository: UserSessionRepository,
          logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
@@ -45,6 +47,7 @@ actor CredentialsRepositoryImpl: @preconcurrency CredentialsRepository {
         self.wifiManager = wifiManager
         self.logger = logger
         self.preferences = preferences
+        self.userSessionRepository = userSessionRepository
 
         // Schedule loadData to run on the actor's executor
         Task {
@@ -160,9 +163,7 @@ actor CredentialsRepositoryImpl: @preconcurrency CredentialsRepository {
     }
 
     func updateServerConfig() {
-        if preferences.getSessionAuthHash() == nil {
-            return
-        }
+        guard userSessionRepository.sessionAuth != nil else { return }
 
         // Cancel any existing update task and start a new one
         updateTask?.cancel()

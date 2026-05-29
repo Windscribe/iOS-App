@@ -140,6 +140,7 @@ class Repository: Assembly {
                                       vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                       wifiManager: r.resolve(WifiManager.self)!,
                                       preferences: r.resolve(Preferences.self)!,
+                                      userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                       logger: logger)
         }.inObjectScope(.userScope)
         container.register(PortMapRepository.self) { r in
@@ -223,6 +224,7 @@ class Repository: Assembly {
             MigrationRepositoryImpl(
                 preferences: r.resolve(Preferences.self)!,
                 keychainManager: r.resolve(KeychainManager.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.userScope)
@@ -403,7 +405,8 @@ class Managers: Assembly {
                              wifiManager: r.resolve(WifiManager.self)!,
                              locationListRepository: r.resolve(LocationListRepository.self)!,
                              windowProvider: r.resolve(WindowProvider.self)!,
-                             checkUpdateRepository: r.resolve(CheckUpdateRepository.self)!)
+                             checkUpdateRepository: r.resolve(CheckUpdateRepository.self)!,
+                             userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(SSOManaging.self) { r in

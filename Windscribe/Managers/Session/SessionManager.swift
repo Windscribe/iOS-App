@@ -128,7 +128,7 @@ class SessionManagerImpl: SessionManager {
         }
 
         Task { @MainActor in
-            guard preferences.getSessionAuthHash() != nil else { return }
+            guard userSessionRepository.sessionAuth != nil else { return }
 
             guard await userSessionRepository.syncSession() else {
                 self.logoutUser()

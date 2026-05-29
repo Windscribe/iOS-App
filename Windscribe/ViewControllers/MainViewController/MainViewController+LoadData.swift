@@ -18,10 +18,8 @@ extension MainViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] headings in
                 guard let self = self else { return }
-                // Now we're working with plain strings - no Realm threading issues
                 let portMapProvidedProtocols = (headings ?? []).sorted()
                 if appProtocols != portMapProvidedProtocols {
-                    self.viewModel.loadLocationList()
                     self.viewModel.loadPortMap()
                 }
             }

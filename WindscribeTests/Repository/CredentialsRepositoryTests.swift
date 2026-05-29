@@ -23,6 +23,7 @@ class CredentialsRepositoryTests: XCTestCase {
     var mockWifiManager: MockWifiManager!
     var mockPreferences: MockPreferences!
     var mockLogger: MockLogger!
+    var mockUserSessionRepository: MockUserSessionRepository!
     private var cancellables = Set<AnyCancellable>()
 
     override func setUp() {
@@ -35,6 +36,7 @@ class CredentialsRepositoryTests: XCTestCase {
         mockWifiManager = MockWifiManager()
         mockPreferences = MockPreferences()
         mockLogger = MockLogger()
+        mockUserSessionRepository = MockUserSessionRepository()
 
         // Register mocks
         mockContainer.register(APIManager.self) { _ in
@@ -65,6 +67,10 @@ class CredentialsRepositoryTests: XCTestCase {
             return self.mockLogger
         }.inObjectScope(.container)
 
+        mockContainer.register(UserSessionRepository.self) { _ in
+            return self.mockUserSessionRepository
+        }.inObjectScope(.container)
+
         // Register CredentialsRepository
         mockContainer.register(CredentialsRepository.self) { r in
             return CredentialsRepositoryImpl(
@@ -74,6 +80,7 @@ class CredentialsRepositoryTests: XCTestCase {
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 wifiManager: r.resolve(WifiManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.container)
@@ -484,6 +491,7 @@ class CredentialsRepositoryTests: XCTestCase {
             vpnStateRepository: mockVPNStateRepository,
             wifiManager: mockWifiManager,
             preferences: mockPreferences,
+            userSessionRepository: mockUserSessionRepository,
             logger: mockLogger
         )
 
@@ -645,6 +653,7 @@ class CredentialsRepositoryTests: XCTestCase {
             vpnStateRepository: mockVPNStateRepository,
             wifiManager: mockWifiManager,
             preferences: mockPreferences,
+            userSessionRepository: mockUserSessionRepository,
             logger: mockLogger
         )
         weak var weakRepo = repo as AnyObject?

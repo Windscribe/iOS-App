@@ -13,14 +13,14 @@ import Swinject
 import UIKit
 
 class WindowSetupServiceImpl: WindowSetupService {
-    private let preferences: Preferences
+    private let userSessionRepository: UserSessionRepository
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private var splashView: LoadingSplashView?
     private var cancellables = Set<AnyCancellable>()
 
-    init(preferences: Preferences,
+    init(userSessionRepository: UserSessionRepository,
          lookAndFeelRepository: LookAndFeelRepositoryType) {
-        self.preferences = preferences
+        self.userSessionRepository = userSessionRepository
         self.lookAndFeelRepository = lookAndFeelRepository
     }
 
@@ -31,7 +31,7 @@ class WindowSetupServiceImpl: WindowSetupService {
         window.rootViewController = UIViewController()
         window.makeKeyAndVisible()
 
-        if preferences.getSessionAuthHash() != nil {
+        if userSessionRepository.sessionAuth != nil {
             let splash = LoadingSplashView(frame: window.bounds)
             window.addSubview(splash)
             self.splashView = splash
@@ -58,7 +58,7 @@ class WindowSetupServiceImpl: WindowSetupService {
     private func presentMainView<T: View>(with view: T, on window: UIWindow) {
         let rootViewController: UIViewController
 
-        if preferences.getSessionAuthHash() != nil {
+        if userSessionRepository.sessionAuth != nil {
             let mainViewController = Assembler.resolve(MainViewController.self).then {
                 $0.appJustStarted = true
             }

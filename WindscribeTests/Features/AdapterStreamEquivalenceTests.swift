@@ -295,6 +295,7 @@ private final class StubUserSessionRepository: UserSessionRepository {
     }
 
     func update(session _: SessionModel) async {}
+    func updateSessionAuth(with _: String?) {}
     func clearSession() {}
     func canAccesstoProLocation(location _: LocationModel) -> Bool { false }
     func canAccesstoProLocation(locationId _: Int) -> Bool { false }

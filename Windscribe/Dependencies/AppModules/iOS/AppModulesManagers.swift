@@ -16,13 +16,13 @@ class IOSManagers: Assembly {
 
         container.register(WindowSetupService.self) { r in
             WindowSetupServiceImpl(
-                preferences: r.resolve(Preferences.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.container)
 
         container.register(SceneActionHandler.self) { r in
             SceneActionHandlerImpl(
-                preferences: r.resolve(Preferences.self)!,
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                 alertManager: r.resolve(AlertManager.self)!,

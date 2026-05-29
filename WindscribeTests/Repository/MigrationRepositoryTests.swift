@@ -13,6 +13,7 @@ import XCTest
 class MigrationRepositoryTests: XCTestCase {
     var mockPreferences: MockPreferences!
     var mockKeychainManager: MockKeychainManager!
+    var mockUserSessionRepository: MockUserSessionRepository!
     var mockLogger: MockLogger!
     var repository: MigrationRepository!
 
@@ -20,11 +21,13 @@ class MigrationRepositoryTests: XCTestCase {
         super.setUp()
         mockPreferences = MockPreferences()
         mockKeychainManager = MockKeychainManager()
+        mockUserSessionRepository = MockUserSessionRepository()
         mockLogger = MockLogger()
 
         repository = MigrationRepositoryImpl(
             preferences: mockPreferences,
             keychainManager: mockKeychainManager,
+            userSessionRepository: mockUserSessionRepository,
             logger: mockLogger
         )
     }
@@ -33,6 +36,7 @@ class MigrationRepositoryTests: XCTestCase {
         repository = nil
         mockPreferences = nil
         mockKeychainManager = nil
+        mockUserSessionRepository = nil
         mockLogger = nil
         super.tearDown()
     }
@@ -43,6 +47,7 @@ class MigrationRepositoryTests: XCTestCase {
         let newRepository = MigrationRepositoryImpl(
             preferences: mockPreferences,
             keychainManager: mockKeychainManager,
+            userSessionRepository: mockUserSessionRepository,
             logger: mockLogger
         )
 
@@ -57,8 +62,8 @@ class MigrationRepositoryTests: XCTestCase {
 
         repository.runMigrations()
 
-        XCTAssertTrue(mockPreferences.saveSessionAuthHashCalled, "Should save auth hash to Keychain")
-        XCTAssertEqual(mockPreferences.lastSavedSessionAuth, "old-auth-hash-from-ud",
+        XCTAssertTrue(mockUserSessionRepository.updateSessionAuthCalled, "Should update session auth via UserSessionRepository")
+        XCTAssertEqual(mockUserSessionRepository.lastUpdatedSessionAuth, "old-auth-hash-from-ud",
                        "Should migrate the exact auth hash value")
         XCTAssertTrue(mockPreferences.clearUserDefaultsSessionAuthCalled,
                       "Should clear the old UserDefaults auth hash")
@@ -72,8 +77,8 @@ class MigrationRepositoryTests: XCTestCase {
 
         XCTAssertTrue(mockPreferences.clearSessionAuthCalled,
                       "Should clear stale session auth from Keychain")
-        XCTAssertFalse(mockPreferences.saveSessionAuthHashCalled,
-                       "Should NOT save auth hash on fresh install")
+        XCTAssertFalse(mockUserSessionRepository.updateSessionAuthCalled,
+                       "Should NOT update session auth on fresh install")
     }
 
     func testAlreadyMigrated_AuthNotResaved() {
@@ -82,8 +87,8 @@ class MigrationRepositoryTests: XCTestCase {
 
         repository.runMigrations()
 
-        XCTAssertFalse(mockPreferences.saveSessionAuthHashCalled,
-                       "Should NOT re-save auth hash if UD is empty")
+        XCTAssertFalse(mockUserSessionRepository.updateSessionAuthCalled,
+                       "Should NOT update session auth if UD is empty")
         XCTAssertFalse(mockPreferences.clearUserDefaultsSessionAuthCalled,
                        "Should NOT clear UD if there was nothing to migrate")
     }
