@@ -181,6 +181,7 @@
 "Failed to import asset." = "Échec de l'importation de la ressource.";
 "Failed to import custom location names list" = "Échec de l'importation de la liste des noms d'emplacements personnalisés";
 "Failed to load data" = "Échec du chargement des données";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "Désolé, nous n’avons pas pu charger votre fil d’actualités !\n\nVeuillez réessayer plus tard ou vérifier votre connexion Internet.";
 "Failed to load products. Check your internet connection and try again." = "Échec du chargement des produits. Vérifiez votre connexion Internet et réessayez.";
 "Failed to restore transaction." = "Échec de la restauration de la transaction.";
 "Failed to send support ticket. Please check your network and try again." = "Échec de l’envoi du ticket au centre d’assistance. Veuillez vérifier votre réseau et réessayer !";

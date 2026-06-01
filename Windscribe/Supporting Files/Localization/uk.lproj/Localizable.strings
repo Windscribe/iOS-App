@@ -181,6 +181,7 @@
 "Failed to import asset." = "Не вдалося імпортувати ресурс.";
 "Failed to import custom location names list" = "Не вдалося імпортувати список користувацьких назв локацій";
 "Failed to load data" = "Не вдалося завантажити дані";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "На жаль, не вдалося завантажити вашу стрічку новин!\n\nСпробуйте пізніше або перевірте підключення до Інтернету.";
 "Failed to load products. Check your internet connection and try again." = "Не вдалося завантажити продукти. Перевірте підключення до Інтернету та спробуйте ще раз.";
 "Failed to restore transaction." = "Не вдалося відновити транзакцію.";
 "Failed to send support ticket. Please check your network and try again." = "Не вдалося надіслати запит у службу підтримки. Перевірте мережу та повторіть спробу.";

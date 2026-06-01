@@ -92,7 +92,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
                 if vpnStateRepository.configurationState != .initial {
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                 } else {
-                    self.loadState = .error("\(TextsAsset.failedToLoadData): \(error.localizedDescription)")
+                    self.loadState = .error(TextsAsset.NewsFeed.loadErrorMessage)
                     self.logger.logE("Newsfeed", "Data Load Error: \(error)")
                     return
                 }

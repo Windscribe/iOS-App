@@ -181,6 +181,7 @@
 "Failed to import asset." = "Không thể nhập tài nguyên.";
 "Failed to import custom location names list" = "Không thể nhập danh sách tên vị trí tùy chỉnh";
 "Failed to load data" = "Tải dữ liệu thất bại";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "Rất tiếc, chúng tôi không thể tải bảng tin của bạn!\n\nVui lòng thử lại sau hoặc kiểm tra kết nối Internet của bạn.";
 "Failed to load products. Check your internet connection and try again." = "Không thể tải sản phẩm. Kiểm tra kết nối internet của bạn và thử lại.";
 "Failed to restore transaction." = "Không thể khôi phục giao dịch.";
 "Failed to send support ticket. Please check your network and try again." = "Không thể gửi yêu cầu hỗ trợ. Vui lòng kiểm tra mạng của bạn và thử lại.";

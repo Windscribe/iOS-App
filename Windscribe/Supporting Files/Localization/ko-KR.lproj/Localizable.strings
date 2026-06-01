@@ -181,6 +181,7 @@
 "Failed to import asset." = "에셋 가져오기 실패.";
 "Failed to import custom location names list" = "사용자 정의 위치 이름 목록 가져오기 실패";
 "Failed to load data" = "데이터 로딩 실패";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "죄송합니다. 뉴스 피드를 불러올 수 없습니다!\n\n나중에 다시 시도하거나 인터넷 연결을 확인해 주세요.";
 "Failed to load products. Check your internet connection and try again." = "상품을 불러오지 못했습니다. 인터넷 연결을 확인하고 다시 시도하세요.";
 "Failed to restore transaction." = "거래를 복원하지 못했습니다.";
 "Failed to send support ticket. Please check your network and try again." = "지원 티켓 전송에 실패했습니다. 네트워크를 확인하고 다시 시도하세요.";

@@ -181,6 +181,7 @@
 "Failed to import asset." = "アセットのインポートに失敗しました。";
 "Failed to import custom location names list" = "カスタムロケーション名リストのインポートに失敗しました";
 "Failed to load data" = "データの読み込みに失敗しました";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "申し訳ありません。ニュースフィードを読み込めませんでした！\n\n後でもう一度お試しいただくか、インターネット接続を確認してください。";
 "Failed to load products. Check your internet connection and try again." = "製品を読み込めませんでした。インターネット接続を確認して、もう一度お試しください。";
 "Failed to restore transaction." = "取引の復元に失敗しました。";
 "Failed to send support ticket. Please check your network and try again." = "サポートチケットの送信に失敗しました。ネットワークを確認して、再試行してください。";

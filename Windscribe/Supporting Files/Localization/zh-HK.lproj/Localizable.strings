@@ -181,6 +181,7 @@
 "Failed to import asset." = "匯入資源失敗。";
 "Failed to import custom location names list" = "匯入自訂位置名稱清單失敗";
 "Failed to load data" = "無法載入資料";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "抱歉，我們無法載入您的新聞動態！\n\n請稍後再試，或檢查您的互聯網連線。";
 "Failed to load products. Check your internet connection and try again." = "無法載入產品，請檢查您的網絡連接並重試。";
 "Failed to restore transaction." = "無法恢復交易。";
 "Failed to send support ticket. Please check your network and try again." = "未能傳送服務工單。請檢查你的網路，然後重試。";

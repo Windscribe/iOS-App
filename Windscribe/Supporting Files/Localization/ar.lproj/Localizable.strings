@@ -181,6 +181,7 @@
 "Failed to import asset." = "فشل استيراد الأصل.";
 "Failed to import custom location names list" = "فشل استيراد قائمة أسماء المواقع المخصصة";
 "Failed to load data" = "فشل في تحميل البيانات";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "عذرًا، لم نتمكن من تحميل موجز الأخبار الخاص بك!\n\nيُرجى المحاولة مرة أخرى لاحقًا أو التحقق من اتصالك بالإنترنت.";
 "Failed to load products. Check your internet connection and try again." = "تعذر تحميل المنتجات. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.";
 "Failed to restore transaction." = "فشل استعادة المعاملة.";
 "Failed to send support ticket. Please check your network and try again." = "فشل إرسال بطاقة الدعم. يُرجى التحقق من شبكتك والمحاولة مرة أخرى.";

@@ -1043,6 +1043,10 @@ enum TextsAsset {
         static var title: String {
             return "News Feed".localized
         }
+
+        static var loadErrorMessage: String {
+            return "Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection.".localized
+        }
     }
 
     enum EnterEmail {

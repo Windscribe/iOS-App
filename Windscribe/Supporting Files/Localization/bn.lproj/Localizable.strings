@@ -181,6 +181,7 @@
 "Failed to import asset." = "সম্পদ আমদানি করতে ব্যর্থ হয়েছে৷";
 "Failed to import custom location names list" = "কাস্টম অবস্থানের নামের তালিকা আমদানি করতে ব্যর্থ হয়েছে৷";
 "Failed to load data" = "ডেটা লোড করতে ব্যর্থ";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "দুঃখিত, আমরা আপনার নিউজ ফিড লোড করতে পারিনি!\n\nঅনুগ্রহ করে পরে আবার চেষ্টা করুন, অথবা আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।";
 "Failed to load products. Check your internet connection and try again." = "পণ্য লোড করতে ব্যর্থ হয়েছে। আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন এবং পুনরায় চেষ্টা করুন।";
 "Failed to restore transaction." = "লেনদেন পুনরুদ্ধারে ব্যর্থ হয়েছে।";
 "Failed to send support ticket. Please check your network and try again." = "সাপোর্ট টিকেট প্রেরণ ব্যর্থ হয়েছে। দয়া করে আপনার নেটওয়ার্ক চেক করুন এবং আবার চেষ্টা করুন।";

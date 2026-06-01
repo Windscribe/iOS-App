@@ -29,8 +29,12 @@ struct NewsFeedView: View {
                             .scaleEffect(2)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if case .error(let errorMessage) = viewModel.loadState {
-                        Text("\(TextsAsset.error): \(errorMessage)")
+                        Text(errorMessage)
                             .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 16)
                     } else {
                         ScrollView {
                             VStack(spacing: 14) {

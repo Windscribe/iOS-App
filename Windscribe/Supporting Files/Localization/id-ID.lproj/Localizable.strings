@@ -181,6 +181,7 @@
 "Failed to import asset." = "Gagal mengimpor aset.";
 "Failed to import custom location names list" = "Gagal mengimpor daftar nama lokasi kustom";
 "Failed to load data" = "Gagal memuat data";
+"Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "Maaf, kami tidak dapat memuat umpan berita Anda!\n\nSilakan coba lagi nanti atau periksa koneksi internet Anda.";
 "Failed to load products. Check your internet connection and try again." = "Gagal memuat produk. Periksa koneksi internet Anda dan coba lagi.";
 "Failed to restore transaction." = "Gagal memulihkan transaksi.";
 "Failed to send support ticket. Please check your network and try again." = "Gagl mengirim tiket bantuan. Periksa jaringan Anda dan coba lagi.";
