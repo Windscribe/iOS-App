@@ -176,12 +176,14 @@ actor CredentialsRepositoryImpl: @preconcurrency CredentialsRepository {
             do {
                 try await getUpdatedOpenVPNCrendentials()
                 guard !Task.isCancelled else { return }
+                try await getUpdatedIKEv2Crendentials()
+                guard !Task.isCancelled else { return }
                 try await getUpdatedServerConfig()
                 guard !Task.isCancelled else { return }
-                self.logger.logI("CredentialsRepositoryImpl", "Server config updated.")
+                self.logger.logI("CredentialsRepositoryImpl", "Server config and credentials updated.")
             } catch {
                 if !Task.isCancelled {
-                    self.logger.logE("CredentialsRepositoryImpl", "Failed to update server config.")
+                    self.logger.logE("CredentialsRepositoryImpl", "Failed to update server config and credentials.")
                 }
             }
         }
