@@ -417,6 +417,7 @@ class CredentialsRepositoryTests: XCTestCase {
         let base64Config = mockConfig.data(using: .utf8)!.base64EncodedString()
 
         mockAPIManager.mockOpenVPNCredentials = createMockAPIOpenVPNCredentials()
+        mockAPIManager.mockIKEv2Credentials = createMockAPIIKEv2Credentials()
         mockAPIManager.mockOpenVPNServerConfig = base64Config
 
         // When
@@ -427,9 +428,12 @@ class CredentialsRepositoryTests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             Task {
                 // Then
-                let credentials = await self.repository.openVPNCrendentials
-                XCTAssertNotNil(credentials, "Should update OpenVPN credentials")
-                XCTAssertTrue(self.mockPreferences.saveOpenVPNCredentialsCalled, "Should save credentials")
+                let openVPNCredentials = await self.repository.openVPNCrendentials
+                let ikev2Credentials = await self.repository.ikev2Crendentials
+                XCTAssertNotNil(openVPNCredentials, "Should update OpenVPN credentials")
+                XCTAssertNotNil(ikev2Credentials, "Should update IKEv2 credentials")
+                XCTAssertTrue(self.mockPreferences.saveOpenVPNCredentialsCalled, "Should save OpenVPN credentials")
+                XCTAssertTrue(self.mockPreferences.saveIKEv2CredentialsCalled, "Should save IKEv2 credentials")
                 XCTAssertTrue(self.mockFileDatabase.saveFileCalled, "Should save config file")
                 expectation.fulfill()
             }
@@ -585,7 +589,9 @@ class CredentialsRepositoryTests: XCTestCase {
         // Given
         mockPreferences.sessionAuthToReturn = "valid-session-auth"
         let mockCredentials = createMockAPIOpenVPNCredentials()
+        let mockIKEv2Credentials = createMockAPIIKEv2Credentials()
         mockAPIManager.mockOpenVPNCredentials = mockCredentials
+        mockAPIManager.mockIKEv2Credentials = mockIKEv2Credentials
         let base64Config = "client\ndev tun".data(using: .utf8)!.base64EncodedString()
         mockAPIManager.mockOpenVPNServerConfig = base64Config
 
@@ -614,7 +620,9 @@ class CredentialsRepositoryTests: XCTestCase {
         // Given
         mockPreferences.sessionAuthToReturn = "valid-session-auth"
         let mockCredentials = createMockAPIOpenVPNCredentials()
+        let mockIKEv2Credentials = createMockAPIIKEv2Credentials()
         mockAPIManager.mockOpenVPNCredentials = mockCredentials
+        mockAPIManager.mockIKEv2Credentials = mockIKEv2Credentials
         let base64Config = "client\ndev tun".data(using: .utf8)!.base64EncodedString()
         mockAPIManager.mockOpenVPNServerConfig = base64Config
 
