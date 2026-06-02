@@ -39,7 +39,7 @@ class FavNodeTableViewCellModel: DatacenterTableViewCellModel {
         self.countryCode = countryCode
         self.locationLoad = locationLoad
         self.isSavedHasFav = isSavedHasFav
-        self.isPremium = isPremium
+        self.hasAccess = hasAccess
         self.isDarkMode = isDarkMode
         self.latency = latency
     }
