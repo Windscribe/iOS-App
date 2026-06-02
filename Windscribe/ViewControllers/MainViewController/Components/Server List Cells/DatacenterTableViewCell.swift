@@ -20,7 +20,7 @@ protocol DatacenterTableViewCellModelType: BaseNodeCellViewModelType {
     func update(displayingDatacenter: DatacenterModel?,
                 locationLoad: Bool,
                 isSavedHasFav: Bool,
-                isPremium: Bool,
+                hasAccess: Bool,
                 isDarkMode: Bool,
                 latency: Int,
                 countryCode: String?)
@@ -37,36 +37,35 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
     var displayingDatacenter: DatacenterModel?
     var isFavoriteCell: Bool { return false }
 
-    var isPremium: Bool = false
+    var hasAccess: Bool = false
     var countryCode: String?
 
     func update(displayingDatacenter: DatacenterModel?,
                 locationLoad: Bool,
                 isSavedHasFav: Bool,
-                isPremium: Bool,
+                hasAccess: Bool,
                 isDarkMode: Bool,
                 latency: Int,
                 countryCode: String?) {
         self.displayingDatacenter = displayingDatacenter
         self.locationLoad = locationLoad
         self.isSavedHasFav = isSavedHasFav
-        self.isPremium = isPremium
+        self.hasAccess = hasAccess
         self.isDarkMode = isDarkMode
         self.latency = latency
-        self.countryCode = countryCode
     }
 
     override var isSignalVisible: Bool { !(isDisabled || displayingDatacenter?.servers.count == 0 || latency < 0) }
     override var isDisabled: Bool {
         guard let displayingDatacenter else { return true }
-        guard !isProLocked else { return false }
-        if isPremium, displayingDatacenter.servers.count == 0  { return true }
-        return displayingDatacenter.isUnderMantainance
+        let status = displayingDatacenter.getStatus(hasAccess: hasAccess)
+        if status == .underMantainance { return true }
+        return false
     }
-    
+
     var isProLocked: Bool {
         guard let datacenter = displayingDatacenter else { return false }
-        return datacenter.isPremiumOnly && !isPremium
+        return datacenter.isPremiumOnly && !hasAccess
     }
 
     override var showP2P: Bool { displayingDatacenter?.p2p != 1 }
@@ -106,7 +105,7 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
         }
         return super.iconImage
     }
-    
+
     override var hasProLocked: Bool { isProLocked && isFavoriteCell }
 
     var isSpeedIconVisible: Bool {
