@@ -212,7 +212,7 @@ class LocationsListTableViewDataSourceImpl: WExpyTableViewDataSource,
             cell.datacenterCellViewModel?.update(displayingDatacenter: datacenter,
                                                  locationLoad: locationLoad,
                                                  isSavedHasFav: isGroupFavorite(datacenter?.id),
-                                                 hasAccess: userSessionRepository.canAccesstoProLocation(location: locationModel),
+                                                 isPremium: userSessionRepository.canAccesstoProLocation(location: locationModel),
                                                  isDarkMode: lookAndFeelRepository.isDarkMode,
                                                  latency: latency,
                                                  countryCode: locationModel.countryCode)

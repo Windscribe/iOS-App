@@ -93,8 +93,7 @@ extension LocationListViewModel {
     /// true: under maintenance
     /// false: not
     private func checkMaintenanceLocation(location: LocationModel, datacenter: DatacenterModel) -> Bool {
-        let status = datacenter.getStatus(hasAccess: userSessionRepository.canAccesstoProLocation(location: location))
-        if status == .underMantainance { return true }
+        if datacenter.statusValue == .underMantainance { return true }
         return false
     }
 }

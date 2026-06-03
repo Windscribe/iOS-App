@@ -79,8 +79,7 @@ extension FavouriteListViewModel {
     /// - Parameter favourite: The DatacenterModel representing the selected favourite location
     /// - Returns: true if location is under maintenance or disabled, false otherwise
     private func checkMaintenanceLocation(favourite: DatacenterModel) -> Bool {
-        let status = favourite.getStatus(hasAccess: userSessionRepository.canAccesstoProLocation(locationId: favourite.locationId))
-        if status == .underMantainance { return true }
+        if favourite.statusValue == .underMantainance { return true }
         return false
     }
 }

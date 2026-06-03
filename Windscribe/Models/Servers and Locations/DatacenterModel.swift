@@ -54,24 +54,26 @@ struct DatacenterModel: Codable, Equatable, Sendable {
     private(set) var pingServer: ServerMachineModel?
 
     var isPremiumOnly: Bool {
-        return quickStatus == .isPro || isPremium == 1
+        return statusValue == .isPro || isPremium == 1
     }
 
     var isUnderMantainance: Bool {
-        quickStatus == .underMantainance
+        statusValue == .underMantainance
     }
 
-    private var quickStatus: DatacenterStatus {
+    var statusValue: DatacenterStatus {
         let hasServers = servers.count > 0
 
-        if status == 1, hasServers {
-            // Available: has servers
-            return .available
+        if status == 2 && !hasServers {
+            // Under maintenance: status 2 with no servers
+            return .underMantainance
         } else if status == 1 && !hasServers {
             // Pro required: enabled but no servers available
             return .isPro
+        } else {
+            // Available: has servers
+            return .available
         }
-        return .underMantainance
     }
 
     enum CodingKeys: String, CodingKey {
@@ -155,20 +157,6 @@ struct DatacenterModel: Codable, Equatable, Sendable {
                                             linkSpeed: linkSpeed)
         newDatacenter.servers = servers
         return newDatacenter
-    }
-
-    func getStatus(hasAccess: Bool) -> DatacenterStatus {
-        let hasAtLeastOneServer = servers.count > 0             // at least one server in inventory
-        let isEnabled           = status == 1                   // location active in backend
-        let isPremiumLocation   = isPremium == 1            // location is flagged premium/pro
-
-        if isEnabled, hasAtLeastOneServer {
-            return .available                                   // active + at least one server → connectable
-        } else if !hasAccess, isPremiumLocation {
-            return .isPro                                       // user lacks access on a premium location → show star + "Upgrade"
-        } else {
-            return .underMantainance                            // everything else → disabled (pylon icon)
-        }
     }
 }
 
