@@ -406,12 +406,80 @@ class VPNStateRepositoryTests: XCTestCase {
         XCTAssertEqual(repository.lastConnectionStatus, .connected)
     }
 
-    // MARK: - Help Functions
-    func getVPNInfo(with status: NEVPNStatus) -> VPNConnectionInfo{
-        return VPNConnectionInfo(selectedProtocol: "Wireguard",
+    func getVPNInfo(with status: NEVPNStatus) -> VPNConnectionInfo {
+        return VPNConnectionInfo(selectedProtocol: VPNProtocolType.wireGuard.identifier,
                                  selectedPort: "443",
                                  status: status,
+                                 server: "Test Server",
                                  killSwitch: false,
                                  onDemand: false)
+    }
+}
+
+class VPNUserSettingsProfilePolicyTests: XCTestCase {
+
+    func testManualConnectionWithoutKillSwitchStartsWithoutOnDemandOrIncludeAllNetworks() {
+        let settings = VPNUserSettings(killSwitch: false,
+                                       allowLan: false,
+                                       isRFC: true,
+                                       isCircumventCensorshipEnabled: false,
+                                       onDemandRules: [NEOnDemandRuleConnect()])
+
+        XCTAssertFalse(settings.enableOnDemandDuringConnectionStart)
+        XCTAssertFalse(settings.includeAllNetworksDuringConnectionStart)
+    }
+
+    func testManualConnectionPreservesAutoSecurePolicyAfterSuccessfulConnection() {
+        let settings = VPNUserSettings(killSwitch: false,
+                                       allowLan: false,
+                                       isRFC: true,
+                                       isCircumventCensorshipEnabled: false,
+                                       onDemandRules: [NEOnDemandRuleConnect()])
+
+        XCTAssertTrue(settings.enableOnDemandAfterSuccessfulConnection)
+        XCTAssertTrue(settings.includeAllNetworksAfterSuccessfulConnection)
+    }
+
+    func testPostConnectionKeepsOnDemandEnabledForEmptyRules() {
+        let settings = VPNUserSettings(killSwitch: false,
+                                       allowLan: true,
+                                       isRFC: true,
+                                       isCircumventCensorshipEnabled: false,
+                                       onDemandRules: [])
+
+        XCTAssertTrue(settings.enableOnDemandAfterSuccessfulConnection)
+    }
+
+    func testPostConnectionWithAllowLanAndRFCDoesNotIncludeAllNetworks() {
+        let settings = VPNUserSettings(killSwitch: false,
+                                       allowLan: true,
+                                       isRFC: true,
+                                       isCircumventCensorshipEnabled: false,
+                                       onDemandRules: [NEOnDemandRuleConnect()])
+
+        XCTAssertFalse(settings.includeAllNetworksAfterSuccessfulConnection)
+    }
+
+    func testPostConnectionWithNonRFCIncludesAllNetworks() {
+        let settings = VPNUserSettings(killSwitch: false,
+                                       allowLan: true,
+                                       isRFC: false,
+                                       isCircumventCensorshipEnabled: false,
+                                       onDemandRules: [NEOnDemandRuleConnect()])
+
+        XCTAssertTrue(settings.includeAllNetworksAfterSuccessfulConnection)
+    }
+
+    func testKillSwitchStillAppliesStrictProfilePolicyBeforeTunnelStart() {
+        let settings = VPNUserSettings(killSwitch: true,
+                                       allowLan: false,
+                                       isRFC: true,
+                                       isCircumventCensorshipEnabled: false,
+                                       onDemandRules: [NEOnDemandRuleConnect()])
+
+        XCTAssertTrue(settings.enableOnDemandDuringConnectionStart)
+        XCTAssertTrue(settings.includeAllNetworksDuringConnectionStart)
+        XCTAssertTrue(settings.enableOnDemandAfterSuccessfulConnection)
+        XCTAssertTrue(settings.includeAllNetworksAfterSuccessfulConnection)
     }
 }

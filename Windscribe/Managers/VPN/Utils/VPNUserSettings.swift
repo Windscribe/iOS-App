@@ -16,6 +16,46 @@ struct VPNUserSettings: CustomStringConvertible {
     let isCircumventCensorshipEnabled: Bool
     let onDemandRules: [NEOnDemandRule]?
     var deleteOldestKey = false
+
+    /// On iOS, keep the initial profile permissive unless Always On VPN is
+    /// explicitly enabled. Other platforms keep the old on-demand-at-start
+    /// behavior because the iOS `requiresVPN` failure mode does not apply.
+    var enableOnDemandDuringConnectionStart: Bool {
+#if os(iOS)
+        return killSwitch
+#else
+        return true
+#endif
+    }
+
+    var includeAllNetworksDuringConnectionStart: Bool {
+#if os(iOS)
+        return killSwitch
+#else
+        return false
+#endif
+    }
+
+    /// Preserve the previous post-connect on-demand behavior. Empty rule sets
+    /// are effectively a no-op, but keeping on-demand enabled avoids a silent
+    /// profile-policy change outside the #1100 startup wedge.
+    var enableOnDemandAfterSuccessfulConnection: Bool {
+        return true
+    }
+
+    var includeAllNetworksAfterSuccessfulConnection: Bool {
+        if !isRFC {
+            return true
+        }
+        if killSwitch {
+            return true
+        }
+        if #available(iOS 16.0, *) {
+            return !allowLan
+        }
+        return false
+    }
+
     var description: String {
         return "User Settings: [KillSwitch: \(killSwitch) allowLan: \(allowLan), isRfc: \(isRFC), CircumventCensorship: \(isCircumventCensorshipEnabled)]"
     }
@@ -104,11 +144,6 @@ struct OpenVPNConfiguration: VPNConfiguration {
 
         tunnelProtocol.disconnectOnSleep = false
         manager.protocolConfiguration = tunnelProtocol
-#if os(iOS)
-        if #available(iOS 16.0, *) {
-            manager.protocolConfiguration?.includeAllNetworks = true
-        }
-#endif
     }
 }
 
@@ -164,20 +199,15 @@ extension VPNConfiguration {
             // For Non RFC address. set [includeallnetworks​ =  True & excludeLocalNetworks​ = False]
             // For RFC address follow user settings.
             if #available(iOS 15.1, *) {
-                manager.protocolConfiguration?.includeAllNetworks = settings.isRFC ? settings.killSwitch : true
+                manager.protocolConfiguration?.includeAllNetworks = settings.includeAllNetworksDuringConnectionStart
                 manager.protocolConfiguration?.excludeLocalNetworks = settings.isRFC ? settings.allowLan : false
             }
-            // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
-            if #available(iOS 16.0, *) {
-                if !settings.allowLan {
-                    manager.protocolConfiguration?.includeAllNetworks = true
-                }
-            }
+            // Stricter iOS 16 include-all-networks policy is applied after connect validation.
         #endif
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = settings.onDemandRules
         manager.isEnabled = true
-        manager.isOnDemandEnabled = true
+        manager.isOnDemandEnabled = settings.enableOnDemandDuringConnectionStart
         manager.localizedDescription = AppConstants.appName
     }
 }
