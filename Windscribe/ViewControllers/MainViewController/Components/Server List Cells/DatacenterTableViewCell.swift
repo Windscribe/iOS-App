@@ -56,17 +56,11 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
         self.countryCode = countryCode
     }
 
-    override var isSignalVisible: Bool { !(isDisabled || displayingDatacenter?.servers.count == 0 || latency < 0) }
+    override var isSignalVisible: Bool { !(isDisabled || displayingDatacenter?.servers.count == 0) }
     override var isDisabled: Bool {
         guard let displayingDatacenter else { return true }
         guard !isProLocked else { return false }
-        if isPremium, displayingDatacenter.servers.count == 0  { return true }
         return displayingDatacenter.isUnderMantainance
-    }
-    
-    var isProLocked: Bool {
-        guard let datacenter = displayingDatacenter else { return false }
-        return datacenter.isPremiumOnly && !isPremium
     }
 
     override var showP2P: Bool { displayingDatacenter?.p2p != 1 }
@@ -106,7 +100,12 @@ class DatacenterTableViewCellModel: BaseNodeCellViewModel, DatacenterTableViewCe
         }
         return super.iconImage
     }
-    
+
+    var isProLocked: Bool {
+        guard let datacenter = displayingDatacenter else { return false }
+        return datacenter.isPremiumOnly && !isPremium
+    }
+
     override var hasProLocked: Bool { isProLocked && isFavoriteCell }
 
     var isSpeedIconVisible: Bool {
