@@ -22,6 +22,7 @@ protocol VPNManager: Sendable {
     // Set Methods
     func updateOnDemandRules()
     func resetProfiles() async
+    func removeProfiles() async
 
     // Connection Methods
     func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error>

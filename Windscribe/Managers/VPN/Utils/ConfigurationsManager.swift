@@ -233,9 +233,23 @@ class ConfigurationsManager {
     }
 
     func remove(manager: NEVPNManager) async {
+        clearCachedTunnelManager(manager)
         try? await manager.removeFromPreferences()
         try? await manager.loadFromPreferences()
         reloadManagersTrigger.send(())
+    }
+
+    private func clearCachedTunnelManager(_ manager: NEVPNManager) {
+        tunnelManagerLock.withLock {
+            let username = manager.protocolConfiguration?.username
+            if manager === wgTunnelManager || username == VPNProtocolType.wireGuard.identifier {
+                wgTunnelManager = nil
+            }
+
+            if manager === opTunnelManager || username == TextsAsset.openVPN {
+                opTunnelManager = nil
+            }
+        }
     }
 
     func saveToPreferences(manager: NEVPNManager) async throws {

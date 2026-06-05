@@ -342,6 +342,7 @@ private final class NoopVPNManager: VPNManager {
     func isActive() async -> Bool { false }
     func updateOnDemandRules() {}
     func resetProfiles() async {}
+    func removeProfiles() async {}
     func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error> {
         fatalError("unused in status-stream test")
     }

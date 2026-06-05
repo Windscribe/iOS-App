@@ -25,6 +25,7 @@ class MockVPNManager: VPNManager {
     var lastConnectConnectionType: ConnectionType?
     var mockConnectionStates: [VPNConnectionState] = [.vpn(.connecting), .vpn(.connected)]
     var mockConnectionError: Error?
+    var removeProfilesCalled = false
 
     func configureForConnectionState() {
     }
@@ -35,6 +36,10 @@ class MockVPNManager: VPNManager {
 
     func resetProfiles() async {
 
+    }
+
+    func removeProfiles() async {
+        removeProfilesCalled = true
     }
 
     func isActive() async -> Bool {

@@ -33,6 +33,14 @@ extension VPNManagerImpl {
         }
     }
 
+    func removeProfiles() async {
+        let managers = (try? await configManager.getAllManagers()) ?? configManager.managers
+        for manager in managers {
+            await configManager.reset(manager: manager)
+            await configManager.remove(manager: manager)
+        }
+    }
+
     // function to check if local ip belongs to RFC 1918 ips
     func checkLocalIPIsRFC() -> Bool {
         if let localIPAddress = NWInterface.InterfaceType.wifi.ipv4 {

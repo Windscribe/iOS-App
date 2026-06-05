@@ -350,9 +350,9 @@ class SessionManagerImpl: SessionManager {
 #endif
         }
 
-        // Reset VPN Profiles
+        // Remove VPN Profiles
         Task { @MainActor in
-            await vpnManager.resetProfiles()
+            await vpnManager.removeProfiles()
         }
 
         // Clear Apple SSO Session
