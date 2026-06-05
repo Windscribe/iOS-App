@@ -115,10 +115,7 @@ extension ConfigurationsManager {
                         progressPublisher.send(.validating)
                         cancellable?.cancel()
                         if connectionType == .emergency {
-                            Task {
-                                await self.applyPostConnectionSettings(manager: nextManager, settings: vpnSettings)
-                                progressPublisher.send(completion: .finished)
-                            }
+                            progressPublisher.send(completion: .finished)
                             return
                         }
                         Task {
@@ -129,7 +126,6 @@ extension ConfigurationsManager {
                                 if isCancelled {
                                     progressPublisher.send(.update("Task cancelled"))
                                 }
-                                await self.applyPostConnectionSettings(manager: nextManager, settings: vpnSettings)
                                 progressPublisher.send(.update("Connectivity test successful"))
                                 progressPublisher.send(.validated)
                                 progressPublisher.send(completion: .finished)
@@ -312,27 +308,6 @@ extension ConfigurationsManager {
         } else {
             preferences.saveIgnorePinIP(status: false)
         }
-    }
-
-    /// Apply the stricter on-demand/include-all-networks profile policy only
-    /// after the tunnel is up and connectivity has been validated. This keeps
-    /// failed/interrupted starts from leaving a non-kill-switch connection in
-    /// iOS `requiresVPN`, while preserving successful auto-secure behavior.
-    private func applyPostConnectionSettings(manager: NEVPNManager, settings: VPNUserSettings) async {
-        guard settings.enableOnDemandAfterSuccessfulConnection || settings.includeAllNetworksAfterSuccessfulConnection else {
-            return
-        }
-        try? await manager.loadFromPreferences()
-#if os(iOS)
-        if #available(iOS 15.1, *) {
-            manager.protocolConfiguration?.includeAllNetworks = settings.includeAllNetworksAfterSuccessfulConnection
-            manager.protocolConfiguration?.excludeLocalNetworks = settings.isRFC ? settings.allowLan : false
-        }
-#endif
-        manager.onDemandRules?.removeAll()
-        manager.onDemandRules = settings.onDemandRules
-        manager.isOnDemandEnabled = settings.enableOnDemandAfterSuccessfulConnection
-        try? await saveToPreferences(manager: manager)
     }
 
     /// Pin IP if there is one selected. Returns error on failure, nil otherwise.
