@@ -19,7 +19,19 @@ def ci_api_key
 end
 
 def ci_build(scheme:, sign: false, build_number: nil)
-  xcargs = build_number ? "CURRENT_PROJECT_VERSION=#{build_number}" : nil
+  args = []
+  args << "CURRENT_PROJECT_VERSION=#{build_number}" if build_number
+
+  # INTERNAL marker. Builds are internal by default (WS_INTERNAL_FLAG=INTERNAL in
+  # Config.xcconfig). Strip it — and drop the red INTERNAL app icon back to AppIcon —
+  # only for release-* branch builds, the one case that ships externally. Debug/Staging
+  # bake INTERNAL in regardless of branch.
+  if ENV["CI_COMMIT_REF_NAME"].to_s.start_with?("release-")
+    args << "WS_INTERNAL_FLAG="
+    args << "WS_APP_ICON=AppIcon"
+  end
+
+  xcargs = args.empty? ? nil : args.join(" ")
 
   if sign
     setup_ci

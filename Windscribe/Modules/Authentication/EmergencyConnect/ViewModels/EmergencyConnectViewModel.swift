@@ -85,11 +85,12 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
     }
 
     func connectButtonTapped() {
+        if Env.isStaging {
+            alertManager.showSimpleAlert(
+                viewController: nil, title: "Staging", message: "No Emergency Connect in Staging", buttonText: TextsAsset.okay)
+            return
+        }
 
-#if STAGING
-        alertManager.showSimpleAlert(
-            viewController: nil, title: "Staging", message: "No Emergency Connect in Staging", buttonText: TextsAsset.okay)
-#else
         guard connectionState != .disconnecting else { return }
 
         if connectionState == .connected || connectionState == .connecting {
@@ -107,7 +108,6 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
                 self.connect(using: config)
             }
         }
-#endif
     }
 
     private func connect(using ovpnInfoList: [OpenVPNConnectionInfo]) {

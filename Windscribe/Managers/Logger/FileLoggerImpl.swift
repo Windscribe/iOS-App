@@ -121,11 +121,8 @@ class FileLoggerImpl: FileLogger {
     private var currentBufferSize: Int = 0
     var logDirectory: URL? = {
         let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
-        #if os(tvOS)
-            return containerUrl?.appendingPathComponent("Library/Caches")
-        #else
-            return containerUrl?.appendingPathComponent("AppExtensionLogs")
-        #endif
+        let subpath = Env.isTVOS ? "Library/Caches" : "AppExtensionLogs"
+        return containerUrl?.appendingPathComponent(subpath)
     }()
 
     init() {

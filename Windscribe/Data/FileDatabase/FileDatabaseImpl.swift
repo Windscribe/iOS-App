@@ -18,17 +18,11 @@ class FileDatabaseImpl: FileDatabase {
     func removeFile(path: String) async throws {
         let fileManager = FileManager.default
         do {
-            #if os(iOS)
-                let documentDirectory = try fileManager.url(for: .documentDirectory,
-                                                            in: .userDomainMask,
-                                                            appropriateFor: nil,
-                                                            create: false)
-            #else
-                let documentDirectory = try fileManager.url(for: .cachesDirectory,
-                                                            in: .userDomainMask,
-                                                            appropriateFor: nil,
-                                                            create: false)
-            #endif
+            let directory: FileManager.SearchPathDirectory = Env.isIOS ? .documentDirectory : .cachesDirectory
+            let documentDirectory = try fileManager.url(for: directory,
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
 
             let fileURL = documentDirectory.appendingPathComponent(path)
             try fileManager.removeItem(at: fileURL)
@@ -41,17 +35,11 @@ class FileDatabaseImpl: FileDatabase {
     func saveFile(data: Data, path: String) async throws {
         let fileManager = FileManager.default
         do {
-            #if os(iOS)
-                let documentDirectory = try fileManager.url(for: .documentDirectory,
-                                                            in: .userDomainMask,
-                                                            appropriateFor: nil,
-                                                            create: false)
-            #else
-                let documentDirectory = try fileManager.url(for: .cachesDirectory,
-                                                            in: .userDomainMask,
-                                                            appropriateFor: nil,
-                                                            create: false)
-            #endif
+            let directory: FileManager.SearchPathDirectory = Env.isIOS ? .documentDirectory : .cachesDirectory
+            let documentDirectory = try fileManager.url(for: directory,
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
 
             let fileURL = documentDirectory.appendingPathComponent(path)
             try data.write(to: fileURL)
@@ -64,17 +52,11 @@ class FileDatabaseImpl: FileDatabase {
     func readFile(path: String) async throws -> Data {
         let fileManager = FileManager.default
         do {
-            #if os(iOS)
-                let documentDirectory = try fileManager.url(for: .documentDirectory,
-                                                            in: .userDomainMask,
-                                                            appropriateFor: nil,
-                                                            create: false)
-            #else
-                let documentDirectory = try fileManager.url(for: .cachesDirectory,
-                                                            in: .userDomainMask,
-                                                            appropriateFor: nil,
-                                                            create: false)
-            #endif
+            let directory: FileManager.SearchPathDirectory = Env.isIOS ? .documentDirectory : .cachesDirectory
+            let documentDirectory = try fileManager.url(for: directory,
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
 
             let fileURL = documentDirectory.appendingPathComponent(path)
             return try Data(contentsOf: fileURL, options: .uncached)

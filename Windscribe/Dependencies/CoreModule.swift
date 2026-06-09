@@ -64,17 +64,7 @@ extension Container {
             language = String(deviceLanguage.prefix(2))
         }
 
-        #if os(tvOS)
-            let platform = "appletv"
-        #else
-            let platform = "ios"
-        #endif
-
-        #if STAGING
-            let isStaging = true
-        #else
-            let isStaging = false
-        #endif
+        let platform = Env.isTVOS ? "appletv" : "ios"
 
         WSNet.initialize(
             platform,
@@ -83,13 +73,13 @@ extension Container {
             deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "",
             openVpnVersion: APIParameterValues.openVPNVersion,
             sessionTypeId: "4",
-            isUseStagingDomains: isStaging,
+            isUseStagingDomains: Env.isStaging,
             language: language,
             persistentSettings: preferences.getServerSettings(),
             loggerFunction: { message in
                 logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
             },
-            debugLog: false,
+            debugLog: Env.isInternal,
             amneziawgVersion: APIParameterValues.unlockWGVersion)
 
         WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])

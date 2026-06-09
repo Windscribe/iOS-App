@@ -22,3 +22,14 @@ TEST_TARGET_BUNDLE_ID = com.WindscribeTests
 MARKETING_VERSION = 3.12.0
 CURRENT_PROJECT_VERSION = 1
 TV_MARKETING_VERSION = 1.0.4
+
+// INTERNAL build marker. Drives the `INTERNAL` Swift compilation condition for
+// the Production config (Debug/Staging bake `INTERNAL` in directly — always internal).
+// Defaults on; CI strips it (WS_INTERNAL_FLAG= via xcargs) for release-* branch builds.
+WS_INTERNAL_FLAG = INTERNAL
+
+// App icon for INTERNAL builds — the base icon with a red INTERNAL banner, so an
+// internal build is never mistaken for / released as production. Tracks WS_INTERNAL_FLAG:
+// defaults to the bannered icon; CI overrides to AppIcon for release-* branch builds.
+// (Staging keeps its own AppIcon-Staging, set per-config.)
+WS_APP_ICON = AppIcon-Internal
