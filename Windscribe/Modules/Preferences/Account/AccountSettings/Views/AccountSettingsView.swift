@@ -370,7 +370,7 @@ struct AccountSectionView: View {
                 .padding(.horizontal, 16)
             }
 
-            if accountStatus == .unverified {
+            if section.type == .info, accountStatus == .unverified {
                 Button(action: {
                     handleRowAction(.resendEmail)
                 }, label: {
