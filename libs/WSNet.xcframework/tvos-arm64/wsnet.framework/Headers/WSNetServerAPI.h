@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setApiResolutionsSettings:(NSString*)apiRoot assetsRoot:(NSString*)assetsRoot;
 -(void)setIgnoreSslErrors:(BOOL)bIgnore;
 -(void)resetFailover;
--(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(unsigned int, unsigned int))tryingBackupEndpointCallback;
+-(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(void))tryingBackupEndpointCallback;
 -(WSNetCancelableCallback*)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)session:(NSString*)authHash appleId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId invRev:(int64_t)invRev backup:(int32_t)backup callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)claimVoucherCode:(NSString*)authHash voucherCode:(NSString*)voucherCode callback:(void(^)(int, NSString*))callback;
