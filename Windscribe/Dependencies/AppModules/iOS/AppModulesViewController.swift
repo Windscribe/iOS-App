@@ -263,7 +263,8 @@ class ViewControllerModule: Assembly {
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     userSessionRepository: r.resolve(UserSessionRepository.self)!,
                     apiManager: r.resolve(APIManager.self)!,
-                    connectivity: r.resolve(ConnectivityManager.self)!),
+                    connectivity: r.resolve(ConnectivityManager.self)!,
+                    deviceAttesting: r.resolve((any DeviceAttesting).self)!),
                 router: r.resolve(HelpNavigationRouter.self)!)
         }.inObjectScope(.transient)
 

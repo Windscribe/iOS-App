@@ -28,6 +28,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
     private let connectivity: ConnectivityManager
+    private let deviceAttesting: any DeviceAttesting
 
     private var networkStatus: NetworkStatus = .disconnected
 
@@ -36,11 +37,13 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
          hapticFeedbackManager: HapticFeedbackManager,
          userSessionRepository: UserSessionRepository,
          apiManager: APIManager,
-         connectivity: ConnectivityManager) {
+         connectivity: ConnectivityManager,
+         deviceAttesting: any DeviceAttesting) {
 
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
         self.connectivity = connectivity
+        self.deviceAttesting = deviceAttesting
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -128,6 +131,15 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
 
         Task {
             do {
+                // Surface a fresh DeviceCheck token in the uploaded log so the
+                // device's attestation bits can be reset through the admin
+                // panel. The token is opaque to anyone without our DeviceCheck
+                // credentials, rotates per call, and expires within minutes,
+                // so one is minted per log submission. Best-effort: failure
+                // must never block sending the log.
+                let attestationToken = (try? await deviceAttesting.generateToken()) ?? "unavailable"
+                logger.logI("DeviceAttestation", "reset-token ios \(attestationToken)", flushImmediately: true)
+
                 let logData = try await logger.getLogData()
 
                 let username = await MainActor.run {
