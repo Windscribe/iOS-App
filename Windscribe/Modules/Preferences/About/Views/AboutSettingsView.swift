@@ -40,7 +40,7 @@ struct AboutSettingsView: View {
         }
         .dynamicTypeSize(dynamicTypeRange)
         .sheet(item: $viewModel.safariURL) { url in
-            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
+            SafariView(url: url)
         }
         .navigationTitle(TextsAsset.About.title)
         .navigationBarTitleDisplayMode(.inline)

@@ -78,7 +78,7 @@ import RealmSwift
     }
 }
 
-struct RobertFilterModel: Equatable, Hashable, Codable {
+struct RobertFilterModel: Equatable, Hashable, Codable, Sendable {
     var id: String
     var title: String
     var filterDescription: String

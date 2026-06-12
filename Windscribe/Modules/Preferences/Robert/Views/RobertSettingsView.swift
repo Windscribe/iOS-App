@@ -38,7 +38,6 @@ struct RobertSettingsView: View {
                                         .foregroundColor(.from(.backgroundColor, viewModel.isDarkMode))
                                 }
                                 DescriptionWithLearnMore(description: TextsAsset.Robert.description,
-                                                         isDarkMode: viewModel.isDarkMode,
                                                          action: viewModel.infoSelected)
                                     .padding(.horizontal, 14)
                                     .padding(.vertical, 12)
@@ -74,11 +73,11 @@ struct RobertSettingsView: View {
             }
 
             if viewModel.isLoading {
-                MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: false)
+                MenuLoadingOverlayView(isFullScreen: false)
             }
         }
         .sheet(item: $viewModel.safariURL) { url in
-            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
+            SafariView(url: url)
         }
         .navigationTitle(TextsAsset.Robert.title)
         .navigationBarTitleDisplayMode(.inline)

@@ -11,6 +11,7 @@ import SwiftUI
 struct LoginTextField: View {
 
     @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.lookAndFeel) private var lookAndFeel
 
     var title: String
     var secondaryTitle: String?
@@ -23,7 +24,6 @@ struct LoginTextField: View {
     var showFieldErrorText: Bool = true
 
     @Binding var text: String
-    @Binding var isDarkMode: Bool
     var passwordVisible: Binding<Bool>?
     @State private var isPasswordVisible: Bool = false
     @FocusState private var isFocused: Bool
@@ -38,7 +38,7 @@ struct LoginTextField: View {
         if showError {
             return .loginRegisterFailedField
         } else if isFocused {
-            return .from(.titleColor, isDarkMode)
+            return .from(.titleColor, lookAndFeel.isDarkMode)
         }
         return .loginRegisterStrokeColor
     }
@@ -67,7 +67,7 @@ struct LoginTextField: View {
                             .disabled(isSecure && !isPasswordVisible)
                             .keyboardType(keyboardType)
                             .textContentType(textContentType)
-                            .tint(.from(.iconColor, isDarkMode))
+                            .tint(.from(.iconColor, lookAndFeel.isDarkMode))
                             .focused($isFocused)
 
                         SecureField("", text: $text)
@@ -75,11 +75,11 @@ struct LoginTextField: View {
                             .disabled(!(!isPasswordVisible && isSecure))
                             .keyboardType(keyboardType)
                             .textContentType(textContentType)
-                            .tint(.from(.iconColor, isDarkMode))
+                            .tint(.from(.iconColor, lookAndFeel.isDarkMode))
                             .focused($isFocused)
                     }
-                    .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, isDarkMode))
-                    .modifier(LoginTextFieldModifiers(placeholder: placeholder, text: text, isDarkMode: isDarkMode, showError: showError))
+                    .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, lookAndFeel.isDarkMode))
+                    .modifier(LoginTextFieldModifiers(placeholder: placeholder, text: text, showError: showError))
 
                     if isSecure && showPasswordToggle {
                         Button(action: {
@@ -88,7 +88,7 @@ struct LoginTextField: View {
                             }
                         }, label: {
                             Image(isPasswordVisible ? ImagesAsset.eyeOff : ImagesAsset.eye)
-                                .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5))
+                                .foregroundColor(.from(.iconColor, lookAndFeel.isDarkMode).opacity(0.5))
                         })
 
                         Spacer()
@@ -100,7 +100,7 @@ struct LoginTextField: View {
                     }
                 }
                 .padding()
-                .background(Color.from(.backgroundColor, isDarkMode))
+                .background(Color.from(.backgroundColor, lookAndFeel.isDarkMode))
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
@@ -141,14 +141,14 @@ private extension LoginTextField {
                     .font(.medium(.callout))
                     .foregroundColor(showError
                                      ? .loginRegisterFailedField
-                                     : .from(.titleColor, isDarkMode))
+                                     : .from(.titleColor, lookAndFeel.isDarkMode))
 
                 Spacer()
 
                 Button(action: titleTapAction) {
                     Text(secondary)
                         .font(.regular(.callout))
-                        .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5))
+                        .foregroundColor(.from(.iconColor, lookAndFeel.isDarkMode).opacity(0.5))
                         .underline()
                 }
                 .buttonStyle(.plain)
@@ -159,10 +159,10 @@ private extension LoginTextField {
                 .font(.medium(.callout))
                 .foregroundColor(showError
                                  ? .loginRegisterFailedField
-                                 : .from(.titleColor, isDarkMode))
+                                 : .from(.titleColor, lookAndFeel.isDarkMode))
             + Text(" \(secondary)")
                 .font(.regular(.callout))
-                .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5)))
+                .foregroundColor(.from(.iconColor, lookAndFeel.isDarkMode).opacity(0.5)))
             .frame(maxWidth: .infinity, alignment: .leading)
         } else if let titleTapAction = titleTapAction {
             // Whole title is tappable
@@ -171,7 +171,7 @@ private extension LoginTextField {
                     .font(.medium(.callout))
                     .foregroundColor(showError
                                      ? .loginRegisterFailedField
-                                     : .from(.titleColor, isDarkMode))
+                                     : .from(.titleColor, lookAndFeel.isDarkMode))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .buttonStyle(.plain)
@@ -181,7 +181,7 @@ private extension LoginTextField {
                 .font(.medium(.callout))
                 .foregroundColor(showError
                                  ? .loginRegisterFailedField
-                                 : .from(.titleColor, isDarkMode))
+                                 : .from(.titleColor, lookAndFeel.isDarkMode))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -190,9 +190,10 @@ private extension LoginTextField {
 // MARK: - Modifiers
 
 private struct LoginTextFieldModifiers: ViewModifier {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
     var placeholder: String
     var text: String
-    var isDarkMode: Bool
     var showError: Bool
 
     func body(content: Content) -> some View {
@@ -202,7 +203,7 @@ private struct LoginTextFieldModifiers: ViewModifier {
             .submitLabel(.return)
             .placeholder(when: text.isEmpty) {
                 Text(placeholder)
-                    .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, isDarkMode).opacity(0.5))
+                    .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, lookAndFeel.isDarkMode).opacity(0.5))
             }
     }
 }

@@ -474,6 +474,10 @@ class MockPreferences: Preferences {
         return Just(nil).eraseToAnyPublisher()
     }
 
+    func getAutoSecureNewNetworksSync() -> Bool {
+        return DefaultValues.autoSecure
+    }
+
     func saveAutoSecureNewNetworks(autoSecure: Bool) {}
 
     func getConnectionMode() -> AnyPublisher<String?, Never> {

@@ -186,7 +186,7 @@ protocol MenuEntryHeaderType: MenuEntryItemType {
     var secondaryEntries: [MenuSecondaryEntryItem] { get }
 }
 
-protocol MenuEntryItemType: Hashable {
+protocol MenuEntryItemType: Hashable, Identifiable {
     var id: Int { get }
     var title: String { get }
     var icon: String { get }

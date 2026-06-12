@@ -166,7 +166,6 @@ struct GeneralViewModelTests {
     // MARK: - Helpers
 
     private func makeViewModel(
-        lookAndFeel: any LookAndFeelObserving = MockLookAndFeelObserving(),
         hapticFeedback: any HapticFeedbacking = MockHapticFeedbacking(),
         languageStoring: any LanguageStoring = MockLanguageStoring(),
         preferencesReading: any PreferencesReading = StubPreferencesReading(),
@@ -268,6 +267,19 @@ final class StubPreferencesReading: PreferencesReading, @unchecked Sendable {
     var locationOrder: String?
     var isHapticFeedbackEnabled: Bool
     var isLocationLoadEnabled: Bool
+    var soundEffectConnect: String?
+    var soundEffectDisconnect: String?
+    var customSoundPathConnect: String?
+    var customSoundPathDisconnect: String?
+    var customAppIcon: String?
+    var connectionMode: String?
+    var connectedDNS: String?
+    var customDNSValue = ""
+    var egressProtocol: String?
+    var ingressProtocol: String?
+    var autoSecureNewNetworks = false
+    var ssoProvider: String?
+    var advanceParams: String?
 
     private var locationLoadContinuation: AsyncStream<Bool>.Continuation?
     private var hapticContinuation: AsyncStream<Bool>.Continuation?
@@ -302,6 +314,22 @@ final class StubPreferencesReading: PreferencesReading, @unchecked Sendable {
         }
     }
 
+    var selectedProtocolUpdates: AsyncStream<String?> { stream(value: selectedProtocol) }
+    var selectedPortUpdates: AsyncStream<String?> { stream(value: selectedPort) }
+    var killSwitchUpdates: AsyncStream<Bool> { stream(value: killSwitchEnabled) }
+    var allowLANUpdates: AsyncStream<Bool> { stream(value: allowLAN) }
+    var connectionModeUpdates: AsyncStream<String?> { stream(value: connectionMode) }
+    var connectedDNSUpdates: AsyncStream<String?> { stream(value: connectedDNS) }
+    var egressProtocolUpdates: AsyncStream<String?> { stream(value: egressProtocol) }
+    var ingressProtocolUpdates: AsyncStream<String?> { stream(value: ingressProtocol) }
+    var autoSecureUpdates: AsyncStream<Bool> { stream(value: autoSecureNewNetworks) }
+
+    private func stream<Value>(value: Value) -> AsyncStream<Value> {
+        AsyncStream { continuation in
+            continuation.yield(value)
+        }
+    }
+
     func sendLocationLoad(_ value: Bool) {
         isLocationLoadEnabled = value
         locationLoadContinuation?.yield(value)
@@ -316,16 +344,44 @@ final class StubPreferencesReading: PreferencesReading, @unchecked Sendable {
         locationOrder = value
         orderContinuation?.yield(value)
     }
+
+    func getCustomAppIcon() -> String? {
+        customAppIcon
+    }
 }
 
 final class MockPreferencesWriting: PreferencesWriting, @unchecked Sendable {
     private(set) var savedShowServerNetLoad: Bool?
     private(set) var savedHaptic: Bool?
     private(set) var savedOrderLocationsBy: String?
+    private(set) var savedCustomAppIcon: String?
+    private(set) var savedConnectionMode: String?
+    private(set) var savedSelectedProtocol: String?
+    private(set) var savedSelectedPort: String?
+    private(set) var savedKillSwitch: Bool?
+    private(set) var savedAllowLAN: Bool?
+    private(set) var savedConnectedDNS: String?
+    private(set) var savedCustomDNSValue: DNSValue?
+    private(set) var savedEgressProtocolPreference: String?
+    private(set) var savedIngressProtocolPreference: String?
+    private(set) var savedAutoSecureNewNetworks: Bool?
+    private(set) var savedAdvanceParams: String?
 
     func saveShowServerNetLoad(show: Bool) { savedShowServerNetLoad = show }
     func saveHapticFeedback(haptic: Bool) { savedHaptic = haptic }
     func saveOrderLocationsBy(order: String) { savedOrderLocationsBy = order }
+    func saveCustomAppIcon(value: String) { savedCustomAppIcon = value }
+    func saveConnectionMode(mode: String) { savedConnectionMode = mode }
+    func saveSelectedProtocol(selectedProtocol: String) { savedSelectedProtocol = selectedProtocol }
+    func saveSelectedPort(port: String) { savedSelectedPort = port }
+    func saveKillSwitch(killSwitch: Bool) { savedKillSwitch = killSwitch }
+    func saveAllowLAN(mode: Bool) { savedAllowLAN = mode }
+    func saveConnectedDNS(mode: String) { savedConnectedDNS = mode }
+    func saveCustomDNSValue(value: DNSValue) { savedCustomDNSValue = value }
+    func saveEgressProtocolPreference(value: String) { savedEgressProtocolPreference = value }
+    func saveIngressProtocolPreference(value: String) { savedIngressProtocolPreference = value }
+    func saveAutoSecureNewNetworks(autoSecure: Bool) { savedAutoSecureNewNetworks = autoSecure }
+    func saveAdvanceParams(params: String) { savedAdvanceParams = params }
 }
 
 final class MockPushNotificationManaging: PushNotificationManaging, @unchecked Sendable {

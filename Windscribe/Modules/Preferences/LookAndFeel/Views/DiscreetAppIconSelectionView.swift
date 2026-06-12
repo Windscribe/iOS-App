@@ -31,7 +31,6 @@ struct DiscreetAppIconSelectionView: View {
                             section: section,
                             icons: section.icons(from: viewModel.iconOptions),
                             selectedIcon: viewModel.selectedIcon,
-                            isDarkMode: viewModel.isDarkMode,
                             onIconSelected: { icon in
                                 viewModel.iconSelected(icon)
                             }
@@ -52,10 +51,11 @@ struct DiscreetAppIconSelectionView: View {
 }
 
 struct IconSectionView: View {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
     let section: IconSection
     let icons: [DiscreetAppIconType]
     let selectedIcon: DiscreetAppIconType
-    let isDarkMode: Bool
     let onIconSelected: (DiscreetAppIconType) -> Void
 
     var body: some View {
@@ -63,7 +63,7 @@ struct IconSectionView: View {
             // Section header
             Text(section.title)
                 .font(.semiBold(.footnote))
-                .foregroundColor(.from(.infoColor, isDarkMode))
+                .foregroundColor(.from(.infoColor, lookAndFeel.isDarkMode))
 
             // Section content
             VStack(spacing: 0) {
@@ -71,7 +71,7 @@ struct IconSectionView: View {
                     IconRowView(
                         icon: icon,
                         isSelected: selectedIcon == icon,
-                        isDarkMode: isDarkMode,
+                        isDarkMode: lookAndFeel.isDarkMode,
                         showSeparator: index < icons.count - 1,
                         action: {
                             onIconSelected(icon)
@@ -81,7 +81,7 @@ struct IconSectionView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.from(.backgroundColor, isDarkMode))
+                    .fill(Color.from(.backgroundColor, lookAndFeel.isDarkMode))
             )
         }
     }

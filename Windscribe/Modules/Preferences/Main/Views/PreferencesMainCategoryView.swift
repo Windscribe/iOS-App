@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Swinject
 
 struct PreferencesMainCategoryView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -80,7 +81,7 @@ struct PreferencesMainCategoryView: View {
         .withRouter(router)
         .sheet(isPresented: $showConfirmEmailSheet) {
             if #available(iOS 16.4, *) {
-                router.createView(for: .confirmEmail)
+                confirmEmailSheetContent
                     .presentationDetents([PresentationDetent.fraction(0.65)])
                     .presentationDragIndicator(.hidden)
                     .presentationCornerRadius(24)
@@ -89,15 +90,32 @@ struct PreferencesMainCategoryView: View {
                             .padding(.bottom, -1000) // Extend background to cover peek area
                     }
             } else if #available(iOS 16.0, *) {
-                router.createView(for: .confirmEmail)
+                confirmEmailSheetContent
                     .presentationDetents([PresentationDetent.fraction(0.65)])
                     .presentationDragIndicator(.hidden)
             } else {
-                router.createView(for: .confirmEmail)
+                confirmEmailSheetContent
             }
         }
         .onWillDisappear {
             viewModel.actionSelected()
+        }
+    }
+
+    @ViewBuilder
+    private var confirmEmailSheetContent: some View {
+        if #available(iOS 17.0, *) {
+            ConfirmEmailScreen(
+                openEnterEmail: {
+                    showConfirmEmailSheet = false
+                    router.navigate(to: .enterEmail)
+                },
+                onDismiss: {
+                    showConfirmEmailSheet = false
+                }
+            )
+        } else {
+            Assembler.resolve(ConfirmEmailView.self)
         }
     }
 

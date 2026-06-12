@@ -9,17 +9,6 @@
 import Foundation
 import Combine
 
-enum RobertEntryType: MenuEntryHeaderType, Hashable, Equatable {
-    case customRules
-
-    var id: Int { 1 }
-    var action: MenuEntryActionType? { .none(title: TextsAsset.Robert.manageCustomRules, parentId: id) }
-    var message: String? { nil }
-    var secondaryEntries: [MenuSecondaryEntryItem] { [] }
-    var title: String { TextsAsset.Robert.manageCustomRules }
-    var icon: String { "" }
-}
-
 protocol RobertSettingsViewModel: PreferencesBaseViewModel {
     var description: AttributedString { get set }
     var errorMessage: String? { get set }

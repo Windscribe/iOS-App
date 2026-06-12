@@ -111,6 +111,7 @@ protocol Preferences: Sendable {
     func setServerCredentialTypeKey(typeKey: String)
 
     func getAutoSecureNewNetworks() -> AnyPublisher<Bool?, Never>
+    func getAutoSecureNewNetworksSync() -> Bool
     func saveAutoSecureNewNetworks(autoSecure: Bool)
 
     func getConnectionMode() -> AnyPublisher<String?, Never>

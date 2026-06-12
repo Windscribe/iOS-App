@@ -34,9 +34,61 @@ struct AccountSettingsView: View {
     }
 
     var body: some View {
+        mainContent
+            .fullScreenCover(isPresented: $viewModel.showPasswordResetSuccess) {
+                PasswordResetSuccessView(
+                    isDarkMode: viewModel.isDarkMode,
+                    onClose: {
+                        viewModel.dismissPasswordResetSuccess()
+                    }
+                )
+            }
+            .dynamicTypeSize(dynamicTypeRange)
+            .navigationTitle(TextsAsset.Account.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .alert(item: $viewModel.alertMessage) { alert in
+                Alert(
+                    title: Text(alert.title),
+                    message: Text(alert.message),
+                    dismissButton: .default(Text(alert.buttonText))
+                )
+            }
+            .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
+                get: { dialog != nil && dialog != .lazyLogin },
+                set: { if !$0 { dialog = nil } }
+            ), actions: {
+                dialogInputField
+                Button(TextsAsset.confirm) {
+                    handleConfirm(dialog: dialog, input: inputText)
+                }
+                Button(TextsAsset.cancel, role: .cancel) { }
+            }, message: {
+                Text(dialogDescription(dialog))
+            })
+            .id(dialog?.id)
+            .sheet(item: $fallbackDialog) { dialog in
+                fallbackDialogSheet(dialog)
+            }
+            .sheet(isPresented: $showUpgradeModal) {
+                upgradeSheet
+            }
+            .onChange(of: viewModel.showUpgradeWithPromo) { promoCode in
+                if let promoCode = promoCode {
+                    upgradePromoCode = promoCode
+                    showUpgradeModal = true
+                    viewModel.showUpgradeWithPromo = nil
+                }
+            }
+            .onAppear {
+                viewModel.actionSelected()
+            }
+            .overlay(lazyLoginOverlay)
+    }
+
+    private var mainContent: some View {
         ZStack {
             if case let .loading(isFullScreen) = viewModel.loadingState, isFullScreen {
-                MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: true)
+                MenuLoadingOverlayView(isFullScreen: true)
             } else {
                 PreferencesBaseView(isDarkMode: $viewModel.isDarkMode, useHapticFeedback: false) {
                     ScrollView {
@@ -73,109 +125,75 @@ struct AccountSettingsView: View {
             }
 
             if case let .loading(isFullScreen) = viewModel.loadingState, !isFullScreen {
-                MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: false)
+                MenuLoadingOverlayView(isFullScreen: false)
             }
         }
-        .fullScreenCover(isPresented: $viewModel.showPasswordResetSuccess) {
-            PasswordResetSuccessView(
-                isDarkMode: viewModel.isDarkMode,
-                onClose: {
-                    viewModel.dismissPasswordResetSuccess()
-                }
-            )
-        }
-        .dynamicTypeSize(dynamicTypeRange)
-        .navigationTitle(TextsAsset.Account.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .alert(item: $viewModel.alertMessage) { alert in
-            Alert(
-                title: Text(alert.title),
-                message: Text(alert.message),
-                dismissButton: .default(Text(alert.buttonText))
-            )
-        }
-        .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
-            get: { dialog != nil && dialog != .lazyLogin },
-            set: { if !$0 { dialog = nil } }
-        ), actions: {
-            if dialog == .password {
-                SecureField(dialogPlaceHolder(dialog), text: $inputText)
-            } else {
-                TextField(dialogPlaceHolder(dialog), text: $inputText)
-            }
+    }
 
-            Button(TextsAsset.confirm) {
-                handleConfirm(dialog: dialog, input: inputText)
-            }
+    @ViewBuilder
+    private var dialogInputField: some View {
+        if dialog == .password {
+            SecureField(dialogPlaceHolder(dialog), text: $inputText)
+        } else {
+            TextField(dialogPlaceHolder(dialog), text: $inputText)
+        }
+    }
 
-            Button(TextsAsset.cancel, role: .cancel) { }
-        }, message: {
-            Text(dialogDescription(dialog))
-        })
-        .id(dialog?.id)
-        .sheet(item: $fallbackDialog) { dialog in
-            MenuTextFieldDialogView(
-                title: dialogTitle(dialog),
-                description: dialogDescription(dialog),
-                placeholder: dialogPlaceHolder(dialog),
-                isSecure: dialog == .password,
-                isLazyCode: dialog == .lazyLogin,
-                onConfirm: { input in
-                    handleConfirm(dialog: dialog, input: input)
-                },
-                onCancel: {
-                    fallbackDialog = nil
-                }
-            )
-        }
-        .sheet(isPresented: $showUpgradeModal) {
-            if let promoCode = upgradePromoCode {
-                PlanUpgradeViewControllerWrapper(promoCode: promoCode, pcpID: nil)
-                    .edgesIgnoringSafeArea(.all)
-            } else {
-                PlanUpgradeViewControllerWrapper()
-                    .edgesIgnoringSafeArea(.all)
+    private func fallbackDialogSheet(_ dialog: AccountInputDialog) -> some View {
+        MenuTextFieldDialogView(
+            title: dialogTitle(dialog),
+            description: dialogDescription(dialog),
+            placeholder: dialogPlaceHolder(dialog),
+            isSecure: dialog == .password,
+            isLazyCode: dialog == .lazyLogin,
+            onConfirm: { input in
+                handleConfirm(dialog: dialog, input: input)
+            },
+            onCancel: {
+                fallbackDialog = nil
             }
-        }
-        .onChange(of: viewModel.showUpgradeWithPromo) { promoCode in
-            if let promoCode = promoCode {
-                upgradePromoCode = promoCode
-                showUpgradeModal = true
-                viewModel.showUpgradeWithPromo = nil
-            }
-        }
-        .onAppear {
-            viewModel.actionSelected()
-        }
-        .overlay(
-            ZStack {
-                if showCustomLazyLoginAlert {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .transition(.opacity)
-                        .onTapGesture {
-                            showCustomLazyLoginAlert = false
-                        }
-
-                    LazyLoginCodeAlertView(
-                        title: TextsAsset.Account.loginCodeTitle,
-                        message: TextsAsset.Account.lazyLoginDescription,
-                        code: $inputText,
-                        isDarkMode: viewModel.isDarkMode,
-                        onConfirm: {
-                            showCustomLazyLoginAlert = false
-                            handleConfirm(dialog: .lazyLogin, input: inputText)
-                        },
-                        onCancel: {
-                            showCustomLazyLoginAlert = false
-                            inputText = ""
-                        }
-                    )
-                    .transition(.opacity)
-                }
-            }
-            .animation(.easeInOut(duration: 0.2), value: showCustomLazyLoginAlert)
         )
+    }
+
+    @ViewBuilder
+    private var upgradeSheet: some View {
+        if let promoCode = upgradePromoCode {
+            PlanUpgradeViewControllerWrapper(promoCode: promoCode, pcpID: nil)
+                .edgesIgnoringSafeArea(.all)
+        } else {
+            PlanUpgradeViewControllerWrapper()
+                .edgesIgnoringSafeArea(.all)
+        }
+    }
+
+    private var lazyLoginOverlay: some View {
+        ZStack {
+            if showCustomLazyLoginAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .onTapGesture {
+                        showCustomLazyLoginAlert = false
+                    }
+
+                LazyLoginCodeAlertView(
+                    title: TextsAsset.Account.loginCodeTitle,
+                    message: TextsAsset.Account.lazyLoginDescription,
+                    code: $inputText,
+                    isDarkMode: viewModel.isDarkMode,
+                    onConfirm: {
+                        showCustomLazyLoginAlert = false
+                        handleConfirm(dialog: .lazyLogin, input: inputText)
+                    },
+                    onCancel: {
+                        showCustomLazyLoginAlert = false
+                        inputText = ""
+                    }
+                )
+                .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: showCustomLazyLoginAlert)
     }
 
     @ViewBuilder

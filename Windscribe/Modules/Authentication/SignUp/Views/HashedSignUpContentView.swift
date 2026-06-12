@@ -76,7 +76,7 @@ struct HashedSignUpContentView: View {
             Alert(title: Text("Error"), message: Text(fileError ?? ""))
         }
         .sheet(item: $safariURL) { url in
-            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
+            SafariView(url: url)
         }
         .onChange(of: viewModel.accountHash) { _ in
             hideCopiedFeedback()
@@ -229,8 +229,7 @@ private extension HashedSignUpContentView {
             LoginTextField(
                 title: "",
                 placeholder: TextsAsset.Authentication.enterVoucherCode,
-                text: $viewModel.voucherCode,
-                isDarkMode: $viewModel.isDarkMode
+                text: $viewModel.voucherCode
             )
             .transition(.opacity)
             .animation(.easeInOut(duration: 0.25), value: viewModel.isVoucherVisible)

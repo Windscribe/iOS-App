@@ -110,7 +110,6 @@ private extension StandardSignUpContentView {
             errorMessage: usernameErrorMessage,
             showWarningIcon: isUsernameError,
             text: $viewModel.username,
-            isDarkMode: $viewModel.isDarkMode,
             trailingView: AnyView(
                 Button(action: { viewModel.generateUsername() }) {
                     Image(ImagesAsset.arrowRefresh)
@@ -134,7 +133,6 @@ private extension StandardSignUpContentView {
             errorMessage: passwordErrorMessage,
             showWarningIcon: isPasswordError,
             text: $viewModel.password,
-            isDarkMode: $viewModel.isDarkMode,
             passwordVisible: $forcePasswordVisible,
             trailingView: AnyView(
                 Button(action: {
@@ -163,7 +161,6 @@ private extension StandardSignUpContentView {
             errorMessage: confirmPasswordErrorMessage,
             showWarningIcon: isConfirmPasswordError,
             text: $viewModel.confirmPassword,
-            isDarkMode: $viewModel.isDarkMode,
             passwordVisible: $forcePasswordVisible,
             trailingView: AnyView(
                 Button(action: {
@@ -207,7 +204,6 @@ private extension StandardSignUpContentView {
                 errorMessage: emailErrorMessage,
                 showWarningIcon: false,
                 text: $viewModel.email,
-                isDarkMode: $viewModel.isDarkMode,
                 keyboardType: .emailAddress,
                 trailingView: AnyView(
                     InfoAlertButton(
@@ -257,7 +253,6 @@ private extension StandardSignUpContentView {
                 title: "",
                 placeholder: TextsAsset.Authentication.enterVoucherCode,
                 text: $viewModel.voucherCode,
-                isDarkMode: $viewModel.isDarkMode
             )
             .focused(focusedField, equals: .voucher)
             .id(SignUpView.Field.voucher)
@@ -326,7 +321,6 @@ private extension StandardSignUpContentView {
                         : nil,
                     showWarningIcon: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email),
                     text: $viewModel.referralUsername,
-                    isDarkMode: $viewModel.isDarkMode
                 )
                 .disabled(!viewModel.isEmailValid(viewModel.email))
                 .focused(focusedField, equals: .referral)

@@ -70,7 +70,104 @@ extension EnvironmentValues {
         legacy: Assembler.resolve(HapticFeedbackManager.self)
     )
 
+    /// Look-and-feel write surface (background effects, sound effects, dark mode).
+    @Entry var lookAndFeelStoring: any LookAndFeelStoring = LegacyLookAndFeelStore(
+        repository: Assembler.resolve(LookAndFeelRepositoryType.self),
+        preferences: Assembler.resolve(Preferences.self)
+    )
+
+    /// Background file operations (save/retrieve custom background images).
+    @Entry var backgroundFileStoring: any BackgroundFileStoring = LegacyBackgroundFileStore(
+        legacy: Assembler.resolve(BackgroundFileManaging.self)
+    )
+
+    /// Sound file operations (save/retrieve custom sound files).
+    @Entry var soundFileStoring: any SoundFileStoring = LegacySoundFileStore(
+        legacy: Assembler.resolve(SoundFileManaging.self)
+    )
+
+    /// Location names management (import/export/reset custom location names).
+    @Entry var locationNamesManaging: any LocationNamesManaging = LegacyLocationNamesManager(
+        legacy: Assembler.resolve(LocationListRepository.self)
+    )
+
+    /// R.O.B.E.R.T. filter read/write surface.
+    @Entry var robertFiltering: any RobertFiltering = LegacyRobertFilterStore(
+        legacy: Assembler.resolve(RobertyFiltersRepository.self)
+    )
+
+    /// R.O.B.E.R.T. custom-rules authenticated URL provider.
+    @Entry var robertRuleURLProvider: any RobertRuleURLProviding = LegacyRobertRuleURLProvider(
+        apiManager: Assembler.resolve(APIManager.self)
+    )
+
+    /// Account actions for the Neo Account preferences screen.
+    @Entry var accountManaging: any AccountManaging = LegacyAccountManager(
+        sessionManager: Assembler.resolve(SessionManager.self),
+        apiManager: Assembler.resolve(APIManager.self)
+    )
+
     /// Device attestation surface (DeviceCheck tokens for backend-side device
     /// quota / fraud signals). Default: production `DCDeviceAttestation`.
     @Entry var deviceAttesting: any DeviceAttesting = DCDeviceAttestation()
+
+    /// DNS settings management (validation, resolution).
+    @Entry var dnsSettingsManaging: any DNSSettingsManaging = LegacyDNSSettingsManager(
+        legacy: Assembler.resolve(DNSSettingsManagerType.self)
+    )
+
+    /// Port map provider (available ports per protocol).
+    @Entry var portMapProviding: any PortMapProviding = LegacyPortMapProvider(
+        legacy: Assembler.resolve(PortMapRepository.self)
+    )
+
+    /// Anti-censorship settings management (protocol tweaks, routing type).
+    @Entry var antiCensorshipManaging: any AntiCensorshipManaging = LegacyAntiCensorshipManager(
+        legacy: Assembler.resolve(AntiCensorshipRepository.self)
+    )
+
+    /// Wi-Fi network provider (saved networks list).
+    @Entry var wifiNetworkProviding: any WifiNetworkProviding = LegacyWifiNetworkProvider(
+        legacy: Assembler.resolve(WifiNetworkRepository.self)
+    )
+
+    /// Network connectivity observer (current network state).
+    @Entry var connectivityObserving: any ConnectivityObserving = LegacyConnectivityObserver(
+        legacy: Assembler.resolve(ConnectivityManager.self)
+    )
+
+    /// Wi-Fi network manager (trust status, preferred protocol updates).
+    @Entry var wifiNetworkManaging: any WifiNetworkManaging = LegacyWifiNetworkManager(
+        legacy: Assembler.resolve(WifiNetworkRepository.self)
+    )
+
+    /// VPN state provider (connection status).
+    @Entry var vpnStateProviding: any VPNStateProviding = LegacyVPNStateProvider(
+        legacy: Assembler.resolve(VPNStateRepository.self)
+    )
+
+    /// Protocol manager (protocol switching and refresh).
+    @Entry var protocolManaging: any ProtocolManaging = LegacyProtocolManager(
+        legacy: Assembler.resolve(ProtocolManagerType.self)
+    )
+
+    /// VPN on-demand rules manager (updates trust-based rules).
+    @Entry var vpnOnDemandManaging: any VPNOnDemandManaging = LegacyVPNOnDemandManager(
+        legacy: Assembler.resolve(VPNManager.self)
+    )
+
+    /// Debug log submission surface.
+    @Entry var debugLogManaging: any DebugLogManaging = LegacyDebugLogManager(
+        legacy: Assembler.resolve(APIManager.self)
+    )
+
+    /// Support ticket submission surface.
+    @Entry var ticketManaging: any TicketManaging = LegacyTicketManager(
+        legacy: Assembler.resolve(APIManager.self)
+    )
+
+    /// Referral/share state surface.
+    @Entry var referAndSharing: any ReferAndSharing = LegacyReferAndShareManager(
+        legacy: Assembler.resolve(ReferAndShareManager.self)
+    )
 }

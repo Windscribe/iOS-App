@@ -9,13 +9,14 @@
 import SwiftUI
 
 struct DescriptionWithLearnMore: View {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
     let description: String
-    var isDarkMode: Bool
     let action: () -> Void
 
     var body: some View {
         Text(buildAttributedString())
-            .foregroundColor(.from(.infoColor, isDarkMode))
+            .foregroundColor(.from(.infoColor, lookAndFeel.isDarkMode))
             .font(.regular(.footnote))
             .multilineTextAlignment(.leading)
             .environment(\.openURL, OpenURLAction { _ in

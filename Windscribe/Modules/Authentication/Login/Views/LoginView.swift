@@ -116,7 +116,7 @@ struct LoginView: View {
             .navigationBarBackButtonHidden(viewModel.showLoadingView && !viewModel.showCaptchaPopup)
             .toolbar { loginToolbar() }
             .sheet(item: $safariURL) { url in
-                SafariView(url: url, isDarkMode: viewModel.isDarkMode)
+                SafariView(url: url)
             }
             .fileImporter(
                 isPresented: $viewModel.showFileImporter,
@@ -233,7 +233,6 @@ private extension LoginView {
             showWarningIcon: showUsernameIcon,
             showFieldErrorText: false,
             text: $viewModel.username,
-            isDarkMode: $viewModel.isDarkMode,
             textContentType: .username
         )
         .focused($focusedField, equals: .username)
@@ -253,7 +252,6 @@ private extension LoginView {
             showWarningIcon: showPasswordIcon,
             showFieldErrorText: false,
             text: $viewModel.password,
-            isDarkMode: $viewModel.isDarkMode,
             titleTapAction: {
                 safariURL = URL(string: Links.forgotPassword)
             },
@@ -302,7 +300,6 @@ private extension LoginView {
                 showError: isTwoFaError,
                 showFieldErrorText: false,
                 text: $viewModel.twoFactorCode,
-                isDarkMode: $viewModel.isDarkMode,
                 keyboardType: .default,
                 textContentType: .oneTimeCode,
                 trailingView: AnyView(
@@ -334,7 +331,6 @@ private extension LoginView {
             showError: isHashError,
             showFieldErrorText: false,
             text: $viewModel.accountHash,
-            isDarkMode: $viewModel.isDarkMode,
             trailingView: AnyView(
                 Button(action: {
                     viewModel.showFileImporter = true

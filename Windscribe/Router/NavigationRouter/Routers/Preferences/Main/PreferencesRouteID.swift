@@ -23,7 +23,6 @@ enum PreferencesRouteID: Int, BaseRouteID, CaseIterable {
     case enterEmail
     case login
     case signupGhost
-    case confirmEmail
 
     var id: PreferencesRouteID { self }
 }

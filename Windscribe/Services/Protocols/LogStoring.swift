@@ -12,6 +12,7 @@ protocol LogStoring: Sendable {
     func logI(_ tag: String, _ message: String)
     func logE(_ tag: String, _ message: String)
     func logD(_ tag: String, _ message: String)
+    func getLogData() async throws -> String
 }
 
 /// Adapter wrapping the legacy `FileLogger`.
@@ -32,5 +33,9 @@ final class LegacyLogStore: LogStoring, Sendable {
 
     func logD(_ tag: String, _ message: String) {
         legacy.logD(tag, message)
+    }
+
+    func getLogData() async throws -> String {
+        try await legacy.getLogData()
     }
 }

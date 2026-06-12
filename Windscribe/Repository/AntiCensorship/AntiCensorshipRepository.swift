@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-protocol AntiCensorshipRepository {
+protocol AntiCensorshipRepository: Sendable {
     var useProtocolTweaksSubject: CurrentValueSubject<Bool, Never> { get }
     var selecteRoutingTypeSubject: CurrentValueSubject<ServerRoutingType, Never> { get }
     var selectedWgParamSubject: CurrentValueSubject<UnblockWgParams?, Never> { get }

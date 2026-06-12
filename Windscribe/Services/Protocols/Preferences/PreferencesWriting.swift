@@ -12,6 +12,18 @@ protocol PreferencesWriting: Sendable {
     func saveShowServerNetLoad(show: Bool)
     func saveHapticFeedback(haptic: Bool)
     func saveOrderLocationsBy(order: String)
+    func saveCustomAppIcon(value: String)
+    func saveConnectionMode(mode: String)
+    func saveSelectedProtocol(selectedProtocol: String)
+    func saveSelectedPort(port: String)
+    func saveKillSwitch(killSwitch: Bool)
+    func saveAllowLAN(mode: Bool)
+    func saveConnectedDNS(mode: String)
+    func saveCustomDNSValue(value: DNSValue)
+    func saveEgressProtocolPreference(value: String)
+    func saveIngressProtocolPreference(value: String)
+    func saveAutoSecureNewNetworks(autoSecure: Bool)
+    func saveAdvanceParams(params: String)
 }
 
 /// Adapter wrapping the legacy `Preferences` store.
@@ -32,5 +44,53 @@ final class LegacyPreferencesWriter: PreferencesWriting, Sendable {
 
     func saveOrderLocationsBy(order: String) {
         legacy.saveOrderLocationsBy(order: order)
+    }
+
+    func saveCustomAppIcon(value: String) {
+        legacy.saveCustomAppIcon(value: value)
+    }
+
+    func saveConnectionMode(mode: String) {
+        legacy.saveConnectionMode(mode: mode)
+    }
+
+    func saveSelectedProtocol(selectedProtocol: String) {
+        legacy.saveSelectedProtocol(selectedProtocol: selectedProtocol)
+    }
+
+    func saveSelectedPort(port: String) {
+        legacy.saveSelectedPort(port: port)
+    }
+
+    func saveKillSwitch(killSwitch: Bool) {
+        legacy.saveKillSwitch(killSwitch: killSwitch)
+    }
+
+    func saveAllowLAN(mode: Bool) {
+        legacy.saveAllowLane(mode: mode)
+    }
+
+    func saveConnectedDNS(mode: String) {
+        legacy.saveConnectedDNS(mode: mode)
+    }
+
+    func saveCustomDNSValue(value: DNSValue) {
+        legacy.saveCustomDNSValue(value: value)
+    }
+
+    func saveEgressProtocolPreference(value: String) {
+        legacy.saveEgressProtocolPreference(value: value)
+    }
+
+    func saveIngressProtocolPreference(value: String) {
+        legacy.saveIngressProtocolPreference(value: value)
+    }
+
+    func saveAutoSecureNewNetworks(autoSecure: Bool) {
+        legacy.saveAutoSecureNewNetworks(autoSecure: autoSecure)
+    }
+
+    func saveAdvanceParams(params: String) {
+        legacy.saveAdvanceParams(params: params)
     }
 }

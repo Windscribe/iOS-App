@@ -54,8 +54,12 @@ class HomeRouter: BaseRouter, RootRouter {
             let locationPermissionView = Assembler.resolve(LocationPermissionInfoView.self)
             presentViewModally(from: from, view: DeviceTypeProvider { locationPermissionView })
         case RouteID.shareWithFriends:
-            let referForDataView = Assembler.resolve(ReferForDataSettingsView.self)
-            pushViewWithoutNavigationBar(from: from, view: referForDataView, title: "")
+            if #available(iOS 17.0, *) {
+                pushViewWithoutNavigationBar(from: from, view: ReferForDataScreen(), title: "")
+            } else {
+                let referForDataView = Assembler.resolve(ReferForDataSettingsView.self)
+                pushViewWithoutNavigationBar(from: from, view: referForDataView, title: "")
+            }
         case let RouteID.network(network):
             let networkView = Assembler.resolve(NetworkSettingsView.self)
                 .environmentObject(NetworkFlowContext(displayNetwork: network))

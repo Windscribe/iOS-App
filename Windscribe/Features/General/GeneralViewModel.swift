@@ -13,7 +13,7 @@ import Foundation
 @MainActor
 final class GeneralViewModel {
 
-    // MARK: - State (read by the view)
+    // MARK: - Private State
     private var currentLanguage: String
     private var locationOrder: String = DefaultValues.orderLocationsBy
     private var isHapticFeedbackEnabled = DefaultValues.hapticFeedback
@@ -27,6 +27,7 @@ final class GeneralViewModel {
     private let preferencesWriting: PreferencesWriting
     private let pushNotifications: PushNotificationManaging
 
+    // MARK: - Entries
     var entries: [GeneralMenuEntryType] {
         let orderPreferences = zip(TextsAsset.orderPreferences,
                                    Fields.orderPreferences)
@@ -44,6 +45,7 @@ final class GeneralViewModel {
         ]
     }
 
+    // MARK: - Initialization
     init(hapticFeedback: HapticFeedbacking,
          languageStoring: LanguageStoring,
          preferencesReading: PreferencesReading,
@@ -62,6 +64,7 @@ final class GeneralViewModel {
         isLocationLoadEnabled = preferencesReading.isLocationLoadEnabled
     }
 
+    // MARK: - Lifecycle
     func startObservers() async {
         guard !hasStarted else { return }
         hasStarted = true

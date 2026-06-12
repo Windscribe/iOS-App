@@ -40,7 +40,6 @@ struct EnterEmailView: View {
                         showWarningIcon: currentError != nil,
                         showFieldErrorText: true,
                         text: $viewModel.email,
-                        isDarkMode: $viewModel.isDarkMode,
                         keyboardType: .emailAddress,
                         trailingView: viewModel.showGet10GBPromo
                         ? AnyView(

@@ -218,7 +218,7 @@ struct MenuEntryActionView: View {
                                   actionType: actionType,
                                   action: action)
         case let .infoLink(message, parentId):
-            DescriptionWithLearnMore(description: message, isDarkMode: isDarkMode) {
+            DescriptionWithLearnMore(description: message) {
                 action(.infoLink(parentId: parentId))
             }
             .frame(maxWidth: .infinity, alignment: .leading)

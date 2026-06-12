@@ -107,6 +107,10 @@ class PreferencesImpl: Preferences {
         return observeKey(SharedKeys.autoSecureNewNetworks, type: Bool.self, defaultValue: DefaultValues.autoSecureNewNetworks)
     }
 
+    func getAutoSecureNewNetworksSync() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.autoSecureNewNetworks) ?? DefaultValues.autoSecure
+    }
+
     func saveBlurStaticIpAddress(bool: Bool?) {
         setBool(bool, forKey: SharedKeys.blurStaticIpAddress)
     }

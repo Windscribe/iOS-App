@@ -13,10 +13,9 @@ import SwiftUI
 /// `docs/PROJECT_NEO.md` for the Screen/View/Route convention.
 @available(iOS 17.0, *)
 struct AboutScreen: View {
-    @Environment(\.lookAndFeel) private var lookAndFeel
 
     var body: some View {
-        AboutView(viewModel: AboutViewModel(lookAndFeel: lookAndFeel))
+        AboutView(viewModel: AboutViewModel())
     }
 }
 
@@ -24,6 +23,7 @@ struct AboutScreen: View {
 private struct AboutView: View {
 
     @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
+    @Environment(\.lookAndFeel) private var lookAndFeel
 
     @State private var viewModel: AboutViewModel
 
@@ -33,14 +33,14 @@ private struct AboutView: View {
 
     var body: some View {
         @Bindable var bindable = viewModel
-        PreferencesBaseView(isDarkMode: $bindable.isDarkMode) {
+        BaseContentView {
             ScrollView {
                 VStack(spacing: 14) {
                     ForEach(viewModel.entries, id: \.self) { item in
                         Button {
                             viewModel.entrySelected(item)
                         } label: {
-                            MenuCategoryRow(item: item, isDarkMode: viewModel.isDarkMode)
+                            MenuCategoryRow(item: item, isDarkMode: lookAndFeel.isDarkMode)
                         }
                     }
                 }
@@ -49,12 +49,9 @@ private struct AboutView: View {
         }
         .dynamicTypeSize(dynamicTypeRange)
         .sheet(item: $bindable.safariURL) { url in
-            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
+            SafariView(url: url)
         }
         .navigationTitle(TextsAsset.About.title)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            await viewModel.observeDarkMode()
-        }
     }
 }

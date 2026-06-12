@@ -10,21 +10,21 @@ import Foundation
 import SwiftUI
 
 struct MenuLoadingOverlayView: View {
-    @Binding var isDarkMode: Bool
-    var isFullScreen: Bool
+    @Environment(\.lookAndFeel) private var lookAndFeel
 
+    var isFullScreen: Bool
     var body: some View {
         ZStack {
             if isFullScreen {
-                Color.from(.actionBackgroundColor, isDarkMode)
+                Color.from(.actionBackgroundColor, lookAndFeel.isDarkMode)
                     .ignoresSafeArea()
             } else {
-                Color.from(.actionBackgroundColor, isDarkMode).opacity(0.25)
+                Color.from(.actionBackgroundColor, lookAndFeel.isDarkMode).opacity(0.25)
                     .edgesIgnoringSafeArea(.all)
             }
 
             ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: .from(.iconColor, isDarkMode)))
+                .progressViewStyle(CircularProgressViewStyle(tint: .from(.iconColor, lookAndFeel.isDarkMode)))
                 .scaleEffect(1.5)
         }
     }

@@ -17,13 +17,17 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
     @Published var activeRoute: Route?
 
     func createView(for route: PreferencesRouteID) -> AnyView {
+        if #available(iOS 17.0, *) {
+            return newCreateView(for: route)
+        } else {
+            return oldCreateView(for: route)
+        }
+    }
+
+    private func oldCreateView(for route: PreferencesRouteID) -> AnyView {
         switch route {
         case .general:
-            if #available(iOS 17.0, *) {
-                return AnyView(GeneralScreen())
-            } else {
-                return AnyView(Assembler.resolve(GeneralSettingsView.self))
-            }
+            return AnyView(Assembler.resolve(GeneralSettingsView.self))
         case .account:
             return AnyView(Assembler.resolve(AccountSettingsView.self))
         case .connection:
@@ -37,11 +41,7 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
         case .help:
             return AnyView(Assembler.resolve(HelpSettingsView.self))
         case .about:
-            if #available(iOS 17.0, *) {
-                return AnyView(AboutScreen())
-            } else {
-                return AnyView(Assembler.resolve(AboutSettingsView.self))
-            }
+            return AnyView(Assembler.resolve(AboutSettingsView.self))
         case .screenTest:
             return AnyView(Assembler.resolve(ScreenTestView.self))
         case .ghostAccount:
@@ -54,8 +54,51 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
             let context = SignupFlowContext()
             context.isFromGhostAccount = true
             return AnyView(Assembler.resolve(SignUpView.self).environmentObject(context))
-        case .confirmEmail:
-            return AnyView(Assembler.resolve(ConfirmEmailView.self))
+        }
+    }
+
+    @available(iOS 17.0, *)
+    private func newCreateView(for route: PreferencesRouteID) -> AnyView {
+        switch route {
+        case .general:
+            return AnyView(GeneralScreen())
+        case .account:
+            return AnyView(AccountScreen { [weak self] in
+                self?.navigate(to: .enterEmail)
+            })
+        case .connection:
+            return AnyView(ConnectionScreen())
+        case .robert:
+            return AnyView(RobertScreen())
+        case .referData:
+            return AnyView(ReferForDataScreen())
+        case .lookAndFeel:
+            return AnyView(LookAndFeelScreen())
+        case .help:
+            return AnyView(HelpMeScreen())
+        case .about:
+            return AnyView(AboutScreen())
+        case .screenTest:
+            return AnyView(ScreenTestScreen())
+        case .ghostAccount:
+            return AnyView(GhostAccountScreen(
+                openLogin: { [weak self] in
+                    self?.navigate(to: .login)
+                },
+                openSignupGhost: { [weak self] in
+                    self?.navigate(to: .signupGhost)
+                }
+            ))
+        case .enterEmail:
+            return AnyView(EnterEmailScreen { [weak self] in
+                self?.pop()
+            })
+        case .login:
+            return AnyView(Assembler.resolve(LoginView.self))
+        case .signupGhost:
+            let context = SignupFlowContext()
+            context.isFromGhostAccount = true
+            return AnyView(Assembler.resolve(SignUpView.self).environmentObject(context))
         }
     }
 

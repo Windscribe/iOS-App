@@ -13,7 +13,7 @@ protocol OpensURlType {
     func canOpenURL(_ url: URL) -> Bool
 }
 
-protocol DNSSettingsManagerType {
+protocol DNSSettingsManagerType: Sendable {
     func makeDNSSettings(from dnsValue: DNSValue) -> NEDNSSettings?
     func getDNSValue(from value: String, opensURL: OpensURlType,
                      completionDNS: @escaping (_ dnsValue: DNSValue?) -> Void,

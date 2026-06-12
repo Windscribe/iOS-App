@@ -113,8 +113,7 @@ struct RestrictiveNetworkView: View, ResponsivePopupLayoutProvider {
                 }
             }
             .sheet(item: $viewModel.safariURL) { url in
-                SafariView(url: url, isDarkMode: viewModel.isDarkMode)
-            }
+                SafariView(url: url)            }
             .sheet(isPresented: $viewModel.showShareSheet) {
                 ShareSheetView(items: [viewModel.logContentToShare])
             }

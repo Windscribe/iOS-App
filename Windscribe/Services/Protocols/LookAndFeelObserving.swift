@@ -23,6 +23,21 @@ protocol LookAndFeelObserving: Sendable {
     /// Async stream of dark-mode updates. The first value emitted is the
     /// current value, so callers can drive UI directly off this stream.
     var darkModeUpdates: AsyncStream<Bool> { get }
+
+    /// Current background effect for the connected state.
+    var backgroundEffectConnect: BackgroundEffectType { get }
+
+    /// Current background effect for the disconnected state.
+    var backgroundEffectDisconnect: BackgroundEffectType { get }
+
+    /// Path to the custom background image for the connected state.
+    var backgroundCustomConnectPath: String? { get }
+
+    /// Path to the custom background image for the disconnected state.
+    var backgroundCustomDisconnectPath: String? { get }
+
+    /// Aspect ratio for custom background images.
+    var backgroundCustomAspectRatio: BackgroundAspectRatioType { get }
 }
 
 /// Adapter that wraps the legacy `LookAndFeelRepositoryType` (Combine-based,
@@ -49,5 +64,25 @@ final class LegacyLookAndFeelObserver: LookAndFeelObserving, Sendable {
                 cancellable.cancel()
             }
         }
+    }
+
+    var backgroundEffectConnect: BackgroundEffectType {
+        repository.backgroundEffectConnect
+    }
+
+    var backgroundEffectDisconnect: BackgroundEffectType {
+        repository.backgroundEffectDisconnect
+    }
+
+    var backgroundCustomConnectPath: String? {
+        repository.backgroundCustomConnectPath
+    }
+
+    var backgroundCustomDisconnectPath: String? {
+        repository.backgroundCustomDisconnectPath
+    }
+
+    var backgroundCustomAspectRatio: BackgroundAspectRatioType {
+        repository.backgroundCustomAspectRatio
     }
 }

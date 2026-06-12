@@ -10,13 +10,14 @@ import SwiftUI
 import SafariServices
 
 struct SafariView: UIViewControllerRepresentable {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
     let url: URL
-    let isDarkMode: Bool
 
     func makeUIViewController(context: Context) -> SFSafariViewController {
         let safariVC = SFSafariViewController(url: url)
-        safariVC.preferredControlTintColor = .from(.iconColor, isDarkMode)
-        safariVC.preferredBarTintColor = .from(.backgroundColor, isDarkMode)
+        safariVC.preferredControlTintColor = .from(.iconColor, lookAndFeel.isDarkMode)
+        safariVC.preferredBarTintColor = .from(.backgroundColor, lookAndFeel.isDarkMode)
 
         return safariVC
     }

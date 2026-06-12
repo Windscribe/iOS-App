@@ -42,19 +42,8 @@ private struct GeneralContentView: View {
     }
 
     var body: some View {
-        @Bindable var bindable = viewModel
-        BaseContentView {
-            ScrollView {
-                VStack(spacing: 14) {
-                    ForEach(viewModel.entries, id: \.self) { entry in
-                        MenuEntryView(item: entry, action: { actionType in
-                            viewModel.entrySelected(entry, action: actionType)
-                        })
-                    }
-                }
-                .padding(.top, 8)
-            }
-            .dynamicTypeSize(dynamicTypeRange)
+        PreferencesContentView(entries: viewModel.entries) { entry, action in
+            viewModel.entrySelected(entry, action: action)
         }
         .task {
             await viewModel.startObservers()

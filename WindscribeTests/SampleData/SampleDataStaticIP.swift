@@ -2,7 +2,7 @@
 //  SampleDataStaticIP.swift
 //  WindscribeTests
 //
-//  Created by Claude Code on 2025-10-16.
+//  Created by Andre Fonseca Code on 2025-10-16.
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
