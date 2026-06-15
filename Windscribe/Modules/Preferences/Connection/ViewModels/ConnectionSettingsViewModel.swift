@@ -121,7 +121,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
             .receive(on: DispatchQueue.main)
             .sink { [weak self] preference in
                 guard let self = self else { return }
-                self.egressProtocol = preference ?? DefaultValues.ipStack
+                self.egressProtocol = preference?.localized ?? DefaultValues.ipStack
                 self.reloadItems()
             }
             .store(in: &cancellables)

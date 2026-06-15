@@ -59,6 +59,8 @@
 "Assets imported successfully!" = "アセットが正常にインポートされました！";
 "Authentication Token retrieval failed." = "認証トークンの取得に失敗しました。";
 "Auto" = "自動";
+"Regular" = "通常";
+"Alternate" = "代替";
 "Auto-Secure" = "自動セキュリティ";
 "Auto-Secure New Networks" = "新しいネットワークを自動で保護";
 "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPNプロトコルを自動的に選択するか、手動で1つ選択します。注: \"優先プロトコル\" はこの設定を上書きします。";
@@ -483,3 +485,4 @@
 "This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "このバージョンのWindscribeはサポートされていません。アプリを引き続きご利用いただくには %@ にアップデートしてください。";
 "PLAN INFO" = "プラン情報";
 "Copied to Clipboard!" = "クリップボードにコピーしました！";
+"Copied!" = "コピーしました！";

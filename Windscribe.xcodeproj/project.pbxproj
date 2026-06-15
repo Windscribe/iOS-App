@@ -159,12 +159,7 @@
 		1E6610A32E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */; };
 		1E6ECB5F2F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */; };
 		1E6ECB602F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */; };
-		1E6ECB632F740FD200F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
 		1E6ECB642F740FD200F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
-		1E6ECB652F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
-		1E6ECB662F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
-		1E6ECB672F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
-		1E6ECB682F740FF400F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
 		1E743FEE2F1E6EA100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
 		1E743FEF2F1E6EA100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
 		1E743FF02F1E6EB100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
@@ -198,6 +193,14 @@
 		1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
 		1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
 		1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
+		1E87176A2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E87176B2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E87176C2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E87176D2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E87176E2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E87176F2FDAD20A00ED45F0 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
+		1E8717702FDAD20A00ED45F0 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
+		1E8717712FDAD22200ED45F0 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		1E8717592FD72E2600ED45F0 /* ViewLogScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717562FD72E2600ED45F0 /* ViewLogScreen.swift */; };
 		1E87175A2FD72E2600ED45F0 /* ViewLogScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717572FD72E2600ED45F0 /* ViewLogScreenViewModel.swift */; };
 		1E87592D2F20F12000D7767F /* UIControl+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E87592C2F20F12000D7767F /* UIControl+Combine.swift */; };
@@ -7739,6 +7742,7 @@
 				59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */,
 				59FC74342C515A4C00021CD1 /* KeyChainDatabase.swift in Sources */,
 				1E0492EF2F51CA3E0016B11F /* LocationModel.swift in Sources */,
+				1E87176E2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */,
 				59FC73E42C51505100021CD1 /* APIManagerImpl+Session.swift in Sources */,
 				599BA2A82C5D1E5300F0D1E4 /* DNSValue.swift in Sources */,
 				F485CBC22D4D672D0063EA3A /* UIWindow+Extension.swift in Sources */,
@@ -7756,7 +7760,6 @@
 				1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */,
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
 				F49C457F2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
-				1E6ECB632F740FD200F1E620 /* ServerRoutingType.swift in Sources */,
 				92B7B5BA2F92E369006B69DF /* PingDataRecord.swift in Sources */,
 				92B7B5AA2F92E350006B69DF /* SuggestedPortsRecord.swift in Sources */,
 				F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
@@ -8637,7 +8640,6 @@
 				C50BB0EC2F3CD62800D6283B /* APIError.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
 				1E2CC4672F58907A0077C82E /* DatacenterModel.swift in Sources */,
-				1E6ECB652F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,
 				F49C457A2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				92EFE9C02FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
@@ -8653,6 +8655,7 @@
 				F469F0DB2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				E9425BA327437064008B8786 /* FilePaths.swift in Sources */,
 				C56FCBEA2B2B8E4D008DE7D4 /* SharedKeys.swift in Sources */,
+				1E87176F2FDAD20A00ED45F0 /* UIConstants+Text.swift in Sources */,
 				C585F3E22C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
 				C571C6752C135C3600786DA5 /* UserScope.swift in Sources */,
 				92EFE9B92FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
@@ -8673,6 +8676,7 @@
 				F485CBBF2D4D52D40063EA3A /* Then.swift in Sources */,
 				AFBD019222946AF400FED749 /* Date+Extension.swift in Sources */,
 				C52DA52E2B63913100E5C571 /* FileDatabaseImpl.swift in Sources */,
+				1E87176A2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */,
 				F470F5622E81C00F00F8400D /* PreferencesImpl+LookAndFeel.swift in Sources */,
 				C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */,
 				E9425B9A27437024008B8786 /* APIParameters.swift in Sources */,
@@ -8696,18 +8700,19 @@
 				F470F55A2E81B00400F8400D /* UserDefaults+Extension.swift in Sources */,
 				C56FCBEB2B2B8E4E008DE7D4 /* SharedKeys.swift in Sources */,
 				C52DA52B2B63912B00E5C571 /* FileDatabase.swift in Sources */,
-				1E6ECB662F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */,
 				1E0492E62F4F28CC0016B11F /* WSNetBridgeAPIType.swift in Sources */,
 				596E60072B8F77ED00D51E20 /* Language.swift in Sources */,
 				C59FF1A32CBB8D890072EF70 /* ContainerResolver.swift in Sources */,
 				C5DD96072CA7257500FFABBC /* Data+Extension.swift in Sources */,
+				1E87176B2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */,
 				C561237B2C5F25760090EB5A /* Resolver.swift in Sources */,
 				F4433D0B2E8310790012EA34 /* KeychainManagerImpl.swift in Sources */,
 				C5BC5F002E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */,
 				C571C6762C135C3600786DA5 /* UserScope.swift in Sources */,
 				F469F0DE2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				F470F5512E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
+				1E8717712FDAD22200ED45F0 /* UIConstants+Fields.swift in Sources */,
 				1E3F77612DB13CA0008308A8 /* ExportedLocations.swift in Sources */,
 				1E60E01C2CAD667200623CD5 /* ContainerResolvertype.swift in Sources */,
 				C5DD96042CA723E700FFABBC /* KeyChainDatabaseImpl.swift in Sources */,
@@ -8734,6 +8739,7 @@
 				1EB910AF2F9F7B9D00D04943 /* ServerMachineModel.swift in Sources */,
 				C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
+				1E8717702FDAD20A00ED45F0 /* UIConstants+Text.swift in Sources */,
 				92EFE9BD2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
 				C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */,
 				C5035A142CBE280600A46B6D /* Connect.swift in Sources */,
@@ -8770,7 +8776,6 @@
 				C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */,
 				C585F3E42C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
 				1EB910A82F9F797200D04943 /* PreferencesImpl+Keychain.swift in Sources */,
-				1E6ECB672F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				C5A6F07E2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */,
 				C50F20C92B61777B00266B23 /* CoreModule.swift in Sources */,
@@ -8784,6 +8789,7 @@
 				3FF4243D140342EA94E36948 /* UIConstants+Text.swift in Sources */,
 				596E60082B8F77EF00D51E20 /* Language.swift in Sources */,
 				1EE640CA2F6976F600C7FB29 /* UIConstants+Fields.swift in Sources */,
+				1E87176C2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */,
 				C50F20832B60B79600266B23 /* APIUtil.swift in Sources */,
 				F40F7E622F293AD300400CC1 /* WireguardIPManager.swift in Sources */,
 				C51EEDC92C1779A900B01F8F /* LanguageManager.swift in Sources */,
@@ -8854,6 +8860,7 @@
 				597DDE012BA2180500F19F3F /* UIConstants+Fields.swift in Sources */,
 				1E0492E82F4F28CC0016B11F /* WSNetBridgeAPIType.swift in Sources */,
 				C50F20B22B616DF900266B23 /* FileLogger.swift in Sources */,
+				1E87176D2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */,
 				1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */,
 				599339702B4CD28400EC615D /* DefaultValues.swift in Sources */,
 				92EFE9BE2FACE69200B381CB /* WSNetPingManagerType.swift in Sources */,
@@ -8898,7 +8905,6 @@
 				C56FCBE42B2B8DB2008DE7D4 /* PreferencesImpl.swift in Sources */,
 				C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */,
 				1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */,
-				1E6ECB682F740FF400F1E620 /* ServerRoutingType.swift in Sources */,
 				F470F5502E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
 				1EB910A42F9F791E00D04943 /* PreferencesImpl+Utils.swift in Sources */,
 				1EB910B52F9F7BFB00D04943 /* SessionKeychainStore.swift in Sources */,

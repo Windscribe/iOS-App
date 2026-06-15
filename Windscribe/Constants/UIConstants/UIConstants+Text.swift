@@ -561,6 +561,9 @@ enum TextsAsset {
         static var antiCensorshipTitle: String { "Anti-censorship".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
         static var serverRouting: String { "Server Routing".localized }
+        static var serverRoutingAuto: String { "Auto".localized }
+        static var serverRoutingRegular: String { "Regular".localized }
+        static var serverRoutingAlternate: String { "Alternate".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized

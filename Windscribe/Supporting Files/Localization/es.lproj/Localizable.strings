@@ -59,6 +59,8 @@
 "Assets imported successfully!" = "¡Recursos importados exitosamente!";
 "Authentication Token retrieval failed." = "No se pudo obtener el token de autenticación.";
 "Auto" = "Automático";
+"Regular" = "Normal";
+"Alternate" = "Alternativo";
 "Auto-Secure" = "Protección automática";
 "Auto-Secure New Networks" = "Proteger automáticamente las redes nuevas";
 "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "Elige automáticamente el protocolo VPN o selecciona uno manualmente. NOTA: \"Protocolo preferido\" anulará esta configuración.";
@@ -483,3 +485,4 @@
 "This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Esta versión de Windscribe ya no es compatible. Actualiza a %@ para seguir usando la aplicación.";
 "PLAN INFO" = "INFORMACIÓN DEL PLAN";
 "Copied to Clipboard!" = "¡Copiado al portapapeles!";
+"Copied!" = "¡Copiado!";

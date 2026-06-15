@@ -59,6 +59,8 @@
 "Assets imported successfully!" = "Varlıklar başarıyla içe aktarıldı!";
 "Authentication Token retrieval failed." = "Kimlik doğrulama jetonu alınamadı.";
 "Auto" = "Otomatik";
+"Regular" = "Normal";
+"Alternate" = "Alternatif";
 "Auto-Secure" = "Otomatik Koruma";
 "Auto-Secure New Networks" = "Güvenlir Yeni Ağlar";
 "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPN protokolünü otomatik olarak seçin veya manuel olarak bir tane seçin. NOT: \"Tercih Edilen Protokol\" bu ayarı geçersiz kılacaktır.";
@@ -483,3 +485,4 @@
 "This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Windscribe’ın bu sürümü artık desteklenmiyor. Uygulamayı kullanmaya devam etmek için lütfen %@ sürümüne güncelleyin.";
 "PLAN INFO" = "PLAN BİLGİSİ";
 "Copied to Clipboard!" = "Panoya kopyalandı!";
+"Copied!" = "Kopyalandı!";

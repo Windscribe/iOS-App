@@ -59,6 +59,8 @@
 "Assets imported successfully!" = "Tài nguyên đã được nhập thành công!";
 "Authentication Token retrieval failed." = "Không thể lấy mã xác thực.";
 "Auto" = "Tự động";
+"Regular" = "Thông thường";
+"Alternate" = "Thay thế";
 "Auto-Secure" = "Tự động Bảo mật";
 "Auto-Secure New Networks" = "Tự động Bảo mật Mạng mới";
 "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "Tự động chọn giao thức VPN hoặc chọn một giao thức theo cách thủ công. LƯU Ý: \"Giao thức Ưu tiên\" sẽ ghi đè cài đặt này.";
@@ -483,3 +485,4 @@
 "This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "Phiên bản Windscribe này không còn được hỗ trợ. Vui lòng cập nhật lên %@ để tiếp tục sử dụng ứng dụng.";
 "PLAN INFO" = "THÔNG TIN GÓI";
 "Copied to Clipboard!" = "Đã sao chép vào bộ nhớ tạm!";
+"Copied!" = "Đã sao chép!";

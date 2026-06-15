@@ -15,9 +15,9 @@ enum ServerRoutingType: String, CaseIterable {
 
     var title: String {
         switch self {
-        case .auto: "Auto"
-        case .regular: "Regular"
-        case .alternate: "Alternate"
+        case .auto: TextsAsset.Connection.serverRoutingAuto
+        case .regular: TextsAsset.Connection.serverRoutingRegular
+        case .alternate: TextsAsset.Connection.serverRoutingAlternate
         }
     }
 

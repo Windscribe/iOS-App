@@ -59,6 +59,8 @@
 "Assets imported successfully!" = "تم استيراد الأصول بنجاح!";
 "Authentication Token retrieval failed." = "فشل في استرداد رمز المصادقة.";
 "Auto" = "آلي";
+"Regular" = "عادي";
+"Alternate" = "بديل";
 "Auto-Secure" = "التأمين التلقائي";
 "Auto-Secure New Networks" = "تأمين الشبكات الجديدة آلياً";
 "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "اختر بروتوكول VPN تلقائيًا، أو حدده يدويًا. ملاحظة: سيتجاوز \"البروتوكول المفضل\" هذا الإعداد.";
@@ -482,4 +484,5 @@
 "This version of Windscribe is no longer supported. Please update to continue using the app." = "إصدار Windscribe هذا لم يعد مدعوماً. يرجى التحديث للاستمرار في استخدام التطبيق.";
 "This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "إصدار Windscribe هذا لم يعد مدعوماً. يرجى التحديث إلى %@ للاستمرار في استخدام التطبيق.";
 "Copied to Clipboard!" = "تم النسخ إلى الحافظة!";
+"Copied!" = "تم النسخ!";
 "PLAN INFO" = "معلومات الخطة";

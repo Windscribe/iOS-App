@@ -59,7 +59,7 @@ final class GeneralViewModel {
         self.pushNotifications = pushNotifications
 
         currentLanguage = languageStoring.activeLanguage?.name ?? DefaultValues.language
-        locationOrder = preferencesReading.locationOrder ?? DefaultValues.orderLocationsBy
+        locationOrder = preferencesReading.locationOrder?.localized ?? DefaultValues.orderLocationsBy
         isHapticFeedbackEnabled = preferencesReading.isHapticFeedbackEnabled
         isLocationLoadEnabled = preferencesReading.isLocationLoadEnabled
     }
@@ -97,7 +97,7 @@ final class GeneralViewModel {
 
     func observeLocationOrderBy() async {
         for await orderBy in preferencesReading.locationOrderUpdates {
-            locationOrder = orderBy
+            locationOrder = orderBy.localized
         }
     }
 

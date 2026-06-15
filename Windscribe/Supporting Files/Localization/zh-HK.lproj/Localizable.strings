@@ -59,6 +59,8 @@
 "Assets imported successfully!" = "資源匯入成功！";
 "Authentication Token retrieval failed." = "無法取得驗證權杖。";
 "Auto" = "自動";
+"Regular" = "一般";
+"Alternate" = "備用";
 "Auto-Secure" = "自動保護";
 "Auto-Secure New Networks" = "自動保護新網路";
 "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "自動選擇 VPN 協議，或手動選擇一個。注意：「首選協議」會覆蓋此設定。";
@@ -483,3 +485,4 @@
 "This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "此版本的 Windscribe 已不再支援。請更新至 %@ 以繼續使用此應用程式。";
 "PLAN INFO" = "套餐資訊";
 "Copied to Clipboard!" = "已複製到剪貼簿！";
+"Copied!" = "已複製！";

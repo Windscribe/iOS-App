@@ -59,6 +59,8 @@
 "Assets imported successfully!" = "에셋을 성공적으로 가져왔습니다!";
 "Authentication Token retrieval failed." = "인증 토큰을 가져오지 못했습니다.";
 "Auto" = "자동";
+"Regular" = "일반";
+"Alternate" = "대체";
 "Auto-Secure" = "자동 보안";
 "Auto-Secure New Networks" = "새로운 네트워크 자동 보안";
 "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPN 프로토콜을 자동으로 선택하거나 수동으로 하나를 선택하세요. 참고: \"기본 프로토콜\"이 이 설정을 재정의합니다.";
@@ -483,3 +485,4 @@
 "This version of Windscribe is no longer supported. Please update to %@ to continue using the app." = "이 버전의 Windscribe는 더 이상 지원되지 않습니다. 앱을 계속 사용하려면 %@(으)로 업데이트하세요.";
 "PLAN INFO" = "요금제 정보";
 "Copied to Clipboard!" = "클립보드에 복사됨!";
+"Copied!" = "복사됨!";
