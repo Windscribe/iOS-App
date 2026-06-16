@@ -182,6 +182,9 @@ struct SendTicketView: View {
                     .navigationBarTitleDisplayMode(.inline)
                 }
             }
+            .sheet(item: $viewModel.safariURL) { url in
+                SafariView(url: url)
+            }
         }
     }
 }

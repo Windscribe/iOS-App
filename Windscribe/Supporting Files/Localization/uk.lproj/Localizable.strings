@@ -119,7 +119,7 @@
 "Connection Failure!" = "Помилка з'єднання!";
 "Connection Mode" = "Режим підключення";
 "CONNECTIVITY TEST" = "ТЕСТ ПІДКЛЮЧЕННЯ";
-"Contact Humans" = "Зв’язатися з підтримкою";
+"Contact \"Humans\"" = "Зв’язатися з «людьми»";
 "Contact Support" = "Звернутися в службу підтримки";
 "Continue" = "Продовжити";
 "Continue with Apple" = "Продовжити через Apple";
@@ -214,7 +214,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Перейдіть за вказаною вище адресою на телефоні або комп\\ютері, щоб отримати всі запити, пов\\язані зі службою підтримки.";
 "Grant Permission" = "Надати дозвіл";
 "Haptic Feedback" = "Вібрація";
-"Have a problem that Garry can't resolve? Contact human support" = "Є проблема, яку Гаррі не може вирішити? Зверніться до служби підтримки.";
+"Have a problem Garry can't resolve? There is no such problem." = "Є проблема, яку Garry не може вирішити? Такої проблеми не існує.";
 "Help Me!" = "Потрібна допомога!";
 "I hate free stuff" = "Я ненавиджу безкоштовні речі";
 "I Quit" = "Я йду";

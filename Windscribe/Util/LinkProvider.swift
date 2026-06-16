@@ -27,4 +27,13 @@ enum LinkProvider {
     static func getWindscribeLink(path: String) -> String {
         return Links.base + path
     }
+
+    static func getKnowledgeBaseGarryURL(message: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = Env.isInternal ? "www-staging.windscribe.com" : "windscribe.com"
+        components.path = "/knowledge-base"
+        components.queryItems = [URLQueryItem(name: "yo_garry", value: message)]
+        return components.url
+    }
 }

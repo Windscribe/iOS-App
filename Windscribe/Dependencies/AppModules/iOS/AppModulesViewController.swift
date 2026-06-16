@@ -271,7 +271,6 @@ class ViewControllerModule: Assembly {
         container.register(SendTicketView.self) { r in
             SendTicketView(
                 viewModel: SendTicketViewModelImpl(
-                    apiManager: r.resolve(APIManager.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     userSessionRepository: r.resolve(UserSessionRepository.self)!)
            )

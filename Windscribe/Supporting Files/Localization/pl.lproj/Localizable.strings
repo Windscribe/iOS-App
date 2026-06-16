@@ -119,7 +119,7 @@
 "Connection Failure!" = "Błąd połączenia!";
 "Connection Mode" = "Tryb połączenia";
 "CONNECTIVITY TEST" = "TEST POŁĄCZENIA";
-"Contact Humans" = "Skontaktuj się z obsługą";
+"Contact \"Humans\"" = "Skontaktuj się z „ludźmi”";
 "Contact Support" = "Skontaktuj się z pomocą techniczną";
 "Continue" = "Kontynuuj";
 "Continue with Apple" = "Kontynuuj z Apple";
@@ -214,7 +214,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Przejdź do powyższego adresu w telefonie lub komputerze, aby uzyskać wszystkie pytania związane z pomocą techniczną.";
 "Grant Permission" = "Udziel zgody";
 "Haptic Feedback" = "Odpowiedzi haptyczne";
-"Have a problem that Garry can't resolve? Contact human support" = "Masz problem, którego Garry nie może rozwiązać? Skontaktuj się z pomocą techniczną.";
+"Have a problem Garry can't resolve? There is no such problem." = "Masz problem, którego Garry nie może rozwiązać? Taki problem nie istnieje.";
 "Help Me!" = "Pomóż mi!";
 "I hate free stuff" = "Nienawidzę darmowych rzeczy";
 "I Quit" = "Wyjdź";

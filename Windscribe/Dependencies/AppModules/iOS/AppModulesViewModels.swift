@@ -212,7 +212,6 @@ class ViewModels: Assembly {
 
         container.register((any SendTicketViewModel).self) { r in
             SendTicketViewModelImpl(
-                apiManager: r.resolve(APIManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.transient)

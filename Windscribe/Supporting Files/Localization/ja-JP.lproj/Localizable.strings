@@ -119,7 +119,7 @@
 "Connection Failure!" = "接続に失敗しました！";
 "Connection Mode" = "接続モード";
 "CONNECTIVITY TEST" = "接続性テスト";
-"Contact Humans" = "サポートに問い合わせる";
+"Contact \"Humans\"" = "「人間」に問い合わせる";
 "Contact Support" = "サポートに問い合わせる";
 "Continue" = "続行";
 "Continue with Apple" = "Appleで続ける";
@@ -214,7 +214,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "サポート関連のすべての問い合わせについては、携帯電話またはコンピューターの上記のアドレスにアクセスしてください。";
 "Grant Permission" = "許可を付与";
 "Haptic Feedback" = "触覚フィードバック";
-"Have a problem that Garry can't resolve? Contact human support" = "Garry でも解決できない問題がありますか？サポート担当者にお問い合わせください。";
+"Have a problem Garry can't resolve? There is no such problem." = "Garry が解決できない問題がありますか？そんな問題はありません。";
 "Help Me!" = "助けて！";
 "I hate free stuff" = "無料は嫌いです";
 "I Quit" = "やめる";

@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import UIKit
 
 protocol SendTicketViewModel: ObservableObject {
     // Input Fields
@@ -23,6 +22,7 @@ protocol SendTicketViewModel: ObservableObject {
     var showSuccess: Bool { get }
     var showError: Bool { get }
     var errorMessage: String { get }
+    var safariURL: URL? { get set }
 
     // Derived State
     var isFormValid: Bool { get }
@@ -45,11 +45,11 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
     @Published var showSuccess: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String = ""
+    @Published var safariURL: URL?
 
     // Dependencies
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let userSessionRepository: UserSessionRepository
-    private let apiManager: APIManager
 
     // Cancellables
     private var cancellables = Set<AnyCancellable>()
@@ -60,11 +60,9 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
     }
 
     init(
-        apiManager: APIManager,
         lookAndFeelRepository: LookAndFeelRepositoryType,
         userSessionRepository: UserSessionRepository
     ) {
-        self.apiManager = apiManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.userSessionRepository = userSessionRepository
 
@@ -85,41 +83,17 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
     }
 
     func sendTicket() {
-        guard let categoryIndex = TextsAsset.SubmitTicket.categories.firstIndex(of: category) else { return }
+        let supportText = [subject, message]
+            .filter { !$0.isEmpty }
+            .joined(separator: "\n\n")
 
-        showProgress = true
-        showSuccess = false
-        showError = false
-
-        let device = UIDevice.current
-        let platform = "Brand: Apple | OS: \(device.systemVersion) | Model: \(UIDevice.modelName)"
-        let name = userSessionRepository.sessionModel?.userId ?? ""
-
-        Task { [weak self] in
-            guard let self = self else { return }
-
-            do {
-                _ = try await apiManager.sendTicket(
-                    email: email,
-                    name: name,
-                    subject: subject,
-                    message: message,
-                    category: "\(categoryIndex + 1)",
-                    type: category, channel: "app_ios", platform: platform)
-
-                await MainActor.run {
-                    self.showProgress = false
-                    self.showSuccess = true
-                }
-            } catch {
-                await MainActor.run {
-                    self.showProgress = false
-                    self.errorMessage = error.localizedDescription.isEmpty
-                        ? TextsAsset.SubmitTicket.failedToSendTicket
-                        : error.localizedDescription
-                    self.showError = true
-                }
-            }
+        guard let url = LinkProvider.getKnowledgeBaseGarryURL(message: supportText) else {
+            errorMessage = TextsAsset.SubmitTicket.failedToSendTicket
+            showError = true
+            return
         }
+
+        showError = false
+        safariURL = url
     }
 }

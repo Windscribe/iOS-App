@@ -119,7 +119,7 @@
 "Connection Failure!" = "Kết nối thất bại!";
 "Connection Mode" = "Chế độ Kết nối";
 "CONNECTIVITY TEST" = "KIỂM TRA KHẢ NĂNG KẾT NỐI";
-"Contact Humans" = "Liên hệ với hỗ trợ con người";
+"Contact \"Humans\"" = "Liên hệ với \"con người\"";
 "Contact Support" = "Liên hệ Bộ phận Hỗ trợ";
 "Continue" = "Tiếp tục";
 "Continue with Apple" = "Tiếp tục với Apple";
@@ -214,7 +214,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Truy cập địa chỉ trên trên điện thoại hoặc máy tính của bạn cho tất cả các yêu cầu liên quan đến hỗ trợ.";
 "Grant Permission" = "Cấp phép";
 "Haptic Feedback" = "Phản hồi Haptic";
-"Have a problem that Garry can't resolve? Contact human support" = "Gặp vấn đề mà Garry không thể giải quyết? Hãy liên hệ với bộ phận hỗ trợ trực tiếp.";
+"Have a problem Garry can't resolve? There is no such problem." = "Có vấn đề mà Garry không giải quyết được? Không có vấn đề như vậy đâu.";
 "Help Me!" = "Giúp tôi!";
 "I hate free stuff" = "Tôi ghét những thứ miễn phí";
 "I Quit" = "Tôi từ bỏ";

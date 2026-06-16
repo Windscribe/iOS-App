@@ -119,7 +119,7 @@
 "Connection Failure!" = "कनेक्शन विफल!";
 "Connection Mode" = "कनेक्शन मोड";
 "CONNECTIVITY TEST" = "कनेक्टिविटी परीक्षण";
-"Contact Humans" = "मानव से संपर्क करें";
+"Contact \"Humans\"" = "\"इंसानों\" से संपर्क करें";
 "Contact Support" = "संपर्क समर्थन";
 "Continue" = "जारी रखना";
 "Continue with Apple" = "Apple के साथ जारी रखें";
@@ -214,7 +214,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "सभी समर्थन संबंधी पूछताछ के लिए अपने फोन या कंप्यूटर पर ऊपर दिए गए पते पर जाएं।";
 "Grant Permission" = "अनुमति दें";
 "Haptic Feedback" = "हैप्टिक राय";
-"Have a problem that Garry can't resolve? Contact human support" = "कोई समस्या है जो Garry हल नहीं कर सकता? मानव सपोर्ट से संपर्क करें";
+"Have a problem Garry can't resolve? There is no such problem." = "कोई समस्या है जिसे Garry हल नहीं कर सकता? ऐसी कोई समस्या नहीं है।";
 "Help Me!" = "मेरी सहायता करो!";
 "I hate free stuff" = "मुझे मुफ़्त चीज़ों से नफ़रत है";
 "I Quit" = "मैं छोड़ता हूं";

@@ -119,7 +119,7 @@
 "Connection Failure!" = "Bağlantı Hatası!";
 "Connection Mode" = "Bağlantı Modu";
 "CONNECTIVITY TEST" = "BAĞLANTI TESTİ";
-"Contact Humans" = "İnsan Desteğiyle İletişime Geçin";
+"Contact \"Humans\"" = "\"İnsanlarla\" İletişime Geçin";
 "Contact Support" = "Destek Al";
 "Continue" = "Devam";
 "Continue with Apple" = "Apple ile Devam Et";
@@ -214,7 +214,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Destekle ilgili tüm sorularınız için telefonunuzda veya bilgisayarınızda yukarıdaki adrese gidin.";
 "Grant Permission" = "İzin Ver";
 "Haptic Feedback" = "Dokunsal geribildirim";
-"Have a problem that Garry can't resolve? Contact human support" = "Garry'nin çözemediği bir sorununuz mu var? İnsan destek ekibiyle iletişime geçin.";
+"Have a problem Garry can't resolve? There is no such problem." = "Garry'nin çözemediği bir sorununuz mu var? Öyle bir sorun yok.";
 "Help Me!" = "Yardım!";
 "I hate free stuff" = "Ücretsiz şeyleri sevmem";
 "I Quit" = "Vazgeç";

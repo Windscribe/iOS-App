@@ -119,7 +119,7 @@
 "Connection Failure!" = "連線失敗！";
 "Connection Mode" = "連線模式";
 "CONNECTIVITY TEST" = "連線測試";
-"Contact Humans" = "聯絡人工客服";
+"Contact \"Humans\"" = "聯絡「人類」";
 "Contact Support" = "聯絡支援";
 "Continue" = "繼續";
 "Continue with Apple" = "繼續使用 Apple";
@@ -214,7 +214,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "转到手机或计算机上的上述地址，以获取所有与支持相关的查询。";
 "Grant Permission" = "授予權限";
 "Haptic Feedback" = "觸覺反饋";
-"Have a problem that Garry can't resolve? Contact human support" = "Garry 無法解決您的問題？請聯絡人工支援。";
+"Have a problem Garry can't resolve? There is no such problem." = "有 Garry 解決唔到嘅問題？冇呢種問題。";
 "Help Me!" = "幫幫我！";
 "I hate free stuff" = "我討厭免費的東西";
 "I Quit" = "我退出";

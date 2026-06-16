@@ -1831,11 +1831,11 @@ enum TextsAsset {
         }
 
         static var sendTicket: String {
-            return "Contact Humans".localized
+            return "Contact \"Humans\"".localized
         }
 
         static var sendUsATicket: String {
-            return "Have a problem that Garry can't resolve? Contact human support".localized
+            return "Have a problem Garry can't resolve? There is no such problem.".localized
         }
 
         static var communitySupport: String {
