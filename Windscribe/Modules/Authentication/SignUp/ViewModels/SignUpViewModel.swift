@@ -371,11 +371,17 @@ class SignUpViewModelImpl: SignUpViewModel {
         logger.logI("SignUpViewModel", "Submitting captcha solution with offset \(solution)")
 
         // Step 4: Call signup with full captcha metadata and secure token
+        let isHashedSignup = selectedTab == .hashed
+        let signupUsername = isHashedSignup ? accountHash : username
+        let signupPassword = isHashedSignup ? accountHash : password
+        let signupReferral = isHashedSignup ? "" : referralUsername
+        let signupEmail = isHashedSignup ? "" : email
+
         signUpWithCredentials(
-            username: username,
-            password: password,
-            referringUsername: referralUsername,
-            email: email,
+            username: signupUsername,
+            password: signupPassword,
+            referringUsername: signupReferral,
+            email: signupEmail,
             voucherCode: voucherCode,
             secureToken: secureToken,           // Comes from authTokenSignup
             captchaSolution: solution,          // Final X drag offset
