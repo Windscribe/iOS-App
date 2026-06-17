@@ -58,6 +58,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     let pushNotificationManager: PushNotificationManager
     let mobilePlanRepository: MobilePlanRepository
     let logger: FileLogger
+    let receiptVerificationService: ReceiptVerificationService
 
     let upgradeState = CurrentValueSubject<UpgradeState?, Never>(nil)
     let showProgress = CurrentValueSubject<Bool, Never>(false)
@@ -82,7 +83,8 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
          pushNotificationManager: PushNotificationManager,
          mobilePlanRepository: MobilePlanRepository,
          logger: FileLogger,
-         lookAndFeelRepository: LookAndFeelRepositoryType) {
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         receiptVerificationService: ReceiptVerificationService) {
         self.alertManager = alertManager
         self.apiManager = apiManager
         self.userSessionRepository = userSessionRepository
@@ -92,6 +94,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         self.pushNotificationManager = pushNotificationManager
         self.mobilePlanRepository = mobilePlanRepository
         self.logger = logger
+        self.receiptVerificationService = receiptVerificationService
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         inAppPurchaseManager.delegate = self
         checkAccountStatus()
@@ -200,7 +203,8 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             guard let self = self else { return }
 
             do {
-                _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
+                let receiptData = ReceiptData(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
+                _ = try await self.receiptVerificationService.verifyReceipt(receiptData)
                 await MainActor.run {
                     self.logger.logD("UpgradeViewModelImpl", "Purchase verified successfully")
                     self.saveAppleData(appleID: nil, appleData: nil, appleSig: nil)

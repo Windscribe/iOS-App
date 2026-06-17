@@ -1091,6 +1091,11 @@
 		C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C074329424CF300D6C3C1 /* Proxy.swift */; };
 		C59CA15F2CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59CA15E2CD400D9007517DA /* ConfigurationsManager+Connect.swift */; };
 		C59CA1602CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59CA15E2CD400D9007517DA /* ConfigurationsManager+Connect.swift */; };
+		C59E9C952FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9C942FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift */; };
+		C59E9C962FE1ACB200FF8A8E /* ReceiptVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9C932FE1ACB200FF8A8E /* ReceiptVerificationService.swift */; };
+		C59E9C972FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9C942FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift */; };
+		C59E9C982FE1ACB200FF8A8E /* ReceiptVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9C932FE1ACB200FF8A8E /* ReceiptVerificationService.swift */; };
+		C59E9C9C2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9C9B2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift */; };
 		C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
@@ -2366,6 +2371,9 @@
 		C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxyInfo.swift; sourceTree = "<group>"; };
 		C59C074329424CF300D6C3C1 /* Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Proxy.swift; sourceTree = "<group>"; };
 		C59CA15E2CD400D9007517DA /* ConfigurationsManager+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Connect.swift"; sourceTree = "<group>"; };
+		C59E9C932FE1ACB200FF8A8E /* ReceiptVerificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptVerificationService.swift; sourceTree = "<group>"; };
+		C59E9C942FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptVerificationServiceImpl.swift; sourceTree = "<group>"; };
+		C59E9C9B2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptVerificationServiceTests.swift; sourceTree = "<group>"; };
 		C59FF19E2CB998610072EF70 /* IntentCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentCommon.swift; sourceTree = "<group>"; };
 		C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Extension.swift"; sourceTree = "<group>"; };
 		C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisconnectReason.swift; sourceTree = "<group>"; };
@@ -4912,6 +4920,8 @@
 		C580FE142B507846004FA857 /* Payment */ = {
 			isa = PBXGroup;
 			children = (
+				C59E9C932FE1ACB200FF8A8E /* ReceiptVerificationService.swift */,
+				C59E9C942FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift */,
 				C580FE1F2B507B60004FA857 /* InAppPurchaseManager.swift */,
 				C580FE192B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift */,
 				AF16CA1722272EBE00997A2A /* InAppPurchaseManagerImpl.swift */,
@@ -5235,6 +5245,7 @@
 			isa = PBXGroup;
 			children = (
 				F465A6362D5D37EF00579B5F /* AppReviewManagerTests.swift */,
+				C59E9C9B2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift */,
 				F40419442D8232460005EF97 /* HTMLParserTests.swift */,
 				F49935422DA9987800108558 /* SoundManagerTests.swift */,
 				927991512F86C766000BB9D0 /* HashAuthManagerTests.swift */,
@@ -7760,6 +7771,8 @@
 				F49C457B2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				59FC741F2C51548000021CD1 /* VPNManager.swift in Sources */,
 				F43791842E95AA7C00ED6141 /* MenuEntryViewModel.swift in Sources */,
+				C59E9C972FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift in Sources */,
+				C59E9C982FE1ACB200FF8A8E /* ReceiptVerificationService.swift in Sources */,
 				1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */,
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
 				F49C457F2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
@@ -8070,6 +8083,8 @@
 				C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */,
 				C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */,
 				AF4C9AD122F4A03D004A9FA6 /* CustomConfig.swift in Sources */,
+				C59E9C952FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift in Sources */,
+				C59E9C962FE1ACB200FF8A8E /* ReceiptVerificationService.swift in Sources */,
 				F499352E2DA71F1400108558 /* GhostAccountViewModel.swift in Sources */,
 				C5A930DF2B43F00A0001CFA0 /* CredentialsRepository.swift in Sources */,
 				595329FE2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift in Sources */,
@@ -8518,6 +8533,7 @@
 				1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */,
 				1E0492B62F4750A40016B11F /* MockCredentialsRepository.swift in Sources */,
 				9223E1F32FB22934007252B6 /* MockPatternTests.swift in Sources */,
+				C59E9C9C2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,
 				92B7B5C42F92E37E006B69DF /* WifiNetworkRecordTests.swift in Sources */,

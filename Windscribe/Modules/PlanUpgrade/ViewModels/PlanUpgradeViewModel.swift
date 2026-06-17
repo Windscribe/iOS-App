@@ -43,6 +43,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private let pushNotificationManager: PushNotificationManager
     private let mobilePlanRepository: MobilePlanRepository
     private let logger: FileLogger
+    private let receiptVerificationService: ReceiptVerificationService
 
     // MARK: Reactive Properties
 
@@ -69,7 +70,8 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
          pushNotificationManager: PushNotificationManager,
          mobilePlanRepository: MobilePlanRepository, logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
-         userSessionRepository: UserSessionRepository) {
+         userSessionRepository: UserSessionRepository,
+         receiptVerificationService: ReceiptVerificationService) {
         self.alertManager = alertManager
         self.apiManager = apiManager
         self.upgradeRouter = upgradeRouter
@@ -80,6 +82,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
         self.mobilePlanRepository = mobilePlanRepository
         self.logger = logger
         self.userSessionRepository = userSessionRepository
+        self.receiptVerificationService = receiptVerificationService
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         self.inAppPurchaseManager.delegate = self
     }
@@ -240,7 +243,8 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
             guard let self = self else { return }
 
             do {
-                _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
+                let receiptData = ReceiptData(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
+                _ = try await self.receiptVerificationService.verifyReceipt(receiptData)
                 await MainActor.run {
                     self.logger.logD("DefaultUpgradePlanViewModel", "Purchase verified successfully")
                     self.saveAppleData(appleID: nil, appleData: nil, appleSig: nil)

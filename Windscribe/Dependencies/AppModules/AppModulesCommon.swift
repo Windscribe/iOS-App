@@ -270,7 +270,8 @@ class Managers: Assembly {
                                      preferences: r.resolve(Preferences.self)!,
                                      logger: r.resolve(FileLogger.self)!,
                                      mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
-                                     sessionManager: r.resolve(SessionManager.self)!)
+                                     sessionManager: r.resolve(SessionManager.self)!,
+                                     receiptVerificationService: r.resolve(ReceiptVerificationService.self)!)
         }.inObjectScope(.userScope)
 
         container.register(ModernInAppPurchaseManager.self) { r in
@@ -279,7 +280,8 @@ class Managers: Assembly {
                 preferences: r.resolve(Preferences.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
-                sessionManager: r.resolve(SessionManager.self)!)
+                sessionManager: r.resolve(SessionManager.self)!,
+                receiptVerificationService: r.resolve(ReceiptVerificationService.self)!)
         }.inObjectScope(.userScope)
 
         container.register(HTMLParsing.self) { r in
@@ -320,6 +322,13 @@ class Managers: Assembly {
                                antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
                                locationListRepository: r.resolve(LocationListRepository.self)!,
                                windowProvider: r.resolve(WindowProvider.self)!)
+        }.inObjectScope(.userScope)
+        container.register(ReceiptVerificationService.self) { r in
+            ReceiptVerificationServiceImpl(
+                apiManager: r.resolve(APIManager.self)!,
+                sessionManager: r.resolve(SessionManager.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(HapticFeedbackManager.self) { r in
             HapticFeedbackManagerImpl(

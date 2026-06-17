@@ -22,9 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var migrationRepository: MigrationRepository = Assembler.resolve(MigrationRepository.self)
 
-    private lazy var purchaseManager: InAppPurchaseManager = Assembler.resolve(InAppPurchaseManager.self)
-
     private lazy var lifecycleManager: LifecycleManagerType = Assembler.resolve(LifecycleManagerType.self)
+
+    private lazy var receiptVerificationService: ReceiptVerificationService = Assembler.resolve(ReceiptVerificationService.self)
 
     lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         lifecycleManager.onAppStart()
         recordInstallIfFirstLoad()
         resetCountryOverrideForServerList()
-        purchaseManager.verifyPendingTransaction()
+        receiptVerificationService.verifyPendingReceipt()
 
         return true
     }

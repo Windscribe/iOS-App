@@ -76,7 +76,8 @@ class ViewModels: Assembly {
                 mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                userSessionRepository: r.resolve(UserSessionRepository.self)!)
+                userSessionRepository: r.resolve(UserSessionRepository.self)!,
+                receiptVerificationService: r.resolve(ReceiptVerificationService.self)!)
         }.inObjectScope(.transient)
 
         container.register((any EmergencyConnectViewModel).self) { r in

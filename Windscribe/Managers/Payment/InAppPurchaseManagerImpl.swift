@@ -43,17 +43,20 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
     let logger: FileLogger
     let mobilePlanRepository: MobilePlanRepository
     let sessionManager: SessionManager
+    let receiptVerificationService: ReceiptVerificationService
 
     init(apiManager: APIManager,
          preferences: Preferences,
          logger: FileLogger,
          mobilePlanRepository: MobilePlanRepository,
-         sessionManager: SessionManager) {
+         sessionManager: SessionManager,
+         receiptVerificationService: ReceiptVerificationService) {
         self.apiManager = apiManager
         self.preferences = preferences
         self.mobilePlanRepository = mobilePlanRepository
         self.logger = logger
         self.sessionManager = sessionManager
+        self.receiptVerificationService = receiptVerificationService
         super.init()
     }
 
@@ -161,84 +164,6 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
                                             appleID: transactionID,
                                             appleData: appleData,
                                             appleSIG: signature)
-        }
-    }
-
-    func verifyPendingTransaction() {
-        // replace below code with SharedUserDefaults methods
-        if let appleID = preferences.getActiveAppleID(),
-           let appleData = preferences.getActiveAppleData(),
-           let appleSIG = preferences.getActiveAppleSig() {
-
-            Task { [weak self] in
-                guard let self = self else { return }
-                await self.retryVerifyPendingTransaction(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
-            }
-        }
-    }
-
-    private func retryVerifyPendingTransaction(appleID: String, appleData: String, appleSIG: String) async {
-        let maxAttempts = 3
-
-        for attempt in 0..<maxAttempts {
-            do {
-                _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
-
-                // Verify successful - now get updated session
-                try? await self.sessionManager.updateSession()
-
-                self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful on attempt \(attempt + 1).")
-                // setting nil for successfull validation
-                self.preferences.saveActiveAppleID(id: nil)
-                self.preferences.saveActiveAppleSig(sig: nil)
-                self.preferences.saveActiveAppleData(data: nil)
-
-                return  // Success - exit retry loop
-
-            } catch {
-                if let error = error as? Errors {
-                    self.logger.logE("InAppPurchaseManagerImpl", "Attempt \(attempt + 1) failed: \(error.description)")
-                }
-
-                // If not last attempt, wait before retrying
-                if attempt < maxAttempts - 1 {
-                    // 5-second delay gives network time to recover and prevents hammering the server
-                    self.logger.logI("InAppPurchaseManagerImpl", "Retrying in 5 seconds...")
-                    try? await Task.sleep(nanoseconds: 5_000_000_000)
-                } else {
-                    self.logger.logE("InAppPurchaseManagerImpl", "All retry attempts exhausted. Transaction will be retried on next app launch.")
-                }
-            }
-        }
-    }
-
-    func verifyPendingTransaction() async throws {
-        guard let appleID = preferences.getActiveAppleID(),
-              let appleData = preferences.getActiveAppleData(),
-              let appleSIG = preferences.getActiveAppleSig() else {
-            return
-        }
-
-        Task { [weak self] in
-            guard let self = self else { return }
-
-            do {
-                _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
-
-                // Verify successful - now get updated session
-                try? await self.sessionManager.updateSession()
-
-                self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
-                // setting nil for successfull validation
-                self.preferences.saveActiveAppleID(id: nil)
-                self.preferences.saveActiveAppleSig(sig: nil)
-                self.preferences.saveActiveAppleData(data: nil)
-
-            } catch {
-                if let error = error as? Errors {
-                    self.logger.logE("InAppPurchaseManagerImpl", "\(error.description)")
-                }
-            }
         }
     }
 }

@@ -15,6 +15,9 @@ class MockAPIManager: APIManager {
     var mockLeaderboard: Leaderboard?
     var mockAPIMessage: APIMessage?
 
+    // Artificial delay for testing concurrent behavior (in nanoseconds)
+    var artificialDelayNanoseconds: UInt64 = 0
+
     // PortMap tracking
     var portMapListToReturn: PortMapList?
 
@@ -66,6 +69,13 @@ class MockAPIManager: APIManager {
     var mockIKEv2Credentials: IKEv2ServerCredentials?
     var mockOpenVPNServerConfig: String?
 
+    // Receipt verification tracking
+    var verifyApplePaymentCalled = false
+    var verifyApplePaymentCallCount = 0
+    var lastVerifiedAppleID: String?
+    var lastVerifiedAppleData: String?
+    var lastVerifiedAppleSIG: String?
+
     func reset() {
         shouldThrowError = false
         customError = Errors.notDefined
@@ -105,6 +115,11 @@ class MockAPIManager: APIManager {
         mockOpenVPNCredentials = nil
         mockIKEv2Credentials = nil
         mockOpenVPNServerConfig = nil
+        verifyApplePaymentCalled = false
+        verifyApplePaymentCallCount = 0
+        lastVerifiedAppleID = nil
+        lastVerifiedAppleData = nil
+        lastVerifiedAppleSIG = nil
     }
 
     // MARK: - ShakeForData Methods (Implemented)
@@ -401,7 +416,26 @@ class MockAPIManager: APIManager {
     }
 
     func verifyApplePayment(appleID: String, appleData: String, appleSIG: String) async throws -> APIMessage {
-        throw Errors.notDefined
+        verifyApplePaymentCalled = true
+        verifyApplePaymentCallCount += 1
+        lastVerifiedAppleID = appleID
+        lastVerifiedAppleData = appleData
+        lastVerifiedAppleSIG = appleSIG
+
+        // Add artificial delay if configured (for testing concurrent behavior)
+        if artificialDelayNanoseconds > 0 {
+            try? await Task.sleep(nanoseconds: artificialDelayNanoseconds)
+        }
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let message = mockAPIMessage else {
+            return APIMessage(message: "Receipt verified successfully", success: true)
+        }
+
+        return message
     }
 
     // MARK: - Robert Methods

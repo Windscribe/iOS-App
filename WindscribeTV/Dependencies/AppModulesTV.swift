@@ -109,7 +109,8 @@ class TVViewModels: Assembly {
                                  pushNotificationManager: r.resolve(PushNotificationManager.self)!,
                                  mobilePlanRepository: r.resolve(MobilePlanRepository.self)!,
                                  logger: r.resolve(FileLogger.self)!,
-                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                 receiptVerificationService: r.resolve(ReceiptVerificationService.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,

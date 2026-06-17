@@ -46,6 +46,11 @@ class MockPreferences: Preferences {
     var mockPrivacyPopupAccepted: Bool? = false
     var mockTunnelStoppedForAppUpdate = false
 
+    // Apple receipt storage
+    var mockActiveAppleSig: String?
+    var mockActiveAppleData: String?
+    var mockActiveAppleID: String?
+
     // WireGuard configuration storage
     var mockWireGuardAddress: String?
     var mockWireGuardDNS: String?
@@ -287,22 +292,28 @@ class MockPreferences: Preferences {
         return mockFirstInstall
     }
 
-    func saveActiveAppleSig(sig: String?) {}
+    func saveActiveAppleSig(sig: String?) {
+        mockActiveAppleSig = sig
+    }
 
     func getActiveAppleSig() -> String? {
-        return nil
+        return mockActiveAppleSig
     }
 
-    func saveActiveAppleData(data: String?) {}
+    func saveActiveAppleData(data: String?) {
+        mockActiveAppleData = data
+    }
 
     func getActiveAppleData() -> String? {
-        return nil
+        return mockActiveAppleData
     }
 
-    func saveActiveAppleID(id: String?) {}
+    func saveActiveAppleID(id: String?) {
+        mockActiveAppleID = id
+    }
 
     func getActiveAppleID() -> String? {
-        return nil
+        return mockActiveAppleID
     }
 
     func saveAppleLanguage(languge: String?) {}

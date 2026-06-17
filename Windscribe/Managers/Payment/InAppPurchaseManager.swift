@@ -109,7 +109,6 @@ protocol InAppPurchaseManager {
     func restorePurchase()
     func fetchAvailableProducts(productIDs: [String])
     func matchInAppPurchaseWithWindscribeData(transaction: SKPaymentTransaction)
-    func verifyPendingTransaction()
     var delegate: InAppPurchaseManagerDelegate? { get set }
 }
 
@@ -124,5 +123,4 @@ protocol ModernInAppPurchaseManager {
     func purchase(windscribeInAppProduct: WindscribeInAppProduct) async throws -> PurchaseResult
     func restorePurchases() async throws
     func fetchAvailableProducts(productIDs: [String]) async throws -> [WindscribeInAppProduct]
-    func verifyPendingTransaction() async throws
 }
