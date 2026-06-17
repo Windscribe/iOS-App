@@ -169,6 +169,8 @@
 "Enter voucher code" = "バウチャーコードを入力してください";
 "Enter your information" = "情報を入力してください";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Windscribe のパスワードを入力してアカウントを削除します。この操作は元に戻せないことに注意してください。";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "エラー";
 "Expiry Date" = "有効期限";
 "Export" = "エクスポート";

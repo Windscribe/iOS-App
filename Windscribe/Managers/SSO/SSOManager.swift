@@ -8,17 +8,18 @@
 import AuthenticationServices
 import Combine
 
-protocol SSOManaging {
+protocol LegacySSOManaging {
     func getSession() -> AnyPublisher<Void, Errors>
+    func reauthenticate() -> AnyPublisher<String, Errors>
     func signOut()
 }
 
-class SSOManager: NSObject, ObservableObject, SSOManaging {
+class SSOManager: NSObject, ObservableObject, LegacySSOManaging {
     private let logger: FileLogger
     private let apiManager: APIManager
     private let userSessionRepository: UserSessionRepository
     private var cancellables = Set<AnyCancellable>()
-    private var ssoSession: PassthroughSubject<Void, Errors>?
+    private var ssoSession: PassthroughSubject<String, Errors>?
 
     init(logger: FileLogger,
          apiManager: APIManager,
@@ -31,11 +32,22 @@ class SSOManager: NSObject, ObservableObject, SSOManaging {
     /// Requests apple OAuth sign in token
     /// Uses token to get updated user session.
     func getSession() -> AnyPublisher<Void, Errors> {
-        let subject = PassthroughSubject<Void, Errors>()
+        return requestAppleSession(requestedScopes: [.fullName, .email])
+            .map { _ in () }
+            .eraseToAnyPublisher()
+    }
+
+    /// Reauthenticates the current Apple SSO user and refreshes the session auth hash.
+    func reauthenticate() -> AnyPublisher<String, Errors> {
+        return requestAppleSession(requestedScopes: nil)
+    }
+
+    private func requestAppleSession(requestedScopes: [ASAuthorization.Scope]?) -> AnyPublisher<String, Errors> {
+        let subject = PassthroughSubject<String, Errors>()
         ssoSession = subject
 
         let request = ASAuthorizationAppleIDProvider().createRequest().then {
-            $0.requestedScopes = [.fullName, .email]
+            $0.requestedScopes = requestedScopes
         }
 
         let controller = ASAuthorizationController(authorizationRequests: [request]).then {
@@ -85,7 +97,7 @@ extension SSOManager: ASAuthorizationControllerDelegate {
 
                 await userSessionRepository.update(session: session)
                 await MainActor.run {
-                    self.ssoSession?.send(())
+                    self.ssoSession?.send((token))
                     self.ssoSession?.send(completion: .finished)
                 }
             } catch {

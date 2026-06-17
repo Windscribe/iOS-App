@@ -169,6 +169,8 @@
 "Enter voucher code" = "Entrez le code du bon";
 "Enter your information" = "Entrez vos informations";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Entrez votre mot de passe Windscribe pour supprimer votre compte. Veuillez noter que cette action ne peut pas être annulée.";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "Erreur";
 "Expiry Date" = "Date d’expiration";
 "Export" = "Exporter";

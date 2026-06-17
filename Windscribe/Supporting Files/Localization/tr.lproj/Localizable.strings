@@ -169,6 +169,8 @@
 "Enter voucher code" = "Kupon kodunu girin";
 "Enter your information" = "Bilgilerinizi girin";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Hesabınızı silmek için Windscribe şifrenizi girin. Lütfen bu işlemin geri alınamayacağını unutmayın.";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "Hata Oluştu";
 "Expiry Date" = "Bitiş Tarihi";
 "Export" = "Dışa Aktar";

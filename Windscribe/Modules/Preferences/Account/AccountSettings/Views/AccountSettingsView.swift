@@ -134,8 +134,18 @@ struct AccountSettingsView: View {
     private var dialogInputField: some View {
         if dialog == .password {
             SecureField(dialogPlaceHolder(dialog), text: $inputText)
-        } else {
+        } else if dialog == .accountHash {
+            if #available(iOS 16, *) {
+                TextField(dialogPlaceHolder(dialog), text: $inputText, axis: .vertical)
+                    .lineLimit(2, reservesSpace: true)
+            } else {
+                TextField(dialogPlaceHolder(dialog), text: $inputText)
+                    .lineLimit(2)
+            }
+        } else if dialog != .appleSSO {
             TextField(dialogPlaceHolder(dialog), text: $inputText)
+        } else {
+            EmptyView()
         }
     }
 
@@ -146,6 +156,7 @@ struct AccountSettingsView: View {
             placeholder: dialogPlaceHolder(dialog),
             isSecure: dialog == .password,
             isLazyCode: dialog == .lazyLogin,
+            visibleLineCount: dialog == .accountHash ? 2 : 1,
             onConfirm: { input in
                 handleConfirm(dialog: dialog, input: input)
             },
@@ -242,7 +253,7 @@ struct AccountSettingsView: View {
             // Button 2: Delete Account
             if viewModel.shouldShowDeleteAccountButton {
                 Button(action: {
-                    presentDialog(for: .password)
+                    presentDialog(for: viewModel.accountDeletionDialog)
                 }, label: {
                     Text(TextsAsset.Account.cancelAccount)
                         .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
@@ -275,10 +286,13 @@ struct AccountSettingsView: View {
 
     private func handleConfirm(dialog selectedDialog: AccountInputDialog?, input: String) {
         switch selectedDialog {
-        case .password:
+        case .password, .accountHash:
             viewModel.confirmCancelAccount(password: input)
         case .lazyLogin:
             viewModel.verifyLazyLogin(code: input)
+            break
+        case .appleSSO:
+            viewModel.confirmCancelAccountWithAppleSSO()
         case .none:
             break
         }
@@ -293,7 +307,7 @@ struct AccountSettingsView: View {
         }
 
         switch dialog {
-        case .password:
+        case .password, .accountHash, .appleSSO:
             return TextsAsset.Account.cancelAccount
         case .lazyLogin:
             return TextsAsset.Account.loginCodeTitle
@@ -308,8 +322,12 @@ struct AccountSettingsView: View {
         switch dialog {
         case .password:
             return TextsAsset.Account.deleteAccountMessage
+        case .accountHash:
+            return TextsAsset.Account.deleteAccountHashMessage
         case .lazyLogin:
             return TextsAsset.Account.lazyLoginDescription
+        case .appleSSO:
+            return TextsAsset.Account.deleteAccountAppleSSOMessage
         }
     }
 
@@ -321,8 +339,12 @@ struct AccountSettingsView: View {
         switch dialog {
         case .password:
             return TextsAsset.Account.accountPasswordTitle
+        case .accountHash:
+            return TextsAsset.accountHash
         case .lazyLogin:
             return TextsAsset.Account.loginCodeTitle
+        case .appleSSO:
+            return ""
         }
     }
 
@@ -505,31 +527,31 @@ struct AccountRowView: View {
 
                 if let message = row.message, section != .other {
                     Text(message)
-                            .foregroundColor(section == .plan
-                                             ? (message == TextsAsset.pro ? .actionGreen : (message == TextsAsset.Account.freeAccountDescription) ? .from(.titleColor, isDarkMode) : .infoGrey)
-                                             : .from(.infoColor, isDarkMode))
-                            .font(.regular(.callout))
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                            .multilineTextAlignment(.trailing)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .opacity(showCopied ? 0.2 : 1)
-                            .overlay {
-                                if showCopied {
-                                    Text(TextsAsset.copied)
-                                        .font(.regular(.callout))
-                                        .foregroundColor(.from(.titleColor, isDarkMode))
-                                        .transition(.opacity)
-                                }
+                        .foregroundColor(section == .plan
+                                         ? (message == TextsAsset.pro ? .actionGreen : (message == TextsAsset.Account.freeAccountDescription) ? .from(.titleColor, isDarkMode) : .infoGrey)
+                                         : .from(.infoColor, isDarkMode))
+                        .font(.regular(.callout))
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .multilineTextAlignment(.trailing)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .opacity(showCopied ? 0.2 : 1)
+                        .overlay {
+                            if showCopied {
+                                Text(TextsAsset.copied)
+                                    .font(.regular(.callout))
+                                    .foregroundColor(.from(.titleColor, isDarkMode))
+                                    .transition(.opacity)
                             }
-                            .onTapGesture {
-                                guard row.isCopyable else { return }
-                                UIPasteboard.general.string = message
-                                withAnimation { showCopied = true }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                    withAnimation { showCopied = false }
-                                }
+                        }
+                        .onTapGesture {
+                            guard row.isCopyable else { return }
+                            UIPasteboard.general.string = message
+                            withAnimation { showCopied = true }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                withAnimation { showCopied = false }
                             }
+                        }
                 }
 
                 if row.action != nil {

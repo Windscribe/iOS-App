@@ -33,4 +33,5 @@ enum DefaultValues {
     static let revision: Int64 = 0
     static let ipStack = "Auto"
     static let ipv4Only = "IPv4 Only"
+    static let installer = ""
 }

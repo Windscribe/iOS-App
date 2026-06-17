@@ -169,6 +169,8 @@
 "Enter voucher code" = "輸入優惠碼";
 "Enter your information" = "輸入您的資料";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "输入您的 Windscribe 密码以删除您的帐户。请注意，此操作无法撤消。";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "錯誤";
 "Expiry Date" = "到期日";
 "Export" = "匯出";

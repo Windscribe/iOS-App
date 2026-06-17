@@ -62,7 +62,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     private let apiManager: APIManager
     private let preferences: Preferences
     private let vpnStateRepository: VPNStateRepository
-    private let ssoManager: SSOManaging
+    private let ssoManager: LegacySSOManaging
     private let sessionManager: SessionManager
     private let logger: FileLogger
 
@@ -74,7 +74,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
          apiManager: APIManager,
          preferences: Preferences,
          vpnStateRepository: VPNStateRepository,
-         ssoManager: SSOManaging,
+         ssoManager: LegacySSOManaging,
          logger: FileLogger,
          sessionManager: SessionManager) {
         self.userSessionRepository = userSessionRepository

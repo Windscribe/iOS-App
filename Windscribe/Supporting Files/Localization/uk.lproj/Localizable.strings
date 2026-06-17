@@ -169,6 +169,8 @@
 "Enter voucher code" = "Введіть код ваучера";
 "Enter your information" = "Введіть вашу інформацію";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Введіть свій пароль Windscribe, щоб видалити обліковий запис. Зауважте, що цю дію неможливо скасувати.";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "Помилка";
 "Expiry Date" = "Дата закінчення терміну дії";
 "Export" = "Експортувати";

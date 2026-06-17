@@ -15,6 +15,7 @@ struct MenuTextFieldDialogView: View {
     let placeholder: String
     let isSecure: Bool
     let isLazyCode: Bool
+    let visibleLineCount: Int
     let onConfirm: (String) -> Void
     let onCancel: () -> Void
 
@@ -47,8 +48,7 @@ struct MenuTextFieldDialogView: View {
                 .keyboardType(.asciiCapable)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             } else {
-                TextField(placeholder, text: $input)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                multilineTextField
             }
 
             HStack {
@@ -66,5 +66,18 @@ struct MenuTextFieldDialogView: View {
         .background(Color.nightBlue)
         .cornerRadius(12)
         .padding(.horizontal, 24)
+    }
+
+    @ViewBuilder
+    private var multilineTextField: some View {
+        if #available(iOS 16, *), visibleLineCount > 1 {
+            TextField(placeholder, text: $input, axis: .vertical)
+                .lineLimit(visibleLineCount, reservesSpace: true)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+        } else {
+            TextField(placeholder, text: $input)
+                .lineLimit(visibleLineCount)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+        }
     }
 }

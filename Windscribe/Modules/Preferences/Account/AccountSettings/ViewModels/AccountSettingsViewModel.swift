@@ -18,10 +18,12 @@ protocol AccountSettingsViewModel: PreferencesBaseViewModel {
     var shouldShowResetPasswordButton: Bool { get }
     var resetPasswordButtonHidden: Bool { get }
     var showPasswordResetSuccess: Bool { get }
+    var accountDeletionDialog: AccountInputDialog { get }
 
     func loadSession()
     func handleRowAction(_ action: AccountRowAction)
     func resetPassword()
+    func confirmCancelAccountWithAppleSSO()
     func dismissPasswordResetSuccess()
 }
 
@@ -41,6 +43,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     private let sessionManager: SessionManager
     private let userSessionRepository: UserSessionRepository
     private let apiManager: APIManager
+    private let ssoManager: LegacySSOManaging
     private let languageManager: LanguageManager
 
     var shouldShowAddEmailButton: Bool {
@@ -51,6 +54,15 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     }
 
     // MARK: - Plan Action Buttons - Individual Logic
+
+    var accountDeletionDialog: AccountInputDialog {
+        if userSessionRepository.sessionModel?.isHashAuth == true {
+            return .accountHash
+        } else if preferences.getSSOProvider() == "apple" {
+            return .appleSSO
+        }
+        return .password
+    }
 
     var shouldShowUpgradeButton: Bool {
         guard let session = userSessionRepository.sessionModel else {
@@ -73,6 +85,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
          sessionManager: SessionManager,
          userSessionRepository: UserSessionRepository,
          apiManager: APIManager,
+         ssoManager: LegacySSOManaging,
          languageManager: LanguageManager,
          logger: FileLogger,
          hapticFeedbackManager: HapticFeedbackManager) {
@@ -80,6 +93,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
         self.sessionManager = sessionManager
         self.userSessionRepository = userSessionRepository
         self.apiManager = apiManager
+        self.ssoManager = ssoManager
         self.languageManager = languageManager
 
         super.init(logger: logger,
@@ -273,12 +287,46 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     }
 
     func confirmCancelAccount(password: String) {
+        cancelAccount(password: password)
+    }
+
+    func confirmCancelAccountWithAppleSSO() {
         loadingState = .loading(isFullScreen: false)
+
+        ssoManager.reauthenticate()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+
+                if case let .failure(error) = completion {
+                    self.loadingState = .error(error.localizedDescription)
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.error,
+                        message: self.fetchErrorMessage(from: error),
+                        buttonText: TextsAsset.okay)
+                }
+            } receiveValue: { [weak self] token in
+                self?.cancelAccount(token: token, shouldShowLoading: false)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func cancelAccount(password: String = "", token: String = "", shouldShowLoading: Bool = true) {
+        if shouldShowLoading {
+            loadingState = .loading(isFullScreen: false)
+        }
 
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                _ = try await apiManager.cancelAccount(password: password)
+                if !password.isEmpty {
+                    _ = try await apiManager.cancelAccount(password: password)
+                } else if !token.isEmpty {
+                    _ = try await apiManager.cancelSSOAccount(ssoToken: token)
+                } else {
+                    self.loadingState = .success
+                    return
+                }
                 await MainActor.run {
                     self.loadingState = .success
                     self.logoutUser()

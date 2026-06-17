@@ -169,6 +169,8 @@
 "Enter voucher code" = "바우처 코드를 입력하세요";
 "Enter your information" = "정보를 입력하세요";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "계정을 삭제하려면 Windscribe 비밀번호를 입력하세요. 이 작업은 취소할 수 없습니다.";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "오류";
 "Expiry Date" = "만료일";
 "Export" = "내보내기";

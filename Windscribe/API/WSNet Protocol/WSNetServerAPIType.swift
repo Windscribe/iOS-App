@@ -46,14 +46,17 @@ protocol WSNetServerAPIType {
                 captchaTrailX: [NSNumber],
                 captchaTrailY: [NSNumber],
                 attestationToken: String,
+                installer: String,
                 callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     // swiftlint:enable function_parameter_count
     func signup(usingToken token: String,
                 attestationToken: String,
+                installer: String,
                 callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     func sso(_ provider: String,
              token: String,
              attestationToken: String,
+             installer: String,
              callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     func authTokenLogin(_ username: String,
                         useAsciiCaptcha: Bool,
@@ -78,6 +81,7 @@ protocol WSNetServerAPIType {
                       callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     func cancelAccount(_ authHash: String,
                        password: String,
+                       ssoToken: String,
                        callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     func generateRandomUsername(_ callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
     func generateRandomPassword(_ callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
@@ -183,5 +187,5 @@ protocol WSNetServerAPIType {
                      signature: String,
                      callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
 }
-
 extension WSNetServerAPI: WSNetServerAPIType {}
+

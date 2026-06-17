@@ -130,9 +130,20 @@ struct AccountSettingsAlertContent: Identifiable {
 
 enum AccountInputDialog: String, Identifiable, CaseIterable {
     case password
+    case accountHash
     case lazyLogin
+    case appleSSO
 
     var id: String { rawValue }
+
+    var requiresTextInput: Bool {
+        switch self {
+        case .password, .accountHash, .lazyLogin:
+            return true
+        case .appleSSO:
+            return false
+        }
+    }
 }
 
 enum AccountState: Equatable {

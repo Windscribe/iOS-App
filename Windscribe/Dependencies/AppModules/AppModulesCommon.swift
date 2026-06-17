@@ -316,7 +316,7 @@ class Managers: Assembly {
                                locationsManager: r.resolve(LocationsManager.self)!,
                                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                vpnManager: r.resolve(VPNManager.self)!,
-                               ssoManager: r.resolve(SSOManaging.self)!,
+                               ssoManager: r.resolve(LegacySSOManaging.self)!,
                                antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
                                locationListRepository: r.resolve(LocationListRepository.self)!,
                                windowProvider: r.resolve(WindowProvider.self)!)
@@ -409,7 +409,7 @@ class Managers: Assembly {
                              userSessionRepository: r.resolve(UserSessionRepository.self)!)
         }.inObjectScope(.userScope)
 
-        container.register(SSOManaging.self) { r in
+        container.register(LegacySSOManaging.self) { r in
             SSOManager(logger: r.resolve(FileLogger.self)!,
                        apiManager: r.resolve(APIManager.self)!,
                        userSessionRepository: r.resolve(UserSessionRepository.self)!)

@@ -19,6 +19,7 @@ protocol AccountManaging: Sendable {
     func resendConfirmationEmail() async throws
     func addEmail(_ email: String) async throws
     func cancelAccount(password: String) async throws
+    func cancelSSOAccount(ssoToken: String) async throws
     func verifyLazyLogin(code: String) async throws
     func resetPassword(email: String) async throws -> AccountPasswordResetResult
     func keepSessionUpdated()
@@ -52,6 +53,10 @@ final class LegacyAccountManager: AccountManaging, @unchecked Sendable {
 
     func cancelAccount(password: String) async throws {
         _ = try await apiManager.cancelAccount(password: password)
+    }
+
+    func cancelSSOAccount(ssoToken: String) async throws {
+        _ = try await apiManager.cancelSSOAccount(ssoToken: ssoToken)
     }
 
     func verifyLazyLogin(code: String) async throws {

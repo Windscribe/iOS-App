@@ -63,6 +63,7 @@ extension APIManagerImpl {
                 captchaTrailX: captchaTrailX.asNSNumberArray,
                 captchaTrailY: captchaTrailY.asNSNumberArray,
                 attestationToken: attestationToken,
+                installer: DefaultValues.installer,
                 callback: completion
             )
         }
@@ -97,7 +98,10 @@ extension APIManagerImpl {
     func signUpUsingToken(token: String) async throws -> SessionModel {
         let attestationToken = (try? await deviceAttesting.generateToken()) ?? ""
         return try await apiUtil.makeApiCall(modalType: SessionModel.self) { completion in
-            self.api.signup(usingToken: token, attestationToken: attestationToken, callback: completion)
+            self.api.signup(usingToken: token,
+                            attestationToken: attestationToken,
+                            installer: DefaultValues.installer,
+                            callback: completion)
         }
     }
 
@@ -108,7 +112,11 @@ extension APIManagerImpl {
                 return nil
             }
 
-            return self.api.sso(SSOSessionType.apple.ssoID, token: token, attestationToken: attestationToken, callback: completion)
+            return self.api.sso(SSOSessionType.apple.ssoID,
+                                token: token,
+                                attestationToken: attestationToken,
+                                installer: DefaultValues.installer,
+                                callback: completion)
         }
     }
 
@@ -183,7 +191,22 @@ extension APIManagerImpl {
             throw Errors.validationFailure
         }
         return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
-            self.api.cancelAccount(sessionAuth, password: password, callback: completion)
+            self.api.cancelAccount(sessionAuth,
+                                   password: password,
+                                   ssoToken: "",
+                                   callback: completion)
+        }
+    }
+
+    func cancelSSOAccount(ssoToken: String) async throws -> APIMessage {
+        guard let sessionAuth = userSessionRepository?.sessionAuth else {
+            throw Errors.validationFailure
+        }
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
+            self.api.cancelAccount(sessionAuth,
+                                   password: "",
+                                   ssoToken: ssoToken,
+                                   callback: completion)
         }
     }
 

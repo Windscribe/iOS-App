@@ -6,5 +6,8 @@
 "IPv4 Only" = "IPv4 Only";
 "Egress (WireGuard only)" = "Egress (WireGuard only)";
 "Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Regular" = "Regular";
 "Alternate" = "Alternate";
+
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";

@@ -54,7 +54,7 @@ class SessionManagerImpl: SessionManager {
     private let locationListRepository: LocationListRepository
 
     private let vpnManager: VPNManager
-    private let ssoManager: SSOManaging
+    private let ssoManager: LegacySSOManaging
     private let windowProvider: WindowProvider
 
     private var cancellables = Set<AnyCancellable>()
@@ -72,7 +72,7 @@ class SessionManagerImpl: SessionManager {
           locationsManager: LocationsManager,
           vpnStateRepository: VPNStateRepository,
           vpnManager: VPNManager,
-          ssoManager: SSOManaging,
+          ssoManager: LegacySSOManaging,
           antiCensorshipRepository: AntiCensorshipRepository,
           locationListRepository: LocationListRepository,
           windowProvider: WindowProvider) {

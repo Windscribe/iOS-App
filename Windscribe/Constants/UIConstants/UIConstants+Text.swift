@@ -896,6 +896,14 @@ enum TextsAsset {
             return "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone.".localized
         }
 
+        static var deleteAccountHashMessage: String {
+            return "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.".localized
+        }
+
+        static var deleteAccountAppleSSOMessage: String {
+            return "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.".localized
+        }
+
         static var other: String {
             return "Other".localized
         }

@@ -48,6 +48,7 @@ protocol APIManager {
     func getXpressLoginCode() async throws -> XPressLoginCodeResponse
     func verifyXPressLoginCode(code: String, sig: String) async throws -> XPressLoginVerifyResponse
     func cancelAccount(password: String) async throws -> APIMessage
+    func cancelSSOAccount(ssoToken: String) async throws -> APIMessage
     func verifyTvLoginCode(code: String) async throws -> XPressLoginVerifyResponse
     func claimVoucherCode(code: String) async throws -> ClaimVoucherCodeResponse
 

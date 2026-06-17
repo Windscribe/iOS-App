@@ -169,6 +169,8 @@
 "Enter voucher code" = "Nhập mã phiếu giảm giá";
 "Enter your information" = "Nhập thông tin của bạn";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Nhập mật khẩu Windscribe để xóa tài khoản của bạn. Xin lưu ý rằng hành động này không thể hoàn tác được.";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "Lỗi";
 "Expiry Date" = "Ngày hết hạn";
 "Export" = "Xuất";

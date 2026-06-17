@@ -169,6 +169,8 @@
 "Enter voucher code" = "ভাউচার কোড লিখুন";
 "Enter your information" = "আপনার তথ্য লিখুন";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "আপনার অ্যাকাউন্ট মুছে ফেলতে আপনার Windscribe পাসওয়ার্ড লিখুন। অনুগ্রহ করে সচেতন হোন যে এই ক্রিয়াটি পূর্বাবস্থায় ফেরানো যাবে না৷";
+"Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone.";
 "Error" = "ত্রুটি";
 "Expiry Date" = "মেয়াদ শেষের তারিখ";
 "Export" = "রপ্তানি";

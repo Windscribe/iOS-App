@@ -40,12 +40,22 @@ final class AccountViewModel {
         return session.trafficUsed <= 0
     }
 
+    var accountDeletionDialog: AccountInputDialog {
+        if sessionProvider.session?.isHashAuth == true {
+            return .accountHash
+        } else if preferencesReading.ssoProvider == "apple" {
+            return .appleSSO
+        }
+        return .password
+    }
+
     // MARK: - Dependencies (injected via init — protocols only)
     private let hapticFeedback: any HapticFeedbacking
     private let sessionProvider: any SessionProviding
     private let accountManager: any AccountManaging
     private let preferencesReading: any PreferencesReading
     private let logger: any LogStoring
+    private let ssoManaging: any SSOManaging
 
     // MARK: - Init
 
@@ -53,11 +63,13 @@ final class AccountViewModel {
          sessionProvider: any SessionProviding,
          accountManager: any AccountManaging,
          preferencesReading: any PreferencesReading,
+         ssoManaging: any SSOManaging,
          logger: any LogStoring) {
         self.hapticFeedback = hapticFeedback
         self.sessionProvider = sessionProvider
         self.accountManager = accountManager
         self.preferencesReading = preferencesReading
+        self.ssoManaging = ssoManaging
         self.logger = logger
 
         if let session = sessionProvider.session {
@@ -151,6 +163,29 @@ final class AccountViewModel {
     }
 
     func confirmCancelAccount(password: String) {
+        cancelAccount(password: password)
+    }
+
+    func confirmCancelAccountWithAppleSSO() {
+        loadingState = .loading(isFullScreen: false)
+
+        Task {
+            do {
+                let token = try await ssoManaging.reauthenticate()
+                loadingState = .success
+                try await accountManager.cancelSSOAccount(ssoToken: token)
+                accountManager.logoutUser()
+            } catch {
+                loadingState = .error(error.localizedDescription)
+                alertMessage = AccountSettingsAlertContent(
+                    title: TextsAsset.error,
+                    message: self.fetchErrorMessage(from: error),
+                    buttonText: TextsAsset.okay)
+            }
+        }
+    }
+
+    private func cancelAccount(password: String, shouldShowLoading: Bool = true) {
         loadingState = .loading(isFullScreen: false)
 
         Task {

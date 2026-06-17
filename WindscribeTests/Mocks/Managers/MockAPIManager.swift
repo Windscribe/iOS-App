@@ -273,6 +273,10 @@ class MockAPIManager: APIManager {
         throw Errors.notDefined
     }
 
+    func cancelSSOAccount(ssoToken: String) async throws -> APIMessage {
+        throw Errors.notDefined
+    }
+
     func verifyTvLoginCode(code: String) async throws -> XPressLoginVerifyResponse {
         throw Errors.notDefined
     }

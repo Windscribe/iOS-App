@@ -111,6 +111,11 @@ extension EnvironmentValues {
     /// quota / fraud signals). Default: production `DCDeviceAttestation`.
     @Entry var deviceAttesting: any DeviceAttesting = DCDeviceAttestation()
 
+    /// Single Sign On Actions
+    @Entry var ssoManaging: any SSOManaging = LegacySSOManager(
+        legacy: Assembler.resolve(LegacySSOManaging.self)
+    )
+
     /// DNS settings management (validation, resolution).
     @Entry var dnsSettingsManaging: any DNSSettingsManaging = LegacyDNSSettingsManager(
         legacy: Assembler.resolve(DNSSettingsManagerType.self)

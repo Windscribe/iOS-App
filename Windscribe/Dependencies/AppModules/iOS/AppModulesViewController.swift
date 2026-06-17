@@ -23,7 +23,7 @@ class ViewControllerModule: Assembly {
                 apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
-                ssoManager: r.resolve(SSOManaging.self)!,
+                ssoManager: r.resolve(LegacySSOManaging.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 sessionManager: r.resolve(SessionManager.self)!
             ), router: r.resolve(AuthenticationNavigationRouter.self)!)
@@ -146,6 +146,7 @@ class ViewControllerModule: Assembly {
                     sessionManager: r.resolve(SessionManager.self)!,
                     userSessionRepository: r.resolve(UserSessionRepository.self)!,
                     apiManager: r.resolve(APIManager.self)!,
+                    ssoManager: r.resolve(LegacySSOManaging.self)!,
                     languageManager: r.resolve(LanguageManager.self)!,
                     logger: r.resolve(FileLogger.self)!,
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)

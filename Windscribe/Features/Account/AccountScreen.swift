@@ -16,6 +16,7 @@ struct AccountScreen: View {
     @Environment(\.sessionProviding) private var sessionProvider
     @Environment(\.accountManaging) private var accountManager
     @Environment(\.preferencesReading) private var preferencesReading
+    @Environment(\.ssoManaging) private var ssoManaging
     @Environment(\.logger) private var logger
 
     let openEnterEmail: () -> Void
@@ -30,6 +31,7 @@ struct AccountScreen: View {
             sessionProvider: sessionProvider,
             accountManager: accountManager,
             preferencesReading: preferencesReading,
+            ssoManaging: ssoManaging,
             logger: logger
         )
 
@@ -90,8 +92,7 @@ private struct AccountContentView: View {
             get: { dialog != nil && dialog != .lazyLogin },
             set: { if !$0 { dialog = nil } }
         ), actions: {
-            SecureField(dialogPlaceHolder(dialog), text: $inputText)
-
+            dialogInputField
             Button(TextsAsset.confirm) {
                 handleConfirm(dialog: dialog, input: inputText)
             }
@@ -119,6 +120,20 @@ private struct AccountContentView: View {
             guard !hasLoaded else { return }
             hasLoaded = true
             Task { await viewModel.loadSession() }
+        }
+    }
+
+    @ViewBuilder
+    private var dialogInputField: some View {
+        if dialog == .password {
+            SecureField(dialogPlaceHolder(dialog), text: $inputText)
+        } else if dialog == .accountHash {
+            TextField(dialogPlaceHolder(dialog), text: $inputText, axis: .vertical)
+                .lineLimit(2, reservesSpace: true)
+        } else if dialog != .appleSSO {
+            TextField(dialogPlaceHolder(dialog), text: $inputText)
+        } else {
+            EmptyView()
         }
     }
 
@@ -180,7 +195,7 @@ private struct AccountContentView: View {
                     backgroundColor: .from(.backgroundColor, lookAndFeel.isDarkMode)
                 ) {
                     viewModel.actionSelected()
-                    presentDialog(for: .password)
+                    presentDialog(for: viewModel.accountDeletionDialog)
                 }
             }
 
@@ -228,10 +243,12 @@ private struct AccountContentView: View {
 
     private func handleConfirm(dialog selectedDialog: AccountInputDialog?, input: String) {
         switch selectedDialog {
-        case .password:
+        case .password, .accountHash:
             viewModel.confirmCancelAccount(password: input)
         case .lazyLogin:
             viewModel.verifyLazyLogin(code: input)
+        case .appleSSO:
+            viewModel.confirmCancelAccountWithAppleSSO()
         case .none:
             break
         }
@@ -244,7 +261,7 @@ private struct AccountContentView: View {
         guard let dialog else { return TextsAsset.Account.defaultDialogTitle }
 
         switch dialog {
-        case .password:
+        case .password, .accountHash, .appleSSO:
             return TextsAsset.Account.cancelAccount
         case .lazyLogin:
             return TextsAsset.Account.loginCodeTitle
@@ -257,8 +274,12 @@ private struct AccountContentView: View {
         switch dialog {
         case .password:
             return TextsAsset.Account.deleteAccountMessage
+        case .accountHash:
+            return TextsAsset.Account.deleteAccountHashMessage
         case .lazyLogin:
             return TextsAsset.Account.lazyLoginDescription
+        case .appleSSO:
+            return TextsAsset.Account.deleteAccountAppleSSOMessage
         }
     }
 
@@ -268,8 +289,12 @@ private struct AccountContentView: View {
         switch dialog {
         case .password:
             return TextsAsset.Account.accountPasswordTitle
+        case .accountHash:
+            return TextsAsset.accountHash
         case .lazyLogin:
             return TextsAsset.Account.loginCodeTitle
+        case .appleSSO:
+            return ""
         }
     }
 
