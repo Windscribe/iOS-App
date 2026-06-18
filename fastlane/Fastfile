@@ -71,7 +71,8 @@ def ci_build(scheme:, sign: false, build_number: nil)
       export_options: "./exportOptions.plist",
       clean: true,
       output_directory: "build_logs",
-      xcargs: xcargs
+      xcargs: xcargs,
+      xcodebuild_formatter: "xcbeautify"
     )
   else
     gym(
@@ -81,7 +82,8 @@ def ci_build(scheme:, sign: false, build_number: nil)
       skip_archive: true,
       clean: true,
       output_directory: "build_logs",
-      xcargs: xcargs
+      xcargs: xcargs,
+      xcodebuild_formatter: "xcbeautify"
     )
   end
 end
@@ -100,7 +102,8 @@ lane :test do
     clean: true,
     fail_build: true,
     output_directory: "test_logs",
-    output_types: "junit"
+    output_types: "junit",
+    xcodebuild_formatter: "xcbeautify"
   )
 end
 
