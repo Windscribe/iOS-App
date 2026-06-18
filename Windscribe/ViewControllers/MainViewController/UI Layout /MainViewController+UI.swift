@@ -13,13 +13,15 @@ import Swinject
 extension MainViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if scrollView != nil {
+        if let scrollView = scrollView {
             scrollView.contentSize = CGSize(width: size.width * 4, height: 0)
             view.setNeedsLayout()
-            cardHeaderWasSelected(with: .all)
+            if listSelectionView != nil {
+                cardHeaderWasSelected(with: .all)
+            }
         }
-        flagBackgroundView.redraw()
-        listSelectionView.redrawGradientView()
+        flagBackgroundView?.redraw()
+        listSelectionView?.redrawGradientView()
 
         // After the transition completes, force a full layout pass so all
         // subviews (header, gradient, flags) pick up the new window bounds.
@@ -34,8 +36,8 @@ extension MainViewController {
             self.overrideUserInterfaceStyle = .dark
             self.navigationController?.overrideUserInterfaceStyle = .dark
             self.view.window?.overrideUserInterfaceStyle = .dark
-            self.flagBackgroundView.redraw()
-            self.listSelectionView.redrawGradientView()
+            self.flagBackgroundView?.redraw()
+            self.listSelectionView?.redrawGradientView()
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
         })
