@@ -152,38 +152,41 @@ extension LocalDatabaseImpl {
                     }
                 }
                 if oldSchemaVersion < 47 {
-                    migration.enumerateObjects(ofType: UserPreferences.className()) { oldObject, _ in
-                        if let connectionMode = oldObject?["connectionMode"] as? String {
+                    migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
+                        // Read from the migrated object, not the old object. Some of these
+                        // preferences were added after the original UserPreferences schema;
+                        // accessing a missing key on oldObject crashes Realm migrations.
+                        if let connectionMode = newObject?["connectionMode"] as? String {
                             self.preferences.saveConnectionMode(mode: connectionMode)
                         }
-                        if let language = oldObject?["language"] as? String {
+                        if let language = newObject?["language"] as? String {
                             self.preferences.saveLanguage(language: language)
                         }
-                        if let orderLocationsBy = oldObject?["orderLocationsBy"] as? String {
+                        if let orderLocationsBy = newObject?["orderLocationsBy"] as? String {
                             self.preferences.saveOrderLocationsBy(order: orderLocationsBy)
                         }
-                        if let appearance = oldObject?["appearance"] as? String {
+                        if let appearance = newObject?["appearance"] as? String {
                             self.preferences.saveDarkMode(darkMode: appearance == DefaultValues.appearance)
                         }
-                        if let firewall = oldObject?["firewall"] as? Bool {
+                        if let firewall = newObject?["firewall"] as? Bool {
                             self.preferences.saveFirewallMode(firewall: firewall)
                         }
-                        if let killSwitch = oldObject?["killSwitch"] as? Bool {
+                        if let killSwitch = newObject?["killSwitch"] as? Bool {
                             self.preferences.saveKillSwitch(killSwitch: killSwitch)
                         }
-                        if let allowLan = oldObject?["allowLan"] as? Bool {
+                        if let allowLan = newObject?["allowLan"] as? Bool {
                             self.preferences.saveAllowLane(mode: allowLan)
                         }
-                        if let autoSecureNewNetworks = oldObject?["autoSecureNewNetworks"] as? Bool {
+                        if let autoSecureNewNetworks = newObject?["autoSecureNewNetworks"] as? Bool {
                             self.preferences.saveAutoSecureNewNetworks(autoSecure: autoSecureNewNetworks)
                         }
-                        if let hapticFeedback = oldObject?["hapticFeedback"] as? Bool {
+                        if let hapticFeedback = newObject?["hapticFeedback"] as? Bool {
                             self.preferences.saveHapticFeedback(haptic: hapticFeedback)
                         }
-                        if let protocolType = oldObject?["protocolType"] as? String {
+                        if let protocolType = newObject?["protocolType"] as? String {
                             self.preferences.saveSelectedProtocol(selectedProtocol: protocolType)
                         }
-                        if let port = oldObject?["port"] as? String {
+                        if let port = newObject?["port"] as? String {
                             self.preferences.saveSelectedPort(port: port)
                         }
                     }
