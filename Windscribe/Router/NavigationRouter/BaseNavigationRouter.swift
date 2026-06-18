@@ -42,14 +42,25 @@ extension BaseNavigationRouter {
         if let window = Assembler.resolve(WindowProvider.self).mainWindow {
             window.rootViewController?.dismiss(animated: false, completion: nil)
 
-            UIView.transition(
-                with: window,
-                duration: 0.3,
-                options: .transitionCrossDissolve,
-                animations: {
-                    window.rootViewController = UINavigationController(rootViewController: mainViewController)
-                },
-                completion: nil)
+            let navigationController = UINavigationController(rootViewController: mainViewController)
+
+            if #available(iOS 26.0, *) {
+                // iOS 26 can assert inside UIKit list metrics while cross-dissolving
+                // the window root controller into MainViewController's table views.
+                UIView.performWithoutAnimation {
+                    window.rootViewController = navigationController
+                    window.makeKeyAndVisible()
+                }
+            } else {
+                UIView.transition(
+                    with: window,
+                    duration: 0.3,
+                    options: .transitionCrossDissolve,
+                    animations: {
+                        window.rootViewController = navigationController
+                    },
+                    completion: nil)
+            }
         }
     }
 }
