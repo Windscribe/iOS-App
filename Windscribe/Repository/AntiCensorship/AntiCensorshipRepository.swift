@@ -43,7 +43,6 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
 
     private var sessionHasBackup: Bool = false
     private var sessionWgParameterKey: String?
-    private var cancellables = Set<AnyCancellable>()
     private var isRefreshing = false
 
     init(apiManager: APIManager,
@@ -129,7 +128,8 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
     }
 
     func refreshParams() {
-        Task {
+        Task { [weak self] in
+            guard let self = self else { return }
             do {
                 isRefreshing = true
                 logger.logI("UnblockWgParamsRepository", "Refreshing wg unblock params")
@@ -140,16 +140,12 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
             } catch {
                 logger.logE("UnblockWgParamsRepository", "Failed Refreshing wg unblock params with error: \(error)")
                 isRefreshing = false
+                return
             }
             // Will only allow for new refresh after one minute in case the user
-            // switches between background and foreground multiple times
-            Just(())
-                .delay(for: .seconds(60), scheduler: RunLoop.main)
-                .sink { [weak self] _ in
-                    guard let self = self else { return }
-                    self.isRefreshing = false
-                }
-                .store(in: &cancellables)
+            // switches between background and foreground multiple times.
+            try? await Task.sleep(nanoseconds: 60_000_000_000)
+            isRefreshing = false
         }
     }
 }
