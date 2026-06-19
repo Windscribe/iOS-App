@@ -194,30 +194,25 @@ extension ConfigurationsManager {
                                    proto: String,
                                    port: String,
                                    vpnSettings: VPNUserSettings) async throws -> VPNConfiguration? {
-        try await withThrowingTaskGroup(of: VPNConfiguration?.self) { group in
-            // Add the build task
-            group.addTask {
-                try await self.buildConfig(location: locationID,
-                                           proto: proto,
-                                           port: port,
-                                           userSettings: vpnSettings)
+        try await withCheckedThrowingContinuation { continuation in
+            let state = ConfigBuildTimeoutState(continuation: continuation)
+            let buildTask = Task { [weak self] in
+                guard let self = self else { return }
+                do {
+                    let config = try await self.buildConfig(location: locationID,
+                                                            proto: proto,
+                                                            port: port,
+                                                            userSettings: vpnSettings)
+                    state.resume(.success(config))
+                } catch {
+                    state.resume(.failure(error))
+                }
             }
+            state.setTask(buildTask)
 
-            // Add the timeout task
-            group.addTask {
-                try await Task.sleep(nanoseconds: 30_000_000_000)
-                throw VPNConfigurationErrors.connectionTimeout
+            DispatchQueue.global().asyncAfter(deadline: .now() + 30) {
+                state.resume(.failure(VPNConfigurationErrors.connectionTimeout))
             }
-
-            // Get the first result (whichever completes first)
-            guard let result = try await group.next() else {
-                throw VPNConfigurationErrors.connectionTimeout
-            }
-
-            // Cancel remaining tasks
-            group.cancelAll()
-
-            return result
         }
     }
 
@@ -455,6 +450,50 @@ extension ConfigurationsManager {
             manager.protocolConfiguration?.includeAllNetworks = false
 #endif
             try await saveToPreferences(manager: manager)
+        }
+    }
+}
+
+private final class ConfigBuildTimeoutState: @unchecked Sendable {
+    private let continuation: CheckedContinuation<VPNConfiguration?, Error>
+    private let lock = NSLock()
+    private var didResume = false
+
+    private var task: Task<Void, Never>?
+
+    init(continuation: CheckedContinuation<VPNConfiguration?, Error>) {
+        self.continuation = continuation
+    }
+
+    func setTask(_ task: Task<Void, Never>) {
+        lock.lock()
+        guard !didResume else {
+            lock.unlock()
+            task.cancel()
+            return
+        }
+        self.task = task
+        lock.unlock()
+    }
+
+    func resume(_ result: Result<VPNConfiguration?, Error>) {
+        lock.lock()
+        guard !didResume else {
+            lock.unlock()
+            return
+        }
+        didResume = true
+        let task = task
+        self.task = nil
+        lock.unlock()
+
+        task?.cancel()
+
+        switch result {
+        case .success(let config):
+            continuation.resume(returning: config)
+        case .failure(let error):
+            continuation.resume(throwing: error)
         }
     }
 }
