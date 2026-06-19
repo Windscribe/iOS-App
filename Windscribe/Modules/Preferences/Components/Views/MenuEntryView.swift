@@ -258,11 +258,20 @@ struct MenuMultipleActionView: View {
                 }
             } label: {
                 HStack(spacing: 8) {
-                    Text(currentOption)
-                        .foregroundColor(.from(.infoColor, isDarkMode))
-                        .font(.regular(.callout))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
+                    ZStack(alignment: .trailing) {
+                        ForEach(options, id: \.self) { option in
+                            Text(option.title)
+                                .font(.regular(.callout))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                                .hidden()
+                        }
+                        Text(currentOption)
+                            .foregroundColor(.from(.infoColor, isDarkMode))
+                            .font(.regular(.callout))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
                     if let imageName = actionType.imageName {
                         Image(imageName)
                             .resizable()
@@ -271,6 +280,9 @@ struct MenuMultipleActionView: View {
                             .frame(width: 16, height: 16)
                             .foregroundColor(.from(.infoColor, isDarkMode))
                     }
+                }
+                .transaction { transaction in
+                    transaction.animation = nil
                 }
             }
             if isAlignLeading {
