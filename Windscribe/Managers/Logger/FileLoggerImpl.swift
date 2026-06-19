@@ -22,11 +22,20 @@ private struct LogBufferModel: Codable {
         case timestamp = "tm"
     }
 
-    private static let jsonDateFormatter: DateFormatter = {
-          let formatter = DateFormatter()
-          formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-          return formatter
-      }()
+    private static func makeJSONDateFormatter() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        return formatter
+    }
+
+    private static func string(from timestamp: TimeInterval) -> String {
+        makeJSONDateFormatter().string(from: Date(timeIntervalSince1970: timestamp))
+    }
+
+    private static func date(from string: String) -> Date? {
+        makeJSONDateFormatter().date(from: string)
+    }
 
     let level: LogLevel
     let tag: String
@@ -36,7 +45,7 @@ private struct LogBufferModel: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        let formattedTime = LogBufferModel.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
+        let formattedTime = LogBufferModel.string(from: timestamp)
 
         // Encode in specific order: tm, lvl, mod, msg for human readability
         try container.encode(formattedTime, forKey: .timestamp)
@@ -61,14 +70,14 @@ private struct LogBufferModel: Codable {
     }
 
     func toOrderedJSONString() -> String {
-          let formattedTime = Self.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
+        let formattedTime = Self.string(from: timestamp)
 
-          // Prevent multiple replacingOccurrences
-          let escapedTag = escapeJSONString(tag)
-          let escapedMessage = escapeJSONString(message)
+        // Prevent multiple replacingOccurrences
+        let escapedTag = escapeJSONString(tag)
+        let escapedMessage = escapeJSONString(message)
 
-          return "{\"tm\": \"\(formattedTime)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
-      }
+        return "{\"tm\": \"\(formattedTime)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
+    }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -88,7 +97,7 @@ private struct LogBufferModel: Codable {
 
         // Decode timestamp string and convert to TimeInterval
         let timestampString = try container.decode(String.self, forKey: .timestamp)
-        timestamp = LogBufferModel.jsonDateFormatter.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
+        timestamp = LogBufferModel.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
     }
 
     // Keep the original init for creating new log entries
