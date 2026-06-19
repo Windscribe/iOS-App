@@ -81,11 +81,27 @@ class LatencyRepositoryImpl: LatencyRepository {
 
         refreshBestLocation()
 
-        let queue = DispatchQueue(label: "debounce.queue")
+        let queue = DispatchQueue(label: "latency.trigger.queue")
 
+        // Fire on pingable publishes (servers merged in), re-arming, at most once/sec.
         locationListRepository.datacenterListSubject
-            .debounce(for: .milliseconds(500), scheduler: queue)
-            .first(where: { !$0.isEmpty })
+            .filter { $0.contains { $0.pingServer != nil } }
+            .throttle(for: .seconds(1), scheduler: queue, latest: true)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                Task {
+                   await self.loadLatency()
+                }
+            }
+            .store(in: &cancellables)
+
+        // loadLatency skips while connected; refresh on the connected->disconnected transition.
+        vpnStateRepository.getStatus()
+            .map { $0 == .disconnected }
+            .removeDuplicates()
+            .dropFirst()
+            .filter { $0 }
+            .throttle(for: .seconds(1), scheduler: queue, latest: true)
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 Task {
