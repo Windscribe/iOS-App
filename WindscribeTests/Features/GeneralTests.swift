@@ -8,6 +8,7 @@
 
 import Testing
 import Foundation
+import UniformTypeIdentifiers
 @testable import Windscribe
 
 @Suite("GeneralViewModel")
@@ -257,6 +258,50 @@ final class MockLanguageStoring: LanguageStoring, @unchecked Sendable {
         setLanguageCalls.append(language)
         continuation?.yield(language)
     }
+}
+
+@Suite("Menu entry identity")
+struct MenuEntryIdentityTests {
+    @Test("Secondary menu entries hash by the same fields used for equality")
+    func secondaryEntryHashMatchesIdEquality() {
+        let first = MenuSecondaryEntryItem(entry: StubMenuEntryItem(id: 7,
+                                                                    title: "First",
+                                                                    icon: "first",
+                                                                    action: .none(title: "First", parentId: 7)))
+        let second = MenuSecondaryEntryItem(entry: StubMenuEntryItem(id: 7,
+                                                                     title: "Second",
+                                                                     icon: "second",
+                                                                     action: .toggle(isSelected: true, parentId: 7)))
+
+        #expect(first == second)
+        #expect(Set([first, second]).count == 1)
+
+        var entries: [MenuSecondaryEntryItem: String] = [:]
+        entries[first] = "first"
+        entries[second] = "second"
+
+        #expect(entries.count == 1)
+        #expect(entries[first] == "second")
+    }
+
+    @Test("Document export identity includes file data")
+    func documentFormatInfoEqualityIncludesFileData() {
+        let first = DocumentFormatInfo(fileData: Data("first".utf8),
+                                       type: .plainText,
+                                       tempFileName: "debug-log.txt")
+        let second = DocumentFormatInfo(fileData: Data("other".utf8),
+                                        type: .plainText,
+                                        tempFileName: "debug-log.txt")
+
+        #expect(first != second)
+    }
+}
+
+private struct StubMenuEntryItem: MenuEntryItemType {
+    let id: Int
+    let title: String
+    let icon: String
+    let action: MenuEntryActionType?
 }
 
 final class StubPreferencesReading: PreferencesReading, @unchecked Sendable {
