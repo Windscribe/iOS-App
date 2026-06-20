@@ -29,7 +29,7 @@ struct DocumentFormatInfo: Hashable {
     static func == (lhs: DocumentFormatInfo, rhs: DocumentFormatInfo) -> Bool {
         return lhs.type == rhs.type &&
                lhs.tempFileName == rhs.tempFileName &&
-               lhs.fileData.count == rhs.fileData.count
+               lhs.fileData == rhs.fileData
     }
 }
 
@@ -150,6 +150,10 @@ struct MenuSecondaryEntryItem: MenuEntryItemType {
 
     static func == (lhs: MenuSecondaryEntryItem, rhs: MenuSecondaryEntryItem) -> Bool {
         lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 
     init(entry: any MenuEntryItemType, hasSeparator: Bool = false) {

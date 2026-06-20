@@ -116,7 +116,7 @@ struct MenuEntryInteractiveView: View {
             .padding(14)
             if item.secondaryEntries.count > 0 {
                 VStack(spacing: 14) {
-                    ForEach(item.secondaryEntries, id: \.self) { entry in
+                    ForEach(item.secondaryEntries, id: \.id) { entry in
                         if entry.hasSeparator {
                             Rectangle()
                                 .fill(Color.from(.separatorColor, isDarkMode))
