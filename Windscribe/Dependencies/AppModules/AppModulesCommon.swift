@@ -61,10 +61,8 @@ class Network: Assembly {
                            apiUtil: r.resolve(APIUtilService.self)!,
                            preferences: r.resolve(Preferences.self)!,
                            deviceAttesting: r.resolve((any DeviceAttesting).self)!)
-        }.initCompleted { r, apiManager in
-            // Note: Api manager and user repository both have circular dependency on each other.
-            (apiManager as? APIManagerImpl)?.userSessionRepository = r.resolve(UserSessionRepository.self)
-        }.inObjectScope(.userScope)
+        }
+        .inObjectScope(.userScope)
         container.register(WireguardAPIManager.self) { r in
             WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPIType.self)!, preferences: r.resolve(Preferences.self)!, apiUtil: r.resolve(APIUtilService.self)!)
         }.inObjectScope(.userScope)

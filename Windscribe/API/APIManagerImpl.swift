@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Swinject
 
 class APIManagerImpl: APIManager {
     var api: WSNetServerAPIType
@@ -15,7 +16,19 @@ class APIManagerImpl: APIManager {
     let apiUtil: APIUtilService
     let preferences: Preferences
     let deviceAttesting: any DeviceAttesting
-    var userSessionRepository: UserSessionRepository?
+
+    private var _userSessionRepository: UserSessionRepository?
+    var userSessionRepository: UserSessionRepository? {
+        get {
+            if _userSessionRepository == nil {
+                _userSessionRepository = Assembler.resolve(UserSessionRepository.self)
+            }
+            return _userSessionRepository
+        }
+        set {
+            _userSessionRepository = newValue
+        }
+    }
 
     init(api: WSNetServerAPIType,
          bridgeApi: WSNetBridgeAPIType,
