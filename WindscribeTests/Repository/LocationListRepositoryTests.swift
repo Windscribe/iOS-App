@@ -283,6 +283,31 @@ class LocationListRepositoryTests: XCTestCase {
         XCTAssertEqual(repository.currentLocationModels.map(\.id), [40, 100, 200, 300])
     }
 
+    /// Regression for #1119: concurrent server/location refreshes must never leave the datacenter
+    /// list server-less (every `pingServer == nil`), which previously killed latency for the session.
+    func testConcurrentServerAndLocationUpdatesAlwaysAttachServers() async throws {
+        let locations = [
+            makeLocation(id: 1, name: "Canada", sortOrder: 10, datacenters: [makeDatacenter(id: 11, locationId: 1)]),
+            makeLocation(id: 2, name: "France", sortOrder: 20, datacenters: [makeDatacenter(id: 22, locationId: 2)])
+        ]
+        let servers = [makeServer(id: 101, dcId: 11), makeServer(id: 102, dcId: 22)]
+
+        mockAPIManager.mockLocationList = LocationsListModel(locations: locations)
+        mockAPIManager.mockServerList = ServerMachinesListModel(servers: servers, revision: 1, backup: 0)
+
+        // Whatever interleaving wins, the final serialized recompute uses the latest of both feeds.
+        for _ in 0 ..< 20 {
+            await withTaskGroup(of: Void.self) { group in
+                group.addTask { try? await self.repository.updatedServerList() }
+                group.addTask { try? await self.repository.updateLocations() }
+                group.addTask { try? await self.repository.updateAll() }
+            }
+
+            let pingable = repository.currentDatacenterModels.filter { $0.pingServer != nil }.count
+            XCTAssertEqual(pingable, 2, "Datacenters lost their ping servers after a concurrent merge")
+        }
+    }
+
     func testFavouritsStartEmpty() async {
         // Then
         XCTAssertEqual(repository.favouriteListSubject.value.count, 0)
@@ -339,7 +364,7 @@ class LocationListRepositoryTests: XCTestCase {
 // MARK: - Helper Methods
 extension LocationListRepositoryTests {
 
-    private func makeLocation(id: Int, name: String, sortOrder: Int) -> LocationModel {
+    private func makeLocation(id: Int, name: String, sortOrder: Int, datacenters: [DatacenterModel] = []) -> LocationModel {
         LocationModel(
             id: id,
             name: name,
@@ -347,8 +372,26 @@ extension LocationListRepositoryTests {
             shortName: name,
             sortOrder: sortOrder,
             continent: "",
-            datacenters: []
+            datacenters: datacenters
         )
+    }
+
+    private func makeDatacenter(id: Int, locationId: Int) -> DatacenterModel {
+        var datacenter = DatacenterModel(
+            id: id, city: "City\(id)", nick: "Nick", iata: "", status: 1, gps: "",
+            tz: "America/Toronto", p2p: 0, isPremium: 0, wgPubkey: "", wgEndpoint: "",
+            ovpnX509: "", linkSpeed: 0
+        )
+        datacenter.locationId = locationId
+        return datacenter
+    }
+
+    private func makeServer(id: Int, dcId: Int) -> ServerMachineModel {
+        let json = """
+        {"id":\(id),"host":"host-\(id).windscribe.com","ip":"1.2.3.\(id % 255)","ip2":"","ip3":"","ipv6":0,"dc_id":\(dcId),"weight":1,"net_load":1,"s_class":0}
+        """.data(using: .utf8)!
+        // swiftlint:disable:next force_try
+        return try! JSONDecoder().decode(ServerMachineModel.self, from: json)
     }
 
     private func createMockSessionModel() -> SessionModel {

@@ -61,6 +61,12 @@ class LocationListRepositoryImpl: LocationListRepository {
 
     private var cancellables = Set<AnyCancellable>()
 
+    /// Canonical merge inputs, mutated/read only on `mergeQueue` so every recompute sees a
+    /// consistent snapshot of both feeds. `rawLocations` is the sorted, un-renamed on-disk shape.
+    private let mergeQueue = DispatchQueue(label: "com.windscribe.locationlist.merge")
+    private var rawLocations: [LocationModel] = []
+    private var rawServers: [ServerMachineModel] = []
+
     var currentLocationModels: [LocationModel] {
         locationListSubject.value
     }
@@ -88,17 +94,6 @@ class LocationListRepositoryImpl: LocationListRepository {
         self.preferences = preferences
         self.antiCensorshipRepository = antiCensorshipRepository
 
-        serverListSubject
-            .sink { [weak self] serverList in
-                guard let self = self else { return }
-
-                let datacenterList = self.currentDatacenterModels
-                guard !datacenterList.isEmpty else { return }
-
-                self.populateDatacenters(from: datacenterList, with: serverList)
-            }
-            .store(in: &cancellables)
-
         self.antiCensorshipRepository.selecteRoutingTypeSubject
             .dropFirst()
             .sink { [weak self] _ in
@@ -108,102 +103,101 @@ class LocationListRepositoryImpl: LocationListRepository {
             }
             .store(in: &cancellables)
 
-        loadInitialServers()
-        loadInitialLocations()
+        loadInitialState()
         loadInitialFavourites()
     }
 
-    private func populateDatacenters(from datacenterList: [DatacenterModel],
-                                     with serverList: [ServerMachineModel]) {
+    // MARK: - Serialized merge
+
+    /// Runs `work` on `mergeQueue` and suspends until it completes, serializing all merges.
+    private func onMergeQueue(_ work: @escaping () -> Void) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            mergeQueue.async {
+                work()
+                continuation.resume()
+            }
+        }
+    }
+
+    /// Rebuilds and republishes all three subjects from the current `rawLocations` + `rawServers`. Must run on `mergeQueue`.
+    private func recomputeAndPublish() {
+        let displayLocations = applyCustomNames(to: rawLocations)
 
         var serversByDatacenter: [Int: [ServerMachineModel]] = [:]
-        serverList.forEach { server in
+        rawServers.forEach { server in
             serversByDatacenter[server.datacenterId, default: []].append(server)
         }
 
-        let updatedDatacenterList = datacenterList.map { datacenter in
-            var updatedDatacenter = datacenter
-            updatedDatacenter.servers = serversByDatacenter[datacenter.id] ?? []
-            return updatedDatacenter
-        }
-
-        datacenterListSubject.send(updatedDatacenterList)
-        populateLocations(from: updatedDatacenterList)
-    }
-
-    private func populateLocations(from datacenterList: [DatacenterModel]) {
-        var datacenterbyLocation: [Int: [DatacenterModel]] = [:]
-        datacenterList.forEach { datacenter in
-            datacenterbyLocation[datacenter.locationId, default: []].append(datacenter)
-        }
-
-        let updatedLocationList = self.currentLocationModels.map { location in
+        let mergedLocations = displayLocations.map { location -> LocationModel in
             var updatedLocation = location
-            updatedLocation.datacenters = datacenterbyLocation[location.id] ?? []
+            updatedLocation.datacenters = location.datacenters.map { datacenter -> DatacenterModel in
+                var updatedDatacenter = datacenter
+                updatedDatacenter.servers = serversByDatacenter[datacenter.id] ?? []
+                return updatedDatacenter
+            }
             return updatedLocation
         }
+        let mergedDatacenters = mergedLocations.flatMap { $0.datacenters }
 
-        self.locationListSubject.send(updatedLocationList)
+        let withServers = mergedDatacenters.filter { !$0.servers.isEmpty }.count
+        logger.logI("LocationListRepositoryImpl",
+                    "Merge: attached servers to \(withServers)/\(mergedDatacenters.count) datacenters (\(rawServers.count) servers, \(mergedLocations.count) locations)")
+
+        // Publish the merged views first, then the raw server list, so any server-list observer
+        // already sees the fresh datacenters/locations.
+        datacenterListSubject.send(mergedDatacenters)
+        locationListSubject.send(mergedLocations)
+        serverListSubject.send(rawServers)
     }
 
-    private func updateDatacenterList(from locations: [LocationModel]) {
-        let allDatacenters = locations.flatMap { $0.datacenters }
-        logger.logI("LocationListRepositoryImpl", "Successfully updated \(allDatacenters.count) datacenters")
-        populateDatacenters(from: allDatacenters, with: currentServerModels)
-    }
+    /// Applies cached custom location/datacenter names, keeping the original count-match safeguard.
+    private func applyCustomNames(to locationList: [LocationModel]) -> [LocationModel] {
+        let regions = preferences.getCustomLocationsNames()
+        guard !regions.isEmpty else { return locationList }
 
-    private func loadInitialLocations(skipCustomNames: Bool = false) {
-        if let locationObjects = localDatabase.getLocations(), !locationObjects.isEmpty {
-            let orderedLocations = sortLocationsByGeography(locationObjects)
-            guard skipCustomNames else {
-                updateLocationModels(orderedLocations)
-                return
-            }
-            locationListSubject.send(orderedLocations)
-            updateDatacenterList(from: orderedLocations)
-        } else if let deprecatedList = self.localDatabase.getServers(), !deprecatedList.isEmpty {
-            saveLocationList(with: deprecatedList)
-        }
-    }
-
-    private func loadInitialServers() {
-        if let serversObjects = self.localDatabase.getServerMachines() {
-            serverListSubject.send(serversObjects)
-        }
-    }
-
-    private func saveLocationList(with locations: [LocationModel], skipCustomNames: Bool = false) {
-        let orderedLocations = sortLocationsByGeography(locations)
-
-        // Persist locations before applying custom names so the disk copy is the canonical shape.
-        localDatabase.saveLocations(locations: orderedLocations)
-
-        logger.logI("LocationListRepositoryImpl", "Successfully updated \(orderedLocations.count) locations")
-
-        // Apply custom names (if any) and update subjects
-        guard skipCustomNames else {
-            updateLocationModels(orderedLocations)
-            return
-        }
-        locationListSubject.send(orderedLocations)
-        updateDatacenterList(from: orderedLocations)
-    }
-
-    func updateLocations() async throws {
-        do {
-            let locationsList = try await apiManager.getLocationsList()
-            let locations = locationsList.locations
-            saveLocationList(with: locations)
-        } catch {
-            logger.logE("LocationListRepositoryImpl", "Failed to update locations: \(error.localizedDescription)")
-
-            // Try to load from local database as fallback
-            if let locationObjects = localDatabase.getLocations() {
-                updateLocationModels(sortLocationsByGeography(locationObjects))
-                return
+        var mergedModels: [LocationModel] = []
+        locationList.forEach { location in
+            if let region = regions.first(where: { $0.id == location.id }) {
+                var mergedDatacenters = [DatacenterModel]()
+                location.datacenters.forEach { datacenter in
+                    if let city = region.cities.first(where: { $0.id == datacenter.id }) {
+                        mergedDatacenters.append(datacenter.getCustomDatacenter(withCity: city.name, andNick: city.nickname))
+                    } else {
+                        mergedDatacenters.append(datacenter)
+                    }
+                }
+                if location.datacenters.count == mergedDatacenters.count {
+                    mergedModels.append(location.getCustomLocation(withName: region.country,
+                                                                   andDatacenters: mergedDatacenters))
+                } else {
+                    mergedModels.append(location.getCustomLocation(withName: region.country,
+                                                                   andDatacenters: location.datacenters))
+                }
             } else {
-                throw error
+                mergedModels.append(location)
             }
+        }
+        return mergedModels.count == locationList.count ? mergedModels : locationList
+    }
+
+    // MARK: - Initial load
+
+    /// Loads cached data synchronously during init (callers expect it immediately); `sync` is safe as nothing references the repository yet.
+    private func loadInitialState() {
+        mergeQueue.sync {
+            if let serversObjects = localDatabase.getServerMachines() {
+                rawServers = serversObjects
+            }
+
+            if let locationObjects = localDatabase.getLocations(), !locationObjects.isEmpty {
+                rawLocations = sortLocationsByGeography(locationObjects)
+            } else if let deprecatedList = localDatabase.getServers(), !deprecatedList.isEmpty {
+                let ordered = sortLocationsByGeography(deprecatedList)
+                localDatabase.saveLocations(locations: ordered)
+                rawLocations = ordered
+            }
+
+            recomputeAndPublish()
         }
     }
 
@@ -212,18 +206,38 @@ class LocationListRepositoryImpl: LocationListRepository {
         favouriteListSubject.send(favList)
     }
 
+    // MARK: - Network updates
+
+    func updateLocations() async throws {
+        do {
+            let locationsList = try await apiManager.getLocationsList()
+            let ordered = sortLocationsByGeography(locationsList.locations)
+            logger.logI("LocationListRepositoryImpl", "Successfully updated \(ordered.count) locations")
+            await setRawLocations(ordered, persist: true)
+        } catch {
+            logger.logE("LocationListRepositoryImpl", "Failed to update locations: \(error.localizedDescription)")
+
+            // Try to load from local database as fallback
+            if let locationObjects = localDatabase.getLocations() {
+                await setRawLocations(sortLocationsByGeography(locationObjects), persist: false)
+                return
+            } else {
+                throw error
+            }
+        }
+    }
+
     func updatedServerList() async throws {
         do {
             let serverList = try await self.apiManager.getServerMachinesList()
             let servers = serverList.servers
-            updateCurrentServers(with: servers, revision: serverList.revision, hasBackup: serverList.hasBakcup)
-
+            await setRawServers(servers, revision: serverList.revision)
             logger.logI("LocationListRepositoryImpl", "Successfully updated \(servers.count) server machines")
         } catch {
             logger.logE("LocationListRepositoryImpl", "Failed to update servers machines: \(error.localizedDescription)")
 
             if let serversObjects = self.localDatabase.getServerMachines() {
-                serverListSubject.send(serversObjects)
+                await setRawServers(serversObjects, revision: nil)
                 return
             } else {
                 throw error
@@ -246,22 +260,48 @@ class LocationListRepositoryImpl: LocationListRepository {
     }
 
     func updateInventory(with inventory: ServerInventoryModel) {
-        preferences.saveServerRevision(revision: inventory.revision)
+        mergeQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.preferences.saveServerRevision(revision: inventory.revision)
 
-        var currentServers = serverListSubject.value
-        inventory.disabled.forEach { disabled in
-            currentServers.removeAll(where: {$0.id == disabled.id})
+            var currentServers = self.rawServers
+            inventory.disabled.forEach { disabled in
+                currentServers.removeAll(where: { $0.id == disabled.id })
+            }
+            currentServers.append(contentsOf: inventory.enabled)
+
+            self.rawServers = currentServers
+            self.localDatabase.saveServerMachines(serverMachines: currentServers)
+            self.recomputeAndPublish()
         }
-        currentServers.append(contentsOf: inventory.enabled)
-
-        updateCurrentServers(with: currentServers, revision: inventory.revision, hasBackup: inventory.hasBakcup)
     }
 
-    private func updateCurrentServers(with servers: [ServerMachineModel], revision: Int64, hasBackup: Bool) {
-        preferences.saveServerRevision(revision: revision)
-        serverListSubject.send(servers)
-        localDatabase.saveServerMachines(serverMachines: servers)
+    /// Sets the canonical server list (persisting when a fresh `revision` is supplied) and republishes.
+    private func setRawServers(_ servers: [ServerMachineModel], revision: Int64?) async {
+        await onMergeQueue { [weak self] in
+            guard let self = self else { return }
+            if let revision = revision {
+                self.preferences.saveServerRevision(revision: revision)
+                self.localDatabase.saveServerMachines(serverMachines: servers)
+            }
+            self.rawServers = servers
+            self.recomputeAndPublish()
+        }
     }
+
+    /// Sets the canonical location list (persisting the canonical shape when fresh) and republishes.
+    private func setRawLocations(_ locations: [LocationModel], persist: Bool) async {
+        await onMergeQueue { [weak self] in
+            guard let self = self else { return }
+            if persist {
+                self.localDatabase.saveLocations(locations: locations)
+            }
+            self.rawLocations = locations
+            self.recomputeAndPublish()
+        }
+    }
+
+    // MARK: - Lookups
 
     func getServers(for datacenterId: Int) -> [ServerMachineModel] {
         getDatacenter(by: datacenterId)?.servers ?? []
@@ -344,48 +384,11 @@ class LocationListRepositoryImpl: LocationListRepository {
     // MARK: - Exported Regions
 
     func updateRegions(with regions: [ExportedRegion]) {
-        let locations = currentLocationModels
-        guard !locations.isEmpty else { return }
-        self.preferences.saveCustomLocationsNames(value: regions)
-        self.updateLocationModels(locations)
-    }
-
-    private func updateLocationModels(_ locationList: [LocationModel]) {
-        logger.logI("LocationListRepository", "Stating merge of local and external servers")
-        let regions = preferences.getCustomLocationsNames()
-        if regions.isEmpty {
-            locationListSubject.send(locationList)
-            updateDatacenterList(from: locationList)
-            return
-        }
-
-        var mergedModels: [LocationModel] = []
-        locationList.forEach { location in
-            if let region = regions.first(where: { $0.id == location.id }) {
-                var mergedDatacenters = [DatacenterModel]()
-                location.datacenters.forEach { datacenter in
-                    if let city = region.cities.first(where: { $0.id == datacenter.id }) {
-                        mergedDatacenters.append(datacenter.getCustomDatacenter(withCity: city.name, andNick: city.nickname))
-                    } else {
-                        mergedDatacenters.append(datacenter)
-                    }
-                }
-                if location.datacenters.count == mergedDatacenters.count {
-                    mergedModels.append(location.getCustomLocation(withName: region.country,
-                                                                   andDatacenters: mergedDatacenters))
-                } else {
-                    mergedModels.append(location.getCustomLocation(withName: region.country,
-                                                                   andDatacenters: location.datacenters))
-                }
-            } else {
-                mergedModels.append(location)
-            }
-        }
-        if mergedModels.count == locationList.count {
-            logger.logI("ServerRepositoryImpl", "Merge of local and external servers successful")
-            locationListSubject.send(mergedModels)
-            updateDatacenterList(from: mergedModels)
-            return
+        guard !currentLocationModels.isEmpty else { return }
+        mergeQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.preferences.saveCustomLocationsNames(value: regions)
+            self.recomputeAndPublish()
         }
     }
 
