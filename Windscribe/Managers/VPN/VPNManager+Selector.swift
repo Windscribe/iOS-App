@@ -34,11 +34,37 @@ extension VPNManagerImpl {
     }
 
     func removeProfiles() async {
-        let managers = (try? await configManager.getAllManagers()) ?? configManager.managers
-        for manager in managers {
-            await configManager.reset(manager: manager)
-            await configManager.remove(manager: manager)
+        // Enumerate installed managers from the system — the cached wg/op managers load async and
+        // are often empty at logout (#1124).
+        var managers: [NEVPNManager] = []
+        if let tunnels = try? await NETunnelProviderManager.loadAllFromPreferences() {
+            managers.append(contentsOf: tunnels)
         }
+        let ikev2 = NEVPNManager.shared()
+        try? await ikev2.loadFromPreferences()
+        if ikev2.protocolConfiguration != nil {
+            managers.append(ikev2)
+        }
+        logger.logI("VPNManager", "Logout: removing \(managers.count) VPN profile(s).")
+        for manager in managers {
+            await disableAndRemove(manager: manager)
+        }
+    }
+
+    /// Disable on-demand and save first (a modify on an approved config — prompt-free) so iOS stops
+    /// auto-reconnecting, then stop the tunnel, then remove. One manager instance throughout (#1124).
+    private func disableAndRemove(manager: NEVPNManager) async {
+        manager.onDemandRules = []
+        manager.isOnDemandEnabled = false
+        manager.isEnabled = false
+        #if os(iOS)
+            manager.protocolConfiguration?.includeAllNetworks = false
+        #endif
+        try? await manager.saveToPreferences()
+        if [.connected, .connecting, .reasserting].contains(manager.connection.status) {
+            manager.connection.stopVPNTunnel()
+        }
+        await configManager.remove(manager: manager)
     }
 
     // function to check if local ip belongs to RFC 1918 ips

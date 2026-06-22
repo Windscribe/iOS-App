@@ -322,9 +322,6 @@ class SessionManagerImpl: SessionManager {
     }
 
     func logoutUser() {
-        // Disconnect VPN
-        vpnManager.simpleDisableConnection()
-
         if let window = windowProvider.mainWindow {
             window.rootViewController?.dismiss(animated: false, completion: nil)
 #if os(iOS)
@@ -350,7 +347,7 @@ class SessionManagerImpl: SessionManager {
 #endif
         }
 
-        // Remove VPN Profiles
+        // Remove VPN profiles (#1124).
         Task { @MainActor in
             await vpnManager.removeProfiles()
         }
