@@ -241,6 +241,12 @@ struct MenuMultipleActionView: View {
     let actionType: MenuEntryActionType
     let action: (MenuEntryActionResponseType) -> Void
 
+    private var currentOptionTitle: String {
+        options.first { option in
+            option.fieldKey == currentOption || option.title == currentOption
+        }?.title ?? currentOption.localized
+    }
+
     var body: some View {
         HStack {
             Menu {
@@ -250,7 +256,7 @@ struct MenuMultipleActionView: View {
                     }, label: {
                         HStack {
                             Text(option.title)
-                            if option.title == currentOption {
+                            if option.fieldKey == currentOption || option.title == currentOption {
                                 Image(ImagesAsset.CheckMarkButton.off)
                             }
                         }
@@ -266,7 +272,7 @@ struct MenuMultipleActionView: View {
                                 .minimumScaleFactor(0.5)
                                 .hidden()
                         }
-                        Text(currentOption)
+                        Text(currentOptionTitle)
                             .foregroundColor(.from(.infoColor, isDarkMode))
                             .font(.regular(.callout))
                             .lineLimit(1)

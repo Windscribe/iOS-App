@@ -471,7 +471,7 @@ enum TextsAsset {
 
     enum PurchaseRestoredAlert {
         static var error: String {
-            return "No valid transaction found to restore."
+            return "No valid transaction found to restore.".localized
         }
     }
 
@@ -917,7 +917,7 @@ enum TextsAsset {
         }
 
         static var lazyLoginSuccess: String {
-            return "Sweet, you should be all good to go now"
+            return "Sweet, you should be all good to go now".localized
         }
 
         static var voucherCodeDescription: String {
@@ -2017,7 +2017,7 @@ enum TextsAsset {
 
         }
         static var ssoErrorAppleTitle: String {
-            return "Apple Sign-In Unsuccesful"
+            return "Apple Sign-In Unsuccesful".localized
         }
     }
 
@@ -2175,11 +2175,11 @@ extension TextsAsset {
         }
 
         static var locationMaintenanceDescription: String {
-            return "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status"
+            return "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status".localized
         }
 
         static var locationMaintenanceTitle: String {
-            return "Location Maintenance"
+            return "Location Maintenance".localized
         }
 
         static var supportTitle: String {
