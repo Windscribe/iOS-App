@@ -11,3 +11,21 @@
 "Alternate" = "Alternate";
 
 "Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
+"Invalid session auth or api parameters provided." = "Invalid session authentication or API parameters provided.";
+"Invalid session auth." = "Invalid session authentication.";
+"Failed to process the upgrade using the receipt." = "Failed to process the upgrade using the receipt.";
+"Unable to verify the receipt with Apple." = "Unable to verify the receipt with Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Missing transaction ID. Please ensure you have an active subscription.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance.";
+"The network appears to be offline." = "The network appears to be offline.";
+"Unable to reach the server. Please try again." = "Unable to reach the server. Please try again.";
+"No data found." = "No data found.";
+"Ip1 and ip3 are not available to configure this profile." = "IP1 and IP3 are not available to configure this profile.";
+"Missing remote address in selected location." = "Missing remote address in selected location.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "You have reached your limit of WireGuard keys. Do you want to delete your oldest key?";
+"2FA code required to login." = "2FA code required to log in.";
+"Too many failed attempts. Please wait a moment and try again." = "Too many failed attempts. Please wait a moment and try again.";
+"Invalid 2FA Code provided." = "Invalid 2FA code provided.";
+"WSNet: Bridge Api failed." = "WSNet: Bridge API failed.";
+"Unknown error." = "Unknown error.";
