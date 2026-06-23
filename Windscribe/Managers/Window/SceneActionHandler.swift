@@ -6,6 +6,7 @@
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 
+import Swinject
 import UIKit
 
 protocol SceneActionHandler {
@@ -15,21 +16,17 @@ protocol SceneActionHandler {
 }
 
 class SceneActionHandlerImpl: SceneActionHandler {
-    private let userSessionRepository: UserSessionRepository
     private let logger: FileLogger
-    private let customConfigRepository: CustomConfigRepository
-    private let alertManager: AlertManager
     private let windowProvider: WindowProvider
 
-    init(userSessionRepository: UserSessionRepository,
-         logger: FileLogger,
-         customConfigRepository: CustomConfigRepository,
-         alertManager: AlertManager,
+    // .container singleton: resolve .userScope deps live so they can't go stale across a userScope reset.
+    private var userSessionRepository: UserSessionRepository { Assembler.resolve(UserSessionRepository.self) }
+    private var customConfigRepository: CustomConfigRepository { Assembler.resolve(CustomConfigRepository.self) }
+    private var alertManager: AlertManager { Assembler.resolve(AlertManager.self) }
+
+    init(logger: FileLogger,
          windowProvider: WindowProvider) {
-        self.userSessionRepository = userSessionRepository
         self.logger = logger
-        self.customConfigRepository = customConfigRepository
-        self.alertManager = alertManager
         self.windowProvider = windowProvider
     }
 

@@ -375,7 +375,7 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(LocationPermissionManaging.self) { r in
             LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(ConnectivityManager.self)!, wifiManager: r.resolve(WifiManager.self)!)
-        }.inObjectScope(.container)
+        }.inObjectScope(.userScope) // session-scoped: shares lifecycle with its .userScope deps
 
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,

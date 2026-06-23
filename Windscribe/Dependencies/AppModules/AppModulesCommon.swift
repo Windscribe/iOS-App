@@ -161,7 +161,7 @@ class Repository: Assembly {
                                   userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                   staticIpRepository: r.resolve(StaticIpRepository.self)!,
                                   locationListRepository: r.resolve(LocationListRepository.self)!)
-        }.inObjectScope(.container)
+        }.inObjectScope(.userScope) // session-scoped: shares lifecycle with its .userScope deps
 
         container.register(EmergencyRepository.self) { r in
             EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(),
@@ -257,10 +257,7 @@ class Managers: Assembly {
         container.register(SceneLifecycleHandler.self) { r in
             SceneLifecycleHandlerImpl(
                 logger: r.resolve(FileLogger.self)!,
-                preferences: r.resolve(Preferences.self)!,
-                protocolManager: r.resolve(ProtocolManagerType.self)!,
-                lifecycleManager: r.resolve(LifecycleManagerType.self)!,
-                pushNotificationManager: r.resolve(PushNotificationManager.self)!)
+                preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.container)
 
         container.register(InAppPurchaseManager.self) { r in

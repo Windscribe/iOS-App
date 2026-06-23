@@ -6,6 +6,7 @@
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 
+import Swinject
 import UIKit
 
 protocol SceneLifecycleHandler {
@@ -19,20 +20,16 @@ protocol SceneLifecycleHandler {
 class SceneLifecycleHandlerImpl: SceneLifecycleHandler {
     private let logger: FileLogger
     private let preferences: Preferences
-    private let protocolManager: ProtocolManagerType
-    private let lifecycleManager: LifecycleManagerType
-    private let pushNotificationManager: PushNotificationManager
+
+    // .container singleton: resolve .userScope deps live so they can't go stale across a userScope reset.
+    private var protocolManager: ProtocolManagerType { Assembler.resolve(ProtocolManagerType.self) }
+    private var lifecycleManager: LifecycleManagerType { Assembler.resolve(LifecycleManagerType.self) }
+    private var pushNotificationManager: PushNotificationManager { Assembler.resolve(PushNotificationManager.self) }
 
     init(logger: FileLogger,
-         preferences: Preferences,
-         protocolManager: ProtocolManagerType,
-         lifecycleManager: LifecycleManagerType,
-         pushNotificationManager: PushNotificationManager) {
+         preferences: Preferences) {
         self.logger = logger
         self.preferences = preferences
-        self.protocolManager = protocolManager
-        self.lifecycleManager = lifecycleManager
-        self.pushNotificationManager = pushNotificationManager
     }
 
     func handleWillResignActive() {

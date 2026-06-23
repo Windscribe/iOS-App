@@ -13,16 +13,12 @@ import Swinject
 import UIKit
 
 class WindowSetupServiceImpl: WindowSetupService {
-    private let userSessionRepository: UserSessionRepository
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private var splashView: LoadingSplashView?
     private var cancellables = Set<AnyCancellable>()
 
-    init(userSessionRepository: UserSessionRepository,
-         lookAndFeelRepository: LookAndFeelRepositoryType) {
-        self.userSessionRepository = userSessionRepository
-        self.lookAndFeelRepository = lookAndFeelRepository
-    }
+    // .container singleton: resolve .userScope deps live so they can't go stale across a userScope reset.
+    private var userSessionRepository: UserSessionRepository { Assembler.resolve(UserSessionRepository.self) }
+    private var lookAndFeelRepository: LookAndFeelRepositoryType { Assembler.resolve(LookAndFeelRepositoryType.self) }
 
     func configureWindow(_ window: UIWindow) {
         bindThemeChange()

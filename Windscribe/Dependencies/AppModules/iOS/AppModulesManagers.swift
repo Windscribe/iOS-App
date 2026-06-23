@@ -14,18 +14,13 @@ class IOSManagers: Assembly {
             HashAuthManagerImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
-        container.register(WindowSetupService.self) { r in
-            WindowSetupServiceImpl(
-                userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+        container.register(WindowSetupService.self) { _ in
+            WindowSetupServiceImpl()
         }.inObjectScope(.container)
 
         container.register(SceneActionHandler.self) { r in
             SceneActionHandlerImpl(
-                userSessionRepository: r.resolve(UserSessionRepository.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                customConfigRepository: r.resolve(CustomConfigRepository.self)!,
-                alertManager: r.resolve(AlertManager.self)!,
                 windowProvider: r.resolve(WindowProvider.self)!)
         }.inObjectScope(.container)
     }
