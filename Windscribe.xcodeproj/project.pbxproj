@@ -642,6 +642,13 @@
 		7CCF1B5600CD8A15E60AAB16 /* NetworkSettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70D3F5B8583E5510FEB413A /* NetworkSettingsScreen.swift */; };
 		8AE591FA3936F7BDB58B11A9 /* DebugLogManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD175BC90A452DFACD551DD7 /* DebugLogManaging.swift */; };
 		8E5956213C7D6FD6D333DE8D /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E318BA53CF287401502205C /* Env.swift */; };
+		921ADAB42FEB19A800A890DC /* WSNetInstanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */; };
+		921ADAB52FEB19A800A890DC /* WSNetInstanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */; };
+		921ADAB62FEB19A800A890DC /* WSNetInstanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */; };
+		921ADAB72FEB19A800A890DC /* WSNetInstanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */; };
+		921ADAB82FEB19A800A890DC /* WSNetInstanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */; };
+		921ADAB92FEB19A800A890DC /* WSNetInstanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */; };
+		921ADABB2FEB1A7600A890DC /* MockWSNetInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921ADABA2FEB1A7600A890DC /* MockWSNetInstance.swift */; };
 		9223E1F32FB22934007252B6 /* MockPatternTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E1F22FB22934007252B6 /* MockPatternTests.swift */; };
 		9223E2092FB3C1DC007252B6 /* WireguardIPManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */; };
 		9223E2282FC4AD11007252B6 /* DeviceAttesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223E2272FC4AD11007252B6 /* DeviceAttesting.swift */; };
@@ -675,7 +682,6 @@
 		92B7B56D2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B56B2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift */; };
 		92B7B5702F92CCEB006B69DF /* LocalDatabaseParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B56F2F92CCEB006B69DF /* LocalDatabaseParityTests.swift */; };
 		92B7B5722F92CD01006B69DF /* RealisticDataFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B5712F92CD01006B69DF /* RealisticDataFixture.swift */; };
-		92B7B5742F92CD53006B69DF /* SnapshotComparisonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B5732F92CD53006B69DF /* SnapshotComparisonTests.swift */; };
 		92B7B5772F92E208006B69DF /* GRDBSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B5762F92E208006B69DF /* GRDBSchema.swift */; };
 		92B7B5782F92E208006B69DF /* GRDBSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B5762F92E208006B69DF /* GRDBSchema.swift */; };
 		92B7B5822F92E322006B69DF /* StaticIPRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B7B5812F92E322006B69DF /* StaticIPRecord.swift */; };
@@ -2043,6 +2049,8 @@
 		6E5E62D9C26726AED182CD85 /* TicketManaging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TicketManaging.swift; sourceTree = "<group>"; };
 		75598BF33E1A750F4680D059 /* HelpMeScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HelpMeScreen.swift; sourceTree = "<group>"; };
 		893D0842272F6F5CCC644B1D /* ViewLogScreenViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ViewLogScreenViewModel.swift; sourceTree = "<group>"; };
+		921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetInstanceType.swift; sourceTree = "<group>"; };
+		921ADABA2FEB1A7600A890DC /* MockWSNetInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockWSNetInstance.swift; sourceTree = "<group>"; };
 		9223E1F22FB22934007252B6 /* MockPatternTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPatternTests.swift; sourceTree = "<group>"; };
 		9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardIPManagerTests.swift; sourceTree = "<group>"; };
 		9223E2272FC4AD11007252B6 /* DeviceAttesting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAttesting.swift; sourceTree = "<group>"; };
@@ -2068,7 +2076,6 @@
 		92B7B56B2F8D5956006B69DF /* CheckUpdateRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUpdateRepositoryImpl.swift; sourceTree = "<group>"; };
 		92B7B56F2F92CCEB006B69DF /* LocalDatabaseParityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseParityTests.swift; sourceTree = "<group>"; };
 		92B7B5712F92CD01006B69DF /* RealisticDataFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealisticDataFixture.swift; sourceTree = "<group>"; };
-		92B7B5732F92CD53006B69DF /* SnapshotComparisonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotComparisonTests.swift; sourceTree = "<group>"; };
 		92B7B5762F92E208006B69DF /* GRDBSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GRDBSchema.swift; sourceTree = "<group>"; };
 		92B7B5812F92E322006B69DF /* StaticIPRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticIPRecord.swift; sourceTree = "<group>"; };
 		92B7B5842F92E329006B69DF /* NoticeRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeRecord.swift; sourceTree = "<group>"; };
@@ -2905,6 +2912,7 @@
 				1E0492D52F47799F0016B11F /* WSNetBridgeAPIType.swift */,
 				92EFE9B52FACE69000B381CB /* WSNetServerAPIType.swift */,
 				92EFE9BC2FACE69200B381CB /* WSNetPingManagerType.swift */,
+				921ADAB32FEB19A800A890DC /* WSNetInstanceType.swift */,
 			);
 			path = "WSNet Protocol";
 			sourceTree = "<group>";
@@ -3908,6 +3916,7 @@
 				F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */,
 				C0DE5CR1BE2F4A00AABB1234 /* MockSessionKeychainStore.swift */,
 				1E0492BD2F4775BE0016B11F /* MockWSNetBridgeAPI.swift */,
+				921ADABA2FEB1A7600A890DC /* MockWSNetInstance.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -5764,7 +5773,6 @@
 				C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */,
 				92B7B56E2F92CCB0006B69DF /* Fixtures */,
 				92B7B56F2F92CCEB006B69DF /* LocalDatabaseParityTests.swift */,
-				92B7B5732F92CD53006B69DF /* SnapshotComparisonTests.swift */,
 				92B7B57A2F92E2F0006B69DF /* RecordTests */,
 				92B7B5DB2F92E5A1006B69DF /* GRDBLocalDatabaseParityTests.swift */,
 				92B7B5E02F92EBCB006B69DF /* RealmToGRDBMigratorGoldenTests.swift */,
@@ -7553,6 +7561,7 @@
 				59FC74722C516D9700021CD1 /* InAppPurchaseManagerImpl.swift in Sources */,
 				59FC74162C51543B00021CD1 /* OpenVPNConnectionInfo.swift in Sources */,
 				59FC74302C5156BB00021CD1 /* FileManager+Extension.swift in Sources */,
+				921ADAB72FEB19A800A890DC /* WSNetInstanceType.swift in Sources */,
 				59FC747B2C518BE400021CD1 /* LoginViewModel.swift in Sources */,
 				59FC740B2C5153ED00021CD1 /* CustomConfig.swift in Sources */,
 				59FC74032C5153B700021CD1 /* WifiNetwork.swift in Sources */,
@@ -8503,6 +8512,7 @@
 				98C5637EDB5F50D554C43D23 /* VPNStateProviding.swift in Sources */,
 				5715BED0A19744EBB46AAFE5 /* ProtocolManaging.swift in Sources */,
 				223ABBB6213125F141CBC8B5 /* VPNOnDemandManaging.swift in Sources */,
+				921ADAB62FEB19A800A890DC /* WSNetInstanceType.swift in Sources */,
 				95E3C3C263B7B4B9CB2C00F5 /* NetworkSettingsScreenViewModel.swift in Sources */,
 				F6F2C4F885A04C24BC7AFAF8 /* NetworkSettingsEntryTpe.swift in Sources */,
 				7CCF1B5600CD8A15E60AAB16 /* NetworkSettingsScreen.swift in Sources */,
@@ -8584,6 +8594,7 @@
 				92B7B5C02F92E376006B69DF /* FavouriteRecordTests.swift in Sources */,
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,
 				92EFE9C42FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift in Sources */,
+				921ADABB2FEB1A7600A890DC /* MockWSNetInstance.swift in Sources */,
 				92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */,
 				92890E142F7C4917002EAB44 /* MockAntiCensorshipRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
@@ -8607,7 +8618,6 @@
 				1E0492B22F462A1F0016B11F /* MockWireguardAPIManager.swift in Sources */,
 				1E022C482E93FDD800AF8AA7 /* TestLocalDatabase.swift in Sources */,
 				1E0492A42F4353350016B11F /* MockWifiManager.swift in Sources */,
-				92B7B5742F92CD53006B69DF /* SnapshotComparisonTests.swift in Sources */,
 				F4A20BD02EE88F620003D880 /* WifiNetworkRepositoryTests.swift in Sources */,
 				92B7B5E12F92EBCB006B69DF /* RealmToGRDBMigratorGoldenTests.swift in Sources */,
 				F45E4FA22F105C8900C9F0DB /* FavouriteListViewModelTests.swift in Sources */,
@@ -8694,6 +8704,7 @@
 				F49C457D2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */,
 				F485CBBF2D4D52D40063EA3A /* Then.swift in Sources */,
+				921ADAB52FEB19A800A890DC /* WSNetInstanceType.swift in Sources */,
 				AFBD019222946AF400FED749 /* Date+Extension.swift in Sources */,
 				C52DA52E2B63913100E5C571 /* FileDatabaseImpl.swift in Sources */,
 				1E87176A2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */,
@@ -8780,6 +8791,7 @@
 				C59FF1A62CBB8DDB0072EF70 /* APIError.swift in Sources */,
 				F49C45762DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				8E5956213C7D6FD6D333DE8D /* Env.swift in Sources */,
+				921ADAB42FEB19A800A890DC /* WSNetInstanceType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8851,6 +8863,7 @@
 				C5D0E40829BB8BE70091FB14 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				C50F20C72B61769F00266B23 /* WireguardModule.swift in Sources */,
 				C5D0E40E29BB8BE70091FB14 /* FileManager+Extension.swift in Sources */,
+				921ADAB82FEB19A800A890DC /* WSNetInstanceType.swift in Sources */,
 				C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */,
 				92EFE9BA2FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				C590D76927F2A55D007515B3 /* Session.swift in Sources */,
@@ -8933,6 +8946,7 @@
 				1E60E0282CAD6F5A00623CD5 /* Connect.swift in Sources */,
 				C50F20D32B62110800266B23 /* Bundle+Extension.swift in Sources */,
 				C5BC5F012E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */,
+				921ADAB92FEB19A800A890DC /* WSNetInstanceType.swift in Sources */,
 				C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C5A6F07F2F3D183E00AB34EF /* DisconnectReason.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,

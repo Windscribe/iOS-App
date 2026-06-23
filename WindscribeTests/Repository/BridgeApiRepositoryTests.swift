@@ -14,6 +14,7 @@ import XCTest
 
 class BridgeApiRepositoryTests: XCTestCase {
     var mockBridgeAPI: MockWSNetBridgeAPI!
+    var mockWSNetInstance: MockWSNetInstance!
     var mockLocationsManager: MockLocationsManager!
     var mockUserSessionRepository: MockUserSessionRepository!
     var mockVPNStateRepository: MockVPNStateRepository!
@@ -26,6 +27,7 @@ class BridgeApiRepositoryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockBridgeAPI = MockWSNetBridgeAPI()
+        mockWSNetInstance = MockWSNetInstance()
         mockLocationsManager = MockLocationsManager()
         mockUserSessionRepository = MockUserSessionRepository()
         mockVPNStateRepository = MockVPNStateRepository()
@@ -36,6 +38,7 @@ class BridgeApiRepositoryTests: XCTestCase {
 
         repository = BridgeApiRepositoryImpl(
             bridgeAPI: mockBridgeAPI,
+            wsnet: mockWSNetInstance,
             locationManager: mockLocationsManager,
             userSessionRepository: mockUserSessionRepository,
             vpnStateRepository: mockVPNStateRepository,
@@ -49,6 +52,7 @@ class BridgeApiRepositoryTests: XCTestCase {
         cancellables = nil
         repository = nil
         mockBridgeAPI = nil
+        mockWSNetInstance = nil
         mockLocationsManager = nil
         mockUserSessionRepository = nil
         mockVPNStateRepository = nil

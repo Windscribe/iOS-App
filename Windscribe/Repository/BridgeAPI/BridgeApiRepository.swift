@@ -20,6 +20,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
     private var initialListenning = true
 
     private let bridgeAPI: WSNetBridgeAPIType
+    private let wsnet: WSNetInstanceType
     private let locationManager: LocationsManager
     private let userSessionRepository: UserSessionRepository
     private let vpnStateRepository: VPNStateRepository
@@ -33,6 +34,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
     }
 
     init(bridgeAPI: WSNetBridgeAPIType,
+         wsnet: WSNetInstanceType = WSNet.instance(),
          locationManager: LocationsManager,
          userSessionRepository: UserSessionRepository,
          vpnStateRepository: VPNStateRepository,
@@ -40,6 +42,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
          protocolManager: ProtocolManagerType,
          preferences: Preferences) {
         self.bridgeAPI = bridgeAPI
+        self.wsnet = wsnet
         self.locationManager = locationManager
         self.userSessionRepository = userSessionRepository
         self.vpnStateRepository = vpnStateRepository
@@ -59,7 +62,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                     self.logger.logI("BridgeApiRepository", "wsnet BridgeAPI_impl VPN Disconnected setting bridgeAPI to Connected State: false")
                     self.bridgeAPI.setConnectedState(false)
                     self.logger.logI("BridgeApiRepository", "wsnet setIsConnectedToVpnState to false")
-                    WSNet.instance().setIsConnectedToVpnState(false)
+                    self.wsnet.setIsConnectedToVpnState(false)
                 }
 
                 guard initialListenning else { return }
@@ -80,7 +83,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
                     Task {
                         // we need to wait on the first time, other wise we might might the tokens for bridge api
                         try? await Task.sleep(nanoseconds: 200_000_000)
-                        WSNet.instance().setIsConnectedToVpnState(isConnected)
+                        self.wsnet.setIsConnectedToVpnState(isConnected)
                     }
                 }
             }
@@ -95,7 +98,7 @@ class BridgeApiRepositoryImpl: BridgeApiRepository {
 
     private func checkAndEmitApiAvailability(ready: Bool) {
         if ready {
-            preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
+            preferences.saveServerSettings(settings: wsnet.currentPersistentSettings())
         }
         guard let sessionModel = self.userSessionRepository.sessionModel else {
             self.bridgeIsAvailable.send(false)
