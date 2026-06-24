@@ -30,7 +30,7 @@ class FavNodeTableViewCellModel: DatacenterTableViewCellModel {
     func update(displayingFavGroup: FavoriteDatacenterlModel?,
                 locationLoad: Bool,
                 isSavedHasFav: Bool,
-                isPremium: Bool,
+                hasAccess: Bool,
                 isDarkMode: Bool,
                 latency: Int,
                 countryCode: String?) {
