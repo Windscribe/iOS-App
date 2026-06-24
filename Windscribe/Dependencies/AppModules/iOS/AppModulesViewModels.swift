@@ -465,7 +465,8 @@ class ViewModels: Assembly {
                                          preferences: r.resolve(Preferences.self)!,
                                          protocolManager: r.resolve(ProtocolManagerType.self)!,
                                          connectivityManager: r.resolve(ConnectivityManager.self)!,
-                                         wifiManager: r.resolve(WifiManager.self)!)
+                                         wifiManager: r.resolve(WifiManager.self)!,
+                                         languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(IPInfoViewModelType.self) { r in

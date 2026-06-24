@@ -14,6 +14,7 @@ protocol ConnectionStateInfoViewModelType {
     var hasNetwork: CurrentValueSubject<Bool, Never> { get }
     var isCircumventCensorshipEnabled: CurrentValueSubject<Bool, Never> { get }
     var refreshProtocolSubject: CurrentValueSubject<ProtocolPort?, Never> { get }
+    var activeLanguageSubject: CurrentValueSubject<Languages, Never> { get }
     var isCustomConfigSelected: Bool { get }
     var isAntiCensorshipEnabled: Bool { get }
     var isConnecting: Bool { get }
@@ -25,6 +26,7 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     let isCircumventCensorshipEnabled = CurrentValueSubject<Bool, Never>(false)
     let hasNetwork = CurrentValueSubject<Bool, Never>(false)
     let refreshProtocolSubject = CurrentValueSubject<ProtocolPort?, Never>(ProtocolPort(DefaultValues.protocol, DefaultValues.port))
+    let activeLanguageSubject: CurrentValueSubject<Languages, Never>
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -40,7 +42,9 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
          preferences: Preferences,
          protocolManager: ProtocolManagerType,
          connectivityManager: ConnectivityManager,
-         wifiManager: WifiManager) {
+         wifiManager: WifiManager,
+         languageManager: LanguageManager) {
+        self.activeLanguageSubject = languageManager.activelanguage
         self.locationsManager = locationsManager
         self.preferences = preferences
         self.vpnStateRepository = vpnStateRepository
@@ -157,6 +161,15 @@ class ConnectionStateInfoView: UIView {
             }
             .store(in: &cancellables)
 
+        viewModel.activeLanguageSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self,
+                      let state = self.viewModel.statusSubject.value else { return }
+                self.updateConnectionInfo(state, self.viewModel.hasNetwork.value)
+            }
+            .store(in: &cancellables)
+
         actionButton.tap
             .sink { [weak self] _ in
                 guard let self = self,
@@ -169,7 +182,8 @@ class ConnectionStateInfoView: UIView {
     }
 
     private func updateConnectionInfo(_ state: ConnectionState, _ hasNetwork: Bool) {
-        pillLabel.text = state.statusText
+        let shouldShowStatusText = ![.testing, .connecting, .automaticFailed].contains(state)
+        pillLabel.text = shouldShowStatusText ? state.statusText : nil
         pillLabel.textColor = state.statusColor
 
         connectingImageView.tintColor = state.statusColor
@@ -179,7 +193,7 @@ class ConnectionStateInfoView: UIView {
         } else {
             noConnectionIcon.isHidden = true
             connectingImageView.isHidden = ![.connecting, .testing].contains(state)
-            pillLabel.isHidden = [.testing, .connecting, .automaticFailed].contains(state)
+            pillLabel.isHidden = !shouldShowStatusText
         }
 
         if connectingImageView.isHidden && connectingImageView.isAnimating {
@@ -220,6 +234,7 @@ class ConnectionStateInfoView: UIView {
     }
 
     private func showNoInternetConnection() {
+        pillLabel.text = nil
         pillLabel.isHidden = true
         connectingImageView.isHidden = true
         noConnectionIcon.isHidden = false
@@ -266,6 +281,7 @@ class ConnectionStateInfoView: UIView {
 
         pillLabel.textAlignment = .center
         pillLabel.adjustsFontSizeToFitWidth = true
+        pillLabel.minimumScaleFactor = 0.7
         pillLabel.font = UIFont.bold(size: 12)
         pillLabel.text = TextsAsset.Status.off
         pillLabel.textColor = UIColor.white
@@ -322,6 +338,7 @@ class ConnectionStateInfoView: UIView {
     }
 
     private static let pillSize = CGSizeMake(39.0, 19.0)
+    private static let pillHorizontalPadding = 6.0
 
     private func setLayout() {
         pillView.translatesAutoresizingMaskIntoConstraints = false
@@ -345,11 +362,12 @@ class ConnectionStateInfoView: UIView {
 
             // pillView
             pillView.heightAnchor.constraint(equalToConstant: Self.pillSize.height),
-            pillView.widthAnchor.constraint(equalToConstant: Self.pillSize.width),
+            pillView.widthAnchor.constraint(greaterThanOrEqualToConstant: Self.pillSize.width),
 
             // pillLabel
             pillLabel.centerYAnchor.constraint(equalTo: pillView.centerYAnchor),
-            pillLabel.centerXAnchor.constraint(equalTo: pillView.centerXAnchor),
+            pillLabel.leadingAnchor.constraint(equalTo: pillView.leadingAnchor, constant: Self.pillHorizontalPadding),
+            pillLabel.trailingAnchor.constraint(equalTo: pillView.trailingAnchor, constant: -Self.pillHorizontalPadding),
 
             // connectingImageView
             connectingImageView.centerYAnchor.constraint(equalTo: pillView.centerYAnchor),
