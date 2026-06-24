@@ -138,7 +138,7 @@ class FavouriteListTableViewDataSourceImpl: WSTableViewDataSource, FavouriteList
         cell.favNodeCellViewModel?.update(displayingFavGroup: favourite,
                                           locationLoad: locationLoad,
                                           isSavedHasFav: true,
-                                          isPremium: userSessionRepository.canAccesstoProLocation(locationId: favourite.datacenterModel.locationId),
+                                          hasAccess: userSessionRepository.canAccesstoProLocation(locationId: favourite.datacenterModel.locationId),
                                           isDarkMode: lookAndFeelRepository.isDarkMode,
                                           latency: latency,
                                           countryCode: locationModel?.countryCode)
