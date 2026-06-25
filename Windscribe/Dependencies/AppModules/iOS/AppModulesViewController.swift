@@ -16,17 +16,14 @@ import Swinject
 class ViewControllerModule: Assembly {
     func assemble(container: Swinject.Container) {
         container.register(WelcomeView.self) { r in
-            WelcomeView(viewModel: WelcomeViewModelImpl(
-                userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
+            WelcomeView(viewModel:  WelcomeViewModelImpl(
                 userDataRepository: r.resolve(UserDataRepository.self)!,
-                apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 ssoManager: r.resolve(LegacySSOManaging.self)!,
-                logger: r.resolve(FileLogger.self)!,
-                sessionManager: r.resolve(SessionManager.self)!
-            ), router: r.resolve(AuthenticationNavigationRouter.self)!)
+                logger: r.resolve(FileLogger.self)!
+            ),
+                        router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
         container.register(LoginView.self) { r in

@@ -10,9 +10,10 @@ import SwiftUI
 import Swinject
 
 struct InfoAlertButton: View {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
     let title: String
     let message: String
-    @Binding var isDarkMode: Bool
 
     private let alertManager: AlertManager = Assembler.resolve(AlertManager.self)
 
@@ -25,7 +26,7 @@ struct InfoAlertButton: View {
             )
         }, label: {
             Image(systemName: "info.circle")
-                .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5))
+                .foregroundColor(.from(.iconColor, lookAndFeel.isDarkMode).opacity(0.5))
         })
         .buttonStyle(.plain)
     }

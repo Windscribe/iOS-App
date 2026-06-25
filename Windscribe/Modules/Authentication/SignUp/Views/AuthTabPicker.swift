@@ -12,14 +12,16 @@ import SwiftUI
 
 /// Creates a trailing toolbar item for the AuthTabPicker.
 struct AuthTabPickerToolbarItem: ToolbarContent {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
+
     @Binding var selectedTab: AuthTab
-    @Binding var isDarkMode: Bool
     var isVisible: Bool = true
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             if isVisible {
-                AuthTabPicker(selectedTab: $selectedTab, isDarkMode: $isDarkMode)
+                AuthTabPicker(selectedTab: $selectedTab)
             }
         }
     }
@@ -28,9 +30,9 @@ struct AuthTabPickerToolbarItem: ToolbarContent {
 // MARK: - Tab Picker View
 
 struct AuthTabPicker: View {
+    @Environment(\.lookAndFeel) private var lookAndFeel
 
     @Binding var selectedTab: AuthTab
-    @Binding var isDarkMode: Bool
 
     var body: some View {
         HStack(spacing: 0) {
@@ -72,7 +74,7 @@ struct AuthTabPicker: View {
             }
         }
         .padding(3)
-        .background(Color.from(.backgroundColor, isDarkMode))
+        .background(Color.from(.backgroundColor, lookAndFeel.isDarkMode))
         .clipShape(Capsule())
     }
 }

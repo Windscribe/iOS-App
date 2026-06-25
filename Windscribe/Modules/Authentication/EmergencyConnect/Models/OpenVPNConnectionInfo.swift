@@ -8,7 +8,7 @@
 
 import Foundation
 
-class OpenVPNConnectionInfo: NSObject {
+final class OpenVPNConnectionInfo: NSObject, @unchecked Sendable {
     let serverConfig: Data
     let ip: String
     let port: String

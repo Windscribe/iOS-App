@@ -211,7 +211,7 @@ private extension HashedSignUpContentView {
 
                 Spacer()
 
-                OptionalPill(isDarkMode: $viewModel.isDarkMode)
+                OptionalPill()
 
                 Image(ImagesAsset.chevronDown)
                     .font(.caption)

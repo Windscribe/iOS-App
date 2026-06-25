@@ -193,6 +193,20 @@
 		1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
 		1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
 		1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
+		1E8717652FD9C7CB00ED45F0 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717642FD9C7AC00ED45F0 /* WelcomeScreen.swift */; };
+		1E8717672FD9C98F00ED45F0 /* UserDataProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717662FD9C98C00ED45F0 /* UserDataProviding.swift */; };
+		1E8717692FD9CCE300ED45F0 /* SSOManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717682FD9CCDF00ED45F0 /* SSOManaging.swift */; };
+		1E8717732FDAEED700ED45F0 /* WelcomeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717722FDAEECA00ED45F0 /* WelcomeScreenViewModel.swift */; };
+		CD8600022FE0000000000002 /* EmergencyConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8600012FE0000000000001 /* EmergencyConnecting.swift */; };
+		CD8600052FE0000000000005 /* EmergencyConnectScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8600042FE0000000000004 /* EmergencyConnectScreen.swift */; };
+		CD8600072FE0000000000007 /* EmergencyConnectScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8600062FE0000000000006 /* EmergencyConnectScreenViewModel.swift */; };
+		CD8610022FE1000000000002 /* LoginAuthenticating.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8610012FE1000000000001 /* LoginAuthenticating.swift */; };
+		CD8610042FE1000000000004 /* MainRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8610032FE1000000000003 /* MainRouting.swift */; };
+		CD8610072FE1000000000007 /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8610062FE1000000000006 /* LoginScreen.swift */; };
+		CD8610092FE1000000000009 /* LoginScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8610082FE1000000000008 /* LoginScreenViewModel.swift */; };
+		CD8620022FE2000000000002 /* SignUpAuthenticating.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8620012FE2000000000001 /* SignUpAuthenticating.swift */; };
+		CD8620052FE2000000000005 /* SignUpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8620042FE2000000000004 /* SignUpScreen.swift */; };
+		CD8620072FE2000000000007 /* SignUpScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8620062FE2000000000006 /* SignUpScreenViewModel.swift */; };
 		1E8717592FD72E2600ED45F0 /* ViewLogScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717562FD72E2600ED45F0 /* ViewLogScreen.swift */; };
 		1E87175A2FD72E2600ED45F0 /* ViewLogScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717572FD72E2600ED45F0 /* ViewLogScreenViewModel.swift */; };
 		1E87176A2FDAD1F000ED45F0 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
@@ -203,7 +217,6 @@
 		1E87176F2FDAD20A00ED45F0 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		1E8717702FDAD20A00ED45F0 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		1E8717712FDAD22200ED45F0 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
-		1E8717A62FE166CD00ED45F0 /* SSOManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8717A52FE166CD00ED45F0 /* SSOManaging.swift */; };
 		1E87592D2F20F12000D7767F /* UIControl+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E87592C2F20F12000D7767F /* UIControl+Combine.swift */; };
 		1E87592E2F20F12000D7767F /* UIControl+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E87592C2F20F12000D7767F /* UIControl+Combine.swift */; };
 		1E87592F2F20F6AC00D7767F /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Extension.swift */; };
@@ -1847,6 +1860,20 @@
 		1E7A7AF12E0173B000A6EAA6 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/SiriOldIntents.strings; sourceTree = "<group>"; };
 		1E7A7AF32E0173B100A6EAA6 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/SiriOldIntents.strings; sourceTree = "<group>"; };
 		1E818F112C3D6D560088066C /* RegexConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexConstants.swift; sourceTree = "<group>"; };
+		1E8717642FD9C7AC00ED45F0 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
+		1E8717662FD9C98C00ED45F0 /* UserDataProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataProviding.swift; sourceTree = "<group>"; };
+		1E8717682FD9CCDF00ED45F0 /* SSOManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOManaging.swift; sourceTree = "<group>"; };
+		1E8717722FDAEECA00ED45F0 /* WelcomeScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreenViewModel.swift; sourceTree = "<group>"; };
+		CD8600012FE0000000000001 /* EmergencyConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnecting.swift; sourceTree = "<group>"; };
+		CD8600042FE0000000000004 /* EmergencyConnectScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectScreen.swift; sourceTree = "<group>"; };
+		CD8600062FE0000000000006 /* EmergencyConnectScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectScreenViewModel.swift; sourceTree = "<group>"; };
+		CD8610012FE1000000000001 /* LoginAuthenticating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAuthenticating.swift; sourceTree = "<group>"; };
+		CD8610032FE1000000000003 /* MainRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouting.swift; sourceTree = "<group>"; };
+		CD8610062FE1000000000006 /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		CD8610082FE1000000000008 /* LoginScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenViewModel.swift; sourceTree = "<group>"; };
+		CD8620012FE2000000000001 /* SignUpAuthenticating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpAuthenticating.swift; sourceTree = "<group>"; };
+		CD8620042FE2000000000004 /* SignUpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScreen.swift; sourceTree = "<group>"; };
+		CD8620062FE2000000000006 /* SignUpScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScreenViewModel.swift; sourceTree = "<group>"; };
 		1E8717562FD72E2600ED45F0 /* ViewLogScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLogScreen.swift; sourceTree = "<group>"; };
 		1E8717572FD72E2600ED45F0 /* ViewLogScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLogScreenViewModel.swift; sourceTree = "<group>"; };
 		1E8717A52FE166CD00ED45F0 /* SSOManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOManaging.swift; sourceTree = "<group>"; };
@@ -3311,6 +3338,53 @@
 			path = DNS;
 			sourceTree = "<group>";
 		};
+		1E8717622FD9C78200ED45F0 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				1E8717632FD9C79400ED45F0 /* Welcome */,
+				CD8610052FE1000000000005 /* Login */,
+				CD8620032FE2000000000003 /* SignUp */,
+				CD8600032FE0000000000003 /* EmergencyConnect */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		1E8717632FD9C79400ED45F0 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				1E8717722FDAEECA00ED45F0 /* WelcomeScreenViewModel.swift */,
+				1E8717642FD9C7AC00ED45F0 /* WelcomeScreen.swift */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
+		CD8610052FE1000000000005 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				CD8610082FE1000000000008 /* LoginScreenViewModel.swift */,
+				CD8610062FE1000000000006 /* LoginScreen.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		CD8620032FE2000000000003 /* SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				CD8620062FE2000000000006 /* SignUpScreenViewModel.swift */,
+				CD8620042FE2000000000004 /* SignUpScreen.swift */,
+			);
+			path = SignUp;
+			sourceTree = "<group>";
+		};
+		CD8600032FE0000000000003 /* EmergencyConnect */ = {
+			isa = PBXGroup;
+			children = (
+				CD8600062FE0000000000006 /* EmergencyConnectScreenViewModel.swift */,
+				CD8600042FE0000000000004 /* EmergencyConnectScreen.swift */,
+			);
+			path = EmergencyConnect;
+			sourceTree = "<group>";
+		};
 		1E8717582FD72E2600ED45F0 /* ViewLog */ = {
 			isa = PBXGroup;
 			children = (
@@ -4197,6 +4271,7 @@
 		92C985962FA3A73B00326D64 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				1E8717622FD9C78200ED45F0 /* Authentication */,
 				1EF6DAA22FED6DF8007F7991 /* Preferences */,
 				CDAC00012FD2000000000001 /* Account */,
 				CD1F00072FD8000000000007 /* ReferForData */,
@@ -4234,7 +4309,12 @@
 		92C985992FA3A74900326D64 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				1E8717A52FE166CD00ED45F0 /* SSOManaging.swift */,
+				1E8717682FD9CCDF00ED45F0 /* SSOManaging.swift */,
+				1E8717662FD9C98C00ED45F0 /* UserDataProviding.swift */,
+				CD8600012FE0000000000001 /* EmergencyConnecting.swift */,
+				CD8610012FE1000000000001 /* LoginAuthenticating.swift */,
+				CD8620012FE2000000000001 /* SignUpAuthenticating.swift */,
+				CD8610032FE1000000000003 /* MainRouting.swift */,
 				1E91D9D92FD6F35800026A6D /* Network */,
 				1EA874602FD32CB8009DD282 /* Connection */,
 				1EA874422FD051FE009DD282 /* BackgroundFileStoring.swift */,
@@ -7922,6 +8002,7 @@
 				AF36A1FD237DC02200BDDCDB /* APIMessage.swift in Sources */,
 				F47EC5322DEA1B6000AF5089 /* SendTicketView.swift in Sources */,
 				C5A930F42B45A3880001CFA0 /* FileLogger.swift in Sources */,
+				1E8717672FD9C98F00ED45F0 /* UserDataProviding.swift in Sources */,
 				AF0CA559223C49020048D71C /* Array+Extension.swift in Sources */,
 				C50F20C62B61760000266B23 /* CoreModule.swift in Sources */,
 				F4F3A5B72E26C855006D967F /* EnterCredentialsView.swift in Sources */,
@@ -8134,6 +8215,7 @@
 				1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */,
 				F47EC5362DEA1B7800AF5089 /* AdvancedParametersView.swift in Sources */,
 				F49C45C62DCD32D4007E5EF1 /* HelpSettingsView.swift in Sources */,
+				1E8717732FDAEED700ED45F0 /* WelcomeScreenViewModel.swift in Sources */,
 				1EB910B42F9F7BFB00D04943 /* SessionKeychainStore.swift in Sources */,
 				F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */,
 				F4433D052E830A340012EA34 /* KeychainManager.swift in Sources */,
@@ -8484,6 +8566,17 @@
 				92C9859B2FA3A75C00326D64 /* LookAndFeelObserving.swift in Sources */,
 				F4888E362D931364005EF149 /* NavigationRouterModifier.swift in Sources */,
 				F47EC5382DEA1B8400AF5089 /* AdvancedParametersViewModel.swift in Sources */,
+				1E8717652FD9C7CB00ED45F0 /* WelcomeScreen.swift in Sources */,
+				CD8600022FE0000000000002 /* EmergencyConnecting.swift in Sources */,
+				CD8600052FE0000000000005 /* EmergencyConnectScreen.swift in Sources */,
+				CD8600072FE0000000000007 /* EmergencyConnectScreenViewModel.swift in Sources */,
+				CD8610022FE1000000000002 /* LoginAuthenticating.swift in Sources */,
+				CD8610042FE1000000000004 /* MainRouting.swift in Sources */,
+				CD8610072FE1000000000007 /* LoginScreen.swift in Sources */,
+				CD8610092FE1000000000009 /* LoginScreenViewModel.swift in Sources */,
+				CD8620022FE2000000000002 /* SignUpAuthenticating.swift in Sources */,
+				CD8620052FE2000000000005 /* SignUpScreen.swift in Sources */,
+				CD8620072FE2000000000007 /* SignUpScreenViewModel.swift in Sources */,
 				1E60E0172CAD664300623CD5 /* ContainerResolver.swift in Sources */,
 				92C985B32FABBB8300326D64 /* SessionProviding.swift in Sources */,
 				1EA91DCB2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift in Sources */,
@@ -8513,6 +8606,7 @@
 				C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */,
 				92C985AB2FABBB2000326D64 /* VPNConnecting.swift in Sources */,
 				AF54C6BC228215A700DAAB07 /* UIDevice+Extension.swift in Sources */,
+				1E8717692FD9CCE300ED45F0 /* SSOManaging.swift in Sources */,
 				AF36BF1022FC971E00FCC6F4 /* WSTextField.swift in Sources */,
 				F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */,
 				1EB67FA52DE8C28E00729052 /* NetworkSettingsViewModel.swift in Sources */,

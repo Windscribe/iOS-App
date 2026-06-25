@@ -167,8 +167,7 @@ struct LoginView: View {
                             },
                             onCancel: {
                                 viewModel.showCaptchaPopup = false
-                            },
-                            isDarkMode: $viewModel.isDarkMode
+                            }
                         )
                         .transition(.scale.combined(with: .opacity))
                         .zIndex(2)
@@ -279,7 +278,7 @@ private extension LoginView {
 
                 Spacer()
 
-                OptionalPill(isDarkMode: $viewModel.isDarkMode)
+                OptionalPill()
 
                 Image(systemName: "chevron.down")
                     .font(.caption)
@@ -305,8 +304,7 @@ private extension LoginView {
                 trailingView: AnyView(
                     InfoAlertButton(
                         title: TextsAsset.addTwoFA,
-                        message: TextsAsset.twoFADescription,
-                        isDarkMode: $viewModel.isDarkMode
+                        message: TextsAsset.twoFADescription
                     )
                 )
             )
@@ -393,8 +391,7 @@ private extension LoginView {
     @ToolbarContentBuilder
     func loginToolbar() -> some ToolbarContent {
         AuthTabPickerToolbarItem(
-            selectedTab: $viewModel.selectedTab,
-            isDarkMode: $viewModel.isDarkMode
+            selectedTab: $viewModel.selectedTab
         )
         ToolbarItemGroup(placement: .keyboard) {
             Button(action: {

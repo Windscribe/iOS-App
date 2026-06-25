@@ -12,6 +12,7 @@ protocol PreferencesWriting: Sendable {
     func saveShowServerNetLoad(show: Bool)
     func saveHapticFeedback(haptic: Bool)
     func saveOrderLocationsBy(order: String)
+    func saveSSOProvider(provider: String)
     func saveCustomAppIcon(value: String)
     func saveConnectionMode(mode: String)
     func saveSelectedProtocol(selectedProtocol: String)
@@ -44,6 +45,10 @@ final class LegacyPreferencesWriter: PreferencesWriting, Sendable {
 
     func saveOrderLocationsBy(order: String) {
         legacy.saveOrderLocationsBy(order: order)
+    }
+
+    func saveSSOProvider(provider: String) {
+        legacy.saveSSOProvider(provider: provider)
     }
 
     func saveCustomAppIcon(value: String) {

@@ -325,17 +325,34 @@ class SessionManagerImpl: SessionManager {
         if let window = windowProvider.mainWindow {
             window.rootViewController?.dismiss(animated: false, completion: nil)
 #if os(iOS)
-            let welcomeRootView = DeviceTypeProvider { Assembler.resolve(WelcomeView.self) }
-
-            DispatchQueue.main.async {
-                UIView.transition(
-                    with: window,
-                    duration: 0.3,
-                    options: .transitionCrossDissolve,
-                    animations: {
-                        window.rootViewController = UIHostingController(rootView: welcomeRootView)
-                    },
-                    completion: nil)
+            if #available(iOS 17.0, *) {
+                let welcomeRootView = DeviceTypeProvider {
+                    WelcomeScreen()
+                }
+                DispatchQueue.main.async {
+                    UIView.transition(
+                        with: window,
+                        duration: 0.3,
+                        options: .transitionCrossDissolve,
+                        animations: {
+                            window.rootViewController = UIHostingController(rootView: welcomeRootView)
+                        },
+                        completion: nil)
+                }
+            } else {
+                let welcomeRootView = DeviceTypeProvider {
+                    Assembler.resolve(WelcomeView.self)
+                }
+                DispatchQueue.main.async {
+                    UIView.transition(
+                        with: window,
+                        duration: 0.3,
+                        options: .transitionCrossDissolve,
+                        animations: {
+                            window.rootViewController = UIHostingController(rootView: welcomeRootView)
+                        },
+                        completion: nil)
+                }
             }
 #elseif os(tvOS)
             let firstViewController =  Assembler.resolve(WelcomeViewController.self)

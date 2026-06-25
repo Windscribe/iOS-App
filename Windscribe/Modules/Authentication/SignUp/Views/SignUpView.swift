@@ -116,7 +116,6 @@ struct SignUpView: View {
         )
         .fullScreenCover(isPresented: $showEmailWarning) {
             SignupWarningView(
-                isDarkMode: $viewModel.isDarkMode,
                 onContinue: {
                     showEmailWarning = false
                     viewModel.continueButtonTapped(ignoreEmailCheck: true, claimAccount: false)
@@ -159,8 +158,7 @@ struct SignUpView: View {
                         },
                         onCancel: {
                             viewModel.showCaptchaPopup = false
-                        },
-                        isDarkMode: $viewModel.isDarkMode
+                        }
                     )
                     .transition(.scale.combined(with: .opacity))
                     .zIndex(2)
@@ -222,7 +220,6 @@ private extension SignUpView {
     func signupToolbar() -> some ToolbarContent {
         AuthTabPickerToolbarItem(
             selectedTab: $viewModel.selectedTab,
-            isDarkMode: $viewModel.isDarkMode,
             isVisible: !signupFlowContext.isFromGhostAccount
         )
         ToolbarItemGroup(placement: .keyboard) {

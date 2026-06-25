@@ -22,6 +22,7 @@ protocol VPNConnecting: Sendable {
     /// `VPNStateRepository.vpnInfo` subject. The first emission is the
     /// current state, so callers can drive UI directly off this stream.
     var statusUpdates: AsyncStream<VPNConnectionState> { get }
+    var isConnected: AsyncStream<Bool> { get }
 }
 
 /// Adapter wrapping the legacy `VPNManager` (commands) and
@@ -53,6 +54,18 @@ final class LegacyVPNConnector: VPNConnecting, Sendable {
         return AsyncStream { continuation in
             let cancellable = subject.sink { info in
                 continuation.yield(.vpn(info?.status ?? .disconnected))
+            }
+            continuation.onTermination = { _ in
+                cancellable.cancel()
+            }
+        }
+    }
+
+    var isConnected: AsyncStream<Bool> {
+        let subject = stateRepository.vpnInfo
+        return AsyncStream { continuation in
+            let cancellable = subject.sink { info in
+                continuation.yield(info?.status == .connected)
             }
             continuation.onTermination = { _ in
                 cancellable.cancel()

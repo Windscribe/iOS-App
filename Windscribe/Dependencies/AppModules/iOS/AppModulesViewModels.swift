@@ -52,15 +52,11 @@ class ViewModels: Assembly {
 
         container.register((any WelcomeViewModel).self) { r in
             WelcomeViewModelImpl(
-                userSessionRepository: r.resolve(UserSessionRepository.self)!,
-                keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
-                apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 ssoManager: r.resolve(LegacySSOManaging.self)!,
-                logger: r.resolve(FileLogger.self)!,
-                sessionManager: r.resolve(SessionManager.self)!
+                logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.transient)
 

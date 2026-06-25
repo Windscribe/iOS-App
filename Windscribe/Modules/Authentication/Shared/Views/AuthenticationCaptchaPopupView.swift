@@ -17,7 +17,6 @@ struct CaptchaSheetContent: View {
     let onSubmit: (CGFloat, [CGFloat], [CGFloat]) -> Void
     let onCancel: () -> Void
 
-    @Binding var isDarkMode: Bool
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -27,8 +26,7 @@ struct CaptchaSheetContent: View {
                 puzzlePiece: puzzlePiece,
                 topOffset: topOffset,
                 onSubmit: onSubmit,
-                onCancel: onCancel,
-                isDarkMode: $isDarkMode
+                onCancel: onCancel
             )
             .transition(.scale.combined(with: .opacity))
         }
@@ -37,14 +35,13 @@ struct CaptchaSheetContent: View {
 
 struct AuthenticationCaptchaPopupView: View {
     @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
+    @Environment(\.lookAndFeel) private var lookAndFeel
 
     let background: UIImage
     let puzzlePiece: UIImage
     let topOffset: CGFloat  // Reference referenceHeight space
     let onSubmit: (_ finalX: CGFloat, _ trailX: [CGFloat], _ trailY: [CGFloat]) -> Void
     let onCancel: () -> Void
-
-    @Binding var isDarkMode: Bool
 
     @State private var sliderOffsetX: CGFloat = 0
     @State private var sliderOffsetY: CGFloat = 0
@@ -65,14 +62,12 @@ struct AuthenticationCaptchaPopupView: View {
         puzzlePiece: UIImage,
         topOffset: CGFloat,
         onSubmit: @escaping (_ finalX: CGFloat, _ trailX: [CGFloat], _ trailY: [CGFloat]) -> Void,
-        onCancel: @escaping () -> Void,
-        isDarkMode: Binding<Bool>) {
+        onCancel: @escaping () -> Void) {
             self.background = background
             self.puzzlePiece = puzzlePiece
             self.topOffset = topOffset
             self.onSubmit = onSubmit
             self.onCancel = onCancel
-            self._isDarkMode = isDarkMode
 
             referenceWidth = background.size.width
             referenceHeight = background.size.height
@@ -97,12 +92,12 @@ struct AuthenticationCaptchaPopupView: View {
                     Text(TextsAsset.Authentication.captchaDescription)
                         .font(.medium(.headline))
                         .multilineTextAlignment(.center)
-                        .foregroundColor(.from(.titleColor, isDarkMode))
+                        .foregroundColor(.from(.titleColor, lookAndFeel.isDarkMode))
 
                     Text(TextsAsset.Authentication.captchaSliderDescription)
                         .font(.regular(.subheadline))
                         .multilineTextAlignment(.center)
-                        .foregroundColor(.from(.infoColor, isDarkMode))
+                        .foregroundColor(.from(.infoColor, lookAndFeel.isDarkMode))
                 }
                 .padding(.top, 8)
 
@@ -140,20 +135,20 @@ struct AuthenticationCaptchaPopupView: View {
 
                 Button(TextsAsset.cancel, action: onCancel)
                     .font(.medium(.body))
-                    .foregroundColor(isDarkMode ? .white : .white)
+                    .foregroundColor(lookAndFeel.isDarkMode ? .white : .white)
                     .padding(.vertical, 12)
                     .frame(width: maxWidth)
-                    .background(Color.from(.dismissButtonBackgroundColor, isDarkMode))
+                    .background(Color.from(.dismissButtonBackgroundColor, lookAndFeel.isDarkMode))
                     .clipShape(Capsule())
                     .padding(.bottom, 8)
             }
             .padding()
-            .background(Color.from(.captchaBackgroundColor, isDarkMode))
+            .background(Color.from(.captchaBackgroundColor, lookAndFeel.isDarkMode))
             .cornerRadius(16)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .inset(by: 0.5)
-                    .stroke(Color.from(.iconColor, isDarkMode).opacity(0.05), lineWidth: 1)
+                    .stroke(Color.from(.iconColor, lookAndFeel.isDarkMode).opacity(0.05), lineWidth: 1)
             )
             .frame(width: maxWidth)
             .position(x: geo.size.width / 2, y: geo.size.height / 2)

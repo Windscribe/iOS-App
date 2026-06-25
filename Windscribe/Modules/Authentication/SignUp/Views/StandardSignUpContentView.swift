@@ -194,7 +194,7 @@ private extension StandardSignUpContentView {
 
                 Spacer()
 
-                OptionalPill(isDarkMode: $viewModel.isDarkMode)
+                OptionalPill()
             }
 
             LoginTextField(
@@ -208,8 +208,7 @@ private extension StandardSignUpContentView {
                 trailingView: AnyView(
                     InfoAlertButton(
                         title: TextsAsset.addEmail,
-                        message: TextsAsset.emailInfoLabel,
-                        isDarkMode: $viewModel.isDarkMode
+                        message: TextsAsset.emailInfoLabel
                     )
                 )
             )
@@ -233,7 +232,7 @@ private extension StandardSignUpContentView {
 
                 Spacer()
 
-                OptionalPill(isDarkMode: $viewModel.isDarkMode)
+                OptionalPill()
 
                 Image(ImagesAsset.chevronDown)
                     .font(.caption)
@@ -277,7 +276,7 @@ private extension StandardSignUpContentView {
 
                     Spacer()
 
-                    OptionalPill(isDarkMode: $viewModel.isDarkMode)
+                    OptionalPill()
 
                     Image(ImagesAsset.chevronDown)
                         .font(.caption)

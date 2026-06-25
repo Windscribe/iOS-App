@@ -111,10 +111,42 @@ extension EnvironmentValues {
     /// quota / fraud signals). Default: production `DCDeviceAttestation`.
     @Entry var deviceAttesting: any DeviceAttesting = DCDeviceAttestation()
 
+    /// User Data access.
+    @Entry var userDataProviding: any UserDataProviding = LegacyUserDataProvider(
+        legacy: Assembler.resolve(UserDataRepository.self)
+    )
+
     /// Single Sign On Actions
     @Entry var ssoManaging: any SSOManaging = LegacySSOManager(
         legacy: Assembler.resolve(LegacySSOManaging.self)
     )
+
+    /// Emergency Connect commands.
+    @Entry var emergencyConnecting: any EmergencyConnecting = LegacyEmergencyConnector(
+        legacy: Assembler.resolve(EmergencyRepository.self)
+    )
+
+    /// Login/authentication actions.
+    @Entry var loginAuthenticating: any LoginAuthenticating = LegacyLoginAuthenticator(
+        apiManager: Assembler.resolve(APIManager.self),
+        sessionManager: Assembler.resolve(SessionManager.self),
+        userSessionRepository: Assembler.resolve(UserSessionRepository.self),
+        preferences: Assembler.resolve(Preferences.self),
+        wifiManager: Assembler.resolve(WifiManager.self),
+        hashAuthManager: Assembler.resolve(HashAuthManager.self)
+    )
+
+    /// Signup/authentication actions.
+    @Entry var signUpAuthenticating: any SignUpAuthenticating = LegacySignUpAuthenticator(
+        apiManager: Assembler.resolve(APIManager.self),
+        sessionManager: Assembler.resolve(SessionManager.self),
+        userSessionRepository: Assembler.resolve(UserSessionRepository.self),
+        preferences: Assembler.resolve(Preferences.self),
+        hashAuthManager: Assembler.resolve(HashAuthManager.self)
+    )
+
+    /// Main-app routing transition.
+    @Entry var mainRouting: any MainRouting = LegacyMainRouter()
 
     /// DNS settings management (validation, resolution).
     @Entry var dnsSettingsManaging: any DNSSettingsManaging = LegacyDNSSettingsManager(

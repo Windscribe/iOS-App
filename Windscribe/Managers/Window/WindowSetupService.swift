@@ -91,6 +91,10 @@ class WindowSetupServiceImpl: WindowSetupService {
     }
 
     private func setUpWelcomeView() -> any View {
-        return Assembler.resolve(WelcomeView.self)
+        if #available(iOS 17.0, *) {
+            return WelcomeScreen()
+        } else {
+            return Assembler.resolve(WelcomeView.self)
+        }
     }
 }

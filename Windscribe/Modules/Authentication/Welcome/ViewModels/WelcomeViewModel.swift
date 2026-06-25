@@ -56,36 +56,24 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let emergencyConnectOnText = TextsAsset.Welcome.emergencyConnectOn
 
     private var cancellables = Set<AnyCancellable>()
-    private let userSessionRepository: UserSessionRepository
-    private let keyChainDatabase: KeyChainDatabase
     private let userDataRepository: UserDataRepository
-    private let apiManager: APIManager
     private let preferences: Preferences
     private let vpnStateRepository: VPNStateRepository
     private let ssoManager: LegacySSOManaging
-    private let sessionManager: SessionManager
     private let logger: FileLogger
 
     private var presentingController: UIViewController?
 
-    init(userSessionRepository: UserSessionRepository,
-         keyChainDatabase: KeyChainDatabase,
-         userDataRepository: UserDataRepository,
-         apiManager: APIManager,
+    init(userDataRepository: UserDataRepository,
          preferences: Preferences,
          vpnStateRepository: VPNStateRepository,
          ssoManager: LegacySSOManaging,
-         logger: FileLogger,
-         sessionManager: SessionManager) {
-        self.userSessionRepository = userSessionRepository
-        self.keyChainDatabase = keyChainDatabase
+         logger: FileLogger) {
         self.userDataRepository = userDataRepository
-        self.apiManager = apiManager
         self.preferences = preferences
         self.vpnStateRepository = vpnStateRepository
         self.ssoManager = ssoManager
         self.logger = logger
-        self.sessionManager = sessionManager
 
         listenForVPNStateChange()
     }

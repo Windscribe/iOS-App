@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct OptionalPill: View {
-    @Binding var isDarkMode: Bool
+    @Environment(\.lookAndFeel) private var lookAndFeel
 
     var body: some View {
         Text(TextsAsset.optional)
             .font(.regular(.footnote))
-            .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.5))
+            .foregroundColor(.from(.iconColor, lookAndFeel.isDarkMode).opacity(0.5))
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(Color.from(.backgroundColor, isDarkMode))
+            .background(Color.from(.backgroundColor, lookAndFeel.isDarkMode))
             .clipShape(Capsule())
     }
 }

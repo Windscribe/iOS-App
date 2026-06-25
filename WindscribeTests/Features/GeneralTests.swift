@@ -399,6 +399,7 @@ final class MockPreferencesWriting: PreferencesWriting, @unchecked Sendable {
     private(set) var savedShowServerNetLoad: Bool?
     private(set) var savedHaptic: Bool?
     private(set) var savedOrderLocationsBy: String?
+    private(set) var savedSSOProvider: String?
     private(set) var savedCustomAppIcon: String?
     private(set) var savedConnectionMode: String?
     private(set) var savedSelectedProtocol: String?
@@ -415,6 +416,7 @@ final class MockPreferencesWriting: PreferencesWriting, @unchecked Sendable {
     func saveShowServerNetLoad(show: Bool) { savedShowServerNetLoad = show }
     func saveHapticFeedback(haptic: Bool) { savedHaptic = haptic }
     func saveOrderLocationsBy(order: String) { savedOrderLocationsBy = order }
+    func saveSSOProvider(provider: String) { savedSSOProvider = provider }
     func saveCustomAppIcon(value: String) { savedCustomAppIcon = value }
     func saveConnectionMode(mode: String) { savedConnectionMode = mode }
     func saveSelectedProtocol(selectedProtocol: String) { savedSelectedProtocol = selectedProtocol }

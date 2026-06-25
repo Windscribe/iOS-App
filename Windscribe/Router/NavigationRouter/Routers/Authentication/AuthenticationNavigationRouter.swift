@@ -25,8 +25,15 @@ class AuthenticationNavigationRouter: BaseNavigationRouter {
     func createView(for route: Route) -> AnyView {
         switch route {
         case .login:
+            if #available(iOS 17.0, *) {
+                return AnyView(LoginScreen())
+            }
             return AnyView(Assembler.resolve(LoginView.self))
         case .signup(let claimGhostAccount):
+            if #available(iOS 17.0, *) {
+                return AnyView(SignUpScreen(claimGhostAccount: claimGhostAccount))
+            }
+
             let context = SignupFlowContext()
             context.isFromGhostAccount = claimGhostAccount
 
@@ -35,6 +42,9 @@ class AuthenticationNavigationRouter: BaseNavigationRouter {
                     .environmentObject(context)
             )
         case .emergency:
+            if #available(iOS 17.0, *) {
+                return AnyView(EmergencyConnectScreen())
+            }
             return AnyView(Assembler.resolve(EmergencyConnectView.self))
         case .enterEmail:
             return AnyView(Assembler.resolve(EnterEmailView.self))
