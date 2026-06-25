@@ -135,7 +135,7 @@ struct PreferencesMainCategoryView: View {
                         viewModel.logout()
                     }
                 } label: {
-                    MenuCategoryRow(item: item, isDarkMode: viewModel.isDarkMode)
+                    MenuCategoryRow(item: item)
                 }
             }
         }

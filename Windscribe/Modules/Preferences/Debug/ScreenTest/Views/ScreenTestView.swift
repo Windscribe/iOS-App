@@ -57,7 +57,7 @@ struct ScreenTestView: View {
                     viewModel.presentedScreen = route
                 }
             } label: {
-                MenuCategoryRow(item: item, isDarkMode: viewModel.isDarkMode)
+                MenuCategoryRow(item: item)
             }
         }
     }

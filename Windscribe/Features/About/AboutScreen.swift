@@ -40,7 +40,7 @@ private struct AboutView: View {
                         Button {
                             viewModel.entrySelected(item)
                         } label: {
-                            MenuCategoryRow(item: item, isDarkMode: lookAndFeel.isDarkMode)
+                            MenuCategoryRow(item: item)
                         }
                     }
                 }

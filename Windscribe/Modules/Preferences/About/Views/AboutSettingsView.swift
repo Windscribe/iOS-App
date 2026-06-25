@@ -31,7 +31,7 @@ struct AboutSettingsView: View {
                         Button {
                             viewModel.entrySelected(item)
                         } label: {
-                            MenuCategoryRow(item: item, isDarkMode: viewModel.isDarkMode)
+                            MenuCategoryRow(item: item)
                         }
                     }
                 }

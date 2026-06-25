@@ -16,8 +16,12 @@ class HomeRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
         case RouteID.mainMenu:
-            let preferencesView = Assembler.resolve(PreferencesMainCategoryView.self)
-            pushViewWithoutNavigationBar(from: from, view: preferencesView, title: TextsAsset.Preferences.title)
+            if #available(iOS 17.0, *) {
+                pushViewWithoutNavigationBar(from: from, view: PreferencesMainScreen(), title: TextsAsset.Preferences.title)
+            } else {
+                let preferencesView = Assembler.resolve(PreferencesMainCategoryView.self)
+                pushViewWithoutNavigationBar(from: from, view: preferencesView, title: TextsAsset.Preferences.title)
+            }
         case RouteID.signup:
             goToSignUp(viewController: from, claimGhostAccount: false)
         case let RouteID.protocolConnectionResult(protocolName, viewType):

@@ -9,20 +9,20 @@
 import SwiftUI
 
 struct MenuCategoryRow: View {
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
     let item: any MenuCategoryRowType
-    let isDarkMode: Bool
     let title: String
 
-    init(item: any MenuCategoryRowType, isDarkMode: Bool) {
+    init(item: any MenuCategoryRowType) {
         self.item = item
-        self.isDarkMode = isDarkMode
         self.title = item.title
     }
 
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundColor(item.backgroundTintColor(isDarkMode))
+                .foregroundColor(item.backgroundTintColor(lookAndFeel.isDarkMode))
                 .cornerRadius(12)
             HStack(spacing: 12) {
                 if let imageName = item.imageName {
@@ -31,11 +31,11 @@ struct MenuCategoryRow: View {
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 24, height: 24)
-                        .foregroundColor(item.tintColor(isDarkMode))
+                        .foregroundColor(item.tintColor(lookAndFeel.isDarkMode))
                 }
                 if let actionImageName = item.actionImageName {
                     Text(title)
-                        .foregroundColor(item.tintColor(isDarkMode))
+                        .foregroundColor(item.tintColor(lookAndFeel.isDarkMode))
                         .font(.medium(.callout))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Image(actionImageName)
@@ -43,10 +43,10 @@ struct MenuCategoryRow: View {
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 13, height: 13)
-                        .foregroundColor(item.actionTintColor(isDarkMode))
+                        .foregroundColor(item.actionTintColor(lookAndFeel.isDarkMode))
                 } else {
                     Text(title)
-                        .foregroundColor(item.tintColor(isDarkMode))
+                        .foregroundColor(item.tintColor(lookAndFeel.isDarkMode))
                         .font(.medium(.callout))
                 }
             }

@@ -61,7 +61,7 @@ private struct ScreenTestContentView: View {
             Button {
                 viewModel.itemSelected(item)
             } label: {
-                MenuCategoryRow(item: item, isDarkMode: lookAndFeel.isDarkMode)
+                MenuCategoryRow(item: item)
             }
         }
     }

@@ -376,6 +376,9 @@
 		1EE7AC5A2F72AC95003BD80A /* AntiCensorshipOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE7AC592F72AC95003BD80A /* AntiCensorshipOptionsViewModel.swift */; };
 		1EE7AC5C2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE7AC5B2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift */; };
 		1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */; };
+		1EF6DAA32FED6DF8007F7991 /* PreferencesMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6DAA12FED6DF8007F7991 /* PreferencesMainViewModel.swift */; };
+		1EF6DAA42FED6DF8007F7991 /* PreferencesMainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6DAA02FED6DF8007F7991 /* PreferencesMainScreen.swift */; };
+		1EF6DAA52FED6DF8007F7991 /* PreferencesMainEntryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF6DA9F2FED6DF8007F7991 /* PreferencesMainEntryType.swift */; };
 		1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */; };
 		1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */; };
 		1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailAction.swift */; };
@@ -1956,6 +1959,9 @@
 		1EE7AC5B2F72AC9F003BD80A /* AntiCensorshipOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipOptionsView.swift; sourceTree = "<group>"; };
 		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
 		1EF11EE72C94791100C3FD64 /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1EF6DA9F2FED6DF8007F7991 /* PreferencesMainEntryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainEntryType.swift; sourceTree = "<group>"; };
+		1EF6DAA02FED6DF8007F7991 /* PreferencesMainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainScreen.swift; sourceTree = "<group>"; };
+		1EF6DAA12FED6DF8007F7991 /* PreferencesMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainViewModel.swift; sourceTree = "<group>"; };
 		1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePopViewController.swift; sourceTree = "<group>"; };
 		1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePopViewController.xib; sourceTree = "<group>"; };
 		1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailAction.swift; sourceTree = "<group>"; };
@@ -3812,6 +3818,16 @@
 			path = Locations;
 			sourceTree = "<group>";
 		};
+		1EF6DAA22FED6DF8007F7991 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				1EF6DA9F2FED6DF8007F7991 /* PreferencesMainEntryType.swift */,
+				1EF6DAA02FED6DF8007F7991 /* PreferencesMainScreen.swift */,
+				1EF6DAA12FED6DF8007F7991 /* PreferencesMainViewModel.swift */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
 		1EF7BB2F2C6D0D5F0032A4DF /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -4181,6 +4197,7 @@
 		92C985962FA3A73B00326D64 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				1EF6DAA22FED6DF8007F7991 /* Preferences */,
 				CDAC00012FD2000000000001 /* Account */,
 				CD1F00072FD8000000000007 /* ReferForData */,
 				CD2F00072FD8000000000007 /* ScreenTest */,
@@ -7909,6 +7926,9 @@
 				C50F20C62B61760000266B23 /* CoreModule.swift in Sources */,
 				F4F3A5B72E26C855006D967F /* EnterCredentialsView.swift in Sources */,
 				AF2A752D230C52FB00548088 /* WSTableViewDataSource.swift in Sources */,
+				1EF6DAA32FED6DF8007F7991 /* PreferencesMainViewModel.swift in Sources */,
+				1EF6DAA42FED6DF8007F7991 /* PreferencesMainScreen.swift in Sources */,
+				1EF6DAA52FED6DF8007F7991 /* PreferencesMainEntryType.swift in Sources */,
 				C524AA5E26B231AC00FCB1B6 /* AboutItem.swift in Sources */,
 				C580FE042B4F254E004FA857 /* PushNotificationManagerImpl.swift in Sources */,
 				F43184BD2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift in Sources */,
