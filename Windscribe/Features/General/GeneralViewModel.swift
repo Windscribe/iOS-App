@@ -36,7 +36,7 @@ final class GeneralViewModel {
             .map { MenuOption(title: $0, fieldKey: $0) }
 
         return [
-            .locationOrder(currentOption: locationOrder, options: orderPreferences),
+            .locationOrder(currentOption: locationOrder.localized, options: orderPreferences),
             .language(currentOption: currentLanguage, options: languages),
             .locationLoad(isSelected: isLocationLoadEnabled),
             .hapticFeedback(isSelected: isHapticFeedbackEnabled),
@@ -97,7 +97,7 @@ final class GeneralViewModel {
 
     func observeLocationOrderBy() async {
         for await orderBy in preferencesReading.locationOrderUpdates {
-            locationOrder = orderBy.localized
+            locationOrder = orderBy
         }
     }
 
