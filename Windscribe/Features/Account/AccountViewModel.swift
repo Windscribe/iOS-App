@@ -36,8 +36,7 @@ final class AccountViewModel {
     }
 
     var shouldShowDeleteAccountButton: Bool {
-        guard let session = sessionProvider.session else { return false }
-        return session.trafficUsed <= 0
+        return sessionProvider.session != nil
     }
 
     var accountDeletionDialog: AccountInputDialog {
