@@ -73,11 +73,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     }
 
     var shouldShowDeleteAccountButton: Bool {
-        guard let session = userSessionRepository.sessionModel else {
-            return false
-        }
-        // Show only if user has not used any data
-        return session.trafficUsed <= 0
+        return userSessionRepository.sessionModel != nil
     }
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
