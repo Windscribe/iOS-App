@@ -15,4 +15,5 @@ enum RobertEntryType: MenuEntryHeaderType, Hashable, Equatable {
     var secondaryEntries: [MenuSecondaryEntryItem] { [] }
     var title: String { TextsAsset.Robert.manageCustomRules }
     var icon: String { "" }
+    var iconSize: CGFloat { defaultIconSize }
 }

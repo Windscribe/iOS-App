@@ -2,7 +2,7 @@
 //  PreferencesMainScreen.swift
 //  Windscribe
 //
-//  Created by Codescribe on 2026-06-25.
+//  Created by Andre Fonseca on 2026-06-25.
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 
@@ -36,9 +36,6 @@ private struct PreferencesMainContentView: View {
     @Environment(\.lookAndFeel) private var lookAndFeel
 
     @State private var viewModel: PreferencesMainViewModel
-    @State private var activeRoute: PreferencesRouteID?
-    @State private var showConfirmEmailSheet = false
-    @State private var showLogoutConfirmation = false
 
     init(viewModel: PreferencesMainViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -49,7 +46,7 @@ private struct PreferencesMainContentView: View {
             VStack(spacing: 16) {
                 ScrollView {
                     VStack(spacing: 14) {
-                        categoryRows
+                        preferenceRows
                     }
                     .padding(.top, 8)
                 }
@@ -60,10 +57,10 @@ private struct PreferencesMainContentView: View {
         .background(routeLink)
         .edgesIgnoringSafeArea(.bottom)
         .dynamicTypeSize(dynamicTypeRange)
-        .sheet(isPresented: $showConfirmEmailSheet) {
+        .sheet(isPresented: $viewModel.showConfirmEmailSheet) {
             confirmEmailSheetContent
         }
-        .alert(TextsAsset.Preferences.logout, isPresented: $showLogoutConfirmation) {
+        .alert(TextsAsset.Preferences.logout, isPresented: $viewModel.showLogoutConfirmation) {
             Button(TextsAsset.cancel, role: .cancel) { }
             Button(TextsAsset.Preferences.logout, role: .destructive) {
                 viewModel.logout()
@@ -77,18 +74,11 @@ private struct PreferencesMainContentView: View {
     }
 
     @ViewBuilder
-    private var categoryRows: some View {
-        ForEach(viewModel.visibleItems, id: \.self) { item in
+    private var preferenceRows: some View {
+        ForEach(viewModel.visibleItems, id: \.id) { item in
             if !viewModel.shouldHideRow(item: item) {
-                Button {
-                    viewModel.actionSelected()
-                    if item == .logout {
-                        showLogoutConfirmation = true
-                    } else if let route = viewModel.route(for: item) {
-                        activeRoute = route
-                    }
-                } label: {
-                    MenuCategoryRow(item: item)
+                MenuEntryView(item: item) { _ in
+                    viewModel.handleEntrySelection(item)
                 }
             }
         }
@@ -97,26 +87,10 @@ private struct PreferencesMainContentView: View {
     @ViewBuilder
     private var actionButtons: some View {
         VStack(spacing: 12) {
-            if viewModel.actionDisplay != .hideAll {
+            ForEach(viewModel.actionButtons, id: \.id) { actionType in
                 PreferencesActionButton(
-                    title: actionButtonTitle,
-                    backgroundColor: .unconfirmedYellow,
-                    textColor: .midnight,
-                    icon: Image(ImagesAsset.warningBlack),
-                    action: handlePrimaryAction
-                )
-            }
-
-            if viewModel.actionDisplay == .setupAccountAndLogin || viewModel.actionDisplay == .setupAccount {
-                PreferencesActionButton(
-                    title: TextsAsset.login,
-                    backgroundColor: .from(.actionBackgroundColor, lookAndFeel.isDarkMode),
-                    textColor: .from(.titleColor, lookAndFeel.isDarkMode),
-                    icon: nil,
-                    action: {
-                        viewModel.actionSelected()
-                        activeRoute = .login
-                    }
+                    actionType: actionType,
+                    action: { viewModel.handlePrimaryAction(for: actionType) }
                 )
             }
         }
@@ -128,11 +102,11 @@ private struct PreferencesMainContentView: View {
     private var confirmEmailSheetContent: some View {
         ConfirmEmailScreen(
             openEnterEmail: {
-                showConfirmEmailSheet = false
-                activeRoute = .enterEmail
+                viewModel.clearEmailSheet()
+                viewModel.handlePrimaryAction(for: .email)
             },
             onDismiss: {
-                showConfirmEmailSheet = false
+                viewModel.clearEmailSheet()
             }
         )
         .presentationDetents([PresentationDetent.fraction(0.65)])
@@ -149,10 +123,10 @@ private struct PreferencesMainContentView: View {
         NavigationLink(
             destination: routeDestination,
             isActive: Binding(
-                get: { activeRoute != nil },
+                get: { viewModel.activeRoute != nil },
                 set: { isActive in
                     if !isActive {
-                        activeRoute = nil
+                        viewModel.clearActiveRoute()
                     }
                 }
             )
@@ -165,13 +139,13 @@ private struct PreferencesMainContentView: View {
 
     @ViewBuilder
     private var routeDestination: some View {
-        if let route = activeRoute {
+        if let route = viewModel.activeRoute {
             switch route {
             case .general:
                 GeneralScreen()
             case .account:
                 AccountScreen {
-                    activeRoute = .enterEmail
+                    viewModel.handlePrimaryAction(for: .email)
                 }
             case .connection:
                 ConnectionScreen()
@@ -189,47 +163,18 @@ private struct PreferencesMainContentView: View {
                 ScreenTestScreen()
             case .ghostAccount:
                 GhostAccountScreen(
-                    openLogin: { activeRoute = .login },
-                    openSignupGhost: { activeRoute = .signupGhost }
+                    openLogin: { viewModel.handlePrimaryAction(for: .login) },
+                    openSignupGhost: {  viewModel.handlePrimaryAction(for: .setupAccount) }
                 )
             case .enterEmail:
                 EnterEmailScreen {
-                    activeRoute = nil
+                    viewModel.clearActiveRoute()
                 }
             case .login, .signupGhost:
                 PreferencesNavigationRouter().createView(for: route)
             }
         } else {
             EmptyView()
-        }
-    }
-
-    private var actionButtonTitle: String {
-        switch viewModel.actionDisplay {
-        case .email:
-            TextsAsset.addEmail
-        case .emailGet10GB:
-            "\(TextsAsset.addEmail) (\(TextsAsset.get10GbAMonth))"
-        case .setupAccount:
-            TextsAsset.setupAccount
-        case .confirmEmail:
-            TextsAsset.EmailView.confirmEmail
-        default:
-            ""
-        }
-    }
-
-    private func handlePrimaryAction() {
-        viewModel.actionSelected()
-        switch viewModel.actionDisplay {
-        case .email, .emailGet10GB:
-            activeRoute = .enterEmail
-        case .setupAccountAndLogin, .setupAccount:
-            activeRoute = .signupGhost
-        case .confirmEmail:
-            showConfirmEmailSheet = true
-        default:
-            break
         }
     }
 }

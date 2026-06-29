@@ -6,10 +6,8 @@
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 
-import SwiftUI
-
 @available(iOS 17.0, *)
-enum PreferencesMainEntryType: Int, MenuCategoryRowType {
+enum PreferencesMainEntryType: Int, MenuEntryHeaderType, Hashable {
     case general
     case account
     case connection
@@ -48,7 +46,7 @@ enum PreferencesMainEntryType: Int, MenuCategoryRowType {
         }
     }
 
-    var imageName: String? {
+    var icon: String {
         switch self {
         case .general:
             ImagesAsset.Preferences.general
@@ -73,32 +71,23 @@ enum PreferencesMainEntryType: Int, MenuCategoryRowType {
         }
     }
 
-    var actionImageName: String? {
+    var iconSize: CGFloat { 23 }
+
+    var message: String? { nil }
+
+    var action: MenuEntryActionType? {
         switch self {
         case .logout:
-            nil
+            return .tintedButton(title: "",
+                                 tintColor: .deepOrange,
+                                 parentId: id)
         default:
-            ImagesAsset.serverWhiteRightArrow
+            return .button(title: "",
+                           parentId: id)
         }
     }
 
-    func tintColor(_ isDarkMode: Bool) -> Color {
-        switch self {
-        case .logout:
-            .deepOrange
-        default:
-            .from(.titleColor, isDarkMode)
-        }
-    }
-
-    func backgroundTintColor(_ isDarkMode: Bool) -> Color {
-        switch self {
-        case .logout:
-            tintColor(isDarkMode).opacity(0.15)
-        default:
-            .from(.preferencesBackgroundColor, isDarkMode)
-        }
-    }
+    var secondaryEntries: [MenuSecondaryEntryItem] { [] }
 
     var routeID: PreferencesRouteID? {
         switch self {

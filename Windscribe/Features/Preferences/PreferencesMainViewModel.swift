@@ -9,20 +9,9 @@
 import Foundation
 
 @available(iOS 17.0, *)
-enum PreferencesMainActionDisplay: Equatable {
-    case email
-    case emailGet10GB
-    case setupAccountAndLogin
-    case setupAccount
-    case confirmEmail
-    case hideAll
-}
-
-@available(iOS 17.0, *)
 @Observable
 @MainActor
 final class PreferencesMainViewModel {
-    var actionDisplay: PreferencesMainActionDisplay = .hideAll
     var visibleItems: [PreferencesMainEntryType] {
         let isGhost = sessionProviding.session?.isUserGhost ?? false
         let count = isGhost ? 9 : 10
@@ -32,6 +21,11 @@ final class PreferencesMainViewModel {
             return item
         }
     }
+
+    var actionButtons: [PreferencesAction] = []
+    var activeRoute: PreferencesRouteID?
+    var showConfirmEmailSheet = false
+    var showLogoutConfirmation = false
 
     private let accountManaging: AccountManaging
     private let hapticFeedback: HapticFeedbacking
@@ -84,22 +78,22 @@ final class PreferencesMainViewModel {
 
     func updateActionDisplay() {
         guard let session = sessionProviding.session else {
-            actionDisplay = .hideAll
+            actionButtons = []
             return
         }
 
         if session.isUserPro && !session.hasUserAddedEmail && !session.isUserGhost {
-            actionDisplay = .email
+            actionButtons = [.email]
         } else if !session.isUserPro && !session.hasUserAddedEmail && !session.isUserGhost {
-            actionDisplay = .emailGet10GB
+            actionButtons = [.emailGet10GB]
         } else if !session.isUserPro && !session.hasUserAddedEmail && session.isUserGhost {
-            actionDisplay = .setupAccountAndLogin
+            actionButtons = [.setupAccountAndLogin, .login]
         } else if session.isUserPro && !session.hasUserAddedEmail && session.isUserGhost {
-            actionDisplay = .setupAccount
+            actionButtons = [.setupAccount, .login]
         } else if session.userNeedsToConfirmEmail == true {
-            actionDisplay = .confirmEmail
+            actionButtons = [.confirmEmail]
         } else {
-            actionDisplay = .hideAll
+            actionButtons = []
         }
     }
 
@@ -115,6 +109,37 @@ final class PreferencesMainViewModel {
         let isGhost = session?.isUserGhost ?? false
         let isPro = session?.isUserPro ?? false
         return item == .referForData && (isGhost || isPro)
+    }
+
+    func handleEntrySelection(_ item: PreferencesMainEntryType) {
+        actionSelected()
+        if item == .logout {
+            showLogoutConfirmation = true
+        } else if let route = route(for: item) {
+            activeRoute = route
+        }
+    }
+
+    func handlePrimaryAction(for action: PreferencesAction) {
+        actionSelected()
+        switch action {
+        case .email, .emailGet10GB:
+            activeRoute = .enterEmail
+        case .setupAccountAndLogin, .setupAccount:
+            activeRoute = .signupGhost
+        case .confirmEmail:
+            showConfirmEmailSheet = true
+        case .login:
+            activeRoute = .login
+        }
+    }
+
+    func clearActiveRoute() {
+        activeRoute = nil
+    }
+
+    func clearEmailSheet() {
+        showConfirmEmailSheet = false
     }
 
     func logout() {

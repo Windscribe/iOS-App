@@ -9,26 +9,32 @@
 import SwiftUI
 
 struct PreferencesActionButton: View {
-    let title: String
-    let backgroundColor: Color
-    let textColor: Color
-    let icon: Image?
+    @Environment(\.lookAndFeel) private var lookAndFeel
+
+    let actionType: PreferencesAction
     let action: () -> Void
 
+    init(actionType: PreferencesAction, action: @escaping () -> Void) {
+        self.actionType = actionType
+        self.action = action
+    }
+
     var body: some View {
+        let actionDisplay = actionType.getActionDisplay(isDarkMode: lookAndFeel.isDarkMode)
+
         Button(action: action) {
             HStack {
-                if let icon = icon {
+                if let icon = actionDisplay.icon.map({ Image($0) }) {
                     icon
                 }
-                Text(title)
+                Text(actionDisplay.title)
                     .font(.text(.callout))
                     .multilineTextAlignment(.center)
                     .padding(12)
             }
             .frame(maxWidth: .infinity)
-            .background(backgroundColor)
-            .foregroundColor(textColor)
+            .background(actionDisplay.backgroundColor)
+            .foregroundColor(actionDisplay.textColor)
             .cornerRadius(12)
         }
     }

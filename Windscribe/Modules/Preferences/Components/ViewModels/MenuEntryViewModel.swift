@@ -54,10 +54,38 @@ struct MultiFormatDocument: FileDocument {
 }
 #endif
 
+enum MenuEntryTintColor: Hashable {
+    case titleColor
+    case deepOrange
+
+    func foregroundColor(isDarkMode: Bool) -> Color {
+        switch self {
+        case .titleColor:
+            .from(.titleColor, isDarkMode)
+        case .deepOrange:
+            .deepOrange
+        }
+    }
+
+    func backgroundColor(isDarkMode: Bool) -> Color {
+        switch self {
+        case .titleColor:
+            .from(.preferencesBackgroundColor, isDarkMode)
+        case .deepOrange:
+            .deepOrange.opacity(0.15)
+        }
+    }
+
+    func actionColor(isDarkMode: Bool) -> Color {
+        foregroundColor(isDarkMode: isDarkMode).opacity(0.3)
+    }
+}
+
 enum MenuEntryActionType: Hashable {
     case multiple(currentOption: String, options: [MenuOption], parentId: Int)
     case toggle(isSelected: Bool, parentId: Int)
     case button(title: String?, parentId: Int)
+    case tintedButton(title: String?, tintColor: MenuEntryTintColor, parentId: Int)
     case buttonFile(title: String, fileTypes: [UTType], parentId: Int)
     case buttonFileExport(title: String,
                           documentInfo: DocumentFormatInfo?,
@@ -76,6 +104,8 @@ enum MenuEntryActionType: Hashable {
             isSelected ? ImagesAsset.SwitchButton.on : ImagesAsset.SwitchButton.off
         case .button, .buttonFile, .buttonFileExport:
             ImagesAsset.serverWhiteRightArrow
+        case .tintedButton:
+            nil
         case .link:
             ImagesAsset.externalLink
         case .file:
@@ -90,6 +120,7 @@ enum MenuEntryActionType: Hashable {
         case let .multiple(_, _, parentId),
             let .toggle(_, parentId),
             let .button(_, parentId),
+            let .tintedButton(_, _, parentId),
             let .link(_, parentId),
             let .none(_, parentId),
             let .file(_, _, parentId),
@@ -145,6 +176,7 @@ struct MenuSecondaryEntryItem: MenuEntryItemType {
     var id: Int
     var title: String
     var icon: String
+    var iconSize: CGFloat
     var action: MenuEntryActionType?
     var separator: Bool?
 
@@ -161,6 +193,7 @@ struct MenuSecondaryEntryItem: MenuEntryItemType {
         title = entry.title
         icon = entry.icon
         action = entry.action
+        iconSize = entry.iconSize
         separator = hasSeparator
     }
 
@@ -190,14 +223,18 @@ protocol MenuEntryHeaderType: MenuEntryItemType {
     var secondaryEntries: [MenuSecondaryEntryItem] { get }
 }
 
+
 protocol MenuEntryItemType: Hashable, Identifiable {
     var id: Int { get }
     var title: String { get }
     var icon: String { get }
+    var iconSize: CGFloat { get }
     var action: MenuEntryActionType? { get }
     var useOriginalIconRendering: Bool { get }
 }
 
 extension MenuEntryItemType {
     var useOriginalIconRendering: Bool { false }
+    var iconSize: CGFloat { defaultIconSize }
+    var defaultIconSize: CGFloat { 16 }
 }

@@ -50,6 +50,7 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
         case .customLocation: return ImagesAsset.LookFeel.customLocation
         }
     }
+    var iconSize: CGFloat { defaultIconSize }
     var message: String? {
         switch self {
         case .appearance: TextsAsset.LookFeel.appearanceDescription
@@ -235,6 +236,8 @@ enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
     }
 
     var icon: String { "" }
+
+    var iconSize: CGFloat { defaultIconSize }
 
     var message: String? { nil }
 

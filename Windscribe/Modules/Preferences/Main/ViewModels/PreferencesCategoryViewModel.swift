@@ -9,17 +9,8 @@
 import Foundation
 import Combine
 
-enum PreferencesActionDisplay {
-    case email
-    case emailGet10GB
-    case setupAccountAndLogin
-    case setupAccount
-    case confirmEmail
-    case hideAll
-}
-
 protocol PreferencesMainCategoryViewModel: PreferencesBaseViewModel {
-    var actionDisplay: PreferencesActionDisplay { get set }
+    var actionButtons: [PreferencesAction] { get set }
     var currentLanguage: String? { get set }
     var visibleItems: [PreferenceItemType] { get set }
     var isScreenTestEnabled: Bool { get }
@@ -31,7 +22,7 @@ protocol PreferencesMainCategoryViewModel: PreferencesBaseViewModel {
 }
 
 final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, PreferencesMainCategoryViewModel {
-    @Published var actionDisplay: PreferencesActionDisplay = .hideAll
+    @Published var actionButtons: [PreferencesAction] = []
     @Published var currentLanguage: String?
     @Published var visibleItems: [PreferenceItemType] = []
 
@@ -83,22 +74,22 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
 
     func updateActionDisplay() {
         guard let session = userSessionRepository.sessionModel else {
-            actionDisplay = .hideAll
+            actionButtons = []
             return
         }
 
         if session.isUserPro && !session.hasUserAddedEmail && !session.isUserGhost {
-            actionDisplay = .email
+            actionButtons = [.email]
         } else if !session.isUserPro && !session.hasUserAddedEmail && !session.isUserGhost {
-            actionDisplay = .emailGet10GB
+            actionButtons = [.emailGet10GB]
         } else if !session.isUserPro && !session.hasUserAddedEmail && session.isUserGhost {
-            actionDisplay = .setupAccountAndLogin
+            actionButtons = [.setupAccountAndLogin, .login]
         } else if session.isUserPro && !session.hasUserAddedEmail && session.isUserGhost {
-            actionDisplay = .setupAccount
+            actionButtons = [.setupAccount, .login]
         } else if session.userNeedsToConfirmEmail == true {
-            actionDisplay = .confirmEmail
+            actionButtons = [.confirmEmail]
         } else {
-            actionDisplay = .hideAll
+            actionButtons = []
         }
     }
 

@@ -46,6 +46,9 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case .version: ""
         }
     }
+
+    var iconSize: CGFloat { defaultIconSize }
+
     var message: String? {
         switch self {
         case .locationOrder: TextsAsset.PreferencesDescription.locationOrder

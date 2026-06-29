@@ -34,6 +34,7 @@ enum NetworkSettingsEntryTpe: MenuEntryHeaderType, Hashable {
         default: ""
         }
     }
+    var iconSize: CGFloat { defaultIconSize }
     var message: String? {
         switch self {
         case .autoSecure: TextsAsset.Connection.autoSecureSettingsDescription
@@ -92,6 +93,7 @@ enum NetworkSettingsSecondaryType: MenuEntryItemType, Hashable {
         }
     }
     var icon: String { "" }
+    var iconSize: CGFloat { defaultIconSize }
     var message: String? { nil }
     var action: MenuEntryActionType? {
         switch self {

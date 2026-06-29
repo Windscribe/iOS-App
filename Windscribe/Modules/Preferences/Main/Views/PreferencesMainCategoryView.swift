@@ -38,36 +38,10 @@ struct PreferencesMainCategoryView: View {
                 }
 
                 VStack(spacing: 12) {
-                    if viewModel.actionDisplay != .hideAll {
+                    ForEach(viewModel.actionButtons, id: \.id) { actionType in
                         PreferencesActionButton(
-                            title: actionButtonTitle(),
-                            backgroundColor: .unconfirmedYellow,
-                            textColor: .midnight,
-                            icon: Image(ImagesAsset.warningBlack),
-                            action: {
-                                switch viewModel.actionDisplay {
-                                case .email, .emailGet10GB:
-                                    router.navigate(to: .enterEmail)
-                                case .setupAccountAndLogin, .setupAccount:
-                                    router.navigate(to: .signupGhost)
-                                case .confirmEmail:
-                                    showConfirmEmailSheet = true
-                                default:
-                                    break
-                                }
-                            }
-                        )
-                    }
-
-                    if viewModel.actionDisplay == .setupAccountAndLogin || viewModel.actionDisplay == .setupAccount {
-                        PreferencesActionButton(
-                            title: TextsAsset.login,
-                            backgroundColor: .from(.actionBackgroundColor, viewModel.isDarkMode),
-                            textColor: .from(.titleColor, viewModel.isDarkMode),
-                            icon: nil,
-                            action: {
-                                router.navigate(to: .login)
-                            }
+                            actionType: actionType,
+                            action: { handlePrimaryAction(for: actionType) }
                         )
                     }
                 }
@@ -99,6 +73,20 @@ struct PreferencesMainCategoryView: View {
         }
         .onWillDisappear {
             viewModel.actionSelected()
+        }
+    }
+
+    private func handlePrimaryAction(for actionType: PreferencesAction) {
+        viewModel.actionSelected()
+        switch actionType {
+        case .email, .emailGet10GB:
+            router.navigate(to: .enterEmail)
+        case .setupAccountAndLogin, .setupAccount:
+            router.navigate(to: .signupGhost)
+        case .confirmEmail:
+            showConfirmEmailSheet = true
+        case .login:
+            router.navigate(to: .login)
         }
     }
 
@@ -166,21 +154,6 @@ struct PreferencesMainCategoryView: View {
             router.createView(for: route)
         } else {
             EmptyView()
-        }
-    }
-
-    private func actionButtonTitle() -> String {
-        switch viewModel.actionDisplay {
-        case .email:
-            return TextsAsset.addEmail
-        case .emailGet10GB:
-            return "\(TextsAsset.addEmail) (\(TextsAsset.get10GbAMonth))"
-        case .setupAccount:
-            return TextsAsset.setupAccount
-        case .confirmEmail:
-            return TextsAsset.EmailView.confirmEmail
-        default:
-            return ""
         }
     }
 }

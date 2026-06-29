@@ -34,6 +34,7 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
         case .routingType: ""
         }
     }
+    var iconSize: CGFloat { defaultIconSize }
 
     var message: String? { nil }
 
@@ -108,6 +109,8 @@ enum AntiCensorshipOptionsSecondaryType: MenuEntryItemType, Hashable {
     }
 
     var icon: String { "" }
+
+    var iconSize: CGFloat { defaultIconSize }
 
     var message: String? { nil }
 

@@ -29,7 +29,8 @@ struct MenuEntryView: View {
                 MenuEntryInfoView(item: item, title: item.title, isDarkMode: lookAndFeel.isDarkMode)
             }
         }
-        .background(Color.from(.backgroundColor, lookAndFeel.isDarkMode))
+        .background(item.action?.backgroundColor(isDarkMode: lookAndFeel.isDarkMode) ??
+                    Color.from(.backgroundColor, lookAndFeel.isDarkMode))
         .cornerRadius(12)
         .padding(.horizontal, 16)
     }
@@ -41,19 +42,35 @@ struct MenuEntryHeaderView: View {
     let action: (MenuEntryActionResponseType) -> Void
     var isActionLeading: Bool { item.title.isEmpty && item.icon.isEmpty}
 
+    private var tintColor: Color {
+        item.action?.foregroundColor(isDarkMode: isDarkMode) ?? .from(.titleColor, isDarkMode)
+    }
+
+    private var shouldShowStartSpacer: Bool {
+        switch item.action {
+        case .tintedButton:
+            return true
+        default:
+            return false
+        }
+    }
+
     var body: some View {
         HStack(spacing: 12) {
+            if shouldShowStartSpacer {
+                Spacer()
+            }
             if !item.icon.isEmpty {
                 Image(item.icon)
                     .resizable()
                     .renderingMode(item.useOriginalIconRendering ? .original : .template)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(item.useOriginalIconRendering ? .clear : .from(.iconColor, isDarkMode))
+                    .frame(width: item.iconSize, height: item.iconSize)
+                    .foregroundColor(item.useOriginalIconRendering ? .clear : tintColor)
             }
             if !item.title.isEmpty {
                 Text(item.title)
-                    .foregroundColor(.from(.titleColor, isDarkMode))
+                    .foregroundColor(tintColor)
                     .font(.medium(.callout))
                 Spacer()
             }
@@ -91,7 +108,7 @@ struct MenuEntryHeaderActionView: View {
 
     func getButtonParentId() -> Int? {
         switch item.action {
-        case let .button(_, parentId):
+        case let .button(_, parentId), let .tintedButton(_, _, parentId):
             return parentId
         default:
             return nil
@@ -152,6 +169,26 @@ struct MenuEntryInfoView: View {
     }
 }
 
+extension MenuEntryActionType {
+    func foregroundColor(isDarkMode: Bool) -> Color? {
+        switch self {
+        case let .tintedButton(_, tintColor, _):
+            tintColor.foregroundColor(isDarkMode: isDarkMode)
+        default:
+            nil
+        }
+    }
+
+    func backgroundColor(isDarkMode: Bool) -> Color? {
+        switch self {
+        case let .tintedButton(_, tintColor, _):
+            tintColor.backgroundColor(isDarkMode: isDarkMode)
+        default:
+            nil
+        }
+    }
+}
+
 struct MenuEntryActionView: View {
     let actionType: MenuEntryActionType
     let isAlignLeading: Bool
@@ -179,10 +216,16 @@ struct MenuEntryActionView: View {
                 }
             })
         case let .button(title, parentId), let .link(title, parentId):
-            MenuButtonActionView(isDarkMode: isDarkMode,
-                                 title: title,
+            MenuButtonActionView(title: title,
                                  actionType: actionType,
                                  action: {
+                action(.button(parentId: parentId))
+            })
+        case let .tintedButton(title, tintColor, parentId):
+            MenuTintedButtonActionView(title: title,
+                                       actionType: actionType,
+                                       tintColor: tintColor,
+                                       action: {
                 action(.button(parentId: parentId))
             })
         case let .buttonFile(title, fileTypes, parentId):
@@ -379,10 +422,11 @@ struct MenuFieldView: View {
     }
 }
 
-struct MenuButtonActionView: View {
-    let isDarkMode: Bool
+struct MenuTintedButtonActionView: View {
+    @Environment(\.lookAndFeel) private var lookAndFeel
     let title: String?
     let actionType: MenuEntryActionType
+    let tintColor: MenuEntryTintColor
     let action: () -> Void
 
     var body: some View {
@@ -392,7 +436,7 @@ struct MenuButtonActionView: View {
             HStack {
                 if let title = title {
                     Text(title)
-                        .foregroundColor(.from(.infoColor, isDarkMode))
+                        .foregroundColor(tintColor.foregroundColor(isDarkMode: lookAndFeel.isDarkMode))
                         .font(.regular(.callout))
                 }
                 if let imageName = actionType.imageName {
@@ -401,10 +445,24 @@ struct MenuButtonActionView: View {
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.from(.infoColor, isDarkMode))
+                        .foregroundColor(tintColor.foregroundColor(isDarkMode: lookAndFeel.isDarkMode))
                 }
             }
         })
+    }
+}
+
+struct MenuButtonActionView: View {
+    let title: String?
+    let actionType: MenuEntryActionType
+    let action: () -> Void
+
+    var body: some View {
+        MenuTintedButtonActionView(
+            title: title,
+            actionType: actionType,
+            tintColor: .titleColor,
+            action: action)
     }
 }
 

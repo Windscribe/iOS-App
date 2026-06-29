@@ -53,6 +53,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
         case .ipStack: ImagesAsset.Connection.preferredProtocol
         }
     }
+    var iconSize: CGFloat { defaultIconSize }
     var message: String? {
         switch self {
         case .networkOptions: nil
@@ -175,6 +176,7 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
         }
     }
     var icon: String { "" }
+    var iconSize: CGFloat { defaultIconSize }
     var message: String? { nil }
     var action: MenuEntryActionType? {
         switch self {
