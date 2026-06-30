@@ -132,7 +132,7 @@ final class NetworkOptionsScreenViewModel {
                 if entry.id == parentId {
                     navigateToNetwork(named: info.name)
                 } else {
-                    let index = parentId / 10
+                    let index = parentId / 20
                     if index < otherNetworks.count {
                         navigateToNetwork(named: otherNetworks[index].name)
                     }
