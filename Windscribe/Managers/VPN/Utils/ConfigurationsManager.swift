@@ -66,6 +66,10 @@ class ConfigurationsManager {
     private let reloadLock = NSLock()
     private var isReloading = false
 
+    // Prevents foreground disconnect-error polling from racing manager reload/recreate.
+    let connectErrorLookupLock = NSLock()
+    var isCheckingConnectError = false
+
     /// Tracks all node hostnames that failed during current location session
     /// Cleared when location changes, protocol changes, or connection succeeds
     var failedServerHostnames: Set<String> = []
@@ -134,27 +138,29 @@ class ConfigurationsManager {
         self.credentialsRepository = credentialsRepository
         self.staticIpRepository = staticIpRepository
         self.antiCensorshipRepository = antiCensorshipRepository
-        loadTunnelManagers()
+        Task { await loadTunnelManagers() }
         load()
     }
 
     /// Load OpenVPN and wireguard managers if already configured
-    private func loadTunnelManagers() {
-        tunnelManagerLock.lock()
-        DispatchQueue.main.async {
-            NETunnelProviderManager.loadAllFromPreferences { tunnels, _ in
-                if let tunnels = tunnels {
-                    for tunnel in tunnels {
-                        if tunnel.protocolConfiguration?.username == VPNProtocolType.wireGuard.identifier && self.wgTunnelManager == nil {
-                            self.wgTunnelManager = tunnel
-                        }
-                        if tunnel.protocolConfiguration?.username == TextsAsset.openVPN && self.opTunnelManager == nil {
-                            self.opTunnelManager = tunnel
-                        }
+    func loadTunnelManagers() async {
+        let tunnels: [NETunnelProviderManager]? = await withCheckedContinuation { continuation in
+            DispatchQueue.main.async {
+                NETunnelProviderManager.loadAllFromPreferences { tunnels, error in
+                    if let error = error {
+                        self.logger.logE("VPNConfiguration", "Failed loading tunnel managers: \(error)")
+                        continuation.resume(returning: nil)
+                        return
                     }
+                    continuation.resume(returning: tunnels ?? [])
                 }
-                self.tunnelManagerLock.unlock()
             }
+        }
+
+        guard let tunnels = tunnels else { return }
+        tunnelManagerLock.withLock {
+            wgTunnelManager = tunnels.first { $0.protocolConfiguration?.username == VPNProtocolType.wireGuard.identifier }
+            opTunnelManager = tunnels.first { $0.protocolConfiguration?.username == TextsAsset.openVPN }
         }
     }
 

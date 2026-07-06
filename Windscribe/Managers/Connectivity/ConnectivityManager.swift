@@ -39,6 +39,7 @@ class ConnectivityManagerImpl: ConnectivityManager {
     private static let wifiToCellularHandoffDebounce: TimeInterval = 1.5
     private var pendingEmit: DispatchWorkItem?
     private var pendingEmitToken: UUID?
+    private var networkPathTask: Task<Void, Never>?
 
     init(logger: FileLogger,
          bridgeAPI: WSNetBridgeAPIType) {
@@ -72,24 +73,32 @@ class ConnectivityManagerImpl: ConnectivityManager {
     }
 
     private func refreshNetworkPathMonitor(path: NWPath) {
+        let networkStatus = getNetworkStatus(path: path)
         let networkType = getNetworkType(path: path)
-        Task {
-            var networkName = await getNetworkName(networkType: networkType)
-            if networkName == nil && networkType == .wifi {
-                networkName = self.lastValidNetworkName
-            }
+        let vpnActive = isVPN(path: path)
 
-            if networkName != nil && networkType == .wifi {
-                self.lastValidNetworkName = networkName
-            }
+        networkPathTask?.cancel()
+        networkPathTask = Task { [weak self] in
+            guard let self = self else { return }
+            var networkName = await self.getNetworkName(networkType: networkType)
+            guard !Task.isCancelled else { return }
 
-            let appNetwork = AppNetwork(
-                self.getNetworkStatus(path: path),
-                networkType: networkType,
-                name: networkName,
-                isVPN: self.isVPN(path: path)
-            )
             await MainActor.run {
+                guard !Task.isCancelled else { return }
+                if networkName == nil && networkType == .wifi {
+                    networkName = self.lastValidNetworkName
+                }
+
+                if networkName != nil && networkType == .wifi {
+                    self.lastValidNetworkName = networkName
+                }
+
+                let appNetwork = AppNetwork(
+                    networkStatus,
+                    networkType: networkType,
+                    name: networkName,
+                    isVPN: vpnActive
+                )
                 self.scheduleEmit(appNetwork)
             }
         }

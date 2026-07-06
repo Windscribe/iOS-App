@@ -217,14 +217,30 @@ extension ConfigurationsManager {
     }
 
     func getGeneralConnectError() async -> VPNConfigurationErrors? {
+        connectErrorLookupLock.lock()
+        guard !isCheckingConnectError else {
+            connectErrorLookupLock.unlock()
+            logger.logI("VPNConfiguration", "Skipping concurrent last disconnect error lookup.")
+            return nil
+        }
+        isCheckingConnectError = true
+        connectErrorLookupLock.unlock()
+
+        defer {
+            connectErrorLookupLock.lock()
+            isCheckingConnectError = false
+            connectErrorLookupLock.unlock()
+        }
+
         do {
-            guard let allManagers = try? await getAllManagers() else { return nil }
-            for manager in allManagers {
+            await loadTunnelManagers()
+            let allManagers = try await getAllManagers()
+            for manager in allManagers where manager.protocolConfiguration != nil {
                 try await getConnectError(manager: manager)
             }
         } catch {
             if let nsError = error as? VPNConfigurationErrors {
-            return nsError
+                return nsError
             }
         }
         return nil
