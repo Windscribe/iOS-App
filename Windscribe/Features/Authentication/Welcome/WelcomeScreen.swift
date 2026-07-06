@@ -62,6 +62,9 @@ private struct WelcomeContentView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .dynamicTypeSize(dynamicTypeRange)
+        .task {
+            await viewModel.observeConnectionState()
+        }
 
     }
 
