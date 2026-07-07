@@ -21,6 +21,7 @@ final class AntiCensorshipScreenViewModel {
 
     // MARK: - Dependencies
     private let antiCensorshipManaging: any AntiCensorshipManaging
+    private let hapticFeedback: any HapticFeedbacking
     private let logger: any LogStoring
 
     // MARK: - Published State
@@ -52,8 +53,10 @@ final class AntiCensorshipScreenViewModel {
 
     // MARK: - Initialization
     init(antiCensorshipManaging: any AntiCensorshipManaging,
-        logger: any LogStoring) {
+         hapticFeedback: any HapticFeedbacking,
+         logger: any LogStoring) {
         self.antiCensorshipManaging = antiCensorshipManaging
+        self.hapticFeedback = hapticFeedback
         self.logger = logger
 
         // Initialize current state
@@ -94,6 +97,8 @@ final class AntiCensorshipScreenViewModel {
 
     // MARK: - Actions (called by the view)
     func entrySelected(_ entry: AntiCensorshipOptionsEntryType, action: MenuEntryActionResponseType) {
+        hapticFeedback.checkSettingsAction(action: action)
+
         switch entry {
         case .info:
             openLink(.circumventCensorship)
@@ -121,17 +126,21 @@ final class AntiCensorshipScreenViewModel {
 
     // MARK: - Private Methods
     private func updateCircumventCensorshipEnabled(_ enabled: Bool) {
+        circumventCensorshipSelected = enabled
         antiCensorshipManaging.setUseProtocolTweaks(enabled)
+        selectedUnblockWgParam = antiCensorshipManaging.selectedWgParam?.title ?? ""
         logger.logI("AntiCensorshipScreenViewModel", "Circumvent censorship enabled: \(enabled)")
     }
 
     private func updateUnblockWgParam(_ param: String) {
         antiCensorshipManaging.setWgParameter(withId: param)
+        selectedUnblockWgParam = antiCensorshipManaging.selectedWgParam?.title ?? ""
         logger.logI("AntiCensorshipScreenViewModel", "Selected unblock WG param: \(param)")
     }
 
     private func updateRoutingOption(_ fieldValue: String) {
         let routingType = ServerRoutingType(rawValue: fieldValue) ?? .auto
+        selectedRoutingType = routingType
         logger.logI("AntiCensorshipScreenViewModel", "Selected serverpede backup: \(routingType)")
         antiCensorshipManaging.setServerRoutingType(routingType)
     }
