@@ -70,6 +70,8 @@ class ConfigurationsManager {
     let connectErrorLookupLock = NSLock()
     var isCheckingConnectError = false
 
+    private var initialTunnelManagersLoadTask: Task<Void, Never>?
+
     /// Tracks all node hostnames that failed during current location session
     /// Cleared when location changes, protocol changes, or connection succeeds
     var failedServerHostnames: Set<String> = []
@@ -138,7 +140,7 @@ class ConfigurationsManager {
         self.credentialsRepository = credentialsRepository
         self.staticIpRepository = staticIpRepository
         self.antiCensorshipRepository = antiCensorshipRepository
-        Task { await loadTunnelManagers() }
+        initialTunnelManagersLoadTask = Task { await loadTunnelManagers() }
         load()
     }
 
@@ -214,6 +216,8 @@ class ConfigurationsManager {
     }
 
     func getAllManagers() async throws -> [NEVPNManager] {
+        await initialTunnelManagersLoadTask?.value
+
         var providers: [NEVPNManager] = await [try? getNEVPNManager()].compactMap { $0 }
         tunnelManagerLock.withLock {
             if let wgTunnelManager = wgTunnelManager {
