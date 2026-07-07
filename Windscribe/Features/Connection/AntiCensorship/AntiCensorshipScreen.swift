@@ -11,12 +11,14 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct AntiCensorshipScreen: View {
     @Environment(\.antiCensorshipManaging) private var antiCensorshipManaging
+    @Environment(\.hapticFeedback) private var hapticFeedback
     @Environment(\.logger) private var logger
     @Environment(\.lookAndFeel) private var lookAndFeel
 
     var body: some View {
         AntiCensorshipContentView(viewModel: AntiCensorshipScreenViewModel(
             antiCensorshipManaging: antiCensorshipManaging,
+            hapticFeedback: hapticFeedback,
             logger: logger
         ))
         .navigationTitle(TextsAsset.Connection.antiCensorshipTitle)
