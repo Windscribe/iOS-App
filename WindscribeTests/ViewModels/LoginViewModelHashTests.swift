@@ -75,6 +75,9 @@ final class LoginViewModelHashTests: XCTestCase {
 
         sut.accountHash = "0xabc123"
         XCTAssertTrue(sut.isContinueButtonEnabled)
+
+        sut.accountHash = "   "
+        XCTAssertFalse(sut.isContinueButtonEnabled)
     }
 
     // MARK: - continueButtonTapped
@@ -107,6 +110,17 @@ final class LoginViewModelHashTests: XCTestCase {
         sut.continueButtonTapped()
 
         XCTAssertTrue(sut.showLoadingView)
+    }
+
+    func test_continueButtonTapped_hashedTab_trimsSurroundingWhitespace() async {
+        sut.selectedTab = .hashed
+        sut.accountHash = " \t0xabc123\n "
+
+        sut.continueButtonTapped()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertEqual(sut.accountHash, "0xabc123")
+        XCTAssertEqual(mockAPIManager.lastAuthTokenUsername, "0xabc123")
     }
 
     // MARK: - loadHashFromFile
