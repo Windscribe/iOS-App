@@ -60,12 +60,16 @@ class LoginViewModelImpl: LoginViewModel {
 
     private var secureToken: String = ""
 
+    private var trimmedAccountHash: String {
+        accountHash.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     var isContinueButtonEnabled: Bool {
         switch selectedTab {
         case .standard:
             return username.count > 2 && password.count > 2
         case .hashed:
-            return !accountHash.isEmpty
+            return !trimmedAccountHash.isEmpty
         }
     }
 
@@ -136,8 +140,8 @@ class LoginViewModelImpl: LoginViewModel {
         showLoadingView = true
         failedState = nil
 
-        let loginUsername = selectedTab == .hashed ? accountHash : username
-        let loginPassword = selectedTab == .hashed ? accountHash : password
+        let loginUsername = selectedTab == .hashed ? trimmedAccountHash : username
+        let loginPassword = selectedTab == .hashed ? trimmedAccountHash : password
 
         loginWithCredentials(
             username: loginUsername,
@@ -164,9 +168,11 @@ class LoginViewModelImpl: LoginViewModel {
             loginUsername = username
             loginPassword = password
         case .hashed:
-            guard !accountHash.isEmpty else { return }
-            loginUsername = accountHash
-            loginPassword = accountHash
+            let hash = trimmedAccountHash
+            guard !hash.isEmpty else { return }
+            accountHash = hash
+            loginUsername = hash
+            loginPassword = hash
         }
 
         failedState = nil
