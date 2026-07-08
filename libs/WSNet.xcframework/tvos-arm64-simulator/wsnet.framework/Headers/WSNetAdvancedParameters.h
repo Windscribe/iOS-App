@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)countryOverrideValue;
 -(void)setLogApiResponce:(BOOL)isEnabled;
 -(BOOL)isLogApiResponce;
+-(void)setSuppressBridgeApiTokenRequest:(BOOL)isSuppress;
+-(BOOL)isSuppressBridgeApiTokenRequest;
 
 @end
 
