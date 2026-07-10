@@ -26,7 +26,7 @@ final class EnterEmailFeatureViewModel {
     let titleText = TextsAsset.addEmail
 
     private var isUserPro: Bool
-    private var hasStarted = false
+    private var isObserving = false
 
     var emailIsValid: Bool {
         email.count > 3 && email.contains("@") && email.contains(".")
@@ -54,8 +54,9 @@ final class EnterEmailFeatureViewModel {
     // MARK: - Lifecycle
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let session: () = observeSession()
 

@@ -29,7 +29,7 @@ final class LookAndFeelViewModel {
     private var soundEffectDisconnect: SoundEffectType = .none
     private var discreetAppIconSelection: DiscreetAppIconType = .og
     private var serverDocumentInfo: DocumentFormatInfo?
-    private var hasStarted = false
+    private var isObserving = false
 
     var entries: [LookAndFeelEntryType] {
         [
@@ -90,8 +90,9 @@ final class LookAndFeelViewModel {
     // MARK: - Lifecycle
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         await observeDarkMode()
     }

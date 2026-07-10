@@ -21,7 +21,7 @@ final class ConfirmEmailScreenViewModel {
     var showingResendSuccessAlert = false
     var shouldDismiss = false
 
-    private var hasStarted = false
+    private var isObserving = false
 
     // MARK: - Dependencies (injected via init — protocols only)
     private let sessionProvider: any SessionProviding
@@ -39,8 +39,9 @@ final class ConfirmEmailScreenViewModel {
     // MARK: - Lifecycle
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let session: () = observeSession()
 

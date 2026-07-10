@@ -19,7 +19,7 @@ enum NetworkOptionsRoute: Hashable {
 final class NetworkOptionsScreenViewModel {
 
     // MARK: - Private State
-    private var hasStarted = false
+    private var isObserving = false
     private var networks: [WifiNetworkModel] = []
     private var currentNetwork: AppNetwork?
     private var isAutoSecureEnabled = DefaultValues.autoSecure
@@ -86,8 +86,9 @@ final class NetworkOptionsScreenViewModel {
 
     // MARK: - Lifecycle
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let autoSecure: () = observeAutoSecure()
         async let wifiNetworks: () = observeWifiNetworks()

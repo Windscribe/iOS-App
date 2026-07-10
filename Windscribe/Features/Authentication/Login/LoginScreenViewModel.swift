@@ -52,7 +52,7 @@ final class LoginScreenViewModel {
     // MARK: - Private vars
 
     private var secureToken = ""
-    private var hasStarted = false
+    private var isObserving = false
 
     // MARK: - Init
 
@@ -77,8 +77,9 @@ final class LoginScreenViewModel {
     // MARK: - Lifecycle
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let network: () = observeNetworkChanges()
 

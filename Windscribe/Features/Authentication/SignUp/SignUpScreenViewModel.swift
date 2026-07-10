@@ -67,7 +67,7 @@ final class SignUpScreenViewModel {
     private var secureToken = ""
     private var lastUsernameGenerateTime: Date = .distantPast
     private var lastPasswordGenerateTime: Date = .distantPast
-    private var hasStarted = false
+    private var isObserving = false
 
     // MARK: - Init
 
@@ -96,8 +96,9 @@ final class SignUpScreenViewModel {
     // MARK: - Lifecycle
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let network: () = observeNetworkChanges()
 

@@ -34,7 +34,7 @@ final class PreferencesMainViewModel {
     private let sessionProviding: SessionProviding
 
     private let isScreenTestEnabled = false
-    private var hasStarted = false
+    private var isObserving = false
 
     init(accountManaging: AccountManaging,
          hapticFeedback: HapticFeedbacking,
@@ -51,8 +51,9 @@ final class PreferencesMainViewModel {
     }
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let language: () = observeLanguage()
         async let session: () = observeSession()

@@ -20,7 +20,7 @@ enum ConnectionRoute: Hashable {
 final class ConnectionScreenViewModel {
 
     // MARK: - Private State
-    private var hasStarted = false
+    private var isObserving = false
     private var currentProtocol: String = DefaultValues.protocol
     private var currentPort: String = DefaultValues.port
     private var killSwitchSelected: Bool = DefaultValues.killSwitch
@@ -131,8 +131,9 @@ final class ConnectionScreenViewModel {
 
     // MARK: - Lifecycle
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let selectedProtocol: () = observeSelectedProtocol()
         async let port: () = observeSelectedPort()
