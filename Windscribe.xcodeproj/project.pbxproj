@@ -160,6 +160,8 @@
 		1E6ECB5F2F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */; };
 		1E6ECB602F72C5AF00F1E620 /* AntiCensorshipRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */; };
 		1E6ECB642F740FD200F1E620 /* ServerRoutingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */; };
+		1E6EF90230013FE60070FDDE /* RestrictiveNetworkScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6EF8FF30013FE60070FDDE /* RestrictiveNetworkScreen.swift */; };
+		1E6EF90330013FE60070FDDE /* RestrictiveNetworkScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6EF90030013FE60070FDDE /* RestrictiveNetworkScreenViewModel.swift */; };
 		1E743FEE2F1E6EA100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
 		1E743FEF2F1E6EA100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
 		1E743FF02F1E6EB100F0E24B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */; };
@@ -1824,6 +1826,8 @@
 		1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+WillDisappear.swift"; sourceTree = "<group>"; };
 		1E6ECB5E2F72C5AF00F1E620 /* AntiCensorshipRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipRepository.swift; sourceTree = "<group>"; };
 		1E6ECB622F740FD000F1E620 /* ServerRoutingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRoutingType.swift; sourceTree = "<group>"; };
+		1E6EF8FF30013FE60070FDDE /* RestrictiveNetworkScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkScreen.swift; sourceTree = "<group>"; };
+		1E6EF90030013FE60070FDDE /* RestrictiveNetworkScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkScreenViewModel.swift; sourceTree = "<group>"; };
 		1E743FED2F1E6E9D00F0E24B /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		1E74914D2FBF6C3500F815C6 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		1E74914F2FBF6C3500F815C6 /* AboutSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsViewModel.swift; sourceTree = "<group>"; };
@@ -3254,6 +3258,23 @@
 			path = AntiCensorship;
 			sourceTree = "<group>";
 		};
+		1E6EF8FE30013F6E0070FDDE /* Popups */ = {
+			isa = PBXGroup;
+			children = (
+				1E6EF90130013FE60070FDDE /* RestrictiveNetwork */,
+			);
+			path = Popups;
+			sourceTree = "<group>";
+		};
+		1E6EF90130013FE60070FDDE /* RestrictiveNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				1E6EF8FF30013FE60070FDDE /* RestrictiveNetworkScreen.swift */,
+				1E6EF90030013FE60070FDDE /* RestrictiveNetworkScreenViewModel.swift */,
+			);
+			path = RestrictiveNetwork;
+			sourceTree = "<group>";
+		};
 		1E74914E2FBF6C3500F815C6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -4239,6 +4260,7 @@
 		92C985962FA3A73B00326D64 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				1E6EF8FE30013F6E0070FDDE /* Popups */,
 				1E8717622FD9C78200ED45F0 /* Authentication */,
 				1EF6DAA22FED6DF8007F7991 /* Preferences */,
 				CDAC00012FD2000000000001 /* Account */,
@@ -8079,6 +8101,8 @@
 				F40B8AF02E54FB8500609902 /* ScreenTestRouteID.swift in Sources */,
 				1ED6167E2DD75BF9006CDC99 /* PreferencesActionButton.swift in Sources */,
 				F4888E342D930EC3005EF149 /* AuthenticationRouteID.swift in Sources */,
+				1E6EF90230013FE60070FDDE /* RestrictiveNetworkScreen.swift in Sources */,
+				1E6EF90330013FE60070FDDE /* RestrictiveNetworkScreenViewModel.swift in Sources */,
 				AF04982D21FA24FF0046D33B /* DatacenterTableViewCell.swift in Sources */,
 				F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */,
 				F43184BA2E1C59DE007C96E3 /* LocationPermissionInfoView.swift in Sources */,

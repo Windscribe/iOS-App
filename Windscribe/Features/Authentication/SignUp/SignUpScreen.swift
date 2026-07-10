@@ -81,34 +81,44 @@ private struct SignUpContentView: View {
 
         ScrollViewReader { proxy in
             GeometryReader { geometry in
-                BaseContentView() {
-                    ScrollView {
-                        tabContent
-                            .padding()
-                            .background(attachPreferenceReader())
-                            .frame(minHeight: geometry.size.height)
-                    }
-                    .onChange(of: viewModel.email) { _, _ in
-                        if viewModel.isEmailValid(viewModel.email) {
+                ZStack {
+                    BaseContentView() {
+                        ScrollView {
+                            tabContent
+                                .padding()
+                                .background(attachPreferenceReader())
+                                .frame(minHeight: geometry.size.height)
+                        }
+                        .onChange(of: viewModel.email) { _, _ in
+                            if viewModel.isEmailValid(viewModel.email) {
+                                viewModel.failedState = .none
+                            }
+                        }
+                        .onChange(of: viewModel.selectedTab) { _, _ in
                             viewModel.failedState = .none
                         }
-                    }
-                    .onChange(of: viewModel.selectedTab) { _, _ in
-                        viewModel.failedState = .none
-                    }
-                    .onChange(of: focusedField) { _, field in
-                        if field != nil {
-                            viewModel.failedState = .none
-                        }
+                        .onChange(of: focusedField) { _, field in
+                            if field != nil {
+                                viewModel.failedState = .none
+                            }
 
-                        guard let field = field else { return }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                            scrollToField(field, proxy: proxy, geometry: geometry)
+                            guard let field = field else { return }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                scrollToField(field, proxy: proxy, geometry: geometry)
+                            }
+                        }
+                        .onTapGesture {
+                            focusedField = nil
                         }
                     }
-                    .onTapGesture {
-                        focusedField = nil
-                    }
+
+                    NavigationLink(
+                        destination: RestrictiveNetworkScreen(),
+                        isActive: $bindable.showRestrictiveNetworkModal,
+                        label: { EmptyView() }
+                    )
+                    .hidden()
+                    .disabled(viewModel.showLoadingView)
                 }
             }
         }

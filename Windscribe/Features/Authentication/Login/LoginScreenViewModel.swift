@@ -229,12 +229,7 @@ final class LoginScreenViewModel {
             try await userDataProviding.prepareUserData()
             logger.logI("LoginViewModel", "User data is ready")
 
-            let wasEmergencyConnected = emergencyConnecting.isConnected()
-            emergencyConnecting.cleanEmergencyConfigs()
-
-            if wasEmergencyConnected {
-                logger.logI("LoginViewModel", "Disconnecting emergency connect.")
-                try? await emergencyConnecting.disconnect()
+            if await emergencyConnecting.checkEmergencyConnectCleaning() {
                 logger.logI("LoginViewModel", "disconnectFromEmergencyConnect for getNextProtocol")
                 await protocolManaging.refreshProtocols(shouldReset: true, shouldReconnect: false)
             }

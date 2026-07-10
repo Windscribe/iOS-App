@@ -410,12 +410,9 @@ final class SignUpScreenViewModel {
 
         do {
             try await userDataProviding.prepareUserData()
-            let wasEmergencyConnected = emergencyConnecting.isConnected()
-            emergencyConnecting.cleanEmergencyConfigs()
 
-            if wasEmergencyConnected {
-                try? await emergencyConnecting.disconnect()
-                logger.logI("SignUpViewmodel", "disconnectFromEmergencyConnect for getNextProtocol")
+            if await emergencyConnecting.checkEmergencyConnectCleaning() {
+                logger.logI("LoginViewModel", "disconnectFromEmergencyConnect for getNextProtocol")
                 await protocolManaging.refreshProtocols(shouldReset: true, shouldReconnect: false)
             }
 
