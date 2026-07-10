@@ -19,7 +19,7 @@ final class HelpMeScreenViewModel {
     private let logger: any LogStoring
 
     // MARK: - State
-    private var hasStarted = false
+    private var isObserving = false
     private var networkStatus: NetworkStatus = .disconnected
 
     var sendLogStatus: HelpLogStatus = .idle
@@ -94,8 +94,9 @@ final class HelpMeScreenViewModel {
 
     // MARK: - Observers
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let connectivity: () = observeConnectivity()
 

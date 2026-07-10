@@ -23,7 +23,7 @@ final class AccountViewModel {
     var resetPasswordButtonHidden = false
     var showPasswordResetSuccess = false
 
-    private var hasStarted = false
+    private var isObserving = false
 
     var shouldShowAddEmailButton: Bool {
         guard let session = sessionProvider.session else { return false }
@@ -79,8 +79,9 @@ final class AccountViewModel {
     // MARK: - Lifecycle
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let session: () = observeSession()
 

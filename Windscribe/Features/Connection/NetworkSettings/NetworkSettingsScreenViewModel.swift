@@ -24,7 +24,7 @@ final class NetworkSettingsScreenViewModel {
 
     // MARK: - State
     private var displayingNetwork: WifiNetworkModel
-    private var hasStarted = false
+    private var isObserving = false
     var shouldDismiss = false
 
     init(
@@ -77,8 +77,9 @@ final class NetworkSettingsScreenViewModel {
 
     // MARK: - Observers
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let networks: () = observeWifiNetworks()
 

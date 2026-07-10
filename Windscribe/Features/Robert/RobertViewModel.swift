@@ -22,7 +22,7 @@ final class RobertViewModel {
     var entries: [RobertFilterModel]
     let customRulesEntry: RobertEntryType = .customRules
 
-    private var hasStarted = false
+    private var isObserving = false
 
     // MARK: - Dependencies (injected via init — protocols only)
 
@@ -47,8 +47,9 @@ final class RobertViewModel {
     // MARK: - Lifecycle
 
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let filterUpdates: () = observeFilters()
         async let refresh: () = refreshFilters()

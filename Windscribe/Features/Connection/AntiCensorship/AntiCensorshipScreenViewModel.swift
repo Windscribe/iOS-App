@@ -14,7 +14,7 @@ import Foundation
 final class AntiCensorshipScreenViewModel {
 
     // MARK: - Private State
-    private var hasStarted = false
+    private var isObserving = false
     private var circumventCensorshipSelected = DefaultValues.circumventCensorship
     private var selectedUnblockWgParam = ""
     private var selectedRoutingType: ServerRoutingType = .auto
@@ -67,8 +67,9 @@ final class AntiCensorshipScreenViewModel {
 
     // MARK: - Lifecycle
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let tweaks: () = observeProtocolTweaks()
         async let routing: () = observeServerRoutingType()

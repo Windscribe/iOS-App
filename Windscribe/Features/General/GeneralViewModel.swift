@@ -18,7 +18,7 @@ final class GeneralViewModel {
     private var locationOrder: String = DefaultValues.orderLocationsBy
     private var isHapticFeedbackEnabled = DefaultValues.hapticFeedback
     private var isLocationLoadEnabled = DefaultValues.showServerNetLoad
-    private var hasStarted = false
+    private var isObserving = false
 
     // MARK: - Dependencies
     private let hapticFeedback: HapticFeedbacking
@@ -66,8 +66,9 @@ final class GeneralViewModel {
 
     // MARK: - Lifecycle
     func startObservers() async {
-        guard !hasStarted else { return }
-        hasStarted = true
+        guard !isObserving else { return }
+        isObserving = true
+        defer { isObserving = false }
 
         async let language: () = observeLanguage()
         async let locationLoad: () = observeLocationLoadEnabled()
