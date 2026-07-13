@@ -77,28 +77,38 @@ private struct LoginContentView: View {
 
         ScrollViewReader { proxy in
             GeometryReader { geometry in
-                BaseContentView() {
-                    ScrollView {
-                        tabContent
-                            .padding()
-                            .padding(.bottom, 16)
-                            .background(attachPreferenceReader())
-                    }
-                    .onChange(of: viewModel.selectedTab) { _, _ in
-                        viewModel.clearError()
-                    }
-                    .onChange(of: focusedField) { _, field in
-                        guard let field = field else { return }
-
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                            scrollToField(field, proxy: proxy, geometry: geometry)
+                ZStack {
+                    BaseContentView() {
+                        ScrollView {
+                            tabContent
+                                .padding()
+                                .padding(.bottom, 16)
+                                .background(attachPreferenceReader())
                         }
+                        .onChange(of: viewModel.selectedTab) { _, _ in
+                            viewModel.clearError()
+                        }
+                        .onChange(of: focusedField) { _, field in
+                            guard let field = field else { return }
 
-                        viewModel.clearError()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                scrollToField(field, proxy: proxy, geometry: geometry)
+                            }
+
+                            viewModel.clearError()
+                        }
+                        .onTapGesture {
+                            focusedField = nil
+                        }
                     }
-                    .onTapGesture {
-                        focusedField = nil
-                    }
+
+                    NavigationLink(
+                        destination: RestrictiveNetworkScreen(),
+                        isActive: $bindable.showRestrictiveNetworkModal,
+                        label: { EmptyView() }
+                    )
+                    .hidden()
+                    .disabled(viewModel.showLoadingView)
                 }
             }
             .navigationTitle(TextsAsset.Welcome.login)

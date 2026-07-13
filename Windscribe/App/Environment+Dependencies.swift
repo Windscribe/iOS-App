@@ -123,7 +123,8 @@ extension EnvironmentValues {
 
     /// Emergency Connect commands.
     @Entry var emergencyConnecting: any EmergencyConnecting = LegacyEmergencyConnector(
-        legacy: Assembler.resolve(EmergencyRepository.self)
+        legacy: Assembler.resolve(EmergencyRepository.self),
+        logger: Assembler.resolve(FileLogger.self)
     )
 
     /// Login/authentication actions.

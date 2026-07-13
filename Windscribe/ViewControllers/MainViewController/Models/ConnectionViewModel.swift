@@ -384,7 +384,16 @@ extension ConnectionViewModel {
     }
 
     func checkForForceDisconnect() {
-        if locationsManager.checkForForceDisconnect(), isConnected() {
+        let wasConnectedToProLocation = locationsManager.getIsProDatacenterSelected()
+        guard locationsManager.checkForForceDisconnect(), isConnected() else { return }
+
+        let accountWasDowngraded = userSessionRepository.oldSessionModel?.isPremium == true &&
+            userSessionRepository.sessionModel?.isPremium == false
+
+        if accountWasDowngraded && wasConnectedToProLocation {
+            logger.logI("ConnectionViewModel", "Disconnecting after account downgrade invalidated the selected Pro location.")
+            disableConnection()
+        } else {
             enableConnection()
         }
     }

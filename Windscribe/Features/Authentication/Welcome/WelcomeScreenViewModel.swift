@@ -19,10 +19,6 @@ final class WelcomeScreenViewModel {
     var scrollOrder = 0
     var showLoadingView = false
     var emergencyConnectStatus = false
-    var failedState: String?
-    var routeToSignup = false
-    var routeToMainView = false
-    var showRestrictiveNetworkModal = false
     var isNavigating: Bool = false
     var isEmergencyConnectPresented = false
     var navigationRoute: AuthenticationRouteID? {
@@ -30,15 +26,20 @@ final class WelcomeScreenViewModel {
             isNavigating = navigationRoute != nil
         }
     }
+    var showSSOErrorAlert = false
+    var errorMessage = ""
 
     // MARK: - Dependencies (injected via init — protocols only)
 
     private let userDataProviding: any UserDataProviding
     private let preferencesReading: any PreferencesReading
     private let preferencesWriting: any PreferencesWriting
+    private let emergencyConnecting: any EmergencyConnecting
+    private let protocolManaging: any ProtocolManaging
     private let vpnConnecting: any VPNConnecting
     private let ssoManaging: any SSOManaging
     private let logger: any LogStoring
+    private let mainRouting: any MainRouting
 
     // MARK: - Private vars
 
@@ -65,15 +66,21 @@ final class WelcomeScreenViewModel {
     init(userDataProviding: any UserDataProviding,
          preferencesReading: any PreferencesReading,
          preferencesWriting: any PreferencesWriting,
+         emergencyConnecting: any EmergencyConnecting,
+         protocolManaging: any ProtocolManaging,
          vpnConnecting: any VPNConnecting,
          ssoManaging: any SSOManaging,
-         logger: any LogStoring) {
+         logger: any LogStoring,
+         mainRouting: any MainRouting) {
         self.userDataProviding = userDataProviding
         self.vpnConnecting = vpnConnecting
+        self.emergencyConnecting = emergencyConnecting
+        self.protocolManaging = protocolManaging
         self.preferencesReading = preferencesReading
         self.preferencesWriting = preferencesWriting
         self.ssoManaging = ssoManaging
         self.logger = logger
+        self.mainRouting = mainRouting
     }
 
     // MARK: - Actions (called by the view)
@@ -81,7 +88,6 @@ final class WelcomeScreenViewModel {
     func slideScrollView() {
         scrollOrder = (scrollOrder + 1) % 4
     }
-
 
     func setPresentingController(_ controller: UIViewController) {
         self.presentingController = controller
@@ -101,10 +107,10 @@ final class WelcomeScreenViewModel {
             showLoadingView = true
 
             do {
-                try await ssoManaging.getSession()
-                // Save SSO provider for password reset feature
-                preferencesWriting.saveSSOProvider(provider: "apple")
-                logger.logI("WelcomeViewModel", "Apple sign in successful")
+//                try await ssoManaging.getSession()
+//                // Save SSO provider for password reset feature
+//                preferencesWriting.saveSSOProvider(provider: "apple")
+//                logger.logI("WelcomeViewModel", "Apple sign in successful")
                 await prepareUserData()
             } catch {
                 logger.logE("WelcomeViewModel", "Apple sign in error: \(error)")
@@ -120,18 +126,30 @@ final class WelcomeScreenViewModel {
         }
     }
 
+    func clearFailedState() {
+        showSSOErrorAlert = false
+        errorMessage = ""
+    }
+
+    func showFailedState(message: String) {
+        showSSOErrorAlert = true
+        errorMessage = message
+    }
+
     private func prepareUserData() async {
         do {
             try await userDataProviding.prepareUserData()
-            await MainActor.run {
-                showLoadingView = false
-                routeToMainView = true
+
+            if await emergencyConnecting.checkEmergencyConnectCleaning() {
+                logger.logI("LoginViewModel", "disconnectFromEmergencyConnect for getNextProtocol")
+                await protocolManaging.refreshProtocols(shouldReset: true, shouldReconnect: false)
             }
+
+            showLoadingView = false
+            mainRouting.routeToMainView()
         } catch {
-            await MainActor.run {
-                showLoadingView = false
-                handleError(error)
-            }
+            showLoadingView = false
+            handleError(error)
         }
     }
 
@@ -142,14 +160,14 @@ final class WelcomeScreenViewModel {
         if let error = error as? Errors {
             switch error {
             case Errors.failOverFailed:
-                failedState = TextsAsset.failedToLoadData
-                showRestrictiveNetworkModal = true
+                showFailedState(message: TextsAsset.failedToLoadData)
+                navigate(to: .restrictiveNetwork)
             case let Errors.apiError(apiError):
                 // API errors
-                failedState = apiError.errorMessage ?? TextsAsset.unknownAPIError
+                showFailedState(message: apiError.errorMessage ?? TextsAsset.unknownAPIError)
             default:
                 // Networking(Wsnet) + Apple Authorization
-                failedState = error.description
+                showFailedState(message: error.description)
             }
         }
     }

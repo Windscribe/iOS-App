@@ -16,17 +16,23 @@ struct WelcomeScreen: View {
     @Environment(\.userDataProviding) private var userDataProviding
     @Environment(\.preferencesReading) private var preferencesReading
     @Environment(\.preferencesWriting) private var preferencesWriting
+    @Environment(\.emergencyConnecting) private var emergencyConnecting
+    @Environment(\.protocolManaging) private var protocolManaging
     @Environment(\.vpnConnecting) private var vpnConnecting
     @Environment(\.ssoManaging) private var ssoManaging
     @Environment(\.logger) private var logger
+    @Environment(\.mainRouting) private var mainRouting
 
     var body: some View {
         WelcomeContentView(viewModel: WelcomeScreenViewModel(userDataProviding: userDataProviding,
                                                              preferencesReading: preferencesReading,
                                                              preferencesWriting: preferencesWriting,
+                                                             emergencyConnecting: emergencyConnecting,
+                                                             protocolManaging: protocolManaging,
                                                              vpnConnecting: vpnConnecting,
                                                              ssoManaging: ssoManaging,
-                                                             logger: logger))
+                                                             logger: logger,
+                                                             mainRouting: mainRouting))
     }
 }
 
@@ -60,6 +66,15 @@ private struct WelcomeContentView: View {
                 .disabled(viewModel.showLoadingView)
             }
         }
+        .alert(isPresented: $bindable.showSSOErrorAlert) {
+            Alert(title: Text(TextsAsset.Welcome.ssoErrorAppleTitle),
+                  message: Text(viewModel.errorMessage),
+                  dismissButton:
+                    .default(Text(TextsAsset.ok)) {
+                        viewModel.clearFailedState()
+                    }
+            )
+        }
         .navigationViewStyle(StackNavigationViewStyle())
         .dynamicTypeSize(dynamicTypeRange)
         .task {
@@ -76,6 +91,8 @@ private struct WelcomeContentView: View {
                 LoginScreen()
             case .signup(let claimGhostAccount):
                 SignUpScreen(claimGhostAccount: claimGhostAccount)
+            case .restrictiveNetwork:
+                RestrictiveNetworkScreen()
             default:
                 EmptyView()
             }

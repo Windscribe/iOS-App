@@ -280,6 +280,15 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func reloadServerList() {
         if viewModel.checkAccountWasDowngraded() {
+            if viewModel.getIsProDatacenterSelected() {
+                if vpnConnectionViewModel.isDisconnected() {
+                    loadLatencyValues()
+                } else if !vpnConnectionViewModel.isDisconnecting() {
+                    vpnConnectionViewModel.disableConnection()
+                }
+                return
+            }
+
             if vpnConnectionViewModel.isDisconnected() {
                 loadLatencyValues()
             } else {
