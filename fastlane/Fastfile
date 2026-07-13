@@ -97,7 +97,9 @@ desc "Runs tests"
 lane :test do
   scan(
     project: "Windscribe.xcodeproj",
-    device: "iPhone 16 Pro",
+    # Explicit OS version skips scan's runtime auto-detection, which crashes when
+    # xcodebuild and simctl disagree on the SDK point version (Xcode 26.6: 26.5 vs 26.5.1)
+    device: "iPhone 17 Pro (26.5)",
     scheme: "WindscribeTests",
     clean: true,
     fail_build: true,

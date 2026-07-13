@@ -3,7 +3,7 @@ include:
     file: 'strix-scan.yml'
 
 variables:
-  XCODE_VERSION: "26.3"
+  XCODE_VERSION: "26.6"
 
 default:
   tags:
@@ -11,7 +11,10 @@ default:
   before_script:
     - export LANG=en_US.UTF-8
     - export LC_ALL=en_US.UTF-8
-    - xcodes select $XCODE_VERSION
+    # Per-job Xcode selection via DEVELOPER_DIR; `xcodes select` needs sudo and mutates global state
+    - export DEVELOPER_DIR="$(xcodes installed | awk -v v="$XCODE_VERSION" '$1 == v { print $NF }')/Contents/Developer"
+    - test -d "$DEVELOPER_DIR" || { echo "Xcode $XCODE_VERSION not installed on this runner"; exit 1; }
+    - xcodebuild -version
 
 stages:
   - lint
