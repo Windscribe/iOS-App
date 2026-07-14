@@ -107,10 +107,10 @@ final class WelcomeScreenViewModel {
             showLoadingView = true
 
             do {
-//                try await ssoManaging.getSession()
-//                // Save SSO provider for password reset feature
-//                preferencesWriting.saveSSOProvider(provider: "apple")
-//                logger.logI("WelcomeViewModel", "Apple sign in successful")
+                try await ssoManaging.getSession()
+                // Save SSO provider for password reset feature
+                preferencesWriting.saveSSOProvider(provider: "apple")
+                logger.logI("WelcomeViewModel", "Apple sign in successful")
                 await prepareUserData()
             } catch {
                 logger.logE("WelcomeViewModel", "Apple sign in error: \(error)")
