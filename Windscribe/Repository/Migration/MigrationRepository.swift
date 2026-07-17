@@ -82,7 +82,8 @@ class MigrationRepositoryImpl: MigrationRepository {
     private func migrateSessionAuthToKeychain() {
         // Fresh install detection: UserDefaults resets on reinstall, Keychain doesn't.
         if preferences.getFirstInstall() == false {
-            preferences.clearSessionAuth()
+            // Clear through the repository so its in-memory auth cache cannot outlive the Keychain value.
+            userSessionRepository.updateSessionAuth(with: nil)
             return
         }
 
