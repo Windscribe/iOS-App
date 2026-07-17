@@ -72,13 +72,16 @@ class MigrationRepositoryTests: XCTestCase {
     func testFreshInstall_StaleSessionAuthCleared() {
         mockPreferences.mockFirstInstall = false
         mockPreferences.sessionAuthToReturn = "stale-auth-hash"
+        mockUserSessionRepository.sessionAuth = "stale-auth-hash"
 
         repository.runMigrations()
 
-        XCTAssertTrue(mockPreferences.clearSessionAuthCalled,
-                      "Should clear stale session auth from Keychain")
-        XCTAssertFalse(mockUserSessionRepository.updateSessionAuthCalled,
-                       "Should NOT update session auth on fresh install")
+        XCTAssertTrue(mockUserSessionRepository.updateSessionAuthCalled,
+                      "Should clear stale session auth through the repository")
+        XCTAssertNil(mockUserSessionRepository.lastUpdatedSessionAuth,
+                     "Should clear the persisted session auth")
+        XCTAssertNil(mockUserSessionRepository.sessionAuth,
+                     "Should clear the cached session auth")
     }
 
     func testAlreadyMigrated_AuthNotResaved() {
