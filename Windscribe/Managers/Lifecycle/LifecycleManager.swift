@@ -130,6 +130,10 @@ class LifecycleManager: LifecycleManagerType {
 
     private func checkForKillSwitch() {
         vpnManager.configureForConnectionState()
+        guard vpnStateRepository.configurationState == .initial else {
+            logger.logI("LifecycleManager", "VPN configuration is active, skipping kill switch cleanup.")
+            return
+        }
         let info = vpnStateRepository.vpnInfo.value
         if connectivity.internetConnectionAvailable() {
             if info?.killSwitch == true && vpnStateRepository.isDisconnected() && !wifiManager.isConnectedWifiTrusted() {
