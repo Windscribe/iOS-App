@@ -163,6 +163,7 @@
 "Enter here" = "여기에 입력";
 "Enter password" = "비밀번호를 입력하세요";
 "Enter subject" = "제목을 입력하세요";
+"Enter TLS server name (optional)" = "TLS 서버 이름 입력(선택 사항)";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV 앱에 로그인하려면 TV 화면에 표시된 코드를 입력하세요";
 "Enter the username and password associated with this custom config" = "이 사용자 지정 구성과 연결된 사용자 이름 및 비밀번호를 입력하세요";
 "Enter username" = "사용자 이름을 입력하세요";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "이 설정은 성능을 저하시킵니다. Windscribe가 정상적으로 연결되지 않을 때만 활성화하세요.";
 "This custom configuration will be gone forever." = "이 사용자 지정 구성이 영원히 삭제됩니다.";
 "This Location is Under Maintenance" = "이 위치는 유지보수 중입니다";
+"This setting applies to Stealth and Wstunnel protocol only" = "이 설정은 Stealth 및 Wstunnel 프로토콜에만 적용됩니다";
 "This network hates us" = "이 네트워크에서 거부합니다";
 "This turns on the on-demand mode." = "주문형 모드를 켭니다.";
 "Tile" = "타일";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Apple 로그인 실패";
 "Check your preferred one-time password application for a code." = "코드를 확인하려면 선호하는 일회용 비밀번호 앱을 확인하세요.";
 "Confirm Password" = "비밀번호 확인";
+"Custom SNI Domain" = "사용자 지정 SNI 도메인";
 "Enter 2FA Code" = "2FA 코드 입력";
 "Enter Account Hash or Upload" = "계정 해시 입력 또는 업로드";
 "Got Voucher Code?" = "바우처 코드가 있으신가요?";

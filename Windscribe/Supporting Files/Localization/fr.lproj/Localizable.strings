@@ -163,6 +163,7 @@
 "Enter here" = "Entrez ici";
 "Enter password" = "Entrez le mot de passe";
 "Enter subject" = "Saisissez le sujet";
+"Enter TLS server name (optional)" = "Saisissez le nom du serveur TLS (facultatif)";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Saisissez le code affiché sur l’écran de votre TV pour vous connecter à l’application Windscribe TV";
 "Enter the username and password associated with this custom config" = "Entrez le nom d’utilisateur et le mot de passe associés à cette configuration personnalisée";
 "Enter username" = "Entrez le nom d'utilisateur";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Cela dégrade les performances, activez uniquement si Windscribe ne se connecte pas normalement.";
 "This custom configuration will be gone forever." = "Cette configuration personnalisée disparaîtra à jamais.";
 "This Location is Under Maintenance" = "Cet emplacement est en maintenance";
+"This setting applies to Stealth and Wstunnel protocol only" = "Ce paramètre s’applique uniquement aux protocoles Stealth et Wstunnel";
 "This network hates us" = "Ce réseau nous déteste";
 "This turns on the on-demand mode." = "Cela permet d’activer le mode à la demande.";
 "Tile" = "Mosaïque";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Connexion Apple infructueuse";
 "Check your preferred one-time password application for a code." = "Consultez votre application de mot de passe à usage unique préférée pour obtenir un code.";
 "Confirm Password" = "Confirmer le mot de passe";
+"Custom SNI Domain" = "Domaine SNI personnalisé";
 "Enter 2FA Code" = "Saisir le code 2FA";
 "Enter Account Hash or Upload" = "Saisir le hash du compte ou téléverser";
 "Got Voucher Code?" = "Vous avez un code de bon ?";

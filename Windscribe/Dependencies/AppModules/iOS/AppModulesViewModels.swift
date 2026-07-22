@@ -153,7 +153,8 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!
+                antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
+                preferences: r.resolve(Preferences.self)!
             )
         }.inObjectScope(.transient)
 

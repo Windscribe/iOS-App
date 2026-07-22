@@ -18,11 +18,13 @@ final class AntiCensorshipScreenViewModel {
     private var circumventCensorshipSelected = DefaultValues.circumventCensorship
     private var selectedUnblockWgParam = ""
     private var selectedRoutingType: ServerRoutingType = .auto
+    private var tlsServerName = ""
 
     // MARK: - Dependencies
     private let antiCensorshipManaging: any AntiCensorshipManaging
     private let hapticFeedback: any HapticFeedbacking
     private let logger: any LogStoring
+    private let preferencesWriting: any PreferencesWriting
 
     // MARK: - Published State
     var safariURL: URL?
@@ -47,6 +49,10 @@ final class AntiCensorshipScreenViewModel {
             .routingType(
                 selectedRoutingType: selectedRoutingType.title,
                 routingOptions: routingOptions
+            ),
+            .tlsServerName(
+                value: tlsServerName,
+                placeholder: TextsAsset.Connection.tlsServerNameValueFieldDescription
             )
         ]
     }
@@ -54,15 +60,19 @@ final class AntiCensorshipScreenViewModel {
     // MARK: - Initialization
     init(antiCensorshipManaging: any AntiCensorshipManaging,
          hapticFeedback: any HapticFeedbacking,
-         logger: any LogStoring) {
+         logger: any LogStoring,
+         preferencesReading: any PreferencesReading,
+         preferencesWriting: any PreferencesWriting) {
         self.antiCensorshipManaging = antiCensorshipManaging
         self.hapticFeedback = hapticFeedback
         self.logger = logger
+        self.preferencesWriting = preferencesWriting
 
         // Initialize current state
         self.circumventCensorshipSelected = antiCensorshipManaging.useProtocolTweaks
         self.selectedUnblockWgParam = antiCensorshipManaging.selectedWgParam?.title ?? ""
         self.selectedRoutingType = antiCensorshipManaging.serverRoutingType
+        self.tlsServerName = preferencesReading.tlsServerName ?? ""
     }
 
     // MARK: - Lifecycle
@@ -121,6 +131,12 @@ final class AntiCensorshipScreenViewModel {
             }
             if case .infoLink = action {
                 openLink(.circumventCensorship)
+            }
+
+        case .tlsServerName:
+            if case .field(let value, _) = action {
+                tlsServerName = value
+                preferencesWriting.saveTlsServerName(value: value)
             }
         }
     }

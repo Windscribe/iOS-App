@@ -163,6 +163,7 @@
 "Enter here" = "Masukkan di sini";
 "Enter password" = "Masukkan kata sandi";
 "Enter subject" = "Masukkan subjek";
+"Enter TLS server name (optional)" = "Masukkan nama server TLS (opsional)";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Masukkan kode yang ditampilkan di layar TV Anda untuk masuk ke aplikasi Windscribe TV";
 "Enter the username and password associated with this custom config" = "Masukkan nama pengguna dan kata sandi yang berkaitan dengan konfigurasi kustom ini";
 "Enter username" = "Masukkan nama pengguna";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Ini menurunkan performa, aktifkan hanya jika Windscribe tidak terhubung secara normal.";
 "This custom configuration will be gone forever." = "Konfigurasi kustom ini akan hilang selamanya.";
 "This Location is Under Maintenance" = "Lokasi Ini Sedang Dalam Pemeliharaan";
+"This setting applies to Stealth and Wstunnel protocol only" = "Pengaturan ini hanya berlaku untuk protokol Stealth dan Wstunnel";
 "This network hates us" = "Jaringan ini tidak menyukai kami";
 "This turns on the on-demand mode." = "Ini mengaktifkan mode on-demand.";
 "Tile" = "Ubin";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Masuk dengan Apple tidak berhasil";
 "Check your preferred one-time password application for a code." = "Periksa aplikasi kata sandi sekali pakai pilihan Anda untuk mendapatkan kode.";
 "Confirm Password" = "Konfirmasi Kata Sandi";
+"Custom SNI Domain" = "Domain SNI Kustom";
 "Enter 2FA Code" = "Masukkan Kode 2FA";
 "Enter Account Hash or Upload" = "Masukkan Hash Akun atau Unggah";
 "Got Voucher Code?" = "Punya Kode Voucher?";

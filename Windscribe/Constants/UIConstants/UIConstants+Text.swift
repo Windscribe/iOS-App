@@ -564,6 +564,7 @@ enum TextsAsset {
         static var serverRoutingAuto: String { "Auto".localized }
         static var serverRoutingRegular: String { "Regular".localized }
         static var serverRoutingAlternate: String { "Alternate".localized }
+        static var tlsServerName: String { "Custom SNI Domain".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized
@@ -603,6 +604,11 @@ enum TextsAsset {
 
         static var antiCensorshipInfoDescription: String {
             return "These degrade performance, enable only if Windscribe doesn't connect normally.".localized
+        }
+
+        static var tlsServerNameInfo: String { "This setting applies to Stealth and Wstunnel protocol only".localized }
+        static var tlsServerNameValueFieldDescription: String {
+            return "Enter TLS server name (optional)".localized
         }
     }
 

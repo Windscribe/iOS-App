@@ -324,6 +324,7 @@ final class StubPreferencesReading: PreferencesReading, @unchecked Sendable {
     var ingressProtocol: String?
     var autoSecureNewNetworks = false
     var ssoProvider: String?
+    var tlsServerName: String?
     var advanceParams: String?
 
     private var locationLoadContinuation: AsyncStream<Bool>.Continuation?
@@ -412,6 +413,7 @@ final class MockPreferencesWriting: PreferencesWriting, @unchecked Sendable {
     private(set) var savedIngressProtocolPreference: String?
     private(set) var savedAutoSecureNewNetworks: Bool?
     private(set) var savedAdvanceParams: String?
+    private(set) var savedTlsServerName: String?
 
     func saveShowServerNetLoad(show: Bool) { savedShowServerNetLoad = show }
     func saveHapticFeedback(haptic: Bool) { savedHaptic = haptic }
@@ -429,6 +431,7 @@ final class MockPreferencesWriting: PreferencesWriting, @unchecked Sendable {
     func saveIngressProtocolPreference(value: String) { savedIngressProtocolPreference = value }
     func saveAutoSecureNewNetworks(autoSecure: Bool) { savedAutoSecureNewNetworks = autoSecure }
     func saveAdvanceParams(params: String) { savedAdvanceParams = params }
+    func saveTlsServerName(value: String) { savedTlsServerName = value }
 }
 
 final class MockPushNotificationManaging: PushNotificationManaging, @unchecked Sendable {

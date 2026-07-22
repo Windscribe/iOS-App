@@ -163,6 +163,7 @@
 "Enter here" = "Buraya girin";
 "Enter password" = "Şifreyi girin";
 "Enter subject" = "Konu girin";
+"Enter TLS server name (optional)" = "TLS sunucu adını girin (isteğe bağlı)";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV uygulamasına giriş yapmak için TV ekranınızda gösterilen kodu girin";
 "Enter the username and password associated with this custom config" = "Bu konfigürasyona aşt Kullanıcı adı ve şifreyi girin";
 "Enter username" = "Kullanıcı adını girin";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Bunlar performansı düşürür, yalnızca Windscribe normal şekilde bağlanmazsa etkinleştirin.";
 "This custom configuration will be gone forever." = "Bu konfigürasyon tamamen yok olacak.";
 "This Location is Under Maintenance" = "Bu Konum Bakımda";
+"This setting applies to Stealth and Wstunnel protocol only" = "Bu ayar yalnızca Stealth ve Wstunnel protokolleri için geçerlidir";
 "This network hates us" = "Bu ağ bizi sevmiyor.";
 "This turns on the on-demand mode." = "Bağlı kalma modunu aktif eder.";
 "Tile" = "Döşe";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Apple ile Giriş Başarısız";
 "Check your preferred one-time password application for a code." = "Kod için tercih ettiğin tek kullanımlık parola uygulamasını kontrol et.";
 "Confirm Password" = "Parolayı Onayla";
+"Custom SNI Domain" = "Özel SNI Alan Adı";
 "Enter 2FA Code" = "2FA Kodunu Gir";
 "Enter Account Hash or Upload" = "Hesap Hash’ini Gir veya Yükle";
 "Got Voucher Code?" = "Voucher Kodun Var mı?";

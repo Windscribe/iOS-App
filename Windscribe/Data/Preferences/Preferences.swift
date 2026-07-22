@@ -291,4 +291,8 @@ protocol Preferences: Sendable {
     func clearSessionAuth()
     func saveSessionAuthHash(sessionAuth: String)
     func getSessionAuthHash() -> String?
+
+    // Proxy info
+    func getTlsServerName() -> String?
+    func saveTlsServerName(value: String)
 }

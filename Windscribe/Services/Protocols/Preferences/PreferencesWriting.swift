@@ -25,6 +25,7 @@ protocol PreferencesWriting: Sendable {
     func saveIngressProtocolPreference(value: String)
     func saveAutoSecureNewNetworks(autoSecure: Bool)
     func saveAdvanceParams(params: String)
+    func saveTlsServerName(value: String)
 }
 
 /// Adapter wrapping the legacy `Preferences` store.
@@ -97,5 +98,9 @@ final class LegacyPreferencesWriter: PreferencesWriting, Sendable {
 
     func saveAdvanceParams(params: String) {
         legacy.saveAdvanceParams(params: params)
+    }
+
+    func saveTlsServerName(value: String) {
+        legacy.saveTlsServerName(value: value)
     }
 }

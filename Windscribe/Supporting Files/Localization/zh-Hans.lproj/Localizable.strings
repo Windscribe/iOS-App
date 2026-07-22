@@ -163,6 +163,7 @@
 "Enter here" = "在此输入";
 "Enter password" = "输入密码";
 "Enter subject" = "输入主题";
+"Enter TLS server name (optional)" = "输入 TLS 服务器名称（可选）";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "输入电视屏幕上显示的代码以登录 Windscribe TV 应用";
 "Enter the username and password associated with this custom config" = "输入与此自定义配置关联的用户名和密码";
 "Enter username" = "输入用户名";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "这些会降低性能，仅在 Windscribe 无法正常连接时启用。";
 "This custom configuration will be gone forever." = "此自定义配置将永远消失。";
 "This Location is Under Maintenance" = "此位置正在维护中";
+"This setting applies to Stealth and Wstunnel protocol only" = "此设置仅适用于 Stealth 和 Wstunnel 协议";
 "This network hates us" = "这个网络讨厌我们";
 "This turns on the on-demand mode." = "这将打开按需连接模式。";
 "Tile" = "平铺";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Apple 登录失败";
 "Check your preferred one-time password application for a code." = "请在你首选的一次性密码应用中查看代码。";
 "Confirm Password" = "确认密码";
+"Custom SNI Domain" = "自定义 SNI 域名";
 "Enter 2FA Code" = "输入 2FA 代码";
 "Enter Account Hash or Upload" = "输入账户哈希或上传";
 "Got Voucher Code?" = "有优惠券代码？";

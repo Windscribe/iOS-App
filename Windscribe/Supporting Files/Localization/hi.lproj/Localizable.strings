@@ -163,6 +163,7 @@
 "Enter here" = "यहाँ दर्ज करें";
 "Enter password" = "पासवर्ड दर्ज करें";
 "Enter subject" = "विषय दर्ज करें";
+"Enter TLS server name (optional)" = "TLS सर्वर नाम दर्ज करें (वैकल्पिक)";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV ऐप में लॉग इन करने के लिए अपनी टीवी स्क्रीन पर दिखाया गया कोड दर्ज करें";
 "Enter the username and password associated with this custom config" = "इस कस्टम कॉन्फ़िगरेशन से संबद्ध उपयोगकर्ता नाम और पासवर्ड दर्ज करें";
 "Enter username" = "उपयोगकर्ता नाम दर्ज करें";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "ये प्रदर्शन को कम करते हैं, केवल तभी सक्षम करें जब Windscribe सामान्य रूप से कनेक्ट न हो।";
 "This custom configuration will be gone forever." = "यह कस्टम कॉन्फ़िगरेशन हमेशा के लिए चला जाएगा ।";
 "This Location is Under Maintenance" = "यह स्थान रखरखाव में है";
+"This setting applies to Stealth and Wstunnel protocol only" = "यह सेटिंग केवल Stealth और Wstunnel प्रोटोकॉल पर लागू होती है";
 "This network hates us" = "यह नेटवर्क हमसे नफरत करता है";
 "This turns on the on-demand mode." = "इससे ऑन-डिमांड मोड चालू हो जाता है.";
 "Tile" = "टाइल करें";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Apple साइन-इन असफल";
 "Check your preferred one-time password application for a code." = "कोड के लिए अपने पसंदीदा वन-टाइम पासवर्ड ऐप की जाँच करें।";
 "Confirm Password" = "पासवर्ड की पुष्टि करें";
+"Custom SNI Domain" = "कस्टम SNI डोमेन";
 "Enter 2FA Code" = "2FA कोड दर्ज करें";
 "Enter Account Hash or Upload" = "खाता हैश दर्ज करें या अपलोड करें";
 "Got Voucher Code?" = "वाउचर कोड है?";

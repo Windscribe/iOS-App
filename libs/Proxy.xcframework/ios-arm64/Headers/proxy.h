@@ -75,7 +75,7 @@ extern "C" {
 #endif
 
 extern void Initialise(GoUint8 development, GoString logFilePath);
-extern GoUint8 StartProxy(GoString listenAddress, GoString remoteAddress, GoInt tunnelType, GoInt mtu, GoUint8 extraPadding);
+extern GoUint8 StartProxy(GoString listenAddress, GoString remoteAddress, GoInt tunnelType, GoInt mtu, GoUint8 extraPadding, GoString tlsServerName);
 extern void Stop();
 extern GoInt GetPrimaryListenerSocketFd();
 

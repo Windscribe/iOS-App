@@ -26,12 +26,15 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
 
     // MARK: - Dependencies
     private let antiCensorshipRepository: AntiCensorshipRepository
+    private let preferences: Preferences
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
-         antiCensorshipRepository: AntiCensorshipRepository) {
+         antiCensorshipRepository: AntiCensorshipRepository,
+         preferences: Preferences) {
         self.antiCensorshipRepository = antiCensorshipRepository
+        self.preferences = preferences
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -83,7 +86,9 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
                             paramSelected: selectedUnblockWgParam,
                             paramOptions: paramOptions),
             .routingType(selectedRoutingType: selectedRoutingType.title,
-                         routingOptions: routingOptions)
+                         routingOptions: routingOptions),
+            .tlsServerName(value: preferences.getTlsServerName() ?? "",
+                           placeholder: TextsAsset.Connection.tlsServerNameValueFieldDescription)
         ]
     }
 
@@ -109,6 +114,11 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
             }
             if case .infoLink = action {
                 openLink(.circumventCensorship)
+            }
+        case .tlsServerName:
+            if case .field(let value , _) = action {
+                preferences.saveTlsServerName(value: value)
+                reloadItems()
             }
         }
     }

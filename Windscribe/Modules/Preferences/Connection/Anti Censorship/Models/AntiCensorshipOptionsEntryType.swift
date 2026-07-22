@@ -9,13 +9,15 @@
 enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
     case info,
          protocolTweaks(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption]),
-         routingType(selectedRoutingType: String, routingOptions: [MenuOption])
+         routingType(selectedRoutingType: String, routingOptions: [MenuOption]),
+         tlsServerName(value: String, placeholder: String)
 
     var id: Int {
         switch self {
         case .info: 1
         case .protocolTweaks: 2
         case .routingType: 3
+        case .tlsServerName: 4
         }
     }
 
@@ -24,6 +26,7 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
         case .info: ""
         case .protocolTweaks: TextsAsset.Connection.circumventCensorship
         case .routingType: TextsAsset.Connection.serverRouting
+        case .tlsServerName: TextsAsset.Connection.tlsServerName
         }
     }
 
@@ -32,11 +35,17 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
         case .info: ""
         case .protocolTweaks: ImagesAsset.Connection.circumventCensorship
         case .routingType: ""
+        case .tlsServerName: ""
         }
     }
     var iconSize: CGFloat { defaultIconSize }
 
-    var message: String? { nil }
+    var message: String? {
+        switch self {
+        case .tlsServerName: TextsAsset.Connection.tlsServerNameInfo
+        default: nil
+        }
+    }
 
     var action: MenuEntryActionType? {
         switch self {
@@ -67,6 +76,9 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
             }
         case let .routingType(selectedRoutingType, routingOptions):
             return [.serverpedeInfo]
+        case let .tlsServerName(customValue, placeholder):
+            let value: String = customValue.isEmpty ? TextsAsset.Connection.tlsServerNameValueFieldDescription : customValue
+            return [.tlsServerName(value: value, placeholder: placeholder)]
         }
     }
 }
@@ -75,7 +87,8 @@ enum AntiCensorshipOptionsSecondaryIDs: Int {
     case circumventCensorshipInfo = 100,
          protocolTweaksInfo,
          wgUnlockMenu,
-         serverpedeInfo
+         serverpedeInfo,
+         tlsServerName
 
     var id: Int { rawValue }
 }
@@ -84,7 +97,8 @@ enum AntiCensorshipOptionsSecondaryType: MenuEntryItemType, Hashable {
     case circumventCensorshipInfo,
          protocolTweaksInfo,
          wgUnlockMenu(currentOption: String, options: [MenuOption]),
-         serverpedeInfo
+         serverpedeInfo,
+         tlsServerName(value: String, placeholder: String)
 
     var id: Int {
         switch self {
@@ -96,15 +110,15 @@ enum AntiCensorshipOptionsSecondaryType: MenuEntryItemType, Hashable {
             AntiCensorshipOptionsSecondaryIDs.wgUnlockMenu.id
         case .serverpedeInfo:
             AntiCensorshipOptionsSecondaryIDs.serverpedeInfo.id
+        case .tlsServerName:
+            AntiCensorshipOptionsSecondaryIDs.tlsServerName.id
         }
     }
 
     var title: String {
         switch self {
-        case .circumventCensorshipInfo: ""
-        case .protocolTweaksInfo: ""
         case .wgUnlockMenu: TextsAsset.Connection.configuration
-        case .serverpedeInfo: ""
+        default: ""
         }
     }
 
@@ -124,6 +138,8 @@ enum AntiCensorshipOptionsSecondaryType: MenuEntryItemType, Hashable {
                 .multiple(currentOption: currentOption, options: options, parentId: id)
         case .serverpedeInfo:
                 .infoLink(message: TextsAsset.Connection.serverRoutingDescription, parentId: id)
+        case let .tlsServerName(value: value, placeholder: placeholder):
+                .field(value: value, placeHolder: placeholder, parentId: id)
         }
     }
 }

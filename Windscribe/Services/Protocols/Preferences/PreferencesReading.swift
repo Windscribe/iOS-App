@@ -37,6 +37,7 @@ protocol PreferencesReading: Sendable {
     var ingressProtocol: String? { get }
     var autoSecureNewNetworks: Bool { get }
     var ssoProvider: String? { get }
+    var tlsServerName: String? { get }
 
     var locationLoadUpdates: AsyncStream<Bool> { get }
     var hapticFeedbackUpdates: AsyncStream<Bool> { get }
@@ -80,6 +81,7 @@ final class LegacyPreferencesReader: PreferencesReading, Sendable {
     var ingressProtocol: String? { legacy.getIngressProtocolPreferenceSync() }
     var autoSecureNewNetworks: Bool { legacy.getAutoSecureNewNetworksSync() }
     var ssoProvider: String? { legacy.getSSOProvider() }
+    var tlsServerName: String? { legacy.getTlsServerName() }
 
     // Legacy protocol overloads `getSelectedProtocolSync` by return type (String / String?); pick the optional one.
     var selectedProtocol: String? {

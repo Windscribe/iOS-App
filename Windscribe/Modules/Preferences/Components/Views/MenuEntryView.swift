@@ -362,6 +362,8 @@ struct MenuFieldView: View {
                             .font(.regular(.callout))
                     }
                     TextField("", text: $editedValue)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
                         .foregroundColor(.from(.infoColor, isDarkMode))
                         .font(.regular(.callout))
                         .focused($isTextFieldFocused)
@@ -369,7 +371,7 @@ struct MenuFieldView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Button(action: {
-                    action(.field(value: "", parentId: parentId))
+                    action(.field(value: value, parentId: parentId))
                     isEditing = false
                     isTextFieldFocused = false
                 }, label: {
@@ -408,15 +410,14 @@ struct MenuFieldView: View {
                     Text(value)
                         .foregroundColor(.from(.infoColor, isDarkMode))
                         .font(.regular(.callout))
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     Image(ImagesAsset.editPencil)
                         .resizable()
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16, height: 16)
                         .foregroundColor(.from(.infoColor, isDarkMode))
-                    Spacer()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
             })
         }
     }

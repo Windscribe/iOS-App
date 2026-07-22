@@ -41,6 +41,7 @@ class MockPreferences: Preferences {
     var mockEgressProtocolPreference: String = DefaultValues.ipStack
     var mockLastSelectedPinnedIp: String?
     var mockUnblockWgParams: Windscribe.UnblockWgParams?
+    var mockTlsServerName: String?
     var disconnectReason: Windscribe.DisconnectReason?
     var userStatus: Bool?
     var mockPrivacyPopupAccepted: Bool? = false
@@ -910,6 +911,14 @@ class MockPreferences: Preferences {
 
     func getRoutingType() -> Windscribe.ServerRoutingType {
         .auto
+    }
+
+    func getTlsServerName() -> String? {
+        mockTlsServerName
+    }
+
+    func saveTlsServerName(value: String) {
+        mockTlsServerName = value
     }
 
     // MARK: - Realm → GRDB migration flag

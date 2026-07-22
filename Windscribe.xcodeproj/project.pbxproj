@@ -140,6 +140,7 @@
 		1E5553D82DA6AA2A00F16AF0 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
 		1E55B7202FBCB2300007BE80 /* BaseContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E55B71F2FBCB2230007BE80 /* BaseContentView.swift */; };
 		1E55B7222FBE14A40007BE80 /* GeneralTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E55B7212FBE149C0007BE80 /* GeneralTests.swift */; };
+		C0DE10940000000000000002 /* AntiCensorshipScreenViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */; };
 		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
 		1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */; };
 		1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
@@ -1815,6 +1816,7 @@
 		1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportedLocations.swift; sourceTree = "<group>"; };
 		1E55B71F2FBCB2230007BE80 /* BaseContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseContentView.swift; sourceTree = "<group>"; };
 		1E55B7212FBE149C0007BE80 /* GeneralTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTests.swift; sourceTree = "<group>"; };
+		C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipScreenViewModelTests.swift; sourceTree = "<group>"; };
 		1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocationIntentHandler.swift; sourceTree = "<group>"; };
 		1E60DFF72CAB061800623CD5 /* Disconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disconnect.swift; sourceTree = "<group>"; };
 		1E60DFF82CAB061800623CD5 /* Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
@@ -4335,6 +4337,7 @@
 		92C985A22FA3A78A00326D64 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */,
 				1E55B7212FBE149C0007BE80 /* GeneralTests.swift */,
 				92C985A32FA3A79E00326D64 /* AboutTests.swift */,
 				92EFE9C32FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift */,
@@ -8729,6 +8732,7 @@
 				92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */,
 				92890E142F7C4917002EAB44 /* MockAntiCensorshipRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
+				C0DE10940000000000000002 /* AntiCensorshipScreenViewModelTests.swift in Sources */,
 				1E55B7222FBE14A40007BE80 /* GeneralTests.swift in Sources */,
 				1E0492BC2F4750BC0016B11F /* MockEmergencyRepository.swift in Sources */,
 				F42D7FBA2F3513E700F71B20 /* IPRepositoryTests.swift in Sources */,

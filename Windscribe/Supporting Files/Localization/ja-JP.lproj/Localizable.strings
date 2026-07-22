@@ -163,6 +163,7 @@
 "Enter here" = "ここに入力";
 "Enter password" = "パスワードを入力してください";
 "Enter subject" = "件名を入力してください";
+"Enter TLS server name (optional)" = "TLSサーバー名を入力（任意）";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Windscribe TV アプリにログインするには、テレビ画面に表示されているコードを入力してください";
 "Enter the username and password associated with this custom config" = "このカスタム設定に紐付けられているユーザー名とパスワードを入力";
 "Enter username" = "ユーザー名を入力してください";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "これらはパフォーマンスを低下させます。Windscribe が正常に接続しない場合のみ有効にしてください。";
 "This custom configuration will be gone forever." = "このカスタム設定は永久に削除されます。";
 "This Location is Under Maintenance" = "このロケーションはメンテナンス中です";
+"This setting applies to Stealth and Wstunnel protocol only" = "この設定はStealthおよびWstunnelプロトコルにのみ適用されます";
 "This network hates us" = "このネットワークは私たちを嫌っています";
 "This turns on the on-demand mode." = "これによりオンデマンドモードがオンになります。";
 "Tile" = "タイル状に並べる";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Appleサインインに失敗しました";
 "Check your preferred one-time password application for a code." = "コードを取得するには、使用しているワンタイムパスワードアプリを確認してください。";
 "Confirm Password" = "パスワードを確認";
+"Custom SNI Domain" = "カスタムSNIドメイン";
 "Enter 2FA Code" = "2FAコードを入力";
 "Enter Account Hash or Upload" = "アカウントハッシュを入力またはアップロード";
 "Got Voucher Code?" = "バウチャーコードをお持ちですか？";

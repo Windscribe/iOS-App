@@ -163,6 +163,7 @@
 "Enter here" = "Введите здесь";
 "Enter password" = "Введите пароль";
 "Enter subject" = "Введите тему";
+"Enter TLS server name (optional)" = "Введите имя TLS-сервера (необязательно)";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Введите код, отображаемый на экране телевизора, чтобы войти в приложение Windscribe TV";
 "Enter the username and password associated with this custom config" = "Введите имя пользователя и пароль, связанные с этой пользовательской конфигурацией.";
 "Enter username" = "Введите имя пользователя";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Это снижает производительность, включайте только если Windscribe не подключается нормально.";
 "This custom configuration will be gone forever." = "Эта пользовательская конфигурация будет удалена без возможности восстановления.";
 "This Location is Under Maintenance" = "Эта локация на обслуживании";
+"This setting applies to Stealth and Wstunnel protocol only" = "Эта настройка применяется только к протоколам Stealth и Wstunnel";
 "This network hates us" = "Эта сеть ненавидит нас";
 "This turns on the on-demand mode." = "Включает режим по требованию.";
 "Tile" = "Плитка";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Вход через Apple не удался";
 "Check your preferred one-time password application for a code." = "Проверьте код в предпочитаемом приложении для одноразовых паролей.";
 "Confirm Password" = "Подтвердите пароль";
+"Custom SNI Domain" = "Пользовательский домен SNI";
 "Enter 2FA Code" = "Введите код 2FA";
 "Enter Account Hash or Upload" = "Введите хеш учетной записи или загрузите его";
 "Got Voucher Code?" = "Есть код ваучера?";

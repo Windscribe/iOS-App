@@ -144,6 +144,9 @@ enum SharedKeys {
     static let keychainStoredSession = "stored-session-data"
     static let keychainCustomConfigCreds = "customconfig-credentials"
 
+    // Proxy
+    static let tlsServerName: String = "tlsServerName"
+
 
     /// Cached plist dictionary to avoid repeated file I/O
     private static let plistDictionary: [String: Any] = {

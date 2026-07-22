@@ -163,6 +163,7 @@
 "Enter here" = "Nhập tại đây";
 "Enter password" = "Nhập mật khẩu";
 "Enter subject" = "Nhập chủ đề";
+"Enter TLS server name (optional)" = "Nhập tên máy chủ TLS (không bắt buộc)";
 "Enter the code shown on your tv screen to Log into Windscribe’s TV app" = "Nhập mã hiển thị trên màn hình TV của bạn để đăng nhập vào ứng dụng Windscribe TV";
 "Enter the username and password associated with this custom config" = "Nhập tên người dùng và mật khẩu được liên kết với cấu hình tùy chỉnh này";
 "Enter username" = "Nhập tên người dùng";
@@ -408,6 +409,7 @@
 "These degrade performance, enable only if Windscribe doesn't connect normally." = "Những tùy chọn này làm giảm hiệu suất, chỉ bật khi Windscribe không kết nối bình thường.";
 "This custom configuration will be gone forever." = "Cấu hình tùy chỉnh này sẽ biến mất vĩnh viễn.";
 "This Location is Under Maintenance" = "Vị trí này đang bảo trì";
+"This setting applies to Stealth and Wstunnel protocol only" = "Cài đặt này chỉ áp dụng cho giao thức Stealth và Wstunnel";
 "This network hates us" = "Mạng này ghét chúng tôi";
 "This turns on the on-demand mode." = "Điều này sẽ bật chế độ theo yêu cầu.";
 "Tile" = "Xếp ô";
@@ -513,6 +515,7 @@
 "Apple Sign-In Unsuccesful" = "Đăng nhập bằng Apple không thành công";
 "Check your preferred one-time password application for a code." = "Kiểm tra ứng dụng mật khẩu một lần ưa thích của bạn để lấy mã.";
 "Confirm Password" = "Xác nhận mật khẩu";
+"Custom SNI Domain" = "Miền SNI tùy chỉnh";
 "Enter 2FA Code" = "Nhập mã 2FA";
 "Enter Account Hash or Upload" = "Nhập mã băm tài khoản hoặc tải lên";
 "Got Voucher Code?" = "Có mã voucher?";

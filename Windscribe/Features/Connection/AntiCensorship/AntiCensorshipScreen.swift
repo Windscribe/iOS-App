@@ -14,12 +14,16 @@ struct AntiCensorshipScreen: View {
     @Environment(\.hapticFeedback) private var hapticFeedback
     @Environment(\.logger) private var logger
     @Environment(\.lookAndFeel) private var lookAndFeel
+    @Environment(\.preferencesReading) private var preferencesReading
+    @Environment(\.preferencesWriting) private var preferencesWriting
 
     var body: some View {
         AntiCensorshipContentView(viewModel: AntiCensorshipScreenViewModel(
             antiCensorshipManaging: antiCensorshipManaging,
             hapticFeedback: hapticFeedback,
-            logger: logger
+            logger: logger,
+            preferencesReading: preferencesReading,
+            preferencesWriting: preferencesWriting
         ))
         .navigationTitle(TextsAsset.Connection.antiCensorshipTitle)
         .navigationBarTitleDisplayMode(.inline)

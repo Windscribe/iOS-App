@@ -619,4 +619,13 @@ class PreferencesImpl: Preferences {
     func saveDidMigrateRealmToGRDB(_ value: Bool) {
         UserDefaults.standard.set(value, forKey: SharedKeys.didMigrateRealmToGRDB)
     }
+
+    // Proxy info
+    func getTlsServerName() -> String? {
+        getString(forKey: SharedKeys.tlsServerName)
+    }
+
+    func saveTlsServerName(value: String) {
+        setString(value, forKey: SharedKeys.tlsServerName)
+    }
 }

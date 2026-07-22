@@ -35,8 +35,10 @@
 "Apple Sign-In Unsuccesful" = "Apple Sign-In Unsuccessful";
 "Check your preferred one-time password application for a code." = "Check your preferred one-time password application for a code.";
 "Confirm Password" = "Confirm Password";
+"Custom SNI Domain" = "Custom SNI Domain";
 "Enter 2FA Code" = "Enter 2FA Code";
 "Enter Account Hash or Upload" = "Enter Account Hash or Upload";
+"Enter TLS server name (optional)" = "Enter TLS server name (optional)";
 "Got Voucher Code?" = "Got Voucher Code?";
 "Hash" = "Hash";
 "I have backed up my account hash securely and understand that Windscribe will not be able to help me recover my account if I lose it." = "I have backed up my account hash securely and understand that Windscribe will not be able to help me recover my account if I lose it.";
@@ -57,3 +59,4 @@
 "FAILED" = "FAILED";
 "ON" = "ON";
 "OFF" = "OFF";
+"This setting applies to Stealth and Wstunnel protocol only" = "This setting applies to Stealth and Wstunnel protocol only";
