@@ -39,6 +39,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     private var startHandler: ((Error?) -> Void)?
     private var stopHandler: (() -> Void)?
+    private var proxyStartRequested = false
     private var vpnReachability = OpenVPNReachability()
     private var configuration: OpenVPNConfiguration!
     private var UDPSession: NWUDPSession!
@@ -124,8 +125,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         }
 
         logger.logI("PacketTunnelProvider", "Reason for disconnect \(reason.rawValue)", flushImmediately: true)
+        stopProxyIfNeeded()
         vpnAdapter.disconnect()
         completionHandler()
+    }
+
+    private func stopProxyIfNeeded() {
+        guard proxyStartRequested else { return }
+        logger.logI("PacketTunnelProvider", "Stopping local proxy.", flushImmediately: true)
+        Stop()
+        proxyStartRequested = false
     }
 
     /// Initialises and starts proxy if required
@@ -138,6 +147,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                 return false
             }
             guard let path = proxyLogFilePath() else { return false }
+            proxyStartRequested = true
             DispatchQueue.global(qos: .background).async {
                 let logFilePathCString = (path as NSString).utf8String
                 let listenAddressCString = (Proxy.localEndpoint as NSString).utf8String
@@ -262,6 +272,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
                     controlPlane?.checkTunnelHealth()
                 }
         case .disconnected:
+            stopProxyIfNeeded()
             guard let stopHandler = stopHandler else { return }
             if vpnReachability.isTracking {
                 vpnReachability.stopTracking()
