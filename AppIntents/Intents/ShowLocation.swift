@@ -20,6 +20,7 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
 
     static var title: LocalizedStringResource = LocalizedStringResource("ShowLocation.intentTitle", table: "SiriIntents")
     static var description = IntentDescription(LocalizedStringResource("ShowLocation.intentDescription", table: "SiriIntents"))
+    static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
     static var parameterSummary: some ParameterSummary {
         Summary("Connection State")

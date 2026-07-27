@@ -18,6 +18,7 @@ extension Connect: ForegroundContinuableIntent {}
 struct Connect: AppIntent, WidgetConfigurationIntent {
     static var title: LocalizedStringResource = LocalizedStringResource("Connect.intentTitle", table: "SiriIntents")
     static var description = IntentDescription(LocalizedStringResource("Connect.intentDescription", table: "SiriIntents"))
+    static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
     let tag = "AppIntents"
     static var parameterSummary: some ParameterSummary {

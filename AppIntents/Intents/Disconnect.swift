@@ -19,6 +19,7 @@ extension Disconnect: ForegroundContinuableIntent {}
 struct Disconnect: AppIntent, WidgetConfigurationIntent {
     static var title: LocalizedStringResource = LocalizedStringResource("Disconnect.intentTitle", table: "SiriIntents")
     static var description = IntentDescription(LocalizedStringResource("Disconnect.intentDescription", table: "SiriIntents"))
+    static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
     let tag = "AppIntents"
     fileprivate let logger = ContainerResolver().getLogger()
