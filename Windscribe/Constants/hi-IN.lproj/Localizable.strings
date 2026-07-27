@@ -347,3 +347,5 @@
 
 "Sorry, we couldn't load your news feed!\n\nPlease try again later, or check your internet connection." = "क्षमा करें, हम आपका समाचार फ़ीड लोड नहीं कर सके!\n\nकृपया बाद में फिर से कोशिश करें या अपना इंटरनेट कनेक्शन जांचें।";
 "Copied!" = "कॉपी किया गया!";
+"We detected that SSL requests may be intercepted on your network. This could be due to a firewall configured on your device, or Windscribe being blocked by your network administrator. Ignore SSL errors?" = "हमने पाया है कि आपके नेटवर्क पर SSL अनुरोधों को इंटरसेप्ट किया जा सकता है। ऐसा आपके डिवाइस पर कॉन्फ़िगर किए गए फ़ायरवॉल के कारण हो सकता है, या आपके नेटवर्क व्यवस्थापक द्वारा Windscribe को ब्लॉक किए जाने के कारण। SSL त्रुटियों को अनदेखा करें?";
+"SSL Error" = "SSL त्रुटि";

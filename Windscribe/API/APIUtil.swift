@@ -10,7 +10,13 @@ import Foundation
 
 // MARK: - API Utility Service Protocol
 
+protocol PromptPresenter {
+    func askUser(message: String, title: String) async -> Bool
+}
+
 protocol APIUtilService {
+    var ignoreSslErrorsEnabledForRuntime: Bool { get }
+
     func makeApiCall<T: Decodable>(modalType: T.Type, apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) async throws -> T
     func makeApiCall<T: Decodable>(modalType: T.Type,
                                    maxRetries: Int,
@@ -24,6 +30,27 @@ protocol APIUtilService {
 // MARK: - API Utility Service Implementation
 
 final class APIUtilServiceImpl: APIUtilService {
+    private let serverAPI: WSNetServerAPIType?
+    private let bridgeAPI: WSNetBridgeAPIType?
+    private let promptPresenter: PromptPresenter?
+    private let sslErrorStateLock = NSLock()
+    private var isIgnoreSslErrorsEnabledForRuntime = false
+    private var askedToIgnoreSslErrorsForRuntime = false
+
+    var ignoreSslErrorsEnabledForRuntime: Bool {
+        sslErrorStateLock.lock()
+        defer { sslErrorStateLock.unlock() }
+        return isIgnoreSslErrorsEnabledForRuntime
+    }
+
+    init(serverAPI: WSNetServerAPIType? = nil,
+         bridgeAPI: WSNetBridgeAPIType? = nil,
+         promptPresenter: PromptPresenter? = nil) {
+        self.serverAPI = serverAPI
+        self.bridgeAPI = bridgeAPI
+        self.promptPresenter = promptPresenter
+        resetIgnoreSslErrorsForRuntime()
+    }
 
     func mapToSuccess<T: Decodable>(json: String, modeType: T.Type) -> T? {
         if modeType is String.Type {
@@ -66,7 +93,16 @@ final class APIUtilServiceImpl: APIUtilService {
             func attemptCall() {
                 _ = apiCall { statusCode, responseData in
                     if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
-                        if retries <= 0 {
+                        if wsNetError == .failOverFailed, self.markSSLErrorPromptAskedIfNeeded() {
+                            Task {
+                                let shouldRetry = await self.shouldRetryAfterSSLErrorPrompt()
+                                guard shouldRetry else {
+                                    continuation.resume(throwing: wsNetError)
+                                    return
+                                }
+                                attemptCall()
+                            }
+                        } else if retries <= 0 {
                             continuation.resume(throwing: wsNetError)
                         } else {
                             retries -= 1
@@ -83,6 +119,52 @@ final class APIUtilServiceImpl: APIUtilService {
             }
             attemptCall()
         }
+    }
+
+    private func markSSLErrorPromptAskedIfNeeded() -> Bool {
+        sslErrorStateLock.lock()
+        defer { sslErrorStateLock.unlock() }
+
+        guard !isIgnoreSslErrorsEnabledForRuntime,
+              !askedToIgnoreSslErrorsForRuntime else { return false }
+
+        askedToIgnoreSslErrorsForRuntime = true
+        return true
+    }
+
+    private func shouldRetryAfterSSLErrorPrompt() async -> Bool {
+        guard let promptPresenter = promptPresenter,
+              serverAPI != nil,
+              bridgeAPI != nil,
+              !ignoreSslErrorsEnabledForRuntime else { return false }
+
+        let shouldIgnoreSslErrors = await promptPresenter.askUser(
+            message: TextsAsset.SSLError.message,
+            title: TextsAsset.SSLError.title
+        )
+        guard shouldIgnoreSslErrors else { return false }
+
+        setIgnoreSslErrorsForRuntime()
+        return true
+    }
+
+    private func setIgnoreSslErrorsForRuntime() {
+        sslErrorStateLock.lock()
+        isIgnoreSslErrorsEnabledForRuntime = true
+        sslErrorStateLock.unlock()
+
+        serverAPI?.setIgnoreSslErrors(true)
+        bridgeAPI?.setIgnoreSslErrors(true)
+    }
+
+    private func resetIgnoreSslErrorsForRuntime() {
+        sslErrorStateLock.lock()
+        isIgnoreSslErrorsEnabledForRuntime = false
+        askedToIgnoreSslErrorsForRuntime = false
+        sslErrorStateLock.unlock()
+
+        serverAPI?.setIgnoreSslErrors(false)
+        bridgeAPI?.setIgnoreSslErrors(false)
     }
 
     func checkBridgeResult(statusCode: Int32, message: String) throws -> Bool {

@@ -1169,6 +1169,16 @@ enum TextsAsset {
         }
     }
 
+    enum SSLError {
+        static var title: String {
+            return "SSL Error".localized
+        }
+
+        static var message: String {
+            return "We detected that SSL requests may be intercepted on your network. This could be due to a firewall configured on your device, or Windscribe being blocked by your network administrator. Ignore SSL errors?".localized
+        }
+    }
+
     enum UpgradeView {
         static var pricing: String {
             return "Pricing".localized

@@ -44,8 +44,12 @@ class App: Assembly {
 class Network: Assembly {
     func assemble(container: Swinject.Container) {
         container.injectCore()
-        container.register(APIUtilService.self) { _ in
-            APIUtilServiceImpl()
+        container.register(APIUtilService.self) { r in
+            APIUtilServiceImpl(
+                serverAPI: r.resolve(WSNetServerAPIType.self)!,
+                bridgeAPI: r.resolve(WSNetBridgeAPIType.self)!,
+                promptPresenter: r.resolve(AlertManager.self)!
+            )
         }.inObjectScope(.userScope)
         container.register(ConnectivityManager.self) { r in
             ConnectivityManagerImpl(logger: r.resolve(FileLogger.self)!,

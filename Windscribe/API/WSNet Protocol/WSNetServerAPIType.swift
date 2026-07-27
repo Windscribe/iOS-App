@@ -186,6 +186,7 @@ protocol WSNetServerAPIType {
                      score: String,
                      signature: String,
                      callback: @escaping (Int32, String) -> Void) -> WSNetCancelableCallback
+    func setIgnoreSslErrors(_ ignore: Bool)
 }
 extension WSNetServerAPI: WSNetServerAPIType {}
 

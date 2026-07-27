@@ -7,7 +7,7 @@
 //
 import UIKit
 
-protocol AlertManager {
+protocol AlertManager: PromptPresenter {
     func showSimpleAlert(viewController: UIViewController?, title: String, message: String, buttonText: String)
     func showSimpleAlert(title: String, message: String, buttonText: String)
     func showSimpleAlert(viewController: UIViewController?,

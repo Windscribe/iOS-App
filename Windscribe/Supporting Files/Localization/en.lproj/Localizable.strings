@@ -60,3 +60,5 @@
 "ON" = "ON";
 "OFF" = "OFF";
 "This setting applies to Stealth and Wstunnel protocol only" = "This setting applies to Stealth and Wstunnel protocol only";
+"We detected that SSL requests may be intercepted on your network. This could be due to a firewall configured on your device, or Windscribe being blocked by your network administrator. Ignore SSL errors?" = "We detected that SSL requests may be intercepted on your network. This could be due to a firewall configured on your device, or Windscribe being blocked by your network administrator. Ignore SSL errors?";
+"SSL Error" = "SSL Error";
