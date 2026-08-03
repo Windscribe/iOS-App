@@ -136,6 +136,18 @@ class WireGuardCredentialsTests: XCTestCase {
         XCTAssertNotEqual(privateKey, publicKey, "Public key should be different from private key")
     }
 
+    func test_getPublicKey_withoutGeneration_shouldRequireExistingKey() async {
+        // Given
+        wgCredentials.delete()
+
+        // When
+        let publicKey = await wgCredentials.getPublicKey(generateIfMissing: false)
+
+        // Then
+        XCTAssertNil(publicKey)
+        XCTAssertNil(wgCredentials.getExistingPrivateKey())
+    }
+
     // MARK: - Delete Tests
 
     func test_delete_shouldRemovePrivateKeyFromKeychain() {

@@ -220,6 +220,23 @@ class WireguardConfigRepositoryTests: XCTestCase {
         }
 
         XCTAssertTrue(mockAlertManager.askUserCalled, "Should ask user for confirmation")
+        XCTAssertTrue(mockLogger.errorMessages.contains { $0.contains("stage=wg_init.result result=failure") })
+    }
+
+    func test_getCredentials_limitExceeded_retryFails_shouldLogInitFailure() async {
+        // Given
+        mockAPIManager.shouldThrowLimitExceeded = true
+        mockAPIManager.shouldThrowError = true
+        mockAlertManager.userResponse = true
+
+        // When/Then
+        do {
+            try await repository.getCredentials(request: WireguardConfigRequest(attemptId: "key-limit-retry"))
+            XCTFail("Expected key-limit retry to fail")
+        } catch {
+            XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 2)
+            XCTAssertTrue(mockLogger.errorMessages.contains { $0.contains("attempt_id=key-limit-retry stage=wg_init.result result=failure") })
+        }
     }
 
     func test_getCredentials_limitExceeded_withoutAlertManager_shouldDeleteOldestAutomatically() async throws {
@@ -446,6 +463,96 @@ class WireguardConfigRepositoryTests: XCTestCase {
         XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 2, "Should reinitialize when endpoint changes")
     }
 
+    func test_getCredentials_failedInit_shouldRetrySameEndpoint() async throws {
+        // Given - persisted material exists, but the first registration attempt fails.
+        mockWgCredentials.saveInitResponse(config: createMockDynamicWireGuardConfig(presharedKey: "persisted-key"))
+        mockWgCredentials.saveGeneratedIP(ip: "10.64.1.100", dns: "10.255.255.1")
+        mockAPIManager.shouldThrowError = true
+        mockAPIManager.customError = Errors.notDefined
+
+        do {
+            try await repository.getCredentials(request: WireguardConfigRequest(attemptId: "failed-attempt"))
+            XCTFail("Expected the first init attempt to fail")
+        } catch {
+            XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 1)
+        }
+
+        mockAPIManager.shouldThrowError = false
+        mockAPIManager.wgInitResponseToReturn = createMockDynamicWireGuardConfig(presharedKey: "refreshed-key")
+        mockIPManager.generatedIPToReturn = "10.64.1.101"
+
+        // When - the same endpoint is attempted again.
+        try await repository.getCredentials(request: WireguardConfigRequest(attemptId: "retry-attempt"))
+
+        // Then - the failed attempt did not poison the endpoint success cache.
+        XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 2)
+    }
+
+    func test_getCredentials_forcedRefresh_shouldUseReturnedMaterialWithoutRotatingKey() async throws {
+        // Given - the endpoint has already initialized successfully.
+        mockAPIManager.wgInitResponseToReturn = createMockDynamicWireGuardConfig(presharedKey: "initial-key")
+        mockIPManager.generatedIPToReturn = "10.64.1.100"
+        try await repository.getCredentials(request: WireguardConfigRequest(attemptId: "initial-attempt"))
+        let initialPublicKey = mockAPIManager.lastClientPublicKey
+
+        mockAPIManager.wgInitResponseToReturn = createMockDynamicWireGuardConfig(presharedKey: "refreshed-key")
+        mockIPManager.generatedIPToReturn = "10.64.1.101"
+
+        // When
+        let attemptId = "forced-refresh-attempt"
+        try await repository.getCredentials(
+            request: WireguardConfigRequest(attemptId: attemptId, forceRefresh: true)
+        )
+
+        // Then - the same local public key is re-registered and returned material builds the file.
+        XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 2)
+        XCTAssertEqual(mockAPIManager.lastClientPublicKey, initialPublicKey)
+        XCTAssertFalse(mockAPIManager.lastDeleteOldestKey ?? true)
+        let savedData = try await mockFileDatabase.readFile(path: FilePaths.wireGuard)
+        let savedString = String(data: savedData, encoding: .utf8)
+        XCTAssertTrue(savedString?.contains("PresharedKey = refreshed-key") ?? false)
+        XCTAssertFalse(savedString?.contains("PresharedKey = initial-key") ?? true)
+        XCTAssertTrue(mockLogger.infoMessages.contains { $0.contains("attempt_id=\(attemptId) stage=wg_init.decision") })
+        XCTAssertTrue(mockLogger.infoMessages.contains { $0.contains("attempt_id=\(attemptId) stage=config.persisted result=success") })
+    }
+
+    func test_getCredentials_forcedRefresh_shouldRunAtMostOncePerAttempt() async throws {
+        // Given
+        mockAPIManager.wgInitResponseToReturn = createMockDynamicWireGuardConfig(presharedKey: "initial-key")
+        mockIPManager.generatedIPToReturn = "10.64.1.100"
+        try await repository.getCredentials(request: WireguardConfigRequest(attemptId: "initial-attempt"))
+
+        mockAPIManager.wgInitResponseToReturn = createMockDynamicWireGuardConfig(presharedKey: "refreshed-key")
+        let request = WireguardConfigRequest(attemptId: "bounded-refresh-attempt", forceRefresh: true)
+
+        // When
+        try await repository.getCredentials(request: request)
+        try await repository.getCredentials(request: request)
+
+        // Then - only the first forced refresh reaches wgConfigInit.
+        XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 2)
+        XCTAssertTrue(mockLogger.infoMessages.contains { $0.contains("reason=forced_refresh_already_attempted") })
+    }
+
+    func test_getCredentials_forcedRefresh_withoutExistingKey_shouldNotRegisterOrGenerateKey() async throws {
+        // Given - initialize normally, then make the existing key unavailable.
+        mockAPIManager.wgInitResponseToReturn = createMockDynamicWireGuardConfig(presharedKey: "initial-key")
+        mockIPManager.generatedIPToReturn = "10.64.1.100"
+        try await repository.getCredentials(request: WireguardConfigRequest(attemptId: "initial-attempt"))
+        mockWgCredentials.simulateDeletePrivateKey()
+
+        // When/Then
+        do {
+            try await repository.getCredentials(
+                request: WireguardConfigRequest(attemptId: "missing-key-refresh", forceRefresh: true)
+            )
+            XCTFail("Expected forced refresh to require an existing key")
+        } catch {
+            XCTAssertEqual(mockAPIManager.wgConfigInitCallCount, 1, "Should not register a generated replacement key")
+            XCTAssertTrue(mockLogger.errorMessages.contains { $0.contains("reason=public_key_unavailable") })
+        }
+    }
+
     func test_getCredentials_withDifferentCIDRFormats_shouldWork() async throws {
         // Test that the repository correctly uses the first CIDR from the response
         // This test verifies with the default CIDR
@@ -587,16 +694,23 @@ class WireguardConfigRepositoryTests: XCTestCase {
     // MARK: - Helper Methods
 
     private func createMockDynamicWireGuardConfig(
+        presharedKey: String = "test-preshared-key",
         hashedCIDRs: [String] = ["10.64.0.0/16"],
         hashedCIDRsV6: [String]? = nil,
         allowedIPsV6: String? = nil
     ) -> DynamicWireGuardConfig {
         let response = DynamicWireGuardConfig()
-        response.presharedKey = "test-preshared-key"
+        response.presharedKey = presharedKey
         response.allowedIPs = "0.0.0.0/0"
         response.allowedIPsV6 = allowedIPsV6
         response.hashedCIDR = hashedCIDRs
         response.hashedCIDRv6 = hashedCIDRsV6
         return response
+    }
+}
+
+private extension WireguardConfigRepository {
+    func getCredentials() async throws {
+        try await getCredentials(request: WireguardConfigRequest())
     }
 }

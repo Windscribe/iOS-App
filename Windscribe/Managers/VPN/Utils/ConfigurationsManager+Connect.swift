@@ -7,6 +7,7 @@
 //
 
 import Combine
+import Foundation
 import NetworkExtension
 import Swinject
 
@@ -33,8 +34,10 @@ extension ConfigurationsManager {
     ///   publisher terminates with an `VPNConnectionErrors`.
     func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
         let progressPublisher = PassthroughSubject<VPNConnectionState, Error>()
+        let attemptId = vpnSettings.connectionAttemptId
         var nextManager: NEVPNManager?
         var isCancelled = false
+        logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.start protocol=\(proto) connection_type=\(connectionType)")
         let task = Task { [weak self] in
             guard let self = self else { return }
             do {
@@ -45,6 +48,7 @@ extension ConfigurationsManager {
                     throw VPNConfigurationErrors.connectionTimeout
                 }
 
+                self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=config.built result=success protocol=\(proto)")
                 self.logger.logI("VPNConfiguration", "Configuration built successfully \(config.description)")
                 progressPublisher.send(.update("Configuration built successfully \(config.description)"))
 
@@ -82,6 +86,7 @@ extension ConfigurationsManager {
                 progressPublisher.send(.update("Saving configuration."))
                 try await self.saveToPreferences(manager: nextManager)
                 cacheTunnelManager(manager: nextManager)
+                self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=tunnel.start protocol=\(wrapperProtocol)")
                 self.logger.logI("VPNConfiguration", "Starting VPN connection.")
                 progressPublisher.send(.update("Starting VPN connection."))
                 // Clear bridge API host before the tunnel starts so wsnet's
@@ -89,7 +94,13 @@ extension ConfigurationsManager {
                 // the previous host. initBridgeApiIfNeeded sets the real host
                 // after the tunnel is up and triggers a fresh token fetch. (#969)
                 self.bridgeAPI.setCurrentHost("")
-                try nextManager.connection.startVPNTunnel()
+                if wrapperProtocol == VPNProtocolType.wireGuard.identifier,
+                   let providerSession = nextManager.connection as? NETunnelProviderSession {
+                    // Launch options are the handoff point for correlating host and Network Extension logs.
+                    try providerSession.startTunnel(options: ["activationAttemptId": attemptId as NSString])
+                } else {
+                    try nextManager.connection.startVPNTunnel()
+                }
 
                 self.delegate?.setActiveManager(with: VPNManagerType(from: wrapperProtocol))
 
@@ -111,10 +122,12 @@ extension ConfigurationsManager {
                     progressPublisher.send(.vpn(nextManager.connection.status))
 
                     if nextManager.connection.status == .connected {
+                        self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=tunnel.connected result=success")
                         progressPublisher.send(.update("Testing connectivity."))
                         progressPublisher.send(.validating)
                         cancellable?.cancel()
                         if connectionType == .emergency {
+                            self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=success")
                             progressPublisher.send(completion: .finished)
                             return
                         }
@@ -128,10 +141,12 @@ extension ConfigurationsManager {
                                 }
                                 progressPublisher.send(.update("Connectivity test successful"))
                                 progressPublisher.send(.validated)
+                                self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=success")
                                 progressPublisher.send(completion: .finished)
 
                                 self.preferences.increaseConnectionCount()
                             } catch {
+                                self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
                                 try await self.disableProfile(nextManager)
                                 await self.reloadManagers()
                                 progressPublisher.send(completion: .failure(error))
@@ -145,6 +160,7 @@ extension ConfigurationsManager {
                                 try await self.disableProfile(nextManager)
                                 try await self.getConnectError(manager: nextManager)
                             } catch {
+                                self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
                                 try? await self.waitForDisconnection(manager: nextManager)
                                 progressPublisher.send(completion: .failure(error))
                             }
@@ -156,6 +172,7 @@ extension ConfigurationsManager {
                                 try await self.lookForAuthFailure(manager: nextManager)
                             } catch {
                                 cancellable?.cancel()
+                                self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
                                 try await self.disableProfile(nextManager)
                                 progressPublisher.send(completion: .failure(error))
                             }
@@ -165,12 +182,14 @@ extension ConfigurationsManager {
                     }
                 }
             } catch let error {
+                self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
                 self.logger.logE("VPNConfiguration", "Failed connection with error: \(error).")
                 progressPublisher.send(completion: .failure(error))
             }
         }
         return progressPublisher
             .handleEvents(receiveCancel: {
+                self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=cancelled")
                 self.logger.logI("VPNConfiguration", "Cancelling connection task.")
                 task.cancel()
                 isCancelled = true

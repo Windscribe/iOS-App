@@ -5,6 +5,7 @@
 //  Created by Andre Fonseca on 25/10/2024.
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
+import Foundation
 import NetworkExtension
 import UIKit
 import WireGuardKit
@@ -16,6 +17,21 @@ struct VPNUserSettings: CustomStringConvertible {
     let isCircumventCensorshipEnabled: Bool
     let onDemandRules: [NEOnDemandRule]?
     var deleteOldestKey = false
+    var connectionAttemptId = UUID().uuidString
+    var forceWireguardRefresh = false
+
+    init(killSwitch: Bool,
+         allowLan: Bool,
+         isRFC: Bool,
+         isCircumventCensorshipEnabled: Bool,
+         onDemandRules: [NEOnDemandRule]?) {
+        self.killSwitch = killSwitch
+        self.allowLan = allowLan
+        self.isRFC = isRFC
+        self.isCircumventCensorshipEnabled = isCircumventCensorshipEnabled
+        self.onDemandRules = onDemandRules
+    }
+
     var description: String {
         return "User Settings: [KillSwitch: \(killSwitch) allowLan: \(allowLan), isRfc: \(isRFC), CircumventCensorship: \(isCircumventCensorshipEnabled)]"
     }

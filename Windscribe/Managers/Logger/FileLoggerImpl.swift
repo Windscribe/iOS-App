@@ -113,6 +113,7 @@ class FileLoggerImpl: FileLogger {
 
     private let maxLogLength = 120_000
     private let logFileName = "windscribe.log"
+    private let logSchemaVersion = 1
 
     // MARK: - Log Batching Configuration
     private let batchFlushInterval: TimeInterval = 10.0 // Flush every 10 seconds
@@ -351,14 +352,16 @@ class FileLoggerImpl: FileLogger {
 
                 let allLogs = self.parseExistingLogFile(logFileURL: logFileURL)
                 let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp }
+                let metadata = self.makeLogMetadata()
+                let availableLogLength = max(0, self.maxLogLength - metadata.count - 1)
                 let combinedLog = sortedLogs
                     .reduce(into: "", {
                         let log = $1.toOrderedJSONString()
-                        if $0.count + log.count + "\n".count <= self.maxLogLength {
+                        if $0.count + log.count + "\n".count <= availableLogLength {
                             return $0 = log + "\n" + $0
                         }
                     })
-                continuation.resume(returning: combinedLog)
+                continuation.resume(returning: combinedLog + metadata + "\n")
             }
         }
     }
@@ -377,6 +380,14 @@ class FileLoggerImpl: FileLogger {
         ]
         let fullInfo = deviceInfo.joined(separator: "\n")
         logD("FileLogger", fullInfo)
+    }
+
+    private func makeLogMetadata() -> String {
+        LogBufferModel(
+            level: .info,
+            tag: "LogMetadata",
+            message: "schema_version=\(logSchemaVersion) app_version=\(Bundle.main.releaseVersionNumber ?? "unknown") app_build=\(Bundle.main.buildVersionNumber ?? "unknown") os_version=\(UIDevice.current.systemVersion)"
+        ).toOrderedJSONString()
     }
 
     private func setupLogger() {

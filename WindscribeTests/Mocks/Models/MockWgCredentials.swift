@@ -67,6 +67,13 @@ class MockWgCredentials: WgCredentials {
         return super.getPrivateKey()
     }
 
+    override func getExistingPrivateKey() -> String? {
+        if privateKeyDeleted {
+            return nil
+        }
+        return super.getExistingPrivateKey()
+    }
+
     func reset() {
         deleteCalled = false
         privateKeyDeleted = false

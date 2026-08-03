@@ -24,6 +24,8 @@ class MockLogger: FileLogger {
     var lastLogIMessage: String?
     var lastLogETag: String?
     var lastLogEMessage: String?
+    private(set) var infoMessages: [String] = []
+    private(set) var errorMessages: [String] = []
 
     // Guards the tracking state so the mock is safe under concurrent logging.
     private let lock = NSLock()
@@ -89,6 +91,7 @@ class MockLogger: FileLogger {
             logICalled = true
             lastLogITag = tag
             lastLogIMessage = message
+            infoMessages.append(message)
         }
         print("[MOCK LOGGER INFO] \(tag): \(message)")
     }
@@ -98,6 +101,7 @@ class MockLogger: FileLogger {
             logECalled = true
             lastLogETag = tag
             lastLogEMessage = message
+            errorMessages.append(message)
         }
         print("[MOCK LOGGER ERROR] \(tag): \(message)")
     }
@@ -115,6 +119,8 @@ class MockLogger: FileLogger {
             lastLogIMessage = nil
             lastLogETag = nil
             lastLogEMessage = nil
+            infoMessages.removeAll()
+            errorMessages.removeAll()
         }
     }
 }

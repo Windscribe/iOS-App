@@ -70,13 +70,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
+        let attemptId = activationAttemptId ?? "system"
 
         ensureLocalizationInitialized()
 
         // Load configuration from preferences.
         wgCrendentials.load()
+        logger.logI("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.start origin=\(activationAttemptId == nil ? "system" : "app")", flushImmediately: true)
         logger.logI("PacketTunnelProvider", "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"), flushImmediately: true)
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
+            logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=credentials_not_initialized", flushImmediately: true)
             completionHandler(NSError(domain: "com.windscribe", code: 50))
             return
         }
@@ -86,6 +89,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
               var tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration()
         else {
+            self.logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=saved_protocol_invalid", flushImmediately: true)
             self.logger.logE("PacketTunnelProvider", "Saved Protocol Configuration is invalid - nil", flushImmediately: true)
             errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
@@ -94,6 +98,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         // Ensure tunnel configuration is up to date with latest credentials
         if !preferences.isCustomConfigSelected() {
             guard let quickConfig = wgCrendentials.asWgCredentialsString() else {
+                logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=credentials_incomplete", flushImmediately: true)
                 logger.logE("PacketTunnelProvider", "WG credentials incomplete (base IPv4 fields missing); refusing to start tunnel", flushImmediately: true)
                 errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
@@ -103,6 +108,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                 tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: quickConfig)
                 logger.logI("PacketTunnelProvider", "Created tunnel configuration from wgQuickConfig", flushImmediately: true)
             } catch {
+                logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=config_parse_failed", flushImmediately: true)
                 logger.logE("PacketTunnelProvider", "Failed to create tunnel configuration: \(error)", flushImmediately: true)
                 errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
@@ -119,6 +125,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
             guard let adapterError = adapterError else {
                 let interfaceName = self.adapter.interfaceName ?? "unknown"
+                self.logger.logI("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.ready result=success", flushImmediately: true)
                 self.logger.logI("PacketTunnelProvider", "Tunnel interface is \(interfaceName)", flushImmediately: true)
 
                 // Initialize control plane when tunnel is ready
@@ -144,11 +151,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
             switch adapterError {
             case .cannotLocateTunnelFileDescriptor:
+                self.logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=file_descriptor_unavailable", flushImmediately: true)
                 self.logger.logE("PacketTunnelProvider", "Starting tunnel failed: could not determine file descriptor", flushImmediately: true)
                 errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
                 completionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
 
             case let .dnsResolution(dnsErrors):
+                self.logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=dns_resolution", flushImmediately: true)
                 let hostnamesWithDnsResolutionFailure = dnsErrors.map { $0.address }
                     .joined(separator: ", ")
                 self.logger.logE("PacketTunnelProvider", "DNS resolution failed for the following hostnames: \(hostnamesWithDnsResolutionFailure)", flushImmediately: true)
@@ -156,16 +165,19 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                 completionHandler(PacketTunnelProviderError.dnsResolutionFailure)
 
             case let .setNetworkSettings(error):
+                self.logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=network_settings", flushImmediately: true)
                 self.logger.logE("PacketTunnelProvider", "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)", flushImmediately: true)
                 errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
                 completionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
 
             case let .startWireGuardBackend(errorCode):
+                self.logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=backend_start", flushImmediately: true)
                 self.logger.logE("PacketTunnelProvider", "Starting tunnel failed with wgTurnOn returning \(errorCode)", flushImmediately: true)
                 errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
                 completionHandler(PacketTunnelProviderError.couldNotStartBackend)
 
             case .invalidState:
+                self.logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=invalid_state", flushImmediately: true)
                 completionHandler(PacketTunnelProviderError.couldNotStartBackend)
             }
         }

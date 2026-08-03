@@ -7,6 +7,7 @@
 //
 
 import Combine
+import Foundation
 import NetworkExtension
 import Swinject
 
@@ -104,9 +105,10 @@ extension VPNManagerImpl {
     ///   - port: The port number for the protocol.
     /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
     private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
+        let attemptId = UUID().uuidString
         // Clear failed servers if user changed location, keep them if same location for retry filtering
         configManager.clearFailedServersIfLocationChanged(currentLocationId: id)
-        return configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings(): self.makeUserSettings(), connectionType: connectionType)
+        return configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionSettings(for: connectionType, attemptId: attemptId), connectionType: connectionType)
             .catch { error in
                 self.logger.logE("VPNConfiguration", "Fail to connect with error: \(error).")
                 if let error = error as? NEVPNError {
@@ -117,26 +119,26 @@ extension VPNManagerImpl {
                         return Just(())
                             .delay(for: .seconds(2), scheduler: DispatchQueue.main)
                             .flatMap { _ in
-                                self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings() : self.makeUserSettings(), connectionType: connectionType)
+                                self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.connectionSettings(for: connectionType, attemptId: attemptId), connectionType: connectionType)
                             }.eraseToAnyPublisher()
                     }
                 }
                 if let error = error as? VPNConfigurationErrors {
-                    // Mark node as failed so retry won't select the same node
-                    self.configManager.updateFailedNode()
                     switch error {
                     case .authFailure:
                         if self.locationsManager.getConnectionTargetType(id: id) != .custom {
                             return self.updateConnectionData(locationID: id, connectionError: error)
                                 .flatMap { updatedLocation in
-                                    self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), connectionType: connectionType)
+                                    self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.connectionSettings(for: .user, attemptId: attemptId), connectionType: connectionType)
                                 }.eraseToAnyPublisher()
                         }
-                        // Retry protocol once with new node.
+                        // Retry once after refreshing account and location data.
                     case .connectionTimeout, .connectivityTestFailed:
+                        // Only node-scoped connectivity failures should exclude the current node.
+                        self.configManager.updateFailedNode()
                         if connectionType == .user, self.locationsManager.getConnectionTargetType(id: id) != .custom {
                             self.logger.logI("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
-                            return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
+                            return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.connectionSettings(for: .user, attemptId: attemptId))
                         }
                     case .noValidServerFound:
                         self.logger.logI("VPNManager", "noValidNodeFound - should trigger protocol failover")
@@ -146,6 +148,12 @@ extension VPNManagerImpl {
                 self.preferences.saveIgnorePinIP(status: false)
                 return Fail(error: error).eraseToAnyPublisher()
             }.eraseToAnyPublisher()
+    }
+
+    private func connectionSettings(for connectionType: ConnectionType, attemptId: String) -> VPNUserSettings {
+        var settings = connectionType == .emergency ? emergencyUserSettings() : makeUserSettings()
+        settings.connectionAttemptId = attemptId
+        return settings
     }
 
     /// Attempts to update VPN connection data, including server data and credentials, in case of an authentication failure.

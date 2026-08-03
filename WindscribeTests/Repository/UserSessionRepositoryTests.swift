@@ -337,7 +337,7 @@ private final class ConfigurationsManagerAccessKeyChainDatabase: KeyChainDatabas
 }
 
 private final class ConfigurationsManagerAccessWireguardConfigRepository: WireguardConfigRepository {
-    func getCredentials() async throws {}
+    func getCredentials(request _: WireguardConfigRequest) async throws {}
 }
 
 private final class ConfigurationsManagerAccessIPRepository: IPRepository {

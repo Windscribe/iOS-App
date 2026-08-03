@@ -49,36 +49,40 @@ class WgCredentials {
         dns = preferences.getWireGuardDNS()
     }
 
-    func getPublicKey() async -> String? {
+    func getPublicKey(generateIfMissing: Bool = true) async -> String? {
         return await Task.detached(priority: .utility) { [weak self] in
-            guard let self = self,
-                  let privateKey = self.getPrivateKey() else { return nil }
+            guard let self = self else { return nil }
+            let privateKey = generateIfMissing ? self.getPrivateKey() : self.getExistingPrivateKey()
+            guard let privateKey else { return nil }
             return PrivateKey(base64Key: privateKey)?.publicKey.base64Key
         }.value
     }
 
+    func getExistingPrivateKey() -> String? {
+        try? keychainManager.getString(
+            forKey: SharedKeys.privateKey,
+            service: "WireguardService",
+            accessGroup: SharedKeys.sharedKeychainGroup)
+    }
+
     // Generate private key if not available and save it to keychain.
     func getPrivateKey() -> String? {
+        if let currentKey = getExistingPrivateKey() {
+            return currentKey
+        }
+
+        // Key doesn't exist, generate new one
         do {
-            let currentKey = try keychainManager.getString(
+            let privateKey = PrivateKey().base64Key
+            try keychainManager.setString(
+                privateKey,
                 forKey: SharedKeys.privateKey,
                 service: "WireguardService",
                 accessGroup: SharedKeys.sharedKeychainGroup)
-            return currentKey
+            return privateKey
         } catch {
-            // Key doesn't exist, generate new one
-            do {
-                let privateKey = PrivateKey().base64Key
-                try keychainManager.setString(
-                    privateKey,
-                    forKey: SharedKeys.privateKey,
-                    service: "WireguardService",
-                    accessGroup: SharedKeys.sharedKeychainGroup)
-                return privateKey
-            } catch {
-                logger.logE("WgCredentials", "Error saving new private key to keychain: \(error)")
-                return nil
-            }
+            logger.logE("WgCredentials", "Error saving new private key to keychain: \(error)")
+            return nil
         }
     }
 
@@ -179,7 +183,7 @@ class WgCredentials {
     }
 
     func asWgCredentialsString() -> String? {
-        if let privateKey = getPrivateKey(),
+        if let privateKey = getExistingPrivateKey(),
            let address = address,
            let dns = dns,
            let allowedIps = allowedIps,
