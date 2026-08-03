@@ -35,4 +35,13 @@ struct AppNetwork: CustomStringConvertible, Equatable {
     var description: String {
         return "Internet: [Status:\(status) NetworkType:\(networkType) SSID:\( name ?? " Network name not available.") isVPN: \(isVPN)]"
     }
+
+    var displayName: String? {
+        switch networkType {
+        case .cellular:
+            return TextsAsset.cellular
+        case .wifi, .none:
+            return name
+        }
+    }
 }

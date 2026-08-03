@@ -71,6 +71,7 @@ enum Fields {
         static let light = "Light"
         static let bestLocation = "Best Location"
         static let ipv4Only = "IPv4 Only"
+        static let cellular = "Cellular"
     }
 }
 

@@ -166,7 +166,7 @@ extension VPNManagerImpl {
         var onDemandRules: [NEOnDemandRule] = []
         let networks = wifiNetworkRepository.networks.value
         networks.filter { $0.status == true }.forEach { network in
-            if network.SSID == TextsAsset.cellular && network.SSID != vpnStateRepository.untrustedOneTimeOnlySSID {
+            if network.SSID == Fields.Values.cellular && network.SSID != vpnStateRepository.untrustedOneTimeOnlySSID {
                 let ruleDisconnect = NEOnDemandRuleDisconnect()
 #if os(iOS)
                 ruleDisconnect.interfaceTypeMatch = .cellular
@@ -175,7 +175,7 @@ extension VPNManagerImpl {
                 logger.logD("VPNManager", "Added On demand disconnect rule for cellular network.")
             }
         }
-        let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != vpnStateRepository.untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
+        let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != Fields.Values.cellular && $0.SSID != vpnStateRepository.untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
         if unsecureWifiNetworks.count > 0 {
             let ruleDisconnect = NEOnDemandRuleDisconnect()
             ruleDisconnect.ssidMatch = unsecureWifiNetworks

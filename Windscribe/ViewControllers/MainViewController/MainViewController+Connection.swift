@@ -23,8 +23,8 @@ extension MainViewController {
                 let locationStatus = self.locationPermissionManager.locationStatusSubject.value
                 if locationStatus == .authorizedWhenInUse || locationStatus == .authorizedAlways {
                     if network.networkType == .cellular || network.networkType == .wifi {
-                        if let name = network.name {
-                            self.wifiInfoView.updateWifiName(name: name)
+                        if let displayName = network.displayName {
+                            self.wifiInfoView.updateWifiName(name: displayName)
                         }
                     } else {
                         self.wifiInfoView.updateWifiName(name: TextsAsset.NetworkSecurity.unknownNetwork)

@@ -243,6 +243,7 @@
 		1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		1EA4FA732D3E8D920021C656 /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
 		1EA6C2B82FA3B917009FD440 /* SessionModelCodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA6C2B62FA3B917009FD440 /* SessionModelCodableTests.swift */; };
+		5F0F6B6526400EB3FC2B745C /* AppNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED01D5BA3EA813F683803E /* AppNetworkTests.swift */; };
 		1EA7FB812F34F6A600387839 /* IBMPlexSans-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E925521EF8EC500A3F584 /* IBMPlexSans-SemiBold.otf */; };
 		1EA80E192EAFE5440003322D /* BridgeApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */; };
 		1EA80E1A2EAFE5440003322D /* BridgeApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */; };
@@ -1890,6 +1891,7 @@
 		1E9F2C322C665FC600607BAA /* PreferencesViewLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewLogView.swift; sourceTree = "<group>"; };
 		1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesViewLogView.xib; sourceTree = "<group>"; };
 		1EA6C2B62FA3B917009FD440 /* SessionModelCodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionModelCodableTests.swift; sourceTree = "<group>"; };
+		C5ED01D5BA3EA813F683803E /* AppNetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNetworkTests.swift; sourceTree = "<group>"; };
 		1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeApiRepository.swift; sourceTree = "<group>"; };
 		1EA80E1B2EB0E8650003322D /* FavNodeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodeTableViewCell.swift; sourceTree = "<group>"; };
 		1EA80E1E2EBA60390003322D /* BridgeApiFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeApiFailedView.swift; sourceTree = "<group>"; };
@@ -3456,6 +3458,7 @@
 		1EA6C2B72FA3B917009FD440 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C5ED01D5BA3EA813F683803E /* AppNetworkTests.swift */,
 				1EA6C2B62FA3B917009FD440 /* SessionModelCodableTests.swift */,
 			);
 			path = Models;
@@ -8761,6 +8764,7 @@
 				F41AC7A32EA95CC200673A11 /* MockWgCredentials.swift in Sources */,
 				1E0492B42F4749D10016B11F /* UserDataRepositoryTests.swift in Sources */,
 				1EA6C2B82FA3B917009FD440 /* SessionModelCodableTests.swift in Sources */,
+				5F0F6B6526400EB3FC2B745C /* AppNetworkTests.swift in Sources */,
 				927991582F86C92C000BB9D0 /* AuthTestStubs.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				92B7B5CA2F92E38B006B69DF /* SuggestedPortsRecordTests.swift in Sources */,

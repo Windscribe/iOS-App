@@ -279,7 +279,7 @@ extension ConnectionViewModel {
     }
 
     func isNetworkCellularWhileConnecting(for network: WifiNetworkModel?) -> Bool {
-        if isConnecting() && network?.SSID == "Cellular" { return true }
+        if isConnecting() && network?.SSID == Fields.Values.cellular { return true }
         if isConnecting() || isConnected() {
             return connectivity.network.value.networkType == NetworkType.none
         }
@@ -287,7 +287,7 @@ extension ConnectionViewModel {
     }
 
     func isNetworkCellularWhileConnecting(for network: AppNetwork?) -> Bool {
-        if isConnecting() && network?.name == "Cellular" { return true }
+        if isConnecting() && network?.name == Fields.Values.cellular { return true }
         if (isConnecting() || isConnected()) && network?.networkType == NetworkType.none {
             return true
         }

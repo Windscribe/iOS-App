@@ -232,7 +232,7 @@ class ConnectivityManagerImpl: ConnectivityManager {
     /// Returns carrier name for cellular network
     ///  - Note: This api was depcreated in iOS 16.0 and returns "Cellular"
     private func getCellularNetworkName() -> String {
-        return "Cellular"
+        return Fields.Values.cellular
     }
 
     func internetConnectionAvailable() -> Bool {
