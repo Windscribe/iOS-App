@@ -11,15 +11,15 @@ import UIKit
 import Swinject
 
 extension MainViewController {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        reconcileMainViewLayout(for: view.bounds.width)
+    }
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if let scrollView = scrollView {
-            scrollView.contentSize = CGSize(width: size.width * 4, height: 0)
-            view.setNeedsLayout()
-            if listSelectionView != nil {
-                cardHeaderWasSelected(with: .all)
-            }
-        }
+        reconcileMainViewLayout(for: size.width)
+        view.setNeedsLayout()
         flagBackgroundView?.redraw()
         listSelectionView?.redrawGradientView()
 
@@ -41,6 +41,37 @@ extension MainViewController {
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
         })
+    }
+
+    private func reconcileMainViewLayout(for width: CGFloat) {
+        guard width > 0,
+              width != lastMainViewLayoutWidth,
+              let scrollView = scrollView,
+              let listSelectionView = listSelectionView else {
+            return
+        }
+
+        let selectedTab = listSelectionView.viewModel.selectedAction.value
+        let pageIndex: CGFloat
+        switch selectedTab {
+        case .all, .startSearch: pageIndex = 0
+        case .fav: pageIndex = 1
+        case .staticIP: pageIndex = 2
+        case .config: pageIndex = 3
+        }
+
+        lastMainViewLayoutWidth = width
+        scrollView.contentSize = CGSize(width: width * 4, height: 0)
+        scrollView.setContentOffset(
+            CGPoint(x: width * pageIndex, y: 0),
+            animated: false
+        )
+        flagBackgroundView?.redraw()
+        listSelectionView.redrawGradientView()
+        logger?.logI(
+            "MainViewLayout",
+            "Reconciled width=\(Int(width)) selected_page=\(Int(pageIndex))"
+        )
     }
 
     func addDataSources() {

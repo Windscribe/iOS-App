@@ -104,6 +104,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var expandedSections: [Int: Bool]?
     var selectedHeaderViewTab: CardHeaderButtonType?
     var lastSelectedHeaderViewTab: CardHeaderButtonType?
+    var lastMainViewLayoutWidth: CGFloat = 0
 
     var router: HomeRouter?
     var accountRouter: AccountRouter?

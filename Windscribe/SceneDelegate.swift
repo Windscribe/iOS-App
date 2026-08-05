@@ -59,10 +59,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UNUserNotificationCente
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         lifecycleHandler.handleDidBecomeActive()
+        refreshSceneLayout()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         lifecycleHandler.handleWillTerminate()
+    }
+
+    private func refreshSceneLayout() {
+        guard let window = window else { return }
+        window.setNeedsLayout()
+        window.rootViewController?.view.setNeedsLayout()
+        UIView.performWithoutAnimation {
+            window.layoutIfNeeded()
+            window.rootViewController?.view.layoutIfNeeded()
+        }
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
