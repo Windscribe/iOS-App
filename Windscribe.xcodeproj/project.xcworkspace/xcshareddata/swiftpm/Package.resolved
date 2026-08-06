@@ -1,5 +1,5 @@
 {
-  "originHash" : "4ab188e5656afc36cd0f01462b111270bf62479b428b16ea5555bb7a0d487ed3",
+  "originHash" : "4d1817778000d2c4dfcc1776ffff338e16055c3028535d1e55916653882d70bd",
   "pins" : [
     {
       "identity" : "amneziawg-apple",
@@ -38,21 +38,20 @@
       }
     },
     {
+      "identity" : "iosopenvpnadapter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Windscribe/iOSOpenVPNAdapter.git",
+      "state" : {
+        "revision" : "5dacd45e47ca9658d11861f760d5d20677c547b6"
+      }
+    },
+    {
       "identity" : "iqkeyboardmanager",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hackiftekhar/IQKeyboardManager.git",
       "state" : {
         "revision" : "1e442766a41e2948df25559eb03ab752c6d3aad0",
         "version" : "6.5.0"
-      }
-    },
-    {
-      "identity" : "openvpnadapter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Windscribe/OpenVPNAdapter.git",
-      "state" : {
-        "branch" : "windscribe",
-        "revision" : "6503b7eac2e858b38a13a05ba6daf23dab38a78e"
       }
     },
     {

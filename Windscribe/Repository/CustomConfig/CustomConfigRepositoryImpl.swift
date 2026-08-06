@@ -192,7 +192,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                     throw RepositoryError.invalidConfigData
                 }
                 if protocolType == "" {
-                    protocolType = VPNProtocolType.iKEv2.identifier
+                    protocolType = VPNProtocolType.udp.identifier
                     lines.insert("proto \(protocolType.lowercased())", at: remoteLineNumber)
                 }
                 if port == "" {

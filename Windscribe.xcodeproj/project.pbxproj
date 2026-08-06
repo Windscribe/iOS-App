@@ -140,7 +140,6 @@
 		1E5553D82DA6AA2A00F16AF0 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
 		1E55B7202FBCB2300007BE80 /* BaseContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E55B71F2FBCB2230007BE80 /* BaseContentView.swift */; };
 		1E55B7222FBE14A40007BE80 /* GeneralTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E55B7212FBE149C0007BE80 /* GeneralTests.swift */; };
-		C0DE10940000000000000002 /* AntiCensorshipScreenViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */; };
 		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
 		1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */; };
 		1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
@@ -243,7 +242,6 @@
 		1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		1EA4FA732D3E8D920021C656 /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
 		1EA6C2B82FA3B917009FD440 /* SessionModelCodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA6C2B62FA3B917009FD440 /* SessionModelCodableTests.swift */; };
-		5F0F6B6526400EB3FC2B745C /* AppNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED01D5BA3EA813F683803E /* AppNetworkTests.swift */; };
 		1EA7FB812F34F6A600387839 /* IBMPlexSans-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E925521EF8EC500A3F584 /* IBMPlexSans-SemiBold.otf */; };
 		1EA80E192EAFE5440003322D /* BridgeApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */; };
 		1EA80E1A2EAFE5440003322D /* BridgeApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */; };
@@ -646,6 +644,7 @@
 		59FC74872C52FCEE00021CD1 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74862C52FCEE00021CD1 /* Router.swift */; };
 		59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74882C530A4100021CD1 /* LoginRouter.swift */; };
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
+		5F0F6B6526400EB3FC2B745C /* AppNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED01D5BA3EA813F683803E /* AppNetworkTests.swift */; };
 		6524E67AF808CCFEA53DFB52 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E318BA53CF287401502205C /* Env.swift */; };
 		6635DEC57B9FAAA54F812060 /* WifiNetworkManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCBE70CD79C3A434F208C7D /* WifiNetworkManaging.swift */; };
 		6F4352B54FD0A037A3F0F231 /* HelpMeScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF9E8CC711B4E64563F3FF4 /* HelpMeScreenViewModel.swift */; };
@@ -923,6 +922,7 @@
 		B1983A010000000A /* WindowSetupServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000B /* WindowSetupServiceType.swift */; };
 		B1983A010000000C /* WindowSetupServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000B /* WindowSetupServiceType.swift */; };
 		B1983A010000000D /* AppModulesManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000E /* AppModulesManagers.swift */; };
+		C0DE10940000000000000002 /* AntiCensorshipScreenViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */; };
 		C0DE5CR1BE2F4A01AABB1234 /* MockSessionKeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE5CR1BE2F4A00AABB1234 /* MockSessionKeychainStore.swift */; };
 		C5007D532CAF9E740035AE21 /* PreferencePrivacyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */; };
 		C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */; };
@@ -1040,7 +1040,6 @@
 		C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C561237F2C5F25B60090EB5A /* libresolv.tbd */; };
 		C5658EA72C71AACD00E8215A /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5658EA62C71AACD00E8215A /* HomeRouter.swift */; };
 		C56615F32C4D7AEB008AA993 /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Extension.swift */; };
-		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
 		C56616152C4D9207008AA993 /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */; };
 		C56FCBCE2B2A41BB008DE7D4 /* Routers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBCD2B2A41BB008DE7D4 /* Routers.swift */; };
@@ -1125,6 +1124,7 @@
 		C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
 		C59FF1AA2CBB9C4F0072EF70 /* ClaimVoucherCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 595329FD2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift */; };
 		C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Extension.swift */; };
+		C5A15699301D815E00A2603A /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C5A15698301D815E00A2603A /* OpenVPNAdapter */; };
 		C5A3444F2C4DF049001EBB5C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C5A6F0792F3D178B00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
 		C5A6F07A2F3D178B00AB34EF /* DisconnectReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6F0782F3D178300AB34EF /* DisconnectReason.swift */; };
@@ -1817,7 +1817,6 @@
 		1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportedLocations.swift; sourceTree = "<group>"; };
 		1E55B71F2FBCB2230007BE80 /* BaseContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseContentView.swift; sourceTree = "<group>"; };
 		1E55B7212FBE149C0007BE80 /* GeneralTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTests.swift; sourceTree = "<group>"; };
-		C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipScreenViewModelTests.swift; sourceTree = "<group>"; };
 		1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocationIntentHandler.swift; sourceTree = "<group>"; };
 		1E60DFF72CAB061800623CD5 /* Disconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disconnect.swift; sourceTree = "<group>"; };
 		1E60DFF82CAB061800623CD5 /* Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
@@ -1891,7 +1890,6 @@
 		1E9F2C322C665FC600607BAA /* PreferencesViewLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewLogView.swift; sourceTree = "<group>"; };
 		1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesViewLogView.xib; sourceTree = "<group>"; };
 		1EA6C2B62FA3B917009FD440 /* SessionModelCodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionModelCodableTests.swift; sourceTree = "<group>"; };
-		C5ED01D5BA3EA813F683803E /* AppNetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNetworkTests.swift; sourceTree = "<group>"; };
 		1EA80E182EAFE5420003322D /* BridgeApiRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeApiRepository.swift; sourceTree = "<group>"; };
 		1EA80E1B2EB0E8650003322D /* FavNodeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodeTableViewCell.swift; sourceTree = "<group>"; };
 		1EA80E1E2EBA60390003322D /* BridgeApiFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeApiFailedView.swift; sourceTree = "<group>"; };
@@ -2322,6 +2320,7 @@
 		B1983A0100000008 /* TVWindowSetupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVWindowSetupService.swift; sourceTree = "<group>"; };
 		B1983A010000000B /* WindowSetupServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupServiceType.swift; sourceTree = "<group>"; };
 		B1983A010000000E /* AppModulesManagers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModulesManagers.swift; sourceTree = "<group>"; };
+		C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipScreenViewModelTests.swift; sourceTree = "<group>"; };
 		C0DE5CR1BE2F4A00AABB1234 /* MockSessionKeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSessionKeychainStore.swift; sourceTree = "<group>"; };
 		C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencePrivacyView.xib; sourceTree = "<group>"; };
 		C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencePrivacyView.swift; sourceTree = "<group>"; };
@@ -2453,6 +2452,7 @@
 		C5D983C12B34DA3F0069FF3A /* APIUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtil.swift; sourceTree = "<group>"; };
 		C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtilTests.swift; sourceTree = "<group>"; };
 		C5E4C7FF2F3A6C11000FC3EE /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
+		C5ED01D5BA3EA813F683803E /* AppNetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNetworkTests.swift; sourceTree = "<group>"; };
 		C5FA3E832684BB90001D03A7 /* HelpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpItem.swift; sourceTree = "<group>"; };
 		C5FA3E8B268789EE001D03A7 /* Ticket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		CD1030A12FBB000100000001 /* ConnectivityManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManagerTests.swift; sourceTree = "<group>"; };
@@ -2835,10 +2835,10 @@
 				C56123812C5F25C80090EB5A /* libresolv.9.tbd in Frameworks */,
 				C56123822C5F25D30090EB5A /* libresolv.tbd in Frameworks */,
 				597C04F52C2F022C00C2A085 /* SystemConfiguration.framework in Frameworks */,
+				C5A15699301D815E00A2603A /* OpenVPNAdapter in Frameworks */,
 				1E0A6DFE2D79ECBC0075B8F5 /* Swinject in Frameworks */,
 				597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */,
 				C5AB0C792C63E511005D2541 /* Proxy.xcframework in Frameworks */,
-				C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */,
 				C5E4C8012F3A6C11000FC3EE /* WSNet.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7126,7 +7126,6 @@
 				AF018DE721B0866600B225FF /* Resources */,
 				AF537A302249739E00A66683 /* Embed Foundation Extensions */,
 				AF619D9624AA46E400BB331C /* Go Version */,
-				AF619D9924AA473400BB331C /* Strip Trailing Whitespace */,
 				1E2696CC2BFF696E00B0AD59 /* Run SwiftLint */,
 				C56615FA2C4D88C5008AA993 /* Embed Frameworks */,
 			);
@@ -7186,9 +7185,9 @@
 			);
 			name = PacketTunnel;
 			packageProductDependencies = (
-				C56615F52C4D84BC008AA993 /* OpenVPNAdapter */,
 				1E0A6DFD2D79ECBC0075B8F5 /* Swinject */,
 				1ED33DDC2D7B3D4500B980D3 /* RealmSwift */,
+				C5A15698301D815E00A2603A /* OpenVPNAdapter */,
 			);
 			productName = PacketTunnel;
 			productReference = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */;
@@ -7371,7 +7370,6 @@
 			mainGroup = AF018DE021B0866600B225FF;
 			packageReferences = (
 				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */,
-				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
 				F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				1E0A6DBE2D7889170075B8F5 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
@@ -7380,6 +7378,7 @@
 				1E0A6DF42D79EB900075B8F5 /* XCRemoteSwiftPackageReference "Swinject" */,
 				1EBBDB012D79EB900075B8F5 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */,
+				C5A15697301D815E00A2603A /* XCRemoteSwiftPackageReference "iOSOpenVPNAdapter" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -7614,25 +7613,6 @@
 			shellPath = /bin/sh;
 			shellScript = "exec make -C \"$PROJECT_DIR/wireguard-go-bridge\" version-header\n";
 			showEnvVarsInLog = 0;
-		};
-		AF619D9924AA473400BB331C /* Strip Trailing Whitespace */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Strip Trailing Whitespace";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "find . -name '*.swift' -exec sed -i '' -E 's/[[:space:]]+$//g' {} +\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -10582,12 +10562,12 @@
 				minimumVersion = 0.3.0;
 			};
 		};
-		C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */ = {
+		C5A15697301D815E00A2603A /* XCRemoteSwiftPackageReference "iOSOpenVPNAdapter" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Windscribe/OpenVPNAdapter.git";
+			repositoryURL = "https://github.com/Windscribe/iOSOpenVPNAdapter.git";
 			requirement = {
-				branch = windscribe;
-				kind = branch;
+				kind = revision;
+				revision = 5dacd45e47ca9658d11861f760d5d20677c547b6;
 			};
 		};
 		C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */ = {
@@ -10724,9 +10704,9 @@
 			package = C5B8573C2F2CE8EF00BD1C28 /* XCRemoteSwiftPackageReference "amneziawg-apple" */;
 			productName = WireGuardKit;
 		};
-		C56615F52C4D84BC008AA993 /* OpenVPNAdapter */ = {
+		C5A15698301D815E00A2603A /* OpenVPNAdapter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */;
+			package = C5A15697301D815E00A2603A /* XCRemoteSwiftPackageReference "iOSOpenVPNAdapter" */;
 			productName = OpenVPNAdapter;
 		};
 		C5B8573D2F2CEA5F00BD1C28 /* WireGuardKit */ = {

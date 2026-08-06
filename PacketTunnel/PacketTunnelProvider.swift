@@ -72,7 +72,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         configuration.disableClientCert = true
         configuration.fileContent = ovpnFileContent
         do {
-            properties = try vpnAdapter.apply(configuration: configuration)
+            properties = try vpnAdapter.apply(configuration)
         } catch {
             logger.logE("PacketTunnelProvider", "Failed to apply configuration to OpenVPNAdapter: \(error.localizedDescription)", flushImmediately: true)
             completionHandler(error)
@@ -86,7 +86,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                 credentials.password = password
                 do {
                     logger.logI("PacketTunnelProvider", "Added credentials to OpenVPNAdapter.", flushImmediately: true)
-                    try vpnAdapter.provide(credentials: credentials)
+                    try vpnAdapter.provide(credentials)
                 } catch {
                     logger.logE("PacketTunnelProvider", "Failed to provide credentials: \(error.localizedDescription)", flushImmediately: true)
                     completionHandler(error)
@@ -228,7 +228,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 }
 
 extension PacketTunnelProvider: OpenVPNAdapterDelegate {
-    func openVPNAdapter(_: OpenVPNAdapter, configureTunnelWithNetworkSettings networkSettings: NEPacketTunnelNetworkSettings?, completionHandler: @escaping (Error?) -> Void) {
+    func openVPNAdapter(_: OpenVPNAdapter, configureTunnelWith networkSettings: NEPacketTunnelNetworkSettings?, completionHandler: @escaping (Error?) -> Void) {
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
             logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)", flushImmediately: true)
@@ -240,7 +240,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
         setTunnelNetworkSettings(networkSettings, completionHandler: completionHandler)
     }
 
-    func openVPNAdapter(_: OpenVPNAdapter, handleEvent event: OpenVPNAdapterEvent, message _: String?) {
+    func openVPNAdapter(_: OpenVPNAdapter, handle event: OpenVPNAdapterEvent, message _: String?) {
         #if os(iOS)
         WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
         #endif
