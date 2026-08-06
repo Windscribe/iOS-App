@@ -14,6 +14,10 @@ enum LogLevel: String {
     case debug, info, error
 }
 
+private extension CodingUserInfoKey {
+    static let logDateFormatter = CodingUserInfoKey(rawValue: "logDateFormatter")!
+}
+
 private struct LogBufferModel: Codable {
     enum CodingKeys: String, CodingKey {
         case level = "lvl"
@@ -22,33 +26,17 @@ private struct LogBufferModel: Codable {
         case timestamp = "tm"
     }
 
-    private static func makeJSONDateFormatter() -> DateFormatter {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-        return formatter
-    }
-
-    private static func string(from timestamp: TimeInterval) -> String {
-        makeJSONDateFormatter().string(from: Date(timeIntervalSince1970: timestamp))
-    }
-
-    private static func date(from string: String) -> Date? {
-        makeJSONDateFormatter().date(from: string)
-    }
-
     let level: LogLevel
     let tag: String
     let message: String
     let timestamp: TimeInterval
+    let timestampString: String
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        let formattedTime = LogBufferModel.string(from: timestamp)
-
         // Encode in specific order: tm, lvl, mod, msg for human readability
-        try container.encode(formattedTime, forKey: .timestamp)
+        try container.encode(timestampString, forKey: .timestamp)
         try container.encode(level.rawValue, forKey: .level)
         try container.encode(tag, forKey: .tag)
         try container.encode(message, forKey: .message)
@@ -70,13 +58,11 @@ private struct LogBufferModel: Codable {
     }
 
     func toOrderedJSONString() -> String {
-        let formattedTime = Self.string(from: timestamp)
-
         // Prevent multiple replacingOccurrences
         let escapedTag = escapeJSONString(tag)
         let escapedMessage = escapeJSONString(message)
 
-        return "{\"tm\": \"\(formattedTime)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
+        return "{\"tm\": \"\(timestampString)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
     }
 
     init(from decoder: Decoder) throws {
@@ -95,17 +81,31 @@ private struct LogBufferModel: Codable {
         default: level = .info // fallback
         }
 
-        // Decode timestamp string and convert to TimeInterval
-        let timestampString = try container.decode(String.self, forKey: .timestamp)
-        timestamp = LogBufferModel.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
+        guard let dateFormatter = decoder.userInfo[.logDateFormatter] as? DateFormatter else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .timestamp,
+                in: container,
+                debugDescription: "Missing log date formatter."
+            )
+        }
+
+        let decodedTimestampString = try container.decode(String.self, forKey: .timestamp)
+        if let date = dateFormatter.date(from: decodedTimestampString) {
+            timestamp = date.timeIntervalSince1970
+            timestampString = decodedTimestampString
+        } else {
+            let now = Date()
+            timestamp = now.timeIntervalSince1970
+            timestampString = dateFormatter.string(from: now)
+        }
     }
 
-    // Keep the original init for creating new log entries
-    init(level: LogLevel, tag: String, message: String) {
+    init(level: LogLevel, tag: String, message: String, timestamp: TimeInterval, dateFormatter: DateFormatter) {
         self.level = level
         self.tag = tag
         self.message = message
-        self.timestamp = Date().timeIntervalSince1970
+        self.timestamp = timestamp
+        timestampString = dateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
     }
 }
 
@@ -114,6 +114,12 @@ class FileLoggerImpl: FileLogger {
     private let maxLogLength = 120_000
     private let logFileName = "windscribe.log"
     private let logSchemaVersion = 1
+    private let jsonDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        return formatter
+    }()
 
     // MARK: - Log Batching Configuration
     private let batchFlushInterval: TimeInterval = 10.0 // Flush every 10 seconds
@@ -123,12 +129,14 @@ class FileLoggerImpl: FileLogger {
     // MARK: - Log Retention Configuration
     private let maxLogRetentionHours: TimeInterval = 24 * 60 * 60 // 24 hours in seconds
     private let maxLogFileSize: Int = 2 * 1024 * 1024 // 2MB total
+    private let logCompactionInterval: TimeInterval = 60 * 60
 
     // MARK: - Batching State
     private let batchQueue = DispatchQueue(label: "com.windscribe.logging.batch", qos: .utility)
     private var logBuffer: [LogBufferModel] = []
     private var batchTimer: DispatchSourceTimer?
     private var currentBufferSize: Int = 0
+    private var lastCompactionTime = Date().timeIntervalSince1970
     var logDirectory: URL? = {
         let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
         let subpath = Env.isTVOS ? "Library/Caches" : "AppExtensionLogs"
@@ -159,13 +167,24 @@ class FileLoggerImpl: FileLogger {
     }
 
     func logWSNet(_ message: String) {
-        guard let jsonData = message.data(using: .utf8),
-        let wsnetLog = try? JSONDecoder().decode(LogBufferModel.self, from: jsonData)
-        else {
-            addToBatch(.info, tag: "wsnet", message: message, flushImmediately: false)
-            return
+        batchQueue.async { [weak self] in
+            guard let self else { return }
+
+            let logEntry: LogBufferModel
+            if let jsonData = message.data(using: .utf8),
+               let wsnetLog = try? self.makeLogDecoder().decode(LogBufferModel.self, from: jsonData) {
+                logEntry = wsnetLog
+            } else {
+                logEntry = LogBufferModel(
+                    level: .info,
+                    tag: "wsnet",
+                    message: message,
+                    timestamp: Date().timeIntervalSince1970,
+                    dateFormatter: self.jsonDateFormatter
+                )
+            }
+            self.addLogBufferModelToBatch(logEntry, flushImmediately: false)
         }
-        addLogBufferModelToBatch(wsnetLog, flushImmediately: false)
     }
 
     func logE(_ tag: String, _ message: String) {
@@ -186,26 +205,31 @@ class FileLoggerImpl: FileLogger {
     }
 
     private func addToBatch(_ level: LogLevel, tag: String, message: String, flushImmediately: Bool) {
-        let logEntry = LogBufferModel(level: level, tag: tag, message: message)
-        addLogBufferModelToBatch(logEntry, flushImmediately: flushImmediately)
+        batchQueue.async { [weak self] in
+            guard let self else { return }
+            let logEntry = LogBufferModel(
+                level: level,
+                tag: tag,
+                message: message,
+                timestamp: Date().timeIntervalSince1970,
+                dateFormatter: self.jsonDateFormatter
+            )
+            self.addLogBufferModelToBatch(logEntry, flushImmediately: flushImmediately)
+        }
     }
 
     private func addLogBufferModelToBatch(_ logEntry: LogBufferModel, flushImmediately: Bool) {
-        batchQueue.async { [weak self] in
-            guard let self = self else { return }
 #if DEBUG
-            // Print inside async block to avoid concurrent access to DateFormatter
-            print(logEntry.toOrderedJSONString())
+        print(logEntry.toOrderedJSONString())
 #endif
-            self.logBuffer.append(logEntry)
-            self.currentBufferSize += logEntry.message.count + "\(logEntry.tag)".count
+        logBuffer.append(logEntry)
+        currentBufferSize += logEntry.message.count + "\(logEntry.tag)".count
 
-            // Check if we should flush the buffer
-            if flushImmediately ||
-               self.logBuffer.count >= self.batchMaxSize ||
-               self.currentBufferSize >= self.batchMaxMemorySize {
-                self.flushLogBuffer()
-            }
+        // Check if we should flush the buffer
+        if flushImmediately ||
+           logBuffer.count >= batchMaxSize ||
+           currentBufferSize >= batchMaxMemorySize {
+            flushLogBuffer()
         }
     }
 
@@ -250,28 +274,44 @@ class FileLoggerImpl: FileLogger {
         guard !logs.isEmpty else { return }
 
         do {
-            // Read existing logs and combine with new ones
-            var allLogs: [LogBufferModel] = []
-
-            if FileManager.default.fileExists(atPath: logFileURL.path) {
-                let existingLogs = parseExistingLogFile(logFileURL: logFileURL)
-                allLogs.append(contentsOf: existingLogs)
-            }
-
-            // Add new logs
-            allLogs.append(contentsOf: logs)
-
-            // Apply retention policies
-            let trimmedLogs = applyRetentionPolicies(logs: allLogs)
-
-            // Write trimmed logs back to file using custom ordered JSON
-            let trimmedJsonLines = trimmedLogs.map { log in
+            let jsonLines = logs.map { log in
                 log.toOrderedJSONString()
             }
+            let content = jsonLines.joined(separator: "\n") + "\n"
 
-            let finalContent = trimmedJsonLines.joined(separator: "\n") + (trimmedJsonLines.isEmpty ? "" : "\n")
-            try finalContent.write(to: logFileURL, atomically: true, encoding: .utf8)
+            if FileManager.default.fileExists(atPath: logFileURL.path) {
+                let fileHandle = try FileHandle(forWritingTo: logFileURL)
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(Data(content.utf8))
+                fileHandle.closeFile()
+            } else {
+                try content.write(to: logFileURL, atomically: true, encoding: .utf8)
+            }
 
+            let now = Date().timeIntervalSince1970
+            let fileSize = try logFileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+            if fileSize > maxLogFileSize || now - lastCompactionTime >= logCompactionInterval {
+                compactLogFile()
+            }
+        } catch {
+            // Silently fail - logging errors in the logger creates infinite loops
+        }
+    }
+
+    private func compactLogFile() {
+        guard let logFileURL = getLogFileURL(),
+              FileManager.default.fileExists(atPath: logFileURL.path) else {
+            lastCompactionTime = Date().timeIntervalSince1970
+            return
+        }
+
+        let trimmedLogs = applyRetentionPolicies(logs: parseExistingLogFile(logFileURL: logFileURL))
+        let jsonLines = trimmedLogs.map { $0.toOrderedJSONString() }
+        let content = jsonLines.joined(separator: "\n") + (jsonLines.isEmpty ? "" : "\n")
+
+        do {
+            try content.write(to: logFileURL, atomically: true, encoding: .utf8)
+            lastCompactionTime = Date().timeIntervalSince1970
         } catch {
             // Silently fail - logging errors in the logger creates infinite loops
         }
@@ -282,7 +322,7 @@ class FileLoggerImpl: FileLogger {
             let content = try String(contentsOf: logFileURL, encoding: .utf8)
             let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
 
-            let decoder = JSONDecoder()
+            let decoder = makeLogDecoder()
             var parsedLogs: [LogBufferModel] = []
 
             for line in lines {
@@ -319,7 +359,7 @@ class FileLoggerImpl: FileLogger {
         // Start from newest and work backwards to keep as much recent data as possible
         for log in sortedLogs.reversed() {
             let jsonString = log.toOrderedJSONString()
-            let logSize = jsonString.count + 1 // +1 for newline
+            let logSize = jsonString.utf8.count + 1 // +1 for newline
 
             if currentSize + logSize <= maxLogFileSize {
                 finalLogs.insert(log, at: 0) // Insert at beginning to maintain chronological order
@@ -383,11 +423,20 @@ class FileLoggerImpl: FileLogger {
     }
 
     private func makeLogMetadata() -> String {
-        LogBufferModel(
+        let timestamp = Date().timeIntervalSince1970
+        return LogBufferModel(
             level: .info,
             tag: "LogMetadata",
-            message: "schema_version=\(logSchemaVersion) app_version=\(Bundle.main.releaseVersionNumber ?? "unknown") app_build=\(Bundle.main.buildVersionNumber ?? "unknown") os_version=\(UIDevice.current.systemVersion)"
+            message: "schema_version=\(logSchemaVersion) app_version=\(Bundle.main.releaseVersionNumber ?? "unknown") app_build=\(Bundle.main.buildVersionNumber ?? "unknown") os_version=\(UIDevice.current.systemVersion)",
+            timestamp: timestamp,
+            dateFormatter: jsonDateFormatter
         ).toOrderedJSONString()
+    }
+
+    private func makeLogDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.userInfo[.logDateFormatter] = jsonDateFormatter
+        return decoder
     }
 
     private func setupLogger() {
