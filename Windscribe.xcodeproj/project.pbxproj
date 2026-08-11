@@ -412,6 +412,7 @@
 		1EF7CF132EAB8DB1001AE14E /* LocalPingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CF122EAB8DA5001AE14E /* LocalPingManager.swift */; };
 		1EF7CF142EAB8DB1001AE14E /* LocalPingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CF122EAB8DA5001AE14E /* LocalPingManager.swift */; };
 		1EFFD03E2E99374C005603FB /* LocationListRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD03D2E993748005603FB /* LocationListRepositoryTests.swift */; };
+		99AC5DB7C995E6687B041DFF /* AntiCensorshipRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46CF47DED27842F38A8898E /* AntiCensorshipRepositoryTests.swift */; };
 		1EFFD0432E99389B005603FB /* MockUserSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */; };
 		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
 		1EFFD04D2E994400005603FB /* LocationList.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFFD04C2E9943F6005603FB /* LocationList.json */; };
@@ -2008,6 +2009,7 @@
 		1EF7CF122EAB8DA5001AE14E /* LocalPingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPingManager.swift; sourceTree = "<group>"; };
 		1EFCFB591FEE429D95FA2D03 /* SendTicketScreenViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SendTicketScreenViewModel.swift; sourceTree = "<group>"; };
 		1EFFD03D2E993748005603FB /* LocationListRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListRepositoryTests.swift; sourceTree = "<group>"; };
+		F46CF47DED27842F38A8898E /* AntiCensorshipRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipRepositoryTests.swift; sourceTree = "<group>"; };
 		1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserSessionRepository.swift; sourceTree = "<group>"; };
 		1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAdvanceRepository.swift; sourceTree = "<group>"; };
 		1EFFD04C2E9943F6005603FB /* LocationList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LocationList.json; sourceTree = "<group>"; };
@@ -5786,6 +5788,7 @@
 				1EE62A832F3CB2D9008CC7AA /* VPNStateRepositoryTests.swift */,
 				1EFFD0522E9FD8CF005603FB /* AdvanceRepositoryTests.swift */,
 				1EFFD03D2E993748005603FB /* LocationListRepositoryTests.swift */,
+				F46CF47DED27842F38A8898E /* AntiCensorshipRepositoryTests.swift */,
 				F4B4C1F52EA16A6C0024D824 /* StaticIpRepositoryTests.swift */,
 				F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */,
 				F41AC79F2EA950E400673A11 /* UserSessionRepositoryTests.swift */,
@@ -8696,6 +8699,7 @@
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
 				F4B4C1F42EA169920024D824 /* SampleDataStaticIP.swift in Sources */,
 				1EFFD03E2E99374C005603FB /* LocationListRepositoryTests.swift in Sources */,
+				99AC5DB7C995E6687B041DFF /* AntiCensorshipRepositoryTests.swift in Sources */,
 				92B7B59A2F92E340006B69DF /* StaticIPRecordTests.swift in Sources */,
 				927991502F86C74F000BB9D0 /* MockHashAuthManager.swift in Sources */,
 				F4B4C1FD2EA6B5000024D824 /* MobilePlanRepositoryTests.swift in Sources */,

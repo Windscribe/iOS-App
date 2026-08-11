@@ -63,6 +63,11 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
 
     // MARK: - Setting values
     func setUseProtocolTweaks(_ value: Bool) {
+        preferences.saveAntiCensorshipManuallyConfigured(status: true)
+        applyUseProtocolTweaks(value)
+    }
+
+    private func applyUseProtocolTweaks(_ value: Bool) {
         preferences.saveCircumventCensorshipStatus(status: value)
         useProtocolTweaksSubject.send(value)
 
@@ -76,7 +81,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
     private func updateSelectedWgParam() {
         if selectedWgParamSubject.value == nil {
             if let sessionWgParameterKey = sessionWgParameterKey {
-                setWgParameter(withId: sessionWgParameterKey)
+                applyWgParameter(withId: sessionWgParameterKey)
             } else if let first = unlockParams.first {
                 selectParam(with: first)
             }
@@ -94,14 +99,21 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
         } else {
             sessionWgParameterKey = id
 
+            guard !preferences.isAntiCensorshipManuallyConfigured() else { return }
+
             if useProtocolTweaksSubject.value == false {
-                setUseProtocolTweaks(true)
+                applyUseProtocolTweaks(true)
             }
-            setWgParameter(withId: id)
+            applyWgParameter(withId: id)
         }
     }
 
     func setWgParameter(withId id: String) {
+        preferences.saveAntiCensorshipManuallyConfigured(status: true)
+        applyWgParameter(withId: id)
+    }
+
+    private func applyWgParameter(withId id: String) {
         guard useProtocolTweaksSubject.value else { return }
         if let first = unlockParams.first(where: { $0.id == id }) {
             selectParam(with: first)

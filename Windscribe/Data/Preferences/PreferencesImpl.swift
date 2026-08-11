@@ -431,6 +431,17 @@ class PreferencesImpl: Preferences {
         return false
     }
 
+    func isAntiCensorshipManuallyConfigured() -> Bool {
+        if let value = sharedDefault?.object(forKey: SharedKeys.antiCensorshipManuallyConfigured) as? Bool {
+            return value
+        }
+        return false
+    }
+
+    func saveAntiCensorshipManuallyConfigured(status: Bool) {
+        setBool(status, forKey: SharedKeys.antiCensorshipManuallyConfigured)
+    }
+
     func getServerSettings() -> String {
         return sharedDefault?.string(forKey: SharedKeys.serverSettings) ?? ""
     }

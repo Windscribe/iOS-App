@@ -102,6 +102,8 @@ protocol Preferences: Sendable {
     func getCircumventCensorshipEnabled() -> AnyPublisher<Bool, Never>
     func isCircumventCensorshipEnabled() -> Bool
     func saveCircumventCensorshipStatus(status: Bool)
+    func isAntiCensorshipManuallyConfigured() -> Bool
+    func saveAntiCensorshipManuallyConfigured(status: Bool)
 
 
     func setLanguageManagerSelectedLanguage(language: Languages)

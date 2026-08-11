@@ -46,6 +46,8 @@ class MockPreferences: Preferences {
     var userStatus: Bool?
     var mockPrivacyPopupAccepted: Bool? = false
     var mockTunnelStoppedForAppUpdate = false
+    var mockCircumventCensorshipEnabled = false
+    var mockAntiCensorshipManuallyConfigured = false
 
     // Apple receipt storage
     var mockActiveAppleSig: String?
@@ -465,14 +467,24 @@ class MockPreferences: Preferences {
     }
 
     func getCircumventCensorshipEnabled() -> AnyPublisher<Bool, Never> {
-        return Just(false).eraseToAnyPublisher()
+        return Just(mockCircumventCensorshipEnabled).eraseToAnyPublisher()
     }
 
     func isCircumventCensorshipEnabled() -> Bool {
-        return false
+        return mockCircumventCensorshipEnabled
     }
 
-    func saveCircumventCensorshipStatus(status: Bool) {}
+    func saveCircumventCensorshipStatus(status: Bool) {
+        mockCircumventCensorshipEnabled = status
+    }
+
+    func isAntiCensorshipManuallyConfigured() -> Bool {
+        return mockAntiCensorshipManuallyConfigured
+    }
+
+    func saveAntiCensorshipManuallyConfigured(status: Bool) {
+        mockAntiCensorshipManuallyConfigured = status
+    }
 
     func setLanguageManagerSelectedLanguage(language: Windscribe.Languages) {}
 
