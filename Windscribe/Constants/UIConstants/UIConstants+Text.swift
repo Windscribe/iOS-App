@@ -2035,6 +2035,10 @@ enum TextsAsset {
         static var ssoErrorAppleTitle: String {
             return "Apple Sign-In Unsuccesful".localized
         }
+
+        static var emergencyConnectTitle: String {
+            return "Emergency Connect".localized
+        }
     }
 
     enum Authentication {

@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "Исходящий (только WireGuard)";
 "Email" = "Эл. адрес";
 "Email is required to reset password." = "Для сброса пароля требуется электронная почта.";
+"Emergency Connect" = "Аварийное подключение";
 "Emergency Connect On" = "Аварийное подключение включено";
 "Enable Notifications" = "Включить уведомления";
 "Enabled" = "Включено";

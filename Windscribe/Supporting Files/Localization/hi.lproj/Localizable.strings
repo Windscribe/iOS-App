@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "एग्रेस (केवल WireGuard)";
 "Email" = "ईमेल";
 "Email is required to reset password." = "पासवर्ड रीसेट करने के लिए ईमेल आवश्यक है।";
+"Emergency Connect" = "आपातकालीन कनेक्ट";
 "Emergency Connect On" = "आपातकालीन कनेक्ट चालू";
 "Enable Notifications" = "सूचनाएँ दिखाएँ";
 "Enabled" = "सक्षम";

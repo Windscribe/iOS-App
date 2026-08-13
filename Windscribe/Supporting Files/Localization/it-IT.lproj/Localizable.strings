@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "Uscita (solo WireGuard)";
 "Email" = "E-mail";
 "Email is required to reset password." = "È necessaria un'email per reimpostare la password.";
+"Emergency Connect" = "Connessione di emergenza";
 "Emergency Connect On" = "Connessione di emergenza attivata";
 "Enable Notifications" = "Attiva le notifiche";
 "Enabled" = "Attivato";

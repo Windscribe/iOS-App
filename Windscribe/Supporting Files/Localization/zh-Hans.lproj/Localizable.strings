@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "出口（仅 WireGuard）";
 "Email" = "电子邮箱";
 "Email is required to reset password." = "重置密码需要电子邮箱。";
+"Emergency Connect" = "紧急连接";
 "Emergency Connect On" = "紧急连接已开启";
 "Enable Notifications" = "启用通知";
 "Enabled" = "已啟用";

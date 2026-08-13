@@ -48,7 +48,7 @@ struct EmergencyConnectView: View, ResponsivePopupLayoutProvider {
                                 .frame(width: 60, height: 60)
                                 .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
-                            Text(TextsAsset.connect)
+                            Text(TextsAsset.Welcome.emergencyConnectTitle)
                                 .font(.bold(.title1))
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .foregroundColor(.from(.iconColor, viewModel.isDarkMode))

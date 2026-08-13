@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "이그레스(WireGuard만)";
 "Email" = "이메일";
 "Email is required to reset password." = "비밀번호를 재설정하려면 이메일이 필요합니다.";
+"Emergency Connect" = "긴급 연결";
 "Emergency Connect On" = "긴급 연결 켜짐";
 "Enable Notifications" = "알림 활성화";
 "Enabled" = "켜짐";

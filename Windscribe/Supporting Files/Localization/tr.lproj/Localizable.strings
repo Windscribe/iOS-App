@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "Çıkış (yalnızca WireGuard)";
 "Email" = "E-posta";
 "Email is required to reset password." = "Şifreyi sıfırlamak için e-posta gereklidir.";
+"Emergency Connect" = "Acil Bağlantı";
 "Emergency Connect On" = "Acil Bağlantı Açık";
 "Enable Notifications" = "Bildirimleri Aktif Et";
 "Enabled" = "aktif";

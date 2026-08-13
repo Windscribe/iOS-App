@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "Вихідний (тільки WireGuard)";
 "Email" = "Електронна адреса";
 "Email is required to reset password." = "Для скидання пароля потрібна електронна пошта.";
+"Emergency Connect" = "Аварійне підключення";
 "Emergency Connect On" = "Аварійне підключення увімкнено";
 "Enable Notifications" = "Увімкнути сповіщення";
 "Enabled" = "Увімкнено";

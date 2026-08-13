@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "Wyjście (tylko WireGuard)";
 "Email" = "Adres e-mail";
 "Email is required to reset password." = "É necessário um e-mail para repor a palavra-passe.";
+"Emergency Connect" = "Awaryjne połączenie";
 "Emergency Connect On" = "Awaryjne połączenie włączone";
 "Enable Notifications" = "Włącz powiadomienia";
 "Enabled" = "Włączony";

@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "الخروج (WireGuard فقط)";
 "Email" = "البريد الإلكتروني";
 "Email is required to reset password." = "البريد الإلكتروني مطلوب لإعادة تعيين كلمة المرور.";
+"Emergency Connect" = "الاتصال الطارئ";
 "Emergency Connect On" = "تم تفعيل الاتصال الطارئ";
 "Enable Notifications" = "تمكين الإشعارات";
 "Enabled" = "مُفعَّل";

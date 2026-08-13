@@ -36,6 +36,7 @@
 "Check your preferred one-time password application for a code." = "Check your preferred one-time password application for a code.";
 "Confirm Password" = "Confirm Password";
 "Custom SNI Domain" = "Custom SNI Domain";
+"Emergency Connect" = "Emergency Connect";
 "Enter 2FA Code" = "Enter 2FA Code";
 "Enter Account Hash or Upload" = "Enter Account Hash or Upload";
 "Enter TLS server name (optional)" = "Enter TLS server name (optional)";

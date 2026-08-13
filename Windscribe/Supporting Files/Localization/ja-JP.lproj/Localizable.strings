@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "エグレス（WireGuardのみ）";
 "Email" = "メールアドレス";
 "Email is required to reset password." = "パスワードをリセットするにはメールアドレスが必要です。";
+"Emergency Connect" = "緊急接続";
 "Emergency Connect On" = "緊急接続オン";
 "Enable Notifications" = "通知を有効化";
 "Enabled" = "有効";

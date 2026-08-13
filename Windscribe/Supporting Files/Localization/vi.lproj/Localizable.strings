@@ -154,6 +154,7 @@
 "Egress (WireGuard only)" = "Đi ra (Chỉ WireGuard)";
 "Email" = "Thư điện tử";
 "Email is required to reset password." = "Cần có email để đặt lại mật khẩu.";
+"Emergency Connect" = "Kết nối khẩn cấp";
 "Emergency Connect On" = "Kết nối khẩn cấp bật";
 "Enable Notifications" = "Bật thông báo";
 "Enabled" = "Đã kích hoạt";
