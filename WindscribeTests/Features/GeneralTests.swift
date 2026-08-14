@@ -6,6 +6,7 @@
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 
+import Combine
 import Testing
 import Foundation
 import UniformTypeIdentifiers
@@ -216,6 +217,92 @@ struct GeneralViewModelTests {
         }
         return nil
     }
+}
+
+@Suite("Main screen localization refresh")
+@MainActor
+struct MainScreenLocalizationRefreshTests {
+    @Test("Language changes refresh an unknown network label but preserve a known SSID")
+    func refreshesUnknownNetworkOnly() async throws {
+        let languageManager = StubLanguageManager()
+        let viewModel = WifiInfoViewModel(
+            preferences: MockPreferences(),
+            wifiManager: MockWifiManager(),
+            languageManager: languageManager
+        )
+        let view = WifiInfoView()
+        view.viewModel = viewModel
+
+        view.nameLabel.text = "stale unknown network"
+        languageManager.setLanguage(language: .spanish)
+        try await waitFor {
+            view.nameLabel.text == TextsAsset.NetworkSecurity.unknownNetwork
+        }
+
+        view.updateWifiName(name: "Home WiFi")
+        languageManager.setLanguage(language: .french)
+        await drainMainQueue()
+
+        #expect(view.nameLabel.text == "Home WiFi")
+    }
+
+    @Test("Language changes localize the disconnected pill before VPN state loads")
+    func refreshesDisconnectedStatusWithoutLoadedState() async throws {
+        let viewModel = StubConnectionStateInfoViewModel()
+        let view = ConnectionStateInfoView(wifiManager: MockWifiManager())
+        view.viewModel = viewModel
+        await drainMainQueue()
+
+        view.pillLabel.text = "stale status"
+        viewModel.activeLanguageSubject.send(.spanish)
+
+        try await waitFor { view.pillLabel.text == TextsAsset.Status.off }
+    }
+
+    private func drainMainQueue() async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            DispatchQueue.main.async {
+                continuation.resume()
+            }
+        }
+    }
+
+    private func waitFor(
+        _ condition: @MainActor () -> Bool,
+        timeout: Duration = .milliseconds(200)
+    ) async throws {
+        let deadline = ContinuousClock.now.advanced(by: timeout)
+        while !condition() && ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(5))
+        }
+        #expect(condition())
+    }
+}
+
+private final class StubLanguageManager: LanguageManager, @unchecked Sendable {
+    let activelanguage = CurrentValueSubject<Languages, Never>(.english)
+
+    func setAppLanguage() {}
+
+    func setLanguage(language: Languages) {
+        activelanguage.send(language)
+    }
+
+    func getCurrentLanguage() -> Languages {
+        activelanguage.value
+    }
+}
+
+private final class StubConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
+    let statusSubject = CurrentValueSubject<ConnectionState?, Never>(nil)
+    let hasNetwork = CurrentValueSubject<Bool, Never>(true)
+    let isCircumventCensorshipEnabled = CurrentValueSubject<Bool, Never>(false)
+    let refreshProtocolSubject = CurrentValueSubject<ProtocolPort?, Never>(nil)
+    let activeLanguageSubject = CurrentValueSubject<Languages, Never>(.english)
+    let isCustomConfigSelected = false
+    let isAntiCensorshipEnabled = false
+    let isConnecting = false
+    let isConnected = false
 }
 
 // MARK: - Mocks

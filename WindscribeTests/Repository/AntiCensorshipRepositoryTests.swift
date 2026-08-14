@@ -2,7 +2,7 @@
 //  AntiCensorshipRepositoryTests.swift
 //  WindscribeTests
 //
-//  Created by Dev Scribe on 2026-08-10.
+//  Created by Andre Fonseca on 2026-08-10.
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 

@@ -164,8 +164,11 @@ class ConnectionStateInfoView: UIView {
         viewModel.activeLanguageSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                guard let self = self,
-                      let state = self.viewModel.statusSubject.value else { return }
+                guard let self = self else { return }
+                guard let state = self.viewModel.statusSubject.value else {
+                    self.pillLabel.text = TextsAsset.Status.off
+                    return
+                }
                 self.updateConnectionInfo(state, self.viewModel.hasNetwork.value)
             }
             .store(in: &cancellables)

@@ -480,7 +480,8 @@ class ViewModels: Assembly {
 
         container.register(WifiInfoViewModelType.self) { r in
             WifiInfoViewModel(preferences: r.resolve(Preferences.self)!,
-                              wifiManager: r.resolve(WifiManager.self)!)
+                              wifiManager: r.resolve(WifiManager.self)!,
+                              languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(ServerInfoViewModelType.self) { r in

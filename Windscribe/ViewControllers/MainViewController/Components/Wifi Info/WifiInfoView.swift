@@ -13,6 +13,7 @@ protocol WifiInfoViewModelType {
     var trustedNetworkImage: String { get }
     var isBlur: Bool { get }
     var unknownWifiTriggerSubject: PassthroughSubject<Void, Never> { get }
+    var activeLanguageSubject: CurrentValueSubject<Languages, Never> { get }
 
     func nameLabelTapped(networkName: String?) -> Bool?
 }
@@ -21,6 +22,7 @@ class WifiInfoViewModel: WifiInfoViewModelType {
     let preferences: Preferences
     let wifiManager: WifiManager
     let unknownWifiTriggerSubject = PassthroughSubject<Void, Never>()
+    let activeLanguageSubject: CurrentValueSubject<Languages, Never>
 
     var trustedNetworkImage: String {
         if let status = wifiManager.getConnectedNetwork()?.status {
@@ -38,9 +40,12 @@ class WifiInfoViewModel: WifiInfoViewModelType {
         return preferences.getBlurNetworkName() ?? false
     }
 
-    init(preferences: Preferences, wifiManager: WifiManager) {
+    init(preferences: Preferences,
+         wifiManager: WifiManager,
+         languageManager: LanguageManager) {
         self.preferences = preferences
         self.wifiManager = wifiManager
+        self.activeLanguageSubject = languageManager.activelanguage
     }
 
     func nameLabelTapped(networkName: String?) -> Bool? {
@@ -73,6 +78,7 @@ class WifiInfoView: UIView {
     var stackView = UIStackView()
     var nameLabelSpacerView = UIView()
     private var network: WifiNetworkModel?
+    private var isUnknownNetwork = true
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -84,7 +90,8 @@ class WifiInfoView: UIView {
         setLayout()
     }
 
-    func updateWifiName(name: String) {
+    func updateWifiName(name: String, isUnknownNetwork: Bool = false) {
+        self.isUnknownNetwork = isUnknownNetwork
         nameLabel.text = name
         updateActionVivibility()
         // Force layout recalculation to apply compression resistance priorities
@@ -97,6 +104,16 @@ class WifiInfoView: UIView {
 
         nameLabel.isBlurring = viewModel.isBlur
 
+        viewModel.activeLanguageSubject
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self, isUnknownNetwork else { return }
+                updateWifiName(name: TextsAsset.NetworkSecurity.unknownNetwork,
+                               isUnknownNetwork: true)
+            }
+            .store(in: &cancellables)
+
         // Track when double tap occurs to prevent single tap
         var isDoubleTapInProgress = false
 
@@ -105,7 +122,7 @@ class WifiInfoView: UIView {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 isDoubleTapInProgress = true
-                if nameLabel.text != TextsAsset.NetworkSecurity.unknownNetwork {
+                if !isUnknownNetwork {
                     let preferences = (viewModel as? WifiInfoViewModel)?.preferences
                     preferences?.saveBlurNetworkName(bool: !(preferences?.getBlurNetworkName() ?? false))
                     nameLabel.isBlurring = preferences?.getBlurNetworkName() ?? false
@@ -124,7 +141,7 @@ class WifiInfoView: UIView {
                 guard let self = self else { return }
                 // Don't fire if double tap is in progress
                 guard !isDoubleTapInProgress else { return }
-                if nameLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
+                if isUnknownNetwork {
                     viewModel.unknownWifiTriggerSubject.send(())
                 } else {
                     guard let network = self.network else { return }
@@ -163,7 +180,7 @@ class WifiInfoView: UIView {
     }
 
     private func updateActionVivibility() {
-        let isNetwork = nameLabel.text != TextsAsset.NetworkSecurity.unknownNetwork &&
+        let isNetwork = !isUnknownNetwork &&
         nameLabel.text != TextsAsset.noNetworksAvailable &&
         network != nil
         actionButton.isHidden = !isNetwork

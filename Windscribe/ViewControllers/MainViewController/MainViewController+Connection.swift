@@ -27,7 +27,10 @@ extension MainViewController {
                             self.wifiInfoView.updateWifiName(name: displayName)
                         }
                     } else {
-                        self.wifiInfoView.updateWifiName(name: TextsAsset.NetworkSecurity.unknownNetwork)
+                        self.wifiInfoView.updateWifiName(
+                            name: TextsAsset.NetworkSecurity.unknownNetwork,
+                            isUnknownNetwork: true
+                        )
                     }
                 }
             }

@@ -2,7 +2,7 @@
 //  FileLoggerTests.swift
 //  WindscribeTests
 //
-//  Created by Dev Scribe on 2026-08-05.
+//  Created by Andre Fonseca on 2026-08-05.
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 

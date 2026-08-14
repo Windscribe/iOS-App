@@ -2,7 +2,7 @@
 //  AppNetworkTests.swift
 //  WindscribeTests
 //
-//  Created by Dev Scribe on 2026-07-30.
+//  Created by Andre Fonseca on 2026-07-30.
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 
