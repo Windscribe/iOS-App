@@ -78,9 +78,9 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
             return
         }
 
-        if session.isUserPro && !session.hasUserAddedEmail && !session.isUserGhost {
+        if !session.shouldShowEmailPromo && !session.hasUserAddedEmail && !session.isUserGhost {
             actionButtons = [.email]
-        } else if !session.isUserPro && !session.hasUserAddedEmail && !session.isUserGhost {
+        } else if session.shouldShowEmailPromo && !session.hasUserAddedEmail && !session.isUserGhost {
             actionButtons = [.emailGet10GB]
         } else if !session.isUserPro && !session.hasUserAddedEmail && session.isUserGhost {
             actionButtons = [.setupAccountAndLogin, .login]

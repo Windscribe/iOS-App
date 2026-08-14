@@ -85,4 +85,36 @@ class SessionModelCodableTests: XCTestCase {
         // Then — the top-level key should be "data" (nested container)
         XCTAssertNotNil(json?["data"], "Encoded JSON should contain a 'data' wrapper key")
     }
+
+    func testEmailDataIncentiveEligibilityByPlan() {
+        XCTAssertTrue(makeSession().shouldShowEmailPromo)
+        XCTAssertFalse(makeSession(isPremium: true).shouldShowEmailPromo)
+        XCTAssertFalse(makeSession(alc: ["US"]).shouldShowEmailPromo)
+        XCTAssertFalse(makeSession(billingPlanId: -9).shouldShowEmailPromo)
+    }
+
+    private func makeSession(isPremium: Bool = false,
+                             billingPlanId: Int = 0,
+                             alc: [String] = []) -> SessionModel {
+        SessionModel(
+            sessionAuthHash: "hash",
+            username: "windscribe",
+            userId: "1",
+            email: "",
+            emailStatus: false,
+            trafficUsed: 0,
+            trafficMax: 0,
+            status: 1,
+            billingPlanId: billingPlanId,
+            isPremium: isPremium,
+            premiumExpiryDate: "",
+            regDate: 0,
+            lastReset: "",
+            locRev: 0,
+            locHash: "",
+            amneziawgConfigId: "",
+            alc: alc,
+            sipCount: []
+        )
+    }
 }

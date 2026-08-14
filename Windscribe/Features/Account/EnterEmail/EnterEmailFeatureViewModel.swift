@@ -25,7 +25,7 @@ final class EnterEmailFeatureViewModel {
     let infoLabelText = TextsAsset.addEmailInfo
     let titleText = TextsAsset.addEmail
 
-    private var isUserPro: Bool
+    private var shouldShowEmailPromo: Bool
     private var isObserving = false
 
     var emailIsValid: Bool {
@@ -33,7 +33,7 @@ final class EnterEmailFeatureViewModel {
     }
 
     var showGet10GBPromo: Bool {
-        !isUserPro
+        shouldShowEmailPromo
     }
 
     // MARK: - Dependencies (injected via init — protocols only)
@@ -48,7 +48,7 @@ final class EnterEmailFeatureViewModel {
         self.sessionProvider = sessionProvider
         self.accountManager = accountManager
         self.email = sessionProvider.session?.email ?? ""
-        self.isUserPro = sessionProvider.session?.isUserPro ?? false
+        self.shouldShowEmailPromo = sessionProvider.session?.shouldShowEmailPromo ?? false
     }
 
     // MARK: - Lifecycle
@@ -65,7 +65,7 @@ final class EnterEmailFeatureViewModel {
 
     func observeSession() async {
         for await session in sessionProvider.sessionUpdates {
-            isUserPro = session?.isUserPro ?? false
+            shouldShowEmailPromo = session?.shouldShowEmailPromo ?? false
         }
     }
 

@@ -50,7 +50,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
     }
 
     var showGet10GBPromo: Bool {
-        !(userSessionRepository.sessionModel?.isUserPro ?? false)
+        userSessionRepository.sessionModel?.shouldShowEmailPromo ?? false
     }
 
     init(userSessionRepository: UserSessionRepository,

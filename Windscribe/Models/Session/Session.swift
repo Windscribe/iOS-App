@@ -155,6 +155,10 @@ struct SessionModel: Codable, Equatable, Sendable {
         return !isUserPro && !alc.isEmpty
     }
 
+    var shouldShowEmailPromo: Bool {
+        return !isUserPro && alc.isEmpty
+    }
+
     var hasUserAddedEmail: Bool {
         return email != ""
     }

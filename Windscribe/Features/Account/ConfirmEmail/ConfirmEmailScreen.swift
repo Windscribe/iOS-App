@@ -100,7 +100,7 @@ private struct ConfirmEmailContentView: View {
                     .foregroundColor(.from(.titleColor, lookAndFeel.isDarkMode))
                     .multilineTextAlignment(.center)
 
-                Text(viewModel.session?.isUserPro == true ? TextsAsset.EmailView.infoPro : TextsAsset.EmailView.info)
+                Text(viewModel.session?.shouldShowEmailPromo == true ? TextsAsset.EmailView.info : TextsAsset.EmailView.infoPro)
                     .font(.text(.callout))
                     .dynamicTypeSize(dynamicTypeRange)
                     .foregroundColor(.from(.titleColor, lookAndFeel.isDarkMode).opacity(0.5))
