@@ -13,6 +13,9 @@ protocol AntiCensorshipManaging: Sendable {
     /// Current WireGuard unlock parameters available.
     var unlockParams: [UnblockWgParams] { get }
 
+    /// Current protocol tweaks mode.
+    var protocolTweaksMode: ProtocolTweaksMode { get }
+
     /// Current protocol tweaks enabled state.
     var useProtocolTweaks: Bool { get }
 
@@ -21,6 +24,9 @@ protocol AntiCensorshipManaging: Sendable {
 
     /// Current selected WireGuard parameter.
     var selectedWgParam: UnblockWgParams? { get }
+
+    /// Updates stream for protocol tweaks mode changes.
+    var protocolTweaksModeUpdates: AsyncStream<ProtocolTweaksMode> { get }
 
     /// Updates stream for protocol tweaks enabled state.
     var useProtocolTweaksUpdates: AsyncStream<Bool> { get }
@@ -31,8 +37,8 @@ protocol AntiCensorshipManaging: Sendable {
     /// Updates stream for selected WG parameter changes.
     var selectedWgParamUpdates: AsyncStream<UnblockWgParams?> { get }
 
-    /// Sets whether to use protocol tweaks.
-    func setUseProtocolTweaks(_ value: Bool)
+    /// Sets the protocol tweaks mode.
+    func setProtocolTweaksMode(_ value: ProtocolTweaksMode)
 
     /// Sets the server routing type.
     func setServerRoutingType(_ value: ServerRoutingType)
@@ -53,6 +59,10 @@ final class LegacyAntiCensorshipManager: AntiCensorshipManaging, Sendable {
         legacy.unlockParams
     }
 
+    var protocolTweaksMode: ProtocolTweaksMode {
+        legacy.protocolTweaksModeSubject.value
+    }
+
     var useProtocolTweaks: Bool {
         legacy.useProtocolTweaksSubject.value
     }
@@ -63,6 +73,18 @@ final class LegacyAntiCensorshipManager: AntiCensorshipManaging, Sendable {
 
     var selectedWgParam: UnblockWgParams? {
         legacy.selectedWgParamSubject.value
+    }
+
+    var protocolTweaksModeUpdates: AsyncStream<ProtocolTweaksMode> {
+        let subject = legacy.protocolTweaksModeSubject
+        return AsyncStream { continuation in
+            let cancellable = subject.sink { value in
+                continuation.yield(value)
+            }
+            continuation.onTermination = { _ in
+                cancellable.cancel()
+            }
+        }
     }
 
     var useProtocolTweaksUpdates: AsyncStream<Bool> {
@@ -101,8 +123,8 @@ final class LegacyAntiCensorshipManager: AntiCensorshipManaging, Sendable {
         }
     }
 
-    func setUseProtocolTweaks(_ value: Bool) {
-        legacy.setUseProtocolTweaks(value)
+    func setProtocolTweaksMode(_ value: ProtocolTweaksMode) {
+        legacy.setProtocolTweaksMode(value)
     }
 
     func setServerRoutingType(_ value: ServerRoutingType) {

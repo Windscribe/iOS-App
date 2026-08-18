@@ -8,7 +8,10 @@
 
 enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
     case info,
-         protocolTweaks(isSelected: Bool, paramSelected: String, paramOptions: [MenuOption]),
+         protocolTweaks(selectedMode: ProtocolTweaksMode,
+                        modeOptions: [MenuOption],
+                        paramSelected: String,
+                        paramOptions: [MenuOption]),
          routingType(selectedRoutingType: String, routingOptions: [MenuOption]),
          tlsServerName(value: String, placeholder: String)
 
@@ -24,7 +27,7 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
     var title: String {
         switch self {
         case .info: ""
-        case .protocolTweaks: TextsAsset.Connection.circumventCensorship
+        case .protocolTweaks: TextsAsset.Connection.protocolTweaks
         case .routingType: TextsAsset.Connection.serverRouting
         case .tlsServerName: TextsAsset.Connection.tlsServerName
         }
@@ -49,8 +52,8 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
 
     var action: MenuEntryActionType? {
         switch self {
-        case let .protocolTweaks(isSelected, _, _):
-                .toggle(isSelected: isSelected, parentId: id)
+        case let .protocolTweaks(selectedMode, modeOptions, _, _):
+                .multiple(currentOption: selectedMode.title, options: modeOptions, parentId: id)
         case let .routingType(selectedRoutingType, routingOptions):
                 .multiple(currentOption: selectedRoutingType, options: routingOptions, parentId: id)
         default: nil
@@ -67,14 +70,14 @@ enum AntiCensorshipOptionsEntryType: MenuEntryHeaderType, Hashable {
     func makeSecondaryEntries() -> [AntiCensorshipOptionsSecondaryType] {
         switch self {
         case .info: return [.circumventCensorshipInfo]
-        case let .protocolTweaks(isSelected, paramSelected, paramOptions):
-            if isSelected {
+        case let .protocolTweaks(selectedMode, _, paramSelected, paramOptions):
+            if selectedMode == .enabled {
                 return [.protocolTweaksInfo,
                         .wgUnlockMenu(currentOption: paramSelected, options: paramOptions)]
             } else {
                 return [.protocolTweaksInfo]
             }
-        case let .routingType(selectedRoutingType, routingOptions):
+        case .routingType:
             return [.serverpedeInfo]
         case let .tlsServerName(customValue, placeholder):
             let value: String = customValue.isEmpty ? TextsAsset.Connection.tlsServerNameValueFieldDescription : customValue

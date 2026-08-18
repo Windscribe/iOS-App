@@ -442,6 +442,14 @@ class PreferencesImpl: Preferences {
         setBool(status, forKey: SharedKeys.antiCensorshipManuallyConfigured)
     }
 
+    func getProtocolTweaksMode() -> String? {
+        sharedDefault?.string(forKey: SharedKeys.protocolTweaksMode)
+    }
+
+    func saveProtocolTweaksMode(_ mode: String) {
+        sharedDefault?.set(mode, forKey: SharedKeys.protocolTweaksMode)
+    }
+
     func getServerSettings() -> String {
         return sharedDefault?.string(forKey: SharedKeys.serverSettings) ?? ""
     }

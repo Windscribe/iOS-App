@@ -319,6 +319,7 @@
 "Privacy Policy" = "গোপনীয়তা নীতি";
 "Pro" = "প্রো";
 "Protocol" = "প্রোটোকল";
+"Protocol Tweaks" = "প্রোটোকল টুইকস";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "WireGuard, OpenVPN এবং Stealth প্রোটোকলে প্রোটোকল-স্তরের পরিবর্তন করা হয়েছে।";
 "Quickly re-connect using a different protocol." = "ভিন্ন প্রোটোকল ব্যবহার করে দ্রুত পুনরায় সংযোগ করুন।";
 "R.O.B.E.R.T." = "R.O.B.E.R.T.";

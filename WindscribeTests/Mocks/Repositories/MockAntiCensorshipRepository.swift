@@ -13,6 +13,8 @@ import Combine
 
 class MockAntiCensorshipRepository: AntiCensorshipRepository {
 
+    var protocolTweaksModeSubject: CurrentValueSubject<ProtocolTweaksMode, Never> = .init(.auto)
+
     var useProtocolTweaksSubject: CurrentValueSubject<Bool, Never> = .init(false)
 
     var selecteRoutingTypeSubject: CurrentValueSubject<Windscribe.ServerRoutingType, Never> = .init(Windscribe.ServerRoutingType.auto)
@@ -25,8 +27,8 @@ class MockAntiCensorshipRepository: AntiCensorshipRepository {
 
     }
 
-    func setUseProtocolTweaks(_ value: Bool) {
-
+    func setProtocolTweaksMode(_ value: ProtocolTweaksMode) {
+        protocolTweaksModeSubject.send(value)
     }
 
     func setWgParameter(withId id: String) {

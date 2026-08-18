@@ -20,7 +20,7 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
     @Published var entries: [AntiCensorshipOptionsEntryType] = []
     @Published var safariURL: URL?
 
-    private var circumventCensorshipSelected = DefaultValues.circumventCensorship
+    private var selectedProtocolTweaksMode: ProtocolTweaksMode = .auto
     private var selectedUnblockWgParam = ""
     private var selectedRoutingType: ServerRoutingType = .auto
 
@@ -44,11 +44,11 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
     override func bindSubjects() {
         super.bindSubjects()
 
-        antiCensorshipRepository.useProtocolTweaksSubject
+        antiCensorshipRepository.protocolTweaksModeSubject
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] enabled in
+            .sink { [weak self] mode in
                 guard let self = self else { return }
-                self.circumventCensorshipSelected = enabled
+                self.selectedProtocolTweaksMode = mode
                 self.reloadItems()
             }
             .store(in: &cancellables)
@@ -73,6 +73,10 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
     }
 
     override func reloadItems() {
+        let modeOptions = ProtocolTweaksMode.allCases.map {
+            MenuOption(title: $0.title, fieldKey: $0.rawValue)
+        }
+
         let paramOptions = antiCensorshipRepository.unlockParams
             .map { MenuOption(title: $0.title, fieldKey: $0.id) }
 
@@ -82,7 +86,8 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
 
         entries = [
             .info,
-            .protocolTweaks(isSelected: circumventCensorshipSelected,
+            .protocolTweaks(selectedMode: selectedProtocolTweaksMode,
+                            modeOptions: modeOptions,
                             paramSelected: selectedUnblockWgParam,
                             paramOptions: paramOptions),
             .routingType(selectedRoutingType: selectedRoutingType.title,
@@ -99,11 +104,12 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
         case .info:
             openLink(.circumventCensorship)
         case .protocolTweaks:
-            if case .toggle(let isSelected, _) = action {
-                updateCircumventCensorshipEnabled(isSelected)
-            }
-            if case .multiple(let currentOption, _) = action {
-                updateUnblockWgParam(currentOption)
+            if case .multiple(let currentOption, let parentId) = action {
+                if parentId == entry.id {
+                    updateProtocolTweaksMode(currentOption)
+                } else if parentId == AntiCensorshipOptionsSecondaryIDs.wgUnlockMenu.id {
+                    updateUnblockWgParam(currentOption)
+                }
             }
             if case .infoLink = action {
                 openLink(.circumventCensorship)
@@ -125,9 +131,10 @@ class AntiCensorshipOptionsViewModelImpl: PreferencesBaseViewModelImpl, AntiCens
 
     // MARK: - Private Methods
 
-    private func updateCircumventCensorshipEnabled(_ enabled: Bool) {
-        antiCensorshipRepository.setUseProtocolTweaks(enabled)
-        logger.logI("AntiCensorshipOptionsViewModel", "Circumvent censorship enabled: \(enabled)")
+    private func updateProtocolTweaksMode(_ fieldValue: String) {
+        selectedProtocolTweaksMode = ProtocolTweaksMode(rawValue: fieldValue) ?? .auto
+        antiCensorshipRepository.setProtocolTweaksMode(selectedProtocolTweaksMode)
+        logger.logI("AntiCensorshipOptionsViewModel", "Protocol tweaks mode: \(selectedProtocolTweaksMode.rawValue)")
         reloadItems()
     }
 

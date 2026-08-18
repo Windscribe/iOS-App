@@ -15,7 +15,7 @@ final class AntiCensorshipScreenViewModel {
 
     // MARK: - Private State
     private var isObserving = false
-    private var circumventCensorshipSelected = DefaultValues.circumventCensorship
+    private var selectedProtocolTweaksMode: ProtocolTweaksMode = .auto
     private var selectedUnblockWgParam = ""
     private var selectedRoutingType: ServerRoutingType = .auto
     private var tlsServerName = ""
@@ -32,6 +32,10 @@ final class AntiCensorshipScreenViewModel {
 
     // MARK: - Entries
     var entries: [AntiCensorshipOptionsEntryType] {
+        let modeOptions = ProtocolTweaksMode.allCases.map {
+            MenuOption(title: $0.title, fieldKey: $0.rawValue)
+        }
+
         let paramOptions = antiCensorshipManaging.unlockParams
             .map { MenuOption(title: $0.title, fieldKey: $0.id) }
 
@@ -42,7 +46,8 @@ final class AntiCensorshipScreenViewModel {
         return [
             .info,
             .protocolTweaks(
-                isSelected: circumventCensorshipSelected,
+                selectedMode: selectedProtocolTweaksMode,
+                modeOptions: modeOptions,
                 paramSelected: selectedUnblockWgParam,
                 paramOptions: paramOptions
             ),
@@ -68,11 +73,10 @@ final class AntiCensorshipScreenViewModel {
         self.logger = logger
         self.preferencesWriting = preferencesWriting
 
-        // Initialize current state
-        self.circumventCensorshipSelected = antiCensorshipManaging.useProtocolTweaks
-        self.selectedUnblockWgParam = antiCensorshipManaging.selectedWgParam?.title ?? ""
-        self.selectedRoutingType = antiCensorshipManaging.serverRoutingType
-        self.tlsServerName = preferencesReading.tlsServerName ?? ""
+        selectedProtocolTweaksMode = antiCensorshipManaging.protocolTweaksMode
+        selectedUnblockWgParam = antiCensorshipManaging.selectedWgParam?.title ?? ""
+        selectedRoutingType = antiCensorshipManaging.serverRoutingType
+        tlsServerName = preferencesReading.tlsServerName ?? ""
     }
 
     // MARK: - Lifecycle
@@ -81,16 +85,16 @@ final class AntiCensorshipScreenViewModel {
         isObserving = true
         defer { isObserving = false }
 
-        async let tweaks: () = observeProtocolTweaks()
+        async let tweaks: () = observeProtocolTweaksMode()
         async let routing: () = observeServerRoutingType()
         async let param: () = observeWgParam()
 
         _ = await (tweaks, routing, param)
     }
 
-    private func observeProtocolTweaks() async {
-        for await value in antiCensorshipManaging.useProtocolTweaksUpdates {
-            circumventCensorshipSelected = value
+    private func observeProtocolTweaksMode() async {
+        for await value in antiCensorshipManaging.protocolTweaksModeUpdates {
+            selectedProtocolTweaksMode = value
         }
     }
 
@@ -115,11 +119,12 @@ final class AntiCensorshipScreenViewModel {
             openLink(.circumventCensorship)
 
         case .protocolTweaks:
-            if case .toggle(let isSelected, _) = action {
-                updateCircumventCensorshipEnabled(isSelected)
-            }
-            if case .multiple(let currentOption, _) = action {
-                updateUnblockWgParam(currentOption)
+            if case .multiple(let currentOption, let parentId) = action {
+                if parentId == entry.id {
+                    updateProtocolTweaksMode(currentOption)
+                } else if parentId == AntiCensorshipOptionsSecondaryIDs.wgUnlockMenu.id {
+                    updateUnblockWgParam(currentOption)
+                }
             }
             if case .infoLink = action {
                 openLink(.circumventCensorship)
@@ -142,11 +147,12 @@ final class AntiCensorshipScreenViewModel {
     }
 
     // MARK: - Private Methods
-    private func updateCircumventCensorshipEnabled(_ enabled: Bool) {
-        circumventCensorshipSelected = enabled
-        antiCensorshipManaging.setUseProtocolTweaks(enabled)
+    private func updateProtocolTweaksMode(_ fieldValue: String) {
+        let mode = ProtocolTweaksMode(rawValue: fieldValue) ?? .auto
+        selectedProtocolTweaksMode = mode
+        antiCensorshipManaging.setProtocolTweaksMode(mode)
         selectedUnblockWgParam = antiCensorshipManaging.selectedWgParam?.title ?? ""
-        logger.logI("AntiCensorshipScreenViewModel", "Circumvent censorship enabled: \(enabled)")
+        logger.logI("AntiCensorshipScreenViewModel", "Protocol tweaks mode: \(mode.rawValue)")
     }
 
     private func updateUnblockWgParam(_ param: String) {

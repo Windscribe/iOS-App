@@ -319,6 +319,7 @@
 "Privacy Policy" = "プライバシーポリシー";
 "Pro" = "プロ";
 "Protocol" = "プロトコル";
+"Protocol Tweaks" = "プロトコル調整";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "WireGuard、OpenVPN、および Stealth プロトコルに対してプロトコルレベルの変更が行われました。";
 "Quickly re-connect using a different protocol." = "別のプロトコルで素早く再接続してください。";
 "R.O.B.E.R.T." = "R.O.B.E.R.T.";

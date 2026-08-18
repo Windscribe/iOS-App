@@ -9,6 +9,7 @@
 "Pressing Confirm will verify your Apple Sign In before deleting your account. Please be aware this action cannot be undone." = "Pressing Confirm will verify your Apple Sign-In before deleting your account. Please be aware this action cannot be undone.";
 "Regular" = "Regular";
 "Alternate" = "Alternate";
+"Protocol Tweaks" = "Protocol Tweaks";
 "Enter your Account Hash to delete your account. Please be aware this action cannot be undone." = "Enter your Account Hash to delete your account. Please be aware this action cannot be undone.";
 "Invalid session auth or api parameters provided." = "Invalid session authentication or API parameters provided.";
 "Invalid session auth." = "Invalid session authentication.";

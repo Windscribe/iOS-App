@@ -319,6 +319,7 @@
 "Privacy Policy" = "Chính sách Quyền riêng tư";
 "Pro" = "Tài khoản cao cấp";
 "Protocol" = "Giao thức";
+"Protocol Tweaks" = "Tinh chỉnh giao thức";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "Đã thực hiện các thay đổi ở cấp độ giao thức đối với các giao thức WireGuard, OpenVPN và Stealth";
 "Quickly re-connect using a different protocol." = "Nhanh chóng kết nối lại bằng một giao thức khác.";
 "R.O.B.E.R.T." = "R.O.B.E.R.T.";

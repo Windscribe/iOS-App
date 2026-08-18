@@ -131,6 +131,7 @@ enum SharedKeys {
     // Unblock WG Params
     static let unblockWgParams = "unblockWgParams"
     static let antiCensorshipManuallyConfigured = "antiCensorshipManuallyConfigured"
+    static let protocolTweaksMode = "protocolTweaksMode"
 
     // Locations and Servers revision
     static let serverRevision = "serverRevision"

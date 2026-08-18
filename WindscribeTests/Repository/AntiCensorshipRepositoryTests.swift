@@ -10,7 +10,7 @@ import Testing
 import Foundation
 @testable import Windscribe
 
-@Suite("AntiCensorshipRepository manual override persistence")
+@Suite("AntiCensorshipRepository protocol tweaks modes")
 struct AntiCensorshipRepositoryTests {
 
     private func makeParam(id: String, title: String) -> UnblockWgParams {
@@ -39,72 +39,113 @@ struct AntiCensorshipRepositoryTests {
                                      preferences: preferences)
     }
 
-    @Test("Session preset does not overwrite a manually selected preset")
-    func manualPresetSurvivesSessionPreset() {
+    @Test("Never-configured legacy state migrates to Auto")
+    func legacyAutomaticMigration() {
         let (preferences, localDatabase) = makeStores()
+        preferences.mockCircumventCensorshipEnabled = true
+
         let repository = makeRepository(preferences: preferences, localDatabase: localDatabase)
 
-        repository.setUseProtocolTweaks(true)
-        repository.setWgParameter(withId: "J")
-
-        repository.setSessionWgParameter(withId: "G")
-
-        #expect(repository.selectedWgParamSubject.value?.id == "J")
-        #expect(preferences.getUnblockWgParams()?.id == "J")
-        #expect(repository.useProtocolTweaksSubject.value == true)
+        #expect(repository.protocolTweaksModeSubject.value == .auto)
+        #expect(repository.useProtocolTweaksSubject.value == false)
+        #expect(preferences.mockProtocolTweaksMode == ProtocolTweaksMode.auto.rawValue)
     }
 
-    @Test("Session preset does not re-enable manually disabled Anti-Censorship")
-    func manualDisableSurvivesSessionPreset() {
+    @Test("Manually enabled legacy state migrates to Enabled")
+    func legacyEnabledMigration() {
         let (preferences, localDatabase) = makeStores()
+        preferences.mockAntiCensorshipManuallyConfigured = true
+        preferences.mockCircumventCensorshipEnabled = true
+        preferences.mockUnblockWgParams = makeParam(id: "J", title: "J - Iran Junk Packets")
+
         let repository = makeRepository(preferences: preferences, localDatabase: localDatabase)
 
-        repository.setUseProtocolTweaks(true)
-        repository.setUseProtocolTweaks(false)
+        #expect(repository.protocolTweaksModeSubject.value == .enabled)
+        #expect(repository.useProtocolTweaksSubject.value == true)
+        #expect(repository.selectedWgParamSubject.value?.id == "J")
+        #expect(preferences.mockProtocolTweaksMode == ProtocolTweaksMode.enabled.rawValue)
+    }
 
-        repository.setSessionWgParameter(withId: "G")
+    @Test("Manually disabled legacy state migrates to Disabled")
+    func legacyDisabledMigration() {
+        let (preferences, localDatabase) = makeStores()
+        preferences.mockAntiCensorshipManuallyConfigured = true
+        preferences.mockCircumventCensorshipEnabled = false
 
+        let repository = makeRepository(preferences: preferences, localDatabase: localDatabase)
+
+        #expect(repository.protocolTweaksModeSubject.value == .disabled)
         #expect(repository.useProtocolTweaksSubject.value == false)
         #expect(repository.selectedWgParamSubject.value == nil)
-        #expect(preferences.isCircumventCensorshipEnabled() == false)
+        #expect(preferences.mockProtocolTweaksMode == ProtocolTweaksMode.disabled.rawValue)
     }
 
-    @Test("Manual selection survives repository recreation plus session bootstrap")
-    func manualOwnershipSurvivesRelaunch() {
+    @Test("Auto follows valid, changed, empty, and unknown session recommendations")
+    func automaticSessionRecommendations() {
+        let (preferences, localDatabase) = makeStores()
+        let repository = makeRepository(preferences: preferences, localDatabase: localDatabase)
+
+        repository.setSessionWgParameter(withId: "G")
+        #expect(repository.useProtocolTweaksSubject.value == true)
+        #expect(repository.selectedWgParamSubject.value?.id == "G")
+
+        repository.setSessionWgParameter(withId: "J")
+        #expect(repository.useProtocolTweaksSubject.value == true)
+        #expect(repository.selectedWgParamSubject.value?.id == "J")
+
+        repository.setSessionWgParameter(withId: "")
+        #expect(repository.useProtocolTweaksSubject.value == false)
+        #expect(repository.selectedWgParamSubject.value == nil)
+
+        repository.setSessionWgParameter(withId: "unknown")
+        #expect(repository.useProtocolTweaksSubject.value == false)
+        #expect(repository.selectedWgParamSubject.value == nil)
+    }
+
+    @Test("Enabled selection survives repository recreation and session refresh")
+    func enabledSelectionPersists() {
         let (preferences, localDatabase) = makeStores()
         let firstLaunch = makeRepository(preferences: preferences, localDatabase: localDatabase)
-        firstLaunch.setUseProtocolTweaks(true)
+        firstLaunch.setProtocolTweaksMode(.enabled)
         firstLaunch.setWgParameter(withId: "J")
 
         let secondLaunch = makeRepository(preferences: preferences, localDatabase: localDatabase)
         secondLaunch.setSessionWgParameter(withId: "G")
 
-        #expect(secondLaunch.selectedWgParamSubject.value?.id == "J")
+        #expect(secondLaunch.protocolTweaksModeSubject.value == .enabled)
         #expect(secondLaunch.useProtocolTweaksSubject.value == true)
+        #expect(secondLaunch.selectedWgParamSubject.value?.id == "J")
+        #expect(preferences.getUnblockWgParams()?.id == "J")
     }
 
-    @Test("Never-configured user still gets automatic session preset")
-    func automaticSessionSelectionStillApplies() {
+    @Test("Disabled mode survives repository recreation and session refresh")
+    func disabledModePersists() {
         let (preferences, localDatabase) = makeStores()
-        let repository = makeRepository(preferences: preferences, localDatabase: localDatabase)
+        let firstLaunch = makeRepository(preferences: preferences, localDatabase: localDatabase)
+        firstLaunch.setProtocolTweaksMode(.disabled)
 
-        repository.setSessionWgParameter(withId: "G")
+        let secondLaunch = makeRepository(preferences: preferences, localDatabase: localDatabase)
+        secondLaunch.setSessionWgParameter(withId: "G")
 
-        #expect(repository.useProtocolTweaksSubject.value == true)
-        #expect(repository.selectedWgParamSubject.value?.id == "G")
-        #expect(preferences.getUnblockWgParams()?.id == "G")
+        #expect(secondLaunch.protocolTweaksModeSubject.value == .disabled)
+        #expect(secondLaunch.useProtocolTweaksSubject.value == false)
+        #expect(secondLaunch.selectedWgParamSubject.value == nil)
     }
 
-    @Test("Empty session preset leaves manual state alone")
-    func emptySessionPresetLeavesManualStateAlone() {
+    @Test("Returning to Auto persists and restores session ownership")
+    func returningToAuto() {
         let (preferences, localDatabase) = makeStores()
-        let repository = makeRepository(preferences: preferences, localDatabase: localDatabase)
-        repository.setUseProtocolTweaks(true)
-        repository.setWgParameter(withId: "J")
+        let firstLaunch = makeRepository(preferences: preferences, localDatabase: localDatabase)
+        firstLaunch.setProtocolTweaksMode(.enabled)
+        firstLaunch.setWgParameter(withId: "J")
+        firstLaunch.setProtocolTweaksMode(.auto)
 
-        repository.setSessionWgParameter(withId: "")
+        let secondLaunch = makeRepository(preferences: preferences, localDatabase: localDatabase)
+        secondLaunch.setSessionWgParameter(withId: "G")
 
-        #expect(repository.selectedWgParamSubject.value?.id == "J")
-        #expect(repository.useProtocolTweaksSubject.value == true)
+        #expect(secondLaunch.protocolTweaksModeSubject.value == .auto)
+        #expect(secondLaunch.useProtocolTweaksSubject.value == true)
+        #expect(secondLaunch.selectedWgParamSubject.value?.id == "G")
+        #expect(preferences.mockAntiCensorshipManuallyConfigured == false)
     }
 }

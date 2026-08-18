@@ -48,6 +48,7 @@ class MockPreferences: Preferences {
     var mockTunnelStoppedForAppUpdate = false
     var mockCircumventCensorshipEnabled = false
     var mockAntiCensorshipManuallyConfigured = false
+    var mockProtocolTweaksMode: String?
 
     // Apple receipt storage
     var mockActiveAppleSig: String?
@@ -484,6 +485,14 @@ class MockPreferences: Preferences {
 
     func saveAntiCensorshipManuallyConfigured(status: Bool) {
         mockAntiCensorshipManuallyConfigured = status
+    }
+
+    func getProtocolTweaksMode() -> String? {
+        mockProtocolTweaksMode
+    }
+
+    func saveProtocolTweaksMode(_ mode: String) {
+        mockProtocolTweaksMode = mode
     }
 
     func setLanguageManagerSelectedLanguage(language: Windscribe.Languages) {}

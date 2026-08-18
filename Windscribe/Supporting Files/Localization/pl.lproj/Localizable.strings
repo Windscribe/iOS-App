@@ -319,6 +319,7 @@
 "Privacy Policy" = "Polityka prywatności";
 "Pro" = "Pro";
 "Protocol" = "Protokół";
+"Protocol Tweaks" = "Modyfikacje protokołu";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "Wprowadzono zmiany na poziomie protokołu w protokołach WireGuard, OpenVPN i Stealth.";
 "Quickly re-connect using a different protocol." = "Szybko połącz ponownie, używając innego protokołu.";
 "R.O.B.E.R.T." = "R.O.B.E.R.T.";

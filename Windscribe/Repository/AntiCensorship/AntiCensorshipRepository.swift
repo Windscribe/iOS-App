@@ -10,6 +10,7 @@ import Foundation
 import Combine
 
 protocol AntiCensorshipRepository: Sendable {
+    var protocolTweaksModeSubject: CurrentValueSubject<ProtocolTweaksMode, Never> { get }
     var useProtocolTweaksSubject: CurrentValueSubject<Bool, Never> { get }
     var selecteRoutingTypeSubject: CurrentValueSubject<ServerRoutingType, Never> { get }
     var selectedWgParamSubject: CurrentValueSubject<UnblockWgParams?, Never> { get }
@@ -17,8 +18,7 @@ protocol AntiCensorshipRepository: Sendable {
     var unlockParams: [UnblockWgParams] { get }
 
     func setServerRoutingType(_ value: ServerRoutingType)
-
-    func setUseProtocolTweaks(_ value: Bool)
+    func setProtocolTweaksMode(_ value: ProtocolTweaksMode)
 
     func setWgParameter(withId id: String)
     func setSessionWgParameter(withId id: String)
@@ -32,6 +32,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
 
     var unlockParams: [UnblockWgParams] = []
 
+    var protocolTweaksModeSubject = CurrentValueSubject<ProtocolTweaksMode, Never>(.auto)
     var selectedWgParamSubject = CurrentValueSubject<UnblockWgParams?, Never>(nil)
     var useProtocolTweaksSubject = CurrentValueSubject<Bool, Never>(false)
     var selecteRoutingTypeSubject = CurrentValueSubject<ServerRoutingType, Never>(.auto)
@@ -55,36 +56,73 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
         self.preferences = preferences
 
         unlockParams = localDatabase.getUnblockWgParams()
-
-        selectedWgParamSubject.send(preferences.getUnblockWgParams())
-        useProtocolTweaksSubject.send(preferences.isCircumventCensorshipEnabled())
+        protocolTweaksModeSubject.send(loadProtocolTweaksMode())
         selecteRoutingTypeSubject.send(preferences.getRoutingType())
+        applyProtocolTweaksMode()
     }
 
     // MARK: - Setting values
-    func setUseProtocolTweaks(_ value: Bool) {
-        preferences.saveAntiCensorshipManuallyConfigured(status: true)
-        applyUseProtocolTweaks(value)
+    func setProtocolTweaksMode(_ value: ProtocolTweaksMode) {
+        preferences.saveProtocolTweaksMode(value.rawValue)
+        preferences.saveAntiCensorshipManuallyConfigured(status: value != .auto)
+        protocolTweaksModeSubject.send(value)
+        applyProtocolTweaksMode()
     }
 
-    private func applyUseProtocolTweaks(_ value: Bool) {
+    private func loadProtocolTweaksMode() -> ProtocolTweaksMode {
+        if let value = preferences.getProtocolTweaksMode(),
+           let mode = ProtocolTweaksMode(rawValue: value) {
+            return mode
+        }
+
+        let mode: ProtocolTweaksMode
+        if preferences.isAntiCensorshipManuallyConfigured() {
+            mode = preferences.isCircumventCensorshipEnabled() ? .enabled : .disabled
+        } else {
+            mode = .auto
+        }
+        preferences.saveProtocolTweaksMode(mode.rawValue)
+        return mode
+    }
+
+    private func applyProtocolTweaksMode() {
+        switch protocolTweaksModeSubject.value {
+        case .auto:
+            applySessionRecommendation()
+        case .enabled:
+            applyEffectiveProtocolTweaks(true)
+            restoreSelectedWgParam()
+        case .disabled:
+            applyEffectiveProtocolTweaks(false)
+        }
+    }
+
+    private func applySessionRecommendation() {
+        guard let id = sessionWgParameterKey,
+              let param = unlockParams.first(where: { $0.id == id }) else {
+            applyEffectiveProtocolTweaks(false)
+            return
+        }
+
+        applyEffectiveProtocolTweaks(true)
+        selectParam(with: param)
+    }
+
+    private func applyEffectiveProtocolTweaks(_ value: Bool) {
         preferences.saveCircumventCensorshipStatus(status: value)
         useProtocolTweaksSubject.send(value)
 
-        if value {
-            updateSelectedWgParam()
-        } else {
+        if !value {
             selectedWgParamSubject.send(nil)
         }
     }
 
-    private func updateSelectedWgParam() {
-        if selectedWgParamSubject.value == nil {
-            if let sessionWgParameterKey = sessionWgParameterKey {
-                applyWgParameter(withId: sessionWgParameterKey)
-            } else if let first = unlockParams.first {
-                selectParam(with: first)
-            }
+    private func restoreSelectedWgParam() {
+        if let saved = preferences.getUnblockWgParams(),
+           let param = unlockParams.first(where: { $0.id == saved.id }) {
+            selectParam(with: param)
+        } else if let first = unlockParams.first {
+            selectParam(with: first)
         }
     }
 
@@ -94,29 +132,18 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
     }
 
     func setSessionWgParameter(withId id: String) {
-        if id.isEmpty {
-            sessionWgParameterKey = nil
-        } else {
-            sessionWgParameterKey = id
+        sessionWgParameterKey = id.isEmpty ? nil : id
 
-            guard !preferences.isAntiCensorshipManuallyConfigured() else { return }
-
-            if useProtocolTweaksSubject.value == false {
-                applyUseProtocolTweaks(true)
-            }
-            applyWgParameter(withId: id)
+        if protocolTweaksModeSubject.value == .auto {
+            applySessionRecommendation()
         }
     }
 
     func setWgParameter(withId id: String) {
+        guard protocolTweaksModeSubject.value == .enabled else { return }
         preferences.saveAntiCensorshipManuallyConfigured(status: true)
-        applyWgParameter(withId: id)
-    }
-
-    private func applyWgParameter(withId id: String) {
-        guard useProtocolTweaksSubject.value else { return }
-        if let first = unlockParams.first(where: { $0.id == id }) {
-            selectParam(with: first)
+        if let param = unlockParams.first(where: { $0.id == id }) {
+            selectParam(with: param)
         }
     }
 
@@ -130,7 +157,10 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
     func needsRefresh() -> Bool {
         guard !isRefreshing else { return false }
         let isEmpty = unlockParams.compactMap { $0.title.isEmpty ? nil : $0.title }.isEmpty
-        return selectedWgParamSubject.value == nil || isEmpty
+        let needsEnabledSelection = protocolTweaksModeSubject.value == .enabled && selectedWgParamSubject.value == nil
+        let needsAutomaticSelection = protocolTweaksModeSubject.value == .auto &&
+            sessionWgParameterKey != nil && selectedWgParamSubject.value == nil
+        return isEmpty || needsEnabledSelection || needsAutomaticSelection
     }
 
     func tryRefresh() {
@@ -147,8 +177,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
                 logger.logI("UnblockWgParamsRepository", "Refreshing wg unblock params")
                 unlockParams = try await apiManager.wgUnlockParams().params
                 localDatabase.saveUnblockWgParams(params: unlockParams)
-
-                updateSelectedWgParam()
+                applyProtocolTweaksMode()
             } catch {
                 logger.logE("UnblockWgParamsRepository", "Failed Refreshing wg unblock params with error: \(error)")
                 isRefreshing = false

@@ -319,6 +319,7 @@
 "Privacy Policy" = "隱私政策";
 "Pro" = "親";
 "Protocol" = "協議";
+"Protocol Tweaks" = "協定調整";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "對 WireGuard、OpenVPN 和 Stealth 協議進行了協議級變更。";
 "Quickly re-connect using a different protocol." = "請使用其他協議快速重新連線。";
 "R.O.B.E.R.T." = "R.O.B.E.R.T.";

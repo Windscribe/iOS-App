@@ -560,6 +560,7 @@ enum TextsAsset {
         static var antiCensorshipOptions: String { return "Anti-censorship Settings".localized }
         static var antiCensorshipTitle: String { "Anti-censorship".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
+        static var protocolTweaks: String { "Protocol Tweaks".localized }
         static var serverRouting: String { "Server Routing".localized }
         static var serverRoutingAuto: String { "Auto".localized }
         static var serverRoutingRegular: String { "Regular".localized }

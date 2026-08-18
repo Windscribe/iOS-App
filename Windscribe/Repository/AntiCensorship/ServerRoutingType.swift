@@ -8,6 +8,20 @@
 
 import Foundation
 
+enum ProtocolTweaksMode: String, CaseIterable {
+    case auto
+    case enabled
+    case disabled
+
+    var title: String {
+        switch self {
+        case .auto: TextsAsset.General.auto
+        case .enabled: TextsAsset.General.enabled
+        case .disabled: TextsAsset.General.disabled
+        }
+    }
+}
+
 enum ServerRoutingType: String, CaseIterable {
     case auto
     case regular

@@ -319,6 +319,7 @@
 "Privacy Policy" = "개인 정보 취급 방침";
 "Pro" = "프로";
 "Protocol" = "프로토콜";
+"Protocol Tweaks" = "프로토콜 조정";
 "Protocol-level changes made to Wireguard, OpenVPN and Stealth protocols" = "WireGuard, OpenVPN 및 Stealth 프로토콜에 프로토콜 수준의 변경이 적용되었습니다.";
 "Quickly re-connect using a different protocol." = "다른 프로토콜로 빠르게 다시 연결하세요.";
 "R.O.B.E.R.T." = "R.O.B.E.R.T. (영어)";
