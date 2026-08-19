@@ -68,7 +68,9 @@ private struct PreferencesMainContentView: View {
         } message: {
             Text(TextsAsset.Preferences.logOutAlert)
         }
-        .task {
+        .allowsHitTesting(!viewModel.isLoggingOut)
+        .task(id: viewModel.isLoggingOut) {
+            guard !viewModel.isLoggingOut else { return }
             await viewModel.startObservers()
         }
     }

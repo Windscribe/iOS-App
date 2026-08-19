@@ -13,7 +13,7 @@ import Foundation
 @MainActor
 final class PreferencesMainViewModel {
     var visibleItems: [PreferencesMainEntryType] {
-        let isGhost = sessionProviding.session?.isUserGhost ?? false
+        let isGhost = session?.isUserGhost ?? false
         let count = isGhost ? 9 : 10
         return (0..<count).compactMap { rawValue in
             guard let item = PreferencesMainEntryType(rawValue: rawValue) else { return nil }
@@ -26,6 +26,7 @@ final class PreferencesMainViewModel {
     var activeRoute: PreferencesRouteID?
     var showConfirmEmailSheet = false
     var showLogoutConfirmation = false
+    private(set) var isLoggingOut = false
 
     private let accountManaging: AccountManaging
     private let hapticFeedback: HapticFeedbacking
@@ -35,6 +36,10 @@ final class PreferencesMainViewModel {
 
     private let isScreenTestEnabled = false
     private var isObserving = false
+    private var logoutSession: SessionModel?
+    private var session: SessionModel? {
+        isLoggingOut ? logoutSession : sessionProviding.session
+    }
 
     init(accountManaging: AccountManaging,
          hapticFeedback: HapticFeedbacking,
@@ -51,7 +56,7 @@ final class PreferencesMainViewModel {
     }
 
     func startObservers() async {
-        guard !isObserving else { return }
+        guard !isLoggingOut, !isObserving else { return }
         isObserving = true
         defer { isObserving = false }
 
@@ -63,12 +68,14 @@ final class PreferencesMainViewModel {
 
     func observeLanguage() async {
         for await _ in languageStoring.languageUpdates {
+            guard !isLoggingOut else { return }
             updateActionDisplay()
         }
     }
 
     func observeSession() async {
         for await _ in sessionProviding.sessionUpdates {
+            guard !isLoggingOut else { return }
             updateActionDisplay()
         }
     }
@@ -78,7 +85,7 @@ final class PreferencesMainViewModel {
     }
 
     func updateActionDisplay() {
-        guard let session = sessionProviding.session else {
+        guard let session else {
             actionButtons = []
             return
         }
@@ -106,7 +113,6 @@ final class PreferencesMainViewModel {
     }
 
     func shouldHideRow(item: PreferencesMainEntryType) -> Bool {
-        let session = sessionProviding.session
         let isGhost = session?.isUserGhost ?? false
         let isPro = session?.isUserPro ?? false
         return item == .referForData && (isGhost || isPro)
@@ -146,11 +152,12 @@ final class PreferencesMainViewModel {
     func logout() {
         logger.logD("PreferencesViewModel", "User tapped logout")
         actionSelected()
+        logoutSession = sessionProviding.session
+        isLoggingOut = true
         accountManaging.logoutUser()
     }
 
     private func dynamicRouteForAccountRow() -> PreferencesRouteID {
-        let session = sessionProviding.session
         if session?.isUserGhost == true {
             if session?.isUserPro == true && session?.hasUserAddedEmail == false {
                 return .signupGhost

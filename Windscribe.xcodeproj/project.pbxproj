@@ -924,6 +924,7 @@
 		B1983A010000000C /* WindowSetupServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000B /* WindowSetupServiceType.swift */; };
 		B1983A010000000D /* AppModulesManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1983A010000000E /* AppModulesManagers.swift */; };
 		C0DE10940000000000000002 /* AntiCensorshipScreenViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */; };
+		C0DE11840000000000000002 /* PreferencesLogoutStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE11840000000000000001 /* PreferencesLogoutStateTests.swift */; };
 		C0DE5CR1BE2F4A01AABB1234 /* MockSessionKeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE5CR1BE2F4A00AABB1234 /* MockSessionKeychainStore.swift */; };
 		C5007D532CAF9E740035AE21 /* PreferencePrivacyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */; };
 		C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */; };
@@ -2324,6 +2325,7 @@
 		B1983A010000000B /* WindowSetupServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowSetupServiceType.swift; sourceTree = "<group>"; };
 		B1983A010000000E /* AppModulesManagers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModulesManagers.swift; sourceTree = "<group>"; };
 		C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiCensorshipScreenViewModelTests.swift; sourceTree = "<group>"; };
+		C0DE11840000000000000001 /* PreferencesLogoutStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesLogoutStateTests.swift; sourceTree = "<group>"; };
 		C0DE5CR1BE2F4A00AABB1234 /* MockSessionKeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSessionKeychainStore.swift; sourceTree = "<group>"; };
 		C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencePrivacyView.xib; sourceTree = "<group>"; };
 		C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencePrivacyView.swift; sourceTree = "<group>"; };
@@ -4345,6 +4347,7 @@
 			isa = PBXGroup;
 			children = (
 				C0DE10940000000000000001 /* AntiCensorshipScreenViewModelTests.swift */,
+				C0DE11840000000000000001 /* PreferencesLogoutStateTests.swift */,
 				1E55B7212FBE149C0007BE80 /* GeneralTests.swift */,
 				92C985A32FA3A79E00326D64 /* AboutTests.swift */,
 				92EFE9C32FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift */,
@@ -8724,6 +8727,7 @@
 				92890E142F7C4917002EAB44 /* MockAntiCensorshipRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
 				C0DE10940000000000000002 /* AntiCensorshipScreenViewModelTests.swift in Sources */,
+				C0DE11840000000000000002 /* PreferencesLogoutStateTests.swift in Sources */,
 				1E55B7222FBE14A40007BE80 /* GeneralTests.swift in Sources */,
 				1E0492BC2F4750BC0016B11F /* MockEmergencyRepository.swift in Sources */,
 				F42D7FBA2F3513E700F71B20 /* IPRepositoryTests.swift in Sources */,

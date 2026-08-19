@@ -33,6 +33,11 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     private let alertManager: AlertManager
     private let languageManager: LanguageManager
     private let preferences: Preferences
+    private var isLoggingOut = false
+    private var logoutSession: SessionModel?
+    private var session: SessionModel? {
+        isLoggingOut ? logoutSession : userSessionRepository.sessionModel
+    }
 
     init(
         sessionManager: SessionManager,
@@ -73,7 +78,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     func updateActionDisplay() {
-        guard let session = userSessionRepository.sessionModel else {
+        guard let session else {
             actionButtons = []
             return
         }
@@ -94,7 +99,6 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     func getDynamicRouteForAccountRow() -> PreferencesRouteID {
-        let session = userSessionRepository.sessionModel
         if session?.isUserGhost == true {
             if session?.isUserPro == true && session?.hasUserAddedEmail == false {
                 return .signupGhost
@@ -107,7 +111,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     override func reloadItems() {
-        let isGhost = userSessionRepository.sessionModel?.isUserGhost ?? false
+        let isGhost = session?.isUserGhost ?? false
         let count = isGhost ? 9 : 10
         visibleItems = (0..<count).compactMap {
             let item = PreferenceItemType(rawValue: $0)!
@@ -117,8 +121,8 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     }
 
     func shouldHideRow(index: Int) -> Bool {
-        let isGhost = userSessionRepository.sessionModel?.isUserGhost ?? false
-        let isPro = userSessionRepository.sessionModel?.isUserPro ?? false
+        let isGhost = session?.isUserGhost ?? false
+        let isPro = session?.isUserPro ?? false
         return index == 4 && (isGhost || isPro)
     }
 
@@ -131,9 +135,11 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
             title: TextsAsset.Preferences.logout,
             message: TextsAsset.Preferences.logOutAlert
         ) { [weak self] confirmed in
-            if confirmed {
-                self?.sessionManager.logoutUser()
-            }
+            guard confirmed, let self else { return }
+            self.logoutSession = self.userSessionRepository.sessionModel
+            self.isLoggingOut = true
+            self.cancellables.removeAll()
+            self.sessionManager.logoutUser()
         }
     }
 }
