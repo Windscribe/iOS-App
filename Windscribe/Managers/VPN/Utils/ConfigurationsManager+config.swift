@@ -303,8 +303,22 @@ extension ConfigurationsManager {
             throw VPNConfigurationErrors.invalidServerConfig
         }
         var lines = stringData.components(separatedBy: "\n")
+        // Remove previously added anti-censorship options
         lines.removeAll { s in
-            s.starts(with: "local-proxy")
+            let trimmed = s.trimmingCharacters(in: .whitespaces)
+            return trimmed.starts(with: "local-proxy") ||
+                   trimmed.starts(with: "udp-stuffing") ||
+                   trimmed.starts(with: "tcp-split-reset") ||
+                   trimmed.starts(with: "<i1>") ||
+                   trimmed.starts(with: "</i1>") ||
+                   trimmed.starts(with: "<i2>") ||
+                   trimmed.starts(with: "</i2>") ||
+                   trimmed.starts(with: "<i3>") ||
+                   trimmed.starts(with: "</i3>") ||
+                   trimmed.starts(with: "<i4>") ||
+                   trimmed.starts(with: "</i4>") ||
+                   trimmed.starts(with: "<i5>") ||
+                   trimmed.starts(with: "</i5>")
         }
         var configFound = false
         var x509Found = false
@@ -337,6 +351,9 @@ extension ConfigurationsManager {
         if userSettings.isCircumventCensorshipEnabled {
             lines.append("udp-stuffing")
             lines.append("tcp-split-reset")
+            if let selectedWgParam = antiCensorshipRepository.selectedWgParamSubject.value {
+                lines.append(contentsOf: selectedWgParam.getOpenVPNIConfigText())
+            }
         }
         guard let appendedConfigData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else {
             throw VPNConfigurationErrors.invalidServerConfig

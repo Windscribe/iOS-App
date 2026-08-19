@@ -42,7 +42,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Windscribe/iOSOpenVPNAdapter.git",
       "state" : {
-        "revision" : "5dacd45e47ca9658d11861f760d5d20677c547b6"
+        "revision" : "29165e967e231ea11aceb6b84ba4080baf340b3a"
       }
     },
     {

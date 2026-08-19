@@ -124,6 +124,22 @@ struct UnblockWgParams: Codable, Equatable {
         .init(from: self)
     }
 
+    func getOpenVPNIConfigText() -> [String] {
+        let iValues: [(index: Int, value: String?)] = [(1, i1), (2, i2), (3, i3), (4, i4), (5, i5)]
+        var result: [String] = []
+        for item in iValues {
+            guard let value = item.value, !value.isEmpty else { continue }
+            let sanitizedValue = value.filter { character in
+                character.isLetter || character.isNumber || character.isWhitespace || character == "<" || character == ">"
+            }
+            guard !sanitizedValue.isEmpty else { continue }
+
+            // Use XML-style tags for i-packets on a single line
+            result.append("<i\(item.index)>\(sanitizedValue)</i\(item.index)>")
+        }
+        return result
+    }
+
     func getConfigText() -> [String] {
         var output = [String]()
         if  let jc = jc, jc != 0 {

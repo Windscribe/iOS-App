@@ -10,6 +10,36 @@ final class UnblockWgParamsRecordTests: XCTestCase {
         return queue
     }
 
+    func testOpenVPNIConfigTextUsesNonEmptySanitizedValues() {
+        let model = UnblockWgParams(
+            id: "wg-params-1",
+            title: "Default",
+            countries: ["RU"],
+            jc: nil,
+            jMin: nil,
+            jMax: nil,
+            s1: nil,
+            s2: nil,
+            s3: nil,
+            s4: nil,
+            h1: nil,
+            h2: nil,
+            h3: nil,
+            h4: nil,
+            i1: "<b 0A0B> <t>",
+            i2: nil,
+            i3: "<rc 8>; drop punctuation!",
+            i4: "!!!",
+            i5: "tail"
+        )
+
+        XCTAssertEqual(model.getOpenVPNIConfigText(), [
+            "<i1><b 0A0B> <t></i1>",
+            "<i3><rc 8> drop punctuation</i3>",
+            "<i5>tail</i5>"
+        ])
+    }
+
     func testRoundTrip() throws {
         let model = UnblockWgParams(
             id: "wg-params-1",
