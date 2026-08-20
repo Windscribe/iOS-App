@@ -47,20 +47,11 @@ extension VPNManagerImpl {
         }
         logger.logI("VPNManager", "Logout: removing \(managers.count) VPN profile(s).")
         for manager in managers {
-            await disableAndRemove(manager: manager)
+            await removeProfile(manager: manager)
         }
     }
 
-    /// Disable on-demand and save first (a modify on an approved config — prompt-free) so iOS stops
-    /// auto-reconnecting, then stop the tunnel, then remove. One manager instance throughout (#1124).
-    private func disableAndRemove(manager: NEVPNManager) async {
-        manager.onDemandRules = []
-        manager.isOnDemandEnabled = false
-        manager.isEnabled = false
-        #if os(iOS)
-            manager.protocolConfiguration?.includeAllNetworks = false
-        #endif
-        try? await manager.saveToPreferences()
+    private func removeProfile(manager: NEVPNManager) async {
         if [.connected, .connecting, .reasserting].contains(manager.connection.status) {
             manager.connection.stopVPNTunnel()
         }
