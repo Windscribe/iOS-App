@@ -1215,6 +1215,7 @@
 		C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E832684BB90001D03A7 /* HelpItem.swift */; };
 		C5FA3E8C268789EE001D03A7 /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E8B268789EE001D03A7 /* Ticket.swift */; };
 		CD1030A22FBB000100000001 /* ConnectivityManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1030A12FBB000100000001 /* ConnectivityManagerTests.swift */; };
+		CD1186A22FCE000100000002 /* WifiManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1186A12FCE000100000001 /* WifiManagerTests.swift */; };
 		CD1F00042FD8000000000004 /* ReferForDataScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1F00012FD8000000000001 /* ReferForDataScreen.swift */; };
 		CD1F00052FD8000000000005 /* ReferForDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1F00022FD8000000000002 /* ReferForDataViewModel.swift */; };
 		CD1F00062FD8000000000006 /* ReferAndSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1F00032FD8000000000003 /* ReferAndSharing.swift */; };
@@ -2462,6 +2463,7 @@
 		C5FA3E832684BB90001D03A7 /* HelpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpItem.swift; sourceTree = "<group>"; };
 		C5FA3E8B268789EE001D03A7 /* Ticket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		CD1030A12FBB000100000001 /* ConnectivityManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManagerTests.swift; sourceTree = "<group>"; };
+		CD1186A12FCE000100000001 /* WifiManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManagerTests.swift; sourceTree = "<group>"; };
 		CD175BC90A452DFACD551DD7 /* DebugLogManaging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DebugLogManaging.swift; sourceTree = "<group>"; };
 		CD1F00012FD8000000000001 /* ReferForDataScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferForDataScreen.swift; sourceTree = "<group>"; };
 		CD1F00022FD8000000000002 /* ReferForDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferForDataViewModel.swift; sourceTree = "<group>"; };
@@ -5387,6 +5389,7 @@
 				927991512F86C766000BB9D0 /* HashAuthManagerTests.swift */,
 				9223E2082FB3C1DC007252B6 /* WireguardIPManagerTests.swift */,
 				CD1030A12FBB000100000001 /* ConnectivityManagerTests.swift */,
+				CD1186A12FCE000100000001 /* WifiManagerTests.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -8712,6 +8715,7 @@
 				1E0492E22F48BD950016B11F /* MigrationRepositoryTests.swift in Sources */,
 				9223E2092FB3C1DC007252B6 /* WireguardIPManagerTests.swift in Sources */,
 				CD1030A22FBB000100000001 /* ConnectivityManagerTests.swift in Sources */,
+				CD1186A22FCE000100000002 /* WifiManagerTests.swift in Sources */,
 				1E0492AC2F45F32E0016B11F /* WireguardConfigRepositoryTests.swift in Sources */,
 				92B7B5D02F92E39A006B69DF /* UnblockWgParamsRecordTests.swift in Sources */,
 				927991542F86C7DD000BB9D0 /* SignUpViewModelHashTests.swift in Sources */,
