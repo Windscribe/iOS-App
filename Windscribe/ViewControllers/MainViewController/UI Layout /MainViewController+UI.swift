@@ -18,7 +18,6 @@ extension MainViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        reconcileMainViewLayout(for: size.width)
         view.setNeedsLayout()
         flagBackgroundView?.redraw()
         listSelectionView?.redrawGradientView()
