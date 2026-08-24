@@ -14,6 +14,26 @@ import os
     import WidgetKit
 #endif
 
+private enum PacketTunnelStartupError: LocalizedError {
+    case alreadyStarting
+    case invalidProtocolConfiguration
+    case missingOpenVPNConfiguration
+    case cancelled
+
+    var errorDescription: String? {
+        switch self {
+        case .alreadyStarting:
+            "Tunnel startup is already in progress."
+        case .invalidProtocolConfiguration:
+            "Invalid tunnel provider configuration."
+        case .missingOpenVPNConfiguration:
+            "Missing OpenVPN configuration."
+        case .cancelled:
+            "Tunnel startup was cancelled."
+        }
+    }
+}
+
 class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     // MARK: Dependencies
 
@@ -37,6 +57,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     // MARK: Properties
 
+    private let startHandlerLock = NSLock()
     private var startHandler: ((Error?) -> Void)?
     private var stopHandler: (() -> Void)?
     private var proxyStartRequested = false
@@ -53,6 +74,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
     }()
 
     override func startTunnel(options _: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+        guard beginStart(with: completionHandler) else {
+            completionHandler(PacketTunnelStartupError.alreadyStarting)
+            return
+        }
+
         // Check if tunnel was force disconnected (e.g., due to session invalidation)
         // This mirrors WireGuard's credential check but uses a flag since OpenVPN
         // credentials are embedded in tunnel config and can't be deleted
@@ -61,21 +87,28 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
             let protocolConfiguration = protocolConfiguration as? NETunnelProviderProtocol,
             let providerConfiguration = protocolConfiguration.providerConfiguration
         else {
-            fatalError()
+            completeStart(with: PacketTunnelStartupError.invalidProtocolConfiguration)
+            return
         }
+
         consoleLogger.debug("Starting tunnel.")
+        guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else {
+            completeStart(with: PacketTunnelStartupError.missingOpenVPNConfiguration)
+            return
+        }
+
         logger.logI("PacketTunnelProvider", "Started OpenVPNAdapter.", flushImmediately: true)
         let properties: OpenVPNConfigurationEvaluation!
-        guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else { return }
         let configuration = OpenVPNConfiguration()
         configuration.tunPersist = true
         configuration.disableClientCert = true
         configuration.fileContent = ovpnFileContent
         do {
-            properties = try vpnAdapter.apply(configuration)
+            let adapter = vpnAdapter
+            properties = try adapter.apply(configuration)
         } catch {
             logger.logE("PacketTunnelProvider", "Failed to apply configuration to OpenVPNAdapter: \(error.localizedDescription)", flushImmediately: true)
-            completionHandler(error)
+            completeStart(with: error)
             return
         }
 
@@ -89,7 +122,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
                     try vpnAdapter.provide(credentials)
                 } catch {
                     logger.logE("PacketTunnelProvider", "Failed to provide credentials: \(error.localizedDescription)", flushImmediately: true)
-                    completionHandler(error)
+                    completeStart(with: error)
                     return
                 }
             }
@@ -104,17 +137,19 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
             // Wait for proxy to start listening for incoming connections..
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) { [weak self] in
                 guard let self = self else { return }
-                self.startHandler = completionHandler
+                guard self.hasPendingStart else { return }
                 self.vpnAdapter.connect(using: self.packetFlow)
             }
         } else {
-            startHandler = completionHandler
             logger.logI("PacketTunnelProvider", "Connecting to OpenVPNAdapter.", flushImmediately: true)
             vpnAdapter.connect(using: packetFlow)
         }
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
+        if hasPendingStart {
+            completeStart(with: PacketTunnelStartupError.cancelled)
+        }
         logger.logI("PacketTunnelProvider", "Stopping OpenVPNAdapter with \(reason)")
         if reason == .appUpdate {
             preferences.saveTunnelStoppedForAppUpdate(status: true)
@@ -146,7 +181,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
             guard let proxyInfo = ProxyInfo(text: String(line)) else {
                 return false
             }
-            guard let path = proxyLogFilePath() else { return false }
+            guard let path = proxyLogFilePath() else {
+                return false
+            }
             proxyStartRequested = true
             DispatchQueue.global(qos: .background).async {
                 let logFilePathCString = (path as NSString).utf8String
@@ -167,6 +204,31 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
             return true
         }
         return false
+    }
+
+    private var hasPendingStart: Bool {
+        startHandlerLock.lock()
+        defer { startHandlerLock.unlock() }
+        return startHandler != nil
+    }
+
+    private func beginStart(with handler: @escaping (Error?) -> Void) -> Bool {
+        startHandlerLock.lock()
+        defer { startHandlerLock.unlock() }
+        guard startHandler == nil else { return false }
+        startHandler = handler
+        return true
+    }
+
+    @discardableResult
+    private func completeStart(with error: Error?) -> Bool {
+        startHandlerLock.lock()
+        let handler = startHandler
+        self.startHandler = nil
+        startHandlerLock.unlock()
+        guard let handler else { return false }
+        handler(error)
+        return true
     }
 
     /// Creates empty log file for proxy.
@@ -250,27 +312,25 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             if reasserting {
                 reasserting = false
             }
-            guard let startHandler = startHandler else { return }
-            startHandler(nil)
-            self.startHandler = nil
-                // Initialize control plane when tunnel is ready
-                if controlPlane == nil {
-                    controlPlane = ControlPlane(
-                        apiUtil: apiUtil,
-                        api: api,
-                        preferences: preferences,
-                        consoleLogger: self.consoleLogger,
-                        onTunnelShouldStop: { @MainActor [weak self] reason, error in
-                            guard let self = self else { return }
-                            self.logger.logI("PacketTunnelProvider", "Control plane requested tunnel stop for reason: \(reason.rawValue)", flushImmediately: true)
-                            self.deleteCredentials(error: error)
-                        }
-                    )
-                }
-                if preferences.getDisconnectReason() == DisconnectReason.unknown {
-                    consoleLogger.debug("Tunnel connected, checking tunnel health.")
-                    controlPlane?.checkTunnelHealth()
-                }
+            guard completeStart(with: nil) else { return }
+            // Initialize control plane when tunnel is ready
+            if controlPlane == nil {
+                controlPlane = ControlPlane(
+                    apiUtil: apiUtil,
+                    api: api,
+                    preferences: preferences,
+                    consoleLogger: self.consoleLogger,
+                    onTunnelShouldStop: { @MainActor [weak self] reason, error in
+                        guard let self = self else { return }
+                        self.logger.logI("PacketTunnelProvider", "Control plane requested tunnel stop for reason: \(reason.rawValue)", flushImmediately: true)
+                        self.deleteCredentials(error: error)
+                    }
+                )
+            }
+            if preferences.getDisconnectReason() == DisconnectReason.unknown {
+                consoleLogger.debug("Tunnel connected, checking tunnel health.")
+                controlPlane?.checkTunnelHealth()
+            }
         case .disconnected:
             stopProxyIfNeeded()
             guard let stopHandler = stopHandler else { return }
@@ -298,10 +358,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
             vpnReachability.stopTracking()
         }
 
-        if let startHandler = startHandler {
-            startHandler(error)
-            self.startHandler = nil
-        } else {
+        if !completeStart(with: error) {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 guard !self.isCancelling else {
