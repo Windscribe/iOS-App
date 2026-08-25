@@ -12,11 +12,13 @@ import Swinject
 
 extension MainViewController {
     override func viewDidLayoutSubviews() {
+        let selectedTab = selectedTabDuringLayoutTransition ?? listSelectionView?.viewModel.selectedAction.value
         super.viewDidLayoutSubviews()
-        reconcileMainViewLayout(for: view.bounds.width)
+        reconcileMainViewLayout(for: view.bounds.width, selectedTab: selectedTab)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        selectedTabDuringLayoutTransition = listSelectionView?.viewModel.selectedAction.value
         super.viewWillTransition(to: size, with: coordinator)
         view.setNeedsLayout()
         flagBackgroundView?.redraw()
@@ -39,18 +41,19 @@ extension MainViewController {
             self.listSelectionView?.redrawGradientView()
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
+            self.selectedTabDuringLayoutTransition = nil
         })
     }
 
-    private func reconcileMainViewLayout(for width: CGFloat) {
+    private func reconcileMainViewLayout(for width: CGFloat, selectedTab: CardHeaderButtonType?) {
         guard width > 0,
               width != lastMainViewLayoutWidth,
               let scrollView = scrollView,
-              let listSelectionView = listSelectionView else {
+              let listSelectionView = listSelectionView,
+              let selectedTab = selectedTab else {
             return
         }
 
-        let selectedTab = listSelectionView.viewModel.selectedAction.value
         let pageIndex: CGFloat
         switch selectedTab {
         case .all, .startSearch: pageIndex = 0

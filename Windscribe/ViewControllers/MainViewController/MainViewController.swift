@@ -105,6 +105,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var selectedHeaderViewTab: CardHeaderButtonType?
     var lastSelectedHeaderViewTab: CardHeaderButtonType?
     var lastMainViewLayoutWidth: CGFloat = 0
+    var selectedTabDuringLayoutTransition: CardHeaderButtonType?
 
     var router: HomeRouter?
     var accountRouter: AccountRouter?
