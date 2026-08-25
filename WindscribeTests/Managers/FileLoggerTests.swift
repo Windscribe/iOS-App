@@ -38,13 +38,42 @@ final class FileLoggerTests: XCTestCase {
         let logger = FileLoggerImpl(testLogDirectory: directory)
         let logFileURL = directory.appendingPathComponent("windscribe.log")
 
-        logger.logI("FileLoggerTests", String(repeating: "😀", count: 525_000))
+        var oversizedData = Data(repeating: 0x78, count: 2 * 1024 * 1024)
+        oversizedData.append(0x0A)
+        try oversizedData.write(to: logFileURL)
+
         logger.logI("FileLoggerTests", "size-triggered compaction")
         _ = try await logger.getLogData()
 
         let content = try String(contentsOf: logFileURL, encoding: .utf8)
         XCTAssertTrue(content.contains("size-triggered compaction"))
-        XCTAssertLessThan(content.utf8.count, 2 * 1024 * 1024)
+        XCTAssertLessThanOrEqual(content.utf8.count, 512 * 1024)
+    }
+
+    func testCompactionDropsLogsOlderThan24Hours() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let logger = FileLoggerImpl(testLogDirectory: directory)
+        let logFileURL = directory.appendingPathComponent("windscribe.log")
+        let formatter = makeLogDateFormatter()
+        let oldTimestamp = formatter.string(from: Date().addingTimeInterval(-25 * 60 * 60))
+        let recentTimestamp = formatter.string(from: Date().addingTimeInterval(-60))
+        let oldLine = "{\"tm\": \"\(oldTimestamp)\", \"lvl\": \"info\", \"mod\": \"FileLoggerTests\", \"msg\": \"expired log\"}"
+        let recentLine = "{\"tm\": \"\(recentTimestamp)\", \"lvl\": \"info\", \"mod\": \"FileLoggerTests\", \"msg\": \"recent log\"}"
+        var oversizedData = Data(repeating: 0x78, count: 512 * 1024)
+        oversizedData.append(Data("\n\(oldLine)\n\(recentLine)\n".utf8))
+        try oversizedData.write(to: logFileURL)
+
+        logger.logI("FileLoggerTests", "retention-triggered compaction")
+        _ = try await logger.getLogData()
+
+        let content = try String(contentsOf: logFileURL, encoding: .utf8)
+        XCTAssertFalse(content.contains("expired log"))
+        XCTAssertTrue(content.contains("recent log"))
+        XCTAssertTrue(content.contains("retention-triggered compaction"))
     }
 
     func testExportPreservesExistingTimestampString() async throws {

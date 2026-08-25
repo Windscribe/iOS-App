@@ -128,7 +128,7 @@ class FileLoggerImpl: FileLogger {
 
     // MARK: - Log Retention Configuration
     private let maxLogRetentionHours: TimeInterval = 24 * 60 * 60 // 24 hours in seconds
-    private let maxLogFileSize: Int = 2 * 1024 * 1024 // 2MB total
+    private let maxLogFileSize: Int = 512 * 1024 // 512KB total
     private let logCompactionInterval: TimeInterval = 60 * 60
 
     // MARK: - Batching State
@@ -274,75 +274,104 @@ class FileLoggerImpl: FileLogger {
         guard !logs.isEmpty else { return }
 
         do {
-            let jsonLines = logs.map { log in
+            let boundedLogs = applyRetentionPolicies(logs: logs, sizeLimit: maxLogFileSize)
+            guard !boundedLogs.isEmpty else { return }
+
+            let jsonLines = boundedLogs.map { log in
                 log.toOrderedJSONString()
             }
             let content = jsonLines.joined(separator: "\n") + "\n"
+            let contentData = Data(content.utf8)
+            let fileExists = FileManager.default.fileExists(atPath: logFileURL.path)
+            var fileSize = 0
 
-            if FileManager.default.fileExists(atPath: logFileURL.path) {
-                let fileHandle = try FileHandle(forWritingTo: logFileURL)
-                fileHandle.seekToEndOfFile()
-                fileHandle.write(Data(content.utf8))
-                fileHandle.closeFile()
-            } else {
-                try content.write(to: logFileURL, atomically: true, encoding: .utf8)
+            if fileExists {
+                fileSize = try logFileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
             }
 
             let now = Date().timeIntervalSince1970
-            let fileSize = try logFileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-            if fileSize > maxLogFileSize || now - lastCompactionTime >= logCompactionInterval {
-                compactLogFile()
+            let requiresCompaction = fileExists && (
+                fileSize > maxLogFileSize - contentData.count ||
+                now - lastCompactionTime >= logCompactionInterval
+            )
+            if requiresCompaction && !compactLogFile(reservingBytes: contentData.count) {
+                return
+            }
+
+            if fileExists {
+                let fileHandle = try FileHandle(forWritingTo: logFileURL)
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(contentData)
+                fileHandle.closeFile()
+            } else {
+                try contentData.write(to: logFileURL, options: .atomic)
             }
         } catch {
             // Silently fail - logging errors in the logger creates infinite loops
         }
     }
 
-    private func compactLogFile() {
+    private func compactLogFile(reservingBytes: Int = 0) -> Bool {
         guard let logFileURL = getLogFileURL(),
               FileManager.default.fileExists(atPath: logFileURL.path) else {
             lastCompactionTime = Date().timeIntervalSince1970
-            return
+            return true
         }
 
-        let trimmedLogs = applyRetentionPolicies(logs: parseExistingLogFile(logFileURL: logFileURL))
+        guard let existingLogs = try? parseExistingLogFile(logFileURL: logFileURL) else {
+            return false
+        }
+        let sizeLimit = max(0, maxLogFileSize - reservingBytes)
+        let trimmedLogs = applyRetentionPolicies(logs: existingLogs, sizeLimit: sizeLimit)
         let jsonLines = trimmedLogs.map { $0.toOrderedJSONString() }
         let content = jsonLines.joined(separator: "\n") + (jsonLines.isEmpty ? "" : "\n")
 
         do {
             try content.write(to: logFileURL, atomically: true, encoding: .utf8)
             lastCompactionTime = Date().timeIntervalSince1970
+            return true
         } catch {
             // Silently fail - logging errors in the logger creates infinite loops
+            return false
         }
     }
 
-    private func parseExistingLogFile(logFileURL: URL) -> [LogBufferModel] {
-        do {
-            let content = try String(contentsOf: logFileURL, encoding: .utf8)
-            let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
+    private func parseExistingLogFile(logFileURL: URL) throws -> [LogBufferModel] {
+        let fileHandle = try FileHandle(forReadingFrom: logFileURL)
+        defer { fileHandle.closeFile() }
 
-            let decoder = makeLogDecoder()
-            var parsedLogs: [LogBufferModel] = []
+        let fileSize = fileHandle.seekToEndOfFile()
+        let maximumReadSize = UInt64(maxLogFileSize)
+        let readOffset = fileSize > maximumReadSize ? fileSize - maximumReadSize : 0
+        fileHandle.seek(toFileOffset: readOffset)
+        var data = fileHandle.readData(ofLength: maxLogFileSize)
 
-            for line in lines {
-                if let data = line.data(using: .utf8) {
-                    do {
-                        let logEntry = try decoder.decode(LogBufferModel.self, from: data)
-                        parsedLogs.append(logEntry)
-                    } catch {
-                        // Silently skip malformed log lines
-                    }
+        if readOffset > 0 {
+            guard let firstNewline = data.firstIndex(of: 0x0A) else { return [] }
+            data.removeSubrange(data.startIndex ... firstNewline)
+        }
+
+        guard let content = String(data: data, encoding: .utf8) else { return [] }
+        let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
+
+        let decoder = makeLogDecoder()
+        var parsedLogs: [LogBufferModel] = []
+
+        for line in lines {
+            if let data = line.data(using: .utf8) {
+                do {
+                    let logEntry = try decoder.decode(LogBufferModel.self, from: data)
+                    parsedLogs.append(logEntry)
+                } catch {
+                    // Silently skip malformed log lines
                 }
             }
-
-            return parsedLogs
-        } catch {
-            return []
         }
+
+        return parsedLogs
     }
 
-    private func applyRetentionPolicies(logs: [LogBufferModel]) -> [LogBufferModel] {
+    private func applyRetentionPolicies(logs: [LogBufferModel], sizeLimit: Int) -> [LogBufferModel] {
         let now = Date().timeIntervalSince1970
         let cutoffTime = now - maxLogRetentionHours
 
@@ -361,7 +390,7 @@ class FileLoggerImpl: FileLogger {
             let jsonString = log.toOrderedJSONString()
             let logSize = jsonString.utf8.count + 1 // +1 for newline
 
-            if currentSize + logSize <= maxLogFileSize {
+            if currentSize + logSize <= sizeLimit {
                 finalLogs.insert(log, at: 0) // Insert at beginning to maintain chronological order
                 currentSize += logSize
             } else {
@@ -389,8 +418,7 @@ class FileLoggerImpl: FileLogger {
                     continuation.resume(returning: "")
                     return
                 }
-
-                let allLogs = self.parseExistingLogFile(logFileURL: logFileURL)
+                let allLogs = (try? self.parseExistingLogFile(logFileURL: logFileURL)) ?? []
                 let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp }
                 let metadata = self.makeLogMetadata()
                 let availableLogLength = max(0, self.maxLogLength - metadata.count - 1)
@@ -451,8 +479,8 @@ class FileLoggerImpl: FileLogger {
 
         // Log configuration on startup to the JSON log file
         let retentionHours = Int(maxLogRetentionHours / (60 * 60))
-        let maxSizeMB = maxLogFileSize / (1024 * 1024)
-        let startupMessage = "JSON log retention: \(retentionHours)h time limit, \(maxSizeMB)MB size limit. Batching: \(batchMaxSize) logs/batch, \(batchFlushInterval)s interval."
+        let maxSizeKB = maxLogFileSize / 1024
+        let startupMessage = "JSON log retention: \(retentionHours)h time limit, \(maxSizeKB)KB size limit. Batching: \(batchMaxSize) logs/batch, \(batchFlushInterval)s interval."
         addToBatch(.info, tag: "FileLogger", message: startupMessage, flushImmediately: false)
     }
 }
