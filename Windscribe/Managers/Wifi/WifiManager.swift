@@ -28,11 +28,13 @@ protocol WifiManager {
 // MARK: - WifiManagerImpl
 
 class WifiManagerImpl: WifiManager {
-    let preferences: Preferences
-    let connectivity: ConnectivityManager
-    private let logger: FileLogger
+    lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
+
+    lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)
+
+    private lazy var logger = Assembler.resolve(FileLogger.self)
     private lazy var vpnManager = Assembler.resolve(VPNManager.self)
-    private let wifiNetworkRepository: WifiNetworkRepository
+    private let wifiNetworkRepository = Assembler.resolve(WifiNetworkRepository.self)
     private lazy var portMapRepository = Assembler.resolve(PortMapRepository.self)
 
     var selectedProtocol: String?
@@ -49,15 +51,7 @@ class WifiManagerImpl: WifiManager {
     private var initialNetworkFetch = true
     private var cancellables = Set<AnyCancellable>()
 
-    init(preferences: Preferences,
-         connectivity: ConnectivityManager,
-         logger: FileLogger,
-         wifiNetworkRepository: WifiNetworkRepository) {
-        self.preferences = preferences
-        self.connectivity = connectivity
-        self.logger = logger
-        self.wifiNetworkRepository = wifiNetworkRepository
-
+    init() {
         observeSecuredNetworks()
 
         preferences.getConnectionMode()
@@ -159,18 +153,21 @@ class WifiManagerImpl: WifiManager {
                     self.connectedSecuredNetwork = nil
                     return
                 }
-                self.connectedSecuredNetwork = networkModels.first {
-                    $0.SSID == appNetwork.name
-                }
                 if self.initialNetworkFetch {
                     self.setSelectedPreferences()
                 } else {
                     self.updateSelectedPreferences()
                 }
                 self.initialNetworkFetch = false
-                if self.connectedSecuredNetwork == nil {
-                    guard let networkName = appNetwork.name else { return }
-                    self.saveNewNetwork(wifiSSID: networkName)
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.connectedSecuredNetwork = networkModels.filter {
+                        $0.SSID == appNetwork.name
+                    }.first
+                    if self.connectedSecuredNetwork == nil {
+                        guard let networkName = appNetwork.name else { return }
+                        self.saveNewNetwork(wifiSSID: networkName)
+                    }
                 }
             })
             .store(in: &cancellables)
