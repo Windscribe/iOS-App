@@ -132,11 +132,8 @@ class Repository: Assembly {
         container.register(StaticIpRepository.self) { r in
             StaticIpRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
         }.inObjectScope(.userScope)
-        container.register(WifiManager.self) { r in
-            WifiManagerImpl(preferences: r.resolve(Preferences.self)!,
-                            connectivity: r.resolve(ConnectivityManager.self)!,
-                            logger: r.resolve(FileLogger.self)!,
-                            wifiNetworkRepository: r.resolve(WifiNetworkRepository.self)!)
+        container.register(WifiManager.self) { _ in
+            WifiManagerImpl()
         }.inObjectScope(.container)
         container.register(CredentialsRepository.self) { r in
             CredentialsRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
