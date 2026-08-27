@@ -79,7 +79,7 @@ extension Container {
             loggerFunction: { message in
                 logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
             },
-            debugLog: Env.isInternal,
+            debugLog: Env.isDebug,
             amneziawgVersion: APIParameterValues.unlockWGVersion)
 
         WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])

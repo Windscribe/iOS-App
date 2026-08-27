@@ -121,6 +121,28 @@ final class FileLoggerTests: XCTestCase {
         }
     }
 
+    func testWSNetDebugPayloadFollowsDebugCompilationCondition() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let timestampString = makeLogDateFormatter().string(from: Date())
+        let payload = "{\"tm\":\"\(timestampString)\"," +
+            "\"lvl\":\"debug\",\"mod\":\"WSNetDebug\"," +
+            "\"msg\":\"debug payload\"}"
+        let logger = FileLoggerImpl(testLogDirectory: directory)
+
+        logger.logWSNet(payload)
+        let exportedLogs = try await logger.getLogData()
+
+#if DEBUG
+        XCTAssertTrue(exportedLogs.contains("WSNetDebug"))
+#else
+        XCTAssertFalse(exportedLogs.contains("WSNetDebug"))
+#endif
+    }
+
     private func makeLogDateFormatter() -> DateFormatter {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")

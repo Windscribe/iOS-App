@@ -173,6 +173,9 @@ class FileLoggerImpl: FileLogger {
             let logEntry: LogBufferModel
             if let jsonData = message.data(using: .utf8),
                let wsnetLog = try? self.makeLogDecoder().decode(LogBufferModel.self, from: jsonData) {
+#if !DEBUG
+                guard wsnetLog.level != .debug else { return }
+#endif
                 logEntry = wsnetLog
             } else {
                 logEntry = LogBufferModel(
