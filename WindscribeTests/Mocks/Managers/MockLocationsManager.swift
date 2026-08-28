@@ -21,6 +21,7 @@ class MockLocationsManager: LocationsManager {
     var getLocationCalled = false
     var saveLastConnectionTargetCalled = false
     var lastSavedLocationId: String?
+    var lastSaveLastConnectionTargetShouldReconnect: Bool?
     var saveBestLocationCalled = false
     var lastSavedBestLocationId: String?
     var mockBestLocation: Int = 0
@@ -59,8 +60,13 @@ class MockLocationsManager: LocationsManager {
     }
 
     func saveLastConnectionTarget(with locationId: String) {
+        saveLastConnectionTarget(with: locationId, shouldReconnect: true)
+    }
+
+    func saveLastConnectionTarget(with locationId: String, shouldReconnect: Bool) {
         saveLastConnectionTargetCalled = true
         lastSavedLocationId = locationId
+        lastSaveLastConnectionTargetShouldReconnect = shouldReconnect
     }
 
     func getBestLocationModel(from datacenterId: Int) -> BestLocationModel? {
@@ -78,9 +84,21 @@ class MockLocationsManager: LocationsManager {
         return mockLocationUIInfo
     }
 
-    func saveStaticIP(withId staticId: Int?) {}
+    func saveStaticIP(withId staticId: Int?) {
+        saveStaticIP(withId: staticId, shouldReconnect: true)
+    }
 
-    func saveCustomConfig(withId customId: String?) {}
+    func saveStaticIP(withId staticId: Int?, shouldReconnect: Bool) {
+        saveLastConnectionTarget(with: "static_\(staticId ?? 0)", shouldReconnect: shouldReconnect)
+    }
+
+    func saveCustomConfig(withId customId: String?) {
+        saveCustomConfig(withId: customId, shouldReconnect: true)
+    }
+
+    func saveCustomConfig(withId customId: String?, shouldReconnect: Bool) {
+        saveLastConnectionTarget(with: "custom_\(customId ?? "0")", shouldReconnect: shouldReconnect)
+    }
 
     func clearLastConnectionTarget() {}
 

@@ -18,6 +18,7 @@ class MockProtocolManager: ProtocolManagerType {
     var refreshProtocolsCalled = false
     var lastShouldReset: Bool?
     var lastShouldReconnect: Bool?
+    var refreshProtocolsHandler: (() -> Void)?
 
     var goodProtocol: ProtocolPort?
     var resetGoodProtocolTime: Date?
@@ -37,6 +38,7 @@ class MockProtocolManager: ProtocolManagerType {
         refreshProtocolsCalled = true
         lastShouldReset = shouldReset
         lastShouldReconnect = shouldReconnect
+        refreshProtocolsHandler?()
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] { return [] }

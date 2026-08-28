@@ -180,7 +180,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
             return
         }
 
-        locationsManager.saveCustomConfig(withId: customConfig.id)
+        locationsManager.saveCustomConfig(withId: customConfig.id, shouldReconnect: false)
         configureVPNTrigger.send(())
     }
 
@@ -193,7 +193,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         let locationID = locationsManager.getBestLocation()
         if locationID != 0, !self.vpnStateRepository.isConnecting() {
             self.logger.logD("CustomConfigPickerViewModel", "Changing selected location to Best location ID \(locationID) from the server list.")
-            self.locationsManager.saveLastConnectionTarget(with: String(locationID))
+            self.locationsManager.saveLastConnectionTarget(with: String(locationID), shouldReconnect: false)
             self.configureVPNTrigger.send(())
         } else {
             self.locationsManager.saveBestLocation(with: "")

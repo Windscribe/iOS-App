@@ -23,7 +23,9 @@ protocol LocationsManager {
     func getLocationUIInfo() -> LocationUIInfo
 
     func saveStaticIP(withId staticId: Int?)
+    func saveStaticIP(withId staticId: Int?, shouldReconnect: Bool)
     func saveCustomConfig(withId customId: String?)
+    func saveCustomConfig(withId customId: String?, shouldReconnect: Bool)
 
     /// Saves the best location, it needs a datacenterId to access the information needed, the BestLocation is Not a Datacenter
     /// And holds information from both LocationModel and the DatacenterModel
@@ -43,6 +45,7 @@ protocol LocationsManager {
     func getLastConnectionTarget() -> String
     /// Saves the full Id of the Datacenter / Static IP / Custom Config that was last connected/selected by the user
     func saveLastConnectionTarget(with targetId: String)
+    func saveLastConnectionTarget(with targetId: String, shouldReconnect: Bool)
     /// Clears the full id, making it empty string "", so there is no Datacenter / Static IP / Custom Config as the last place the user connected to
     func clearLastConnectionTarget()
 
@@ -202,11 +205,19 @@ class LocationsManagerImpl: LocationsManager {
     }
 
     func saveStaticIP(withId staticId: Int?) {
-        saveLastConnectionTarget(with: "static_\(staticId ?? 0)")
+        saveStaticIP(withId: staticId, shouldReconnect: true)
+    }
+
+    func saveStaticIP(withId staticId: Int?, shouldReconnect: Bool) {
+        saveLastConnectionTarget(with: "static_\(staticId ?? 0)", shouldReconnect: shouldReconnect)
     }
 
     func saveCustomConfig(withId customId: String?) {
-        saveLastConnectionTarget(with: "custom_\(customId ?? "0")")
+        saveCustomConfig(withId: customId, shouldReconnect: true)
+    }
+
+    func saveCustomConfig(withId customId: String?, shouldReconnect: Bool) {
+        saveLastConnectionTarget(with: "custom_\(customId ?? "0")", shouldReconnect: shouldReconnect)
     }
 
     func clearLastConnectionTarget() {
@@ -331,7 +342,7 @@ extension LocationsManagerImpl {
         return datacenter?.id
     }
 
-    private func saveLastConnectionTarget(with locationId: String, shouldReconnect: Bool) {
+    func saveLastConnectionTarget(with locationId: String, shouldReconnect: Bool) {
         let currentLocation = getLastConnectionTarget()
         guard locationId != currentLocation else {
             // Even if location hasn't changed, trigger update for UI reactivity

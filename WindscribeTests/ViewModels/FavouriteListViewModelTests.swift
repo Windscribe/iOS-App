@@ -17,6 +17,7 @@ final class FavouriteListViewModelTests: XCTestCase {
     var mockConnectivity: MockConnectivityManager!
     var mockVPNStateRepository: MockVPNStateRepository!
     var mockLocationListRepository: MockLocationListRepository!
+    var mockProtocolManager: MockProtocolManager!
     var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
@@ -27,6 +28,7 @@ final class FavouriteListViewModelTests: XCTestCase {
         mockConnectivity = MockConnectivityManager()
         mockVPNStateRepository = MockVPNStateRepository()
         mockLocationListRepository = MockLocationListRepository()
+        mockProtocolManager = MockProtocolManager()
         cancellables = Set<AnyCancellable>()
 
         viewModel = FavouriteListViewModel(
@@ -35,7 +37,7 @@ final class FavouriteListViewModelTests: XCTestCase {
             connectivity: mockConnectivity,
             userSessionRepository: mockUserSessionRepository,
             locationsManager: mockLocationsManager,
-            protocolManager: MockProtocolManager(),
+            protocolManager: mockProtocolManager,
             locationListRepository: mockLocationListRepository
         )
 
@@ -50,6 +52,7 @@ final class FavouriteListViewModelTests: XCTestCase {
         mockConnectivity = nil
         mockVPNStateRepository = nil
         mockLocationListRepository = nil
+        mockProtocolManager = nil
         cancellables = nil
         super.tearDown()
     }
@@ -125,6 +128,29 @@ final class FavouriteListViewModelTests: XCTestCase {
             maintenanceTriggered,
             "Maintenance popup must NOT fire for an available datacenter"
         )
+    }
+
+    func testSelectingAvailableFavouriteStagesLocationBeforeProtocolReconnect() async {
+        let (_, datacenter) = createMockLocationWithDatacenter(
+            locationId: 1,
+            locationName: "Available Location",
+            datacenterId: 123,
+            city: "New York",
+            status: 1,
+            hasServers: true
+        )
+        let protocolsRefreshed = expectation(description: "Protocols refreshed")
+        mockProtocolManager.refreshProtocolsHandler = {
+            protocolsRefreshed.fulfill()
+        }
+
+        viewModel.setSelectedFav(favourite: datacenter)
+
+        await fulfillment(of: [protocolsRefreshed], timeout: 1.0)
+        XCTAssertEqual(mockLocationsManager.lastSavedLocationId, "123")
+        XCTAssertEqual(mockLocationsManager.lastSaveLastConnectionTargetShouldReconnect, false)
+        XCTAssertEqual(mockProtocolManager.lastShouldReset, true)
+        XCTAssertEqual(mockProtocolManager.lastShouldReconnect, true)
     }
 
     func testProDatacenterDoesNotShowMaintenancePopup() {

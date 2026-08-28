@@ -66,7 +66,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
         }
 
         if vpnStateRepository.configurationState == ConfigurationState.initial {
-            locationsManager.saveStaticIP(withId: staticIP.id)
+            locationsManager.saveStaticIP(withId: staticIP.id, shouldReconnect: false)
             Task {
                 self.logger.logI("StaticIPListViewModel", "setSelectedStaticIP for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)

@@ -64,7 +64,7 @@ class LocationListViewModel: ServerListViewModelType {
             showUpgradeTrigger.send(())
             return
         } else if vpnStateRepository.configurationState == ConfigurationState.initial {
-            locationsManager.saveLastConnectionTarget(with: "\(datacenter.id)")
+            locationsManager.saveLastConnectionTarget(with: "\(datacenter.id)", shouldReconnect: false)
             Task {
                 self.logger.logI("ServerListViewModel", "setSelectedServerAndGroup for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
@@ -78,7 +78,8 @@ class LocationListViewModel: ServerListViewModelType {
         let locationId = locationsManager.getBestLocation()
         if  locationId != 0, !self.vpnStateRepository.isConnecting() {
             self.logger.logD("ServerListViewModel", "Tapped on Best Location with ID \(locationId) from the server list.")
-            self.locationsManager.selectBestLocation(with: String(locationId))
+            self.locationsManager.saveLastConnectionTarget(with: String(locationId), shouldReconnect: false)
+            self.locationsManager.saveBestLocation(with: String(locationId))
             Task {
                 self.logger.logI("ServerListViewModel", "connectToBestLocation for getNextProtocol")
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
