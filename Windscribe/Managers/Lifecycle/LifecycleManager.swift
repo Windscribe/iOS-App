@@ -19,6 +19,15 @@ protocol LifecycleManagerType {
     func appEnteredForeground()
 }
 
+enum SessionRecoverySource {
+    case appLifecycle
+    case sessionUpdateFailure
+
+    var retriesSessionWithoutVPNRecovery: Bool {
+        self == .appLifecycle
+    }
+}
+
 class LifecycleManager: LifecycleManagerType {
     private let logger: FileLogger
     private var sessionManager: SessionManager
@@ -88,7 +97,7 @@ class LifecycleManager: LifecycleManagerType {
         sessionManager.checkForDiscconectReasonTrigger
             .sink { [weak self] _ in
                 Task {
-                    await self?.disconnectToUpdateSession()
+                    await self?.disconnectToUpdateSession(source: .sessionUpdateFailure)
                 }
             }
             .store(in: &cancellables)
@@ -146,7 +155,7 @@ class LifecycleManager: LifecycleManagerType {
         }
     }
 
-    private func disconnectToUpdateSession() async {
+    private func disconnectToUpdateSession(source: SessionRecoverySource = .appLifecycle) async {
         let error = await configManager.getGeneralConnectError()
         if preferences.getDisconnectReason() != .unknown || error == .authFailure {
             logger.logI("LifecycleManager", "Disconencting due to disconnect reason. \(preferences.getDisconnectReason())")
@@ -161,7 +170,7 @@ class LifecycleManager: LifecycleManagerType {
             } catch {
                 logger.logE("LifecycleManager", "Force session update failed: \(error)")
             }
-        } else {
+        } else if source.retriesSessionWithoutVPNRecovery {
             sessionManager.keepSessionUpdated()
         }
     }
