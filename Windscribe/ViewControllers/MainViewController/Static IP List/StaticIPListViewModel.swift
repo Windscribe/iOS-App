@@ -69,7 +69,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
             locationsManager.saveStaticIP(withId: staticIP.id)
             Task {
                 self.logger.logI("StaticIPListViewModel", "setSelectedStaticIP for getNextProtocol")
-                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
+                await protocolManager.refreshProtocolsForLocationChange()
             }
         } else {
             presentAlertTrigger.send(.connecting)

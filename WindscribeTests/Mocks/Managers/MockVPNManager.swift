@@ -23,6 +23,7 @@ class MockVPNManager: VPNManager {
     var lastConnectLocationId: String?
     var lastConnectProto: ProtocolPort?
     var lastConnectConnectionType: ConnectionType?
+    var connectFromViewModelHandler: ((String, ProtocolPort, ConnectionType) -> Void)?
     var mockConnectionStates: [VPNConnectionState] = [.vpn(.connecting), .vpn(.connected)]
     var mockConnectionError: Error?
     var removeProfilesCalled = false
@@ -68,6 +69,7 @@ class MockVPNManager: VPNManager {
         lastConnectLocationId = locationId
         lastConnectProto = proto
         lastConnectConnectionType = connectionType
+        connectFromViewModelHandler?(locationId, proto, connectionType)
 
         let subject = PassthroughSubject<VPNConnectionState, Error>()
 

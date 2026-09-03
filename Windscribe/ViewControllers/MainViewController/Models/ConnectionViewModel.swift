@@ -177,8 +177,8 @@ class ConnectionViewModel: ConnectionViewModelType {
         protocolManager.connectionProtocolSubject
             .sink { [weak self] value in
                 guard let self = self, let value = value else { return }
-                // Only block if actually connected, not just matching protocol
-                if let info = vpnStateRepository.vpnInfo.value,
+                if !value.forceReconnect,
+                   let info = vpnStateRepository.vpnInfo.value,
                    info.selectedProtocol == value.protocolPort.protocolName,
                    info.status == .connected {
                     return

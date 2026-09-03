@@ -127,6 +127,82 @@ final class FavouriteListViewModelTests: XCTestCase {
         )
     }
 
+    func testSelectingAvailableFavouriteReconnectsSameProtocolToNewLocationOnce() async {
+        let (_, datacenter) = createMockLocationWithDatacenter(
+            locationId: 1,
+            locationName: "Available Location",
+            datacenterId: 123,
+            city: "New York",
+            status: 1,
+            hasServers: true
+        )
+        let mockVPNManager = MockVPNManager()
+        let connectionViewModel = makeConnectionViewModel(vpnManager: mockVPNManager)
+        mockVPNStateRepository.vpnInfo.send(
+            VPNConnectionInfo(
+                selectedProtocol: "IKEv2",
+                selectedPort: "500",
+                status: .connected,
+                server: "previous.windscribe.com",
+                killSwitch: false,
+                onDemand: false
+            )
+        )
+        mockVPNStateRepository.simulateStatusChange(.connected)
+        let connectionStarted = expectation(description: "Connection started")
+        mockVPNManager.connectFromViewModelHandler = { _, _, _ in
+            connectionStarted.fulfill()
+        }
+
+        viewModel.setSelectedFav(favourite: datacenter)
+
+        await fulfillment(of: [connectionStarted], timeout: 1.0)
+        XCTAssertEqual(mockLocationsManager.lastSavedLocationId, "123")
+        XCTAssertEqual(mockLocationsManager.lastSaveLastConnectionTargetShouldReconnect, false)
+        XCTAssertTrue(mockProtocolManager.refreshProtocolsForLocationChangeCalled)
+        XCTAssertEqual(mockVPNManager.connectFromViewModelCallCount, 1)
+        XCTAssertEqual(mockVPNManager.lastConnectLocationId, "123")
+        XCTAssertEqual(mockVPNManager.lastConnectProto?.protocolName, "IKEv2")
+        XCTAssertEqual(mockVPNManager.lastConnectProto?.portName, "500")
+        guard case .user? = mockVPNManager.lastConnectConnectionType else {
+            XCTFail("Expected a user connection")
+            return
+        }
+        withExtendedLifetime(connectionViewModel) {}
+    }
+
+    func testSameProtocolRequestWithoutLocationChangeDoesNotReconnect() async {
+        let mockVPNManager = MockVPNManager()
+        let connectionViewModel = makeConnectionViewModel(vpnManager: mockVPNManager)
+        mockVPNStateRepository.vpnInfo.send(
+            VPNConnectionInfo(
+                selectedProtocol: "IKEv2",
+                selectedPort: "500",
+                status: .connected,
+                server: "current.windscribe.com",
+                killSwitch: false,
+                onDemand: false
+            )
+        )
+        let connectionStarted = expectation(description: "Connection not started")
+        connectionStarted.isInverted = true
+        mockVPNManager.connectFromViewModelHandler = { _, _, _ in
+            connectionStarted.fulfill()
+        }
+
+        mockProtocolManager.connectionProtocolSubject.send(
+            ProtocolConnectionRequest(
+                protocolPort: ProtocolPort(protocolName: "IKEv2", portName: "500"),
+                connectionType: .user,
+                forceReconnect: false
+            )
+        )
+
+        await fulfillment(of: [connectionStarted], timeout: 0.1)
+        XCTAssertEqual(mockVPNManager.connectFromViewModelCallCount, 0)
+        withExtendedLifetime(connectionViewModel) {}
+    }
+
     func testProDatacenterDoesNotShowMaintenancePopup() {
         // Given — datacenter with status=1 and no servers maps to
         // statusValue == .isPro (not .underMantainance), so no popup.
@@ -159,6 +235,47 @@ final class FavouriteListViewModelTests: XCTestCase {
     }
 
     // MARK: Helper Methods
+
+    private func makeConnectionViewModel(vpnManager: MockVPNManager) -> ConnectionViewModel {
+        let logger = MockLogger()
+        let preferences = MockPreferences()
+        let apiManager = MockAPIManager()
+        let localDatabase = MockLocalDatabase()
+        let wifiNetworkRepository = WifiNetworkRepositoryImpl(
+            preferences: preferences,
+            localDatabase: localDatabase,
+            connectivity: mockConnectivity,
+            logger: logger
+        )
+        let ipRepository = IPRepositoryImpl(
+            apiManager: apiManager,
+            localDatabase: localDatabase,
+            preferences: preferences,
+            logger: logger
+        )
+
+        return ConnectionViewModel(
+            logger: logger,
+            apiManager: apiManager,
+            vpnManager: vpnManager,
+            vpnStateRepository: mockVPNStateRepository,
+            locationsManager: mockLocationsManager,
+            protocolManager: mockProtocolManager,
+            preferences: preferences,
+            connectivity: mockConnectivity,
+            wifiManager: MockWifiManager(),
+            wifiNetworkRepository: wifiNetworkRepository,
+            credentialsRepository: MockCredentialsRepository(),
+            ipRepository: ipRepository,
+            customSoundPlaybackManager: CustomSoundPlaybackManager(
+                preferences: preferences,
+                soundManager: MockSoundManager()
+            ),
+            privacyStateManager: PrivacyStateManager(logger: logger),
+            userSessionRepository: mockUserSessionRepository,
+            locationListRepository: mockLocationListRepository
+        )
+    }
 
     private func createMockLocation(id: Int, name: String, countryCode: String = "US", status: Int = 1, premiumOnly: Int = 0) -> LocationModel {
         return LocationModel(

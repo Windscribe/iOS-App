@@ -17,7 +17,7 @@ class MockProtocolManagerType: ProtocolManagerType {
     var resetGoodProtocolTime: Date?
 
     var currentProtocolSubject = CurrentValueSubject<Windscribe.ProtocolPort?, Never>(nil)
-    var connectionProtocolSubject = CurrentValueSubject<(protocolPort: Windscribe.ProtocolPort, connectionType: Windscribe.ConnectionType)?, Never>(nil)
+    var connectionProtocolSubject = CurrentValueSubject<Windscribe.ProtocolConnectionRequest?, Never>(nil)
     var displayProtocolsSubject = CurrentValueSubject<[Windscribe.DisplayProtocolPort], Never>([])
     var showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
     var showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
@@ -78,7 +78,13 @@ class MockProtocolManagerType: ProtocolManagerType {
         if let firstProtocol = protocols.first?.protocolPort {
             currentProtocolSubject.send(firstProtocol)
             if shouldReconnect {
-                connectionProtocolSubject.send((protocolPort: firstProtocol, connectionType: .user))
+                connectionProtocolSubject.send(
+                    ProtocolConnectionRequest(
+                        protocolPort: firstProtocol,
+                        connectionType: .user,
+                        forceReconnect: false
+                    )
+                )
             }
         }
 
@@ -89,6 +95,17 @@ class MockProtocolManagerType: ProtocolManagerType {
         if shouldTriggerConnectionMode {
             showConnectionModeTriggeer.send()
         }
+    }
+
+    func refreshProtocolsForLocationChange() async {
+        await refreshProtocols(shouldReset: true, shouldReconnect: false)
+        connectionProtocolSubject.send(
+            ProtocolConnectionRequest(
+                protocolPort: getProtocol(),
+                connectionType: .user,
+                forceReconnect: true
+            )
+        )
     }
 
     func getRefreshedProtocols() async -> [Windscribe.DisplayProtocolPort] {
@@ -155,7 +172,13 @@ class MockProtocolManagerType: ProtocolManagerType {
 
         // Update current protocol
         currentProtocolSubject.send(proto)
-        connectionProtocolSubject.send((protocolPort: proto, connectionType: connectionType))
+        connectionProtocolSubject.send(
+            ProtocolConnectionRequest(
+                protocolPort: proto,
+                connectionType: connectionType,
+                forceReconnect: false
+            )
+        )
 
         // Find and mark the selected protocol
         if let index = protocols.firstIndex(where: { $0.protocolPort == proto }) {

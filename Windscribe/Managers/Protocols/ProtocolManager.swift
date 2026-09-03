@@ -11,12 +11,18 @@ import NetworkExtension
 import Swinject
 import Combine
 
+struct ProtocolConnectionRequest {
+    let protocolPort: ProtocolPort
+    let connectionType: ConnectionType
+    let forceReconnect: Bool
+}
+
 protocol ProtocolManagerType {
     var goodProtocol: ProtocolPort? { get set }
     var resetGoodProtocolTime: Date? { get set }
 
     var currentProtocolSubject: CurrentValueSubject<ProtocolPort?, Never> { get }
-    var connectionProtocolSubject: CurrentValueSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?, Never> { get }
+    var connectionProtocolSubject: CurrentValueSubject<ProtocolConnectionRequest?, Never> { get }
     var showProtocolSwitchTrigger: PassthroughSubject<Void, Never> { get }
     var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
     var showNoInternetBeforeFailoverTrigger: PassthroughSubject<Void, Never> { get }
@@ -28,6 +34,7 @@ protocol ProtocolManagerType {
     var failOverTimerCompletedSubject: PassthroughSubject<Void, Never> { get }
 
     func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool) async
+    func refreshProtocolsForLocationChange() async
     func getRefreshedProtocols() async -> [DisplayProtocolPort]
     func getDisplayProtocols() async -> [DisplayProtocolPort]
     func getNextProtocol() async -> ProtocolPort
@@ -79,7 +86,7 @@ class ProtocolManager: ProtocolManagerType {
     var connectionMode = DefaultValues.connectionMode
 
     let currentProtocolSubject = CurrentValueSubject<ProtocolPort?, Never>(nil)
-    let connectionProtocolSubject = CurrentValueSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?, Never>(nil)
+    let connectionProtocolSubject = CurrentValueSubject<ProtocolConnectionRequest?, Never>(nil)
     let displayProtocolsSubject = CurrentValueSubject<[DisplayProtocolPort], Never>([])
     let showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
     let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
@@ -200,7 +207,22 @@ class ProtocolManager: ProtocolManagerType {
     }
 
     @MainActor
-    func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool, isFromFailover: Bool) async {
+    func refreshProtocolsForLocationChange() async {
+        await refreshProtocols(
+            shouldReset: true,
+            shouldReconnect: true,
+            isFromFailover: false,
+            forceReconnect: true
+        )
+    }
+
+    @MainActor
+    func refreshProtocols(
+        shouldReset: Bool,
+        shouldReconnect: Bool,
+        isFromFailover: Bool,
+        forceReconnect: Bool = false
+    ) async {
         if failoverNetworkName != .none && failoverNetworkName != connectivity.getNetwork().networkType {
             logger.logI("ProtocolManager", "Network failover, reseting all protocols, network name: \(failoverNetworkName)")
             goodProtocol = nil
@@ -282,7 +304,15 @@ class ProtocolManager: ProtocolManagerType {
         let firstProtocol = getFirstProtocol()
         displayProtocolsSubject.send(protocolsToConnectList)
         currentProtocolSubject.send(firstProtocol)
-        connectionProtocolSubject.send(shouldReconnect ? (protocolPort: firstProtocol, connectionType: .user) : nil)
+        connectionProtocolSubject.send(
+            shouldReconnect
+                ? ProtocolConnectionRequest(
+                    protocolPort: firstProtocol,
+                    connectionType: .user,
+                    forceReconnect: forceReconnect
+                )
+                : nil
+        )
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
@@ -343,7 +373,13 @@ class ProtocolManager: ProtocolManagerType {
         setPriority(proto: proto.protocolName)
         let firstProtocol = getFirstProtocol()
         currentProtocolSubject.send(firstProtocol)
-        connectionProtocolSubject.send((protocolPort: firstProtocol, connectionType: connectionType))
+        connectionProtocolSubject.send(
+            ProtocolConnectionRequest(
+                protocolPort: firstProtocol,
+                connectionType: connectionType,
+                forceReconnect: false
+            )
+        )
     }
 
     /// Resetting good Protocol after 12 hours(43200 seconds).

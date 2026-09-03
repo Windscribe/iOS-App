@@ -61,6 +61,7 @@ class MockLocationsManager: LocationsManager {
     func saveLastConnectionTarget(with locationId: String) {
         saveLastConnectionTargetCalled = true
         lastSavedLocationId = locationId
+        selectedLocationUpdated.send(shouldReconnect)
     }
 
     func getBestLocationModel(from datacenterId: Int) -> BestLocationModel? {
@@ -95,7 +96,7 @@ class MockLocationsManager: LocationsManager {
 
     func getBestLocation() -> Int { return mockBestLocation }
 
-    func getLastConnectionTarget() -> String { return "" }
+    func getLastConnectionTarget() -> String { return lastSavedLocationId ?? "" }
 
     func getConnectionTargetType() -> ConnectionTargetType? { return mockConnectionTargetType }
 

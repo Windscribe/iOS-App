@@ -18,11 +18,12 @@ class MockProtocolManager: ProtocolManagerType {
     var refreshProtocolsCalled = false
     var lastShouldReset: Bool?
     var lastShouldReconnect: Bool?
+    var refreshProtocolsForLocationChangeCalled = false
 
     var goodProtocol: ProtocolPort?
     var resetGoodProtocolTime: Date?
     var currentProtocolSubject = CurrentValueSubject<ProtocolPort?, Never>(nil)
-    var connectionProtocolSubject = CurrentValueSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?, Never>(nil)
+    var connectionProtocolSubject = CurrentValueSubject<ProtocolConnectionRequest?, Never>(nil)
     var showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
     var showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
     var showNoInternetBeforeFailoverTrigger = PassthroughSubject<Void, Never>()
@@ -37,6 +38,30 @@ class MockProtocolManager: ProtocolManagerType {
         refreshProtocolsCalled = true
         lastShouldReset = shouldReset
         lastShouldReconnect = shouldReconnect
+        if shouldReconnect {
+            connectionProtocolSubject.send(
+                ProtocolConnectionRequest(
+                    protocolPort: getProtocol(),
+                    connectionType: .user,
+                    forceReconnect: false
+                )
+            )
+        }
+    }
+
+    func refreshProtocolsForLocationChange() async {
+        refreshProtocolsCalled = true
+        refreshProtocolsForLocationChangeCalled = true
+        lastShouldReset = true
+        lastShouldReconnect = true
+        refreshProtocolsHandler?()
+        connectionProtocolSubject.send(
+            ProtocolConnectionRequest(
+                protocolPort: getProtocol(),
+                connectionType: .user,
+                forceReconnect: true
+            )
+        )
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] { return [] }
@@ -56,5 +81,6 @@ class MockProtocolManager: ProtocolManagerType {
         refreshProtocolsCalled = false
         lastShouldReset = nil
         lastShouldReconnect = nil
+        refreshProtocolsForLocationChangeCalled = false
     }
 }
