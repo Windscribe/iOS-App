@@ -66,7 +66,7 @@ class FavouriteListViewModel: FavouriteListViewModelType {
             locationsManager.saveLastConnectionTarget(with: "\(favourite.id)", shouldReconnect: false)
             Task {
                 self.logger.logI("FavouriteListViewModel", "setSelectedFav for getNextProtocol")
-                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
+                await protocolManager.refreshProtocolsForLocationChange()
             }
         } else {
             presentAlertTrigger.send(.connecting)

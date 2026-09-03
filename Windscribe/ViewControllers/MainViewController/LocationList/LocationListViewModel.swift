@@ -67,7 +67,7 @@ class LocationListViewModel: ServerListViewModelType {
             locationsManager.saveLastConnectionTarget(with: "\(datacenter.id)", shouldReconnect: false)
             Task {
                 self.logger.logI("ServerListViewModel", "setSelectedServerAndGroup for getNextProtocol")
-                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
+                await protocolManager.refreshProtocolsForLocationChange()
             }
         } else {
             presentConnectingAlertTrigger.send(())
@@ -82,7 +82,7 @@ class LocationListViewModel: ServerListViewModelType {
             self.locationsManager.saveBestLocation(with: String(locationId))
             Task {
                 self.logger.logI("ServerListViewModel", "connectToBestLocation for getNextProtocol")
-                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
+                await protocolManager.refreshProtocolsForLocationChange()
             }
         } else {
             self.presentConnectingAlertTrigger.send(())
