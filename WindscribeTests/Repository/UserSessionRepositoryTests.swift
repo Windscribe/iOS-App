@@ -88,6 +88,32 @@ class UserSessionRepositoryTests: XCTestCase {
         XCTAssertEqual(repository.oldSessionModel, mockSession, "Old Session should now update to the first one")
     }
 
+    func test_initialSessionUpdatesUserStatusPreference() async {
+        mockPreferences.userStatus = false
+
+        await repository.update(session: createMockSession())
+
+        XCTAssertEqual(mockPreferences.userStatus, true)
+    }
+
+    func test_existingSessionKeepsUserStatusUntilSessionChangeHandling() async {
+        await repository.update(session: createMockSession())
+
+        await repository.update(session: createMockSessionSecond())
+
+        XCTAssertEqual(mockPreferences.userStatus, true)
+    }
+
+    func test_syncSessionUpdatesUserStatusPreference() async {
+        mockPreferences.userStatus = false
+        mockSessionStore.storedSession = createMockSession()
+
+        let result = await repository.syncSession()
+
+        XCTAssertTrue(result)
+        XCTAssertEqual(mockPreferences.userStatus, true)
+    }
+
     func test_clearSession() async {
         // Given
         let mockSession = createMockSession()

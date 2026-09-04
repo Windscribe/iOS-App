@@ -76,6 +76,9 @@ class UserSessionRepositoryImpl: UserSessionRepository {
     }
 
     func update(session: SessionModel) async {
+        if sessionModel == nil {
+            preferences.saveUserStatus(value: session.isUserPro)
+        }
         sessionStore.save(session: session)
         antiCensorshipRepository.setSessionWgParameter(withId: session.inventory?.amneziawgConfigId ?? "")
 
