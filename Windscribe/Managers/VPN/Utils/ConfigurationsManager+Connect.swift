@@ -110,6 +110,7 @@ extension ConfigurationsManager {
                 let timerPublisher = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
                 var cancellable: AnyCancellable?
                 let maxTimeout = self.getMaxTimeout(proto: wrapperProtocol)
+                var disconnectErrorFetchTracker = DisconnectErrorFetchTracker()
 
                 cancellable = timerPublisher.sink { _ in
                     guard !isCancelled else {
@@ -119,9 +120,11 @@ extension ConfigurationsManager {
                     }
 
                     let elapsedTime = Date().timeIntervalSince(startTime)
-                    progressPublisher.send(.vpn(nextManager.connection.status))
+                    let connectionStatus = nextManager.connection.status
+                    let shouldFetchDisconnectError = disconnectErrorFetchTracker.shouldFetch(for: connectionStatus)
+                    progressPublisher.send(.vpn(connectionStatus))
 
-                    if nextManager.connection.status == .connected {
+                    if connectionStatus == .connected {
                         self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=tunnel.connected result=success")
                         progressPublisher.send(.update("Testing connectivity."))
                         progressPublisher.send(.validating)
@@ -167,18 +170,20 @@ extension ConfigurationsManager {
                         }
                         cancellable?.cancel()
                     } else {
-                        Task {
-                            do {
-                                try await self.lookForAuthFailure(manager: nextManager)
-                            } catch {
-                                cancellable?.cancel()
-                                self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
-                                try await self.disableProfile(nextManager)
-                                progressPublisher.send(completion: .failure(error))
+                        if shouldFetchDisconnectError {
+                            Task {
+                                do {
+                                    try await self.lookForAuthFailure(manager: nextManager)
+                                } catch {
+                                    cancellable?.cancel()
+                                    self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
+                                    try await self.disableProfile(nextManager)
+                                    progressPublisher.send(completion: .failure(error))
+                                }
                             }
-                            let parsedTime = "\(Int(elapsedTime)).\(Int(elapsedTime * 10.0) % 10)"
-                            progressPublisher.send(.update("Attempting to connect... elapsed time: \(parsedTime) seconds"))
                         }
+                        let parsedTime = "\(Int(elapsedTime)).\(Int(elapsedTime * 10.0) % 10)"
+                        progressPublisher.send(.update("Attempting to connect... elapsed time: \(parsedTime) seconds"))
                     }
                 }
             } catch let error {
@@ -486,6 +491,25 @@ extension ConfigurationsManager {
 #endif
             try await saveToPreferences(manager: manager)
         }
+    }
+}
+
+struct DisconnectErrorFetchTracker {
+    private var previousStatus: NEVPNStatus?
+    private var didFetchDisconnectError = false
+
+    mutating func shouldFetch(for status: NEVPNStatus) -> Bool {
+        defer { previousStatus = status }
+
+        guard !didFetchDisconnectError,
+              status == .disconnected,
+              let previousStatus,
+              previousStatus != .disconnected else {
+            return false
+        }
+
+        didFetchDisconnectError = true
+        return true
     }
 }
 
