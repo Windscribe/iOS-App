@@ -15,7 +15,12 @@ extension MainViewController {
         latencyViewModel.latencyUpdatedTrigger
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.reloadTableViews()
+                guard let self = self else { return }
+                if self.viewModel.locationOrderBy.value == Fields.Values.latency {
+                    self.reloadServerListOrder()
+                } else {
+                    self.reloadTableViews()
+                }
             }
             .store(in: &cancellables)
     }

@@ -44,6 +44,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let userSessionRepository: UserSessionRepository
     private let staticIpRepository: StaticIpRepository
     private let locationListRepository: LocationListRepository
+    private let latencyLoadLock = NSLock()
 
     let latency = CurrentValueSubject<[PingDataModel], Never>([])
     let latencyUpdatedTrigger = PassthroughSubject<Void, Never>()
@@ -54,6 +55,8 @@ class LatencyRepositoryImpl: LatencyRepository {
     private var startTimeStamp = Date()
     private var hasPassedInitialTimer = false
     private var isLoadingLatency = false
+    private var wasLatencyLoadCancelled = false
+    private var currentLatencyTask: Task<[PingDataModel], Never>?
 
     init(pingManager: LocalPingManager,
          database: LocalDatabase,
@@ -109,6 +112,14 @@ class LatencyRepositoryImpl: LatencyRepository {
                 }
             }
             .store(in: &cancellables)
+
+        vpnStateRepository.vpnInfo
+            .compactMap { $0?.status }
+            .filter { $0 != .disconnected }
+            .sink { [weak self] _ in
+                self?.cancelCurrentLatencyLoad()
+            }
+            .store(in: &cancellables)
     }
 
     private func observeFavouriteList() {
@@ -126,14 +137,11 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadLatency() async {
-        // Guard: if already loading, skip to prevent duplicate simultaneous pings
-        guard !isLoadingLatency else {
+        guard beginLatencyLoad() else {
             logger.logI("LatencyRepositoryImpl", "Latency update already in progress, skipping duplicate request.")
             return
         }
-
-        isLoadingLatency = true
-        defer { isLoadingLatency = false }
+        defer { finishLatencyLoad() }
 
         // If the app launches and the VPN is connected the app does not know straight away
         // that it is connected, we wait 1 sec until eveything is loaded an then we can
@@ -146,12 +154,12 @@ class LatencyRepositoryImpl: LatencyRepository {
         }
         hasPassedInitialTimer = true
 
-        guard !vpnStateRepository.isConnected() else {
-            logger.logI("LatencyRepositoryImpl", "Latency update skipped - VPN is connected.")
+        guard vpnStateRepository.isDisconnected() else {
+            logger.logI("LatencyRepositoryImpl", "Latency update skipped - VPN is not disconnected.")
             return
         }
 
-        await loadAllDatacentersLatency()
+        guard await loadAllDatacentersLatency() else { return }
         latencyUpdatedTrigger.send(())
         refreshBestLocation()
     }
@@ -170,14 +178,14 @@ class LatencyRepositoryImpl: LatencyRepository {
             return
         }
 
-        do {
-            try await createLatencyTask(from: nearbyDatacenterServers.map { ($0.ip, buildHostforPing(from: $0)) })
-            refreshBestLocation()
-            logger.logI("LatencyRepositoryImpl", "Quick latency complete. Best location updated with \(nearbyDatacenterServers.count) datacenters.")
-        } catch {
-            logger.logE("LatencyRepositoryImpl", "Quick latency failed: \(error)")
-            throw error
-        }
+        let nearbyPingTargets = nearbyDatacenterServers.map { ($0.ip, buildHostforPing(from: $0)) }
+        let pingData = await createLatencyTask(from: nearbyPingTargets)
+        persistPingData(pingData)
+        refreshBestLocation()
+        logger.logI(
+            "LatencyRepositoryImpl",
+            "Quick latency complete. Best location updated with \(nearbyDatacenterServers.count) datacenters."
+        )
     }
 
     private func getNearbyDatacentersPingServer(limit: Int) -> [ServerMachineModel] {
@@ -204,26 +212,32 @@ class LatencyRepositoryImpl: LatencyRepository {
             .compactMap { $0.datacenter.pingServer }
     }
 
-    private func loadAllDatacentersLatency() async {
+    private func loadAllDatacentersLatency() async -> Bool {
         logger.logI("LatencyRepositoryImpl", "Attempting to update latency data.")
         let pingDatacenterss = getDatacentersPingAndHosts()
         guard pingDatacenterss.count != 0 else {
             logger.logI("LatencyRepositoryImpl", "Datacenter list not ready for latency update.")
-            return
+            return false
         }
         if locationsManager.getBestLocation() == 0 {
             self.pickBestLocation()
         }
-        guard !vpnStateRepository.isConnected() else {
-            self.logger.logI("LatencyRepositoryImpl", "Latency not updated as vpn is connected")
-            return
+        guard vpnStateRepository.isDisconnected() else {
+            self.logger.logI("LatencyRepositoryImpl", "Latency not updated as VPN is not disconnected.")
+            return false
         }
-        do {
-            try await createLatencyTask(from: pingDatacenterss)
-            self.logger.logI("LatencyRepositoryImpl", "Successfully updated latency data.")
-        } catch {
-            self.logger.logE("LatencyRepositoryImpl", "Failure to update latency data.")
+
+        let latencyTask = Task { await self.createLatencyTask(from: pingDatacenterss) }
+        setCurrentLatencyTask(latencyTask)
+        let pingData = await latencyTask.value
+        guard latencyLoadCanCommit(), vpnStateRepository.isDisconnected() else {
+            logger.logI("LatencyRepositoryImpl", "Discarded latency update because VPN state changed.")
+            return false
         }
+
+        persistPingData(pingData)
+        logger.logI("LatencyRepositoryImpl", "Successfully updated latency data.")
+        return true
     }
 
     func checkLocationsValidity() async {
@@ -237,7 +251,8 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadStaticIpLatency() async {
-        try? await createLatencyTask(from: getStaticPingAndHosts())
+        let pingData = await createLatencyTask(from: getStaticPingAndHosts())
+        persistPingData(pingData)
         latency.send(self.getPingDataModel())
     }
 
@@ -320,42 +335,48 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     // MARK: Ping Methods
-    private func performPing(ip: String, host: String, pingType: Int32) async {
+    private func performPing(ip: String, host: String, pingType: Int32) async -> PingDataModel {
         // Check if task is cancelled before starting
         guard !Task.isCancelled else {
-            self.database.addPingData(pingData: PingDataModel(ip: ip, latency: -1))
-            return
+            return PingDataModel(ip: ip, latency: -1)
         }
 
         let result = await pingManager.ping(ip, hostname: host, pingType: pingType)
 
         guard !Task.isCancelled else {
-            self.database.addPingData(pingData: PingDataModel(ip: ip, latency: -1))
-            return
+            return PingDataModel(ip: ip, latency: -1)
         }
-        self.database.addPingData(pingData: PingDataModel(ip: ip, latency: result.success ? Int(result.time) : -1))
+        return PingDataModel(ip: ip, latency: result.success ? Int(result.time) : -1)
     }
 
-    private func performPingTask(ip: String, host: String, pingType: Int32) async {
+    private func performPingTask(ip: String, host: String, pingType: Int32) async -> PingDataModel {
         // Race between ping and timeout using async/await
-        await withTaskGroup(of: Void.self) { group in
+        await withTaskGroup(of: PingDataModel?.self, returning: PingDataModel.self) { group in
             group.addTask { await self.performPing(ip: ip, host: host, pingType: pingType) }
             group.addTask {
                 try? await Task.sleep(nanoseconds: 3_000_000_000)
+                return nil
             } // 3 secs timeout
 
             // Wait for first task to complete
-            await group.next()
+            let result: PingDataModel?
+            if let firstResult = await group.next() {
+                result = firstResult
+            } else {
+                result = nil
+            }
             group.cancelAll() // Cancel the slower task
+            return result ?? PingDataModel(ip: ip, latency: -1)
         }
     }
 
-    private func createLatencyTask(from: [(String, String)]) async throws {
+    private func createLatencyTask(from: [(String, String)]) async -> [PingDataModel] {
         let maxConcurrentTasks = 20
         let pingType = advanceRepository.getPingType()
 
-        await withTaskGroup(of: Void.self) { group in
+        return await withTaskGroup(of: PingDataModel.self, returning: [PingDataModel].self) { group in
             var index = 0
+            var pingData = [PingDataModel]()
 
             // Add initial batch of tasks up to maxConcurrentTasks
             for (ip, host) in from.prefix(maxConcurrentTasks) {
@@ -363,12 +384,65 @@ class LatencyRepositoryImpl: LatencyRepository {
                 index += 1
             }
             // Process results and add new tasks as they complete
-            for await _ in group where index < from.count {
-                let (ip, host) = from[index]
-                group.addTask { await self.performPingTask(ip: ip, host: host, pingType: pingType) }
-                index += 1
+            for await result in group {
+                pingData.append(result)
+                if index < from.count {
+                    let (ip, host) = from[index]
+                    group.addTask { await self.performPingTask(ip: ip, host: host, pingType: pingType) }
+                    index += 1
+                }
             }
+            return pingData
         }
+    }
+
+    private func persistPingData(_ pingData: [PingDataModel]) {
+        pingData.forEach { database.addPingData(pingData: $0) }
+    }
+
+    private func beginLatencyLoad() -> Bool {
+        latencyLoadLock.lock()
+        defer { latencyLoadLock.unlock() }
+        guard !isLoadingLatency else { return false }
+        isLoadingLatency = true
+        wasLatencyLoadCancelled = false
+        return true
+    }
+
+    private func finishLatencyLoad() {
+        latencyLoadLock.lock()
+        currentLatencyTask = nil
+        isLoadingLatency = false
+        wasLatencyLoadCancelled = false
+        latencyLoadLock.unlock()
+    }
+
+    private func cancelCurrentLatencyLoad() {
+        latencyLoadLock.lock()
+        guard isLoadingLatency else {
+            latencyLoadLock.unlock()
+            return
+        }
+        wasLatencyLoadCancelled = true
+        let latencyTask = currentLatencyTask
+        latencyLoadLock.unlock()
+        latencyTask?.cancel()
+    }
+
+    private func setCurrentLatencyTask(_ latencyTask: Task<[PingDataModel], Never>) {
+        latencyLoadLock.lock()
+        currentLatencyTask = latencyTask
+        let shouldCancel = wasLatencyLoadCancelled
+        latencyLoadLock.unlock()
+        if shouldCancel {
+            latencyTask.cancel()
+        }
+    }
+
+    private func latencyLoadCanCommit() -> Bool {
+        latencyLoadLock.lock()
+        defer { latencyLoadLock.unlock() }
+        return isLoadingLatency && !wasLatencyLoadCancelled
     }
 
     private func getStaticPingAndHosts() -> [(String, String)] {

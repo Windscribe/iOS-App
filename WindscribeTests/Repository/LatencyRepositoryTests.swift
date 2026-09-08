@@ -178,6 +178,97 @@ class LatencyRepositoryTests: XCTestCase {
         XCTAssertFalse(mockPingManager.pingCalled, "Ping should not be called with empty server list")
     }
 
+    func testLoadLatencyDiscardsResultsAfterVPNStateChange() async {
+        let data = createMockData()
+        setLocationDataWithoutTriggeringLatencyLoad(data)
+        mockUserSessionRepository.sessionModel = createMockSession(isPremium: true)
+        mockLocationsManager.mockBestLocation = 101
+        mockLocalDatabase.addPingData(pingData: PingDataModel(ip: "1.2.3.4", latency: 500))
+        mockLocalDatabase.addPingData(pingData: PingDataModel(ip: "5.6.7.8", latency: 600))
+        mockPingManager.setCustomResult(for: "1.2.3.4", time: 10, success: true)
+        mockPingManager.setCustomResult(for: "5.6.7.8", time: 20, success: true)
+        mockPingManager.pingDelayNanoseconds = 300_000_000
+
+        let pingStarted = expectation(description: "Latency pings started")
+        pingStarted.expectedFulfillmentCount = data.serverMachines.count
+        let pingsCancelled = expectation(description: "Latency pings cancelled")
+        pingsCancelled.expectedFulfillmentCount = data.serverMachines.count
+        let updatePublished = expectation(description: "Latency update was not published")
+        updatePublished.isInverted = true
+        mockPingManager.onPing = { pingStarted.fulfill() }
+        mockPingManager.onCancel = { pingsCancelled.fulfill() }
+        repository.latencyUpdatedTrigger
+            .sink { updatePublished.fulfill() }
+            .store(in: &cancellables)
+
+        try? await Task.sleep(nanoseconds: 1_100_000_000)
+        let loadTask = Task { try? await self.repository.loadLatency() }
+        await fulfillment(of: [pingStarted], timeout: 1.0)
+        mockVPNStateRepository.simulateStatusChange(.connecting)
+        mockVPNStateRepository.vpnInfo.send(VPNConnectionInfo(selectedProtocol: "WireGuard",
+                                                                selectedPort: "443",
+                                                                status: .connecting,
+                                                                killSwitch: false,
+                                                                onDemand: false))
+        mockVPNStateRepository.simulateStatusChange(.disconnected)
+        await loadTask.value
+        await fulfillment(of: [pingsCancelled, updatePublished], timeout: 0.1)
+
+        let pingData = mockLocalDatabase.getAllPingData()
+        XCTAssertEqual(pingData.first { $0.ip == "1.2.3.4" }?.latency, 500)
+        XCTAssertEqual(pingData.first { $0.ip == "5.6.7.8" }?.latency, 600)
+        XCTAssertFalse(mockLocationsManager.saveBestLocationCalled)
+        XCTAssertEqual(mockLocationsManager.getBestLocation(), 101)
+    }
+
+    func testLoadLatencyCommitsResultsWhenVPNStaysDisconnected() async {
+        let data = createMockData()
+        setLocationDataWithoutTriggeringLatencyLoad(data)
+        mockUserSessionRepository.sessionModel = createMockSession(isPremium: true)
+        mockLocationsManager.mockBestLocation = 101
+        mockPingManager.setCustomResult(for: "1.2.3.4", time: 100, success: true)
+        mockPingManager.setCustomResult(for: "5.6.7.8", time: 50, success: true)
+
+        let updatePublished = expectation(description: "Latency update was published")
+        repository.latencyUpdatedTrigger
+            .sink { updatePublished.fulfill() }
+            .store(in: &cancellables)
+
+        try? await Task.sleep(nanoseconds: 1_100_000_000)
+        try? await repository.loadLatency()
+        await fulfillment(of: [updatePublished], timeout: 1.0)
+
+        let pingData = mockLocalDatabase.getAllPingData()
+        XCTAssertEqual(pingData.first { $0.ip == "1.2.3.4" }?.latency, 100)
+        XCTAssertEqual(pingData.first { $0.ip == "5.6.7.8" }?.latency, 50)
+        XCTAssertEqual(mockLocationsManager.lastSavedBestLocationId, "102")
+    }
+
+    func testLoadLatencySkipsWhilePreviousLoadIsInProgress() async {
+        let data = createMockData()
+        setLocationDataWithoutTriggeringLatencyLoad(data)
+        mockUserSessionRepository.sessionModel = createMockSession(isPremium: true)
+        mockLocationsManager.mockBestLocation = 101
+        mockPingManager.pingDelayNanoseconds = 300_000_000
+
+        let pingStarted = expectation(description: "First latency load started")
+        pingStarted.expectedFulfillmentCount = data.serverMachines.count
+        pingStarted.assertForOverFulfill = true
+        let updatePublished = expectation(description: "One latency update was published")
+        updatePublished.assertForOverFulfill = true
+        mockPingManager.onPing = { pingStarted.fulfill() }
+        repository.latencyUpdatedTrigger
+            .sink { updatePublished.fulfill() }
+            .store(in: &cancellables)
+
+        try? await Task.sleep(nanoseconds: 1_100_000_000)
+        let firstLoad = Task { try? await self.repository.loadLatency() }
+        await fulfillment(of: [pingStarted], timeout: 1.0)
+        try? await repository.loadLatency()
+        await firstLoad.value
+        await fulfillment(of: [updatePublished], timeout: 1.0)
+    }
+
     // MARK: LoadStaticIpLatency Tests
 
     func testLoadStaticIpLatency() async {
@@ -425,6 +516,14 @@ class LatencyRepositoryTests: XCTestCase {
     }
 
     // MARK: Helper Methods
+
+    private func setLocationDataWithoutTriggeringLatencyLoad(
+        _ data: (locations: [LocationModel], datacenters: [DatacenterModel], serverMachines: [ServerMachineModel])
+    ) {
+        mockLocationListRepository.locationListSubject = CurrentValueSubject(data.locations)
+        mockLocationListRepository.datacenterListSubject = CurrentValueSubject(data.datacenters)
+        mockLocationListRepository.serverListSubject = CurrentValueSubject(data.serverMachines)
+    }
 
     private func createMockSession(isPremium: Bool) -> SessionModel {
         let session = Session()

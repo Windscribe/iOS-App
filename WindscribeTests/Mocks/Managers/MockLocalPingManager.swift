@@ -16,6 +16,9 @@ class MockLocalPingManager: LocalPingManager {
     var mockPingResult: (time: Int32, success: Bool) = (50, true)
     var shouldFail = false
     var customPingResults: [String: (time: Int32, success: Bool)] = [:]
+    var pingDelayNanoseconds: UInt64 = 0
+    var onPing: (() -> Void)?
+    var onCancel: (() -> Void)?
 
     // Tracking
 
@@ -35,6 +38,16 @@ class MockLocalPingManager: LocalPingManager {
         lastPingedHostname = hostname
         lastPingType = pingType
         allPingedIPs.append(ip)
+        onPing?()
+
+        if pingDelayNanoseconds > 0 {
+            do {
+                try await Task.sleep(nanoseconds: pingDelayNanoseconds)
+            } catch {
+                onCancel?()
+                return (-1, false)
+            }
+        }
 
         // Check for custom result for this specific IP
         if let customResult = customPingResults[ip] {
@@ -62,6 +75,9 @@ class MockLocalPingManager: LocalPingManager {
         shouldFail = false
         mockPingResult = (50, true)
         customPingResults = [:]
+        pingDelayNanoseconds = 0
+        onPing = nil
+        onCancel = nil
     }
 
     func setCustomResult(for ip: String, time: Int32, success: Bool) {
