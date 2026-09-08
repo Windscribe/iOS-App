@@ -38,6 +38,7 @@ LintCheck:
   stage: lint
   extends: .on_mr
   script:
+    - ruby fastlane/tests/app_store_release_notes_test.rb
     - fastlane lint
 
 # ─── Test ──────────────────────────────────────────────────────────────────────
@@ -135,6 +136,18 @@ Deploy-iOS-Staging:
   extends: .deploy-ios-base
   variables:
     BUILD_SCHEME: "Windscribe-Staging"
+
+Update-App-Store-Release-Notes:
+  stage: deploy
+  script:
+    - fastlane updateAppStoreReleaseNotes
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: never
+    - if: '$APP_VERSION && $RELEASE_NOTES'
+      when: manual
+      allow_failure: false
+    - when: never
 
 # ─── Notify ───────────────────────────────────────────────────────────────────
 

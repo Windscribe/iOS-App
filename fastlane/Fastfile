@@ -1,6 +1,7 @@
 default_platform(:ios)
 
 require 'base64'
+require_relative 'app_store_release_notes'
 
 APP_IDENTIFIERS = [
   "com.windscribe",
@@ -16,6 +17,35 @@ def ci_api_key
     issuer_id: ENV["UPLOAD_ISSUER_ID"],
     key_content: Base64.decode64(ENV["UPLOAD_KEY"])
   )
+end
+
+def editable_ios_app_store_version
+  app = Spaceship::ConnectAPI::App.find("com.windscribe")
+  UI.user_error!("Could not find com.windscribe in App Store Connect") unless app
+
+  version = app.get_edit_app_store_version(
+    platform: Spaceship::ConnectAPI::Platform::IOS
+  )
+  UI.user_error!("Could not find an editable iOS version") unless version
+
+  version
+end
+
+def update_app_store_release_notes(version:, description:)
+  begin
+    changed_locales = AppStoreReleaseNotes.update(
+      version: version,
+      description: description
+    )
+  rescue ArgumentError => error
+    UI.user_error!(error.message)
+  end
+
+  if changed_locales.empty?
+    UI.success("Release notes already match App Store Connect for all locales")
+  else
+    UI.success("Updated and verified release notes for: #{changed_locales.join(', ')}")
+  end
 end
 
 def ci_build(scheme:, sign: false, build_number: nil)
@@ -117,6 +147,25 @@ end
 desc "Build the tvOS app"
 lane :tvBuild do
   ci_build(scheme: "WindscribeTV-Debug")
+end
+
+desc "Update localized App Store release notes for an editable iOS version"
+lane :updateAppStoreReleaseNotes do
+  app_version = ENV["APP_VERSION"].to_s.strip
+  UI.user_error!("APP_VERSION is required") if app_version.empty?
+  description = ENV["RELEASE_NOTES"].to_s
+  UI.user_error!("RELEASE_NOTES is required") if description.strip.empty?
+
+  ci_api_key
+  version = editable_ios_app_store_version
+
+  if version.version_string != app_version
+    UI.user_error!(
+      "Editable App Store version is #{version.version_string}, not #{app_version}"
+    )
+  end
+
+  update_app_store_release_notes(version: version, description: description)
 end
 
 desc "Push build to TestFlight (scheme controlled by BUILD_SCHEME env var)"

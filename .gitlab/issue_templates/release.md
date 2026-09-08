@@ -18,7 +18,8 @@ This document outlines the steps to follow when releasing the iOS app, including
 - [ ] Prepare External Testflight changelog.
 - [ ] Release app to External Testflight
 - [ ] Fix Users feedback, update release and repeat.
-- [ ] Prepare final changelog. 
+- [ ] Update final App Store release notes.
+  - Run a pipeline for the release branch with `APP_VERSION` and `RELEASE_NOTES`, then play `Update-App-Store-Release-Notes`.
 - [ ] Send app for apple review.
 - [ ] Distribute app to app store users.
 - [ ] Merge release branch in to main
