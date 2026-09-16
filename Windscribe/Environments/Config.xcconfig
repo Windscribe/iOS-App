@@ -19,7 +19,7 @@ TEST_TARGET_BUNDLE_ID = com.WindscribeTests
 // Single source of truth for app + extension versions (iOS).
 // CI overrides CURRENT_PROJECT_VERSION via xcargs (CI_PIPELINE_IID); the value
 // below is the local-build default. tvOS uses TV_MARKETING_VERSION on its own target.
-MARKETING_VERSION = 3.15.0
+MARKETING_VERSION = 3.16.0
 CURRENT_PROJECT_VERSION = 1
 TV_MARKETING_VERSION = 1.0.4
 
