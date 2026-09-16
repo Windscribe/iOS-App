@@ -13,6 +13,36 @@ import NetworkExtension
 import WidgetKit
 #endif
 
+enum ConnectionFailureDisposition: Equatable {
+    case sessionLogout
+    case upgrade
+    case authentication
+    case noConnection
+    case protocolFailover
+}
+
+extension ConnectionFailureReason {
+    var disposition: ConnectionFailureDisposition {
+        switch self {
+        case .accountSessionInvalid:
+            return .sessionLogout
+        case .accountLimitation:
+            return .upgrade
+        case .authentication:
+            return .authentication
+        case .networkUnavailable:
+            return .noConnection
+        case .wireGuardRegistration,
+                .wireGuardConfiguration,
+                .dns,
+                .backendStartup,
+                .timedOut,
+                .unknown:
+            return .protocolFailover
+        }
+    }
+}
+
 protocol ConnectionViewModelType {
     var connectedState: CurrentValueSubject<ConnectionStateInfo, Never> { get }
     var selectedProtoPort: CurrentValueSubject<ProtocolPort?, Never> { get }
@@ -105,6 +135,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let appReviewManager: AppReviewManaging
     let customSoundPlaybackManager: CustomSoundPlaybackManaging
     let privacyStateManager: PrivacyStateManaging
+    let sessionManager: SessionManager
     let userSessionRepository: UserSessionRepository
     let locationListRepository: LocationListRepository
 
@@ -130,6 +161,7 @@ class ConnectionViewModel: ConnectionViewModelType {
          ipRepository: IPRepository,
          customSoundPlaybackManager: CustomSoundPlaybackManaging,
          privacyStateManager: PrivacyStateManaging,
+         sessionManager: SessionManager,
          userSessionRepository: UserSessionRepository,
          locationListRepository: LocationListRepository) {
         self.logger = logger
@@ -146,6 +178,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.credentialsRepository = credentialsRepository
         self.customSoundPlaybackManager = customSoundPlaybackManager
         self.privacyStateManager = privacyStateManager
+        self.sessionManager = sessionManager
         self.userSessionRepository = userSessionRepository
         self.locationListRepository = locationListRepository
 
@@ -614,6 +647,20 @@ extension ConnectionViewModel {
             showPrivacyTrigger.send(())
         case .authFailure:
             showAuthFailureTrigger.send(())
+        case let .classified(failure):
+            switch failure.reason.disposition {
+            case .sessionLogout:
+                sessionManager.logoutUser()
+                return true
+            case .upgrade:
+                showUpgradeRequiredTrigger.send(())
+            case .authentication:
+                showAuthFailureTrigger.send(())
+            case .noConnection:
+                showNoConnectionAlertTrigger.send(())
+            case .protocolFailover:
+                return false
+            }
         case .connectivityTestFailed:
             guard locationsManager.getConnectionTargetType() == .custom else { return false }
             showAuthFailureTrigger.send(())

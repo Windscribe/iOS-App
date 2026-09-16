@@ -125,6 +125,41 @@ extension VPNManagerImpl {
                 }
                 if let error = error as? VPNConfigurationErrors {
                     switch error {
+                    case let .classified(failure):
+                        switch failure.reason {
+                        case .wireGuardRegistration, .wireGuardConfiguration:
+                            guard proto == VPNProtocolType.wireGuard.identifier,
+                                  self.locationsManager.getConnectionTargetType(id: id) != .custom else {
+                                break
+                            }
+                            self.logger.logI("VPNConfiguration", "Retrying WireGuard once with a forced registration refresh.")
+                            return self.configManager.connectAsync(
+                                locationID: id,
+                                proto: proto,
+                                port: port,
+                                vpnSettings: self.connectionSettings(
+                                    for: connectionType,
+                                    attemptId: attemptId,
+                                    forceWireguardRefresh: true
+                                ),
+                                connectionType: connectionType
+                            ).eraseToAnyPublisher()
+                        case .accountSessionInvalid:
+                            break
+                        case .timedOut:
+                            self.configManager.updateFailedNode()
+                            if connectionType == .user, self.locationsManager.getConnectionTargetType(id: id) != .custom {
+                                return self.configManager.connectAsync(
+                                    locationID: id,
+                                    proto: proto,
+                                    port: port,
+                                    vpnSettings: self.connectionSettings(for: connectionType, attemptId: attemptId),
+                                    connectionType: connectionType
+                                ).eraseToAnyPublisher()
+                            }
+                        default:
+                            break
+                        }
                     case .authFailure:
                         if self.locationsManager.getConnectionTargetType(id: id) != .custom {
                             return self.updateConnectionData(locationID: id, connectionError: error)
@@ -150,9 +185,12 @@ extension VPNManagerImpl {
             }.eraseToAnyPublisher()
     }
 
-    private func connectionSettings(for connectionType: ConnectionType, attemptId: String) -> VPNUserSettings {
+    private func connectionSettings(for connectionType: ConnectionType,
+                                    attemptId: String,
+                                    forceWireguardRefresh: Bool = false) -> VPNUserSettings {
         var settings = connectionType == .emergency ? emergencyUserSettings() : makeUserSettings()
         settings.connectionAttemptId = attemptId
+        settings.forceWireguardRefresh = forceWireguardRefresh
         return settings
     }
 

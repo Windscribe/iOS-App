@@ -127,6 +127,7 @@ class TVViewModels: Assembly {
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
                                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!,
+                                sessionManager: r.resolve(SessionManager.self)!,
                                 userSessionRepository: r.resolve(UserSessionRepository.self)!,
                                 locationListRepository: r.resolve(LocationListRepository.self)!)
         }.inObjectScope(.transient)

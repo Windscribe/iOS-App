@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import NetworkExtension
 import Swinject
 @testable import Windscribe
 import XCTest
@@ -689,6 +690,111 @@ class WireguardConfigRepositoryTests: XCTestCase {
         XCTAssertTrue(mockIPManager.generateIPCalled, "Should generate IPv4 IP")
         XCTAssertFalse(mockIPManager.generateIPv6Called, "Should not generate IPv6 IP when server doesn't support it")
         XCTAssertNil(mockWgCredentials.addressV6, "Should not have IPv6 address")
+    }
+
+    // MARK: - Failure Classification
+
+    func test_failureClassifier_providerFailures_shouldRemainTyped() {
+        XCTAssertEqual(classify(provider: .savedProtocolConfigurationIsInvalid).reason, .wireGuardConfiguration)
+        XCTAssertEqual(classify(provider: .dnsResolutionFailure).reason, .dns)
+        XCTAssertEqual(classify(provider: .couldNotStartBackend).reason, .backendStartup)
+        XCTAssertEqual(classify(provider: .couldNotDetermineFileDescriptor).reason, .backendStartup)
+        XCTAssertEqual(classify(provider: .couldNotSetNetworkSettings).reason, .backendStartup)
+    }
+
+    func test_failureClassifier_knownDisconnectReason_shouldTakePrecedence() {
+        let failure = VPNFailureClassifier.classify(
+            protocolName: VPNProtocolType.wireGuard.identifier,
+            stage: .tunnel,
+            error: NSError(domain: "com.windscribe", code: 50),
+            providerError: .couldNotStartBackend,
+            disconnectReason: .invalidSession
+        )
+
+        XCTAssertEqual(failure.reason, .accountSessionInvalid)
+        XCTAssertEqual(failure.evidence.disconnectReason, .invalidSession)
+        XCTAssertEqual(failure.evidence.providerError, .couldNotStartBackend)
+        XCTAssertEqual(failure.evidence.systemError, VPNSystemError(domain: "com.windscribe", code: 50))
+    }
+
+    func test_failureClassifier_numericCodesAlone_shouldNotImplyAuthentication() {
+        for code in [8, 12, 50] {
+            let failure = VPNFailureClassifier.classify(
+                protocolName: VPNProtocolType.wireGuard.identifier,
+                stage: .tunnel,
+                error: NSError(domain: NEVPNErrorDomain, code: code)
+            )
+            XCTAssertEqual(failure.reason, .unknown)
+            XCTAssertEqual(failure.evidence.systemError, VPNSystemError(domain: NEVPNErrorDomain, code: code))
+        }
+    }
+
+    func test_failureClassifier_networkAndTimeout_shouldRemainDistinct() {
+        let offline = VPNFailureClassifier.classify(
+            protocolName: VPNProtocolType.iKEv2.identifier,
+            stage: .connectivity,
+            error: NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet)
+        )
+        let timedOut = VPNFailureClassifier.classify(
+            protocolName: VPNProtocolType.iKEv2.identifier,
+            stage: .timeout,
+            error: NSError(domain: NEVPNErrorDomain, code: 12)
+        )
+
+        XCTAssertEqual(offline.reason, .networkUnavailable)
+        XCTAssertEqual(timedOut.reason, .timedOut)
+    }
+
+    func test_providerEvidenceParser_shouldRequireMatchingAttempt() {
+        let data = "attempt-a\ndnsResolutionFailure".data(using: .utf8)!
+
+        XCTAssertEqual(PacketTunnelProviderError.parse(data, matching: "attempt-a"), .dnsResolutionFailure)
+        XCTAssertNil(PacketTunnelProviderError.parse(data, matching: "attempt-b"))
+        XCTAssertNil(PacketTunnelProviderError.parse(Data("malformed".utf8), matching: "attempt-a"))
+    }
+
+    func test_failureClassifier_accountStatusChanges_shouldUseExistingAccountActions() {
+        let invalidSession = VPNFailureClassifier.classify(
+            protocolName: VPNProtocolType.wireGuard.identifier,
+            stage: .tunnel,
+            disconnectReason: .invalidSession
+        )
+        let accountStatusChanged = VPNFailureClassifier.classify(
+            protocolName: VPNProtocolType.wireGuard.identifier,
+            stage: .tunnel,
+            disconnectReason: .accountStatusChanged
+        )
+
+        XCTAssertEqual(invalidSession.reason, .accountSessionInvalid)
+        XCTAssertEqual(invalidSession.reason.disposition, .sessionLogout)
+        XCTAssertEqual(accountStatusChanged.reason, .accountLimitation)
+        XCTAssertEqual(accountStatusChanged.reason.disposition, .upgrade)
+    }
+
+    func test_failureDisposition_shouldReuseExistingConnectionFlows() {
+        XCTAssertEqual(ConnectionFailureReason.accountSessionInvalid.disposition, .sessionLogout)
+        XCTAssertEqual(ConnectionFailureReason.accountLimitation.disposition, .upgrade)
+        XCTAssertEqual(ConnectionFailureReason.authentication.disposition, .authentication)
+        XCTAssertEqual(ConnectionFailureReason.networkUnavailable.disposition, .noConnection)
+
+        for reason in [
+            ConnectionFailureReason.wireGuardRegistration,
+            .wireGuardConfiguration,
+            .dns,
+            .backendStartup,
+            .timedOut,
+            .unknown
+        ] {
+            XCTAssertEqual(reason.disposition, .protocolFailover)
+        }
+    }
+
+    private func classify(provider: PacketTunnelProviderError) -> VPNConnectionFailure {
+        VPNFailureClassifier.classify(
+            protocolName: VPNProtocolType.wireGuard.identifier,
+            stage: .tunnel,
+            providerError: provider
+        )
     }
 
     // MARK: - Helper Methods

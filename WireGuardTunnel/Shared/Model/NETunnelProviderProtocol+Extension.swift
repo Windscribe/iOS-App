@@ -1,15 +1,34 @@
 // SPDX-License-Identifier: MIT
 // Copyright © 2018-2023 WireGuard LLC. All Rights Reserved.
 
+import Foundation
 import NetworkExtension
 import WireGuardKit
 
-enum PacketTunnelProviderError: String, Error {
+enum PacketTunnelProviderError: String, Error, Sendable, Equatable {
     case savedProtocolConfigurationIsInvalid
     case dnsResolutionFailure
     case couldNotStartBackend
     case couldNotDetermineFileDescriptor
     case couldNotSetNetworkSettings
+
+    static func consume(matching attemptId: String) -> PacketTunnelProviderError? {
+        guard let url = FileManager.networkExtensionLastErrorFileURL,
+              let data = try? Data(contentsOf: url),
+              let error = parse(data, matching: attemptId) else {
+            return nil
+        }
+        _ = FileManager.deleteFile(at: url)
+        return error
+    }
+
+    static func parse(_ data: Data, matching attemptId: String) -> PacketTunnelProviderError? {
+        guard let value = String(data: data, encoding: .utf8) else { return nil }
+        let lines = value.components(separatedBy: .newlines)
+        guard lines.count >= 2,
+              lines[0] == attemptId else { return nil }
+        return PacketTunnelProviderError(rawValue: lines[1])
+    }
 }
 
 extension NETunnelProviderProtocol {

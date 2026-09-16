@@ -80,7 +80,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
         logger.logI("PacketTunnelProvider", "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"), flushImmediately: true)
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
             logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=credentials_not_initialized", flushImmediately: true)
-            completionHandler(NSError(domain: "com.windscribe", code: 50))
+            errorNotifier.notify(.savedProtocolConfigurationIsInvalid)
+            completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
         }
 
@@ -178,6 +179,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
             case .invalidState:
                 self.logger.logE("WireguardLifecycle", "attempt_id=\(attemptId) stage=provider.failure reason=invalid_state", flushImmediately: true)
+                errorNotifier.notify(.couldNotStartBackend)
                 completionHandler(PacketTunnelProviderError.couldNotStartBackend)
             }
         }

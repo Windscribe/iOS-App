@@ -44,9 +44,7 @@ extension ConfigurationsManager {
                 try? await nextManager?.loadFromPreferences()
 
                 progressPublisher.send(.update("Building configuration..."))
-                guard let config = try await tryBuildingConfig(locationID: locationID, proto: proto, port: port, vpnSettings: vpnSettings) else {
-                    throw VPNConfigurationErrors.connectionTimeout
-                }
+                let config = try await tryBuildingConfig(locationID: locationID, proto: proto, port: port, vpnSettings: vpnSettings)
 
                 self.logger.logI("VPNLifecycle", "attempt_id=\(attemptId) stage=config.built result=success protocol=\(proto)")
                 self.logger.logI("VPNConfiguration", "Configuration built successfully \(config.description)")
@@ -158,22 +156,33 @@ extension ConfigurationsManager {
                     } else if elapsedTime >= maxTimeout {
                         progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
                         Task {
+                            // Capture Network Extension/provider evidence before stop/disable tears it down.
+                            let connectionError = await self.getConnectError(
+                                manager: nextManager,
+                                protocolName: wrapperProtocol,
+                                attemptId: attemptId,
+                                fallback: .timedOut
+                            )
+                            nextManager.connection.stopVPNTunnel()
                             do {
-                                nextManager.connection.stopVPNTunnel()
                                 try await self.disableProfile(nextManager)
-                                try await self.getConnectError(manager: nextManager)
                             } catch {
-                                self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
-                                try? await self.waitForDisconnection(manager: nextManager)
-                                progressPublisher.send(completion: .failure(error))
+                                self.logger.logE("VPNConfiguration", "Failed to disable profile after connection timeout: \(error).")
                             }
+                            self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: connectionError)))")
+                            try? await self.waitForDisconnection(manager: nextManager)
+                            progressPublisher.send(completion: .failure(connectionError))
                         }
                         cancellable?.cancel()
                     } else {
                         if shouldFetchDisconnectError {
                             Task {
                                 do {
-                                    try await self.lookForAuthFailure(manager: nextManager)
+                                    try await self.lookForConnectFailure(
+                                        manager: nextManager,
+                                        protocolName: wrapperProtocol,
+                                        attemptId: attemptId
+                                    )
                                 } catch {
                                     cancellable?.cancel()
                                     self.logger.logE("VPNLifecycle", "attempt_id=\(attemptId) stage=attempt.end result=failure error_type=\(String(describing: type(of: error)))")
@@ -217,26 +226,36 @@ extension ConfigurationsManager {
     private func tryBuildingConfig(locationID: String,
                                    proto: String,
                                    port: String,
-                                   vpnSettings: VPNUserSettings) async throws -> VPNConfiguration? {
-        try await withCheckedThrowingContinuation { continuation in
-            let state = ConfigBuildTimeoutState(continuation: continuation)
-            let buildTask = Task { [weak self] in
-                guard let self = self else { return }
-                do {
-                    let config = try await self.buildConfig(location: locationID,
-                                                            proto: proto,
-                                                            port: port,
-                                                            userSettings: vpnSettings)
-                    state.resume(.success(config))
-                } catch {
-                    state.resume(.failure(error))
+                                   vpnSettings: VPNUserSettings) async throws -> VPNConfiguration {
+        do {
+            let config: VPNConfiguration? = try await withCheckedThrowingContinuation { continuation in
+                let state = ConfigBuildTimeoutState(continuation: continuation)
+                let buildTask = Task { [weak self] in
+                    guard let self = self else { return }
+                    do {
+                        let config = try await self.buildConfig(location: locationID,
+                                                                proto: proto,
+                                                                port: port,
+                                                                userSettings: vpnSettings)
+                        state.resume(.success(config))
+                    } catch {
+                        state.resume(.failure(error))
+                    }
+                }
+                state.setTask(buildTask)
+
+                DispatchQueue.global().asyncAfter(deadline: .now() + 30) {
+                    state.resume(.failure(VPNConfigurationErrors.connectionTimeout))
                 }
             }
-            state.setTask(buildTask)
-
-            DispatchQueue.global().asyncAfter(deadline: .now() + 30) {
-                state.resume(.failure(VPNConfigurationErrors.connectionTimeout))
-            }
+            guard let config else { throw VPNConfigurationErrors.connectionTimeout }
+            return config
+        } catch {
+            throw classifyConfigurationError(
+                error,
+                protocolName: proto,
+                attemptId: vpnSettings.connectionAttemptId
+            )
         }
     }
 
@@ -256,53 +275,107 @@ extension ConfigurationsManager {
             connectErrorLookupLock.unlock()
         }
 
-        do {
-            await loadTunnelManagers()
-            let allManagers = try await getAllManagers()
-            for manager in allManagers where manager.protocolConfiguration != nil {
-                try await getConnectError(manager: manager)
-            }
-        } catch {
-            if let nsError = error as? VPNConfigurationErrors {
-                return nsError
-            }
+        guard let activeManagerKey = preferences.getActiveManagerKey() else { return nil }
+        await loadTunnelManagers()
+        let managerType = VPNManagerType(from: activeManagerKey)
+        guard let activeManager = getManager(for: managerType) else { return nil }
+        let failure = await getConnectError(
+            manager: activeManager,
+            protocolName: managerType.username,
+            attemptId: nil,
+            fallback: .unknown
+        )
+        guard case let .classified(classified) = failure,
+              classified.reason == .accountSessionInvalid || classified.reason == .accountLimitation else {
+            return nil
         }
-        return nil
+        return failure
     }
 
-    private func getConnectError(manager: NEVPNManager) async throws {
-        if #available(iOS 16.0, *) {
+    private func getConnectError(manager: NEVPNManager,
+                                 protocolName: String,
+                                 attemptId: String?,
+                                 fallback: ConnectionFailureReason,
+                                 providerError: PacketTunnelProviderError? = nil) async -> VPNConfigurationErrors {
+        var rawError: Error?
+        if #available(iOS 16.0, tvOS 17.0, *) {
             do {
                 try await manager.connection.fetchLastDisconnectError()
             } catch {
-                if let nsError = error as NSError? {
-                    self.logger.logE("VPNConfiguration", "Connection error: \(nsError)")
-                    if [12, 8, 50].contains(nsError.code) {
-                        throw VPNConfigurationErrors.authFailure
-                    }
-                }
-
-                // Check if error message contains NEHotspotNetwork error - treat as connection timeout
-                let errorString = error.localizedDescription
-                if errorString.contains("NEHotspotNetwork") || errorString.contains("nehelper sent invalid result") {
-                    self.logger.logE("VPNConfiguration", "NEHotspotNetwork error detected - treating as connection timeout")
-                    throw VPNConfigurationErrors.connectionTimeout
-                }
+                rawError = error
             }
         }
-        throw VPNConfigurationErrors.connectionTimeout
+
+        let providerFailure = providerError ?? {
+            guard protocolName == VPNProtocolType.wireGuard.identifier,
+                  let attemptId else { return nil }
+            return PacketTunnelProviderError.consume(matching: attemptId)
+        }()
+        let failure = VPNFailureClassifier.classify(
+            protocolName: protocolName,
+            stage: fallback == .timedOut ? .timeout : .tunnel,
+            error: rawError,
+            providerError: providerFailure,
+            disconnectReason: preferences.getDisconnectReason(),
+            fallback: fallback
+        )
+        log(failure: failure, attemptId: attemptId)
+        return .classified(failure)
     }
 
-    private func lookForAuthFailure(manager: NEVPNManager) async throws {
-        if #available(iOS 16.0, *) {
-            do {
-                try await manager.connection.fetchLastDisconnectError()
-            } catch {
-                if let nsError = error as NSError?, [12, 8, 50].contains(nsError.code) {
-                    throw VPNConfigurationErrors.authFailure
-                }
-            }
+    private func lookForConnectFailure(manager: NEVPNManager,
+                                       protocolName: String,
+                                       attemptId: String) async throws {
+        let providerError = protocolName == VPNProtocolType.wireGuard.identifier
+            ? PacketTunnelProviderError.consume(matching: attemptId)
+            : nil
+        if providerError == nil {
+            guard #available(iOS 16.0, tvOS 17.0, *) else { return }
         }
+        guard providerError != nil || manager.connection.status == .disconnected || manager.connection.status == .invalid else {
+            return
+        }
+        throw await getConnectError(
+            manager: manager,
+            protocolName: protocolName,
+            attemptId: attemptId,
+            fallback: .unknown,
+            providerError: providerError
+        )
+    }
+
+    /// Preserves non-WireGuard and handled API errors. Other WireGuard configuration failures
+    /// become either a typed timeout or a registration/configuration fallback.
+    private func classifyConfigurationError(_ error: Error,
+                                            protocolName: String,
+                                            attemptId: String) -> Error {
+        guard protocolName == VPNProtocolType.wireGuard.identifier else { return error }
+        let fallback: ConnectionFailureReason
+        if let configurationError = error as? VPNConfigurationErrors,
+           configurationError == .connectionTimeout {
+            fallback = .timedOut
+        } else {
+            if let apiError = error as? Errors, apiError == .handled { return error }
+            fallback = error is Errors ? .wireGuardRegistration : .wireGuardConfiguration
+        }
+        let failure = VPNFailureClassifier.classify(
+            protocolName: protocolName,
+            stage: .configuration,
+            error: error,
+            fallback: fallback
+        )
+        log(failure: failure, attemptId: attemptId)
+        return VPNConfigurationErrors.classified(failure)
+    }
+
+    private func log(failure: VPNConnectionFailure, attemptId: String?) {
+        let provider = failure.evidence.providerError?.rawValue ?? "none"
+        let domain = failure.evidence.systemError?.domain ?? "none"
+        let code = failure.evidence.systemError?.code ?? 0
+        logger.logE(
+            "VPNFailure",
+            "attempt_id=\(attemptId ?? "none") protocol=\(failure.evidence.protocolName) stage=\(failure.evidence.stage.rawValue) reason=\(failure.reason) provider=\(provider) system_domain=\(domain) system_code=\(code)"
+        )
     }
 
     /// Set up bridge API state, test connectivity, then pin IP.

@@ -79,35 +79,17 @@ extension VPNManagerImpl {
 
 extension VPNManagerImpl {
     private func handleConnectError() {
-        if awaitingConnectionCheck {
-            return
-        }
+        guard !awaitingConnectionCheck else { return }
         awaitingConnectionCheck = true
-        getLastConnectionError { error in
-            guard let error = error else {
-                self.awaitingConnectionCheck = false
+        Task { @MainActor in
+            defer { awaitingConnectionCheck = false }
+            guard let error = await configManager.getGeneralConnectError(),
+                  case let .classified(failure) = error,
+                  failure.reason == .accountSessionInvalid || failure.reason == .accountLimitation else {
                 return
             }
-            if error == .credentialsFailure {
-                self.alertManager.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
-                self.logger.logE("VPNManager", "VPN disconnected due to credential failure")
-                Task { @MainActor in
-                    await self.resetProfiles()
-                    self.logger.logI("VPNManager", "Disabling VPN Profiles to get access api access.")
-                    try await Task.sleep(nanoseconds: 2_000_000_000)
-                    self.logger.logI("VPNManager", "Getting new session.")
-
-                    do {
-                       try await self.sessionManager.updateSession()
-                    } catch let error {
-                        self.logger.logE("VPNManager", "Failure to update session after disabling VPN profile. Error: \(error)")
-                    }
-                    self.awaitingConnectionCheck = false
-                }
-            } else {
-                self.awaitingConnectionCheck = false
-                self.logger.logE("VPNManager", "Unhandled connection error: \(error.description)")
-            }
+            logger.logE("VPNManager", "VPN disconnected due to \(failure.reason).")
+            sessionManager.checkForDiscconectReasonTrigger.send(())
         }
     }
 
@@ -158,44 +140,6 @@ extension VPNManagerImpl {
             completion(configManager.getIKEV2ConnectionInfo(manager: configManager.iKEV2Manager()))
         } else {
             completion(configManager.getVPNConnectionInfo(manager: configManager.getManager(for: activeVPNManager)))
-        }
-    }
-
-    @available(iOS 16.0, tvOS 17.0, *)
-    private func handleNEVPNProviderError(_ error: Error?, completion: @escaping (VPNErrors?) -> Void) {
-        guard let error = error as NSError? else {
-            completion(nil)
-            return
-        }
-        if error.code == 50 {
-            completion(.credentialsFailure)
-        } else {
-            logger.logE("VPNManager", "NEVPNProvider error: \(error)")
-            completion(nil)
-        }
-    }
-
-    private func getLastConnectionError(completion: @escaping (VPNErrors?) -> Void) {
-        guard #available(iOS 16.0, tvOS 17.0, *) else {
-            completion(nil)
-            return
-        }
-
-        var manager: NEVPNManager?
-        if let provider = configManager.wireguardManager(), provider.protocolConfiguration?.username != nil {
-            manager = provider
-        } else if let provider = configManager.openVPNdManager(), provider.protocolConfiguration?.username != nil {
-            manager = provider
-        } else if let provider = configManager.iKEV2Manager(), provider.protocolConfiguration?.username != nil {
-            manager = provider
-        }
-
-        if let manager = manager {
-            manager.connection.fetchLastDisconnectError { error in
-                self.handleNEVPNProviderError(error, completion: completion)
-            }
-        } else {
-            completion(nil)
         }
     }
 }

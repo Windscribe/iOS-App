@@ -156,9 +156,30 @@ class LifecycleManager: LifecycleManagerType {
     }
 
     private func disconnectToUpdateSession(source: SessionRecoverySource = .appLifecycle) async {
+        let disconnectReason = preferences.getDisconnectReason()
+        if disconnectReason == .invalidSession {
+            await logoutInvalidSession()
+            return
+        }
+
         let error = await configManager.getGeneralConnectError()
-        if preferences.getDisconnectReason() != .unknown || error == .authFailure {
-            logger.logI("LifecycleManager", "Disconencting due to disconnect reason. \(preferences.getDisconnectReason())")
+        let classifiedReason: ConnectionFailureReason?
+        if case let .some(.classified(failure)) = error {
+            classifiedReason = failure.reason
+        } else {
+            classifiedReason = nil
+        }
+
+        if classifiedReason == .accountSessionInvalid {
+            await logoutInvalidSession()
+            return
+        }
+
+        let shouldRefreshSession = disconnectReason != .unknown
+            || classifiedReason == .accountLimitation
+            || error == .authFailure
+        if shouldRefreshSession {
+            logger.logI("LifecycleManager", "Disconencting due to disconnect reason. \(disconnectReason)")
             await configManager.reloadManagers()
             await vpnManager.resetProfiles()
             preferences.saveDisconnectReason(reason: DisconnectReason.unknown)
@@ -172,6 +193,14 @@ class LifecycleManager: LifecycleManagerType {
             }
         } else if source.retriesSessionWithoutVPNRecovery {
             sessionManager.keepSessionUpdated()
+        }
+    }
+
+    private func logoutInvalidSession() async {
+        logger.logI("LifecycleManager", "Logging out due to an invalid VPN session.")
+        preferences.saveDisconnectReason(reason: DisconnectReason.unknown)
+        await MainActor.run {
+            sessionManager.logoutUser()
         }
     }
 

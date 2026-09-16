@@ -6,7 +6,7 @@
 //  Copyright © 2026 Windscribe. All rights reserved.
 //
 
-enum DisconnectReason: Int {
+enum DisconnectReason: Int, Sendable, Equatable {
     case accountStatusChanged = 1  // Account changed from okay to > Banned/Expired
     case userStatusChanged = 2     // User status changed from premium to free or vice versa.
     case invalidSession = 3        // Invalid session.

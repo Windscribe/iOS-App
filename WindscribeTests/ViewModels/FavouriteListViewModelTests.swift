@@ -275,6 +275,7 @@ final class FavouriteListViewModelTests: XCTestCase {
                 soundManager: MockSoundManager()
             ),
             privacyStateManager: PrivacyStateManager(logger: logger),
+            sessionManager: MockSessionManager(),
             userSessionRepository: mockUserSessionRepository,
             locationListRepository: mockLocationListRepository
         )
