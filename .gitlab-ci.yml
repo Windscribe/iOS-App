@@ -39,6 +39,7 @@ LintCheck:
   extends: .on_mr
   script:
     - ruby fastlane/tests/app_store_release_notes_test.rb
+    - ruby fastlane/tests/app_store_release_notes_lanes_test.rb
     - ruby fastlane/tests/testflight_test.rb
     - fastlane lint
 
@@ -169,6 +170,11 @@ Update-App-Store-Release-Notes:
       when: manual
       allow_failure: false
     - when: never
+
+Update-tvOS-App-Store-Release-Notes:
+  extends: Update-App-Store-Release-Notes
+  script:
+    - fastlane updateTVAppStoreReleaseNotes
 
 # ─── Notify ───────────────────────────────────────────────────────────────────
 

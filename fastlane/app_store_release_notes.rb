@@ -4,7 +4,7 @@ module AppStoreReleaseNotes
   def self.update(version:, description:)
     value = normalize(description)
     localizations = version.get_app_store_version_localizations
-    raise ArgumentError, "The editable iOS version has no localizations" if localizations.empty?
+    raise ArgumentError, "The editable App Store version has no localizations" if localizations.empty?
 
     changed_locales = []
     localizations.sort_by(&:locale).each do |localization|

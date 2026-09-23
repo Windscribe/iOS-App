@@ -16,14 +16,12 @@ def ci_api_key
   )
 end
 
-def editable_ios_app_store_version
+def editable_app_store_version(platform:)
   app = Spaceship::ConnectAPI::App.find("com.windscribe")
   UI.user_error!("Could not find com.windscribe in App Store Connect") unless app
 
-  version = app.get_edit_app_store_version(
-    platform: Spaceship::ConnectAPI::Platform::IOS
-  )
-  UI.user_error!("Could not find an editable iOS version") unless version
+  version = app.get_edit_app_store_version(platform: platform)
+  UI.user_error!("Could not find an editable #{platform} version") unless version
 
   version
 end
@@ -168,15 +166,14 @@ lane :tvBuild do
   ci_build(scheme: "WindscribeTV-Debug")
 end
 
-desc "Update localized App Store release notes for an editable iOS version"
-lane :updateAppStoreReleaseNotes do
+def update_app_store_release_notes_for_platform(platform:)
   app_version = ENV["APP_VERSION"].to_s.strip
   UI.user_error!("APP_VERSION is required") if app_version.empty?
   description = ENV["RELEASE_NOTES"].to_s
   UI.user_error!("RELEASE_NOTES is required") if description.strip.empty?
 
   ci_api_key
-  version = editable_ios_app_store_version
+  version = editable_app_store_version(platform: platform)
 
   if version.version_string != app_version
     UI.user_error!(
@@ -185,6 +182,16 @@ lane :updateAppStoreReleaseNotes do
   end
 
   update_app_store_release_notes(version: version, description: description)
+end
+
+desc "Update localized App Store release notes for an editable iOS version"
+lane :updateAppStoreReleaseNotes do
+  update_app_store_release_notes_for_platform(platform: Spaceship::ConnectAPI::Platform::IOS)
+end
+
+desc "Update localized App Store release notes for an editable tvOS version"
+lane :updateTVAppStoreReleaseNotes do
+  update_app_store_release_notes_for_platform(platform: Spaceship::ConnectAPI::Platform::TV_OS)
 end
 
 desc "Push build to TestFlight (scheme controlled by BUILD_SCHEME env var)"

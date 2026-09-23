@@ -85,6 +85,6 @@ class AppStoreReleaseNotesTest < Minitest::Test
       )
     end
 
-    assert_equal "The editable iOS version has no localizations", error.message
+    assert_equal "The editable App Store version has no localizations", error.message
   end
 end
