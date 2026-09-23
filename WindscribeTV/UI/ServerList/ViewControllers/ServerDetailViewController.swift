@@ -11,14 +11,12 @@ import Swinject
 import UIKit
 
 class ServerDetailViewController: UIViewController {
+    // MARK: - Properties
+
     @IBOutlet var flagView: UIImageView!
     @IBOutlet var serverTitle: PageTitleLabel!
     @IBOutlet var countLabel: PageTitleLabel!
     @IBOutlet var tableView: UITableView!
-    private var focusServerDetailCellPath: IndexPath?
-
-    private var cancellables = Set<AnyCancellable>()
-
     var flagBackgroundView: UIView!
     var gradient,
         backgroundGradient,
@@ -26,7 +24,26 @@ class ServerDetailViewController: UIViewController {
     var location: LocationModel?
     var viewModel: MainViewModel?, serverListViewModel: ServerListViewModelType?, logger: FileLogger!
     weak var delegate: LocationsListTableViewDelegate?
-    var favList: [DatacenterModel]?
+
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        if let indexPath = focusedDatacenterIndexPath,
+           let cell = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
+            return [cell.favButton]
+        }
+        return super.preferredFocusEnvironments
+    }
+
+    private var focusedDatacenterId: Int?
+    private var cancellables = Set<AnyCancellable>()
+
+    private var focusedDatacenterIndexPath: IndexPath? {
+        guard let row = location?.datacenters.firstIndex(where: { $0.id == focusedDatacenterId }) else {
+            return nil
+        }
+        return IndexPath(row: row, section: 0)
+    }
+
+    // MARK: - View Lifecycle and Binding
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,9 +88,22 @@ class ServerDetailViewController: UIViewController {
     }
 
     func bindData() {
-        viewModel?.favouriteList
-            .sink { favList in
-                self.favList = favList?.compactMap { $0.datacenterModel }
+        guard let locationId = location?.id else { return }
+        viewModel?.locationsList
+            .map { locations in
+                locations.first { $0.id == locationId }
+            }
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] location in
+                guard let self else { return }
+                self.location = location
+                if let location {
+                    flagView.image = UIImage(named: "\(location.countryCode.lowercased())-l")
+                    serverTitle.text = location.name
+                }
+                countLabel.text = String(location?.datacenters.count ?? 0)
+                tableView.reloadData()
             }
             .store(in: &cancellables)
     }
@@ -123,11 +153,9 @@ extension ServerDetailViewController: LocationsListTableViewDelegate {
     /// Reload table.
     /// Request focus update if last cell with focus is found.
     func reloadTable(cell: UITableViewCell) {
-        if let indexPath = tableView.indexPath(for: cell) {
-            focusServerDetailCellPath = indexPath
-        }
+        focusedDatacenterId = (cell as? ServerDetailTableViewCell)?.displayingDatacenter?.id
         tableView.reloadData()
-        if let indexPath = focusServerDetailCellPath {
+        if let indexPath = focusedDatacenterIndexPath {
             tableView.scrollToRow(at: indexPath, at: .none, animated: false)
             if tableView.cellForRow(at: indexPath) is ServerDetailTableViewCell {
                 setNeedsFocusUpdate()
@@ -136,12 +164,4 @@ extension ServerDetailViewController: LocationsListTableViewDelegate {
         }
     }
 
-    /// Bring focus back to last focused cell if required
-    override var preferredFocusEnvironments: [UIFocusEnvironment] {
-        if let indexPath = focusServerDetailCellPath,
-           let cell = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
-            return [cell.favButton]
-        }
-        return super.preferredFocusEnvironments
-    }
 }

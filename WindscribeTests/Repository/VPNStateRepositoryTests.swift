@@ -74,6 +74,14 @@ class VPNStateRepositoryTests: XCTestCase {
         XCTAssertTrue(repository.isDisconnected())
     }
 
+    func test_isDisconnected_with_other_statuses() {
+        let statuses: [NEVPNStatus] = [.invalid, .connecting, .connected, .reasserting, .disconnecting]
+        for status in statuses {
+            repository.vpnInfo.send(getVPNInfo(with: status))
+            XCTAssertFalse(repository.isDisconnected(), "Unexpected disconnected result for \(status)")
+        }
+    }
+
     func test_setting_values() async throws {
         // Given
         repository.setUntrustedOneTimeOnlySSID("UntrustedOneTimeOnlySSID")
@@ -379,7 +387,7 @@ class VPNStateRepositoryTests: XCTestCase {
         // Then
         XCTAssertFalse(repository.isConnected())
         XCTAssertFalse(repository.isConnecting())
-        XCTAssertFalse(repository.isDisconnected())
+        XCTAssertTrue(repository.isDisconnected())
     }
 
     // MARK: - Edge Cases Tests
