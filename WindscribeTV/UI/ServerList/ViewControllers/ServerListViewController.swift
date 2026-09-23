@@ -17,7 +17,6 @@ protocol BestLocationConnectionDelegate: AnyObject {
 enum SideMenuType: String {
     case all = "All"
     case fav = "Favourites"
-    case windflix = "Windflix"
     case staticIp = "Static IP"
 
     func getImage(isSelected: Bool) -> UIImage? {
@@ -28,9 +27,6 @@ enum SideMenuType: String {
         case .fav:
             let img = UIImage(named: ImagesAsset.TvAsset.favnavIcon)
             return isSelected ? img?.withTintColor(.white) : img
-        case .windflix:
-            let img = UIImage(named: ImagesAsset.TvAsset.flixIcon)
-            return isSelected ? img?.withTintColor(.white) : img
         case .staticIp:
             let img = UIImage(named: ImagesAsset.TvAsset.staticIp)
             return isSelected ? img?.withTintColor(.white) : img
@@ -39,8 +35,11 @@ enum SideMenuType: String {
 }
 
 class ServerListViewController: PreferredFocusedViewController, SideMenuOptionViewDelegate {
+    // MARK: - Properties
+
+    private let sideOptions: [SideMenuType] = [.all, .fav, .staticIp]
+
     var viewModel: MainViewModel!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
-    private var cancellables = Set<AnyCancellable>()
 
     @IBOutlet var sideMenu: UIStackView!
     @IBOutlet var sideMenuContainerView: UIView!
@@ -55,21 +54,19 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     weak var bestLocDelegate: BestLocationConnectionDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
-    private var sideOptions: [SideMenuType] = [.all, .fav, .windflix, .staticIp]
-    private var selectedRow: Int = 0
-    private var selectedCollectionIndexPath: IndexPath?
-    private var optionViews = [SideMenuOptionsView]()
-    private var selectionOption = SideMenuType.all
-
     var locationSectionsOrdered: [LocationSection] = []
     var favDatacenters: [DatacenterModel] = []
     var staticIPModels = [StaticIPModel]()
     var staticIpSelected = false
     var bestLocation: BestLocationModel?
 
-    var isWindflixLocationSelected: Bool {
-        selectionOption == .windflix
-    }
+    private var cancellables = Set<AnyCancellable>()
+    private var selectedRow: Int = 0
+    private var selectedCollectionIndexPath: IndexPath?
+    private var optionViews = [SideMenuOptionsView]()
+    private var selectionOption = SideMenuType.all
+
+    // MARK: - View Lifecycle and Selection
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,8 +79,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         favTableView.dataSource = self
         favTableView.register(UINib(nibName: "ServerDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "ServerDetailTableViewCell")
         setup()
-        favTableView.removeFromSuperview()
-        bindData(isStreaming: false)
+        favTableView.isHidden = true
+        bindData()
         serverListCollectionView.contentInsetAdjustmentBehavior = .never
         setupSwipeDownGesture()
         changeEmptyViewVisibility()
@@ -94,7 +91,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
         // Restore focus to previously selected collection view item
         if let indexPath = selectedCollectionIndexPath,
-           selectionOption == .all || selectionOption == .windflix {
+           selectionOption == .all {
             // Scroll to the item first
             serverListCollectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
         }
@@ -106,7 +103,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
         // Set focus after view is fully loaded with a small delay to ensure cell is ready
         if let indexPath = selectedCollectionIndexPath,
-           selectionOption == .all || selectionOption == .windflix {
+           selectionOption == .all {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 if let cell = self.serverListCollectionView.cellForItem(at: indexPath) {
@@ -121,99 +118,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     override func viewWillDisappear(_: Bool) {
         if let vc = presentingViewController as? MainViewController {
             vc.isFromServer = true
-        }
-    }
-
-    private func setup() {
-        sideMenu.distribution = .fillEqually
-        for sideOption in sideOptions {
-            let optionView: SideMenuOptionsView = SideMenuOptionsView.fromNib()
-            optionView.setup(with: sideOption)
-            optionView.delegate = self
-            sideMenu.addArrangedSubview(optionView)
-            optionViews.append(optionView)
-        }
-        nothingToSeeLabel.text = TextsAsset.nothingToSeeHere
-    }
-
-    func bindData(isStreaming: Bool) {
-        self.viewModel.locationsList
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] results in
-                guard let self else { return }
-
-                locationSectionsOrdered = viewModel.sortLocationListUsingUserPreferences(ignoreStreaming: false,
-                                                                                         isForStreaming: isStreaming,
-                                                                                         locations: results)
-                addBestLocation()
-                serverListCollectionView.reloadData()
-            }
-            .store(in: &cancellables)
-
-        viewModel.staticIPs
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self else { return }
-                staticIPModels = self.viewModel.getStaticIp()
-                self.changeEmptyViewVisibility()
-            }
-            .store(in: &cancellables)
-        viewModel.favouriteDatacenters
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.logger.logE("ServerListViewController", "Realm server list notification error \(error.localizedDescription)")
-                }
-            } receiveValue: { [weak self] favourites in
-                guard let self else { return }
-
-                favDatacenters.removeAll()
-                favDatacenters.append(contentsOf: favourites)
-                if self.favTableView.window != nil {
-                    self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-                }
-                if favourites.count == 0 {
-                    self.setNeedsFocusUpdate()
-                } else {
-                    self.updateFocusIfNeeded()
-                    self.view.layoutIfNeeded()
-                }
-                self.changeEmptyViewVisibility()
-            }
-            .store(in: &cancellables)
-    }
-
-    private func addBestLocation() {
-        guard !isWindflixLocationSelected else {
-            if locationSectionsOrdered.first?.location?.name == Fields.Values.bestLocation {
-                locationSectionsOrdered.removeFirst()
-            }
-            return
-        }
-
-        if  bestLocation != nil,
-            let datacenterId = bestLocation?.datacenterId,
-            let locationModel = viewModel.getLocationModel(from: datacenterId) {
-            let bestLocation = locationModel.getBestLocationModel()
-            if locationSectionsOrdered.first?.location?.name != Fields.Values.bestLocation {
-                locationSectionsOrdered.insert(LocationSection(location: bestLocation, collapsed: true), at: 0)
-            }
-        }
-    }
-
-    private func changeEmptyViewVisibility() {
-        switch selectionOption {
-        case .fav:
-            emptyDataView.isHidden = favDatacenters.count > 0
-            emptyDataView.subviews.forEach { $0.isHidden = favDatacenters.count > 0 }
-            emptyDataView.configure(image: UIImage(named: ImagesAsset.favEmpty), text: TextsAsset.nothingToSeeHere)
-        case .staticIp:
-            emptyDataView.isHidden = staticIPModels.count > 0
-            emptyDataView.subviews.forEach { $0.isHidden = staticIPModels.count > 0 }
-            emptyDataView.configure(image: UIImage(named: "static_ip"), text: TextsAsset.noStaticIPs)
-        default:
-            emptyDataView.isHidden = true
-            emptyDataView.subviews.forEach { $0.isHidden = true }
         }
     }
 
@@ -252,6 +156,148 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                     updateFocusIfNeeded()
                 }
             }
+        }
+    }
+
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if context.nextFocusedItem is UIButton {
+            let view = context.nextFocusedView as? UIButton
+
+            if view?.superview?.superview is UITableViewCell {
+                changeSideMenuVisibility(isExpanded: false)
+            } else {
+                changeSideMenuVisibility(isExpanded: true)
+            }
+        } else {
+            changeSideMenuVisibility(isExpanded: false)
+        }
+
+        if context.nextFocusedItem === serverListCollectionView || context.nextFocusedItem === favTableView {
+            changeSideMenuVisibility(isExpanded: false)
+        }
+    }
+
+    func optionWasSelected(with value: SideMenuType) {
+        let selectionChanged = value != selectionOption
+        selectionOption = value
+        staticIpSelected = value == .staticIp
+        serverListCollectionView.isHidden = value != .all
+        favTableView.isHidden = value == .all
+        changeEmptyViewVisibility()
+
+        if selectionChanged && value != .all {
+            favTableView.reloadData()
+        }
+
+        switch value {
+        case .all:
+            myPreferredFocusedView = serverListCollectionView
+        case .fav:
+            myPreferredFocusedView = favDatacenters.isEmpty ? nil : favTableView
+        case .staticIp:
+            myPreferredFocusedView = staticIPModels.isEmpty ? nil : favTableView
+        }
+        if myPreferredFocusedView == nil {
+            focusSelectedMenuOption()
+        }
+        setNeedsFocusUpdate()
+        updateFocusIfNeeded()
+        changeSideMenuVisibility(isExpanded: false)
+
+        for optionView in optionViews {
+            optionView.updateSelection(with: optionView.isType(of: selectionOption))
+            optionView.highlightSelectedOption(optionView.isType(of: selectionOption))
+        }
+    }
+
+    // MARK: - Private Helpers
+
+    private func setup() {
+        sideMenu.distribution = .fillEqually
+        for sideOption in sideOptions {
+            let optionView: SideMenuOptionsView = SideMenuOptionsView.fromNib()
+            optionView.setup(with: sideOption)
+            optionView.delegate = self
+            sideMenu.addArrangedSubview(optionView)
+            optionViews.append(optionView)
+        }
+        nothingToSeeLabel.text = TextsAsset.nothingToSeeHere
+    }
+
+    private func bindData() {
+        self.viewModel.locationsList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] results in
+                guard let self else { return }
+
+                locationSectionsOrdered = viewModel.sortLocationListUsingUserPreferences(ignoreStreaming: false,
+                                                                                         isForStreaming: false,
+                                                                                         locations: results)
+                addBestLocation()
+                serverListCollectionView.reloadData()
+            }
+            .store(in: &cancellables)
+
+        viewModel.staticIPs
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                staticIPModels = self.viewModel.getStaticIp()
+                if staticIpSelected {
+                    favTableView.reloadData()
+                }
+                self.changeEmptyViewVisibility()
+            }
+            .store(in: &cancellables)
+        viewModel.favouriteDatacenters
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.logger.logE("ServerListViewController", "Realm server list notification error \(error.localizedDescription)")
+                }
+            } receiveValue: { [weak self] favourites in
+                guard let self else { return }
+
+                favDatacenters.removeAll()
+                favDatacenters.append(contentsOf: favourites)
+                if selectionOption == .fav {
+                    self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+                }
+                if favourites.count == 0 {
+                    self.setNeedsFocusUpdate()
+                } else {
+                    self.updateFocusIfNeeded()
+                    self.view.layoutIfNeeded()
+                }
+                self.changeEmptyViewVisibility()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func addBestLocation() {
+        if  bestLocation != nil,
+            let datacenterId = bestLocation?.datacenterId,
+            let locationModel = viewModel.getLocationModel(from: datacenterId) {
+            let bestLocation = locationModel.getBestLocationModel()
+            if locationSectionsOrdered.first?.location?.name != Fields.Values.bestLocation {
+                locationSectionsOrdered.insert(LocationSection(location: bestLocation, collapsed: true), at: 0)
+            }
+        }
+    }
+
+    private func changeEmptyViewVisibility() {
+        switch selectionOption {
+        case .fav:
+            emptyDataView.isHidden = favDatacenters.count > 0
+            emptyDataView.subviews.forEach { $0.isHidden = favDatacenters.count > 0 }
+            emptyDataView.configure(image: UIImage(named: ImagesAsset.favEmpty), text: TextsAsset.nothingToSeeHere)
+        case .staticIp:
+            emptyDataView.isHidden = staticIPModels.count > 0
+            emptyDataView.subviews.forEach { $0.isHidden = staticIPModels.count > 0 }
+            emptyDataView.configure(image: UIImage(named: "static_ip"), text: TextsAsset.noStaticIPs)
+        default:
+            emptyDataView.isHidden = true
+            emptyDataView.subviews.forEach { $0.isHidden = true }
         }
     }
 
@@ -327,24 +373,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if context.nextFocusedItem is UIButton {
-            let view = context.nextFocusedView as? UIButton
-
-            if view?.superview?.superview is UITableViewCell {
-                changeSideMenuVisibility(isExpanded: false)
-            } else {
-                changeSideMenuVisibility(isExpanded: true)
-            }
-        } else {
-            changeSideMenuVisibility(isExpanded: false)
-        }
-
-        if context.nextFocusedItem === serverListCollectionView || context.nextFocusedItem === favTableView {
-            changeSideMenuVisibility(isExpanded: false)
-        }
-    }
-
     private func changeSideMenuVisibility(isExpanded: Bool) {
         UIView.animate(withDuration: 0.3) {
             self.sideMenuWidthConstraint.constant = isExpanded ? 400 : 90
@@ -360,117 +388,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }
     }
 
-    func optionWasSelected(with value: SideMenuType) {
-        for optionView in optionViews {
-            optionView.updateSelection(with: optionView.isType(of: value))
-        }
-        switch value {
-        case .all:
-            if value != selectionOption {
-                toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
-                toggleView(viewToToggle: favTableView, isViewVisible: true)
-                selectionOption = .all
-                changeEmptyViewVisibility()
-                bindData(isStreaming: false)
-            }
-            myPreferredFocusedView = serverListCollectionView
-            setNeedsFocusUpdate()
-            updateFocusIfNeeded()
-        case .fav:
-            if value != selectionOption {
-                staticIpSelected = false
-                toggleView(viewToToggle: favTableView, isViewVisible: false)
-                toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
-                selectionOption = .fav
-                changeEmptyViewVisibility()
-                favTableView.reloadData()
-            }
-            if favDatacenters.count != 0 {
-                myPreferredFocusedView = favTableView
-                setNeedsFocusUpdate()
-                updateFocusIfNeeded()
-            }
-        case .windflix:
-            if value != selectionOption {
-                toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
-                toggleView(viewToToggle: favTableView, isViewVisible: true)
-                selectionOption = .windflix
-                changeEmptyViewVisibility()
-                bindData(isStreaming: true)
-            }
-            myPreferredFocusedView = serverListCollectionView
-            setNeedsFocusUpdate()
-            updateFocusIfNeeded()
-        case .staticIp:
-            if value != selectionOption {
-                staticIpSelected = true
-                toggleView(viewToToggle: favTableView, isViewVisible: false)
-                toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
-                selectionOption = .staticIp
-                changeEmptyViewVisibility()
-                favTableView.reloadData()
-            }
-            if staticIPModels.count != 0 {
-                myPreferredFocusedView = favTableView
-                setNeedsFocusUpdate()
-                updateFocusIfNeeded()
-            }
-        }
-
-        changeSideMenuVisibility(isExpanded: false)
-
-        for optionView in optionViews {
-            optionView.highlightSelectedOption(optionView.isType(of: selectionOption))
-        }
-    }
-
-    private func toggleView(viewToToggle: UIView, isViewVisible: Bool) {
-        let finalPosition: CGFloat
-        let finalAlpha: CGFloat
-        let transform: CGAffineTransform
-
-        if isViewVisible {
-            // Hide the view
-            finalPosition = view.bounds.height + viewToToggle.frame.height
-            finalAlpha = 0
-            transform = CGAffineTransform(translationX: 0, y: finalPosition)
-        } else {
-            // Show the view
-            finalPosition = 0
-            finalAlpha = 1
-            transform = CGAffineTransform(translationX: 0, y: finalPosition)
-            viewToToggle.transform = CGAffineTransform(translationX: 0, y: view.bounds.height)
-        }
-
-        // Animate the view sliding in or out
-        UIView.animate(withDuration: 0.5, animations: {
-            viewToToggle.transform = transform
-            viewToToggle.alpha = finalAlpha
-        }, completion: { _ in
-            if isViewVisible {
-                viewToToggle.removeFromSuperview()
-            } else {
-                // Ensure the view is added if it's being shown
-                if !viewToToggle.isDescendant(of: self.view) {
-                    self.view.addSubview(viewToToggle)
-                    self.setConstraints()
-                    viewToToggle.sendToBack()
-                    self.sideMenuContainerView.bringToFront()
-                }
-            }
-        })
-    }
-
-    private func setConstraints() {
-        favTableView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            favTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
-            favTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: -130),
-            favTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130)
-        ])
-    }
 }
 
 extension ServerListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -482,7 +399,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
         guard let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as? ServerListCollectionViewCell else { return ServerListCollectionViewCell() }
         let locationSection = locationSectionsOrdered[indexPath.item]
 
-        if indexPath.item == 0 && !isWindflixLocationSelected && bestLocation != nil {
+        if indexPath.item == 0 && bestLocation != nil {
             cell.flagImage.image = UIImage(named: "bestLocation_cell")
             cell.setup(isShadow: false)
         } else {
@@ -500,7 +417,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
         // Store the selected index path to restore focus when returning
         selectedCollectionIndexPath = indexPath
 
-        if indexPath.row == 0 && !isWindflixLocationSelected && bestLocation != nil {
+        if indexPath.row == 0 && bestLocation != nil {
             navigationController?.popToRootViewController(animated: true)
             bestLocDelegate?.connectToBestLocation()
             return

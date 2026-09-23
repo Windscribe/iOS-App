@@ -30,35 +30,34 @@ protocol StaticIPListTableViewDelegate: AnyObject {
 }
 
 class ServerDetailTableViewCell: UITableViewCell {
-    @IBOutlet var favButton: UIButton!
-    @IBOutlet var cityLabel: UILabel!
-    @IBOutlet var connectButton: UIButton!
-    @IBOutlet var proIcon: UIImageView!
-    weak var delegate: LocationsListTableViewDelegate?
-    weak var favDelegate: FavouriteListTableViewDelegate?
-    weak var staticIpDelegate: StaticIPListTableViewDelegate?
+    // MARK: - Properties
 
-    @IBOutlet var latencyLabel: UILabel!
-    @IBOutlet var descriptionLabel: UILabel!
-
-    @IBOutlet var connectButtonTrailing: NSLayoutConstraint!
     let latencyRepository = Assembler.resolve(LatencyRepository.self)
+    let vpnManager = Assembler.resolve(VPNManager.self)
+
     lazy var preferences = Assembler.resolve(Preferences.self)
     lazy var locationListRepository = Assembler.resolve(LocationListRepository.self)
     lazy var userSessionRepository: UserSessionRepository = Assembler.resolve(UserSessionRepository.self)
     lazy var staticIpRepository = Assembler.resolve(StaticIpRepository.self)
     lazy var alertManager = Assembler.resolve(AlertManager.self)
 
+    @IBOutlet var favButton: UIButton!
+    @IBOutlet var cityLabel: UILabel!
+    @IBOutlet var connectButton: UIButton!
+    @IBOutlet var proIcon: UIImageView!
+    @IBOutlet var latencyLabel: UILabel!
+    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var connectButtonTrailing: NSLayoutConstraint!
+
+    weak var delegate: LocationsListTableViewDelegate?
+    weak var favDelegate: FavouriteListTableViewDelegate?
+    weak var staticIpDelegate: StaticIPListTableViewDelegate?
+
     var displayingDatacenter: DatacenterModel?
     var displayingNodeServer: LocationModel?
     var favIDs: [String] = []
-    private var cancellables = Set<AnyCancellable>()
-    let vpnManager = Assembler.resolve(VPNManager.self)
     var myPreferredFocusedView: UIView?
-
-    override var preferredFocusedView: UIView? {
-        return myPreferredFocusedView
-    }
+    var isFavourited = false
 
     var displayingFavDatacenter: DatacenterModel? {
         didSet {
@@ -72,10 +71,9 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
     }
 
-    var isFavourited: Bool = false
-    private var isbtnFirst = false
-    private var isbtnSecond = false
-    private var isDefault = false
+    override var preferredFocusedView: UIView? {
+        return myPreferredFocusedView
+    }
 
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         switch true {
@@ -88,9 +86,54 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
     }
 
+    override var canBecomeFocused: Bool {
+        return false
+    }
+
+    private var cancellables = Set<AnyCancellable>()
+    private var isbtnFirst = false
+    private var isbtnSecond = false
+    private var isDefault = false
+
+    // MARK: - Cell Lifecycle and Actions
+
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
+        preferences.observeFavouriteIds()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] favIDs in
+                guard let self else { return }
+                self.favIDs = favIDs
+                updateFavouriteState()
+            }
+            .store(in: &cancellables)
+        latencyRepository.latency
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateLatency()
+            }
+            .store(in: &cancellables)
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        displayingDatacenter = nil
+        displayingNodeServer = nil
+        displayingFavDatacenter = nil
+        displayingStaticIP = nil
+        delegate = nil
+        favDelegate = nil
+        staticIpDelegate = nil
+        isFavourited = false
+        isbtnFirst = false
+        isbtnSecond = false
+        myPreferredFocusedView = nil
+        cityLabel.attributedText = nil
+        latencyLabel.text = nil
+        descriptionLabel.text = nil
+        descriptionLabel.isHidden = true
+        proIcon.isHidden = true
     }
 
     func setupUI() {
@@ -129,7 +172,8 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     func updateUIForFavourite() {
-        connectButtonTrailing.constant = 0
+        guard displayingFavDatacenter != nil else { return }
+        connectButtonTrailing.constant = 50
         favButton.isHidden = false
         if let city = displayingFavDatacenter?.city, let nick = displayingFavDatacenter?.nick {
             let fullText = "\(city) \(nick)"
@@ -142,17 +186,8 @@ class ServerDetailTableViewCell: UITableViewCell {
             attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
             cityLabel.attributedText = attributedString
         }
-        guard let pingIp = displayingFavDatacenter?.pingServer?.ip,
-              let minTime = latencyRepository.getPingData(ip: pingIp)?.latency
-        else {
-            latencyLabel.text = "--"
-            return
-        }
-        if minTime > 0 {
-            latencyLabel.text = " \(minTime.description) MS"
-        } else {
-            latencyLabel.text = "--"
-        }
+        updateLatency()
+        updateFavouriteState()
 
         if let premiumOnly = displayingFavDatacenter?.isPremiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
             if premiumOnly && !isUserPro {
@@ -163,16 +198,10 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             proIcon.isHidden = true
         }
-        preferences.observeFavouriteIds().sink { favIDs in
-            self.favIDs = favIDs
-            if let id = self.displayingFavDatacenter?.id {
-                self.isFavourited = favIDs.map { $0 }.contains("\(id)")
-                self.setFavButtonImage()
-            }
-        }.store(in: &cancellables)
     }
 
     func updetaUIForStaticIP() {
+        guard displayingStaticIP != nil else { return }
         favButton.isHidden = true
         proIcon.isHidden = true
         connectButtonTrailing.constant = -125
@@ -187,20 +216,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
             cityLabel.attributedText = attributedString
         }
-        latencyLabel.font = .text(size: 30)
-        if let bestNode = displayingStaticIP?.bestNode, bestNode.forceDisconnect == false {
-            let bestNodeHostname = bestNode.ip1
-            guard let minTime = latencyRepository.getPingData(ip: bestNodeHostname)?.latency else {
-                latencyLabel.text = " "
-                return
-            }
-
-            guard let staticIp = displayingStaticIP?.staticIP else {
-                latencyLabel.text = minTime > 0 ? "\(minTime.description) MS" : ""
-                return
-            }
-            latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " \(staticIp)"
-        }
+        updateLatency()
     }
 
     func setFavButtonImage() {
@@ -230,10 +246,6 @@ class ServerDetailTableViewCell: UITableViewCell {
             latencyLabel.textColor = .whiteWithOpacity(opacity: 0.50)
             return true
         }
-    }
-
-    override var canBecomeFocused: Bool {
-        return false
     }
 
 //    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -298,6 +310,9 @@ class ServerDetailTableViewCell: UITableViewCell {
 
     func bindData(datacenter: DatacenterModel) {
         displayingDatacenter = datacenter
+        favButton.isHidden = false
+        connectButtonTrailing.constant = 50
+        proIcon.isHidden = !datacenter.isPremiumOnly || (userSessionRepository.sessionModel?.isPremium ?? false)
         let city = datacenter.city
         let nick = datacenter.nick
         let fullText = "\(city) \(nick)"
@@ -310,20 +325,8 @@ class ServerDetailTableViewCell: UITableViewCell {
         attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
         cityLabel.attributedText = attributedString
 
-        guard let pintIP = datacenter.pingServer?.ip, let minTime = latencyRepository.getPingData(ip: pintIP)?.latency else {
-            latencyLabel.text = " "
-            return
-        }
-        if minTime > 0 {
-            latencyLabel.text = " \(minTime.description) MS"
-        } else {
-            latencyLabel.text = "  "
-        }
-        preferences.observeFavouriteIds().sink { favIDs in
-            self.favIDs = favIDs
-            self.isFavourited = favIDs.map { $0 }.contains("\(datacenter.id)")
-            self.setupUI()
-        }.store(in: &cancellables)
+        updateLatency()
+        updateFavouriteState()
     }
 
     @objc func favButtonTapped() {
@@ -345,20 +348,6 @@ class ServerDetailTableViewCell: UITableViewCell {
             preferences.addFavouriteId("\(datacenter.id)")
             delegate?.reloadTable(cell: self)
         }
-    }
-
-    private func canAccessServer() -> Bool {
-        if staticIpDelegate != nil {
-            return true
-        }
-
-        // Check whichever datacenter is set (regular location list or favorites)
-        let datacenter = displayingDatacenter ?? displayingFavDatacenter
-        if datacenter?.servers.isEmpty == false {
-            return true
-        }
-
-        return false
     }
 
     @objc func connectButtonTapped() {
@@ -414,6 +403,45 @@ class ServerDetailTableViewCell: UITableViewCell {
                 return true
             }
         }
+        return false
+    }
+
+    // MARK: - Private Helpers
+
+    private func updateFavouriteState() {
+        let datacenter = displayingFavDatacenter ?? displayingDatacenter
+        isFavourited = datacenter.map { favIDs.contains("\($0.id)") } ?? false
+        setFavButtonImage()
+    }
+
+    private func updateLatency() {
+        if let staticIP = displayingStaticIP {
+            latencyLabel.font = .text(size: 30)
+            let latency = staticIP.bestNode.flatMap { node in
+                node.forceDisconnect ? nil : latencyRepository.getPingData(ip: node.ip1)?.latency
+            }
+            let latencyText = latency.map { $0 > 0 ? "\($0) MS" : "" } ?? ""
+            latencyLabel.text = [latencyText, staticIP.staticIP].filter { !$0.isEmpty }.joined(separator: "  ")
+            return
+        }
+
+        latencyLabel.font = .bold(size: 30)
+        let datacenter = displayingFavDatacenter ?? displayingDatacenter
+        let latency = datacenter?.pingServer.flatMap { latencyRepository.getPingData(ip: $0.ip)?.latency }
+        latencyLabel.text = latency.map { $0 > 0 ? "\($0) MS" : "--" } ?? "--"
+    }
+
+    private func canAccessServer() -> Bool {
+        if staticIpDelegate != nil {
+            return true
+        }
+
+        // Check whichever datacenter is set (regular location list or favorites)
+        let datacenter = displayingDatacenter ?? displayingFavDatacenter
+        if datacenter?.servers.isEmpty == false {
+            return true
+        }
+
         return false
     }
 }
