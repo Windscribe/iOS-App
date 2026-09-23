@@ -118,6 +118,37 @@ The xcconfig is the single source of truth; every target's `Info.plist` reads `$
 
 The build number is injected at archive time by `fastlane iOSTestFlight` via `xcargs CURRENT_PROJECT_VERSION=$CI_PIPELINE_IID` (with a TestFlight latest+1 fallback for local archives), so CI builds never mutate the project file.
 
+### Apple TV TestFlight builds
+
+Run a pipeline on the branch to upload, then play one of these manual jobs:
+
+- `Deploy-tvOS-Release`: archives `WindscribeTV-Release` (Production configuration).
+- `Deploy-tvOS-Staging`: archives `WindscribeTV-Staging` (Staging configuration).
+
+Both jobs call `fastlane tvTestFlight`, sign the app and its PacketTunnel/WireGuardTunnel extensions, and upload to the tvOS platform of `com.windscribe` in TestFlight. They do not distribute to external testers, submit for App Review, or publish an App Store release. The jobs are absent from MR pipelines and remain manual in scheduled pipelines; the existing iOS nightly schedule is unchanged.
+
+`TV_MARKETING_VERSION` in `Windscribe/Environments/Config.xcconfig` supplies the version for the app and both extensions. CI uses `CI_PIPELINE_IID` for their build number, without committing project changes. Local runs fall back to the latest tvOS TestFlight build for that version plus one. The existing `release-*` branch policy controls the INTERNAL flag; choosing the Release job alone does not make a non-release branch an external build.
+
+#### Signing setup (one time)
+
+The jobs reuse the iOS CI runner, GitLab Secure Files storage, and App Store Connect API-key variables (`UPLOAD_KEY_ID`, `UPLOAD_ISSUER_ID`, `UPLOAD_KEY`). CI uses Match in read-only mode and cannot create missing profiles.
+
+Before the first upload, a signing administrator must provision/import **tvOS App Store** profiles for:
+
+- `com.windscribe`
+- `com.windscribe.PacketTunnel`
+- `com.windscribe.WireGuardTunnel`
+
+These use the existing distribution certificate and the same bundle identifiers as iOS, but are separate platform-specific profiles. Match stores them as `AppStore_<bundle-id>_tvos.mobileprovision`, not the iOS `AppStore_<bundle-id>.mobileprovision` files. Do not replace the iOS profiles. With authorized Apple Developer and GitLab credentials, the existing Match configuration can populate them from a Mac:
+
+```sh
+bundle exec fastlane match appstore --platform tvos \
+  --app_identifier com.windscribe,com.windscribe.PacketTunnel,com.windscribe.WireGuardTunnel \
+  --readonly false
+```
+
+Confirm the distribution certificate/private key and the three tvOS profiles are available to the runner before playing either deploy job. A successful `Build-tvOS` MR check only verifies an unsigned Debug build; the first signed archive/upload must still be checked in the deploy job and App Store Connect.
+
 ### Acknowledgements
 
 Third-party licenses: [`ACKNOWLEDGEMENTS.md`](ACKNOWLEDGEMENTS.md).

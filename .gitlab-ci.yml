@@ -39,6 +39,7 @@ LintCheck:
   extends: .on_mr
   script:
     - ruby fastlane/tests/app_store_release_notes_test.rb
+    - ruby fastlane/tests/testflight_test.rb
     - fastlane lint
 
 # ─── Test ──────────────────────────────────────────────────────────────────────
@@ -136,6 +137,26 @@ Deploy-iOS-Staging:
   extends: .deploy-ios-base
   variables:
     BUILD_SCHEME: "Windscribe-Staging"
+
+.deploy-tvos-base:
+  stage: deploy
+  script:
+    - fastlane tvTestFlight
+  allow_failure: true
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+      when: never
+    - when: manual
+
+Deploy-tvOS-Release:
+  extends: .deploy-tvos-base
+  variables:
+    BUILD_SCHEME: "WindscribeTV-Release"
+
+Deploy-tvOS-Staging:
+  extends: .deploy-tvos-base
+  variables:
+    BUILD_SCHEME: "WindscribeTV-Staging"
 
 Update-App-Store-Release-Notes:
   stage: deploy

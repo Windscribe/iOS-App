@@ -3,13 +3,10 @@ default_platform(:ios)
 require 'base64'
 require_relative 'app_store_release_notes'
 
-APP_IDENTIFIERS = [
-  "com.windscribe",
-  "com.windscribe.PacketTunnel",
-  "com.windscribe.WireGuardTunnel",
-  "com.windscribe.SiriIntents",
-  "com.windscribe.HomeWidget"
-]
+def tv_marketing_version
+  config_path = File.expand_path("../Windscribe/Environments/Config.xcconfig", __dir__)
+  File.read(config_path).match(/^TV_MARKETING_VERSION\s*=\s*(\S+)/)[1]
+end
 
 def ci_api_key
   app_store_connect_api_key(
@@ -48,9 +45,11 @@ def update_app_store_release_notes(version:, description:)
   end
 end
 
-def ci_build(scheme:, sign: false, build_number: nil)
+def ci_build(scheme:, sign: false, build_number: nil, platform: "ios")
   args = []
   args << "CURRENT_PROJECT_VERSION=#{build_number}" if build_number
+  # Both embedded tunnel extensions must share the tvOS app's version.
+  args << "MARKETING_VERSION=#{tv_marketing_version}" if platform == "tvos"
 
   # INTERNAL marker. Builds are internal by default (WS_INTERNAL_FLAG=INTERNAL in
   # Config.xcconfig). Strip it — and drop the red INTERNAL app icon back to AppIcon —
@@ -66,24 +65,37 @@ def ci_build(scheme:, sign: false, build_number: nil)
   if sign
     setup_ci
 
+    # Switch to manual signing and assign match profiles to each target
+    target_profiles = if platform == "tvos"
+      {
+        "WindscribeTV" => "com.windscribe",
+        "PacketTunnel" => "com.windscribe.PacketTunnel",
+        "WireGuardTunnel" => "com.windscribe.WireGuardTunnel"
+      }
+    else
+      {
+        "Windscribe" => "com.windscribe",
+        "PacketTunnel" => "com.windscribe.PacketTunnel",
+        "WireGuardTunnel" => "com.windscribe.WireGuardTunnel",
+        "SiriIntents" => "com.windscribe.SiriIntents",
+        "HomeWidgetExtension" => "com.windscribe.HomeWidget"
+      }
+    end
+
     match(
       type: "appstore",
-      app_identifier: APP_IDENTIFIERS,
+      platform: platform,
+      app_identifier: target_profiles.values,
       storage_mode: "gitlab_secure_files",
       readonly: true
     )
 
-    # Switch to manual signing and assign match profiles to each target
-    target_profiles = {
-      "Windscribe" => "com.windscribe",
-      "PacketTunnel" => "com.windscribe.PacketTunnel",
-      "WireGuardTunnel" => "com.windscribe.WireGuardTunnel",
-      "SiriIntents" => "com.windscribe.SiriIntents",
-      "HomeWidgetExtension" => "com.windscribe.HomeWidget"
-    }
-
+    provisioning_profiles = {}
     target_profiles.each do |target, app_id|
-      profile_name = ENV["sigh_#{app_id}_appstore_profile-name"]
+      platform_suffix = platform == "tvos" ? "_tvos" : ""
+      profile_name = ENV["sigh_#{app_id}_appstore#{platform_suffix}_profile-name"]
+      UI.user_error!("Missing #{platform} App Store profile for #{app_id}") if profile_name.to_s.empty?
+      provisioning_profiles[app_id] = profile_name
       update_code_signing_settings(
         use_automatic_signing: false,
         path: "Windscribe.xcodeproj",
@@ -98,11 +110,18 @@ def ci_build(scheme:, sign: false, build_number: nil)
       scheme: scheme,
       project: "Windscribe.xcodeproj",
       export_method: "app-store",
-      export_options: "./exportOptions.plist",
+      export_options: platform == "tvos" ? {
+        method: "app-store-connect",
+        teamID: "GYZJYS7XUG",
+        signingStyle: "manual",
+        provisioningProfiles: provisioning_profiles,
+        manageAppVersionAndBuildNumber: false
+      } : "./exportOptions.plist",
       clean: true,
       output_directory: "build_logs",
       xcargs: xcargs,
-      xcodebuild_formatter: "xcbeautify"
+      xcodebuild_formatter: "xcbeautify",
+      **(platform == "tvos" ? { sdk: "appletvos", destination: "generic/platform=tvOS" } : {})
     )
   else
     gym(
@@ -191,4 +210,33 @@ lane :iOSTestFlight do
   config_path = File.expand_path("../Windscribe/Environments/Config.xcconfig", __dir__)
   marketing_version = File.read(config_path).match(/^MARKETING_VERSION\s*=\s*(\S+)/)[1]
   puts "[DEPLOY_INFO] version=#{marketing_version} build=#{build_number}"
+end
+
+desc "Push tvOS build to TestFlight (scheme controlled by BUILD_SCHEME env var)"
+lane :tvTestFlight do
+  scheme = ENV["BUILD_SCHEME"] || "WindscribeTV-Release"
+  unless ["WindscribeTV-Release", "WindscribeTV-Staging"].include?(scheme)
+    UI.user_error!("tvTestFlight requires WindscribeTV-Release or WindscribeTV-Staging")
+  end
+  ci_api_key
+
+  build_number = ENV["CI_PIPELINE_IID"] || (
+    latest_testflight_build_number(
+      app_identifier: "com.windscribe",
+      platform: "appletvos",
+      version: tv_marketing_version,
+      initial_build_number: 1
+    ) + 1
+  ).to_s
+
+  ci_build(scheme: scheme, sign: true, build_number: build_number, platform: "tvos")
+
+  upload_to_testflight(
+    app_identifier: "com.windscribe",
+    app_platform: "appletvos",
+    skip_waiting_for_build_processing: true,
+    distribute_external: false
+  )
+
+  puts "[DEPLOY_TVOS_INFO] version=#{tv_marketing_version} build=#{build_number}"
 end
