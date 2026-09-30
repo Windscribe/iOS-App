@@ -17,6 +17,7 @@ final class FavouriteListViewModelTests: XCTestCase {
     var mockConnectivity: MockConnectivityManager!
     var mockVPNStateRepository: MockVPNStateRepository!
     var mockLocationListRepository: MockLocationListRepository!
+    var mockProtocolManager: MockProtocolManager!
     var cancellables: Set<AnyCancellable>!
 
     override func setUp() {
@@ -27,6 +28,7 @@ final class FavouriteListViewModelTests: XCTestCase {
         mockConnectivity = MockConnectivityManager()
         mockVPNStateRepository = MockVPNStateRepository()
         mockLocationListRepository = MockLocationListRepository()
+        mockProtocolManager = MockProtocolManager()
         cancellables = Set<AnyCancellable>()
 
         viewModel = FavouriteListViewModel(
@@ -35,7 +37,7 @@ final class FavouriteListViewModelTests: XCTestCase {
             connectivity: mockConnectivity,
             userSessionRepository: mockUserSessionRepository,
             locationsManager: mockLocationsManager,
-            protocolManager: MockProtocolManager(),
+            protocolManager: mockProtocolManager,
             locationListRepository: mockLocationListRepository
         )
 
@@ -50,6 +52,7 @@ final class FavouriteListViewModelTests: XCTestCase {
         mockConnectivity = nil
         mockVPNStateRepository = nil
         mockLocationListRepository = nil
+        mockProtocolManager = nil
         cancellables = nil
         super.tearDown()
     }

@@ -21,6 +21,8 @@ class MockLocationsManager: LocationsManager {
     var getLocationCalled = false
     var saveLastConnectionTargetCalled = false
     var lastSavedLocationId: String?
+    /// Value published on `selectedLocationUpdated` by the last `saveLastConnectionTarget(with:)`.
+    var lastSaveLastConnectionTargetShouldReconnect: Bool?
     var saveBestLocationCalled = false
     var lastSavedBestLocationId: String?
     var mockBestLocation: Int = 0
@@ -61,7 +63,10 @@ class MockLocationsManager: LocationsManager {
     func saveLastConnectionTarget(with locationId: String) {
         saveLastConnectionTargetCalled = true
         lastSavedLocationId = locationId
-        selectedLocationUpdated.send(shouldReconnect)
+        // Since #1194 a reconnect is driven by ProtocolManager.refreshProtocolsForLocationChange(),
+        // so saving a target only asks the UI to refresh.
+        lastSaveLastConnectionTargetShouldReconnect = false
+        selectedLocationUpdated.send(false)
     }
 
     func getBestLocationModel(from datacenterId: Int) -> BestLocationModel? {
@@ -128,6 +133,7 @@ class MockLocationsManager: LocationsManager {
         getLocationCalled = false
         saveLastConnectionTargetCalled = false
         lastSavedLocationId = nil
+        lastSaveLastConnectionTargetShouldReconnect = nil
         saveBestLocationCalled = false
         lastSavedBestLocationId = nil
         mockBestLocation = 0
