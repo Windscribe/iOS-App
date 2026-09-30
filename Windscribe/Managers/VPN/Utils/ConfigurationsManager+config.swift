@@ -282,11 +282,9 @@ extension ConfigurationsManager {
      If the existing configuration file does not contain the protocol, remote, or x509 settings, they are added at specified positions in the configuration file.
      */
     private func editOpenVPNConfig(proto: String, serverAddress: String, port: String, x509Name: String, proxyInfo: ProxyInfo?, userSettings: VPNUserSettings) async throws -> (String, Data) {
-        var protoLine = "proto \(proto.lowercased())"
-        if VPNProtocolType.proxiedOpenVPNIdentifiers.contains(proto) {
-            protoLine = "proto tcp"
-        }
-        let remoteLine = "remote \(serverAddress) \(port)"
+        let endpoint = OpenVPNEndpoint.make(proto: proto, serverAddress: serverAddress, port: port)
+        let protoLine = endpoint.protoLine
+        let remoteLine = endpoint.remoteLine
         let x509NameLine = "verify-x509-name \(x509Name) name"
         let proxyLine = proxyInfo?.text
         let configData: Data
@@ -579,5 +577,22 @@ extension ConfigurationsManager {
                 promise(.failure(error))
             }
         }
+    }
+}
+
+/// Builds the `proto` and `remote` directives for an OpenVPN config file.
+///
+/// Stealth and WStunnel never dial the node directly. The Network Extension starts a local
+/// proxy (`PacketTunnelProvider.startProxy`) that wraps the OpenVPN stream in TLS (stunnel)
+/// or a WebSocket (wstunnel) and forwards it to the node, so OpenVPN has to connect to that
+/// proxy's loopback listener over plain TCP instead. The node the proxy forwards to travels
+/// separately on the `local-proxy` line built by `ProxyInfo.text`.
+enum OpenVPNEndpoint {
+    static func make(proto: String, serverAddress: String, port: String) -> (protoLine: String, remoteLine: String) {
+        guard VPNProtocolType.proxiedOpenVPNIdentifiers.contains(proto) else {
+            return ("proto \(proto.lowercased())", "remote \(serverAddress) \(port)")
+        }
+        return ("proto \(Proxy.internalProtocol)",
+                "remote \(Proxy.localAddress) \(Proxy.defaultProxyPort)")
     }
 }
