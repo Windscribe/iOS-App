@@ -794,14 +794,18 @@ An extension does not need to be running for its existing segments to be exporte
 - Encoded record larger than the per-record safety boundary: keep timestamp, level, and module/tag; truncate only the message until the record fits.
 - Module/tag alone exceeds the record frame: drop the record because message-only truncation cannot make it valid.
 - Segment creation or time/size rotation failure: drop the current batch; keep existing segments untouched.
-- Append failure: drop the current batch; keep existing segments untouched.
+- Append failure: drop the pending batch without retrying it. The failing append may have left a partial frame, so abandon that active segment and create a new one for later records. Preserve the earlier files and any complete frames already written.
 - Pending queue saturation: drop the new record without blocking the caller or allocating another queued closure.
 - `flushImmediately`: synchronously serialize and append the accepted record before returning.
 - Partial final record: ignore it during export.
 - Invalid record length or segment version: stop reading that segment without allocating the declared size.
 - Invalid UTF-8 module/message: skip that record during export.
 - Missing segment: continue with the remaining segments.
+- Input seek/read failure: stop reading that input and continue with other segments; preserve records already decoded.
+- Export output write/close failure: throw to the caller and remove the incomplete temporary artifact instead of returning it as a successful export.
 - Export failure in one process directory: export the other directories.
+
+All FileHandle reads, seeks, writes and closes in the logger use throwing APIs. Cleanup is best effort after an error and never writes another log message or starts a retry loop. Open-file factories allow tests to pass real read-only, closed and non-seekable handles through the production I/O paths.
 
 Do not delete all logs because one read, decode, or write operation failed.
 
@@ -840,12 +844,12 @@ The unit tests in this MR cover:
 - lossless archival and export of the legacy `windscribe.log` file;
 - cleanup of legacy archives after their 24-hour migration window expires.
 
-CI additionally builds every target that contains the shared logging sources. Fault-injection tests for segment creation/append failures and physical-device resource measurements remain useful follow-up verification; they are not represented as completed unit coverage here.
+Failure-path tests also cover missing/read-only/closed/non-seekable append handles, cleanup after I/O failure, partial append isolation, recovery after segment creation failure, export output failure from segment/legacy/metadata sources, and continued export past unreadable input handles. CI additionally builds every target that contains the shared logging sources. Physical-device resource measurements and post-release crash-incidence comparison remain separate verification.
 
 ### Required invariants
 
 - the writer does not append after segment creation or rotation failure;
-- an append failure drops only the pending bounded batch and leaves existing segments untouched;
+- an append failure drops only the pending bounded batch and prevents later records from being appended behind an uncertain partial frame;
 - app, PacketTunnel, and WireGuard writers cannot replace or truncate each other's files;
 - one process's rotation cannot affect another process;
 - each process directory remains within the configured byte budget after rotation;

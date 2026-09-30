@@ -91,6 +91,7 @@ final class FileLogSegmentWriter: LogSegmentWriting, @unchecked Sendable {
     private let baseURL: URL
     private let process: LogProcess
     private let bucketDuration: TimeInterval
+    private let openFile: @Sendable (URL) throws -> FileHandle
 
     private var knownSegments: [LogSegment]?
 
@@ -104,11 +105,13 @@ final class FileLogSegmentWriter: LogSegmentWriting, @unchecked Sendable {
         baseURL: URL,
         process: LogProcess,
         // Each segment time bucket covers one hour by default.
-        bucketDuration: TimeInterval = 60 * 60
+        bucketDuration: TimeInterval = 60 * 60,
+        openFile: @escaping @Sendable (URL) throws -> FileHandle = { try FileHandle(forWritingTo: $0) }
     ) {
         self.baseURL = baseURL
         self.process = process
         self.bucketDuration = bucketDuration
+        self.openFile = openFile
     }
 
     // MARK: - LogSegmentWriting
@@ -143,10 +146,15 @@ final class FileLogSegmentWriter: LogSegmentWriting, @unchecked Sendable {
     func append(_ data: Data, to segment: LogSegment) throws {
         guard !data.isEmpty else { return }
 
-        let handle = try FileHandle(forWritingTo: segment.url)
-        defer { handle.closeFile() }
-        handle.seekToEndOfFile()
-        handle.write(data)
+        let handle = try openFile(segment.url)
+        do {
+            try handle.seekToEnd()
+            try handle.write(contentsOf: data)
+            try handle.close()
+        } catch {
+            try? handle.close()
+            throw error
+        }
     }
 
     func removeClosedSegments(

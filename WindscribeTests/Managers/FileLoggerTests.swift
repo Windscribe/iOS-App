@@ -719,6 +719,148 @@ final class FileLoggerTests: XCTestCase {
         XCTAssertEqual(segments.appendCallCount, 5)
     }
 
+    func testSegmentAppendThrowsWhenFileIsMissing() async throws {
+        try await withTemporaryDirectory { directory in
+            let store = FileLogSegmentWriter(baseURL: directory, process: .app)
+            let segment = LogSegment(process: .app, bucketStart: 0, sequence: 0,
+                                     url: directory.appendingPathComponent("missing"))
+            XCTAssertThrowsError(try store.append(Data([1]), to: segment))
+        }
+    }
+
+    func testSegmentAppendThrowsAndClosesReadOnlyHandle() async throws {
+        try await withTemporaryDirectory { directory in
+            let url = directory.appendingPathComponent("read-only")
+            let original = Data("unchanged".utf8)
+            try original.write(to: url)
+            let handle = try FileHandle(forReadingFrom: url)
+            let store = FileLogSegmentWriter(baseURL: directory, process: .app, openFile: { _ in handle })
+            let segment = LogSegment(process: .app, bucketStart: 0, sequence: 0, url: url)
+
+            XCTAssertThrowsError(try store.append(Data([1]), to: segment))
+            XCTAssertThrowsError(try handle.offset())
+            XCTAssertEqual(try Data(contentsOf: url), original)
+        }
+    }
+
+    func testSegmentAppendThrowsAndClosesNonSeekableHandle() async throws {
+        try await withTemporaryDirectory { directory in
+            let pipe = Pipe()
+            let handle = pipe.fileHandleForWriting
+            defer { try? pipe.fileHandleForReading.close() }
+            let store = FileLogSegmentWriter(baseURL: directory, process: .app, openFile: { _ in handle })
+            let segment = LogSegment(process: .app, bucketStart: 0, sequence: 0,
+                                     url: directory.appendingPathComponent("unused"))
+
+            XCTAssertThrowsError(try store.append(Data([1]), to: segment))
+            XCTAssertThrowsError(try handle.write(contentsOf: Data([1])))
+        }
+    }
+
+    func testSegmentAppendThrowsForClosedHandle() async throws {
+        try await withTemporaryDirectory { directory in
+            let url = directory.appendingPathComponent("closed")
+            try Data().write(to: url)
+            let handle = try FileHandle(forWritingTo: url)
+            try handle.close()
+            let store = FileLogSegmentWriter(baseURL: directory, process: .app, openFile: { _ in handle })
+            let segment = LogSegment(process: .app, bucketStart: 0, sequence: 0, url: url)
+
+            XCTAssertThrowsError(try store.append(Data([1]), to: segment))
+        }
+    }
+
+    func testWriterRecoversFromPartialAppendWithoutRetryingFailedBatch() async throws {
+        try await withTemporaryDirectory { directory in
+            let timestamp: TimeInterval = 1_700_000_000
+            let store = FailingLogSegmentWriter(directory: directory, failCreation: false)
+            let writer = SegmentedLogWriter(now: { timestamp }, codec: BinaryLogRecordCodec(),
+                                            segments: store, batchFlushInterval: 3600)
+            writer.log(.info, module: "Test", message: "earlier", flushImmediately: true)
+            writer.log(.info, module: "Test", message: "failed", flushImmediately: true)
+            let damaged = try XCTUnwrap(store.failedSegment)
+            let damagedBytes = try Data(contentsOf: damaged.url)
+            await writer.flush()
+            XCTAssertEqual(store.appendCount, 2)
+
+            writer.log(.info, module: "Test", message: "healthy", flushImmediately: true)
+            XCTAssertEqual(store.appendCount, 3)
+            XCTAssertEqual(try Data(contentsOf: damaged.url), damagedBytes)
+            XCTAssertEqual(try segmentURLs(in: directory, process: .app).count, 2)
+            let exporter = JSONLogExporter(now: { timestamp }, segments: FileLogSegmentReader(baseURL: directory),
+                                           codec: BinaryLogRecordCodec(), metadata: TestLogMetadataProvider(),
+                                           exportDirectory: directory)
+            let artifact = try await exporter.exportRetainedLogs()
+            let records = try jsonRecords(from: String(contentsOf: artifact.url, encoding: .utf8))
+            XCTAssertEqual(Set(records.filter { $0["mod"] == "Test" }.compactMap { $0["msg"] }), ["earlier", "healthy"])
+        }
+    }
+
+    func testWriterRecoversAfterSegmentCreationFailure() async throws {
+        try await withTemporaryDirectory { directory in
+            let store = FailingLogSegmentWriter(directory: directory, failCreation: true)
+            let writer = SegmentedLogWriter(now: { 1_700_000_000 }, codec: BinaryLogRecordCodec(),
+                                            segments: store, batchFlushInterval: 3600)
+            writer.log(.info, module: "Test", message: "dropped", flushImmediately: true)
+            await writer.flush()
+            XCTAssertEqual(store.creationCount, 1)
+            XCTAssertEqual(store.appendCount, 0)
+            writer.log(.info, module: "Test", message: "healthy", flushImmediately: true)
+            XCTAssertEqual(store.creationCount, 2)
+            XCTAssertEqual(store.appendCount, 1)
+        }
+    }
+
+    func testExportWriteFailurePropagatesAndRemovesOutputForEverySource() async throws {
+        for source in ["metadata", "segment", "legacy"] {
+            try await withTemporaryDirectory { directory in
+                let timestamp: TimeInterval = 1_700_000_000
+                let record = LogRecord(timestamp: timestamp, level: .info, module: "Test", message: "record")
+                let codec = BinaryLogRecordCodec()
+                if source == "segment" {
+                    let store = FileLogSegmentWriter(baseURL: directory, process: .app)
+                    let segment = try store.createSegment(bucketStart: 1_699_999_200, sequence: 0, header: codec.segmentHeader)
+                    try store.append(codec.encode(record), to: segment)
+                } else if source == "legacy" {
+                    let legacy = directory.appendingPathComponent(LegacyLogArchive.sourceFileName)
+                    try Data((JSONLogFormatter().format(record) + "\n").utf8).write(to: legacy)
+                    _ = try LegacyLogArchive.archive(in: directory, at: timestamp)
+                }
+                let exporter = JSONLogExporter(now: { timestamp }, segments: FileLogSegmentReader(baseURL: directory),
+                                               codec: codec, metadata: TestLogMetadataProvider(), exportDirectory: directory,
+                                               readChunkBytes: source == "metadata" ? 64 * 1024 : 1,
+                                               openOutput: { try FileHandle(forReadingFrom: $0) })
+                do {
+                    _ = try await exporter.exportRetainedLogs()
+                    XCTFail("Read-only export destination must throw: \(source)")
+                } catch {
+                    let remaining = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+                    XCTAssertFalse(remaining.contains { $0.lastPathComponent.hasPrefix("windscribe-log-export-") })
+                }
+            }
+        }
+    }
+
+    func testExportSkipsFailedInputHandlesAndPreservesHealthySegment() async throws {
+        for failure in FailingLogSegmentReader.Failure.allCases {
+            try await withTemporaryDirectory { directory in
+                let timestamp: TimeInterval = 1_700_000_000
+                let codec = BinaryLogRecordCodec()
+                let store = FileLogSegmentWriter(baseURL: directory, process: .app)
+                let segment = try store.createSegment(bucketStart: 1_699_999_200, sequence: 0, header: codec.segmentHeader)
+                try store.append(codec.encode(LogRecord(timestamp: timestamp, level: .info,
+                                                       module: "Test", message: "healthy")), to: segment)
+                let reader = FailingLogSegmentReader(healthy: segment, failure: failure)
+                let exporter = JSONLogExporter(now: { timestamp }, segments: reader, codec: codec,
+                                               metadata: TestLogMetadataProvider(), exportDirectory: directory)
+                let artifact = try await exporter.exportRetainedLogs()
+                let records = try jsonRecords(from: String(contentsOf: artifact.url, encoding: .utf8))
+                XCTAssertEqual(records.filter { $0["mod"] == "Test" }.map { $0["msg"] }, ["healthy"])
+                XCTAssertEqual(records.last?["mod"], "TestMetadata")
+            }
+        }
+    }
+
     // MARK: - Private Methods
 
     private func waitForRemoval(
@@ -859,6 +1001,90 @@ private final class BlockingLogSegmentWriter: LogSegmentWriting, @unchecked Send
     func releaseFirstAppend() {
         firstAppendRelease.signal()
     }
+}
+
+// Mutated only on the writer queue; tests inspect state after synchronous flushes.
+private final class FailingLogSegmentWriter: LogSegmentWriting, @unchecked Sendable {
+    // MARK: - Properties
+
+    private let store: FileLogSegmentWriter
+    private let failCreation: Bool
+
+    private(set) var creationCount = 0
+    private(set) var appendCount = 0
+    private(set) var failedSegment: LogSegment?
+
+    // MARK: - Initializer
+
+    init(directory: URL, failCreation: Bool) {
+        store = FileLogSegmentWriter(baseURL: directory, process: .app)
+        self.failCreation = failCreation
+    }
+
+    // MARK: - LogSegmentWriting
+
+    func createSegment(bucketStart: TimeInterval, sequence: UInt32, header: Data) throws -> LogSegment {
+        creationCount += 1
+        if failCreation && creationCount == 1 {
+            throw NSError(domain: NSPOSIXErrorDomain, code: Int(ENOSPC))
+        }
+        return try store.createSegment(bucketStart: bucketStart, sequence: sequence, header: header)
+    }
+
+    func append(_ data: Data, to segment: LogSegment) throws {
+        appendCount += 1
+        if !failCreation && appendCount == 2 {
+            failedSegment = segment
+            try store.append(Data(data.prefix(2)), to: segment)
+            let readOnly = try FileHandle(forReadingFrom: segment.url)
+            defer { try? readOnly.close() }
+            try readOnly.write(contentsOf: data)
+        }
+        try store.append(data, to: segment)
+    }
+
+    func removeClosedSegments(olderThan cutoff: TimeInterval, retainingAtMost maximumBytes: Int) throws {
+        try store.removeClosedSegments(olderThan: cutoff, retainingAtMost: maximumBytes)
+    }
+}
+
+private struct FailingLogSegmentReader: LogSegmentReading {
+    enum Failure: CaseIterable, Sendable {
+        case open, seek, read, closed
+    }
+
+    // MARK: - Properties
+
+    let healthy: LogSegment
+    let failure: Failure
+
+    // MARK: - LogSegmentReading
+
+    func segments(for _: [LogProcess], newerThan _: TimeInterval) throws -> [LogSegment] {
+        let failing = LogSegment(process: healthy.process, bucketStart: healthy.bucketStart, sequence: 0,
+                                 url: healthy.url.appendingPathExtension("failure"))
+        return [failing, healthy]
+    }
+
+    func open(_ segment: LogSegment) throws -> FileHandle {
+        guard segment.url != healthy.url else { return try FileHandle(forReadingFrom: healthy.url) }
+        switch failure {
+        case .open:
+            throw NSError(domain: NSPOSIXErrorDomain, code: Int(ENOENT))
+        case .seek:
+            let pipe = Pipe()
+            try pipe.fileHandleForWriting.close()
+            return pipe.fileHandleForReading
+        case .read:
+            return try FileHandle(forWritingTo: healthy.url)
+        case .closed:
+            let handle = try FileHandle(forReadingFrom: healthy.url)
+            try handle.close()
+            return handle
+        }
+    }
+
+    func removeClosedSegments(olderThan _: TimeInterval) throws { }
 }
 
 private struct TestLogMetadataProvider: LogMetadataProviding, Sendable {

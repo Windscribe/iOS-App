@@ -259,7 +259,13 @@ final class SegmentedLogWriter: LogWriting, @unchecked Sendable {
 
         func writePendingData() {
             guard let segment = pendingSegment, !pendingData.isEmpty else { return }
-            try? segments.append(pendingData, to: segment)
+            do {
+                try segments.append(pendingData, to: segment)
+            } catch {
+                // A failed append may leave a partial frame. Never append behind it.
+                activeSegment = nil
+                activeSegmentBytes = 0
+            }
             pendingData.removeAll(keepingCapacity: true)
         }
 

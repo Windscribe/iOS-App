@@ -60,6 +60,7 @@ struct JSONLogExporter: LogExporting, Sendable {
     private let exportDirectory: URL
     private let retentionDuration: TimeInterval
     private let readChunkBytes: Int
+    private let openOutput: @Sendable (URL) throws -> FileHandle
 
     // MARK: - Initializer
 
@@ -71,7 +72,8 @@ struct JSONLogExporter: LogExporting, Sendable {
         metadata: any LogMetadataProviding,
         exportDirectory: URL,
         retentionDuration: TimeInterval = LogRetention.duration,
-        readChunkBytes: Int = 64 * 1024
+        readChunkBytes: Int = 64 * 1024,
+        openOutput: @escaping @Sendable (URL) throws -> FileHandle = { try FileHandle(forWritingTo: $0) }
     ) {
         self.now = now
         self.segments = segments
@@ -81,6 +83,7 @@ struct JSONLogExporter: LogExporting, Sendable {
         self.exportDirectory = exportDirectory
         self.retentionDuration = retentionDuration
         self.readChunkBytes = readChunkBytes
+        self.openOutput = openOutput
     }
 
     // MARK: - LogExporting
@@ -125,29 +128,29 @@ struct JSONLogExporter: LogExporting, Sendable {
         _ = FileManager.default.createFile(atPath: outputURL.path, contents: nil)
 
         do {
-            let output = try FileHandle(forWritingTo: outputURL)
-            defer { output.closeFile() }
+            let output = try openOutput(outputURL)
+            defer { try? output.close() }
 
             var outputBuffer = Data()
 
-            func flushOutputBuffer() {
+            func flushOutputBuffer() throws {
                 guard !outputBuffer.isEmpty else { return }
-                output.write(outputBuffer)
+                try output.write(contentsOf: outputBuffer)
                 outputBuffer.removeAll(keepingCapacity: true)
             }
 
-            func append(_ record: LogRecord) {
+            func append(_ record: LogRecord) throws {
                 guard record.timestamp >= cutoff else { return }
                 outputBuffer.append(
                     Data((formatter.format(record) + "\n").utf8)
                 )
                 if outputBuffer.count >= readChunkBytes {
-                    flushOutputBuffer()
+                    try flushOutputBuffer()
                 }
             }
 
             for legacyLogURL in try archivedLegacyLogFiles(newerThan: cutoff) {
-                readLegacyRecords(
+                try readLegacyRecords(
                     from: legacyLogURL,
                     consume: append
                 )
@@ -157,11 +160,12 @@ struct JSONLogExporter: LogExporting, Sendable {
                 for: LogProcess.allCases,
                 newerThan: cutoff
             ) {
-                readRecords(from: segment, consume: append)
+                try readRecords(from: segment, consume: append)
             }
 
-            append(metadata.metadataRecord(at: exportTime))
-            flushOutputBuffer()
+            try append(metadata.metadataRecord(at: exportTime))
+            try flushOutputBuffer()
+            try output.close()
 
             return LogExportArtifact(
                 url: outputURL,
@@ -175,36 +179,34 @@ struct JSONLogExporter: LogExporting, Sendable {
 
     private func readRecords(
         from segment: LogSegment,
-        consume: (LogRecord) -> Void
-    ) {
+        consume: (LogRecord) throws -> Void
+    ) throws {
         guard let input = try? segments.open(segment) else { return }
-        defer { input.closeFile() }
+        defer { try? input.close() }
 
-        let snapshotLength = input.seekToEndOfFile()
-        guard snapshotLength >= UInt64(codec.segmentHeader.count),
+        guard let snapshotLength = try? input.seekToEnd(),
+              snapshotLength >= UInt64(codec.segmentHeader.count),
               snapshotLength <= UInt64(Int.max) else {
             return
         }
-        input.seek(toFileOffset: 0)
+        guard (try? input.seek(toOffset: 0)) != nil else { return }
 
-        let header = input.readData(ofLength: codec.segmentHeader.count)
-        guard header == codec.segmentHeader else { return }
+        guard let header = try? input.read(upToCount: codec.segmentHeader.count),
+              header == codec.segmentHeader else { return }
 
         var buffer = Data()
         var remainingBytes = Int(snapshotLength) - header.count
 
         while remainingBytes > 0 {
-            let chunk = input.readData(
-                ofLength: min(readChunkBytes, remainingBytes)
-            )
-            guard !chunk.isEmpty else { break }
+            guard let chunk = try? input.read(upToCount: min(readChunkBytes, remainingBytes)),
+                  !chunk.isEmpty else { break }
             remainingBytes -= chunk.count
             buffer.append(chunk)
 
             decodeLoop: while !buffer.isEmpty {
                 switch codec.decodeNext(from: buffer) {
                 case let .record(record, consumedBytes):
-                    consume(record)
+                    try consume(record)
                     buffer.removeFirst(consumedBytes)
                 case let .invalid(consumedBytes):
                     buffer.removeFirst(consumedBytes)
@@ -250,21 +252,21 @@ struct JSONLogExporter: LogExporting, Sendable {
 
     private func readLegacyRecords(
         from url: URL,
-        consume: (LogRecord) -> Void
-    ) {
+        consume: (LogRecord) throws -> Void
+    ) throws {
         guard let input = try? FileHandle(forReadingFrom: url) else { return }
-        defer { input.closeFile() }
+        defer { try? input.close() }
 
-        let snapshotLength = input.seekToEndOfFile()
-        guard snapshotLength <= UInt64(Int.max) else { return }
-        input.seek(toFileOffset: 0)
+        guard let snapshotLength = try? input.seekToEnd(),
+              snapshotLength <= UInt64(Int.max) else { return }
+        guard (try? input.seek(toOffset: 0)) != nil else { return }
 
         let maximumLegacyLineBytes = 1024 * 1024
         var line = Data()
         var droppingLine = false
         var remainingBytes = Int(snapshotLength)
 
-        func processLine() {
+        func processLine() throws {
             defer {
                 line.removeAll(keepingCapacity: true)
                 droppingLine = false
@@ -280,7 +282,7 @@ struct JSONLogExporter: LogExporting, Sendable {
                 return
             }
 
-            consume(
+            try consume(
                 LogRecord(
                     timestamp: timestamp,
                     level: LogLevel(stringValue: values["lvl"] ?? "") ?? .info,
@@ -291,15 +293,13 @@ struct JSONLogExporter: LogExporting, Sendable {
         }
 
         while remainingBytes > 0 {
-            let chunk = input.readData(
-                ofLength: min(readChunkBytes, remainingBytes)
-            )
-            guard !chunk.isEmpty else { break }
+            guard let chunk = try? input.read(upToCount: min(readChunkBytes, remainingBytes)),
+                  !chunk.isEmpty else { break }
             remainingBytes -= chunk.count
 
             for byte in chunk {
                 if byte == 0x0A {
-                    processLine()
+                    try processLine()
                 } else if !droppingLine {
                     if line.count < maximumLegacyLineBytes {
                         line.append(byte)
@@ -309,6 +309,6 @@ struct JSONLogExporter: LogExporting, Sendable {
                 }
             }
         }
-        processLine()
+        try processLine()
     }
 }
