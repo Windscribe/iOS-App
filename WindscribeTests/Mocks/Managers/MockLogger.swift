@@ -34,6 +34,10 @@ class MockLogger: FileLogger {
         return "Test Logs"
     }
 
+    func getLogData(for _: LogExportPurpose) async throws -> String {
+        return "Test Logs"
+    }
+
     func logDeviceInfo() {}
 
     func logD(_ tag: String, _ message: String) {

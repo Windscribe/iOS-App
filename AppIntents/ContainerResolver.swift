@@ -10,14 +10,20 @@ import Foundation
 import Swinject
 
 class ContainerResolver: ContainerResolvertype {
+    private let process: LogProcess
+
     private lazy var container: Container = {
         self.container = Container()
-        container.injectCore()
+        container.injectCore(process: process)
         container.register(APIUtilService.self) { _ in
             APIUtilServiceImpl()
         }.inObjectScope(.container)
         return container
     }()
+
+    init(process: LogProcess) {
+        self.process = process
+    }
 
     func getPreferences() -> Preferences {
         return container.resolve(Preferences.self)!

@@ -12,9 +12,9 @@ import UIKit
 
 /// Core dependencies used by all targets.
 extension Container {
-    func injectCore(ext _: Bool = false) {
+    func injectCore(process: LogProcess) {
         register(FileLogger.self) { _ in
-            let logger = FileLoggerImpl()
+            let logger = FileLoggerImpl(process: process)
             return logger
         }.inObjectScope(.container)
         register(KeychainManager.self) { r in

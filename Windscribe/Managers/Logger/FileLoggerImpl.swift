@@ -8,154 +8,102 @@
 
 import Foundation
 import UIKit
-import os.log
 
-enum LogLevel: String {
-    case debug, info, error
+private struct AppLogMetadataProvider: LogMetadataProviding, Sendable {
+    let schemaVersion: Int
+    let appVersion: String
+    let appBuild: String
+    let osVersion: String
+
+    func metadataRecord(at timestamp: TimeInterval) -> LogRecord {
+        LogRecord(
+            timestamp: timestamp,
+            level: .info,
+            module: "LogMetadata",
+            message: "schema_version=\(schemaVersion) " +
+                "app_version=\(appVersion) " +
+                "app_build=\(appBuild) " +
+                "os_version=\(osVersion)"
+        )
+    }
 }
 
-private extension CodingUserInfoKey {
-    static let logDateFormatter = CodingUserInfoKey(rawValue: "logDateFormatter")!
-}
-
-private struct LogBufferModel: Codable {
+private struct WSNetLibraryLogPayload: Decodable {
     enum CodingKeys: String, CodingKey {
         case level = "lvl"
-        case tag = "mod"
+        case module = "mod"
         case message = "msg"
         case timestamp = "tm"
     }
 
-    let level: LogLevel
-    let tag: String
+    let level: String
+    let module: String
     let message: String
-    let timestamp: TimeInterval
-    let timestampString: String
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-
-        // Encode in specific order: tm, lvl, mod, msg for human readability
-        try container.encode(timestampString, forKey: .timestamp)
-        try container.encode(level.rawValue, forKey: .level)
-        try container.encode(tag, forKey: .tag)
-        try container.encode(message, forKey: .message)
-    }
-
-    private func escapeJSONString(_ input: String) -> String {
-        var result = ""
-        for char in input {
-            switch char {
-            case "\"": result += "\\\""
-            case "\\": result += "\\\\"
-            case "\n": result += "\\n"
-            case "\r": result += "\\r"
-            case "\t": result += "\\t"
-            default: result.append(char)
-            }
-        }
-        return result
-    }
-
-    func toOrderedJSONString() -> String {
-        // Prevent multiple replacingOccurrences
-        let escapedTag = escapeJSONString(tag)
-        let escapedMessage = escapeJSONString(message)
-
-        return "{\"tm\": \"\(timestampString)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        // Decode tag and message directly
-        tag = try container.decode(String.self, forKey: .tag)
-        message = try container.decode(String.self, forKey: .message)
-
-        // Decode level string and convert to enum
-        let levelString = try container.decode(String.self, forKey: .level)
-        switch levelString {
-        case "debug": level = .debug
-        case "info": level = .info
-        case "error": level = .error
-        default: level = .info // fallback
-        }
-
-        guard let dateFormatter = decoder.userInfo[.logDateFormatter] as? DateFormatter else {
-            throw DecodingError.dataCorruptedError(
-                forKey: .timestamp,
-                in: container,
-                debugDescription: "Missing log date formatter."
-            )
-        }
-
-        let decodedTimestampString = try container.decode(String.self, forKey: .timestamp)
-        if let date = dateFormatter.date(from: decodedTimestampString) {
-            timestamp = date.timeIntervalSince1970
-            timestampString = decodedTimestampString
-        } else {
-            let now = Date()
-            timestamp = now.timeIntervalSince1970
-            timestampString = dateFormatter.string(from: now)
-        }
-    }
-
-    init(level: LogLevel, tag: String, message: String, timestamp: TimeInterval, dateFormatter: DateFormatter) {
-        self.level = level
-        self.tag = tag
-        self.message = message
-        self.timestamp = timestamp
-        timestampString = dateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
-    }
+    let timestamp: String
 }
 
-class FileLoggerImpl: FileLogger {
+final class FileLoggerImpl: FileLogger, @unchecked Sendable {
+    // MARK: - Properties
 
-    private let maxLogLength = 120_000
-    private let logFileName = "windscribe.log"
-    private let logSchemaVersion = 1
-    private let jsonDateFormatter: DateFormatter = {
+    let logDirectory: URL?
+
+    private let wsNetDateFormatterLock = NSLock()
+    private let now: @Sendable () -> TimeInterval
+    private let wsNetDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         return formatter
     }()
 
-    // MARK: - Log Batching Configuration
-    private let batchFlushInterval: TimeInterval = 10.0 // Flush every 10 seconds
-    private let batchMaxSize: Int = 50 // Flush when buffer reaches 50 logs
-    private let batchMaxMemorySize: Int = 10_000 // Flush when buffer reaches ~10KB of text
+    private var writer: SegmentedLogWriter?
+    private var exporter: JSONLogExporter?
 
-    // MARK: - Log Retention Configuration
-    private let maxLogRetentionHours: TimeInterval = 24 * 60 * 60 // 24 hours in seconds
-    private let maxLogFileSize: Int = 512 * 1024 // 512KB total
-    private let logCompactionInterval: TimeInterval = 60 * 60
+    // MARK: - Initializer
 
-    // MARK: - Batching State
-    private let batchQueue = DispatchQueue(label: "com.windscribe.logging.batch", qos: .utility)
-    private var logBuffer: [LogBufferModel] = []
-    private var batchTimer: DispatchSourceTimer?
-    private var currentBufferSize: Int = 0
-    private var lastCompactionTime = Date().timeIntervalSince1970
-    var logDirectory: URL? = {
-        let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
-        let subpath = Env.isTVOS ? "Library/Caches" : "AppExtensionLogs"
-        return containerUrl?.appendingPathComponent(subpath)
-    }()
-
-    init() {
-        setupLogger()
-        startBatchTimer()
+    init(
+        logDirectory: URL? = nil,
+        process: LogProcess = .app,
+        retentionDuration: TimeInterval = LogRetention.duration,
+        maximumSegmentBytes: Int = LogStorageBudget.maximumSegmentBytes,
+        maximumStoredBytes: Int = LogStorageBudget.maximumBytesPerProcess,
+        now: @escaping @Sendable () -> TimeInterval = {
+            Date().timeIntervalSince1970
+        }
+    ) {
+        let directory = logDirectory ?? Self.defaultLogDirectory()
+        self.logDirectory = directory
+        self.now = now
+        initComponents(
+            directory: directory,
+            process: process,
+            retentionDuration: retentionDuration,
+            maximumSegmentBytes: maximumSegmentBytes,
+            maximumStoredBytes: maximumStoredBytes,
+            now: now
+        )
+        writer?.log(
+            .info,
+            module: "FileLogger",
+            message: "Segmented logger started. Batching: 50 records, 10s interval."
+        )
     }
+
+    // MARK: - FileLogger
 
     func logD(_ tag: String, _ message: String) {
         logD(tag, message, flushImmediately: false)
     }
 
     func logD(_ tag: String, _ message: String, flushImmediately: Bool) {
-        #if DEBUG
-        addToBatch(.debug, tag: tag, message: message, flushImmediately: flushImmediately)
-        #endif
+#if DEBUG
+        writer?.log(
+            .debug,
+            module: tag,
+            message: message,
+            flushImmediately: flushImmediately
+        )
+#endif
     }
 
     func logI(_ tag: String, _ message: String) {
@@ -163,31 +111,12 @@ class FileLoggerImpl: FileLogger {
     }
 
     func logI(_ tag: String, _ message: String, flushImmediately: Bool) {
-        addToBatch(.info, tag: tag, message: message, flushImmediately: flushImmediately)
-    }
-
-    func logWSNet(_ message: String) {
-        batchQueue.async { [weak self] in
-            guard let self else { return }
-
-            let logEntry: LogBufferModel
-            if let jsonData = message.data(using: .utf8),
-               let wsnetLog = try? self.makeLogDecoder().decode(LogBufferModel.self, from: jsonData) {
-#if !DEBUG
-                guard wsnetLog.level != .debug else { return }
-#endif
-                logEntry = wsnetLog
-            } else {
-                logEntry = LogBufferModel(
-                    level: .info,
-                    tag: "wsnet",
-                    message: message,
-                    timestamp: Date().timeIntervalSince1970,
-                    dateFormatter: self.jsonDateFormatter
-                )
-            }
-            self.addLogBufferModelToBatch(logEntry, flushImmediately: false)
-        }
+        writer?.log(
+            .info,
+            module: tag,
+            message: message,
+            flushImmediately: flushImmediately
+        )
     }
 
     func logE(_ tag: String, _ message: String) {
@@ -195,295 +124,133 @@ class FileLoggerImpl: FileLogger {
     }
 
     func logE(_ tag: String, _ message: String, flushImmediately: Bool) {
-        addToBatch(.error, tag: tag, message: message, flushImmediately: flushImmediately)
+        writer?.log(
+            .error,
+            module: tag,
+            message: message,
+            flushImmediately: flushImmediately
+        )
     }
 
-    // MARK: - Log Batching Implementation
-
-    private func getLogFileURL() -> URL? {
-        guard let logDirectory = logDirectory else {
-            return nil
-        }
-        return logDirectory.appendingPathComponent(logFileName)
-    }
-
-    private func addToBatch(_ level: LogLevel, tag: String, message: String, flushImmediately: Bool) {
-        batchQueue.async { [weak self] in
-            guard let self else { return }
-            let logEntry = LogBufferModel(
-                level: level,
-                tag: tag,
-                message: message,
-                timestamp: Date().timeIntervalSince1970,
-                dateFormatter: self.jsonDateFormatter
-            )
-            self.addLogBufferModelToBatch(logEntry, flushImmediately: flushImmediately)
-        }
-    }
-
-    private func addLogBufferModelToBatch(_ logEntry: LogBufferModel, flushImmediately: Bool) {
-#if DEBUG
-        print(logEntry.toOrderedJSONString())
+    func logWSNet(_ message: String) {
+        let record = makeWSNetRecord(message)
+#if !DEBUG
+        guard record.level != .debug else { return }
 #endif
-        logBuffer.append(logEntry)
-        currentBufferSize += logEntry.message.count + "\(logEntry.tag)".count
-
-        // Check if we should flush the buffer
-        if flushImmediately ||
-           logBuffer.count >= batchMaxSize ||
-           currentBufferSize >= batchMaxMemorySize {
-            flushLogBuffer()
-        }
-    }
-
-    private func startBatchTimer() {
-        let timer = DispatchSource.makeTimerSource(queue: batchQueue)
-        timer.schedule(deadline: .now() + batchFlushInterval, repeating: batchFlushInterval)
-        timer.setEventHandler { [weak self] in
-            self?.flushLogBuffer()
-        }
-        timer.resume()
-        self.batchTimer = timer
-    }
-
-    private func flushLogBuffer(completion: (() -> Void)? = nil) {
-        batchQueue.async { [weak self] in
-            guard let self = self else {
-                completion?()
-                return
-            }
-            guard !self.logBuffer.isEmpty else {
-                completion?()
-                return
-            }
-
-            let bufferCopy = self.logBuffer
-            self.logBuffer.removeAll()
-            self.currentBufferSize = 0
-
-            // Sort by timestamp to maintain chronological order
-            let sortedLogs = bufferCopy.sorted { $0.timestamp < $1.timestamp }
-
-            // Convert to JSON and write to file
-            self.writeLogsToFile(sortedLogs)
-            completion?()
-        }
-    }
-
-    private func writeLogsToFile(_ logs: [LogBufferModel]) {
-        guard let logFileURL = getLogFileURL() else {
-            return
-        }
-        guard !logs.isEmpty else { return }
-
-        do {
-            let boundedLogs = applyRetentionPolicies(logs: logs, sizeLimit: maxLogFileSize)
-            guard !boundedLogs.isEmpty else { return }
-
-            let jsonLines = boundedLogs.map { log in
-                log.toOrderedJSONString()
-            }
-            let content = jsonLines.joined(separator: "\n") + "\n"
-            let contentData = Data(content.utf8)
-            let fileExists = FileManager.default.fileExists(atPath: logFileURL.path)
-            var fileSize = 0
-
-            if fileExists {
-                fileSize = try logFileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-            }
-
-            let now = Date().timeIntervalSince1970
-            let requiresCompaction = fileExists && (
-                fileSize > maxLogFileSize - contentData.count ||
-                now - lastCompactionTime >= logCompactionInterval
-            )
-            if requiresCompaction && !compactLogFile(reservingBytes: contentData.count) {
-                return
-            }
-
-            if fileExists {
-                let fileHandle = try FileHandle(forWritingTo: logFileURL)
-                fileHandle.seekToEndOfFile()
-                fileHandle.write(contentData)
-                fileHandle.closeFile()
-            } else {
-                try contentData.write(to: logFileURL, options: .atomic)
-            }
-        } catch {
-            // Silently fail - logging errors in the logger creates infinite loops
-        }
-    }
-
-    private func compactLogFile(reservingBytes: Int = 0) -> Bool {
-        guard let logFileURL = getLogFileURL(),
-              FileManager.default.fileExists(atPath: logFileURL.path) else {
-            lastCompactionTime = Date().timeIntervalSince1970
-            return true
-        }
-
-        guard let existingLogs = try? parseExistingLogFile(logFileURL: logFileURL) else {
-            return false
-        }
-        let sizeLimit = max(0, maxLogFileSize - reservingBytes)
-        let trimmedLogs = applyRetentionPolicies(logs: existingLogs, sizeLimit: sizeLimit)
-        let jsonLines = trimmedLogs.map { $0.toOrderedJSONString() }
-        let content = jsonLines.joined(separator: "\n") + (jsonLines.isEmpty ? "" : "\n")
-
-        do {
-            try content.write(to: logFileURL, atomically: true, encoding: .utf8)
-            lastCompactionTime = Date().timeIntervalSince1970
-            return true
-        } catch {
-            // Silently fail - logging errors in the logger creates infinite loops
-            return false
-        }
-    }
-
-    private func parseExistingLogFile(logFileURL: URL) throws -> [LogBufferModel] {
-        let fileHandle = try FileHandle(forReadingFrom: logFileURL)
-        defer { fileHandle.closeFile() }
-
-        let fileSize = fileHandle.seekToEndOfFile()
-        let maximumReadSize = UInt64(maxLogFileSize)
-        let readOffset = fileSize > maximumReadSize ? fileSize - maximumReadSize : 0
-        fileHandle.seek(toFileOffset: readOffset)
-        var data = fileHandle.readData(ofLength: maxLogFileSize)
-
-        if readOffset > 0 {
-            guard let firstNewline = data.firstIndex(of: 0x0A) else { return [] }
-            data.removeSubrange(data.startIndex ... firstNewline)
-        }
-
-        guard let content = String(data: data, encoding: .utf8) else { return [] }
-        let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
-
-        let decoder = makeLogDecoder()
-        var parsedLogs: [LogBufferModel] = []
-
-        for line in lines {
-            if let data = line.data(using: .utf8) {
-                do {
-                    let logEntry = try decoder.decode(LogBufferModel.self, from: data)
-                    parsedLogs.append(logEntry)
-                } catch {
-                    // Silently skip malformed log lines
-                }
-            }
-        }
-
-        return parsedLogs
-    }
-
-    private func applyRetentionPolicies(logs: [LogBufferModel], sizeLimit: Int) -> [LogBufferModel] {
-        let now = Date().timeIntervalSince1970
-        let cutoffTime = now - maxLogRetentionHours
-
-        // Step 1: Remove logs older than 24 hours
-        let recentLogs = logs.filter { $0.timestamp >= cutoffTime }
-
-        // Step 2: If still over size limit, remove oldest entries
-        let sortedLogs = recentLogs.sorted { $0.timestamp < $1.timestamp }
-
-        // Calculate current size using ordered JSON strings
-        var currentSize = 0
-        var finalLogs: [LogBufferModel] = []
-
-        // Start from newest and work backwards to keep as much recent data as possible
-        for log in sortedLogs.reversed() {
-            let jsonString = log.toOrderedJSONString()
-            let logSize = jsonString.utf8.count + 1 // +1 for newline
-
-            if currentSize + logSize <= sizeLimit {
-                finalLogs.insert(log, at: 0) // Insert at beginning to maintain chronological order
-                currentSize += logSize
-            } else {
-                break // Stop adding logs once we hit the size limit
-            }
-        }
-
-        return finalLogs
-    }
-
-    deinit {
-        batchTimer?.cancel()
-        flushLogBuffer() // Ensure any remaining logs are written
+        writer?.log(record)
     }
 
     func getLogData() async throws -> String {
-        return await withCheckedContinuation { continuation in
-            guard let logFileURL = getLogFileURL() else {
-                continuation.resume(returning: "")
-                return
-            }
+        try await getLogData(for: .viewing)
+    }
 
-            flushLogBuffer { [weak self] in
-                guard let self = self else {
-                    continuation.resume(returning: "")
-                    return
-                }
-                let allLogs = (try? self.parseExistingLogFile(logFileURL: logFileURL)) ?? []
-                let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp }
-                let metadata = self.makeLogMetadata()
-                let availableLogLength = max(0, self.maxLogLength - metadata.count - 1)
-                let combinedLog = sortedLogs
-                    .reduce(into: "", {
-                        let log = $1.toOrderedJSONString()
-                        if $0.count + log.count + "\n".count <= availableLogLength {
-                            return $0 = log + "\n" + $0
-                        }
-                    })
-                continuation.resume(returning: combinedLog + metadata + "\n")
-            }
-        }
+    func getLogData(for purpose: LogExportPurpose) async throws -> String {
+        guard let writer, let exporter else { return "" }
+
+        await writer.flush()
+        let artifact = try await exporter.exportLogs(for: purpose)
+        defer { try? FileManager.default.removeItem(at: artifact.url) }
+        return try String(contentsOf: artifact.url, encoding: .utf8)
     }
 
     func logDeviceInfo() {
         let currentDevice = UIDevice.current
         let deviceInfo = [
-            "\n[DeviceInfo]",
-            "-------------",
-            "[Device]: \(currentDevice.model)",
-            "[OS Version]: \(currentDevice.systemVersion)",
-            "[Release]: \(Bundle.main.buildVersionNumber ?? "")",
-            "[App Release Version]: \(Bundle.main.releaseVersionNumber ?? "")",
-            "[Start of log]:",
-            "------------------------------------------------------"
+            "[DeviceInfo] [Device]: \(currentDevice.model)",
+            "[OS Version]: \(currentDevice.systemVersion) " +
+                "[Release]: \(Bundle.main.buildVersionNumber ?? "") " +
+                "[App Release Version]: \(Bundle.main.releaseVersionNumber ?? "")"
         ]
-        let fullInfo = deviceInfo.joined(separator: "\n")
-        logD("FileLogger", fullInfo)
+        logD("FileLogger", deviceInfo.joined(separator: "\n"))
     }
 
-    private func makeLogMetadata() -> String {
-        let timestamp = Date().timeIntervalSince1970
-        return LogBufferModel(
-            level: .info,
-            tag: "LogMetadata",
-            message: "schema_version=\(logSchemaVersion) app_version=\(Bundle.main.releaseVersionNumber ?? "unknown") app_build=\(Bundle.main.buildVersionNumber ?? "unknown") os_version=\(UIDevice.current.systemVersion)",
-            timestamp: timestamp,
-            dateFormatter: jsonDateFormatter
-        ).toOrderedJSONString()
+    // MARK: - Private Methods
+
+    private func initComponents(
+        directory: URL?,
+        process: LogProcess,
+        retentionDuration: TimeInterval,
+        maximumSegmentBytes: Int,
+        maximumStoredBytes: Int,
+        now: @escaping @Sendable () -> TimeInterval
+    ) {
+        guard let directory else { return }
+
+        _ = try? LegacyLogArchive.archive(in: directory, at: now())
+
+        let codec = BinaryLogRecordCodec()
+        let segmentWriter = FileLogSegmentWriter(
+            baseURL: directory,
+            process: process
+        )
+        let segmentedWriter = SegmentedLogWriter(
+            now: now,
+            codec: codec,
+            segments: segmentWriter,
+            retentionDuration: retentionDuration,
+            maximumSegmentBytes: maximumSegmentBytes,
+            maximumStoredBytes: maximumStoredBytes
+        )
+#if DEBUG && os(iOS)
+        if process == .app {
+            segmentedWriter.setBurstWarningHandler { recordCount in
+                NotificationCenter.default.post(
+                    name: DebugLogBurst.notification,
+                    object: nil,
+                    userInfo: [DebugLogBurst.recordCountKey: recordCount]
+                )
+            }
+        }
+#endif
+        writer = segmentedWriter
+        let segmentReader = FileLogSegmentReader(baseURL: directory)
+        let metadata = AppLogMetadataProvider(
+            schemaVersion: 1,
+            appVersion: Bundle.main.releaseVersionNumber ?? "unknown",
+            appBuild: Bundle.main.buildVersionNumber ?? "unknown",
+            osVersion: UIDevice.current.systemVersion
+        )
+        exporter = JSONLogExporter(
+            now: now,
+            segments: segmentReader,
+            codec: codec,
+            metadata: metadata,
+            exportDirectory: directory,
+            retentionDuration: retentionDuration
+        )
     }
 
-    private func makeLogDecoder() -> JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.userInfo[.logDateFormatter] = jsonDateFormatter
-        return decoder
-    }
-
-    private func setupLogger() {
-        // Ensure log directory exists
-        guard let logDirectory = logDirectory else { return }
-
-        do {
-            try FileManager.default.createDirectory(at: logDirectory, withIntermediateDirectories: true, attributes: nil)
-        } catch {
-            // Silently fail - logging errors in the logger creates infinite loops
+    private func makeWSNetRecord(_ message: String) -> LogRecord {
+        guard let data = message.data(using: .utf8),
+              let payload = try? JSONDecoder().decode(
+                WSNetLibraryLogPayload.self,
+                from: data
+              ) else {
+            return LogRecord(
+                timestamp: now(),
+                level: .info,
+                module: "wsnet",
+                message: message
+            )
         }
 
-        // Log configuration on startup to the JSON log file
-        let retentionHours = Int(maxLogRetentionHours / (60 * 60))
-        let maxSizeKB = maxLogFileSize / 1024
-        let startupMessage = "JSON log retention: \(retentionHours)h time limit, \(maxSizeKB)KB size limit. Batching: \(batchMaxSize) logs/batch, \(batchFlushInterval)s interval."
-        addToBatch(.info, tag: "FileLogger", message: startupMessage, flushImmediately: false)
+        wsNetDateFormatterLock.lock()
+        let timestamp = wsNetDateFormatter.date(from: payload.timestamp)?.timeIntervalSince1970
+        wsNetDateFormatterLock.unlock()
+
+        return LogRecord(
+            timestamp: timestamp ?? now(),
+            level: LogLevel(stringValue: payload.level) ?? .info,
+            module: payload.module,
+            message: payload.message
+        )
+    }
+
+    private static func defaultLogDirectory() -> URL? {
+        let containerURL = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup
+        )
+        let subpath = Env.isTVOS ? "Library/Caches" : "AppExtensionLogs"
+        return containerURL?.appendingPathComponent(subpath, isDirectory: true)
     }
 }

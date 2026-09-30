@@ -180,7 +180,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         Task {
             do {
                 // Collect log data from logger
-                let logData = try await logger.getLogData()
+                let logData = try await logger.getLogData(for: .submission)
 
                 // Get username, handling ghost accounts
                 let username = await MainActor.run {

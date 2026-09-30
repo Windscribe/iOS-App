@@ -22,8 +22,10 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
     static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
     let tag = "AppIntents"
-    fileprivate let logger = ContainerResolver().getLogger()
-    fileprivate let preferences = ContainerResolver().getPreferences()
+    private let resolver = ContainerResolver(process: .appIntents)
+
+    fileprivate var logger: FileLogger { resolver.getLogger() }
+    fileprivate var preferences: Preferences { resolver.getPreferences() }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         logger.logI(tag, "Disable VPN action called.")

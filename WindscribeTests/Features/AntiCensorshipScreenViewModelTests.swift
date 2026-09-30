@@ -161,4 +161,5 @@ private struct StubLogStoring: LogStoring {
     func logE(_ tag: String, _ message: String) {}
     func logD(_ tag: String, _ message: String) {}
     func getLogData() async throws -> String { "" }
+    func getLogData(for _: LogExportPurpose) async throws -> String { "" }
 }

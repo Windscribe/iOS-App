@@ -35,7 +35,7 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
     }
 
     private var resolver: ContainerResolver {
-        ContainerResolver()
+        ContainerResolver(process: .appIntents)
     }
 
     private var apiUtil: APIUtilService {
