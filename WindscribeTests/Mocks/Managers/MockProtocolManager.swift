@@ -31,7 +31,6 @@ class MockProtocolManager: ProtocolManagerType {
     var disconnectConnectionTrigger = PassthroughSubject<Void, Never>()
     var displayProtocolsSubject = CurrentValueSubject<[DisplayProtocolPort], Never>([])
     var failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
-    /// Invoked by `refreshProtocolsForLocationChange()` so tests can observe the refresh.
     var refreshProtocolsHandler: (() -> Void)?
 
     // MARK: Protocol Methods

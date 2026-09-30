@@ -10,13 +10,9 @@ import Testing
 import Foundation
 @testable import Windscribe
 
-/// Stealth and WStunnel tunnel OpenVPN through the local proxy the Network Extension starts.
-/// If the generated config dials the node directly the proxy is bypassed silently: the tunnel
-/// still comes up, but as plain OpenVPN/TCP with no TLS or WebSocket wrapping.
 @Suite("OpenVPN endpoint directives for proxied protocols")
 struct OpenVPNEndpointTests {
 
-    /// Stands in for `ServerMachineModel.ip2`, the address direct OpenVPN connections use.
     private let nodeAddress = "192.0.2.10"
     private let nodePort = "443"
 
@@ -60,8 +56,7 @@ struct OpenVPNEndpointTests {
         #expect(endpoint.protoLine == "proto \(proto.identifier.lowercased())")
     }
 
-    /// `PacketTunnelProvider.startProxy` greps this line out of the config and parses it
-    /// positionally, so the wire format is a contract between the app and the extension.
+    /// Parsed positionally by `PacketTunnelProvider.startProxy`.
     @Test("Stealth hands the node's ip3 to the proxy over TLS")
     func stealthLocalProxyLine() {
         let info = ProxyInfo(remoteServer: "198.51.100.3", remotePort: nodePort, proxyType: .stunnel)
