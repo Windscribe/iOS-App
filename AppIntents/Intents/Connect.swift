@@ -25,7 +25,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
         Summary("Connect to VPN")
     }
 
-    fileprivate let resolver = ContainerResolver()
+    fileprivate let resolver = ContainerResolver(process: .appIntents)
 
     var logger: FileLogger {
         return resolver.getLogger()

@@ -9,9 +9,10 @@
 import Foundation
 
 protocol FileLogger: Sendable {
-    var logDirectory: URL? { get set }
+    var logDirectory: URL? { get }
     func logDeviceInfo()
     func getLogData() async throws -> String
+    func getLogData(for purpose: LogExportPurpose) async throws -> String
     func logD(_ tag: String, _ message: String)
     func logD(_ tag: String, _ message: String, flushImmediately: Bool)
     func logI(_ tag: String, _ message: String)

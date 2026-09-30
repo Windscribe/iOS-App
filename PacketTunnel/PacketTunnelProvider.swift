@@ -39,7 +39,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider, TunnelCredentialsManaging {
 
     private lazy var container: Container = {
         let container = Container()
-        container.injectCore()
+        container.injectCore(process: .packetTunnel)
         return container
     }()
 

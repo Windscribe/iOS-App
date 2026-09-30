@@ -16,6 +16,7 @@ import WidgetKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    // MARK: - Properties
 
     private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
     private lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
@@ -36,8 +37,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
+#if DEBUG
+    private lazy var debugAlertManager: AlertManager = Assembler.resolve(AlertManager.self)
+    private lazy var debugWindowProvider: WindowProvider = Assembler.resolve(WindowProvider.self)
+
+    private var debugLogBurstObserver: NSObjectProtocol?
+    private var isShowingDebugLogBurstWarning = false
+#endif
+
     func application(_: UIApplication,
                      didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+#if DEBUG
+        observeDebugLogBursts()
+#endif
         migrationRepository.runMigrations()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
@@ -48,6 +60,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
+
+    // MARK: - Private Methods
+
+#if DEBUG
+    private func observeDebugLogBursts() {
+        debugLogBurstObserver = NotificationCenter.default.addObserver(
+            forName: DebugLogBurst.notification,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            let recordCount = notification.userInfo?[DebugLogBurst.recordCountKey] as? Int ?? 0
+            self?.showDebugLogBurstWarning(recordCount: recordCount)
+        }
+    }
+
+    private func showDebugLogBurstWarning(recordCount: Int, attempt: Int = 0) {
+        guard !isShowingDebugLogBurstWarning else { return }
+        guard let viewController = debugWindowProvider.mainWindow?.activeViewController else {
+            guard attempt < 10 else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.showDebugLogBurstWarning(
+                    recordCount: recordCount,
+                    attempt: attempt + 1
+                )
+            }
+            return
+        }
+
+        isShowingDebugLogBurstWarning = true
+        debugAlertManager.showSimpleAlert(
+            viewController: viewController,
+            title: "High Log Volume",
+            message: "The app recorded \(recordCount) logs in one second. Check the debug log for a repeated event.",
+            buttonText: TextsAsset.okay
+        ) { [weak self] in
+            self?.isShowingDebugLogBurstWarning = false
+        }
+    }
+#endif
 
     /// Records app install.
     private func recordInstallIfFirstLoad() {

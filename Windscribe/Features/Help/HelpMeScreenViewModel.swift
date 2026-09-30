@@ -139,7 +139,7 @@ final class HelpMeScreenViewModel {
 
         Task {
             do {
-                let logData = try await logger.getLogData()
+                let logData = try await logger.getLogData(for: .submission)
 
                 var username = sessionProviding.session?.username ?? ""
                 if let session = sessionProviding.session, session.isUserGhost {

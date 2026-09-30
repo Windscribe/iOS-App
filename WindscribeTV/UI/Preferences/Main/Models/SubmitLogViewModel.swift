@@ -48,7 +48,7 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
     func submitDebugLog(username: String? = nil, completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {
         Task {
             do {
-                let logData = try await logger.getLogData()
+                let logData = try await logger.getLogData(for: .submission)
 
                 let username = await MainActor.run {
                     var username = userSessionRepository.sessionModel?.username ?? ""

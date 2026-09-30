@@ -271,7 +271,7 @@ class TVViewModels: Assembly {
 
 class TVViewControllers: Assembly {
     func assemble(container: Swinject.Container) {
-        container.injectCore()
+        container.injectCore(process: .app)
         // swiftlint:disable force_cast
         container.register(MainViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainViewController") as! MainViewController

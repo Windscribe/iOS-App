@@ -13,7 +13,7 @@ import Swinject
 extension Container {
     convenience init(isExt: Bool) {
         self.init()
-        injectCore(ext: isExt)
+        injectCore(process: isExt ? .wireGuardTunnel : .app)
         register(WgCredentials.self) { r in
             WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!, keychainManager: r.resolve(KeychainManager.self)!)
         }.inObjectScope(.container)

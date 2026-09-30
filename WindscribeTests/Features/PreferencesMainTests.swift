@@ -214,6 +214,7 @@ final class PreferencesMainMockLogStoring: LogStoring, @unchecked Sendable {
         debugMessages.append("\(tag): \(message)")
     }
     func getLogData() async throws -> String { "" }
+    func getLogData(for _: LogExportPurpose) async throws -> String { "" }
 }
 
 final class PreferencesMainMockAccountManaging: AccountManaging, @unchecked Sendable {

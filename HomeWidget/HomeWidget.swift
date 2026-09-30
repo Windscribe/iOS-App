@@ -14,7 +14,7 @@ import Swinject
 import WidgetKit
 
 struct Provider: TimelineProvider {
-    let resolver = ContainerResolver()
+    let resolver = ContainerResolver(process: .homeWidget)
 
     fileprivate var logger: FileLogger {
         return resolver.getLogger()

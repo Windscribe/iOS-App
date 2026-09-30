@@ -140,7 +140,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
                 let attestationToken = (try? await deviceAttesting.generateToken()) ?? "unavailable"
                 logger.logI("DeviceAttestation", "reset-token ios \(attestationToken)", flushImmediately: true)
 
-                let logData = try await logger.getLogData()
+                let logData = try await logger.getLogData(for: .submission)
 
                 let username = await MainActor.run {
                     var username = userSessionRepository.sessionModel?.username ?? ""

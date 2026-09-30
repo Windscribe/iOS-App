@@ -11,7 +11,7 @@ import NetworkExtension
 import Swinject
 
 class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
-    private let resolver = ContainerResolver()
+    private let resolver = ContainerResolver(process: .siriIntents)
 
     private lazy var logger: FileLogger = resolver.getLogger()
 

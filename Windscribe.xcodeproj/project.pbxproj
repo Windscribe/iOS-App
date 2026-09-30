@@ -1601,6 +1601,48 @@
 		F4F51A7B2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */; };
 		F4F6224B2E0B22ED00830935 /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
 		F6F2C4F885A04C24BC7AFAF8 /* NetworkSettingsEntryTpe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE18008D9D644F9B38BE5DD /* NetworkSettingsEntryTpe.swift */; };
+		379E1E2182A21A5CDCD7DFCA /* LogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDB91F12AD9CABF1B276F73 /* LogModels.swift */; };
+		72AE72776ADC899ED0C99B7E /* LogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDB91F12AD9CABF1B276F73 /* LogModels.swift */; };
+		916F4A7712ACD77C8F4256F8 /* LogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDB91F12AD9CABF1B276F73 /* LogModels.swift */; };
+		5FD3CDEB31A7F900DFB6BEA6 /* LogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDB91F12AD9CABF1B276F73 /* LogModels.swift */; };
+		5CAC950080E262769D83C35D /* LogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDB91F12AD9CABF1B276F73 /* LogModels.swift */; };
+		E3E52E24E4B72CE81237353C /* LogModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDB91F12AD9CABF1B276F73 /* LogModels.swift */; };
+		36209A250360FEB3F5A226E2 /* LogProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17A90E17D121EAC453188ED /* LogProtocols.swift */; };
+		3ABF8F9307BA9DFA91B149BB /* LogProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17A90E17D121EAC453188ED /* LogProtocols.swift */; };
+		CC54D38C9B9D6B3F506BAC69 /* LogProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17A90E17D121EAC453188ED /* LogProtocols.swift */; };
+		5F32AEA70A416A7F2E110CBE /* LogProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17A90E17D121EAC453188ED /* LogProtocols.swift */; };
+		32A6F591AA7C2B765B667DD4 /* LogProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17A90E17D121EAC453188ED /* LogProtocols.swift */; };
+		00D6F84D854FB8F6ED6444A3 /* LogProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17A90E17D121EAC453188ED /* LogProtocols.swift */; };
+		5FD49A53393154086A532F6B /* LogMessagePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232579552C0D2604AD140405 /* LogMessagePolicy.swift */; };
+		F3649B906DC64E6C3348932E /* LogMessagePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232579552C0D2604AD140405 /* LogMessagePolicy.swift */; };
+		770A25909E09FB0B34FFD19A /* LogMessagePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232579552C0D2604AD140405 /* LogMessagePolicy.swift */; };
+		2BCAC104A9F0B06F5084BFEE /* LogMessagePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232579552C0D2604AD140405 /* LogMessagePolicy.swift */; };
+		62E88DA34EAC7B4F5B3026DE /* LogMessagePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232579552C0D2604AD140405 /* LogMessagePolicy.swift */; };
+		EE74B720A3BF4ED16640F6D1 /* LogMessagePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232579552C0D2604AD140405 /* LogMessagePolicy.swift */; };
+		94062227DAE88E81831CC93F /* BinaryLogRecordCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */; };
+		8E215DD5003DF1D4083250F7 /* BinaryLogRecordCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */; };
+		5A337A59AE9CE22206154B67 /* BinaryLogRecordCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */; };
+		7D8D1E22906BBD118C266336 /* BinaryLogRecordCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */; };
+		E2C38E64F195897C82C2ABF3 /* BinaryLogRecordCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */; };
+		BF9DD468728E01C497B60830 /* BinaryLogRecordCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */; };
+		46B48A86863922C32C616487 /* FileLogSegmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */; };
+		D8E27972489828E0D975086B /* FileLogSegmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */; };
+		CAD9BE5091BAF302D9146883 /* FileLogSegmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */; };
+		3F4953FA83EA324BBE29555A /* FileLogSegmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */; };
+		154FBFD3DB3128A316041D85 /* FileLogSegmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */; };
+		53263A2AD2DDF4B050A25E0A /* FileLogSegmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */; };
+		775D7097B354F62F6502157F /* SegmentedLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */; };
+		7CDF972C63B3AFE19B1A54D9 /* SegmentedLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */; };
+		883C7D5C26290A5D2F1D7A65 /* SegmentedLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */; };
+		EDAA1FCF674585F31324796A /* SegmentedLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */; };
+		83397FCB8DF10A3BB43B0FB8 /* SegmentedLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */; };
+		614043EBAEB69C0C48B683E7 /* SegmentedLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */; };
+		C7D1E72393C36293B91989D7 /* JSONLogExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686EC0E743C36AA044477158 /* JSONLogExporter.swift */; };
+		7E4729588F2E890254F2D961 /* JSONLogExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686EC0E743C36AA044477158 /* JSONLogExporter.swift */; };
+		2BE302B89B6B28AA6D93EBB4 /* JSONLogExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686EC0E743C36AA044477158 /* JSONLogExporter.swift */; };
+		BA5BB423A4E20EBC4E8DE050 /* JSONLogExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686EC0E743C36AA044477158 /* JSONLogExporter.swift */; };
+		660C4085E764F722D0565C54 /* JSONLogExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686EC0E743C36AA044477158 /* JSONLogExporter.swift */; };
+		8C493C348AD7E1003E9932DC /* JSONLogExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686EC0E743C36AA044477158 /* JSONLogExporter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2782,6 +2824,13 @@
 		F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectViewModel.swift; sourceTree = "<group>"; };
 		F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectView.swift; sourceTree = "<group>"; };
 		F500ECFE662E3A1C84E0FF91 /* AdvancedParametersScreenViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdvancedParametersScreenViewModel.swift; sourceTree = "<group>"; };
+		3DDB91F12AD9CABF1B276F73 /* LogModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogModels.swift; sourceTree = "<group>"; };
+		D17A90E17D121EAC453188ED /* LogProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogProtocols.swift; sourceTree = "<group>"; };
+		232579552C0D2604AD140405 /* LogMessagePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogMessagePolicy.swift; sourceTree = "<group>"; };
+		1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryLogRecordCodec.swift; sourceTree = "<group>"; };
+		22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLogSegmentStore.swift; sourceTree = "<group>"; };
+		FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedLogWriter.swift; sourceTree = "<group>"; };
+		686EC0E743C36AA044477158 /* JSONLogExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLogExporter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4296,6 +4345,7 @@
 			children = (
 				92C985992FA3A74900326D64 /* Protocols */,
 				9223E2262FC4AD07007252B6 /* DeviceCheck */,
+				AA4335CD8F86E03D2FAF9026 /* Logging */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -7027,6 +7077,20 @@
 			path = Modules;
 			sourceTree = "<group>";
 		};
+		AA4335CD8F86E03D2FAF9026 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				3DDB91F12AD9CABF1B276F73 /* LogModels.swift */,
+				D17A90E17D121EAC453188ED /* LogProtocols.swift */,
+				232579552C0D2604AD140405 /* LogMessagePolicy.swift */,
+				1F4EF5BE14DCFC318ED9B407 /* BinaryLogRecordCodec.swift */,
+				22BB38C2260A9A4C3B79D7CA /* FileLogSegmentStore.swift */,
+				FA54F0B92E0D7AC4FD673B3C /* SegmentedLogWriter.swift */,
+				686EC0E743C36AA044477158 /* JSONLogExporter.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
 		F4F51A732D9D7E2B00407DE7 /* EmergencyConnect */ = {
 			isa = PBXGroup;
 			children = (
@@ -7781,6 +7845,13 @@
 				59C96D6A2C6A883300546C72 /* LatencyViewModel.swift in Sources */,
 				1ED23F7C2DBBCA9300C7BEE5 /* SelectionViewType.swift in Sources */,
 				59DA7FB72C3D896E00042E57 /* FileLoggerImpl.swift in Sources */,
+				379E1E2182A21A5CDCD7DFCA /* LogModels.swift in Sources */,
+				36209A250360FEB3F5A226E2 /* LogProtocols.swift in Sources */,
+				5FD49A53393154086A532F6B /* LogMessagePolicy.swift in Sources */,
+				94062227DAE88E81831CC93F /* BinaryLogRecordCodec.swift in Sources */,
+				46B48A86863922C32C616487 /* FileLogSegmentStore.swift in Sources */,
+				775D7097B354F62F6502157F /* SegmentedLogWriter.swift in Sources */,
+				C7D1E72393C36293B91989D7 /* JSONLogExporter.swift in Sources */,
 				5998C6252C8807C000558233 /* StaticIPListViewModel.swift in Sources */,
 				599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */,
 				F440BCFF2DE790250057A01F /* MenuCategoryRowType.swift in Sources */,
@@ -8222,6 +8293,13 @@
 				F485CBC12D4D672D0063EA3A /* UIWindow+Extension.swift in Sources */,
 				1E0492F92F51CDC40016B11F /* APIManager+Locations.swift in Sources */,
 				C5A930F92B45A57B0001CFA0 /* FileLoggerImpl.swift in Sources */,
+				72AE72776ADC899ED0C99B7E /* LogModels.swift in Sources */,
+				3ABF8F9307BA9DFA91B149BB /* LogProtocols.swift in Sources */,
+				F3649B906DC64E6C3348932E /* LogMessagePolicy.swift in Sources */,
+				8E215DD5003DF1D4083250F7 /* BinaryLogRecordCodec.swift in Sources */,
+				D8E27972489828E0D975086B /* FileLogSegmentStore.swift in Sources */,
+				7CDF972C63B3AFE19B1A54D9 /* SegmentedLogWriter.swift in Sources */,
+				7E4729588F2E890254F2D961 /* JSONLogExporter.swift in Sources */,
 				9223E22A2FC4AD19007252B6 /* DCDeviceAttestation.swift in Sources */,
 				C580FE1A2B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift in Sources */,
 				92B7B56A2F8D5952006B69DF /* CheckUpdateRepository.swift in Sources */,
@@ -8838,6 +8916,13 @@
 				C52DA5122B63821100E5C571 /* RepositoryErrors.swift in Sources */,
 				C50BB0EE2F3CD65900D6283B /* WSNetErrors.swift in Sources */,
 				C50F20B62B61734400266B23 /* FileLoggerImpl.swift in Sources */,
+				916F4A7712ACD77C8F4256F8 /* LogModels.swift in Sources */,
+				CC54D38C9B9D6B3F506BAC69 /* LogProtocols.swift in Sources */,
+				770A25909E09FB0B34FFD19A /* LogMessagePolicy.swift in Sources */,
+				5A337A59AE9CE22206154B67 /* BinaryLogRecordCodec.swift in Sources */,
+				CAD9BE5091BAF302D9146883 /* FileLogSegmentStore.swift in Sources */,
+				883C7D5C26290A5D2F1D7A65 /* SegmentedLogWriter.swift in Sources */,
+				2BE302B89B6B28AA6D93EBB4 /* JSONLogExporter.swift in Sources */,
 				1E2CC4692F5890830077C82E /* LocationModel.swift in Sources */,
 				1EE640C92F6976F600C7FB29 /* UIConstants+Fields.swift in Sources */,
 				F49C457D2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
@@ -8905,6 +8990,13 @@
 				92EFE9BB2FACE69000B381CB /* WSNetServerAPIType.swift in Sources */,
 				F4433D062E830A340012EA34 /* KeychainManager.swift in Sources */,
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
+				5FD3CDEB31A7F900DFB6BEA6 /* LogModels.swift in Sources */,
+				5F32AEA70A416A7F2E110CBE /* LogProtocols.swift in Sources */,
+				2BCAC104A9F0B06F5084BFEE /* LogMessagePolicy.swift in Sources */,
+				7D8D1E22906BBD118C266336 /* BinaryLogRecordCodec.swift in Sources */,
+				3F4953FA83EA324BBE29555A /* FileLogSegmentStore.swift in Sources */,
+				EDAA1FCF674585F31324796A /* SegmentedLogWriter.swift in Sources */,
+				BA5BB423A4E20EBC4E8DE050 /* JSONLogExporter.swift in Sources */,
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				1EB910AF2F9F7B9D00D04943 /* ServerMachineModel.swift in Sources */,
 				C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */,
@@ -8939,6 +9031,13 @@
 			files = (
 				927445972F61C8A20084C76A /* UIConstants+Fields.swift in Sources */,
 				C5A930FB2B45A5F40001CFA0 /* FileLoggerImpl.swift in Sources */,
+				5CAC950080E262769D83C35D /* LogModels.swift in Sources */,
+				32A6F591AA7C2B765B667DD4 /* LogProtocols.swift in Sources */,
+				62E88DA34EAC7B4F5B3026DE /* LogMessagePolicy.swift in Sources */,
+				E2C38E64F195897C82C2ABF3 /* BinaryLogRecordCodec.swift in Sources */,
+				154FBFD3DB3128A316041D85 /* FileLogSegmentStore.swift in Sources */,
+				83397FCB8DF10A3BB43B0FB8 /* SegmentedLogWriter.swift in Sources */,
+				660C4085E764F722D0565C54 /* JSONLogExporter.swift in Sources */,
 				C52DA5242B638EA400E5C571 /* CustomConfig.swift in Sources */,
 				F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */,
 				C535D29A27E4E85700C08345 /* PreferencesImpl.swift in Sources */,
@@ -9080,6 +9179,13 @@
 				1EB910A42F9F791E00D04943 /* PreferencesImpl+Utils.swift in Sources */,
 				1EB910B52F9F7BFB00D04943 /* SessionKeychainStore.swift in Sources */,
 				C50F20B82B61734600266B23 /* FileLoggerImpl.swift in Sources */,
+				E3E52E24E4B72CE81237353C /* LogModels.swift in Sources */,
+				00D6F84D854FB8F6ED6444A3 /* LogProtocols.swift in Sources */,
+				EE74B720A3BF4ED16640F6D1 /* LogMessagePolicy.swift in Sources */,
+				BF9DD468728E01C497B60830 /* BinaryLogRecordCodec.swift in Sources */,
+				53263A2AD2DDF4B050A25E0A /* FileLogSegmentStore.swift in Sources */,
+				614043EBAEB69C0C48B683E7 /* SegmentedLogWriter.swift in Sources */,
+				8C493C348AD7E1003E9932DC /* JSONLogExporter.swift in Sources */,
 				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,
 				1E60E0282CAD6F5A00623CD5 /* Connect.swift in Sources */,
 				C50F20D32B62110800266B23 /* Bundle+Extension.swift in Sources */,

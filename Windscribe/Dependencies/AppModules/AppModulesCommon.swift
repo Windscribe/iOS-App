@@ -43,7 +43,7 @@ class App: Assembly {
 
 class Network: Assembly {
     func assemble(container: Swinject.Container) {
-        container.injectCore()
+        container.injectCore(process: .app)
         container.register(APIUtilService.self) { r in
             APIUtilServiceImpl(
                 serverAPI: r.resolve(WSNetServerAPIType.self)!,
