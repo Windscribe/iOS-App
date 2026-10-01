@@ -1114,6 +1114,7 @@
 		C59E9C982FE1ACB200FF8A8E /* ReceiptVerificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9C932FE1ACB200FF8A8E /* ReceiptVerificationService.swift */; };
 		C59E9C9C2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9C9B2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift */; };
 		D11900022FF0000000000002 /* ConfigurationsManagerConnectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11900012FF0000000000001 /* ConfigurationsManagerConnectTests.swift */; };
+		C59E9CA12FE1BC5600FF8A8E /* OpenVPNEndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E9CA02FE1BC5600FF8A8E /* OpenVPNEndpointTests.swift */; };
 		7B0BA1BD83314CE099B0B6B6 /* FileLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5379C20530D413C94FAE88C /* FileLoggerTests.swift */; };
 		4CD97279BBD16F785BC85E98 /* SessionRecoverySourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A872C0D8CB82A494A8FF4CF /* SessionRecoverySourceTests.swift */; };
 		C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
@@ -2461,6 +2462,7 @@
 		C59E9C942FE1ACB200FF8A8E /* ReceiptVerificationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptVerificationServiceImpl.swift; sourceTree = "<group>"; };
 		C59E9C9B2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptVerificationServiceTests.swift; sourceTree = "<group>"; };
 		D11900012FF0000000000001 /* ConfigurationsManagerConnectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationsManagerConnectTests.swift; sourceTree = "<group>"; };
+		C59E9CA02FE1BC5600FF8A8E /* OpenVPNEndpointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenVPNEndpointTests.swift; sourceTree = "<group>"; };
 		B5379C20530D413C94FAE88C /* FileLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLoggerTests.swift; sourceTree = "<group>"; };
 		5A872C0D8CB82A494A8FF4CF /* SessionRecoverySourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRecoverySourceTests.swift; sourceTree = "<group>"; };
 		C59FF19E2CB998610072EF70 /* IntentCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentCommon.swift; sourceTree = "<group>"; };
@@ -5438,6 +5440,7 @@
 				B5379C20530D413C94FAE88C /* FileLoggerTests.swift */,
 				5A872C0D8CB82A494A8FF4CF /* SessionRecoverySourceTests.swift */,
 				C59E9C9B2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift */,
+				C59E9CA02FE1BC5600FF8A8E /* OpenVPNEndpointTests.swift */,
 				F40419442D8232460005EF97 /* HTMLParserTests.swift */,
 				F49935422DA9987800108558 /* SoundManagerTests.swift */,
 				927991512F86C766000BB9D0 /* HashAuthManagerTests.swift */,
@@ -8757,6 +8760,7 @@
 				7B0BA1BD83314CE099B0B6B6 /* FileLoggerTests.swift in Sources */,
 				4CD97279BBD16F785BC85E98 /* SessionRecoverySourceTests.swift in Sources */,
 				C59E9C9C2FE1BC5600FF8A8E /* ReceiptVerificationServiceTests.swift in Sources */,
+				C59E9CA12FE1BC5600FF8A8E /* OpenVPNEndpointTests.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,
 				92B7B5C42F92E37E006B69DF /* WifiNetworkRecordTests.swift in Sources */,
