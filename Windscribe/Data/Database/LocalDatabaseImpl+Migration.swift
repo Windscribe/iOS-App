@@ -118,7 +118,7 @@ extension LocalDatabaseImpl {
                         newObject?["linkSpeed"] = "1000"
                     }
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
-                        newObject?["showServerHealth"] = false
+                        newObject?["showServerNetLoad"] = false
                     }
                     migration.enumerateObjects(ofType: Notice.className()) { _, newObject in
                         newObject?["permFree"] = false

@@ -753,6 +753,7 @@
 		92C985A62FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */; };
 		92C985A72FAA84F600326D64 /* RealmKeychainPortMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */; };
 		92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */; };
+		DD1142000000000000000002 /* RealmSchemaMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1142000000000000000001 /* RealmSchemaMigrationTests.swift */; };
 		92C985AB2FABBB2000326D64 /* VPNConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985AA2FABBB2000326D64 /* VPNConnecting.swift */; };
 		92C985AD2FABBB3E00326D64 /* ServerProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985AC2FABBB3E00326D64 /* ServerProviding.swift */; };
 		92C985AF2FABBB4A00326D64 /* CredentialStoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C985AE2FABBB4A00326D64 /* CredentialStoring.swift */; };
@@ -2194,6 +2195,7 @@
 		92C985A32FA3A79E00326D64 /* AboutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTests.swift; sourceTree = "<group>"; };
 		92C985A52FAA84F600326D64 /* RealmKeychainPortMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmKeychainPortMigration.swift; sourceTree = "<group>"; };
 		92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmKeychainPortMigrationTests.swift; sourceTree = "<group>"; };
+		DD1142000000000000000001 /* RealmSchemaMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmSchemaMigrationTests.swift; sourceTree = "<group>"; };
 		92C985AA2FABBB2000326D64 /* VPNConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConnecting.swift; sourceTree = "<group>"; };
 		92C985AC2FABBB3E00326D64 /* ServerProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerProviding.swift; sourceTree = "<group>"; };
 		92C985AE2FABBB4A00326D64 /* CredentialStoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialStoring.swift; sourceTree = "<group>"; };
@@ -5961,6 +5963,7 @@
 				92B7B5DB2F92E5A1006B69DF /* GRDBLocalDatabaseParityTests.swift */,
 				92B7B5E02F92EBCB006B69DF /* RealmToGRDBMigratorGoldenTests.swift */,
 				92C985A82FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift */,
+				DD1142000000000000000001 /* RealmSchemaMigrationTests.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -8810,6 +8813,7 @@
 				92EFE9C42FACEA3B00B381CB /* AdapterStreamEquivalenceTests.swift in Sources */,
 				921ADABB2FEB1A7600A890DC /* MockWSNetInstance.swift in Sources */,
 				92C985A92FAA858D00326D64 /* RealmKeychainPortMigrationTests.swift in Sources */,
+				DD1142000000000000000002 /* RealmSchemaMigrationTests.swift in Sources */,
 				92890E142F7C4917002EAB44 /* MockAntiCensorshipRepository.swift in Sources */,
 				F425B0A02F33C5450046D5E1 /* MockLocalPingManager.swift in Sources */,
 				C0DE10940000000000000002 /* AntiCensorshipScreenViewModelTests.swift in Sources */,
