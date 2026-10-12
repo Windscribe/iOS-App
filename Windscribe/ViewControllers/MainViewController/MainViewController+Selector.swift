@@ -55,7 +55,7 @@ extension MainViewController {
         // Check for ghost account and present account completion screen
         showAccountCompletionForGhostAccount(session: session)
 
-        proIcon.isHidden = !session.isUserPro
+        proIcon.isHidden = !session.isPremium
 
         arrangeListsFooterViews(for: session)
         reloadTableViews()
