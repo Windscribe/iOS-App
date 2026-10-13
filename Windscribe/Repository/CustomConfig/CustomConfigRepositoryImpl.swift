@@ -261,6 +261,21 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         customConfigs.send(models)
     }
 
+    @discardableResult
+    func removeAllCustomConfigs() -> Task<Void, Never> {
+        let configs = localDatabase.getCustomConfigs()
+        logger.logI("CustomConfigRepositoryImpl", "Removing all custom config files.")
+        preferences.deleteAllCustomConfigCredentials()
+        configs.forEach { localDatabase.removeCustomConfig(fileId: $0.id) }
+        let fileDatabase = fileDatabase
+        return Task {
+            for config in configs {
+                let fileExtension = config.protocolType == VPNProtocolType.wireGuard.identifier ? "conf" : "ovpn"
+                try? await fileDatabase.removeFile(path: "\(config.id).\(fileExtension)")
+            }
+        }
+    }
+
     func getCustomConfig(fileId: String) -> CustomConfigModel? {
         guard var model = localDatabase.getCustomConfigs()
             .first(where: { fileId == $0.id }) else {

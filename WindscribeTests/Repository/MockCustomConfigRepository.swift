@@ -31,6 +31,7 @@ final class MockCustomConfigRepository: CustomConfigRepository {
     var saveOpenVPNConfigCallCount = 0
     var removeOpenVPNConfigCallCount = 0
     var removeCustomConfigCallCount = 0
+    var removeAllCustomConfigsCallCount = 0
     var saveOpenVPNCustomConfigCallCount = 0
     var getCustomConfigCallCount = 0
     var saveCustomConfigCallCount = 0
@@ -84,6 +85,14 @@ final class MockCustomConfigRepository: CustomConfigRepository {
         lastRemovedCustomConfigFileId = fileId
         configStorage.removeValue(forKey: fileId)
         updateCustomConfigs()
+    }
+
+    @discardableResult
+    func removeAllCustomConfigs() -> Task<Void, Never> {
+        removeAllCustomConfigsCallCount += 1
+        configStorage.removeAll()
+        updateCustomConfigs()
+        return Task {}
     }
 
     func saveOpenVPNCustomConfig(data: Data, configInfo: OpenVPNConnectionInfo, configuationName: String) async throws -> CustomConfigModel {
@@ -151,6 +160,7 @@ final class MockCustomConfigRepository: CustomConfigRepository {
         saveOpenVPNConfigCallCount = 0
         removeOpenVPNConfigCallCount = 0
         removeCustomConfigCallCount = 0
+        removeAllCustomConfigsCallCount = 0
         saveOpenVPNCustomConfigCallCount = 0
         getCustomConfigCallCount = 0
         saveCustomConfigCallCount = 0

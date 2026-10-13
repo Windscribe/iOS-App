@@ -619,6 +619,44 @@ class CustomConfigRepositoryTests: XCTestCase {
         XCTAssertNil(repository.getCustomConfig(fileId: savedConfig.id))
     }
 
+    func test_removeAllCustomConfigs_shouldRemoveFilesDatabaseEntriesAndCredentials() async throws {
+        let openVPNData = "config".data(using: .utf8)!
+        let connectionInfo = OpenVPNConnectionInfo(
+            serverConfig: openVPNData,
+            ip: "192.168.1.1",
+            port: "443",
+            protocolName: "UDP",
+            username: "user",
+            password: "pass"
+        )
+        let openVPNConfig = try await repository.saveOpenVPNCustomConfig(
+            data: openVPNData,
+            configInfo: connectionInfo,
+            configuationName: "OpenVPN Config"
+        )
+        let wgConfig = CustomConfigModel(
+            id: "wg-test-id",
+            name: "WG Config",
+            serverAddress: "192.168.1.2",
+            protocolType: VPNProtocolType.wireGuard.identifier,
+            port: "51820"
+        )
+        mockLocalDatabase.saveCustomConfig(customConfig: wgConfig)
+        try await mockFileDatabase.saveFile(data: "wg config".data(using: .utf8)!, path: "\(wgConfig.id).conf")
+        let unrelatedPath = "\(wgConfig.id).ovpn"
+        try await mockFileDatabase.saveFile(data: Data(), path: unrelatedPath)
+
+        XCTAssertNotNil(mockPreferences.getCustomConfigCredentials(configId: openVPNConfig.id))
+
+        await repository.removeAllCustomConfigs().value
+
+        XCTAssertFalse(mockFileDatabase.fileExists(path: "\(openVPNConfig.id).ovpn"))
+        XCTAssertFalse(mockFileDatabase.fileExists(path: "\(wgConfig.id).conf"))
+        XCTAssertTrue(mockFileDatabase.fileExists(path: unrelatedPath))
+        XCTAssertTrue(mockLocalDatabase.getCustomConfigs().isEmpty)
+        XCTAssertTrue(mockPreferences.getAllCustomConfigCredentials().isEmpty)
+    }
+
     func test_removeNonExistentConfig_shouldNotCrash() async {
         // Given
         let nonExistentId = "does-not-exist"

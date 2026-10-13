@@ -19,6 +19,9 @@ protocol CustomConfigRepository {
 
     func removeCustomConfig(fileId: String)
 
+    @discardableResult
+    func removeAllCustomConfigs() -> Task<Void, Never>
+
     func saveOpenVPNCustomConfig(data: Data,
                                  configInfo: OpenVPNConnectionInfo,
                                  configuationName: String) async throws -> CustomConfigModel

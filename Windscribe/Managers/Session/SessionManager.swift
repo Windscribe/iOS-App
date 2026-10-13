@@ -52,6 +52,7 @@ class SessionManagerImpl: SessionManager {
     private let vpnStateRepository: VPNStateRepository
     private let antiCensorshipRepository: AntiCensorshipRepository
     private let locationListRepository: LocationListRepository
+    private let customConfigRepository: CustomConfigRepository
 
     private let vpnManager: VPNManager
     private let ssoManager: LegacySSOManaging
@@ -75,6 +76,7 @@ class SessionManagerImpl: SessionManager {
           ssoManager: LegacySSOManaging,
           antiCensorshipRepository: AntiCensorshipRepository,
           locationListRepository: LocationListRepository,
+          customConfigRepository: CustomConfigRepository,
           windowProvider: WindowProvider) {
         self.wgCredentials = wgCredentials
         self.logger = logger
@@ -91,6 +93,7 @@ class SessionManagerImpl: SessionManager {
         self.ssoManager = ssoManager
         self.antiCensorshipRepository = antiCensorshipRepository
         self.locationListRepository = locationListRepository
+        self.customConfigRepository = customConfigRepository
         self.windowProvider = windowProvider
 
         keepSessionUpdated()
@@ -404,6 +407,8 @@ class SessionManagerImpl: SessionManager {
         // Clear Connection and notification count
         preferences.saveConnectionCount(count: 0)
         Assembler.resolve(PushNotificationManager.self).setNotificationCount(count: 0)
+
+        customConfigRepository.removeAllCustomConfigs()
 
         // Clear the user information
         userSessionRepository.clean()

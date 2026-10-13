@@ -320,6 +320,7 @@ class Managers: Assembly {
                                ssoManager: r.resolve(LegacySSOManaging.self)!,
                                antiCensorshipRepository: r.resolve(AntiCensorshipRepository.self)!,
                                locationListRepository: r.resolve(LocationListRepository.self)!,
+                               customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                                windowProvider: r.resolve(WindowProvider.self)!)
         }.inObjectScope(.userScope)
         container.register(ReceiptVerificationService.self) { r in
