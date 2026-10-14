@@ -163,12 +163,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         descriptionLabel.font = .text(size: 30)
         descriptionLabel.isHidden = true
         descriptionLabel.text = ""
-        proIcon.isHidden = true
-        if let premiumOnly = displayingDatacenter?.isPremiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
-            if premiumOnly && !isUserPro {
-                proIcon.isHidden = false
-            }
-        }
+        proIcon.isHidden = !(displayingDatacenter.map { requiresUpgrade(for: $0) } ?? false)
     }
 
     func updateUIForFavourite() {
@@ -189,15 +184,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         updateLatency()
         updateFavouriteState()
 
-        if let premiumOnly = displayingFavDatacenter?.isPremiumOnly, let isUserPro = userSessionRepository.sessionModel?.isPremium {
-            if premiumOnly && !isUserPro {
-                proIcon.isHidden = false
-            } else {
-                proIcon.isHidden = true
-            }
-        } else {
-            proIcon.isHidden = true
-        }
+        proIcon.isHidden = !(displayingFavDatacenter.map { requiresUpgrade(for: $0) } ?? false)
     }
 
     func updetaUIForStaticIP() {
@@ -278,19 +265,15 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
-                if let premiumOnly = displayingFavDatacenter?.isPremiumOnly,
-                   let isUserPro = userSessionRepository.sessionModel?.isPremium,
-                   favButton.isHidden == false {
-                    if premiumOnly && !isUserPro {
-                        descriptionLabel.text = TextsAsset.upgrade
-                    }
+                if let favDatacenter = displayingFavDatacenter,
+                   favButton.isHidden == false,
+                   requiresUpgrade(for: favDatacenter) {
+                    descriptionLabel.text = TextsAsset.upgrade
                 }
-                if let premiumOnly = displayingDatacenter?.isPremiumOnly,
-                   let isUserPro = userSessionRepository.sessionModel?.isPremium,
-                   favButton.isHidden == false {
-                    if premiumOnly && !isUserPro {
-                        descriptionLabel.text = TextsAsset.upgrade
-                    }
+                if let datacenter = displayingDatacenter,
+                   favButton.isHidden == false,
+                   requiresUpgrade(for: datacenter) {
+                    descriptionLabel.text = TextsAsset.upgrade
                 }
 
             } else if favButton.isFocused {
@@ -312,7 +295,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         displayingDatacenter = datacenter
         favButton.isHidden = false
         connectButtonTrailing.constant = 50
-        proIcon.isHidden = !datacenter.isPremiumOnly || (userSessionRepository.sessionModel?.isPremium ?? false)
+        proIcon.isHidden = !requiresUpgrade(for: datacenter)
         let city = datacenter.city
         let nick = datacenter.nick
         let fullText = "\(city) \(nick)"
@@ -407,6 +390,13 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     // MARK: - Private Helpers
+
+    private func requiresUpgrade(for datacenter: DatacenterModel) -> Bool {
+        guard let session = userSessionRepository.sessionModel,
+              datacenter.isPremiumOnly,
+              !session.isPremium else { return false }
+        return !userSessionRepository.canAccesstoProLocation(locationId: datacenter.locationId)
+    }
 
     private func updateFavouriteState() {
         let datacenter = displayingFavDatacenter ?? displayingDatacenter

@@ -627,12 +627,11 @@ class MainViewController: PreferredFocusedViewController {
 
 extension MainViewController: LocationsListTableViewDelegate {
     func setSelectedLocationAndDatacenter(location: LocationModel, datacenter: DatacenterModel) {
-        if let isUserPro = userSessionRepository.sessionModel?.isPremium {
-            if datacenter.isPremiumOnly && !isUserPro {
-                router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
-            } else {
-                serverListViewModel.setSelectedLocationAndDatacenter(location: location, datacenter: datacenter)
-            }
+        guard userSessionRepository.sessionModel != nil else { return }
+        if datacenter.isPremiumOnly && !userSessionRepository.canAccesstoProLocation(location: location) {
+            router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
+        } else {
+            serverListViewModel.setSelectedLocationAndDatacenter(location: location, datacenter: datacenter)
         }
     }
 
