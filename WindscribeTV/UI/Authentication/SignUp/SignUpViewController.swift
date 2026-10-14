@@ -97,6 +97,7 @@ class SignUpViewController: PreferredFocusedViewController {
 
     func bindView() {
         viewModel.showLoadingView
+            .receive(on: DispatchQueue.main)
             .sink { [self] show in
                 if show {
                     showLoading()
@@ -111,11 +112,13 @@ class SignUpViewController: PreferredFocusedViewController {
             }
             .store(in: &cancellables)
         viewModel.failedState
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 self?.setFailureState(state: state)
             }
             .store(in: &cancellables)
         viewModel.routeTo
+            .receive(on: DispatchQueue.main)
             .sink { [self] _ in
                 self.logger.logD("SignUpViewController", "Moving to home screen.")
                 router.routeTo(to: RouteID.home, from: self)

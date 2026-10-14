@@ -344,7 +344,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func prepareUserData(ignoreError: Bool = false) {
-        Task {
+        Task { @MainActor in
             do {
                 try await userDataRepository.prepareUserData()
 

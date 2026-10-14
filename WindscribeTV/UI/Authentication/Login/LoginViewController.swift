@@ -274,6 +274,7 @@ class LoginViewController: PreferredFocusedViewController {
             .store(in: &cancellables)
         viewModel.failedState
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 switch state {
                 case let .username(error), let .network(error), let .api(error), let .twoFa(error), let .loginCode(error):
@@ -286,6 +287,7 @@ class LoginViewController: PreferredFocusedViewController {
             }
             .store(in: &cancellables)
         viewModel.show2faCodeField
+            .receive(on: DispatchQueue.main)
             .sink { [self] show in
                 if show {
                     is2FA = show

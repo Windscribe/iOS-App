@@ -151,15 +151,23 @@ class LoginViewModelImpl: LoginViewModel {
 
                 // No captcha required, proceed with direct login
                 self.logger.logD("LoginViewModel", "AuthToken succeeded. Logging in with secureToken.")
-                let session = try await self.apiCallManager.login(
-                    username: username,
-                    password: password,
-                    code2fa: twoFactorCode ?? "",
-                    secureToken: response.data.token,
-                    captchaSolution: "",
-                    captchaTrailX: [],
-                    captchaTrailY: []
-                )
+                let session: SessionModel
+                do {
+                    session = try await self.apiCallManager.login(
+                        username: username,
+                        password: password,
+                        code2fa: twoFactorCode ?? "",
+                        secureToken: response.data.token,
+                        captchaSolution: "",
+                        captchaTrailX: [],
+                        captchaTrailY: []
+                    )
+                } catch {
+                    await MainActor.run {
+                        self.handleLoginError(error)
+                    }
+                    return
+                }
 
                 self.handleLoginSuccess(session: session)
             } catch {
@@ -345,7 +353,7 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     private func prepareUserData() {
-        Task {
+        Task { @MainActor in
             do {
                 try await userDataRepository.prepareUserData()
 
