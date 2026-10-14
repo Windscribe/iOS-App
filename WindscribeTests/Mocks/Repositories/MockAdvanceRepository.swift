@@ -14,6 +14,7 @@ class MockAdvanceRepository: AdvanceRepository {
     // MARK: - Mock Properties
     var countryOverrideToReturn = "CountryOverride"
     var forcedNodeToReturn = "ForceNode"
+    var forcedServerToReturn: String?
     var pingTypeToReturn: Int32 = 0
 
     // MARK: - AdvanceRepository Implementation
@@ -31,7 +32,7 @@ class MockAdvanceRepository: AdvanceRepository {
     }
 
     func getForcedServer() -> String? {
-        nil
+        forcedServerToReturn
     }
 
     // MARK: - Test Helpers
@@ -39,6 +40,7 @@ class MockAdvanceRepository: AdvanceRepository {
     func reset() {
         countryOverrideToReturn = "CountryOverride"
         forcedNodeToReturn = "ForceNode"
+        forcedServerToReturn = nil
         pingTypeToReturn = 0
     }
 }

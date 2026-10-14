@@ -268,6 +268,8 @@ class LocationListRepositoryImpl: LocationListRepository {
             inventory.disabled.forEach { disabled in
                 currentServers.removeAll(where: { $0.id == disabled.id })
             }
+            let enabledServerIds = Set(inventory.enabled.map(\.id))
+            currentServers.removeAll(where: { enabledServerIds.contains($0.id) })
             currentServers.append(contentsOf: inventory.enabled)
 
             self.rawServers = currentServers

@@ -386,6 +386,7 @@ extension ConfigurationsManager {
     ///
     private func geServerFrom(datacenterId: Int) throws -> ServerMachineModel {
         let servers = locationListRepository.getServers(for: datacenterId)
+            .filter { !$0.forceDisconnect }
         if servers.isEmpty {
             throw VPNConfigurationErrors.noValidServerFound
         } else {

@@ -20,6 +20,7 @@ struct ServerMachineRecord: Codable, FetchableRecord, PersistableRecord, Equatab
     let weight: Int
     let netLoad: Int
     let sclass: Int
+    let forceDisconnect: Bool
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -32,6 +33,7 @@ struct ServerMachineRecord: Codable, FetchableRecord, PersistableRecord, Equatab
         case weight
         case netLoad      = "net_load"
         case sclass
+        case forceDisconnect = "force_disconnect"
     }
 
     // MARK: - Domain ↔ Record
@@ -47,6 +49,7 @@ struct ServerMachineRecord: Codable, FetchableRecord, PersistableRecord, Equatab
         weight       = model.weight
         netLoad      = model.netLoad
         sclass       = model.sclass
+        forceDisconnect = model.forceDisconnect
     }
 
     func toModel() -> ServerMachineModel {
@@ -60,7 +63,8 @@ struct ServerMachineRecord: Codable, FetchableRecord, PersistableRecord, Equatab
             datacenterId: datacenterId,
             weight:      weight,
             netLoad:     netLoad,
-            sclass:      sclass
+            sclass:      sclass,
+            forceDisconnect: forceDisconnect
         )
     }
 }

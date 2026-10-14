@@ -266,7 +266,7 @@ class ConnectionViewModel: ConnectionViewModelType {
             }
             .store(in: &cancellables)
 
-        locationListRepository.datacenterListSubject
+        locationListRepository.serverListSubject
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.checkForForceDisconnect()

@@ -191,13 +191,20 @@ class LocationsManagerImpl: LocationsManager {
         guard !locationListRepository.currentServerModels.isEmpty else {
             return false
         }
-        if locationListRepository.getServers(for: datacenterId).isEmpty {
-            if let sisterLocationId = getSisterLocationId(from: datacenterId) {
-                saveLastConnectionTarget(with: "\(sisterLocationId)")
-                return true
-            }
+        let servers = locationListRepository.getServers(for: datacenterId)
+        if servers.isEmpty {
+            return moveToSisterLocation(from: datacenterId)
         }
-        return false
+        guard let currentHostname = preferences.getLastNodeIP(),
+              servers.contains(where: {
+                  $0.forceDisconnect && $0.hostname.areSubdomainsEqual(other: currentHostname)
+              }) else {
+            return false
+        }
+        if servers.contains(where: { !$0.forceDisconnect }) {
+            return true
+        }
+        return moveToSisterLocation(from: datacenterId)
     }
 
     func saveLastConnectionTarget(with targetId: String) {
@@ -337,9 +344,20 @@ extension LocationsManagerImpl {
         guard !locations.isEmpty else { return nil }
         let location = locations.first { $0.datacenters.first { datacenterId == $0.id } != nil }
         guard let safeLocation = location else { return nil }
-        let datacenter = safeLocation.datacenters.filter { datacenterId != $0.id }
+        let datacenter = safeLocation.datacenters.filter {
+            datacenterId != $0.id &&
+                locationListRepository.getServers(for: $0.id).contains(where: { !$0.forceDisconnect })
+        }
             .randomElement()
         return datacenter?.id
+    }
+
+    private func moveToSisterLocation(from datacenterId: Int) -> Bool {
+        guard let sisterLocationId = getSisterLocationId(from: datacenterId) else {
+            return false
+        }
+        saveLastConnectionTarget(with: "\(sisterLocationId)")
+        return true
     }
 
     func saveLastConnectionTarget(with locationId: String, shouldReconnect: Bool) {

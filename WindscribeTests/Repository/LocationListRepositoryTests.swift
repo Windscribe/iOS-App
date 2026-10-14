@@ -308,6 +308,39 @@ class LocationListRepositoryTests: XCTestCase {
         }
     }
 
+    func testInventoryDeltaReplacesExistingServerWithForceDisconnectFlag() async throws {
+        let location = makeLocation(
+            id: 1,
+            name: "Canada",
+            sortOrder: 10,
+            datacenters: [makeDatacenter(id: 11, locationId: 1)]
+        )
+        let activeServer = makeServer(id: 101, dcId: 11)
+        mockAPIManager.mockLocationList = LocationsListModel(locations: [location])
+        mockAPIManager.mockServerList = ServerMachinesListModel(servers: [activeServer], revision: 1, backup: 0)
+        try await repository.updateAll()
+
+        let delta = try JSONDecoder().decode(
+            ServerInventoryModel.self,
+            from: Data(
+                #"{"action":"delta","enabled":[{"id":101,"host":"host-101.windscribe.com","dc_id":11,"fd":1}],"disabled":[],"revision":2}"#.utf8
+            )
+        )
+        let expectation = expectation(description: "Delta published")
+        repository.serverListSubject
+            .dropFirst()
+            .first()
+            .sink { _ in expectation.fulfill() }
+            .store(in: &cancellables)
+
+        repository.updateInventory(with: delta)
+
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(repository.currentServerModels.count, 1)
+        XCTAssertTrue(repository.currentServerModels[0].forceDisconnect)
+        XCTAssertTrue(repository.currentDatacenterModels[0].servers[0].forceDisconnect)
+    }
+
     func testFavouritsStartEmpty() async {
         // Then
         XCTAssertEqual(repository.favouriteListSubject.value.count, 0)
@@ -439,4 +472,137 @@ extension LocationListRepositoryTests {
 
         return [region]
     }
+}
+
+final class LocationsManagerForceDisconnectTests: XCTestCase {
+
+    // MARK: - Tests
+
+    func testCurrentForceDisconnectNodeReconnectsWithinDatacenter() {
+        let draining = makeServer(id: 1, hostname: "draining.example.com", datacenterId: 101, forceDisconnect: true)
+        let active = makeServer(id: 2, hostname: "active.example.com", datacenterId: 101)
+        let context = makeSUT(currentHostname: draining.hostname, servers: [draining, active])
+
+        XCTAssertTrue(context.manager.checkForForceDisconnect())
+        XCTAssertEqual(context.preferences.mockLastSelectedLocation, "101")
+    }
+
+    func testUnrelatedForceDisconnectNodeDoesNotReconnect() {
+        let current = makeServer(id: 1, hostname: "current.example.com", datacenterId: 101)
+        let draining = makeServer(id: 2, hostname: "draining.example.com", datacenterId: 101, forceDisconnect: true)
+        let context = makeSUT(currentHostname: current.hostname, servers: [current, draining])
+
+        XCTAssertFalse(context.manager.checkForForceDisconnect())
+        XCTAssertEqual(context.preferences.mockLastSelectedLocation, "101")
+    }
+
+    func testCurrentForceDisconnectNodeMovesToEligibleSisterDatacenter() {
+        let draining = makeServer(id: 1, hostname: "draining.example.com", datacenterId: 101, forceDisconnect: true)
+        let sister = makeServer(id: 2, hostname: "sister.example.com", datacenterId: 102)
+        let context = makeSUT(currentHostname: draining.hostname, servers: [draining, sister])
+
+        XCTAssertTrue(context.manager.checkForForceDisconnect())
+        XCTAssertEqual(context.preferences.mockLastSelectedLocation, "102")
+    }
+
+    func testCurrentForceDisconnectNodeStaysConnectedWhenNoEligibleServerExists() {
+        let draining = makeServer(id: 1, hostname: "draining.example.com", datacenterId: 101, forceDisconnect: true)
+        let context = makeSUT(currentHostname: draining.hostname, servers: [draining], includeSister: false)
+
+        XCTAssertFalse(context.manager.checkForForceDisconnect())
+        XCTAssertEqual(context.preferences.mockLastSelectedLocation, "101")
+    }
+
+    // MARK: - Helpers
+
+    private func makeSUT(
+        currentHostname: String,
+        servers: [ServerMachineModel],
+        includeSister: Bool = true
+    ) -> (manager: LocationsManagerImpl, preferences: MockPreferences) {
+        let preferences = MockPreferences()
+        preferences.mockLastSelectedLocation = "101"
+        preferences.mockLastNodeIP = currentHostname
+
+        var datacenters = [makeDatacenter(id: 101, locationId: 1)]
+        if includeSister {
+            datacenters.append(makeDatacenter(id: 102, locationId: 1))
+        }
+        let location = LocationModel(
+            id: 1,
+            name: "Canada",
+            countryCode: "CA",
+            shortName: "CA",
+            sortOrder: 1,
+            continent: "North America",
+            datacenters: datacenters
+        )
+
+        let locationListRepository = MockLocationListRepository()
+        locationListRepository.locationListSubject.send([location])
+        locationListRepository.datacenterListSubject.send(datacenters)
+        locationListRepository.serverListSubject.send(servers)
+
+        let manager = LocationsManagerImpl(
+            customConfigRepository: MockCustomConfigRepository(),
+            preferences: preferences,
+            logger: MockLogger(),
+            languageManager: ForceDisconnectLanguageManager(),
+            userSessionRepository: MockUserSessionRepository(),
+            locationListRepository: locationListRepository,
+            staticIpRepository: MockStaticIpRepository()
+        )
+        return (manager, preferences)
+    }
+
+    private func makeDatacenter(id: Int, locationId: Int) -> DatacenterModel {
+        var datacenter = DatacenterModel(
+            id: id,
+            city: "City\(id)",
+            nick: "Nick",
+            iata: "",
+            status: 1,
+            gps: "",
+            tz: "America/Toronto",
+            p2p: 0,
+            isPremium: 0,
+            wgPubkey: "",
+            wgEndpoint: "",
+            ovpnX509: "",
+            linkSpeed: 0
+        )
+        datacenter.locationId = locationId
+        return datacenter
+    }
+
+    private func makeServer(
+        id: Int,
+        hostname: String,
+        datacenterId: Int,
+        forceDisconnect: Bool = false
+    ) -> ServerMachineModel {
+        ServerMachineModel(
+            id: id,
+            hostname: hostname,
+            ip: "192.0.2.\(id)",
+            ip2: "198.51.100.\(id)",
+            ip3: "203.0.113.\(id)",
+            ipv6: 0,
+            datacenterId: datacenterId,
+            weight: 100,
+            netLoad: 10,
+            sclass: 1,
+            forceDisconnect: forceDisconnect
+        )
+    }
+}
+
+private final class ForceDisconnectLanguageManager: LanguageManager {
+    let activelanguage = CurrentValueSubject<Languages, Never>(.english)
+
+    func setAppLanguage() {}
+    func setLanguage(language: Languages) {
+        activelanguage.send(language)
+    }
+    func getCurrentLanguage() -> Languages { .english }
 }

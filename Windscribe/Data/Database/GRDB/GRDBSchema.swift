@@ -69,6 +69,11 @@ enum GRDBSchema {
             try createUnblockWgParams(db)
             try createPingData(db)
         }
+        migrator.registerMigration("v2-server-force-disconnect") { db in
+            try db.alter(table: Tables.serverMachine) { t in
+                t.add(column: "force_disconnect", .integer).notNull().defaults(to: 0)
+            }
+        }
         return migrator
     }
 

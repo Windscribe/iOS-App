@@ -276,22 +276,58 @@ final class ConfigurationsManagerAccessValidationTests: XCTestCase {
         XCTAssertNil(receivedError)
     }
 
-    private func makeSUT() -> ConfigurationsManager {
+    func testForcedServerIgnoresForceDisconnectNode() async throws {
+        let draining = makeServer(id: 1, hostname: "draining.example.com", forceDisconnect: true)
+        let active = makeServer(id: 2, hostname: "active.example.com")
+        let sut = makeSUT(servers: [draining, active], forcedServer: draining.hostname)
+
+        let configuration = try await buildIKEv2Config(sut)
+
+        XCTAssertEqual(configuration.hostname, active.hostname)
+    }
+
+    func testPinnedServerIgnoresForceDisconnectNode() async throws {
+        let draining = makeServer(id: 1, hostname: "draining.example.com", forceDisconnect: true)
+        let active = makeServer(id: 2, hostname: "active.example.com")
+        let sut = makeSUT(servers: [draining, active], pinnedServer: draining.hostname)
+
+        let configuration = try await buildIKEv2Config(sut)
+
+        XCTAssertEqual(configuration.hostname, active.hostname)
+    }
+
+    func testRandomSelectionIgnoresForceDisconnectNode() async throws {
+        let draining = makeServer(id: 1, hostname: "draining.example.com", forceDisconnect: true)
+        let active = makeServer(id: 2, hostname: "active.example.com")
+        let sut = makeSUT(servers: [draining, active])
+
+        let configuration = try await buildIKEv2Config(sut)
+
+        XCTAssertEqual(configuration.hostname, active.hostname)
+    }
+
+    func testAllForceDisconnectNodesFailSelection() async {
+        let draining = makeServer(id: 1, hostname: "draining.example.com", forceDisconnect: true)
+        let sut = makeSUT(servers: [draining])
+
+        do {
+            _ = try await buildIKEv2Config(sut)
+            XCTFail("Expected server selection to fail")
+        } catch VPNConfigurationErrors.noValidServerFound {
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    private func makeSUT(
+        servers: [ServerMachineModel]? = nil,
+        forcedServer: String? = nil,
+        pinnedServer: String? = nil
+    ) -> ConfigurationsManager {
         let preferences = MockPreferences()
         preferences.mockPrivacyPopupAccepted = true
 
-        let server = ServerMachineModel(
-            id: 1,
-            hostname: "pro-location-001.windscribe.com",
-            ip: "192.0.2.1",
-            ip2: "192.0.2.2",
-            ip3: "192.0.2.3",
-            ipv6: 0,
-            datacenterId: 101,
-            weight: 100,
-            netLoad: 10,
-            sclass: 1
-        )
+        let servers = servers ?? [makeServer(id: 1, hostname: "pro-location-001.windscribe.com")]
 
         var datacenter = DatacenterModel(
             id: 101,
@@ -309,7 +345,7 @@ final class ConfigurationsManagerAccessValidationTests: XCTestCase {
             linkSpeed: 1000
         )
         datacenter.locationId = 1
-        datacenter.servers = [server]
+        datacenter.servers = servers
 
         let location = LocationModel(
             id: 1,
@@ -331,13 +367,27 @@ final class ConfigurationsManagerAccessValidationTests: XCTestCase {
         let locationListRepository = MockLocationListRepository()
         locationListRepository.locationListSubject.send([location])
         locationListRepository.datacenterListSubject.send([datacenter])
-        locationListRepository.serverListSubject.send([server])
+        locationListRepository.serverListSubject.send(servers)
+        if let pinnedServer {
+            locationListRepository.saveFavorite(
+                for: FavouriteModel(id: "101", pinnedNodeHostname: pinnedServer)
+            )
+        }
+
+        let advanceRepository = MockAdvanceRepository()
+        advanceRepository.forcedServerToReturn = forcedServer
+
+        let credentialsRepository = MockCredentialsRepository()
+        credentialsRepository.ikev2Crendentials = ServerCredentialsModel(
+            username: "dXNlcg==",
+            password: "cGFzc3dvcmQ="
+        )
 
         return ConfigurationsManager(
             logger: MockLogger(),
             keychainDb: ConfigurationsManagerAccessKeyChainDatabase(),
             fileDatabase: MockFileDatabase(),
-            advanceRepository: MockAdvanceRepository(),
+            advanceRepository: advanceRepository,
             wgRepository: ConfigurationsManagerAccessWireguardConfigRepository(),
             wgCredentials: MockWgCredentials(),
             preferences: preferences,
@@ -347,17 +397,53 @@ final class ConfigurationsManagerAccessValidationTests: XCTestCase {
             locationListRepository: locationListRepository,
             bridgeAPI: MockWSNetBridgeAPI(),
             bridgeApiRepository: ConfigurationsManagerAccessBridgeApiRepository(),
-            credentialsRepository: MockCredentialsRepository(),
+            credentialsRepository: credentialsRepository,
             staticIpRepository: MockStaticIpRepository(),
             customConfigRepository: MockCustomConfigRepository(),
             antiCensorshipRepository: MockAntiCensorshipRepository()
         )
     }
+
+    private func makeServer(
+        id: Int,
+        hostname: String,
+        forceDisconnect: Bool = false
+    ) -> ServerMachineModel {
+        ServerMachineModel(
+            id: id,
+            hostname: hostname,
+            ip: "192.0.2.\(id)",
+            ip2: "198.51.100.\(id)",
+            ip3: "203.0.113.\(id)",
+            ipv6: 0,
+            datacenterId: 101,
+            weight: 100,
+            netLoad: 10,
+            sclass: 1,
+            forceDisconnect: forceDisconnect
+        )
+    }
+
+    private func buildIKEv2Config(_ sut: ConfigurationsManager) async throws -> IKEv2VPNConfiguration {
+        let configuration = try await sut.buildConfig(
+            location: "101",
+            proto: VPNProtocolType.iKEv2.identifier,
+            port: "500",
+            userSettings: VPNUserSettings(
+                killSwitch: false,
+                allowLan: false,
+                isRFC: false,
+                isCircumventCensorshipEnabled: false,
+                onDemandRules: []
+            )
+        )
+        return try XCTUnwrap(configuration as? IKEv2VPNConfiguration)
+    }
 }
 
 private final class ConfigurationsManagerAccessKeyChainDatabase: KeyChainDatabase {
     func save(username: String, password: String) {}
-    func retrieve(username: String) -> Data? { nil }
+    func retrieve(username: String) -> Data? { Data([1]) }
     func isGhostAccountCreated() -> Bool { false }
     func setGhostAccountCreated() {}
 }

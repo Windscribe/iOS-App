@@ -53,6 +53,7 @@ struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
     let weight: Int
     let netLoad: Int
     let sclass: Int
+    let forceDisconnect: Bool
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -65,6 +66,7 @@ struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
         case weight
         case netLoad = "net_load"
         case sclass = "s_class"
+        case forceDisconnect = "fd"
     }
 
     init(from decoder: Decoder) throws {
@@ -79,6 +81,11 @@ struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
         weight = try container.decodeIfPresent(Int.self, forKey: .weight) ?? 0
         netLoad = try container.decodeIfPresent(Int.self, forKey: .netLoad) ?? 0
         sclass = try container.decodeIfPresent(Int.self, forKey: .sclass) ?? 0
+        if let flag = try? container.decode(Int.self, forKey: .forceDisconnect) {
+            forceDisconnect = flag == 1
+        } else {
+            forceDisconnect = try container.decodeIfPresent(Bool.self, forKey: .forceDisconnect) ?? false
+        }
     }
 
     init(id: Int,
@@ -90,7 +97,8 @@ struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
          datacenterId: Int,
          weight: Int,
          netLoad: Int,
-         sclass: Int) {
+         sclass: Int,
+         forceDisconnect: Bool = false) {
         self.id = id
         self.hostname = hostname
         self.ip = ip
@@ -101,6 +109,7 @@ struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
         self.weight = weight
         self.netLoad = netLoad
         self.sclass = sclass
+        self.forceDisconnect = forceDisconnect
     }
 
     init(from object: ServerMachineObject) {
@@ -114,6 +123,7 @@ struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
         self.weight = object.weight
         self.netLoad = object.netLoad
         self.sclass = object.sclass
+        self.forceDisconnect = false
     }
 
     init(from node: NodeModel) {
@@ -127,6 +137,7 @@ struct ServerMachineModel: Codable, Equatable, Sendable, Hashable {
         self.weight = node.weight
         self.netLoad = 0
         self.sclass = 0
+        self.forceDisconnect = node.forceDisconnect
     }
 }
 
