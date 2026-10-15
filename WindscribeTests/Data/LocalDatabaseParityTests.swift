@@ -623,6 +623,19 @@ class LocalDatabaseContractTests: XCTestCase {
         XCTAssertEqual(found?.ip, "203.0.113.1")
     }
 
+    func testServerMachinesSaveReplacesStoredList() throws {
+        try skip()
+        let kept = ServerMachineModel(id: 701, hostname: "kept.example.com", ip: "198.51.100.1", ip2: "", ip3: "",
+                                      ipv6: 0, datacenterId: 10, weight: 1, netLoad: 0, sclass: 0)
+        let removed = ServerMachineModel(id: 702, hostname: "removed.example.com", ip: "198.51.100.2", ip2: "", ip3: "",
+                                         ipv6: 0, datacenterId: 10, weight: 1, netLoad: 0, sclass: 0)
+        sut.saveServerMachines(serverMachines: [kept, removed])
+
+        sut.saveServerMachines(serverMachines: [kept])
+
+        XCTAssertEqual(sut.getServerMachines()?.map(\.id), [701])
+    }
+
     func testServerMachinesPublisherEmits() throws {
         try skip()
         let exp = expectation(description: "server machines publisher emits after save")

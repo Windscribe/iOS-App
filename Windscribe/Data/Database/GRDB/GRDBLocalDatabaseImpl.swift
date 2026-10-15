@@ -114,6 +114,7 @@ class GRDBLocalDatabaseImpl: LocalDatabase {
     func saveServerMachines(serverMachines: [ServerMachineModel]) {
         do {
             try dbQueue.write { db in
+                try ServerMachineRecord.deleteAll(db)
                 for machine in serverMachines {
                     try ServerMachineRecord(from: machine).save(db)
                 }

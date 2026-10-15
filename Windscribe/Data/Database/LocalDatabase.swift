@@ -27,6 +27,7 @@ protocol LocalDatabase {
 
     func getServerMachines() -> [ServerMachineModel]?
     func getServerMachinesPublisher() -> AnyPublisher<[ServerMachineModel], Never>
+    /// Replaces the stored server list; machines not in `serverMachines` are deleted.
     func saveServerMachines(serverMachines: [ServerMachineModel])
 
     // MARK: Before Modelization of Database

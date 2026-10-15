@@ -55,8 +55,17 @@ class LocalDatabaseImpl: LocalDatabase {
     }
 
     func saveServerMachines(serverMachines: [ServerMachineModel]) {
-        let objects = serverMachines.map { ServerMachineObject(from: $0) }
-        return updateRealmObjects(objects: objects)
+        do {
+            let realm = try Realm()
+            try realm.safeWrite {
+                realm.delete(realm.objects(ServerMachineObject.self))
+                for model in serverMachines {
+                    realm.add(ServerMachineObject(from: model), update: .modified)
+                }
+            }
+        } catch {
+            logger.logE("LocalDatabaseImpl", "Failed to save server machines: \(error.localizedDescription)")
+        }
     }
 
     // MARK: - Before Modelization of Database

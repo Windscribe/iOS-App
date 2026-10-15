@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import GRDB
 import Swinject
 @testable import Windscribe
 import XCTest
@@ -339,6 +340,58 @@ class LocationListRepositoryTests: XCTestCase {
         XCTAssertEqual(repository.currentServerModels.count, 1)
         XCTAssertTrue(repository.currentServerModels[0].forceDisconnect)
         XCTAssertTrue(repository.currentDatacenterModels[0].servers[0].forceDisconnect)
+    }
+
+    func testInventoryDeltaDisabledServerIsNotRestoredFromDatabase() async throws {
+        let queue = try DatabaseQueue()
+        try GRDBSchema.makeMigrator().migrate(queue)
+        let database = GRDBLocalDatabaseImpl(logger: mockLogger, preferences: mockPreferences, dbQueue: queue)
+        let sut = LocationListRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: database,
+            logger: mockLogger,
+            antiCensorshipRepository: mockAntiCensorshipRepository,
+            preferences: mockPreferences
+        )
+        mockAPIManager.mockLocationList = LocationsListModel(locations: [makeLocation(
+            id: 1,
+            name: "Canada",
+            sortOrder: 10,
+            datacenters: [makeDatacenter(id: 11, locationId: 1)]
+        )])
+        mockAPIManager.mockServerList = ServerMachinesListModel(
+            servers: [makeServer(id: 101, dcId: 11), makeServer(id: 102, dcId: 11)],
+            revision: 1,
+            backup: 0
+        )
+        try await sut.updateAll()
+
+        // 999 is unknown locally and must be ignored.
+        let delta = try JSONDecoder().decode(
+            ServerInventoryModel.self,
+            from: Data(#"{"action":"delta","enabled":[],"disabled":[{"id":102},{"id":999}],"revision":2}"#.utf8)
+        )
+        let expectation = expectation(description: "Delta published")
+        sut.serverListSubject
+            .dropFirst()
+            .first()
+            .sink { _ in expectation.fulfill() }
+            .store(in: &cancellables)
+
+        sut.updateInventory(with: delta)
+
+        await fulfillment(of: [expectation], timeout: 1.0)
+        XCTAssertEqual(sut.currentServerModels.map(\.id), [101])
+        XCTAssertEqual(database.getServerMachines()?.map(\.id), [101])
+
+        let relaunched = LocationListRepositoryImpl(
+            apiManager: mockAPIManager,
+            localDatabase: database,
+            logger: mockLogger,
+            antiCensorshipRepository: mockAntiCensorshipRepository,
+            preferences: mockPreferences
+        )
+        XCTAssertEqual(relaunched.currentServerModels.map(\.id), [101])
     }
 
     func testFavouritsStartEmpty() async {
