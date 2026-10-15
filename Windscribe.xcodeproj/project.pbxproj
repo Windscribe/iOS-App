@@ -10645,7 +10645,7 @@
 			repositoryURL = "https://github.com/bradleyandrew/realm-swift.git";
 			requirement = {
 				kind = revision;
-				revision = befdfa0694a16202d5ea4712361fc8b124e578aa;
+				revision = e6ca5f0b5bed60240bd86c3e17b3a02c097369c2;
 			};
 		};
 		1E0A6DBE2D7889170075B8F5 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
