@@ -20,6 +20,11 @@ extension VPNManagerImpl {
         DispatchQueue.main.async {
             self.getVPNConnectionInfo(completion: { [self] info in
                 guard let info = info else {
+                    // No system profile exists, for example after the first save failed.
+                    // Publish disconnected so the status stream re-evaluates the configuration state.
+                    if self.vpnStateRepository.configurationState == .initial {
+                        self.vpnStateRepository.resetVPNInfoToDisconnected()
+                    }
                     return
                 }
                 self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")

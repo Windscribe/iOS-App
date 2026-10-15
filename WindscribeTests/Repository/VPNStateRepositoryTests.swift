@@ -414,6 +414,62 @@ class VPNStateRepositoryTests: XCTestCase {
         XCTAssertEqual(repository.lastConnectionStatus, .connected)
     }
 
+    // MARK: - Failed Configuration Recovery Tests
+
+    func test_getStatus_returns_to_disconnected_after_failed_configuration_without_profile() async throws {
+        // Given - a connect attempt is configuring with a pending info snapshot
+        let connectingExpectation = XCTestExpectation(description: "Status publisher emits connecting")
+        let disconnectedExpectation = XCTestExpectation(description: "Status publisher emits disconnected")
+        var receivedStatuses: [NEVPNStatus] = []
+        let cancellable = repository.getStatus().sink { status in
+            receivedStatuses.append(status)
+            if status == .connecting { connectingExpectation.fulfill() }
+            if status == .disconnected { disconnectedExpectation.fulfill() }
+        }
+        repository.setConfigurationState(.configuring)
+        repository.vpnInfo.send(getVPNInfo(with: .disconnected))
+        await fulfillment(of: [connectingExpectation], timeout: 5.0)
+
+        // When - configuration fails and no system profile exists to report a status
+        repository.setConfigurationState(.initial)
+        repository.resetVPNInfoToDisconnected()
+
+        // Then
+        await fulfillment(of: [disconnectedExpectation], timeout: 5.0)
+        XCTAssertEqual(receivedStatuses, [.connecting, .disconnected])
+
+        cancellable.cancel()
+    }
+
+    func test_resetVPNInfoToDisconnected_preserves_selection() {
+        // Given
+        repository.vpnInfo.send(VPNConnectionInfo(selectedProtocol: "WStunnel",
+                                                  selectedPort: "80",
+                                                  status: .connecting,
+                                                  server: "node.example",
+                                                  killSwitch: true,
+                                                  onDemand: false))
+
+        // When
+        repository.resetVPNInfoToDisconnected()
+
+        // Then
+        let info = repository.vpnInfo.value
+        XCTAssertEqual(info?.status, .disconnected)
+        XCTAssertEqual(info?.selectedProtocol, "WStunnel")
+        XCTAssertEqual(info?.selectedPort, "80")
+        XCTAssertEqual(info?.server, "node.example")
+        XCTAssertEqual(info?.killSwitch, true)
+    }
+
+    func test_resetVPNInfoToDisconnected_without_info_does_nothing() {
+        // When
+        repository.resetVPNInfoToDisconnected()
+
+        // Then
+        XCTAssertNil(repository.vpnInfo.value)
+    }
+
     // MARK: - Help Functions
     func getVPNInfo(with status: NEVPNStatus) -> VPNConnectionInfo{
         return VPNConnectionInfo(selectedProtocol: "Wireguard",

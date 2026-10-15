@@ -46,6 +46,21 @@ protocol VPNStateRepository: Sendable {
     func getStatus() -> AnyPublisher<NEVPNStatus, Never>
 }
 
+extension VPNStateRepository {
+    /// Publishes a disconnected copy of the current snapshot so `getStatus()` re-evaluates the
+    /// configuration state. The snapshot can already be disconnected while the stream still shows
+    /// the connecting state it mapped during configuration.
+    func resetVPNInfoToDisconnected() {
+        guard let info = vpnInfo.value else { return }
+        vpnInfo.send(VPNConnectionInfo(selectedProtocol: info.selectedProtocol,
+                                       selectedPort: info.selectedPort,
+                                       status: .disconnected,
+                                       server: info.server,
+                                       killSwitch: info.killSwitch,
+                                       onDemand: info.onDemand))
+    }
+}
+
 class VPNStateRepositoryImpl: VPNStateRepository {
     let logger: FileLogger
 
