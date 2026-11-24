@@ -237,6 +237,9 @@ class Repository: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 preferences: r.resolve(Preferences.self)!,
+                onProtocolTweaksChanged: { enabled in
+                    WSNet.instance().advancedParameters().setAPIExtraTLSPadding(enabled)
+                }
             )
         }.inObjectScope(.userScope)
 
