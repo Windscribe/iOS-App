@@ -148,4 +148,33 @@ struct AntiCensorshipRepositoryTests {
         #expect(secondLaunch.selectedWgParamSubject.value?.id == "G")
         #expect(preferences.mockAntiCensorshipManuallyConfigured == false)
     }
+
+    @Test("Runtime protocol tweaks changes notify WSNet sync callback")
+    func runtimeProtocolTweaksSyncCallback() {
+        final class CallbackRecorder: @unchecked Sendable {
+            private let lock = NSLock()
+            private(set) var values: [Bool] = []
+            func record(_ val: Bool) {
+                lock.lock()
+                values.append(val)
+                lock.unlock()
+            }
+        }
+
+        let (preferences, localDatabase) = makeStores()
+        let recorder = CallbackRecorder()
+        let repository = AntiCensorshipRepositoryImpl(
+            apiManager: MockAPIManager(),
+            logger: MockLogger(),
+            localDatabase: localDatabase,
+            preferences: preferences,
+            onProtocolTweaksChanged: { enabled in
+                recorder.record(enabled)
+            }
+        )
+        repository.setProtocolTweaksMode(.enabled)
+        repository.setProtocolTweaksMode(.disabled)
+
+        #expect(recorder.values == [false, true, false])
+    }
 }

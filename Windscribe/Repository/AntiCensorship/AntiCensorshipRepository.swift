@@ -41,6 +41,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
     private let logger: FileLogger
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
+    private let onProtocolTweaksChanged: @Sendable (Bool) -> Void
 
     private var sessionHasBackup: Bool = false
     private var sessionWgParameterKey: String?
@@ -49,11 +50,13 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
     init(apiManager: APIManager,
          logger: FileLogger,
          localDatabase: LocalDatabase,
-         preferences: Preferences) {
+         preferences: Preferences,
+         onProtocolTweaksChanged: @escaping @Sendable (Bool) -> Void = { _ in }) {
         self.apiManager = apiManager
         self.logger = logger
         self.localDatabase = localDatabase
         self.preferences = preferences
+        self.onProtocolTweaksChanged = onProtocolTweaksChanged
 
         unlockParams = localDatabase.getUnblockWgParams()
         protocolTweaksModeSubject.send(loadProtocolTweaksMode())
@@ -111,6 +114,7 @@ class AntiCensorshipRepositoryImpl: AntiCensorshipRepository {
     private func applyEffectiveProtocolTweaks(_ value: Bool) {
         preferences.saveCircumventCensorshipStatus(status: value)
         useProtocolTweaksSubject.send(value)
+        onProtocolTweaksChanged(value)
 
         if !value {
             selectedWgParamSubject.send(nil)
